@@ -1,0 +1,6 @@
+Please follow the link:
+
+    http://www.oracle.com/technology/software/popup-license/distribution-license.html
+
+to get the exhaustive information on usage of the Oracle JDBC driver.
+

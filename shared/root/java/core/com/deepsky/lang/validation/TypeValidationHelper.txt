@@ -1,0 +1,155 @@
+package com.deepsky.lang.validation;
+
+import com.deepsky.lang.plsql.struct.support.Type;
+import com.intellij.util.containers.HashMap;
+
+import java.util.Map;
+
+public class TypeValidationHelper {
+
+    static Map<String, OperationHolder> pp;
+
+    static {
+        pp = new HashMap<String, OperationHolder>();
+
+        pp.put(pair2string(Type.INTEGER, Type.INTEGER),
+                new OperationHolder(Type.INTEGER)
+                        .add(ExpressionEval.PLUS)
+                        .add(ExpressionEval.MINUS)
+                        .add(ExpressionEval.MULTI)
+                        .add(ExpressionEval.DIV)
+                        .add(ExpressionEval.CONCAT, Type.VARCHAR2)
+        );
+
+        pp.put(pair2string(Type.NUMBER, Type.INTEGER),
+                new OperationHolder(Type.NUMBER)
+                        .add(ExpressionEval.PLUS)
+                        .add(ExpressionEval.MINUS)
+                        .add(ExpressionEval.MULTI)
+                        .add(ExpressionEval.DIV)
+                        .add(ExpressionEval.CONCAT, Type.VARCHAR2)
+        );
+
+        pp.put(pair2string(Type.NUMBER, Type.NUMBER),
+                new OperationHolder(Type.NUMBER)
+                        .add(ExpressionEval.PLUS)
+                        .add(ExpressionEval.MINUS)
+                        .add(ExpressionEval.MULTI)
+                        .add(ExpressionEval.DIV)
+                        .add(ExpressionEval.CONCAT, Type.VARCHAR2)
+        );
+
+        pp.put(pair2string(Type.INTEGER, Type.NUMBER),
+                new OperationHolder(Type.NUMBER)
+                        .add(ExpressionEval.PLUS)
+                        .add(ExpressionEval.MINUS)
+                        .add(ExpressionEval.MULTI)
+                        .add(ExpressionEval.DIV)
+                        .add(ExpressionEval.CONCAT, Type.VARCHAR2)
+        );
+
+        pp.put(pair2string(Type.VARCHAR2, Type.NUMBER),
+                new OperationHolder(Type.VARCHAR2)
+                        .add(ExpressionEval.CONCAT)
+        );
+
+        pp.put(pair2string(Type.VARCHAR2, Type.INTEGER),
+                new OperationHolder(Type.VARCHAR2)
+                        .add(ExpressionEval.CONCAT)
+        );
+
+        pp.put(pair2string(Type.VARCHAR2, Type.VARCHAR2),
+                new OperationHolder(Type.VARCHAR2)
+                        .add(ExpressionEval.CONCAT)
+        );
+
+        pp.put(pair2string(Type.VARCHAR2, Type.VARCHAR),
+                new OperationHolder(Type.VARCHAR2)
+                        .add(ExpressionEval.CONCAT)
+        );
+
+        pp.put(pair2string(Type.VARCHAR2, Type.CHAR),
+                new OperationHolder(Type.VARCHAR2)
+                        .add(ExpressionEval.CONCAT)
+        );
+
+        pp.put(pair2string(Type.NUMBER, Type.VARCHAR2),
+                new OperationHolder(Type.VARCHAR2)
+                        .add(ExpressionEval.CONCAT)
+        );
+    }
+
+    public static int evaluate(int l, int r, int op) {
+
+        String key = l + ":" + r;
+        OperationHolder holder = pp.get(key);
+        if (holder != null ){ //&& holder.contains(op)) {
+            return holder.resultTypeForOp(op);
+//            return holder.resultType();
+        } else {
+            return Type.UNKNOWN;
+        }
+    }
+
+    static class OperationHolder {
+
+        Pair[] operations = new Pair[0];
+        int result;
+
+        public OperationHolder(int result) {
+            this.result = result;
+        }
+
+        OperationHolder add(int op) {
+            Pair[] t = new Pair[operations.length + 1];
+            System.arraycopy(operations, 0, t, 0, operations.length);
+            t[operations.length] = new Pair(op, result);
+            operations = t;
+            return this;
+        }
+
+        OperationHolder add(int op, int resultType) {
+            Pair[] t = new Pair[operations.length + 1];
+            System.arraycopy(operations, 0, t, 0, operations.length);
+            t[operations.length] = new Pair(op, resultType);
+            operations = t;
+            return this;
+        }
+
+//        public boolean contains(int op) {
+//            for (Pair _op : operations) {
+//                if (_op.op == op) {
+//                    return true;
+//                }
+//            }
+//            return false;
+//        }
+
+        public int resultTypeForOp(int op) {
+            for (Pair _op : operations) {
+                if (_op.op == op) {
+                    return _op.type;
+                }
+            }
+            return Type.UNKNOWN;
+        }
+
+        public int resultType() {
+            return result;
+        }
+    }
+
+    static class Pair {
+        public int op;
+        public int type;
+
+        public Pair(int op, int type){
+            this.op = op;
+            this.type = type;
+        }
+    }
+
+    static String pair2string(int l, int r) {
+        return l + ":" + r;
+    }
+}
