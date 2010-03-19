@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -34,9 +31,11 @@ import com.deepsky.database.SqlScriptManager;
 import com.deepsky.database.cache.Cache;
 import com.deepsky.findUsages.persistence.SqlSearchParameters;
 import com.deepsky.findUsages.scopes.DbScopeDescriptorProvider;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.CreateView;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.ddl.VColumnDefinition;
 import com.deepsky.lang.plsql.psi.ref.DDLTable;
 import com.deepsky.lang.plsql.psi.ref.Table;
@@ -67,12 +66,13 @@ public class ColumnSearcher implements QueryExecutor<PsiReference, ReferencesSea
 
     public boolean execute(ReferencesSearch.SearchParameters queryParameters, final Processor<PsiReference> consumer) {
 
-        final Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
-        SqlSearchParameters searchParams = SqlSearchParameters.getInstance();
+        final Project project = queryParameters.getElementToSearch().getProject();
+//        final Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+        SqlSearchParameters searchParams = SqlSearchParameters.getInstance(project);
 
-        if (project == null) {
-            return false;
-        }
+//        if (project == null) {
+//            return false;
+//        }
 
         // this is needed just for getting a real SearchScope
         SearchScope scope = searchParams.searchScope;
@@ -513,7 +513,7 @@ public class ColumnSearcher implements QueryExecutor<PsiReference, ReferencesSea
                         DbObject.VIEW
                 };
 
-                ObjectCache ocache = ObjectCacheFactory.getObjectCache();
+                ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project); //ObjectCacheFactory.getObjectCache();
                 if (ocache.isReady()) {
                     String user = ocache.getCurrentUser();
                     Cache c0 = ocache.getCache(user);

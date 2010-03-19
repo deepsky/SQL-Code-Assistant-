@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -63,7 +60,7 @@ public class GenericValidator implements SystemFunctionValidator {
             Type t = edesc.getArgumentType(name);
             try {
                 Type t1 = arg.getExpression().getExpressionType();
-                if (!TypeValidationHelper.canBeAssigned(t, t1)) {
+                if (!TypeValidationHelper.canBeAssigned(arg, t, t1)) {
                     errors.add(edesc.getName() + ": type of argument does not fit a formal parameter, position: " + (i + 1));
                     return false;
                 }

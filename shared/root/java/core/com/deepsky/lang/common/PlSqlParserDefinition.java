@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,13 +25,16 @@
 
 package com.deepsky.lang.common;
 
-import com.deepsky.database.ObjectCache;
-import com.deepsky.database.ObjectCacheFactory;
+import com.deepsky.generated.plsql.PLSqlTokenTypes;
+import com.deepsky.integration.PlSqlElementType;
 import com.deepsky.lang.lexer.PlSqlLexerP;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.impl.*;
 import com.deepsky.lang.plsql.psi.impl.BooleanLiteral;
+import com.deepsky.lang.plsql.psi.impl.ctrl.CommitStatementImpl;
+import com.deepsky.lang.plsql.psi.impl.ctrl.RollbackStatementImpl;
 import com.deepsky.lang.plsql.psi.impl.ddl.*;
 import com.deepsky.lang.plsql.psi.impl.types.ColumnTypeRefImpl;
 import com.deepsky.lang.plsql.psi.impl.types.DataTypeImpl;
@@ -105,363 +105,348 @@ public class PlSqlParserDefinition implements ParserDefinition {
         return null;
     }
 
-
     @NotNull
     public PsiElement createElement(ASTNode node) {
-        final IElementType type = node.getElementType();
-//        String tt = node.getText();
-//        if (tt != null && tt.length() > 25) {
-//            tt = tt.substring(0, 25) + " ...";
-//        }
-//        log.info("#create, text [" + tt + "] elem type: " + node.getElementType() + ", parent [" + node.getTreeParent().getElementType() + "]");
+        PsiElement element = createElement2(node);
+        if(element == null){
+            return new ASTWrapperPsiElement(node);
+        } else {
+            return element;
+        }
+    }
 
-        if (type == PLSqlTypesAdopted.SELECT_EXPRESSION) {
-            return new SelectStatementImpl(node);
-//        } else if (type == PLSqlTypesAdopted.SELECT_SUBSEQ) {
-//            // todo -- needs in review
-//            return new SelectStatementImpl(node);
-        } else if (type == PLSqlTypesAdopted.SELECT_EXPRESSION_UNION) {
-            return new SelectStatementUnionImpl(node);
-        } else if (type == PLSqlTypesAdopted.INSERT_COMMAND) {
-            return new InsertStatementImpl(node);
-        } else if (type == PLSqlTypesAdopted.UPDATE_COMMAND) {
-            return new UpdateStatementImpl(node);
-        } else if (type == PLSqlTypesAdopted.DELETE_COMMAND) {
-            return new DeleteStatementImpl(node);
-        } else if (type == PLSqlTypesAdopted.PLSQL_BLOCK) {
-            return new PlSqlBlockImpl(node);
-        } else if (type == PLSqlTypesAdopted.CONSTRAINT) {
-            if (node.findChildByType(PLSqlTypesAdopted.FK_SPEC) != null) {
-                return new ForeignKeyConstraintImpl(node);
-            } else if (node.findChildByType(PLSqlTypesAdopted.PK_SPEC) != null) {
-                return new PrimaryKeyConstraintImpl(node);
-            } else {
-                // todo - not implemented
-            }
-        } else if (type == PLSqlTypesAdopted.ASTERISK_COLUMN) {
-            return new SelectFieldAsteriskImpl(node);
-        } else if (type == PLSqlTypesAdopted.IDENT_ASTERISK_COLUMN) {
-            return new SelectFieldIdentAsteriskImpl(node);
-        } else if (type == PLSqlTypesAdopted.EXPR_COLUMN) {
-            return new SelectFieldExprImpl(node);
-        } else if (type == PLSqlTypesAdopted.TABLE_REFERENCE_LIST_FROM) {
-            return new FromClauseImpl(node);
-        } else if (type == PLSqlTypesAdopted.CURSOR_DECLARATION) {
-            return new CursorDeclImpl(node);
-        } else if (type == PLSqlTypesAdopted.TABLE_ALIAS) {
-            return new PlainTableImpl(node);
-        } else if (type == PLSqlTypesAdopted.FUNCTION_BODY) {
-            return new FunctionImpl(node);
-        } else if (type == PLSqlTypesAdopted.PLSQL_BLOCK) {
-            return new PlSqlBlockImpl(node);
-        } else if (type == PLSqlTypesAdopted.SUBQUERY_EXPR) {
-            return new SubqueryExpressionImpl(node);
-        } else if (type == PLSqlTypesAdopted.PROCEDURE_BODY) {
-            return new ProcedureImpl(node);
-        } else if (type == PLSqlTypesAdopted.PACKAGE_BODY) {
-            return new PackageBodyImpl(node);
-        } else if (type == PLSqlTypesAdopted.PACKAGE_SPEC) {
-            return new PackageSpecImpl(node);
-        } else if (type == PLSqlTypesAdopted.PACKAGE_INIT_SECTION) {
-            return new PackageInitSectionImpl(node);
-        } else if (type == PLSqlTypesAdopted.FUNCTION_SPEC) {
-            return new FunctionSpecImpl(node);
-        } else if (type == PLSqlTypesAdopted.PROCEDURE_SPEC) {
-            return new ProcedureSpecImpl(node);
-//        } else if (type == PLSqlTypesAdopted.FROM_PLAIN_TABLE) {
+    public static PsiElement createElement2(ASTNode node) {
+        final IElementType type = node.getElementType();
+        int ttype = PlSqlElementType.mapTo_TokenType(type);
+
+        switch(ttype){
+            case PLSqlTokenTypes.SELECT_EXPRESSION:
+                return new SelectStatementImpl(node);
+            case PLSqlTokenTypes.SELECT_EXPRESSION_UNION:
+                return new SelectStatementUnionImpl(node);
+            case PLSqlTokenTypes.INSERT_COMMAND:
+                return new InsertStatementImpl(node);
+            case PLSqlTokenTypes.MERGE_COMMAND:
+                return new MergeStatementImpl(node);
+            case PLSqlTokenTypes.UPDATE_COMMAND:
+                return new UpdateStatementImpl(node);
+            case PLSqlTokenTypes.DELETE_COMMAND:
+                return new DeleteStatementImpl(node);
+            case PLSqlTokenTypes.CONSTRAINT:
+                if (node.findChildByType(PlSqlElementTypes.FK_SPEC) != null){
+                    return new ForeignKeyConstraintImpl(node);
+                } else if (node.findChildByType(PlSqlElementTypes.PK_SPEC) != null){
+                    return new PrimaryKeyConstraintImpl(node);
+                } else {
+                    // todo - not implemented
+                }
+                break;
+            case PLSqlTokenTypes.ASTERISK_COLUMN:
+                return new SelectFieldAsteriskImpl(node);
+            case PLSqlTokenTypes.IDENT_ASTERISK_COLUMN:
+                return new SelectFieldIdentAsteriskImpl(node);
+            case PLSqlTokenTypes.EXPR_COLUMN:
+                return new SelectFieldExprImpl(node);
+            case PLSqlTokenTypes.TABLE_REFERENCE_LIST_FROM:
+                return new FromClauseImpl(node);
+            case PLSqlTokenTypes.CURSOR_DECLARATION:
+                return new CursorDeclImpl(node);
+            case PLSqlTokenTypes.TABLE_ALIAS:
+                return new PlainTableImpl(node);
+            case PLSqlTokenTypes.FUNCTION_BODY:
+                return new FunctionImpl(node);
+            case PLSqlTokenTypes.PLSQL_BLOCK:
+                return new PlSqlBlockImpl(node);
+            case PLSqlTokenTypes.SUBQUERY_EXPR:
+                return new SubqueryExpressionImpl(node);
+            case PLSqlTokenTypes.PROCEDURE_BODY:
+                return new ProcedureImpl(node);
+            case PLSqlTokenTypes.PACKAGE_BODY:
+                return new PackageBodyImpl(node);
+            case PLSqlTokenTypes.PACKAGE_SPEC:
+                return new PackageSpecImpl(node);
+            case PLSqlTokenTypes.PACKAGE_INIT_SECTION:
+                return new PackageInitSectionImpl(node);
+            case PLSqlTokenTypes.FUNCTION_SPEC:
+                return new FunctionSpecImpl(node);
+            case PLSqlTokenTypes.PROCEDURE_SPEC:
+                return new ProcedureSpecImpl(node);
+//        } else if (type == PLSqlTypesAdopted.FROM_PLAIN_TABLE:
 //            return new PlainTableImpl(node);
-        } else if (type == PLSqlTypesAdopted.FROM_SUBQUERY) {
-            return new FromSubqueryImpl(node);
-        } else if (type == PLSqlTypesAdopted.OBJECT_NAME) {
-            return new ObjectNameImpl(node);
-        } else if (type == PLSqlTypesAdopted.TABLE_REF) {
-            // reference to a table
-            return new TableNameRefImpl(node);
+            case PLSqlTokenTypes.FROM_SUBQUERY:
+                return new FromSubqueryImpl(node);
+            case PLSqlTokenTypes.OBJECT_NAME:
+                return new ObjectNameImpl(node);
+            case PLSqlTokenTypes.TABLE_REF:
+                // reference to a table
+                return new TableNameRefImpl(node);
 
 // [ ------------------- ]
-        } else if (type == PLSqlTypesAdopted.NAME_FRAGMENT) {
-            return new NameFragmentRefImpl(node);
+            case PLSqlTokenTypes.NAME_FRAGMENT:
+                return new NameFragmentRefImpl(node);
 // [ +++++++++++++++++++ ]
 
-        } else if (type == PLSqlTypesAdopted.COLUMN_NAME_REF) {
-            return new ColumnNameRefImpl(node);
-        } else if (type == PLSqlTypesAdopted.COLUMN_NAME_DDL) {
-            return new ColumnNameDDLImpl(node);
-        } else if (type == PLSqlTypesAdopted.TABLE_NAME) {
-            String text = node.getText();
-            ObjectCacheFactory.getObjectCache().preloadObject(ObjectCache.TABLE | ObjectCache.VIEW, null, text);
-
-            return new TableImpl(node);
-        } else if (type == PLSqlTypesAdopted.TABLE_NAME_DDL) {
-            return new DDLTableImpl(node);
-        } else if (type == PLSqlTypesAdopted.VIEW_NAME_DDL) {
-            return new DDLViewImpl(node);
-        } else if (type == PLSqlTypesAdopted.FUNCTION_CALL) {
-/*
-            ASTNode name = node.findChildByType(PLSqlTypesAdopted.FUNCTION_NAME);
-            String text = name.getText();
-            FunctionNameDTO dto = ASTParseHelper.parseFunctionName(text);
-            if(dto.getSchema().length() > 0 ){
-                ObjectCacheFactory.getObjectCache().refreshDbObject(ObjectCache.PACKAGE, dto.getSchema(), dto.getPackage());
-            } else if(dto.getPackage().length() > 0 ){
-                ObjectCacheFactory.getObjectCache().refreshDbObject(ObjectCache.PACKAGE, null, dto.getPackage());
-            } else {
-                // three cases possible:
-                //  1. this is an embedded function
-                //  2. function defined outside any package
-                //  3. function defined inside the package
-                ObjectCacheFactory.getObjectCache().refreshDbObject(ObjectCache.USER_FUNCTION, null, dto.getName());
-            }
-*/
-            return new FunctionCallImpl(node);
-        } else if (type == PLSqlTypesAdopted.PROCEDURE_CALL) {
-/*
-            ASTNode name = node.findChildByType(PLSqlTypesAdopted.FUNCTION_NAME);
-            String text = name.getText();
-            FunctionNameDTO dto = ASTParseHelper.parseFunctionName(text);
-            if(dto.getSchema().length() > 0 ){
-                ObjectCacheFactory.getObjectCache().refreshDbObject(ObjectCache.PACKAGE, dto.getSchema(), dto.getPackage());
-            } else if(dto.getPackage().length() > 0 ){
-                ObjectCacheFactory.getObjectCache().refreshDbObject(ObjectCache.PACKAGE, null, dto.getPackage());
-            } else {
-                // three cases possible:
-                //  1. this is an embedded function
-                //  2. function defined outside any package
-                //  3. function defined inside the package
-                ObjectCacheFactory.getObjectCache().refreshDbObject(ObjectCache.USER_PROCEDURE, null, dto.getName());
-            }
-*/
-            return new ProcedureCallImpl(node);
-/*  
-        } else if(type == PLSqlTypesAdopted.FUNC_NAME_REF){
-            //return new FunctionReferenceImpl(node);
-//            return new FunctionNameRefImpl(node);
-//            return new CallableNameReferenceImpl(node);
-            return new CallableNameCompositBase(node);
-        } else if(type == PLSqlTypesAdopted.PROC_NAME_REF){
-            //return new FunctionReferenceImpl(node);
-//            return new ProcedureNameRefImpl(node);
-            return new CallableNameCompositBase(node);
-//            return new CallableNameReferenceImpl(node);
-*/
-        } else if (type == PLSqlTypesAdopted.CALLABLE_NAME_REF) {
-            return new CallableCompositeNameBase(node);
-//        } else if(type == PLSqlTypesAdopted.EXEC_NAME_REF){
-//            return new CallableNameReferenceImpl(node);
-        } else if (type == PLSqlTypesAdopted.VAR_REF) {
-            return new ObjectReferenceImpl(node);
-        } else if (type == PLSqlTypesAdopted.PLSQL_VAR_REF) {
-            return new ObjectReferenceImpl(node);
-        } else if (type == PLSqlTypesAdopted.PARAMETER_REF) {
-            return new ParameterReferenceImpl(node);
-        } else if (type == PLSqlTypesAdopted.TRIGGER_COLUMN_REF) {
-            return new TriggerColumnNameRefImpl(node);
-        } else if (type == PLSqlTypesAdopted.COLUMN_OUTER_JOIN) {
-            return new ColumnOuterJoinImpl(node);
-        } else if (type == PLSqlTypesAdopted.PARENTHESIZED_EXPR) {
-            return new ParenthesizedExprImpl(node);
-        } else if (type == PLSqlTypesAdopted.NUMERIC_LITERAL) {
-            return new NumericLiteralImpl(node);
-        } else if (type == PLSqlTypesAdopted.STRING_LITERAL) {
-            return new StringLiteralImpl(node);
-        } else if (type == PLSqlTypesAdopted.BOOLEAN_LITERAL) {
-            return new BooleanLiteral(node);
-        } else if (type == PLSqlTypesAdopted.DECLARE_LIST) {
-            return new DeclarationListImpl(node);
-        } else if (type == PLSqlTypesAdopted.VARIABLE_DECLARATION) {
-            return new VariableDeclImpl(node);
-        } else if (type == PLSqlTypesAdopted.VARIABLE_NAME) {
-            return new VariableNameImpl(node);
-        } else if (type == PLSqlTypesAdopted.PARAMETER_NAME) {
-            return new ParameterNameImpl(node);
-//        } else if (type == PLSqlTypesAdopted.RECORD_ITEM_NAME) {
-//            return new RecordItemNameImpl(node);
-        } else if (type == PLSqlTypesAdopted.ARGUMENT_LIST) {
-            return new ArgumentListImpl(node);
-        } else if (type == PLSqlTypesAdopted.CALL_ARGUMENT_LIST) {
-            return new CallArgumentListImpl(node);
-        } else if (type == PLSqlTypesAdopted.PARAMETER_SPEC) {
-            return new ArgumentImpl(node);
-        } else if (type == PLSqlTypesAdopted.SYSTIMESTAMP_CONST) {
-            return new SystimestampLiteral(node);
-        } else if (type == PLSqlTypesAdopted.CURRENT_TIMESTAMP_CONST) {
-            return new CurrentTimestampLiteral(node);
-        } else if (type == PLSqlTypesAdopted.SYSDATE_CONST) {
-            return new SysdateLiteral(node);
-//        } else if(type == PLSqlTypesAdopted.ROWCOUNT_EXRESSION){
-//            return new RowcountExpressionImpl(node);
-        } else if (type == PLSqlTypesAdopted.ROWNUM) {
-            return new RownumLiteral(node);
-        } else if (type == PLSqlTypesAdopted.NULL_STATEMENT) {
-            return new NullLiteralImpl(node);
-        } else if (type == PLSqlTypesAdopted.CASE_EXPRESSION_SMPL) {
-            return new CaseExpressionImpl(node, CaseExpression.SIMPLE);
-        } else if (type == PLSqlTypesAdopted.CASE_EXPRESSION_SRCH) {
-            return new CaseExpressionImpl(node, CaseExpression.SEARCHED);
-        } else if (type == PLSqlTypesAdopted.COUNT_FUNC) {
-            return new SystemFunctionImpl(node, "COUNT", TypeFactory.createTypeById(Type.NUMBER));
-        } else if (type == PLSqlTypesAdopted.DBTIMEZONE) {
-            return new SystemFunctionImpl(node, "DBTIMEZONE", TypeFactory.createTypeById(Type.VARCHAR));
-        } else if (type == PLSqlTypesAdopted.SYSDATE_CONST) {
-            return new SystemFunctionImpl(node, "SYSDATE", TypeFactory.createTypeById(Type.DATE));
-        } else if (type == PLSqlTypesAdopted.ROWCOUNT_EXRESSION) {
-            return new SystemVariableImpl(node, TypeFactory.createTypeById(Type.NUMBER));
-        } else if (type == PLSqlTypesAdopted.CURRENT_OF_CLAUSE) {
-            return new SystemVariableImpl(node, TypeFactory.createTypeById(Type.BOOLEAN));
-        } else if (type == PLSqlTypesAdopted.CURSOR_STATE) {
-            return new SystemVariableImpl(node, TypeFactory.createTypeById(Type.BOOLEAN));
-        } else if (type == PLSqlTypesAdopted.SQLCODE_SYSVAR) {
-            return new SystemVariableImpl(node, TypeFactory.createTypeById(Type.INTEGER));
-        } else if (type == PLSqlTypesAdopted.SQLERRM_SYSVAR) {
-            return new SystemVariableImpl(node, TypeFactory.createTypeById(Type.CHAR));
-        } else if (type == PLSqlTypesAdopted.USER_CONST) {
-            return new UserConstImpl(node);
-        } else if (type == PLSqlTypesAdopted.EXTRACT_DATE_FUNC) {
-            return new ExtractFunctionImpl(node);
-        } else if (type == PLSqlTypesAdopted.TRIM_FUNC) {
-            return new TrimFunctionImpl(node);
-        } else if (type == PLSqlTypesAdopted.CAST_EXPR) {
-            return new CastExpressionImpl(node);
-        } else if (type == PLSqlTypesAdopted.SEQUENCE_EXPR) {
-            return new SequenceExprImpl(node);
-        } else if (type == PLSqlTypesAdopted.CALL_ARGUMENT) {
-            return new CallArgumentImpl(node);
-        } else if (type == PLSqlTypesAdopted.INTERVAL_DAY_TO_SEC_EXPR) {
-            return new IntervalExpressionImpl(node);
-        } else if (type == PLSqlTypesAdopted.ARITHMETIC_EXPR) {
-            return new ArithmeticExpressionImpl(node);
-        } else if (type == PLSqlTypesAdopted.LOGICAL_EXPR) {
-            return new LogicalExpressionImpl(node);
-        } else if (type == PLSqlTypesAdopted.WHERE_CONDITION) {
-            return new WhereConditionImpl(node);
-        } else if (type == PLSqlTypesAdopted.SUBQUERY_CONDITION) {
-            return new SubqueryConditionImpl(node);
-        } else if (type == PLSqlTypesAdopted.EXISTS_EXPR) {
-            return new ExistsConditionImpl(node);
-        } else if (type == PLSqlTypesAdopted.RELATION_CONDITION) {
-            return new RelationConditionImpl(node);
-        } else if (type == PLSqlTypesAdopted.IN_CONDITION) {
-            return new InConditionImpl(node);
-        } else if (type == PLSqlTypesAdopted.LIKE_CONDITION) {
-            return new LikeConditionImpl(node);
-        } else if (type == PLSqlTypesAdopted.BETWEEN_CONDITION) {
-            return new BetweenConditionImpl(node);
-        } else if (type == PLSqlTypesAdopted.ISNULL_CONDITION) {
-            return new IsNullConditionImpl(node);
-//        } else if(type == PLSqlTypesAdopted.TYPE_SPEC){
-//            return new TypeSpecVariantImpl(node);
-        } else if (type == PLSqlTypesAdopted.AT_TIME_ZONE_EXPR) {
-            return new AtTimeZoneExpressionImpl(node);
+            case PLSqlTokenTypes.COLUMN_NAME_REF:
+                return new ColumnNameRefImpl(node);
+            case PLSqlTokenTypes.COLUMN_NAME_DDL:
+                return new ColumnNameDDLImpl(node);
+            case PLSqlTokenTypes.TABLE_NAME_WITH_LINK:
+                return new TableNameWithLinkImpl(node);
+            case PLSqlTokenTypes.TABLE_NAME:
+                return new TableImpl(node);
+            case PLSqlTokenTypes.TABLE_NAME_DDL:
+                return new DDLTableImpl(node);
+            case PLSqlTokenTypes.VIEW_NAME_DDL:
+                return new DDLViewImpl(node);
+            case PLSqlTokenTypes.FUNCTION_CALL:
+                return new FunctionCallImpl(node);
+            case PLSqlTokenTypes.PROCEDURE_CALL:
+                return new ProcedureCallImpl(node);
+            case PLSqlTokenTypes.CALLABLE_NAME_REF:
+                return new CallableCompositeNameBase(node);
+            case PLSqlTokenTypes.VAR_REF:
+                return new ObjectReferenceImpl(node, false);
+            case PLSqlTokenTypes.PLSQL_VAR_REF:
+                return new ObjectReferenceImpl(node, true);
+            case PLSqlTokenTypes.PARAMETER_REF:
+                return new ParameterReferenceImpl(node);
+            case PLSqlTokenTypes.TRIGGER_COLUMN_REF:
+                return new TriggerColumnNameRefImpl(node);
+            case PLSqlTokenTypes.COLUMN_OUTER_JOIN:
+                return new ColumnOuterJoinImpl(node);
+            case PLSqlTokenTypes.PARENTHESIZED_EXPR:
+                return new ParenthesizedExprImpl(node);
+            case PLSqlTokenTypes.NUMERIC_LITERAL:
+                return new NumericLiteralImpl(node);
+            case PLSqlTokenTypes.STRING_LITERAL:
+                return new StringLiteralImpl(node);
+            case PLSqlTokenTypes.BOOLEAN_LITERAL:
+                return new BooleanLiteral(node);
+            case PLSqlTokenTypes.DECLARE_LIST:
+                return new DeclarationListImpl(node);
+            case PLSqlTokenTypes.VARIABLE_DECLARATION:
+                return new VariableDeclImpl(node);
+            case PLSqlTokenTypes.VARIABLE_NAME:
+                return new VariableNameImpl(node);
+            case PLSqlTokenTypes.PARAMETER_NAME:
+                return new ParameterNameImpl(node);
+            case PLSqlTokenTypes.ARGUMENT_LIST:
+                return new ArgumentListImpl(node);
+            case PLSqlTokenTypes.CALL_ARGUMENT_LIST:
+                return new CallArgumentListImpl(node);
+            case PLSqlTokenTypes.PARAMETER_SPEC:
+                return new ArgumentImpl(node);
+            case PLSqlTokenTypes.SYSTIMESTAMP_CONST:
+                return new SystimestampLiteral(node);
+            case PLSqlTokenTypes.CURRENT_TIMESTAMP_CONST:
+                return new CurrentTimestampLiteral(node);
+            case PLSqlTokenTypes.ROWNUM:
+                return new RownumLiteral(node);
+            case PLSqlTokenTypes.NULL_STATEMENT:
+                return new NullLiteralImpl(node);
+            case PLSqlTokenTypes.CASE_EXPRESSION_SMPL:
+                return new CaseExpressionImpl(node, CaseExpression.SIMPLE);
+            case PLSqlTokenTypes.CASE_EXPRESSION_SRCH:
+                return new CaseExpressionImpl(node, CaseExpression.SEARCHED);
+            case PLSqlTokenTypes.COUNT_FUNC:
+                return new SystemFunctionImpl(node, "COUNT", TypeFactory.createTypeById(Type.NUMBER));
+            case PLSqlTokenTypes.DBTIMEZONE:
+                return new SystemFunctionImpl(node, "DBTIMEZONE", TypeFactory.createTypeById(Type.VARCHAR));
+            case PLSqlTokenTypes.SYSDATE_CONST:
+                return new SystemFunctionImpl(node, "SYSDATE", TypeFactory.createTypeById(Type.DATE));
+            case PLSqlTokenTypes.ROWCOUNT_EXRESSION:
+                return new SystemVariableImpl(node, TypeFactory.createTypeById(Type.NUMBER));
+            case PLSqlTokenTypes.CURRENT_OF_CLAUSE:
+                return new SystemVariableImpl(node, TypeFactory.createTypeById(Type.BOOLEAN));
+            case PLSqlTokenTypes.CURSOR_STATE:
+                return new SystemVariableImpl(node, TypeFactory.createTypeById(Type.BOOLEAN));
+            case PLSqlTokenTypes.SQLCODE_SYSVAR:
+                return new SystemVariableImpl(node, TypeFactory.createTypeById(Type.INTEGER));
+            case PLSqlTokenTypes.SQLERRM_SYSVAR:
+                return new SystemVariableImpl(node, TypeFactory.createTypeById(Type.CHAR));
+            case PLSqlTokenTypes.USER_CONST:
+                return new UserConstImpl(node);
+            case PLSqlTokenTypes.EXTRACT_DATE_FUNC:
+                return new ExtractFunctionImpl(node);
+            case PLSqlTokenTypes.TRIM_FUNC:
+                return new TrimFunctionImpl(node);
+            case PLSqlTokenTypes.CAST_EXPR:
+                return new CastExpressionImpl(node);
+            case PLSqlTokenTypes.SEQUENCE_EXPR:
+                return new SequenceExprImpl(node);
+            case PLSqlTokenTypes.CALL_ARGUMENT:
+                return new CallArgumentImpl(node);
+            case PLSqlTokenTypes.INTERVAL_DAY_TO_SEC_EXPR:
+                return new IntervalExpressionImpl(node);
+            case PLSqlTokenTypes.ARITHMETIC_EXPR:
+                return new ArithmeticExpressionImpl(node);
+            case PLSqlTokenTypes.LOGICAL_EXPR:
+                return new LogicalExpressionImpl(node);
+            case PLSqlTokenTypes.WHERE_CONDITION:
+                return new WhereConditionImpl(node);
+            case PLSqlTokenTypes.SUBQUERY_CONDITION:
+                return new SubqueryConditionImpl(node);
+            case PLSqlTokenTypes.EXISTS_EXPR:
+                return new ExistsConditionImpl(node);
+            case PLSqlTokenTypes.RELATION_CONDITION:
+                return new RelationConditionImpl(node);
+            case PLSqlTokenTypes.IN_CONDITION:
+                return new InConditionImpl(node);
+            case PLSqlTokenTypes.LIKE_CONDITION:
+                return new LikeConditionImpl(node);
+            case PLSqlTokenTypes.BETWEEN_CONDITION:
+                return new BetweenConditionImpl(node);
+            case PLSqlTokenTypes.ISNULL_CONDITION:
+                return new IsNullConditionImpl(node);
+            case PLSqlTokenTypes.AT_TIME_ZONE_EXPR:
+                return new AtTimeZoneExpressionImpl(node);
 
 // [ === Type bindings ===]
-        } else if (type == PLSqlTypesAdopted.TYPE_NAME_REF) {
-            return new TypeNameReferenceImpl(node);
-        } else if (type == PLSqlTypesAdopted.COLUMN_TYPE_REF) {
-            return new ColumnTypeRefImpl(node);
-        } else if (type == PLSqlTypesAdopted.TABLE_TYPE_REF) {
-            return new RowtypeTypeImpl(node);
-        } else if (type == PLSqlTypesAdopted.DATATYPE) {
-            return new DataTypeImpl(node);
+            case PLSqlTokenTypes.TYPE_NAME_REF:
+                return new TypeNameReferenceImpl(node);
+            case PLSqlTokenTypes.COLUMN_TYPE_REF:
+                return new ColumnTypeRefImpl(node);
+            case PLSqlTokenTypes.TABLE_TYPE_REF:
+                return new RowtypeTypeImpl(node);
+            case PLSqlTokenTypes.DATATYPE:
+                return new DataTypeImpl(node);
 // [ ==================== ]
 
-        } else if (type == PLSqlTypesAdopted.RECORD_TYPE_DECL) {
-            RecordTypeDecl r = new RecordTypeDeclImpl(node);
-            updateCache(RECORD_TYPE_DECL, r.getDeclName(), r.getCtxPath());
-            return r;
-        } else if (type == PLSqlTypesAdopted.TABLE_COLLECTION) {
-            TableCollectionDecl tc = new TableCollectionDeclImpl(node);
-            updateCache(TABLE_COLLECTION, tc.getDeclName(), tc.getCtxPath());
-            return tc;
-        } else if (type == PLSqlTypesAdopted.VARRAY_COLLECTION) {
-            VarrayCollectionDecl varray = new VarrayCollectionDeclImpl(node);
-            updateCache(VARRAY_COLLECTION, varray.getDeclName(), varray.getCtxPath());
-            return varray;
-        } else if (type == PLSqlTypesAdopted.OBJECT_TYPE_DEF) {
-            ObjectTypeDecl ot = new ObjectTypeDeclImpl(node);
-            updateCache(OBJECT_TYPE_DEF, ot.getDeclName(), ot.getCtxPath());
-            return ot;
-        } else if (type == PLSqlTypesAdopted.REF_CURSOR) {
-            return new RefCursorDeclImpl(node);
+            case PLSqlTokenTypes.RECORD_TYPE_DECL:
+                RecordTypeDecl r = new RecordTypeDeclImpl(node);
+//                updateCache(RECORD_TYPE_DECL, r.getDeclName(), r.getCtxPath());
+                return r;
+            case PLSqlTokenTypes.TABLE_COLLECTION:
+                TableCollectionDecl tc = new TableCollectionDeclImpl(node);
+//                updateCache(TABLE_COLLECTION, tc.getDeclName(), tc.getCtxPath());
+                return tc;
+            case PLSqlTokenTypes.VARRAY_COLLECTION:
+                VarrayCollectionDecl varray = new VarrayCollectionDeclImpl(node);
+//                updateCache(VARRAY_COLLECTION, varray.getDeclName(), varray.getCtxPath());
+                return varray;
+            case PLSqlTokenTypes.OBJECT_TYPE_DEF:
+                ObjectTypeDecl ot = new ObjectTypeDeclImpl(node);
+//                updateCache(OBJECT_TYPE_DEF, ot.getDeclName(), ot.getCtxPath());
+                return ot;
+            case PLSqlTokenTypes.REF_CURSOR:
+                return new RefCursorDeclImpl(node);
 
 
 // [ === DDL Statements ===]
-        } else if (type == PLSqlTypesAdopted.TABLE_DEF) {
-            return new TableDefinitionImpl(node);
-        } else if (type == PLSqlTypesAdopted.CREATE_TEMP_TABLE) {
-            return new CreateTempTableImpl(node);
-        } else if (type == PLSqlTypesAdopted.CREATE_INDEX) {
-            return new CreateIndexImpl(node);
-        } else if (type == PLSqlTypesAdopted.CREATE_VIEW) {
-            return new CreateViewImpl(node);
-        } else if (type == PLSqlTypesAdopted.ALTER_TABLE) {
-            return new AlterTableImpl(node);
-        } else if (type == PLSqlTypesAdopted.COMMENT) {
-            return new CommentImpl(node);
+            case PLSqlTokenTypes.TABLE_DEF:
+                return new TableDefinitionImpl(node);
+            case PLSqlTokenTypes.CREATE_TEMP_TABLE:
+                return new CreateTempTableImpl(node);
+            case PLSqlTokenTypes.CREATE_INDEX:
+                return new CreateIndexImpl(node);
+            case PLSqlTokenTypes.CREATE_VIEW:
+                return new CreateViewImpl(node);
+            case PLSqlTokenTypes.CREATE_SEQUENCE:
+                return new CreateDbObjectGenericImpl(node, "SEQUENCE");
+            case PLSqlTokenTypes.CREATE_DB_LINK:
+                return new CreateDbObjectGenericImpl(node, "DB LINK");
+
+            case PLSqlTokenTypes.DROP_OPERATOR:
+                return new DropDbObjectGenericImpl(node, "OPERATOR");
+            case PLSqlTokenTypes.DROP_PACKAGE:
+            case PLSqlTokenTypes.DROP_TYPE:
+                return new DropDbObjectGenericImpl(node, "TYPE");
+            case PLSqlTokenTypes.DROP_ROLE:
+                return new DropDbObjectGenericImpl(node, "ROLE");
+            case PLSqlTokenTypes.DROP_USER:
+                return new DropDbObjectGenericImpl(node, "USER");
+            case PLSqlTokenTypes.DROP_LIBRARY:
+                return new DropDbObjectGenericImpl(node, "LIBRARY");
+            case PLSqlTokenTypes.DROP_DB_LINK:
+                return new DropDbObjectGenericImpl(node, "DB LINK");
+            case PLSqlTokenTypes.DROP_SYNONYM:
+                return new DropDbObjectGenericImpl(node, "SYNONYM");
+
+            case PLSqlTokenTypes.ALTER_TABLE:
+                return new AlterTableImpl(node);
+
+            case PLSqlTokenTypes.COMMENT:
+                return new CommentImpl(node);
 // [ ==================== ]
 
+            case PLSqlTokenTypes.COLUMN_DEF:
+                return new ColumnDefinitionImpl(node);
+            case PLSqlTokenTypes.V_COLUMN_DEF:
+                return new VColumnDefinitionImpl(node);
+            case PLSqlTokenTypes.RECORD_ITEM:
+                return new RecordTypeItemImpl(node);
+            case PLSqlTokenTypes.COLUMN_SPEC_LIST:
+                return new ColumnSpecListImpl(node);
+            case PLSqlTokenTypes.COLUMN_SPEC:
+                return new ColumnSpecImpl(node);
+            case PLSqlTokenTypes.ORDER_CLAUSE:
+                return new OrderByClauseImpl(node);
+            case PLSqlTokenTypes.LAST_STMT_RESULT_BOOL:
+                return new LastStatementResultImpl(node, TypeFactory.createTypeById(Type.BOOLEAN));
+            case PLSqlTokenTypes.LAST_STMT_RESULT_NUM:
+                return new LastStatementResultImpl(node, TypeFactory.createTypeById(Type.NUMBER));
+            case PLSqlTokenTypes.ERROR_TOKEN_A:
+                return new ErrorTokenWrapperImpl(node);
+            case PLSqlTokenTypes.COLLECTION_METHOD_CALL:
+                return new CollectionMethodCallImpl(node);
+            case PLSqlTokenTypes.C_RECORD_ITEM_REF:
+                return new CRecordItemRefImpl(node);
+            case PLSqlTokenTypes.SQLPLUS_PROMPT:
+                return new SqlPlusPromptRem(node);
+            case PLSqlTokenTypes.LOOP_INDEX:
+                return new LoopIndexImpl(node);
 
-        } else if (type == PLSqlTypesAdopted.COLUMN_DEF) {
-            return new ColumnDefinitionImpl(node);
-        } else if (type == PLSqlTypesAdopted.V_COLUMN_DEF) {
-            return new VColumnDefinitionImpl(node);
-        } else if (type == PLSqlTypesAdopted.RECORD_ITEM) {
-            return new RecordTypeItemImpl(node);
-        } else if (type == PLSqlTypesAdopted.COLUMN_SPEC_LIST) {
-            return new ColumnSpecListImpl(node);
-        } else if (type == PLSqlTypesAdopted.COLUMN_SPEC) {
-            return new ColumnSpecImpl(node);
-        } else if (type == PLSqlTypesAdopted.ORDER_CLAUSE) {
-            return new OrderByClauseImpl(node);
-        } else if (type == PLSqlTypesAdopted.LAST_STMT_RESULT_BOOL) {
-            return new LastStatementResultImpl(node, TypeFactory.createTypeById(Type.BOOLEAN));
-        } else if (type == PLSqlTypesAdopted.LAST_STMT_RESULT_NUM) {
-            return new LastStatementResultImpl(node, TypeFactory.createTypeById(Type.NUMBER));
-        } else if (type == PLSqlTypesAdopted.ERROR_TOKEN_A) {
-            return new ErrorTokenWrapperImpl(node);
-        } else if (type == PLSqlTypesAdopted.COLLECTION_METHOD_CALL) {
-            return new CollectionMethodCallImpl(node);
-        } else if (type == PLSqlTypesAdopted.C_RECORD_ITEM_REF) {
-            return new CRecordItemRefImpl(node);
-        } else if (type == PLSqlTypesAdopted.SQLPLUS_PROMPT) {
-            return new SqlPlusPromptRem(node);
-        } else if (type == PLSqlTypesAdopted.LOOP_INDEX) {
-            return new LoopIndexImpl(node);
-            
-            // [start] TODO -- trick - must be revised
-        } else if (type == PlSqlTokenTypes.COLON_OLD) {
+                // [start] TODO -- trick - must be revised
+            case PLSqlTokenTypes.COLON_OLD:
 //            return new TriggerSpecColumn(node);
-            return new NameFragmentRefImpl(node);
-        } else if (type == PlSqlTokenTypes.COLON_NEW) {
+                return new NameFragmentRefImpl(node);
+            case PLSqlTokenTypes.COLON_NEW:
 //            return new TriggerSpecColumn(node);
-            return new NameFragmentRefImpl(node);
-            // [end] TODO -- trick - must be revised
+                return new NameFragmentRefImpl(node);
+                // [end] TODO -- trick - must be revised
 
-        } else if (type == PLSqlTypesAdopted.CREATE_TRIGGER) {
-            if (node.findChildByType(PLSqlTypesAdopted.DML_TRIGGER_CLAUSE) != null) {
-                return new CreateTriggerDMLImpl(node);
-            } else if (node.findChildByType(PLSqlTypesAdopted.DDL_TRIGGER_CLAUSE) != null) {
-                // todo - implement me
-                return new CreateTriggerGeneric(node);
-            } else if (node.findChildByType(PLSqlTypesAdopted.DB_EVNT_TRIGGER_CLAUSE) != null) {
-                // todo - implement me
-                return new CreateTriggerGeneric(node);
-            } else if (node.findChildByType(PLSqlTypesAdopted.INSTEADOF_TRIGGER) != null) {
-                // todo - implement me
-                return new CreateTriggerGeneric(node);
-            } else {
-                // todo - implement me
-            }
+            case PLSqlTokenTypes.CREATE_TRIGGER:
+                if (node.findChildByType(PlSqlElementTypes.DML_TRIGGER_CLAUSE) != null){
+                    return new CreateTriggerDMLImpl(node);
+                } else if (node.findChildByType(PlSqlElementTypes.DDL_TRIGGER_CLAUSE) != null){
+                    // todo - implement me
+                    return new CreateTriggerGeneric(node);
+                } else if (node.findChildByType(PlSqlElementTypes.DB_EVNT_TRIGGER_CLAUSE) != null){
+                    // todo - implement me
+                    return new CreateTriggerGeneric(node);
+                } else if (node.findChildByType(PlSqlElementTypes.INSTEADOF_TRIGGER) != null){
+                    // todo - implement me
+                    return new CreateTriggerGeneric(node);
+                } else {
+                    // todo - implement me
+                }
+                break;
+            case PLSqlTokenTypes.SQLPLUS_SET:
+            case PLSqlTokenTypes.SQLPLUS_SHOW:
+            case PLSqlTokenTypes.SQLPLUS_VARIABLE:
+            case PLSqlTokenTypes.SQLPLUS_COLUMN:
+            case PLSqlTokenTypes.SQLPLUS_EXEC:
+            case PLSqlTokenTypes.SQLPLUS_WHENEVER:
+            case PLSqlTokenTypes.SQLPLUS_DEFINE:
+            case PLSqlTokenTypes.SQLPLUS_EXIT:
+            case PLSqlTokenTypes.SQLPLUS_QUIT:
+            case PLSqlTokenTypes.SQLPLUS_SPOOL:
+            case PLSqlTokenTypes.SQLPLUS_RUNSCRIPT:
+            case PLSqlTokenTypes.SQLPLUS_START:
+            case PLSqlTokenTypes.SQLPLUS_SERVEROUTPUT:
+            case PLSqlTokenTypes.SQLPLUS_REPFOOTER:
+            case PLSqlTokenTypes.SQLPLUS_REPHEADER:
+                return new SqlPlusCommandImpl(node);
 
-        } else {
-//            log.info("#create, [NOT SUPPORTED YET] text [" + tt + "] elem type: " + node.getElementType() + ", parent [" + node.getTreeParent().getElementType() + "]");
+            case PLSqlTokenTypes.COMMIT_STATEMENT:
+                return new CommitStatementImpl(node);
+            case PLSqlTokenTypes.ROLLBACK_STATEMENT:
+                return new RollbackStatementImpl(node);
         }
-//        log.info("#create, text [" + tt + "] elem type: " + node.getElementType() + ", parent [" + node.getTreeParent().getElementType() + "]");
-
-
-        return new ASTWrapperPsiElement(node);
+        return null;
     }
 
-    private void updateCache(int type, String name, String path) {
+    private static void updateCache(int type, String name, String path){
         // todo --
         int oo =0;
     }

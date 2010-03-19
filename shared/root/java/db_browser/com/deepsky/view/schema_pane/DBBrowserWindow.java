@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -29,6 +26,8 @@
 package com.deepsky.view.schema_pane;
 
 import com.deepsky.actions.PropertyToggleAction;
+import com.deepsky.database.ConnectionManager;
+import com.deepsky.database.DBException;
 import com.deepsky.gui.PluginSettingsBase;
 import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.conf.PluginSettingsBean;
@@ -61,7 +60,15 @@ public class DBBrowserWindow implements ToggleActionListener {
     public DBBrowserWindow(Project project){
         this.project = project;
 
-        _viewerPanel = new DbSchemaPanel(this);
+        PluginSettingsBean settings = PluginKeys.PLUGIN_SETTINGS.getData(project);
+        splitDividerLocation = settings.getDbBrowserSplitDividerLocation();
+
+        if(splitDividerLocation == 0){
+            // initial call
+            splitDividerLocation = 30;
+        }
+
+        _viewerPanel = new DbSchemaPanel(project, this);
 
         ActionManager actionManager = ActionManager.getInstance();
         DefaultActionGroup actionGroup = new DefaultActionGroup("DBSchemaActionGroup", false);
@@ -92,6 +99,10 @@ public class DBBrowserWindow implements ToggleActionListener {
     }
 
     public void setSplitDividerLocation(int splitDividerLocation) {
+        if(this.splitDividerLocation != splitDividerLocation){
+            PluginSettingsBean settings = PluginKeys.PLUGIN_SETTINGS.getData(project);
+            settings.setDbBrowserSplitDividerLocation(splitDividerLocation);
+        }
         this.splitDividerLocation = splitDividerLocation;
     }
 
@@ -99,10 +110,10 @@ public class DBBrowserWindow implements ToggleActionListener {
         return splitDividerLocation;
     }
 
-    public void handle(int command) {
+    public void handle(AnActionEvent event, int command) {
         PluginSettingsBase dialog = new PluginSettingsBase(project);
 
-        PluginSettingsBean settings = PluginKeys.PLUGIN_SETTINGS.getData();
+        PluginSettingsBean settings = PluginKeys.PLUGIN_SETTINGS.getData(project);
 
         dialog.setDateFormat(settings.getDateFormat());
         dialog.setTimeFormat(settings.getTimeFormat());
@@ -115,6 +126,7 @@ public class DBBrowserWindow implements ToggleActionListener {
         dialog.setValidateFunc(settings.getValidateFunc());
         dialog.setValidateTables(settings.getValidateTables());
         dialog.setValidateInsert(settings.getValidateInsert());
+        dialog.setAutoCommit(settings.isAutoCommit());
 
         dialog.show();
         if (dialog.isOK()) {
@@ -136,6 +148,16 @@ public class DBBrowserWindow implements ToggleActionListener {
             settings.setValidateFunc(dialog.getValidateFunc());
             settings.setValidateTables(dialog.getValidateTables());
             settings.setValidateInsert(dialog.getValidateInsert());
+            if(settings.isAutoCommit() != dialog.getAutoCommit()){
+                try {
+                    ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+                    manager.setAutoCommit(dialog.getAutoCommit());
+//                    PluginKeys.CONNECTION_MANAGER.getData().setAutoCommit(dialog.getAutoCommit());
+                    settings.setAutoCommit(dialog.getAutoCommit());
+                } catch (DBException e) {
+                    // todo --
+                }
+            }
 
             settings.setValidationSettingsListener(null);
 
@@ -206,7 +228,7 @@ public class DBBrowserWindow implements ToggleActionListener {
 
         public void setSelected(AnActionEvent event, boolean b) {
             if (listener != null) {
-                listener.handle(command);
+                listener.handle(event, command);
             }
         }
 

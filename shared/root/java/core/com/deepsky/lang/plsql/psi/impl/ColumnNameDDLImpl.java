@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -30,6 +27,7 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.ddl.VColumnDefinition;
 import com.deepsky.lang.plsql.psi.resolve.ASTNodeHandler;
 import com.deepsky.lang.plsql.psi.resolve.ASTTreeProcessor;
@@ -193,7 +191,7 @@ public class ColumnNameDDLImpl extends PlSqlReferenceBase implements ColumnNameD
         processor.process(this.getNode());
 
         if(tableName[0] != null){
-            return ResolveHelper.describeTable(tableName[0]);
+            return describeTable(tableName[0]);
         }
 
         return null;

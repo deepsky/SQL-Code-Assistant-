@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -29,6 +26,7 @@
 package com.deepsky.view.schema_pane.impl;
 
 import com.deepsky.database.cache.Cache;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.lang.plsql.psi.utils.Formatter;
 import com.deepsky.view.schema_pane.DboDescriptorViewFactory;
@@ -39,6 +37,7 @@ import com.deepsky.view.Icons;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.database.*;
 import com.deepsky.gui.ConnectionSettings2;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
@@ -46,19 +45,21 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.*;
 
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.ArrayList;
 
 
-public class DbSchemaItemView extends ItemViewWrapperBase implements ItemViewWrapper, SessionListener {
+public class DbSchemaItemView extends ItemViewWrapperBase implements SessionListener {
 
     final int CONNECT = 1001;
     final int DISCONNECT = 1002;
     final int EDIT = 1003;
     final int TEST_CONNECTION = 1004;
     final int REMOVE_SESSION = 1005;
+    final int REFRESH_SESSION = 1006;
 
     ObjectCache cache;
     ConnectionInfo cinfo;
@@ -66,12 +67,13 @@ public class DbSchemaItemView extends ItemViewWrapperBase implements ItemViewWra
 
     boolean uiLocked = false;
 
-    public DbSchemaItemView(ItemViewWrapper parent, ConnectionInfo cinfo) {
+    public DbSchemaItemView(Project project, ItemViewWrapper parent, ConnectionInfo cinfo) {
+        super(project);
         this.parent = parent;
         this.cinfo = cinfo;
         this.cinfo.addListener(this);
 
-        cache = ObjectCacheFactory.getObjectCache(); //cinfo.getObjectCache();
+        cache = PluginKeys.OBJECT_CACHE.getData(project); //ObjectCacheFactory.getObjectCache(); //cinfo.getObjectCache();
         updateDescendentNodes();
     }
 
@@ -105,8 +107,10 @@ public class DbSchemaItemView extends ItemViewWrapperBase implements ItemViewWra
 
         out[0] = new String[]{"Connection status", ((cinfo.isConnected()) ? "Logged in" : "Not logged")};
 
-        if (ConnectionManagerImpl.getInstance().getDbMetaInfo() != null) {
-            DbMetaInfo meta = ConnectionManagerImpl.getInstance().getDbMetaInfo();
+        ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+
+        if (manager.getDbMetaInfo() != null) {
+            DbMetaInfo meta = manager.getDbMetaInfo();
             out[1] = new String[]{"Database version", meta.getDbVersion()};
         } else {
             // offline
@@ -138,34 +142,52 @@ public class DbSchemaItemView extends ItemViewWrapperBase implements ItemViewWra
         renderer.setText(text);
     }
 
+    LocalToggleAction conn = new LocalToggleAction("Log In", "Log In", Icons.CONNECT, true, CONNECT);
+    LocalToggleAction disconn = new LocalToggleAction("Log Out", "Log Out", Icons.DISCONNECT, false, DISCONNECT);
+    LocalToggleAction edit = new LocalToggleAction("Edit Connection Settings", "Edit", Icons.EDIT_CONNECTION_PARAMS, true, EDIT);
+    LocalToggleAction remove = new LocalToggleAction("Remove", "Remove", Icons.REMOVE_CONNECTION, REMOVE_SESSION);
+    LocalToggleAction test = new LocalToggleAction("Test Connection", "Test Connection", Icons.TEST_CONNECTION, true, TEST_CONNECTION);
+    LocalToggleAction syncUp = new LocalToggleAction("Refresh", "Refresh", Icons.REFRESH_SESSION, false, REFRESH_SESSION);
+
+    ToggleAction[] actions = new ToggleAction[]{conn, disconn, edit, remove, test, syncUp};
+
     @NotNull
     public ToggleAction[] getActions() {
-        LocalToggleAction conn = new LocalToggleAction("Log In", "Log In", Icons.CONNECT, true, CONNECT);
-        LocalToggleAction disconn = new LocalToggleAction("Log Out", "Log Out", Icons.DISCONNECT, false, DISCONNECT);
-        LocalToggleAction edit = new LocalToggleAction("Edit Connection Settings", "Edit", Icons.EDIT_CONNECTION_PARAMS, true, EDIT);
-        LocalToggleAction remove = new LocalToggleAction("Remove", "Remove", Icons.REMOVE_CONNECTION, REMOVE_SESSION);
-        LocalToggleAction test = new LocalToggleAction("Test Connection", "Test Connection", Icons.TEST_CONNECTION, true, TEST_CONNECTION);
-
-        return new ToggleAction[]{conn, disconn, edit, remove, test};
+        return actions;
+//        LocalToggleAction conn = new LocalToggleAction("Log In", "Log In", Icons.CONNECT, true, CONNECT);
+//        LocalToggleAction disconn = new LocalToggleAction("Log Out", "Log Out", Icons.DISCONNECT, false, DISCONNECT);
+//        LocalToggleAction edit = new LocalToggleAction("Edit Connection Settings", "Edit", Icons.EDIT_CONNECTION_PARAMS, true, EDIT);
+//        LocalToggleAction remove = new LocalToggleAction("Remove", "Remove", Icons.REMOVE_CONNECTION, REMOVE_SESSION);
+//        LocalToggleAction test = new LocalToggleAction("Test Connection", "Test Connection", Icons.TEST_CONNECTION, true, TEST_CONNECTION);
+//        LocalToggleAction syncUp = new LocalToggleAction("Refresh", "Refresh", Icons.REFRESH_SESSION, false, REFRESH_SESSION);
+//
+//        return new ToggleAction[]{conn, disconn, edit, remove, test, syncUp};
     }
 
-    private void notifyListeners(int command) {
+    @NotNull
+    public ToggleAction[] getPopupActions() {
+        return actions;
+    }
+
+    private void notifyListeners(AnActionEvent event, int command) {
+        Project project = event.getData(LangDataKeys.PROJECT);
+
         switch (command) {
             case CONNECT: {
                 MyProgressIndicator indicator = cinfo.connectAsynchronously();
                 String url = cinfo.getUrl().getUserHostPortServiceName();
-                new ProgressIndicatorHelper("Connecting to " + url).runBackgrounableWithProgressInd(indicator, false);
+                new ProgressIndicatorHelper(project, "Connecting to " + url).runBackgrounableWithProgressInd(indicator, false);
                 break;
             }
             case DISCONNECT:
                 cinfo.disconnect();
                 break;
             case TEST_CONNECTION:
-                new TestConnectionProgressIndicator(cinfo.getUrl()).checkConnection();
+                new TestConnectionProgressIndicator(project, cinfo.getUrl()).checkConnection();
                 break;
             case EDIT: {
                 DbUrl url = cinfo.getUrl();
-                ConnectionSettings2 settings = new ConnectionSettings2(
+                ConnectionSettings2 settings = new ConnectionSettings2(project, 
                     url.getHost(), url.getServiceName(), url.getPort(), url.getUser(), url.getPwd(),
                         cinfo.refreshPeriod(), cinfo.loginOnStart(), cinfo.repaireFailedConnection());
 
@@ -184,7 +206,10 @@ public class DbSchemaItemView extends ItemViewWrapperBase implements ItemViewWra
                     boolean repair = settings.getRepairIfDropped();
                     int period = settings.getRefreshPeriod();
 
-                    ConnectionManagerImpl.getInstance().updateSession(cinfo, url, loginOnStartup, repair, period);
+                    ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+                    manager.updateSession(cinfo, url, loginOnStartup, repair, period);
+
+//                    ConnectionManagerImpl.getInstance().updateSession(cinfo, url, loginOnStartup, repair, period);
                     listener.updated(ItemViewListener.REFRESH_NODE_PROPS, this);
                 }
 
@@ -194,6 +219,11 @@ public class DbSchemaItemView extends ItemViewWrapperBase implements ItemViewWra
                 // todo - listener should be unregistered
                 //notifyListeners(ItemViewListener.REMOVE_SESSION);
                 listener.updated(ItemViewListener.REMOVE_NODE, this);
+                break;
+            case REFRESH_SESSION:
+                if(cinfo != null && cinfo.isConnected()){
+                    cinfo.refreshSession();
+                }
                 break;
         }
 
@@ -241,7 +271,7 @@ public class DbSchemaItemView extends ItemViewWrapperBase implements ItemViewWra
                 listener.updated(ItemViewListener.REMOVE_NODE, i);
             }
 
-            cache = ObjectCacheFactory.getObjectCache(); //cinfo.getObjectCache();
+            cache = PluginKeys.OBJECT_CACHE.getData(project); //ObjectCacheFactory.getObjectCache(); //cinfo.getObjectCache();
 
             children.add(new DbSchemaTypeNode(this, DbObject.TABLE));
             listener.updated(ItemViewListener.ADD_NODE, children.get(children.size() - 1));
@@ -264,10 +294,11 @@ public class DbSchemaItemView extends ItemViewWrapperBase implements ItemViewWra
         }
     }
 
-    class DbSchemaTypeNode extends ItemViewWrapperBase implements ItemViewWrapper {
+    class DbSchemaTypeNode extends ItemViewWrapperBase {
 
         String type;
         public DbSchemaTypeNode(ItemViewWrapper parent, String type) {
+            super(DbSchemaItemView.this.getProject());
             this.parent = parent;
             this.type = type;
             if (cinfo.isConnected()) {
@@ -299,10 +330,12 @@ public class DbSchemaItemView extends ItemViewWrapperBase implements ItemViewWra
     class LocalToggleAction extends ToggleAction {
 
         int command;
+        boolean inverse;
         public LocalToggleAction(String actionName, String toolTip, Icon icon, boolean inverse, int command) {
             super(actionName, toolTip, icon);
-            boolean enabled = cinfo.isConnected() ? !inverse : inverse;
-            this.getTemplatePresentation().setEnabled(enabled);
+            this.inverse = inverse;
+//            boolean enabled = cinfo.isConnected() ? !inverse : inverse;
+//            this.getTemplatePresentation().setEnabled(enabled);
             this.command = command;
         }
 
@@ -313,11 +346,16 @@ public class DbSchemaItemView extends ItemViewWrapperBase implements ItemViewWra
         }
 
         public boolean isSelected(AnActionEvent event) {
+            if(cinfo != null && cinfo.isConnected()){
+                event.getPresentation().setEnabled(!inverse);
+            } else {
+                event.getPresentation().setEnabled(inverse);
+            }
             return false;
         }
 
         public void setSelected(AnActionEvent event, boolean b) {
-            notifyListeners(command);
+            notifyListeners(event, command);
         }
     }
 

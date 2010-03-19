@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -31,11 +28,13 @@ package com.deepsky.lang.plsql.psi.resolve;
 import com.deepsky.database.ObjectCache;
 import com.deepsky.database.ObjectCacheFactory;
 import com.deepsky.integration.PlSqlElementType;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.CreateTrigger;
 import com.deepsky.lang.plsql.psi.resolve.collection.TableCollectionItemAccessorCtx;
 import com.deepsky.lang.plsql.psi.resolve.collection.VarrayItemAccessorCtx;
+import com.deepsky.lang.plsql.psi.resolve.psibased.PsiVariableContext;
 import com.deepsky.lang.plsql.psi.utils.Formatter;
 import com.deepsky.lang.plsql.psi.utils.PsiTreeHelpers;
 import com.deepsky.lang.plsql.struct.*;
@@ -43,6 +42,7 @@ import com.deepsky.lang.plsql.struct.types.UserDefinedType;
 import com.deepsky.lang.validation.TypeValidationHelper;
 import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class ResolveHelper3 {
         PackageDescriptor desc = null;
         if (schema != null) {
             // case 1: schema.package.name(....)
-            for (ExecutableDescriptor dbo : getExecutableByName(schema.getText(), pkgRef.getText(), execName.getText())) {
+            for (ExecutableDescriptor dbo : getExecutableByName(exec.getProject(), schema.getText(), pkgRef.getText(), execName.getText())) {
                 if (dbo instanceof ProcedureDescriptor && exec instanceof ProcedureCall) {
                     if (validateCallArgumentList(dbo, callArgs, errors)) {
                         out.add(dbo);
@@ -86,7 +86,7 @@ public class ResolveHelper3 {
 
         } else if (pkgRef != null) {
             // case 2: package.name(....)
-            for (ExecutableDescriptor dbo : getExecutableByName(pkgRef.getText(), execName.getText())) {
+            for (ExecutableDescriptor dbo : getExecutableByName(exec.getProject(), pkgRef.getText(), execName.getText())) {
                 if (!isFunctionCall && dbo instanceof ProcedureDescriptor) {
                     if (validateCallArgumentList(dbo, callArgs, errors)) {
                         out.add(dbo);
@@ -149,8 +149,10 @@ public class ResolveHelper3 {
                 }
             }
 
+            ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(exec.getProject());
             // Function not defined in the package, so look up among user fumnctions
-            DbObject[] objects = ObjectCacheFactory.getObjectCache().findByNameForType(
+            DbObject[] objects = ocache.findByNameForType(
+                    //ObjectCacheFactory.getObjectCache().findByNameForType(
                     ObjectCache.USER_FUNCTION | ObjectCache.USER_PROCEDURE,
                     execName.getText()
             );
@@ -171,7 +173,7 @@ public class ResolveHelper3 {
             }
 
             // look up among system functions
-            for (SystemFunctionDescriptor sdesc : ObjectCacheFactory.getObjectCache().findSystemFunction(execName.getText())) {
+            for (SystemFunctionDescriptor sdesc : ocache.findSystemFunction(execName.getText())) {
                 if (sdesc.getValidator().validate(callArgs, errors)) {
                     out.add(sdesc);
                 }
@@ -199,10 +201,10 @@ public class ResolveHelper3 {
     }
 
 
-    public static ResolveContext777[] resolveCollectionCall(Callable callable) {
+    public static ResolveContext777[] resolveCollectionCall(final Callable callable) {
         final String fname = callable.getFunctionName();
         final List<ResolveContext777> ctx = new ArrayList<ResolveContext777>();
-
+        final Project project = callable.getProject();
         final UsageContext uctx = callable.getUsageContext();
         // 2. the name of variable or argument (usage: function/procedure definition)
         ASTTreeProcessor runner = new ASTTreeProcessor();
@@ -212,7 +214,7 @@ public class ResolveHelper3 {
                     Type t = arg.getType();
                     if (t instanceof UserDefinedType) {
 //                        ctx.add( new PsiArgumentContext(arg));
-                        UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type((UserDefinedType) t, uctx);
+                        UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type(project, (UserDefinedType) t, uctx);
                         if (tdesc instanceof TableCollectionDescriptor) {
                             TableCollectionDescriptor cdesc = (TableCollectionDescriptor) tdesc;
                             ctx.add(new TableCollectionItemAccessorCtx(arg, cdesc));
@@ -224,6 +226,7 @@ public class ResolveHelper3 {
                 }
             }
 
+/*
             public void handleDecl(Declaration decl) {
                 if (decl instanceof VariableDecl) {
                     VariableDecl var = (VariableDecl) decl;
@@ -243,7 +246,30 @@ public class ResolveHelper3 {
                     }
                 }
             }
+*/
         });
+
+        runner.add(new BeginBlockContext() {
+            public void handleDecl(Declaration decl) {
+                if (decl instanceof VariableDecl) {
+                    VariableDecl var = (VariableDecl) decl;
+                    if (var.getDeclName().equalsIgnoreCase(fname)) {
+                        Type t = var.getType();
+                        if (t instanceof UserDefinedType) {
+                            UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type(project, (UserDefinedType) t, uctx);
+                            if (tdesc instanceof TableCollectionDescriptor) {
+                                TableCollectionDescriptor cdesc = (TableCollectionDescriptor) tdesc;
+                                ctx.add(new TableCollectionItemAccessorCtx(var, cdesc));
+                            } else if( tdesc instanceof VarrayCollectionDescriptor){
+                                VarrayCollectionDescriptor vdesc = (VarrayCollectionDescriptor) tdesc;
+                                ctx.add(new VarrayItemAccessorCtx(var, vdesc));
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
 
         runner.add(new PackageTriggerHandler() {
             @Override
@@ -259,7 +285,7 @@ public class ResolveHelper3 {
                         if (t instanceof UserDefinedType) {
 //                            ctx.add( new PsiVariableContext(var));
 
-                            UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type((UserDefinedType) t, uctx);
+                            UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type(project, (UserDefinedType) t, uctx);
                             if (tdesc instanceof TableCollectionDescriptor) {
                                 TableCollectionDescriptor cdesc = (TableCollectionDescriptor) tdesc;
                                 ctx.add(new TableCollectionItemAccessorCtx(var, cdesc));
@@ -281,7 +307,7 @@ public class ResolveHelper3 {
                         if (t instanceof UserDefinedType) {
 //                            ctx.add( new PsiVariableContext(var));
 
-                            UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type((UserDefinedType) t, uctx);
+                            UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type(project, (UserDefinedType) t, uctx);
                             if (tdesc instanceof TableCollectionDescriptor) {
                                 TableCollectionDescriptor cdesc = (TableCollectionDescriptor) tdesc;
                                 ctx.add(new TableCollectionItemAccessorCtx(var, cdesc));
@@ -300,12 +326,13 @@ public class ResolveHelper3 {
     }
 
 
-    static private ExecutableDescriptor[] getExecutableByName(String schema, String packageName, String execName) throws NameNotResolvedException {
+    static private ExecutableDescriptor[] getExecutableByName(Project project, String schema, String packageName, String execName) throws NameNotResolvedException {
         List<ExecutableDescriptor> out = new ArrayList<ExecutableDescriptor>();
-        DbObject[] objects = ObjectCacheFactory.getObjectCache().findByNameForType(schema, ObjectCache.PACKAGE, packageName);
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
+        DbObject[] objects = ocache.findByNameForType(schema, ObjectCache.PACKAGE, packageName);
 
         if (objects.length == 0) {
-            throw new NameNotResolvedException("Package with name '" + packageName + "' not found");
+            throw new NameNotResolvedException("Package " + packageName + " not found");
         }
         for (DbObject dbo : objects) {
             PackageDescriptor pdesc = (PackageDescriptor) dbo;
@@ -316,7 +343,7 @@ public class ResolveHelper3 {
                 }
             }
         }
-        objects = ObjectCacheFactory.getObjectCache().findByNameForType(schema, ObjectCache.PACKAGE_BODY, packageName);
+        objects = ocache.findByNameForType(schema, ObjectCache.PACKAGE_BODY, packageName);
         for (DbObject dbo : objects) {
             PackageDescriptor pdesc = (PackageDescriptor) dbo;
             for (DbObject d : pdesc.findObjectByName(execName)) {
@@ -330,12 +357,13 @@ public class ResolveHelper3 {
         return out.toArray(new ExecutableDescriptor[out.size()]);
     }
 
-    static private ExecutableDescriptor[] getExecutableByName(String packageName, String execName) throws NameNotResolvedException {
+    static private ExecutableDescriptor[] getExecutableByName(Project project, String packageName, String execName) throws NameNotResolvedException {
         List<ExecutableDescriptor> out = new ArrayList<ExecutableDescriptor>();
-        DbObject[] objects = ObjectCacheFactory.getObjectCache().findByNameForType(ObjectCache.PACKAGE, packageName);
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
+        DbObject[] objects = ocache.findByNameForType(ObjectCache.PACKAGE, packageName);
 
         if (objects.length == 0) {
-            throw new NameNotResolvedException("Package with name '" + packageName + "' not found");
+            throw new NameNotResolvedException("Package " + packageName + " not found");
         }
         for (DbObject dbo : objects) {
             PackageDescriptor pdesc = (PackageDescriptor) dbo;
@@ -346,7 +374,7 @@ public class ResolveHelper3 {
                 }
             }
         }
-        objects = ObjectCacheFactory.getObjectCache().findByNameForType(ObjectCache.PACKAGE_BODY, packageName);
+        objects = ocache.findByNameForType(ObjectCache.PACKAGE_BODY, packageName);
         for (DbObject dbo : objects) {
             PackageDescriptor pdesc = (PackageDescriptor) dbo;
             for (DbObject d : pdesc.findObjectByName(execName)) {
@@ -452,7 +480,7 @@ public class ResolveHelper3 {
 //                            UserDefinedType udt = (UserDefinedType) right;
 //                            udt.setDefinitionPackage(arg.getUsageContext().getPackageName());
 //                        }
-                        if (!TypeValidationHelper.canBeAssigned(left, right)) {
+                        if (!TypeValidationHelper.canBeAssigned(arg, left, right)) {
                             errors.add("Formal type and real type mismatched, parameter: " + i);
                             return false;
                         }
@@ -486,7 +514,7 @@ public class ResolveHelper3 {
                         if (t1 == null || t == null) {
                             int hh = 0;
                         }
-                        if (!TypeValidationHelper.canBeAssigned(t, t1)) {
+                        if (!TypeValidationHelper.canBeAssigned(arg, t, t1)) {
                             errors.add("Function: " + "!!!!!" + ", type of argument does not fit a formal parameter, position: " + (i + 1));
                             return false;
                         }
@@ -558,7 +586,7 @@ public class ResolveHelper3 {
                         if (t1 == null) {
                             int hh = 0;
                         }
-                        if (!TypeValidationHelper.canBeAssigned(t, t1)) {
+                        if (!TypeValidationHelper.canBeAssigned(arg, t, t1)) {
                             errors.add("Formal type and real type mismatched, parameter: " + i);
                             return false;
                         }
@@ -593,7 +621,7 @@ public class ResolveHelper3 {
                         if (t1 == null || t == null) {
                             int hh = 0;
                         }
-                        if (!TypeValidationHelper.canBeAssigned(t, t1)) {
+                        if (!TypeValidationHelper.canBeAssigned(arg, t, t1)) {
                             errors.add("Function: " + "!!!!!" + ", type of argument does not fit a formal parameter, position: " + (i + 1));
                             return false;
                         }

@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -238,6 +235,13 @@ public class ButtonTabComponent extends JPanel implements SqlStatementMarkerList
         }
     }
 
+    public void remove(){
+        if (sqlMarker != null) {
+            sqlMarker.removeStateListener(ButtonTabComponent.this);
+            sqlMarker.remove();
+            sqlMarker = null;
+        }
+    }
 
     private class TabButton extends JButton implements ActionListener {
         public TabButton() {
@@ -265,7 +269,9 @@ public class ButtonTabComponent extends JPanel implements SqlStatementMarkerList
             int i = pane.indexOfTabComponent(ButtonTabComponent.this);
             // remove marker if exists
             if (sqlMarker != null) {
+                sqlMarker.removeStateListener(ButtonTabComponent.this);
                 sqlMarker.remove();
+                sqlMarker = null;
             }
             if (i != -1) {
                 pane.remove(i);

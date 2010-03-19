@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -49,7 +46,7 @@ public class PluginSettingsBase extends DialogWrapper {
     private JCheckBox validateFunc;
     private JCheckBox resolveRef;
     private JCheckBox resolveUdt;
-    private JCheckBox checkBox1;
+    private JCheckBox autoCommitCheckBox;
     private JCheckBox validateInsert;
     private JCheckBox validateSyntax;
 
@@ -119,6 +116,13 @@ public class PluginSettingsBase extends DialogWrapper {
         setSelectedItem(tabNumberComboBox, numberOfTabs);
     }
 
+    public void setAutoCommit(boolean state) {
+        autoCommitCheckBox.setSelected(state);
+    }
+
+    public boolean getAutoCommit() {
+        return autoCommitCheckBox.isSelected();
+    }
     // ---------------------------------------------------------------
 
     public boolean getValidateFunc() {
@@ -268,11 +272,11 @@ public class PluginSettingsBase extends DialogWrapper {
         final JLabel label5 = new JLabel();
         label5.setText("Auto Commit:");
         panel6.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
-        checkBox1 = new JCheckBox();
-        checkBox1.setEnabled(false);
-        checkBox1.setSelected(true);
-        checkBox1.setText("");
-        panel6.add(checkBox1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        autoCommitCheckBox = new JCheckBox();
+        autoCommitCheckBox.setEnabled(true);
+        autoCommitCheckBox.setSelected(true);
+        autoCommitCheckBox.setText("");
+        panel6.add(autoCommitCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel7 = new JPanel();
         panel7.setLayout(new GridLayoutManager(6, 1, new Insets(0, 0, 0, 0), -1, -1));
         centralPanel.add(panel7, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));

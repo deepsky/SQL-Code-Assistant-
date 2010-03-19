@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -32,6 +29,7 @@ import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.view.schema_pane.ItemViewListener;
 import com.deepsky.view.schema_pane.ItemViewWrapper;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -43,6 +41,20 @@ public abstract class ItemViewWrapperBase implements ItemViewWrapper {
     List<ItemViewWrapper> children= new ArrayList<ItemViewWrapper>();
     ItemViewWrapper parent;
     ItemViewListener listener;
+    Project project;
+
+    public ItemViewWrapperBase(Project project){
+        this.project = project;
+    }
+
+    public ItemViewWrapperBase(Project project, ItemViewWrapper parent){
+        this.project = project;
+        this.parent = parent;
+    }
+
+    public Project getProject(){
+        return project;
+    }
 
     public ItemViewWrapper getParent() {
         return parent;
@@ -62,6 +74,11 @@ public abstract class ItemViewWrapperBase implements ItemViewWrapper {
 
     @NotNull
     public ToggleAction[] getActions() {
+        return new ToggleAction[0];
+    }
+
+    @NotNull
+    public ToggleAction[] getPopupActions() {
         return new ToggleAction[0];
     }
 

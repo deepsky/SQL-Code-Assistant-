@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -35,7 +32,9 @@ import com.deepsky.database.exec.SQLUpdateStatistics;
 import com.deepsky.lang.plsql.tree.Node;
 import com.deepsky.view.utils.ProgressIndicatorController;
 import com.deepsky.view.utils.ProgressIndicatorHelper;
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
 
 public class SqlRunnerHelper implements Runnable {
 
@@ -44,21 +43,24 @@ public class SqlRunnerHelper implements Runnable {
     DMLResultListener dmlListener;
 
     String select;
-    Node statement;
+    ASTNode statement;
+    Project project;
     SqlQueryRunnerIndicatorImpl ind;
     String errorMessage = "";
     long startMs = 0;
 
     int status = ProgressIndicatorController.INPROGRESS;
 
-    public SqlRunnerHelper(SQLExecutor executor, String select, QueryResultListener queryListener) {
+    public SqlRunnerHelper(Project project, SQLExecutor executor, String select, QueryResultListener queryListener) {
+        this.project = project;
         this.executor = executor;
         this.select = select;
         this.queryListener = queryListener;
     }
 
 
-    public SqlRunnerHelper(SQLExecutor executor, Node statement, DMLResultListener dmlListener) {
+    public SqlRunnerHelper(Project project, SQLExecutor executor, ASTNode statement, DMLResultListener dmlListener) {
+        this.project = project;
         this.executor = executor;
         this.statement = statement;
         this.dmlListener = dmlListener;
@@ -74,7 +76,7 @@ public class SqlRunnerHelper implements Runnable {
         schemaMonitor.start();
 
         // run progress indicator
-        new ProgressIndicatorHelper("Execute SQL statement").runBackgrounableWithProgressInd(ind, false);
+        new ProgressIndicatorHelper(project, "Execute SQL statement").runBackgrounableWithProgressInd(ind, false);
     }
 
     public void run() {

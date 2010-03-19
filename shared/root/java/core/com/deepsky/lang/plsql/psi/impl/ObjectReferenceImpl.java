@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -55,8 +52,10 @@ import java.util.Set;
 
 public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements ObjectReference {
 
-    public ObjectReferenceImpl(ASTNode astNode) {
+    boolean isPlSqlVarRef;
+    public ObjectReferenceImpl(ASTNode astNode, boolean isPlSqlVarRef) {
         super(astNode);
+        this.isPlSqlVarRef = isPlSqlVarRef;
     }
 
     @NotNull
@@ -67,11 +66,11 @@ public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements Objec
         ASTTreeProcessor runner = new ASTTreeProcessor();
 
         final TokenSet tokenSet = TokenSet.create(
-                PlSqlElementTypes.PROCEDURE_BODY,
-                PlSqlElementTypes.FUNCTION_BODY,
-                PlSqlElementTypes.CREATE_TRIGGER,
+                PlSqlElementTypes.PLSQL_BLOCK,
+
                 PlSqlElementTypes.SELECT_EXPRESSION,
                 PlSqlElementTypes.SELECT_EXPRESSION_UNION,
+                PlSqlElementTypes.MERGE_COMMAND,
                 PlSqlElementTypes.INSERT_COMMAND,
                 PlSqlElementTypes.UPDATE_COMMAND,
                 PlSqlElementTypes.DELETE_COMMAND
@@ -89,14 +88,16 @@ public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements Objec
         if (type == PLSqlTypesAdopted.EXPR_COLUMN
             || type == PLSqlTypesAdopted.LOGICAL_EXPR
             || type == PLSqlTypesAdopted.WHERE_CONDITION
+            || type == PLSqlTypesAdopted.CALL_ARGUMENT
+            || type == PLSqlTypesAdopted.ARITHMETIC_EXPR
+            || type == PLSqlTypesAdopted.NUMERIC_LOOP_SPEC
+            || type == PLSqlTypesAdopted.ASSIGNMENT_STATEMENT
             || type == PLSqlTypesAdopted.RELATION_CONDITION){
 
-            if(contains(context,
-                    PlSqlElementTypes.PROCEDURE_BODY,
-                    PlSqlElementTypes.FUNCTION_BODY,
-                    PlSqlElementTypes.CREATE_TRIGGER)){
+            if(contains(context, PlSqlElementTypes.PLSQL_BLOCK)){
                 // inside of a Procedure OR Function OR Trigger
                 if(contains(context, PlSqlElementTypes.SELECT_EXPRESSION,
+                        PlSqlElementTypes.MERGE_COMMAND,
                         PlSqlElementTypes.INSERT_COMMAND,
                         PlSqlElementTypes.UPDATE_COMMAND,
                         PlSqlElementTypes.DELETE_COMMAND
@@ -111,6 +112,11 @@ public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements Objec
                 // outside of PL/SQL code
                 return new VariantsProcessor777_TableColumn(this);
             }
+        } else if( type == PLSqlTypesAdopted.INTO_CLAUSE){
+            if(contains(context, PlSqlElementTypes.PLSQL_BLOCK)){
+                // PL/SQL variable inside of a Procedure OR Function OR Trigger
+                return new VariantsProcessor777_PlSqlVar(this);
+            }
         } else if( type == PLSqlTypesAdopted.RETURN_STATEMENT){
             // PL/SQL variable
             return new VariantsProcessor777_PlSqlVar(this);
@@ -118,36 +124,17 @@ public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements Objec
             return new VariantsProcessor777_TableColumn(this);
         } else if( type == PLSqlTypesAdopted.GROUP_CLAUSE) {
             return new VariantsProcessor777_TableColumn(this);
+        } else if( type == PLSqlTypesAdopted.COUNT_FUNC) {
+            return new VariantsProcessor777_TableColumn(this);
+        } else if( type == PLSqlTypesAdopted.IMMEDIATE_COMMAND) {
+            if(this.getNode().getElementType() == PLSqlTypesAdopted.PLSQL_VAR_REF){
+                // PL/SQL variable
+                return new VariantsProcessor777_PlSqlVar(this);
+            }
         }
 
-/*
-        if (type == PLSqlTypesAdopted.EXPR_COLUMN
-                || type == PLSqlTypesAdopted.WHERE_CONDITION
-                || type == PLSqlTypesAdopted.LOGICAL_EXPR
-                || type == PLSqlTypesAdopted.SORTED_DEF
-                || type == PLSqlTypesAdopted.GROUP_CLAUSE) {
-            return new VariantsProcessor777_TableColumn(this);
-        } else if (type == PLSqlTypesAdopted.ARITHMETIC_EXPR){
-            // PLSqlTypesAdopted.ASSIGNMENT_STATEMENT
-            // PLSqlTypesAdopted.EXPR_COLUMN
-        } else if (type == PLSqlTypesAdopted.CALL_ARGUMENT){
-//        getParent().getNode().getElementType() = PLSQL:INTO_CLAUSE (select into) - variable
-//        getParent().getNode().getElementType() = PLSQL:EXPR_COLUMN - tab column, variable, sysfunc
-//        getParent().getNode().getElementType() = PLSQL:CALL_ARGUMENT - (depends on the call argument type)
-            int o = 0;
-        } else {
-        }
-*/
         throw new NameNotResolvedException("Name not resolved");
     }
-
-//    private boolean containsAll(Set<PlSqlElementType> nodes, PlSqlElementType ... probe ){
-//        return nodes.containsAll(Arrays.asList(probe));
-//    }
-//
-//    private boolean notContainAny(Set<PlSqlElementType> nodes, PlSqlElementType ... probe ){
-//        return nodes.containsAll(Arrays.asList(probe));
-//    }
 
     private boolean contains(Set<PlSqlElementType> nodes, PlSqlElementType ... probes ){
         for(PlSqlElementType type: probes){
@@ -157,7 +144,6 @@ public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements Objec
         }
         return false;
     }
-
 
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
@@ -195,16 +181,7 @@ public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements Objec
         return ResolveHelper4.resolveContext2((NameFragmentRef) nodes[0].getPsi(), nodes.length);
     }
 
-//                if(node.getElementType() == PlSqlElementTypes.CREATE_TRIGGER){
-//                    // create variants including variables and arguments
-//                } else if(node.getElementType() == PlSqlElementTypes.PROCEDURE_BODY){
-//                    // create variants including variables and arguments
-//                } else if(node.getElementType() == PlSqlElementTypes.FUNCTION_BODY){
-//                    // create variants including variables and arguments
-//                } else if(node.getElementType() == PlSqlElementTypes.SELECT_EXPRESSION){
-//                } else if(node.getElementType() == PlSqlElementTypes.SELECT_EXPRESSION_UNION){
-//                } else if(node.getElementType() == PlSqlElementTypes.UPDATE_COMMAND){
-//                } else if(node.getElementType() == PlSqlElementTypes.DELETE_COMMAND){
-//                }
-
+    public boolean isPlSqlVarRef() {
+        return isPlSqlVarRef;
+    }
 }

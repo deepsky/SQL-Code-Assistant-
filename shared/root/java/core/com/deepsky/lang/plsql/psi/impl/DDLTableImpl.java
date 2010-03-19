@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -31,8 +28,9 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.database.ObjectCache;
 import com.deepsky.database.ObjectCacheFactory;
 import com.deepsky.database.SqlScriptManager;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.TableDefinition;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.ddl.CreateView;
 import com.deepsky.lang.plsql.psi.ref.DDLTable;
 import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
@@ -40,6 +38,7 @@ import com.deepsky.lang.plsql.struct.TableDescriptor;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -94,15 +93,15 @@ public class DDLTableImpl  extends PlSqlReferenceBase implements DDLTable { //},
         );
 
         String[] candidates =
-                getTableNameVariantsForPrefix(text);
+                getTableNameVariantsForPrefix(getProject(), text);
 
         return adopt(text, candidates);
     }
 
 
-    static String[] getTableNameVariantsForPrefix(String prefix) {
+    static String[] getTableNameVariantsForPrefix(Project project, String prefix) {
 
-        ObjectCache cache = ObjectCacheFactory.getObjectCache();
+        ObjectCache cache = PluginKeys.OBJECT_CACHE.getData(project); //ObjectCacheFactory.getObjectCache();
         if(prefix.length() == 0){
             String user = cache.getCurrentUser();
             return cache.getNameListForType(user, ObjectCache.TABLE | ObjectCache.VIEW);
@@ -158,7 +157,7 @@ public class DDLTableImpl  extends PlSqlReferenceBase implements DDLTable { //},
     }
 
     public PsiElement resolve() {
-        TableDescriptor tdesc = ResolveHelper.describeTable(getText());
+        TableDescriptor tdesc = describeTable(getText());
         if (tdesc != null) {
             return SqlScriptManager.mapToPsiTree(getProject(), tdesc);
         }

@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,11 +25,14 @@
 
 package com.deepsky.view.query_pane.markup;
 
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.view.query_pane.QueryResultWindow;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,11 +40,17 @@ import javax.swing.*;
 
 public class StatementGutterRenderer extends GutterIconRenderer {
 
-    String markerName;
+    //String markerName;
+    SqlStatementMarker marker;
     Icon icon;
 
-    public StatementGutterRenderer(Icon icon, String markerName) {
-        this.markerName = markerName;
+//    public StatementGutterRenderer(Icon icon, String markerName) {
+//        this.markerName = markerName;
+//        this.icon = icon;
+//    }
+
+    public StatementGutterRenderer(Icon icon, SqlStatementMarker marker) {
+        this.marker = marker;
         this.icon = icon;
     }
 
@@ -74,7 +80,10 @@ public class StatementGutterRenderer extends GutterIconRenderer {
 
         public void setSelected(AnActionEvent event, boolean b) {
             // show content pane
-            QueryResultWindow.getInstance().showContent(markerName);
+//            QueryResultWindow.getInstance().showContent(markerName);
+            Project project = event.getData(LangDataKeys.PROJECT);
+            PluginKeys.QR_WINDOW.getData(project).showContent(marker);
+//            QueryResultWindow.getInstance().showContent(marker);
         }
     }
 

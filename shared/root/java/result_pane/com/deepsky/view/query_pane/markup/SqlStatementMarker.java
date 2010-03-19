@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,7 +25,6 @@
 
 package com.deepsky.view.query_pane.markup;
 
-import com.deepsky.view.query_pane.markup.StatementGutterRenderer;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.view.Icons;
 import com.intellij.ide.DataManager;
@@ -38,10 +34,14 @@ import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.UserDataHolderBase;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class SqlStatementMarker {
+public class SqlStatementMarker extends UserDataHolderBase { //} implements UserDataHolder {
 
     String name;
     PlSqlFile file;
@@ -67,7 +67,8 @@ public class SqlStatementMarker {
         this.file = file;
 
         getHighlighter().setGutterIconRenderer(
-                new StatementGutterRenderer( iconByNumber(resultNumber),  name )
+//                new StatementGutterRenderer( iconByNumber(resultNumber),  name )
+                new StatementGutterRenderer( iconByNumber(resultNumber),  this )
         );
     }
 
@@ -121,7 +122,7 @@ public class SqlStatementMarker {
             return false;    
         }
 //        final RangeHighlighter h = getHighlighter();
-        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+        Project project = file.getProject(); //LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
         // delete marker
         Document doc = file.getViewProvider().getDocument();
         if(doc != null){
@@ -165,4 +166,6 @@ public class SqlStatementMarker {
     }
 
     private SqlStatementMarkerListener[] listeners = new SqlStatementMarkerListener[0];
+
+
 }

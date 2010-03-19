@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -33,7 +30,14 @@ import com.deepsky.database.exec.impl.SQLExecutorDefault;
 import com.deepsky.database.ora.ConnectionHolder;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PluginKeys;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.tree.MarkupGenerator;
+import com.deepsky.lang.plsql.tree.Node;
+import com.deepsky.lang.plsql.tree.TreeNodeBuilder;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -46,36 +50,43 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
 
     File cacheDir = null;
 
-    ConnectionHolder conn;
+    //ConnectionHolder conn;
+    ConnectionHelper connHelper = new ConnectionHelper();
     ConnectionInfoHelper ciHelper;
     CacheManager cacheManager;
 
     List<ConnectionManagerListener> lnrs = new ArrayList<ConnectionManagerListener>();
 
+    List<String> dmlStatementList = new ArrayList<String>();
+    SQLExecutor sqlExecutor = null;
 
+
+/*
     public static ConnectionManager getInstance() {
         return PluginKeys.CONNECTION_MANAGER.getData();
 //        return instance;
     }
+*/
 
     @NotNull
-    public String[] getHostList(){
+    public String[] getHostList() {
         Set<String> hostSet = new HashSet<String>();
         ConnectionInfo[] l = ciHelper.getList();
-        for(ConnectionInfo ci: l){
+        for (ConnectionInfo ci : l) {
             hostSet.add(ci.getUrl().getHost().toLowerCase());
         }
-        
+
         return hostSet.toArray(new String[hostSet.size()]);
     }
 
     public void close() {
         cacheManager.stop();
 
-        if (conn != null && conn.isConnected()) {
-            conn.disconnect();
-            notifyLsnrs(new StateEventImpl(ConnectionManagerListener.DISCONNECTED));
-        }
+        connHelper.disconnect();
+//        if (conn != null && conn.isConnected()) {
+//            conn.disconnect();
+//            notifyLsnrs(new StateEventImpl(ConnectionManagerListener.DISCONNECTED));
+//        }
 
         cacheManager.removeListener(this);
     }
@@ -89,9 +100,11 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
     }
 
     ConnectionProgressIndicatorImpl startupProgressInd;
+    Project project;
 
-    public ConnectionManagerImpl(CacheManager cacheManager) {
+    public ConnectionManagerImpl(Project project, CacheManager cacheManager) {
 
+        this.project = project;
         cacheDir = CacheLocator.getCacheDirectory();
 
         this.cacheManager = cacheManager; //CacheManager3.getInstance();
@@ -136,30 +149,91 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
     }
 
     public DbMetaInfo getDbMetaInfo() {
-        if (conn != null && conn.isConnected()) {
-            return new DbMetaInfo() {
-                public String getDbVersion() {
-                    return conn.getDatabaseVersion();
-                }
-            };
-        } else {
-            return null;
-        }
+        return connHelper.getDbMetaInfo();
     }
 
     public DbUrl getDbUrl() {
-        if (conn != null) {
-            ConnectionInfo cinfo = ciHelper.getActive();
-            if (cinfo != null) {
-                return cinfo.getUrl();
+        return connHelper.getDbUrl();
+    }
+
+    public void setAutoCommit(boolean state) throws DBException {
+        if (isConnected()) {
+            int cmd = 0;
+            if (!connHelper.getAutoCommit() && state) {
+                // going to set AutoCommit ON, check number of DML statements since last commit first
+                if (dmlStatementList.size() == 0) {
+                    // set autocommit silently
+                } else {
+                    // ask user for confirmation
+                    cmd = Messages.showChooseDialog(
+                            "There are not commited changes, do you want commit changes first?",
+                            "Confirmation on changes committing",
+                            new String[]{"Commit", "Rollback", "Cancel"}, "Commit", Messages.getWarningIcon());
+                }
+            }
+            switch (cmd) {
+                case 0: // commit
+                    connHelper.setAutoCommit(state);
+                    dmlStatementList.clear();
+                    break;
+                case 1: // rollback
+                    rollbackChanges();
+                    connHelper.setAutoCommit(state);
+                    dmlStatementList.clear();
+                    break;
+                case 2: // cancel
+                    break;
+            }
+//            connHelper.setAutoCommit(state);
+//            if(state){
+//                // autocommit turned ON
+//                dmlStatementList.clear();
+//            }
+        }
+    }
+
+    private void rollbackChanges() {
+        // TODO ---- should be simplified !!!!
+        SQLExecutor exec = null;
+        try {
+            MarkupGenerator generator = new MarkupGenerator();
+            ASTNode node = generator.parse("ROLLBACK");
+            ASTNode rollback = node.findChildByType(PlSqlElementTypes.ROLLBACK_STATEMENT);
+            if(rollback != null){
+                exec = getSQLExecutor();
+                exec.execute(rollback);
+            }
+
+/*
+            TreeNodeBuilder builder = generator.parse0("ROLLBACK");
+            Node root = builder.buildASTTree();
+
+            Node[] nodes = root.findChildrenByType(PlSqlElementTypes.ROLLBACK_STATEMENT);
+            if (nodes.length == 1) {
+                exec = getSQLExecutor();
+                exec.execute(nodes[0]);
+            }
+*/
+
+        } catch (DBException e) {
+            // todo -- handle error
+        } catch (Throwable e1) {
+            // todo -- handle error
+        } finally {
+            if (exec != null) {
+                exec.close();
             }
         }
+    }
 
-        return null;
+
+    public boolean getAutoCommit() {
+        return connHelper.getAutoCommit();
     }
 
     public boolean isConnected() {
-        return conn != null && ciHelper.getActive() != null;
+        return connHelper.isConnected();
+//        return conn != null && ciHelper.getActive() != null;
     }
 
     public void handleUpdate(int state) {
@@ -311,26 +385,50 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
         }
     }
 
-    SQLExecutor sqlExecutor = null;
-
     public SQLExecutor getSQLExecutor() throws DBException {
-        if (conn != null) {
+        if (connHelper.isConnected()) {
             if (sqlExecutor != null) {
-                sqlExecutor.close();
+                // todo -- rely on a user which should take care of the result set
+//                sqlExecutor.close();
             }
-            sqlExecutor = new SQLExecutorDefault(conn.getConnection());
+            sqlExecutor = new SQLExecutorDefault(project, connHelper.getConnection(), this);
             return sqlExecutor;
         } else {
             throw new DBException("Connection was not established.");
         }
     }
 
-    public Connection getConnection() throws DBException {
-        if (conn != null) {
-            return conn.getConnection();
-        } else {
-            throw new DBException("Connection was not established.");
+    public void refreshSession() {
+        if (ciHelper.getActive() != null) {
+            cacheManager.refresh();
         }
+    }
+
+
+    public void addProcessedStatement(ASTNode node) {
+        if (!connHelper.getAutoCommit()) {
+            // AutoCommit is OFF, check issued DML statements
+            if (PlSqlElementTypes.DML_STATEMENTS.contains(node.getElementType())) {
+                dmlStatementList.add(node.getText());
+            } else if (node.getElementType() == PlSqlElementTypes.COMMIT_STATEMENT) {
+                dmlStatementList.clear();
+            } else if (node.getElementType() == PlSqlElementTypes.ROLLBACK_STATEMENT) {
+                dmlStatementList.clear();
+            } else {
+                // todo
+            }
+        } else {
+            dmlStatementList.clear();
+        }
+
+        // refresh db cache if DDL was run
+        if (PlSqlElementTypes.DDL_STATEMENTS.contains(node.getElementType())) {
+            refreshSession();
+        }
+    }
+
+    public List<String> statementListSinceLastCommit() {
+        return dmlStatementList;
     }
 
     public class ConnectionInfoImpl implements ConnectionInfo {
@@ -412,11 +510,14 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
                 ciHelper.getActive().disconnect();
             }
 
-            conn = new ConnectionHolder(url);
+//            conn = new ConnectionHolder(url);
+            connHelper.connect(url);
             try {
-                conn.getConnection();
+//                conn.getConnection();
                 cacheManager.setTimeout(refreshPeriod());
-                ConnectionHolder cloned = conn.cloneConnectionHolder();
+//                ConnectionHolder cloned = conn.cloneConnectionHolder();
+                ConnectionHolder cloned = connHelper.cloneConnectionHolder();
+
                 cacheManager.start(cloned);
                 ciHelper.setActive(url);
 
@@ -449,13 +550,16 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
         }
 
         public boolean isConnected() {
-            return conn != null && ciHelper.getActive() != null && ciHelper.getActive().equals(this);
+//            return conn != null && ciHelper.getActive() != null && ciHelper.getActive().equals(this);
+            return connHelper.isConnected() && ciHelper.getActive() != null && ciHelper.getActive().equals(this);
         }
 
         public boolean disconnect() {
             if (ciHelper.getActive() != null && ciHelper.getActive().equals(this)) {
                 cacheManager.stop();
-                conn.disconnect();
+//                conn.disconnect();
+//                conn = null;
+                connHelper.disconnect();
                 stateChanged(SessionListener.DISCONNECTED);
                 notifyLsnrs(new StateEventImpl(ConnectionManagerListener.DISCONNECTED));
                 ciHelper.deActivate();
@@ -471,12 +575,11 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
             return false;
         }
 
-//        public ObjectCache getObjectCache() {
-//            if (ciHelper.getActive() != null && ciHelper.getActive().equals(this)) {
-//                return cache;
-//            }
-//            return null;
-//        }
+        public void refreshSession() {
+            if (ciHelper.getActive() != null && ciHelper.getActive().equals(this)) {
+                cacheManager.refresh();
+            }
+        }
     }
 
 
@@ -533,17 +636,19 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
                     ind.setNumberOfChunks(1 + nbr);
                 }
 
-                conn = new ConnectionHolder(itself.url);
+//                conn = new ConnectionHolder(itself.url);
+                connHelper.connect(itself.url);
                 try {
                     ind.setCurrentMessage("Connecting to " + itself.url.getUserHostPortServiceName() + " ...");
-                    conn.getConnection();
+//                    conn.getConnection();
                     __oneMoreStepDone__();
                     __assertCancel__();
 
                     ind.setCurrentMessage("Loading objects ...");
 
                     cacheManager.setTimeout(itself.refreshPeriod());
-                    ConnectionHolder cloned = conn.cloneConnectionHolder();
+//                    ConnectionHolder cloned = conn.cloneConnectionHolder();
+                    ConnectionHolder cloned = connHelper.cloneConnectionHolder();
                     cacheManager.start(cloned, new StartupCacheManagerListener() {
                         int lastStep = -1;
 
@@ -595,7 +700,9 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
             } catch (UrgeCancelExeception e) {
                 cacheManager.stop();
 
-                conn.disconnect();
+//                conn.disconnect();
+//                conn = null;
+                connHelper.disconnect();
                 itself.stateChanged(SessionListener.DISCONNECTED);
                 notifyLsnrs(new StateEventImpl(ConnectionManagerListener.DISCONNECTED));
                 ciHelper.deActivate();
@@ -604,13 +711,15 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
             } catch (Throwable e) {
                 cacheManager.stop();
 
-                conn.disconnect();
+//                conn.disconnect();
+//                conn = null;
+                connHelper.disconnect();
                 itself.stateChanged(SessionListener.DISCONNECTED);
                 notifyLsnrs(new StateEventImpl(ConnectionManagerListener.DISCONNECTED));
                 ciHelper.deActivate();
 
                 String error = e.getMessage();
-                ind.setErrorMessage(error != null? error: "Could not establish connection!");
+                ind.setErrorMessage(error != null ? error : "Could not establish connection!");
                 ind.setStatus(MyProgressIndicator.ProgressStatus.FAILED);
             }
 
@@ -715,42 +824,92 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
     }
 
 
-/*
-    File discoverCacheDir() {
+    // --------------------------------------------------
 
-        File base;
-        // / 1. Relative to the 'classes' directory
-        URL url = this.getClass().getClassLoader().getResource(".");
-/ *
-        if (url != null && new File(url.getPath()).exists()) {
-            base = new File(url.getPath()).getParentFile();
-            File cacheDir = new File(base, "caches");
-            if (cacheDir.exists()) {
-                if (!cacheDir.isDirectory()) {
-                    throw new ConfigurationException(cacheDir.toString() + " supposed to be a directory.");
-                }
-            } else {
-                if (!cacheDir.mkdir()) {
-                    throw new ConfigurationException("Could not create " + cacheDir.toString() + " cache directory.");
-                }
+    private class ConnectionHelper {
+
+        ConnectionHolder holder;
+        boolean cachedAutoCommit = true;
+
+        public void disconnect() {
+            if (isConnected()) {
+                holder.disconnect();
+                holder = null;
+                notifyLsnrs(new StateEventImpl(ConnectionManagerListener.DISCONNECTED));
+            }
+        }
+
+        public DbMetaInfo getDbMetaInfo() {
+            if (isConnected()) {
+                return new DbMetaInfo() {
+                    public String getDbVersion() {
+                        return holder.getDatabaseVersion();
+                    }
+                };
             }
 
-            return cacheDir;
-        }
-* /
-        // 2. Based on idea.plugins.dir prop
-        String idea_plugins_dir = System.getProperty("idea.plugins.path");
-        if (idea_plugins_dir != null && new File(idea_plugins_dir).exists()) {
-            // todo - find plsql plugin directory
+            return null;
         }
 
-        // 3. Based on java temporary directory
-        String java_io_tmpdir = System.getProperty("java.io.tmpdir");
-        if (java_io_tmpdir != null && new File(java_io_tmpdir).exists()) {
-            // todo
+        public DbUrl getDbUrl() {
+            if (holder != null) {
+                return holder.getDbUrl();
+            }
+            return null;
         }
 
-        throw new ConfigurationException("Could not located cache directory.");
+        public boolean isConnected() {
+            return holder != null && holder.isConnected();
+        }
+
+        public Connection getConnection() throws DBException {
+            if (holder != null)
+                return holder.getConnection();
+            else {
+                throw new DBException("Not connected");
+            }
+        }
+
+        public void connect(DbUrl url) throws DBException {
+            if (holder != null) {
+                if (holder.getDbUrl().equals(url)) {
+                    return;
+                } else {
+                    holder.disconnect();
+                }
+            }
+            holder = new ConnectionHolder(url);
+            holder.getConnection();
+            cachedAutoCommit = PluginKeys.PLUGIN_SETTINGS.getData(project).isAutoCommit();
+            holder.setAutoCommit(cachedAutoCommit);
+        }
+
+        public ConnectionHolder cloneConnectionHolder() throws DBException {
+            if (isConnected()) {
+                return holder.cloneConnectionHolder();
+            } else {
+                throw new DBException("Not connected");
+            }
+        }
+
+        public void setAutoCommit(boolean state) throws DBException {
+            if (isConnected()) {
+                holder.setAutoCommit(state);
+                cachedAutoCommit = state;
+                PluginKeys.PLUGIN_SETTINGS.getData(project).setAutoCommit(cachedAutoCommit);
+            } else {
+                throw new DBException("Not connected");
+            }
+        }
+
+        /**
+         * Quick method to get current AutoCommit state
+         *
+         * @return - autocommit state
+         */
+        public boolean getAutoCommit() {
+            return cachedAutoCommit;
+        }
     }
-*/
+
 }

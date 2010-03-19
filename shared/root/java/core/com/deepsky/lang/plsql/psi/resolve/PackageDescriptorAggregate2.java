@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -41,11 +38,13 @@ public class PackageDescriptorAggregate2 { //implements PackageDescriptor {
     PackageSpecDescriptor spec;
     PackageBodyDescriptor body;
     String packageName;
+    ObjectCache ocache;
 
-    public PackageDescriptorAggregate2(PackageSpecDescriptor spec) throws NameNotResolvedException {
+    public PackageDescriptorAggregate2(ObjectCache ocache,PackageSpecDescriptor spec) throws NameNotResolvedException {
         this.spec = spec;
+        this.ocache = ocache;
 
-        DbObject[] objects = ObjectCacheFactory.getObjectCache().findByNameForType(ObjectCache.PACKAGE_BODY, spec.getName());
+        DbObject[] objects = ocache.findByNameForType(ObjectCache.PACKAGE_BODY, spec.getName());
         if(objects.length == 1){
             this.body = (PackageBodyDescriptor) objects[0];
         }
@@ -53,27 +52,30 @@ public class PackageDescriptorAggregate2 { //implements PackageDescriptor {
         this.packageName = spec.getName();
     }
 
-    public PackageDescriptorAggregate2(PackageBodyDescriptor body) throws NameNotResolvedException {
+    public PackageDescriptorAggregate2(ObjectCache ocache,PackageBodyDescriptor body) throws NameNotResolvedException {
+        this.ocache = ocache;
         this.spec = null;
         this.body = body;
         this.packageName = body.getName();
     }
 
-    public PackageDescriptorAggregate2(String packageName) throws NameNotResolvedException {
+    public PackageDescriptorAggregate2(ObjectCache ocache,String packageName) throws NameNotResolvedException {
+        this.ocache = ocache;
+        this.packageName = packageName;
 
-        DbObject[] objects = ObjectCacheFactory.getObjectCache().findByNameForType(ObjectCache.PACKAGE, packageName);
+        DbObject[] objects = ocache.findByNameForType(ObjectCache.PACKAGE, packageName);
         if(objects.length != 1 || !(objects[0] instanceof PackageSpecDescriptor)){
-            throw new NameNotResolvedException("Package " + packageName + " not found");
+            //throw new NameNotResolvedException("Package " + packageName + " not found");
+            return;
         }
         this.spec = (PackageSpecDescriptor) objects[0];
 
-        objects = ObjectCacheFactory.getObjectCache().findByNameForType(ObjectCache.PACKAGE_BODY, packageName);
+        objects = ocache.findByNameForType(ObjectCache.PACKAGE_BODY, packageName);
         if(objects.length == 1){
             this.body = (PackageBodyDescriptor) objects[0];
         }
-
-        this.packageName = packageName;
     }
+
 
     static private void addWithFiltering(PlSqlObject what, List<PlSqlObject> where){
         for(PlSqlObject e: where){
@@ -93,7 +95,7 @@ public class PackageDescriptorAggregate2 { //implements PackageDescriptor {
     public PlSqlObject[] getObjects() {
         List<PlSqlObject> out = new ArrayList<PlSqlObject>();
         if(this.spec == null){
-            DbObject[] objects = ObjectCacheFactory.getObjectCache().findByNameForType(ObjectCache.PACKAGE, packageName);
+            DbObject[] objects = ocache.findByNameForType(ObjectCache.PACKAGE, packageName);
             if(objects.length == 1 && objects[0] instanceof PackageSpecDescriptor){
                 this.spec = (PackageSpecDescriptor) objects[0];
                 processSpec(out);
@@ -116,7 +118,7 @@ public class PackageDescriptorAggregate2 { //implements PackageDescriptor {
     public PlSqlObject[] findObjectByName(String part) {
         List<PlSqlObject> out = new ArrayList<PlSqlObject>();
         if(this.spec == null){
-            DbObject[] objects = ObjectCacheFactory.getObjectCache().findByNameForType(ObjectCache.PACKAGE, packageName);
+            DbObject[] objects = ocache.findByNameForType(ObjectCache.PACKAGE, packageName);
             if(objects.length == 1 && objects[0] instanceof PackageSpecDescriptor){
                 this.spec = (PackageSpecDescriptor) objects[0];
                 processSpec(out, part);

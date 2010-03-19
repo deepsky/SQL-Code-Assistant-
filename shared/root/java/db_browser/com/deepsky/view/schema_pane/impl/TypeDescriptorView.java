@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -35,6 +32,7 @@ import com.deepsky.view.Icons;
 import com.deepsky.view.schema_pane.ItemViewListener;
 import com.deepsky.view.schema_pane.ItemViewWrapper;
 import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.Project;
@@ -53,10 +51,12 @@ public class TypeDescriptorView extends ItemViewWrapperBase implements ToggleAct
     String baseType = "";
     String typeSpec = "";
     Cache cache;
+    String packageName;
 
     Date lastUpdateDate;
 
-    public TypeDescriptorView(Cache c0, String name) {
+    public TypeDescriptorView(Project project, Cache c0, String name) {
+        super(project);
         this.cache = c0;
         this.name = name;
         DbObject dbo = cache.get(name, DbObject.TYPE);
@@ -77,8 +77,11 @@ public class TypeDescriptorView extends ItemViewWrapperBase implements ToggleAct
         }
     }
 
-    public TypeDescriptorView(ItemViewWrapper parent, UserDefinedTypeDescriptor dbo) {
+    public TypeDescriptorView(Project project, ItemViewWrapper parent, UserDefinedTypeDescriptor dbo, Cache cache) {
+        super(project);
         this.name = dbo.getName();
+        this.cache = cache;
+        this.packageName = dbo.getPackage().getName();
         this.parent = parent;
         this.lastUpdateDate = dbo.getLastDDLTime();
 
@@ -149,14 +152,29 @@ public class TypeDescriptorView extends ItemViewWrapperBase implements ToggleAct
 
     }
 
-    public void handle(int command) {
+    public void handle(AnActionEvent event, int command) {
         switch (command) {
             case OPEN: {
                 DbObject dbo = cache.get(name, DbObject.TYPE);
-                Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
                 boolean result = SqlScriptManager.openFileInEditor(project, dbo);
                 break;
             }
+        }
+    }
+
+    public void runDefaultAction() {
+        if (packageName != null) {
+            PackageDescriptor pkg = (PackageDescriptor) cache.get(packageName, DbObject.PACKAGE);
+            PlSqlObject[] objs = pkg.findObjectByName(name);
+            if (objs.length == 1) {
+                //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                boolean result = SqlScriptManager.openFileInEditor(project, objs[0]);
+            }
+        } else {
+            UserDefinedTypeDescriptor udt = (UserDefinedTypeDescriptor) cache.get(name, DbObject.TYPE);
+                //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                boolean result = SqlScriptManager.openFileInEditor(project, udt);
         }
     }
 

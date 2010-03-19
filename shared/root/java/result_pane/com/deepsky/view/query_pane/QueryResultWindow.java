@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -29,7 +26,6 @@
 package com.deepsky.view.query_pane;
 
 import com.deepsky.database.ConnectionManager;
-import com.deepsky.database.ConnectionManagerListener;
 import com.deepsky.database.DBException;
 import com.deepsky.gui.ExportSettings;
 import com.deepsky.lang.common.PluginKeys;
@@ -41,11 +37,11 @@ import com.deepsky.view.query_pane.markup.SqlStatementMarker;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
+import com.intellij.ui.content.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -57,13 +53,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-public class QueryResultWindow implements ConnectionManagerListener {
+public class QueryResultWindow { //implements ConnectionManagerListener {
 
     public static final String QUERY_RESULT_PANE = "Query Result";
     public static final String DATAGRID_PANE = "Data Grid";
 
     public static final String JTABBED_CONTROL = "JTABBED.CONTROL";
     public static final String CREATE_TIME = "CREATE.TIME";
+
+    private static final String CONTENT_PAGE_NAME = "CONTENT_PAGE_NAME";
+
+    private final static Key<String> CONTENT_PAGE_KEY = new Key<String>(CONTENT_PAGE_NAME);
 
     final static int REFRESH_RESULTSET = 1;
     final static int STICKY_OPTION = 3;
@@ -77,9 +77,9 @@ public class QueryResultWindow implements ConnectionManagerListener {
     boolean isConnected = false;
 
 
-    public static synchronized QueryResultWindow getInstance() {
-        return PluginKeys.QR_WINDOW.getData(); //instance;
-    }
+//    public static synchronized QueryResultWindow getInstance() {
+//        return PluginKeys.QR_WINDOW.getData(); //instance;
+//    }
 
     public QueryResultWindow(Project project, ConnectionManager connectionManager) {
         this.project = project; //DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
@@ -93,12 +93,28 @@ public class QueryResultWindow implements ConnectionManagerListener {
             //throw new IllegalStateException();
         }
 
-        connectionManager.addStateListener(this);
+//        connectionManager.addStateListener(this);
+
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindow wm = ToolWindowManager.getInstance(project).getToolWindow(QUERY_RESULT_PANE);
+
+        if (wm == null) {
+//            wm = toolWindowManager.registerToolWindow(
+//                    QUERY_RESULT_PANE, true, ToolWindowAnchor.BOTTOM
+//            );
+//            wm.setIcon(Icons.QUERY_RESULT_PANE);
+//            wm.setToHideOnEmptyContent(true);
+        } else {
+            toolWindowManager.unregisterToolWindow(QUERY_RESULT_PANE);
+        }
+
+//        wm.getContentManager().addContentManagerListener(new ContentManagerListenerImpl());
     }
+
 
     private void assertTabCount(Content content) {
 //        PluginSettingsBean bean = (PluginSettingsBean) SharedObjectPool.getUserData(SharedConstants.PLUGIN_SETTINGS);
-        PluginSettingsBean bean = PluginKeys.PLUGIN_SETTINGS.getData();
+        PluginSettingsBean bean = PluginKeys.PLUGIN_SETTINGS.getData(project);
 
         if (bean == null) {
             bean = new PluginSettingsBean();
@@ -124,11 +140,16 @@ public class QueryResultWindow implements ConnectionManagerListener {
         }
     }
 
+    //private void iterateThruTabs(Content)
+
     @NotNull
     public QueryResultPanel createResultPanel(int panelType, SqlStatementMarker sqlMarker, Icon icon, String toolTip) {
 
         String contentName = connectionManager.getDbUrl().getUserHostPortServiceName().toLowerCase();
         Content content = createContent(contentName);
+
+        // save content name
+        sqlMarker.putUserData(CONTENT_PAGE_KEY, contentName);
 
         Component component = getTab(content, sqlMarker.getName());
         if (panelType == QueryResultPanel.SELECT_RESULT) {
@@ -187,7 +208,7 @@ public class QueryResultWindow implements ConnectionManagerListener {
 
     private DataGridPanel addGridPanelTab(@NotNull Content content, String tabName, Icon icon, String toolTip) {
         JTabbedPane tabbedPane = getTabComponent(content);
-        DataGridPanel dataGridPanel = new DataGridPanel();
+        DataGridPanel dataGridPanel = new DataGridPanel(project);
         dataGridPanel.putClientProperty(CREATE_TIME, new Date().getTime());
 
         tabbedPane.addTab(tabName, dataGridPanel);
@@ -202,7 +223,7 @@ public class QueryResultWindow implements ConnectionManagerListener {
 
     private DataGridPanel addGridPanelTab(@NotNull Content content, SqlStatementMarker sqlMarker, Icon icon, String toolTip) {
         JTabbedPane tabbedPane = getTabComponent(content);
-        DataGridPanel dataGridPanel = new DataGridPanel();
+        DataGridPanel dataGridPanel = new DataGridPanel(project);
         dataGridPanel.putClientProperty(CREATE_TIME, new Date().getTime());
 
         tabbedPane.addTab(sqlMarker.getName(), dataGridPanel);
@@ -289,6 +310,7 @@ public class QueryResultWindow implements ConnectionManagerListener {
             );
             wm.setIcon(Icons.QUERY_RESULT_PANE);
             wm.setToHideOnEmptyContent(true);
+            wm.getContentManager().addContentManagerListener(new ContentManagerListenerImpl());
         }
 
         Content content = wm.getContentManager().findContent(contentName);
@@ -322,9 +344,12 @@ public class QueryResultWindow implements ConnectionManagerListener {
             DefaultActionGroup actionGroup = new DefaultActionGroup("PsiActionGroup22", false);
             actionGroup.add(new LocalToggleAction("Refresh Query Result", "Refresh Query Result", Icons.REFRESH_RESULTSET, REFRESH_RESULTSET));
             actionGroup.add(new LocalToggleAction("Copy", "Copy", Icons.EXPORT_DATA, EXPORT_DATA));
+            actionGroup.addSeparator();
+            actionGroup.add(new ToggleAutocommitAction("Auto Commit", "Auto Commit", Icons.CURSOR_DECL, -100));
 
-// todo -- problem with keeping sql markers and tabs in sync
-//            actionGroup.add(new LocalToggleAction("Close", "Close", Icons.CLOSE_PANEL, CLOSE_PANEL));
+            actionGroup.addSeparator();
+// todo -- check problem with keeping sql markers and tabs in sync
+            actionGroup.add(new LocalToggleAction("Close Result Pane", "Close", Icons.CLOSE_PANEL, CLOSE_PANEL));
 
             ActionManager actionManager = ActionManager.getInstance();
             ActionToolbar toolBar = actionManager.createActionToolbar("DataGridActionToolbar", actionGroup, false);
@@ -343,8 +368,19 @@ public class QueryResultWindow implements ConnectionManagerListener {
         return content;
     }
 
+
+    public void showContent(SqlStatementMarker marker) {
+        String contentName = marker.getUserData(CONTENT_PAGE_KEY);
+        showContent(marker.getName(), contentName, 500);
+    }
+
+    /**
+     * Show content page for current connection
+     *
+     * @param displayName
+     */
     public void showContent(String displayName) {
-        showContent(displayName, 500);
+        showContent(displayName, null, 500);
     }
 
     /**
@@ -353,20 +389,27 @@ public class QueryResultWindow implements ConnectionManagerListener {
      * @param displayName
      * @param wait
      */
-    public void showContent(String displayName, final int wait) {
-//        Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+    private void showContent(String displayName, String contentName, final int wait) {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow wm = toolWindowManager.getToolWindow(QUERY_RESULT_PANE);
 
         if (wm == null) {
-            wm = toolWindowManager.registerToolWindow(QUERY_RESULT_PANE, true, ToolWindowAnchor.BOTTOM);
-            wm.setIcon(Icons.QUERY_RESULT_PANE);
-            wm.setToHideOnEmptyContent(true);
+            // todo -- toolwindow not created! handle error
+            return;
+//            wm = toolWindowManager.registerToolWindow(QUERY_RESULT_PANE, true, ToolWindowAnchor.BOTTOM);
+//            wm.setIcon(Icons.QUERY_RESULT_PANE);
+//            wm.setToHideOnEmptyContent(true);
         }
 
-        String contentName = connectionManager.getDbUrl().getUserHostPortServiceName().toLowerCase();
-        Content content = wm.getContentManager().findContent(contentName);
+        if (contentName == null) {
+            // active db session
+            contentName = "$$1234$$$4321"; // fake name
+            if (connectionManager != null && connectionManager.getDbUrl() != null) {
+                contentName = connectionManager.getDbUrl().getUserHostPortServiceName().toLowerCase();
+            }
+        }
 
+        Content content = wm.getContentManager().findContent(contentName);
         if (content == null) {
             return;
         }
@@ -389,7 +432,6 @@ public class QueryResultWindow implements ConnectionManagerListener {
                     } catch (InterruptedException e1) {
                     }
                 }
-//            }, false);
             }, true);
         }
     }
@@ -406,45 +448,96 @@ public class QueryResultWindow implements ConnectionManagerListener {
     }
 
     public void close() {
-        connectionManager.removeStateListener(this);
+//        connectionManager.removeStateListener(this);
 
-        //getTabComponent(Content content)
-//        Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
-
-        ToolWindowManager toolWindowManager = null;
         try {
-            toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow tw = toolWindowManager.getToolWindow(QUERY_RESULT_PANE);
+
+            if (tw != null) {
+                // close all contents
+                ContentManager cman = tw.getContentManager();
+                Content[] contents = cman.getContents();
+                for (Content c : contents) {
+                    cman.removeContent(c, false);
+                }
+
+                toolWindowManager.unregisterToolWindow(QUERY_RESULT_PANE);
+            }
+
         } catch (Throwable e) {
             // todo -- fix me
         }
-        if (toolWindowManager != null) {
-            toolWindowManager.unregisterToolWindow(QUERY_RESULT_PANE);
-        }
-    }
-
-    public void handleUpdate(StateEvent state) {
-        switch (state.getStatus()) {
-            case ConnectionManagerListener.CONNECTED:
-//                statusLine.setSchemaName(state.getUrl().getUserHostPortServiceName());
-                break;
-            case ConnectionManagerListener.DISCONNECTED:
-//                statusLine.setSchemaName("Not logged in");
-                break;
-        }
     }
 
 
-    class JTabbedPaneListener implements ContainerListener {
-        public void componentAdded(ContainerEvent e) {
+    class ToggleAutocommitAction extends ToggleAction {
+        boolean cached = false;
+
+        public ToggleAutocommitAction(String actionName, String toolTip, Icon icon, int command) {
+            super(actionName, toolTip, icon);
         }
 
-        public void componentRemoved(ContainerEvent e) {
-            if (e.getChild() instanceof QueryResultPanel) {
-                // finalize QueryResultPanel
-                ((QueryResultPanel) e.getChild()).close();
+        @Override
+        public boolean isSelected(AnActionEvent e) {
+            cached = connectionManager.getAutoCommit();
+
+            e.getPresentation().setIcon(
+                    cached ? Icons.AUTOCOMMIT_IS_ON : Icons.AUTOCOMMIT_IS_OFF
+            );
+            e.getPresentation().setText(
+                    cached ? "AutoCommit is ON" : "AutoCommit is OFF"
+            );
+            return cached;
+        }
+
+        @Override
+        public void setSelected(AnActionEvent e, boolean state) {
+            try {
+                connectionManager.setAutoCommit(state);
+            } catch (DBException e1) {
+                Messages.showErrorDialog(project, e1.getMessage(), "Database Connection error");
             }
+/*
+
+            if(connectionManager.isConnected()){
+                int cmd = 0;
+                if(!cached && state){
+                    // check number of DML statements since last commit
+                    if( connectionManager.statementListSinceLastCommit().size() > 0){
+                        // set autocommit silently
+                    } else {
+                        // ask user for confirmation
+                        cmd = Messages.showChooseDialog("There are not commited changes, do you want commit changes first?",
+                                "Confirmation on changes committing",
+                                new String[]{"Commit", "Rollback", "Cancel"}, "Commit", Messages.getWarningIcon());
+                    }
+                }
+
+                switch(cmd){
+                    case 0: // commit
+                        setAutoCommit(state);
+                        cached = state;
+                        break;
+                    case 1: // rollback
+                        break;
+                    case 2: // cancel
+                        break;
+                }
+            }
+*/
         }
     }
+
+/*
+    private void setAutoCommit(boolean state){
+        try {
+            connectionManager.setAutoCommit(state);
+        } catch (DBException e1) {
+            Messages.showErrorDialog( project, e1.getMessage(), "Database Connection error");
+        }
+    }
+*/
 
     class LocalToggleAction extends ToggleAction {
 
@@ -465,10 +558,14 @@ public class QueryResultWindow implements ConnectionManagerListener {
             switch (command) {
                 case REFRESH_RESULTSET: {
                     QueryResultPanel resultPanel = getSelectedResultPanel();
-                    if (isConnected && resultPanel instanceof DataGridPanel && resultPanel.isRefreshSupported()) {
+                    // todo -- if connection was reestablished REFRESH keeps failing ..
+                    if (resultPanel instanceof DataGridPanel && resultPanel.isRefreshSupported()) {
                         try {
                             resultPanel.refresh();
                         } catch (DBException e) {
+                            String error = e.getMessage();
+                            error = error == null || error.length() == 0 ? "Check database connection" : error;
+                            Messages.showErrorDialog(project, error, "Query failed");
                         }
                     }
                     break;
@@ -493,7 +590,7 @@ public class QueryResultWindow implements ConnectionManagerListener {
                             return;
                         }
 
-                        ExportSettings settings = new ExportSettings();
+                        ExportSettings settings = new ExportSettings(project);
                         settings.show();
                         if (!settings.isOK()) {
                             return;
@@ -527,8 +624,8 @@ public class QueryResultWindow implements ConnectionManagerListener {
                                 break;
                         }
 
-                        String content = extractContent(
-                                grid, delimiter, settings.saveColumnHeaders(), settings.encloseFieldsInDowubleQuotes());
+                        String content = grid.extractContent(
+                                delimiter, settings.saveColumnHeaders(), settings.encloseFieldsInDowubleQuotes());
                         if (content != null) {
                             if (fileToSave != null) {
                                 // save in the file
@@ -553,72 +650,53 @@ public class QueryResultWindow implements ConnectionManagerListener {
     }
 
 
-    private String extractContent(DataGridPanel grid, String delimiter, boolean saveHeader, boolean ecloseWithDowbleQuotes) {
-        JTable _table = grid.getTable();
+    // LISTENERS -------------------------------------------------
 
-        int numcols = _table.getSelectedColumnCount();
-        int numrows = _table.getSelectedRowCount();
-
-        if (numcols > 0 && numrows > 0) {
-            StringBuffer sbf = new StringBuffer();
-            int[] rowsselected = _table.getSelectedRows();
-            int[] colsselected = _table.getSelectedColumns();
-
-            if (saveHeader) {
-                // put header name list
-                for (int j = 0; j < numcols; j++) {
-                    String text = (String) _table.getTableHeader().getColumnModel().getColumn(colsselected[j]).getHeaderValue();
-                    sbf.append(text);
-                    if (j < numcols - 1) sbf.append(delimiter);
-                }
-                sbf.append("\n");
-            }
-
-            // put content
-            for (int i = 0; i < numrows; i++) {
-                for (int j = 0; j < numcols; j++) {
-                    Object value = _table.getValueAt(rowsselected[i], colsselected[j]);
-                    String _value = "";
-                    if (value != null) {
-                        _value = value.toString();
-                    }
-                    if (ecloseWithDowbleQuotes) {
-                        sbf.append("\"").append(_value).append("\"");
-                    } else {
-                        sbf.append(_value);
-                    }
-
-                    if (j < numcols - 1) sbf.append(delimiter);
-                }
-                sbf.append("\n");
-            }
-
-//            StringSelection stsel = new StringSelection(sbf.toString());
-//            Clipboard system = Toolkit.getDefaultToolkit().getSystemClipboard();
-//            system.setContents(stsel, stsel);
-            return sbf.toString();
+    class JTabbedPaneListener implements ContainerListener {
+        public void componentAdded(ContainerEvent e) {
         }
 
-        return null;
-    }
-
-/*
-    public void invalidateContent(String displayName){
-//        Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
-        ToolWindow wm = ToolWindowManager.getInstance(project).getToolWindow(QUERY_RESULT_PANE);
-
-        if(wm == null){
-            // nothing to do
-        } else {
-            Content content =  wm.getContentManager().findContent(displayName);
-            if(content != null){
-                // todo
-                wm.getContentManager().removeContent(content, true);
-                return;
+        public void componentRemoved(ContainerEvent e) {
+            if (e.getChild() instanceof QueryResultPanel) {
+                // finalize QueryResultPanel
+                ((QueryResultPanel) e.getChild()).close();
             }
-
         }
     }
-*/
+
+    class ContentManagerListenerImpl implements ContentManagerListener {
+
+        public void contentAdded(ContentManagerEvent event) {
+        }
+
+        public void contentRemoved(ContentManagerEvent event) {
+            JTabbedPane tabbedPane = getTabComponent(event.getContent());
+            for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+                Component c = tabbedPane.getTabComponentAt(i);
+                if (c instanceof ButtonTabComponent) {
+                    ((ButtonTabComponent) c).remove();
+                }
+            }
+
+            tabbedPane.removeAll();
+        }
+
+        public void contentRemoveQuery(ContentManagerEvent event) {
+        }
+
+        public void selectionChanged(ContentManagerEvent event) {
+        }
+    }
+
+//    public void handleUpdate(StateEvent state) {
+//        switch (state.getStatus()) {
+//            case ConnectionManagerListener.CONNECTED:
+////                statusLine.setSchemaName(state.getUrl().getUserHostPortServiceName());
+//                break;
+//            case ConnectionManagerListener.DISCONNECTED:
+////                statusLine.setSchemaName("Not logged in");
+//                break;
+//        }
+//    }
 
 }

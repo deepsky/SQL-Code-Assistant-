@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,25 +25,26 @@
 
 package com.deepsky.navigation;
 
-import com.deepsky.lang.plsql.psi.ExecutableSpec;
-import com.deepsky.lang.plsql.psi.FunctionSpec;
-import com.deepsky.lang.plsql.psi.ObjectName;
-import com.deepsky.lang.plsql.psi.ProcedureSpec;
+import com.deepsky.database.SqlScriptManager;
+import com.deepsky.database.fs.CachedVirtualFileSystem;
+import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
 import com.deepsky.lang.plsql.struct.*;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
 
 public class ImplementationsSearcher implements QueryExecutor<PsiElement, PsiElement> {
 
+    // todo -- at the moment it is supported Go To Impl for objects in the Database scope only!
     public boolean execute(final PsiElement sourceElement, final Processor<PsiElement> consumer) {
         if (sourceElement instanceof ObjectName) {
-            if(sourceElement.getParent() instanceof ExecutableSpec){
+            if(sourceElement.getParent() instanceof ExecutableSpec && dbScopeOriginated(sourceElement)){
                 ExecutableSpec spec = (ExecutableSpec) sourceElement.getParent();
                 String packageName = spec.getPackageName();
                 if(packageName != null){
-                    PackageBodyDescriptor desc = ResolveHelper.resolve_PackageBody(packageName);
+                    PackageBodyDescriptor desc = ResolveHelper.resolve_PackageBody(sourceElement.getProject(), packageName);
                     if(desc != null){
                         DbObject[] dbos = desc.findObjectByName(spec.getEName());
                         for(DbObject dbo: dbos){
@@ -54,14 +52,24 @@ public class ImplementationsSearcher implements QueryExecutor<PsiElement, PsiEle
                                 ExecutableDescriptor edesc = (ExecutableDescriptor) dbo;
                                 ExecutableDescriptor edesc1 = spec.describe();
                                 if (edesc.signatureEquals(edesc1)) {
-                                    consumer.process(sourceElement);
+                                    PlSqlElement e = SqlScriptManager.mapToPsiTree(sourceElement.getProject(), edesc);
+                                    if(e instanceof ObjectName){ //Function){
+//                                        consumer.process(((Function) e).getObjectName());
+                                        consumer.process(e);
+                                    }
+//                                    consumer.process(sourceElement);
 //                                    consumer.process(spec);
                                 }
                             } else if(dbo instanceof ProcedureDescriptor && spec instanceof ProcedureSpec){
                                 ExecutableDescriptor edesc = (ExecutableDescriptor) dbo;
                                 ExecutableDescriptor edesc1 = spec.describe();
                                 if (edesc.signatureEquals(edesc1)) {
-                                    consumer.process(sourceElement);
+                                    PlSqlElement e = SqlScriptManager.mapToPsiTree(sourceElement.getProject(), edesc);
+                                    if(e instanceof ObjectName){ //Procedure){
+//                                        consumer.process(((Procedure) e).getObjectName());
+                                        consumer.process(e);
+                                    }
+//                                    consumer.process(sourceElement);
 //                                    consumer.process(spec);
                                 }
                             }
@@ -70,37 +78,54 @@ public class ImplementationsSearcher implements QueryExecutor<PsiElement, PsiEle
                 }
             }
             return true;
-        } else if (sourceElement instanceof ExecutableSpec) {
-            ExecutableSpec espec = (ExecutableSpec) sourceElement;
-            int hh = 0;
-            return false;
-        }
-        return true;
-    }
-
-
-//    private void processSpec(ExecutableSpec spec, final Processor<PsiElement> consumer){
-//        String packageName = spec.getPackageName();
-//        if(packageName != null){
-//            PackageBodyDescriptor desc = ResolveHelper.resolve_PackageBody(packageName);
-//            if(desc != null){
-//                DbObject[] dbos = desc.findObjectByName(spec.getEName());
-//                for(DbObject dbo: dbos){
-//                    if(dbo instanceof FunctionDescriptor && spec instanceof FunctionSpec){
-//                        ExecutableDescriptor edesc = (ExecutableDescriptor) dbo;
-//                        ExecutableDescriptor edesc1 = spec.describe();
-//                        if (edesc.signatureEquals(edesc1)) {
-//                            consumer.process(sourceElement);
-//                        }
-//                    } else if(dbo instanceof ProcedureDescriptor && spec instanceof ProcedureSpec){
-//                        ExecutableDescriptor edesc = (ExecutableDescriptor) dbo;
-//                        ExecutableDescriptor edesc1 = spec.describe();
-//                        if (edesc.signatureEquals(edesc1)) {
-//                            consumer.process(sourceElement);
+//        } else if (sourceElement instanceof ExecutableSpec) {
+//            ExecutableSpec espec = (ExecutableSpec) sourceElement;
+//            String packageName = espec.getPackageName();
+//            if(packageName != null){
+//                PackageBodyDescriptor desc = ResolveHelper.resolve_PackageBody(packageName);
+//                if(desc != null){
+//                    DbObject[] dbos = desc.findObjectByName(espec.getEName());
+//                    for(DbObject dbo: dbos){
+//                        if(dbo instanceof FunctionDescriptor && espec instanceof FunctionSpec){
+//                            ExecutableDescriptor edesc = (ExecutableDescriptor) dbo;
+//                            ExecutableDescriptor edesc1 = espec.describe();
+//                            if (edesc.signatureEquals(edesc1)) {
+//                                PlSqlElement e = SqlScriptManager.mapToPsiTree(sourceElement.getProject(), edesc);
+//                                if(e instanceof ObjectName){ //Function){
+//                                    consumer.process(e);
+////                                    consumer.process(((Function) e).getObjectName());
+//                                }
+////                                    consumer.process(spec);
+//                            }
+//                        } else if(dbo instanceof ProcedureDescriptor && espec instanceof ProcedureSpec){
+//                            ExecutableDescriptor edesc = (ExecutableDescriptor) dbo;
+//                            ExecutableDescriptor edesc1 = espec.describe();
+//                            if (edesc.signatureEquals(edesc1)) {
+//                                PlSqlElement e = SqlScriptManager.mapToPsiTree(sourceElement.getProject(), edesc);
+//                                if(e instanceof ObjectName){ //Procedure){
+//                                    consumer.process(e);
+////                                    consumer.process(((Procedure) e).getObjectName());
+//                                }
+////                                consumer.process(sourceElement);
+//                            }
 //                        }
 //                    }
 //                }
 //            }
-//        }
-//    }
+//            return true;
+        }
+        return false;
+    }
+
+    private boolean dbScopeOriginated(PsiElement elem) {
+        VirtualFile vf = elem.getContainingFile().getVirtualFile();
+        if(vf != null){
+            if(vf.getFileSystem().getProtocol().equals(CachedVirtualFileSystem.PROTOCOL)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

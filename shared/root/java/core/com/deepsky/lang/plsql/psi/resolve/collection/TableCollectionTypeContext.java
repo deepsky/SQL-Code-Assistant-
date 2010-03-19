@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -57,9 +54,9 @@ public class TableCollectionTypeContext implements ResolveContext777 {
         this.tdesc = tdesc;
     }
 
-    public TableCollectionTypeContext(TableCollectionDescriptor tdesc) {
-        this.tdesc = tdesc;
-    }
+//    public TableCollectionTypeContext(TableCollectionDescriptor tdesc) {
+//        this.tdesc = tdesc;
+//    }
 
     @NotNull
     public VariantsProcessor777 create(int narrow_type) {
@@ -84,7 +81,7 @@ public class TableCollectionTypeContext implements ResolveContext777 {
         } else if (EXTEND.equalsIgnoreCase(text)) {
             return new TableCollectionMethodContext(text);
         } else if (tdesc.getBaseType() instanceof UserDefinedType) {
-            UserDefinedTypeDescriptor basedTypeDesc = ResolveHelper.resolve_Type((UserDefinedType) tdesc.getBaseType());
+            UserDefinedTypeDescriptor basedTypeDesc = ResolveHelper.resolve_Type(project, (UserDefinedType) tdesc.getBaseType());
             if (basedTypeDesc instanceof RecordTypeDescriptor) {
                 return new RecordTypeContext(getProject(), ((RecordTypeDescriptor) basedTypeDesc)).resolve(elem);
             }
@@ -94,12 +91,12 @@ public class TableCollectionTypeContext implements ResolveContext777 {
     }
 
     private Project getProject(){
-        if(project != null){
+//        if(project != null){
             return project;
-        } else {
-            project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
-            return project;
-        }
+//        } else {
+//            project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+//            return project;
+//        }
     }
     
     public Type getType() throws NameNotResolvedException {
@@ -182,7 +179,7 @@ public class TableCollectionTypeContext implements ResolveContext777 {
                 return new String[]{EXTEND};
             } else {
                 if (tdesc.getBaseType() instanceof UserDefinedType) {
-                    UserDefinedTypeDescriptor basedTypeDesc = ResolveHelper.resolve_Type((UserDefinedType) tdesc.getBaseType());
+                    UserDefinedTypeDescriptor basedTypeDesc = ResolveHelper.resolve_Type(project, (UserDefinedType) tdesc.getBaseType());
                     if (basedTypeDesc instanceof RecordTypeDescriptor) {
                         // search variants amongs record items
                         return new RecordTypeContext(project, ((RecordTypeDescriptor) basedTypeDesc)).create(0).getVariants(prefix);

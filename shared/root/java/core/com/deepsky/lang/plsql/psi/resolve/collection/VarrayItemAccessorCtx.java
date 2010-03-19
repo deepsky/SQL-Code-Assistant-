@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -50,22 +47,25 @@ public class VarrayItemAccessorCtx  implements ResolveContext777 {
 
     PsiElement decl;
     VarrayCollectionDescriptor vdesc;
-
+    Project project;
     VariableDescriptor vardesc;
 
     public VarrayItemAccessorCtx(VariableDecl var, VarrayCollectionDescriptor vdesc) {
         this.decl = var;
         this.vdesc = vdesc;
+        this.project = var.getProject();
     }
 
     public VarrayItemAccessorCtx(Argument arg, VarrayCollectionDescriptor vdesc) {
         this.decl = arg;
         this.vdesc = vdesc;
+        this.project = arg.getProject();
     }
 
-    public VarrayItemAccessorCtx(VariableDescriptor vardesc, VarrayCollectionDescriptor vdesc) {
+    public VarrayItemAccessorCtx(Project project, VariableDescriptor vardesc, VarrayCollectionDescriptor vdesc) {
         this.vardesc = vardesc;
         this.vdesc = vdesc;
+        this.project = project;
     }
 
     @NotNull
@@ -78,7 +78,7 @@ public class VarrayItemAccessorCtx  implements ResolveContext777 {
     }
 
     private PsiElement getDecl(VariableDescriptor vdesc) {
-        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+//        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
         return SqlScriptManager.mapToPsiTree(project, vdesc);
     }
 
@@ -86,11 +86,11 @@ public class VarrayItemAccessorCtx  implements ResolveContext777 {
     public ResolveContext777 resolve(PsiElement elem) throws NameNotResolvedException {
         Type t = vdesc.getBaseType();
         if(t instanceof UserDefinedType){
-            UserDefinedTypeDescriptor udesc = ResolveHelper.resolve_Type((UserDefinedType) t);
-            return UserDefinedTypeHelper.createResolveContext(udesc).resolve(elem);
+            UserDefinedTypeDescriptor udesc = ResolveHelper.resolve_Type(elem.getProject(), (UserDefinedType) t);
+            return UserDefinedTypeHelper.createResolveContext(project, udesc).resolve(elem);
         } else if(t instanceof RowtypeType){
             RowtypeType rowtype = (RowtypeType) t;
-            TableDescriptor tdesc = ResolveHelper.describeTable(rowtype.getTableName());
+            TableDescriptor tdesc = ResolveHelper.describeTable(project, rowtype.getTableName());
             if (tdesc != null) {
                 return new PlainTableColumnContext(elem.getProject(), tdesc, elem.getText());
             }

@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,7 +49,7 @@ public class ViewColumnSearchOptions  implements GenericSearchOptions{
 
     @NotNull
     public SearchOption[] getSearchOptions() {
-        SqlSearchParameters searchParams = SqlSearchParameters.getInstance();
+        SqlSearchParameters searchParams = SqlSearchParameters.getInstance(cdef.getProject());
         SearchOption[] out = new SearchOption[2];
         out[0] = new SearchOptionImpl("Usages", searchParams.isColumnUsages, 0);
         out[1] = new SearchOptionImpl("Usages in Type Definitions", searchParams.isUsagesOfColumnTypeRef, 1);
@@ -91,7 +88,7 @@ public class ViewColumnSearchOptions  implements GenericSearchOptions{
 
         public void setEnabled(boolean value) {
             enabled = value;
-            SqlSearchParameters searchParams = SqlSearchParameters.getInstance();
+            SqlSearchParameters searchParams = SqlSearchParameters.getInstance(cdef.getProject());
             if(tag == 0){
                 searchParams.isColumnUsages = value;
             } else if(tag == 1){

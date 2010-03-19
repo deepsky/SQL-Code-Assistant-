@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,6 +25,7 @@
 
 package com.deepsky.lang.plsql.struct;
 
+import com.deepsky.lang.plsql.ConfigurationException;
 import com.deepsky.lang.plsql.struct.types.*;
 
 public class TypeFactory {
@@ -64,6 +62,14 @@ public class TypeFactory {
             return new NULLType();
         } else if(typeName.toUpperCase().startsWith("ANY")){
             return new AnyType();
+        } else if(typeName.toUpperCase().startsWith("ROWID")){
+            return new RowidType();
+        } else if(typeName.toUpperCase().startsWith("LONG")){
+            return new LongType();
+        } else if(typeName.toUpperCase().startsWith("CLOB")){
+            return new ClobType();
+        } else if(typeName.toUpperCase().startsWith("BLOB")){
+            return new BlobType();
         } else if(typeName.toUpperCase().endsWith("%TYPE")){
             String[] parts = typeName.split("[\\.%]");
             if(parts.length == 3){
@@ -115,6 +121,12 @@ public class TypeFactory {
             return new AnyType();
         } else if(typeName.toUpperCase().startsWith("ROWID")){
             return new RowidType();
+        } else if(typeName.toUpperCase().startsWith("LONG")){
+            return new LongType();
+        } else if(typeName.toUpperCase().startsWith("CLOB")){
+            return new ClobType();
+        } else if(typeName.toUpperCase().startsWith("BLOB")){
+            return new BlobType();
         } else {
             // UNKNOWN type
             return new TypeBase();
@@ -123,6 +135,61 @@ public class TypeFactory {
 
     public static Type createTypeById(int typeId)
     {
+        switch(typeId){
+            case Type.CHAR:
+                return new CharType();
+            case Type.DATE:
+                return new DateType();
+            case Type.INTEGER:
+                return new IntegerType();
+            case Type.PLS_INTEGER:
+                return new PlsIntegerType();
+            case Type.INTERVAL:
+                // todo --- !!!
+                return null;
+            case Type.NUMBER:
+                return new NumberType();
+            case Type.NUMERIC:
+                return new NumberType();
+            case Type.TIMESTAMP:
+                return new TimestampType();
+            case Type.VARCHAR:
+                return new Varchar2Type();
+            case Type.VARCHAR2:
+                return new Varchar2Type();
+            case Type.NVARCHAR2:
+                return new NVarchar2Type();
+            case Type.ANY:
+                return new AnyType();
+            case Type.BOOLEAN:
+                return new BooleanType();
+            case Type.NULL:
+                return new NULLType();
+            case Type.LONG:
+                return new LongType();
+            case Type.CLOB:
+                return new ClobType();
+            case Type.BLOB:
+                return new BlobType();
+            default:
+                return new TypeBase();
+        }
+    }
+
+
+    public static String encodeType(Type type) {
+        return type.typeId() + "|" + type.typeName();
+    }
+
+    public static Type decodeType(String encodedType) {
+
+        String[] parts = encodedType.split("\\|");
+        if(parts.length != 2){
+            throw new ConfigurationException("Not able to decode type");
+        }
+
+        int typeId = Integer.parseInt(parts[0]);
+
         switch(typeId){
             case Type.CHAR:
                 return new CharType();
@@ -152,8 +219,36 @@ public class TypeFactory {
                 return new BooleanType();
             case Type.NULL:
                 return new NULLType();
+            case Type.LONG:
+                return new LongType();
+            case Type.CLOB:
+                return new ClobType();
+            case Type.BLOB:
+                return new BlobType();
+            case Type.USER_DEFINED:{
+                String[] args = parts[1].split("\\.");
+                String pkg = args.length == 2? args[0]: null;
+                String typeRef = args.length == 2? args[1]: args[0];
+                return new UserDefinedType(pkg, typeRef);
+            }
+            case Type.ROWTYPE: {
+                String[] args = parts[1].split("[%]");
+                if(parts.length == 2){
+                    return new RowtypeType(args[0]);
+                }
+                throw new ConfigurationException("Not able to decode type");
+            }
+            case Type.REF_CURSOR:
+                throw new ConfigurationException("Not able to decode type");
+            case Type.TABLE_COLUMN_REF_TYPE: {
+                String[] args = parts[1].split("[\\.%]");
+                if(parts.length == 3){
+                    return new TableColumnRefType(parts[0], parts[1]);
+                }
+                throw new ConfigurationException("Not able to decode type");
+            }
             default:
-                return new TypeBase();
+                throw new ConfigurationException("Not able to decode type");
         }
     }
 
@@ -164,9 +259,9 @@ public class TypeFactory {
 
     public static String[] listDataTypes() {
         return new String[]{
-            "NUMBER","NUMERIC","VARCHAR","VARCHAR2","CHAR",
+            "NUMBER","NUMERIC","VARCHAR","VARCHAR2", "NVARCHAR2", "CHAR",
             "BOOLEAN","INTEGER","PLS_INTEGER","DATE","TIMESTAMP",
-            "ROWID", "INTERVAL", "NVARCHAR2", "BLOB", "CLOB", "FLOAT"
+            "ROWID", "INTERVAL",  "BLOB", "CLOB", "FLOAT"
         };
     }
 }

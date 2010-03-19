@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,28 +25,36 @@
 
 package com.deepsky.view.schema_pane.impl;
 
-import com.deepsky.view.schema_pane.ItemViewWrapper;
+import com.deepsky.database.SqlScriptManager;
+import com.deepsky.database.cache.Cache;
+import com.deepsky.lang.plsql.struct.*;
 import com.deepsky.view.Icons;
 import com.deepsky.view.schema_pane.ItemViewListener;
-import com.deepsky.lang.plsql.struct.VariableDescriptor;
-import com.deepsky.lang.plsql.struct.Type;
+import com.deepsky.view.schema_pane.ItemViewWrapper;
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultTreeCellRenderer;
-import java.util.List;
 import java.util.ArrayList;
-
-import org.jetbrains.annotations.NotNull;
+import java.util.List;
 
 public class VariableDescriptorView extends ItemViewWrapperBase {
 
     String name;
+    String packageName;
     Type type;
     ItemViewWrapper parent;
+    Cache cache;
 
-    public VariableDescriptorView(ItemViewWrapper parent, VariableDescriptor var){
+    public VariableDescriptorView(Project project, ItemViewWrapper parent, VariableDescriptor var, Cache cache) {
+        super(project);
         this.name = var.getName().toUpperCase();
+        this.packageName = var.getPackage().getName();
         this.type = var.getType();
+        this.cache = cache;
 
         this.parent = parent;
     }
@@ -86,9 +91,15 @@ public class VariableDescriptorView extends ItemViewWrapperBase {
         renderer.setIcon(Icons.VARIABLE_DECL);
     }
 
-    @NotNull
-    public ToggleAction[] getActions() {
-        return new ToggleAction[0];
+    public void runDefaultAction() {
+        if (packageName != null) {
+            PackageDescriptor pkg = (PackageDescriptor) cache.get(packageName, DbObject.PACKAGE);
+            PlSqlObject[] objs = pkg.findObjectByName(name);
+            if (objs.length == 1) {
+                //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                boolean result = SqlScriptManager.openFileInEditor(project, objs[0]);
+            }
+        }
     }
 
     public void setListener(ItemViewListener listener) {

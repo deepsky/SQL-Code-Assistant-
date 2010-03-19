@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,15 +25,15 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.TableDefinition;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.GenericConstraint;
-import com.deepsky.lang.plsql.struct.TableDescriptor;
-import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.database.ObjectCacheFactory;
-import com.deepsky.database.ObjectCache;
+import com.deepsky.lang.plsql.resolver.ResolveUtils;
+import com.deepsky.lang.plsql.struct.parser.ContextPath;
+import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -53,7 +50,12 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
     }
 
     public String getTableName() {
-        return this.findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL).getText();
+        PsiElement psi = this.findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL);
+        if(psi != null){
+            return psi.getText();
+        } else {
+            throw new SyntaxTreeCorruptedException();
+        }
     }
 
     @NotNull
@@ -98,5 +100,19 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
         super.accept(visitor);
       }
     }
+
+    // [Contex Management Stuff] Start -------------------------------
+    CtxPath cachedCtxPath = null;
+    public CtxPath getCtxPath() {
+        if(cachedCtxPath != null){
+            return cachedCtxPath;
+        } else {
+            CtxPath parent = super.getCtxPath();
+            cachedCtxPath = new CtxPathImpl(
+                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.TABLE_DEF, "..$" + getTableName().toLowerCase()));
+        }
+        return cachedCtxPath;
+    }
+    // [Contex Management Stuff] End ---------------------------------
 
 }

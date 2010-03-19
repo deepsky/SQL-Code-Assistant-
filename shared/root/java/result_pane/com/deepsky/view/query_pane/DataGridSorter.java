@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -70,7 +67,10 @@ public class DataGridSorter extends AbstractTableModel {
     private TableModelListener tableModelListener;
     private List sortingColumns = new ArrayList();
 
-    public DataGridSorter(RowSetModel rowsetModel) {
+    Project project;
+
+    public DataGridSorter(Project project, RowSetModel rowsetModel) {
+        this.project = project;
         this.mouseListener = new MouseHandler();
         this.rowsetModel = rowsetModel;
         adapter = new TableModelAdapter(rowsetModel);
@@ -242,7 +242,7 @@ public class DataGridSorter extends AbstractTableModel {
                                 DataGridOrderSettings.DESC:
                                 ((status == ASCENDING)?DataGridOrderSettings.ASC: DataGridOrderSettings.NOT_SORTED);
 
-                DataGridOrderSettings settings = new DataGridOrderSettings(columnName, sst);
+                DataGridOrderSettings settings = new DataGridOrderSettings(project, columnName, sst);
                 settings.show();
                 if(settings.isOK()){
                     int newStatus;

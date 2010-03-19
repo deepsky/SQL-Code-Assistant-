@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -40,8 +37,6 @@ import com.deepsky.lang.plsql.psi.resolve.impl.UserDefinedTypeHelper;
 import com.deepsky.lang.plsql.struct.*;
 import com.deepsky.lang.plsql.struct.types.RowtypeType;
 import com.deepsky.lang.plsql.struct.types.UserDefinedType;
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -50,22 +45,26 @@ public class TableCollectionItemAccessorCtx implements ResolveContext777 {
 
     PsiElement decl;
     TableCollectionDescriptor cdesc;
+    Project project;
 
     VariableDescriptor vdesc;
 
     public TableCollectionItemAccessorCtx(Argument argument, TableCollectionDescriptor cdesc) {
         this.decl = argument;
         this.cdesc = cdesc;
+        this.project = argument.getProject();
     }
 
     public TableCollectionItemAccessorCtx(VariableDecl var, TableCollectionDescriptor cdesc) {
         this.decl = var;
         this.cdesc = cdesc;
+        this.project = var.getProject();
     }
 
-    public TableCollectionItemAccessorCtx(VariableDescriptor vdesc, TableCollectionDescriptor cdesc) {
+    public TableCollectionItemAccessorCtx(Project project, VariableDescriptor vdesc, TableCollectionDescriptor cdesc) {
         this.vdesc = vdesc;
         this.cdesc = cdesc;
+        this.project = project;
     }
 
     @NotNull
@@ -75,22 +74,22 @@ public class TableCollectionItemAccessorCtx implements ResolveContext777 {
     }
 
     public PsiElement getDeclaration() {
-        return decl != null? decl: getDecl(vdesc);
+        return decl != null ? decl : getDecl(vdesc);
     }
 
     private PsiElement getDecl(VariableDescriptor vdesc) {
-        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+        //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
         return SqlScriptManager.mapToPsiTree(project, vdesc);
     }
 
     public ResolveContext777 resolve(PsiElement elem) throws NameNotResolvedException {
         Type t = cdesc.getBaseType();
-        if(t instanceof UserDefinedType){
-            UserDefinedTypeDescriptor udesc = ResolveHelper.resolve_Type((UserDefinedType) t);
-            return UserDefinedTypeHelper.createResolveContext(udesc).resolve(elem);
-        } else if(t instanceof RowtypeType){
+        if (t instanceof UserDefinedType) {
+            UserDefinedTypeDescriptor udesc = ResolveHelper.resolve_Type(project, (UserDefinedType) t);
+            return UserDefinedTypeHelper.createResolveContext(elem.getProject(), udesc).resolve(elem);
+        } else if (t instanceof RowtypeType) {
             RowtypeType rowtype = (RowtypeType) t;
-            TableDescriptor tdesc = ResolveHelper.describeTable(rowtype.getTableName());
+            TableDescriptor tdesc = ResolveHelper.describeTable(elem.getProject(),rowtype.getTableName());
             if (tdesc != null) {
                 return new PlainTableColumnContext(elem.getProject(), tdesc, elem.getText());
             }

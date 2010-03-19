@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +48,10 @@ import java.awt.event.MouseEvent;
 
 class DbSchemaTree extends JTree {
 
-    public DbSchemaTree(TreeModel newModel) {
+    final Project project;
+    public DbSchemaTree(Project project, TreeModel newModel) {
         super(newModel);
+        this.project = project;
 //        setCellRenderer(new PsiViewerTreeCellRenderer());
         setCellRenderer(new DbSchemaTreeCellRenderer());
         getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -71,11 +70,11 @@ class DbSchemaTree extends JTree {
                 tree.setSelectionPath(path);
                 Object obj = path.getLastPathComponent();
                 boolean enabled = false;
-                if (obj instanceof ItemViewWrapper && ((ItemViewWrapper) obj).getActions().length > 0) {
+                if (obj instanceof ItemViewWrapper && ((ItemViewWrapper) obj).getPopupActions().length > 0) {
                     ItemViewWrapper item = (ItemViewWrapper) obj;
                     DbObject dbo = item.describe();
 
-                    JPopupMenu popup = new DbBrowserPopup(dbo, item.getActions());
+                    JPopupMenu popup = new DbBrowserPopup(dbo, item.getPopupActions());
                     popup.show(tree, x, y);
                 }
             }
@@ -155,12 +154,13 @@ class DbSchemaTree extends JTree {
             public TriggerFindUsageAction(@NotNull final DbObject dbo) {
                 super("Find Usage", "", Icons.FIND, 1, new ToggleActionListener() {
 
-                    public void handle(int command) {
-                        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                    public void handle(AnActionEvent event, int command) {
+                        //Project project = event.getData(LangDataKeys.PROJECT);
+//                        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
                         if (project != null) {
                             PlSqlElement psi = SqlScriptManager.mapToPsiTree(project, dbo);
                             if (psi != null) {
-                                SqlFindUsagesHelper.runFindUsages(project, psi);
+                                SqlFindUsagesHelper.runFindUsages(project, psi, true);
                             }
                         }
                     }

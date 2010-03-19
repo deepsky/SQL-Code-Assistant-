@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,12 +25,15 @@
 
 package com.deepsky.database.exec.impl;
 
+import com.deepsky.database.ConnectionManager;
+import com.deepsky.database.ConnectionManagerImpl;
 import com.deepsky.database.exec.SQLExecutor;
 import com.deepsky.database.exec.RowSetModel;
 import com.deepsky.database.exec.TableResizeListener;
 import com.deepsky.database.exec.SQLUpdateStatistics;
 import com.deepsky.database.DBException;
 import com.deepsky.lang.common.PluginKeys;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.NotSupportedException;
@@ -50,11 +50,15 @@ import java.util.List;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
 public class SQLExecutorDefault implements SQLExecutor {
 
     Connection conn;
+    ConnectionManager connectionManager;
     java.sql.Statement stmt;
     ResultSet rs;
     String sql = null;
@@ -68,11 +72,12 @@ public class SQLExecutorDefault implements SQLExecutor {
     RowSetModel rsmodel;
     int SHUNK_SIZE = 200;
 
-    public SQLExecutorDefault(Connection conn) {
+    public SQLExecutorDefault(Project project, Connection conn, ConnectionManager connectionManager) {
         this.conn = conn;
+        this.connectionManager = connectionManager;
 
 //        PluginSettingsBean bean = (PluginSettingsBean) SharedObjectPool.getUserData(SharedConstants.PLUGIN_SETTINGS);
-        PluginSettingsBean bean = PluginKeys.PLUGIN_SETTINGS.getData();
+        PluginSettingsBean bean = PluginKeys.PLUGIN_SETTINGS.getData(project);
                 
         if (bean == null) {
             bean = new PluginSettingsBean();
@@ -103,18 +108,17 @@ public class SQLExecutorDefault implements SQLExecutor {
 
     private String adoptOrderByClause(String sql_text, int columnId, int dir) {
         MarkupGenerator generator = new MarkupGenerator();
-        TreeNodeBuilder builder = generator.parse0(sql_text);
-        Node root = builder.buildASTTree();
-
-        Node[] nodes = root.findChildrenByType(PLSqlTypesAdopted.SELECT_EXPRESSION); //COMMAND);
-        if (nodes.length == 1) {
-            Node[] nodes2 = nodes[0].findChildrenByType(PLSqlTypesAdopted.ORDER_CLAUSE);
+        ASTNode ast = generator.parse(sql_text);
+        ASTNode _select = ast != null? ast.findChildByType(PLSqlTypesAdopted.SELECT_EXPRESSION): null;
+        if (_select != null) {
+            SelectStatement select = (SelectStatement) _select.getPsi();
+            OrderByClause orderBy = select.getOrderByClause();
             String cuttedSql = sql_text;
-            if (nodes2.length == 1) {
+            if (orderBy != null) {
                 // only one 'ORDER BY' allowed
                 // remove the clause
-                int start = nodes2[0].getRange().getStart();
-                int end = nodes2[0].getRange().getEnd();
+                int start = orderBy.getTextRange().getStartOffset();
+                int end = orderBy.getTextRange().getEndOffset();
                 cuttedSql = sql_text.substring(0, start) + sql_text.substring(end, sql_text.length());
             }
 
@@ -125,73 +129,76 @@ public class SQLExecutorDefault implements SQLExecutor {
         }
     }
 
-    public int execute(InsertStatement stmt) {
-        // todo
-        return 0;
-    }
-
-    public int execute(UpdateStatement stmt) {
-        // todo
-        return 0;
-    }
-
-    public int execute(DeleteStatement stmt) {
-        // todo
-        return 0;
-    }
-
-    public SQLUpdateStatistics execute(Node node) throws DBException {
+    public SQLUpdateStatistics execute(ASTNode node) throws DBException {
         String responseMessage = "";
         int size = 0;
 
         // close result set if exists
         close();
 
+        IElementType etype = node.getElementType();
         long ms = System.currentTimeMillis();
-        if (node.getElementType() == PLSqlTypesAdopted.DELETE_COMMAND){
+
+        // DML statement processing
+        if (etype == PLSqlTypesAdopted.DELETE_COMMAND){
             size = executeUpdate(node.getText());
             responseMessage = size + " rows deleted";
-        } else if ( node.getElementType() == PLSqlTypesAdopted.INSERT_COMMAND){
+        } else if ( etype == PLSqlTypesAdopted.INSERT_COMMAND){
             size = executeUpdate(node.getText());
             responseMessage = size + " rows inserted";
-        } else if (node.getElementType() == PLSqlTypesAdopted.UPDATE_COMMAND){
+        } else if (etype == PLSqlTypesAdopted.UPDATE_COMMAND){
             size = executeUpdate(node.getText());
             responseMessage = size + " rows updated";
-        } else if (node.getElementType() == PLSqlTypesAdopted.TABLE_DEF){
+        } else if (etype == PLSqlTypesAdopted.MERGE_COMMAND){
+            size = executeUpdate(node.getText());
+            responseMessage = size + " rows updated";
+
+            // DDL statement processing
+        } else if (etype == PLSqlTypesAdopted.TABLE_DEF){
             size = executeUpdate(node.getText());
             responseMessage = "Table created";
-        } else if (node.getElementType() == PLSqlTypesAdopted.CREATE_VIEW) {
+        } else if (etype == PLSqlTypesAdopted.CREATE_VIEW) {
             size = executeUpdate(node.getText());
             responseMessage = "View created";
-        } else if (node.getElementType() == PLSqlTypesAdopted.ALTER_TABLE) {
+        } else if (etype == PLSqlTypesAdopted.ALTER_TABLE) {
             size = executeUpdate(node.getText());
             responseMessage = "Table altered";
-        } else if (node.getElementType() == PLSqlTypesAdopted.CREATE_INDEX) {
+        } else if (etype == PLSqlTypesAdopted.CREATE_SEQUENCE) {
             size = executeUpdate(node.getText());
-            responseMessage = "Index dropped";
-        } else if (node.getElementType() == PLSqlTypesAdopted.DROP_TABLE) {
+            responseMessage = "Sequence created";
+        } else if (etype == PLSqlTypesAdopted.CREATE_INDEX) {
+            size = executeUpdate(node.getText());
+            responseMessage = "Index created";
+        } else if (etype == PLSqlTypesAdopted.DROP_TABLE) {
             size = executeUpdate(node.getText());
             responseMessage = "Table dropped";
-        } else if (node.getElementType() == PLSqlTypesAdopted.DROP_VIEW) {
+        } else if (etype == PLSqlTypesAdopted.DROP_VIEW) {
             size = executeUpdate(node.getText());
             responseMessage = "View dropped";
-        } else if (node.getElementType() == PLSqlTypesAdopted.DROP_FUNCTION) {
+        } else if (etype == PLSqlTypesAdopted.DROP_FUNCTION) {
             size = executeUpdate(node.getText());
             responseMessage = "Function dropped";
-        } else if (node.getElementType() == PLSqlTypesAdopted.DROP_PROCEDURE) {
+        } else if (etype == PLSqlTypesAdopted.DROP_PROCEDURE) {
             size = executeUpdate(node.getText());
             responseMessage = "Procedure dropped";
-        } else if (node.getElementType() == PLSqlTypesAdopted.DROP_PACKAGE) {
+        } else if (etype == PLSqlTypesAdopted.DROP_PACKAGE) {
             size = executeUpdate(node.getText());
             responseMessage = "Package dropped";
-        } else if (node.getElementType() == PLSqlTypesAdopted.DROP_SEQUENCE) {
+        } else if (etype == PLSqlTypesAdopted.DROP_SEQUENCE) {
             size = executeUpdate(node.getText());
             responseMessage = "Sequence dropped";
+        } else if (etype == PLSqlTypesAdopted.COMMIT_STATEMENT) {
+            size = executeUpdate(node.getText());
+            responseMessage = "Commited";
+        } else if (etype == PLSqlTypesAdopted.ROLLBACK_STATEMENT) {
+            size = executeUpdate(node.getText());
+            responseMessage = "Rollbacked";
         } else {
             throw new NotSupportedException("Specified SQL statement not supported");
         }
         ms = System.currentTimeMillis() - ms;
 
+        connectionManager.addProcessedStatement(node);
         return new SQLUpdateStatisticsImpl(size, ms, responseMessage);
     }
 

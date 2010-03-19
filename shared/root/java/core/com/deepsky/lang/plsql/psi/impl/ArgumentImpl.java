@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -30,14 +27,18 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.plsql.psi.Argument;
 import com.deepsky.lang.plsql.psi.Expression;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
+import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -115,4 +116,27 @@ public class ArgumentImpl extends PlSqlElementBase implements Argument {
         // todo
         return false;
     }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitArgument(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
+    // [Contex Management Stuff] Start -------------------------------
+    CtxPath cachedCtxPath = null;
+    public CtxPath getCtxPath() {
+        if(cachedCtxPath != null){
+            return cachedCtxPath;
+        } else {
+            CtxPath parent = super.getCtxPath();
+            cachedCtxPath = new CtxPathImpl(
+                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.ARGUMENT, "..$" + getArgumentName().toLowerCase()));
+        }
+        return cachedCtxPath;
+    }
+    // [Contex Management Stuff] End ---------------------------------
+
 }

@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,29 +25,36 @@
 
 package com.deepsky.view.utils;
 
+import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.ConnectionManagerImpl;
 import com.deepsky.database.ora.DbUrl;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.ConfigurationException;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 
 
 public class TestConnectionProgressIndicator {
 
     DbUrl url;
+    final Project project;
 
-    public TestConnectionProgressIndicator(DbUrl url){
+    public TestConnectionProgressIndicator(Project project, DbUrl url){
         this.url = url;
+        this.project = project;
     }
 
     public void checkConnection(){
 
-        ProgressIndicatorHelper progress = new ProgressIndicatorHelper("Test Connection");
+        ProgressIndicatorHelper progress = new ProgressIndicatorHelper(project, "Test Connection");
         boolean res = progress.run(new ProgressIndicatorListener() {
             boolean result;
 
             public boolean isComplete() {
                 try {
-                    result = ConnectionManagerImpl.getInstance().checkConnection(url);
+                    ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+//                    result = ConnectionManagerImpl.getInstance().checkConnection(url);
+                    result = manager.checkConnection(url);
                 } catch (ConfigurationException e1) {
                     result = false;
                 }

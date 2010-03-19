@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,16 +25,16 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.TokenSet;
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.CompositeName;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
-import com.deepsky.lang.plsql.psi.resolve.VariantsProcessor777;
 import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
 import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.psi.resolve.VariantsProcessor777;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PlSqlCompositeNameBase extends PlSqlElementBase implements CompositeName {
@@ -54,7 +51,7 @@ public abstract class PlSqlCompositeNameBase extends PlSqlElementBase implements
             int i = 0;
             for (NameFragmentRef node : names) {
                 if (node == elem) {
-                    if(i == 0){
+                    if (i == 0) {
                         return createVariantsProcessorFront();
                     } else {
                         ResolveContext777 _777 = getResolveContext();
@@ -107,19 +104,24 @@ public abstract class PlSqlCompositeNameBase extends PlSqlElementBase implements
 
 
     @NotNull
-    public ResolveContext777 resolve(NameFragmentRef namePart) throws NameNotResolvedException{
+    public ResolveContext777 resolve(NameFragmentRef namePart) throws NameNotResolvedException {
 
         NameFragmentRef[] pieces = getNamePieces();
-        int pos = namePart == null? pieces.length-1: getFragmentIndex(namePart);
+        int pos = namePart == null ? pieces.length - 1 : getFragmentIndex(namePart);
 
         if (pos == -1) {
-            String text = namePart == null? getText(): namePart.getText();
+            String text = namePart == null ? getText() : namePart.getText();
             throw new NameNotResolvedException("Could not resolve name: " + text);
         }
 
         ResolveContext777 ctx = getResolveContext();
-        for (int i = 1; --pos >= 0; i++) {
-            ctx = ctx.resolve(pieces[i]);
+        int i = 1;
+        try {
+            for (; --pos >= 0; i++) {
+                ctx = ctx.resolve(pieces[i]);
+            }
+        } catch (NameNotResolvedException e) {
+             throw new NameNotResolvedException(pieces[i], "Name not resolved");  
         }
         return ctx;
     }

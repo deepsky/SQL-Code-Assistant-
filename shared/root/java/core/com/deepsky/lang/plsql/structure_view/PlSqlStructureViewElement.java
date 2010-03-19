@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -30,8 +27,11 @@ package com.deepsky.lang.plsql.structure_view;
 
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.ctrl.CommitStatement;
+import com.deepsky.lang.plsql.psi.ctrl.RollbackStatement;
 import com.deepsky.lang.plsql.psi.ddl.*;
 import com.deepsky.lang.plsql.psi.utils.Formatter;
+import com.deepsky.utils.StringUtils;
 import com.deepsky.view.Icons;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.navigation.ItemPresentation;
@@ -99,6 +99,10 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                 childrenElements.add(node);
             }
 
+            public void visitMergeStatement(final MergeStatement node) {
+                childrenElements.add(node);
+            }
+
             public void visitSubquery(final Subquery node) {
                 childrenElements.add(node);
             }
@@ -163,6 +167,10 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                 childrenElements.add(view);
             }
 
+            public void visitSqlPlusCommand(SqlPlusCommand command) {
+                childrenElements.add(command);
+            }
+
             public void visitAlterTable(AlterTable table){
                 childrenElements.add(table);
             }
@@ -179,6 +187,16 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
             public void visitSelectStatementUnion(SelectStatementUnion select) {
                 childrenElements.add(select);
             }
+            public void visitCommitStatement(CommitStatement statement) {
+                childrenElements.add(statement);
+            }
+            public void visitRollbackStatement(RollbackStatement statement) {
+                childrenElements.add(statement);
+            }
+            public void visitDeclarationList(DeclarationList declarationList) {
+                childrenElements.add(declarationList);
+            }
+
         });
 
         StructureViewTreeElement[] children = new StructureViewTreeElement[childrenElements.size()];
@@ -191,6 +209,7 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
 
     public ItemPresentation getPresentation() {
         return new ItemPresentation() {
+            String locationString = null;
             public String getPresentableText() {
                 try {
                     if (myElement instanceof SelectStatementUnion) {
@@ -206,7 +225,7 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                             }
                             String tabName = "";
                             if (tabs[i] instanceof PlainTable) {
-                                tabName = ((PlainTable) tabs[i]).getTableName().toUpperCase();
+                                tabName = StringUtils.discloseDoubleQuotes(((PlainTable) tabs[i]).getTableName().toUpperCase());
                             } else {
                                 tabName = "SUBQUERY";
                             }
@@ -217,19 +236,28 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                                 break;
                             }
                         }
-                        return "SELECT [from " + tabList + "]";
+                        locationString =  "from " + tabList;
+                        return "select";
                     } else if (myElement instanceof InsertStatement) {
                         InsertStatement insert = (InsertStatement) myElement;
-                        String tab = insert.getIntoTable().getTableName();
-                        return "INSERT [into " + tab.toUpperCase() + "]";
+                        String tab = StringUtils.discloseDoubleQuotes(insert.getIntoTable().getTableName());
+                        locationString =  "into " + tab.toUpperCase();
+                        return "insert";
                     } else if (myElement instanceof UpdateStatement) {
                         UpdateStatement update = (UpdateStatement) myElement;
-                        String tab = update.getTargetTable().getTableName();
-                        return "UPDATE [table " + tab.toUpperCase() + "]";
+                        String tab = StringUtils.discloseDoubleQuotes(update.getTargetTable().getTableName());
+                        locationString =  "table " + tab.toUpperCase();
+                        return "update";
                     } else if (myElement instanceof DeleteStatement) {
                         DeleteStatement delete = (DeleteStatement) myElement;
                         String tab = delete.getTargetTable().getTableName();
-                        return "DELETE [table " + tab.toUpperCase() + "]";
+                        locationString =  "table " + tab.toUpperCase();
+                        return "delete";
+                    } else if (myElement instanceof MergeStatement) {
+                        MergeStatement merge = (MergeStatement) myElement;
+                        String tab = merge.getIntoTable().getTableName();
+                        locationString =  "into " + tab.toUpperCase();
+                        return "merge";
                     } else if (myElement instanceof Function) {
                         Function func = (Function) myElement;
                         String name = func.getEName();
@@ -244,6 +272,8 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                         return name.toLowerCase() + argList + ":" + returnType;
                     } else if (myElement instanceof PlSqlBlock) {
                         return "PLSQL BLOCK";
+                    } else if (myElement instanceof DeclarationList) {
+                        return "DECLARE";
                     } else if (myElement instanceof Subquery) {
                         return "SUBQUERY";
                     } else if (myElement instanceof Procedure) {
@@ -262,11 +292,13 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                     } else if (myElement instanceof PackageBody) {
                         PackageBody pkg = (PackageBody) myElement;
                         String name = pkg.getPackageName();
-                        return name.toLowerCase() + " [Package Body]";
+                        locationString =  "Package Body";
+                        return name.toLowerCase();
                     } else if (myElement instanceof PackageSpec) {
                         PackageSpec pkg = (PackageSpec) myElement;
                         String name = pkg.getPackageName();
-                        return name.toLowerCase() + " [Package Specification]";
+                        locationString =  "Package Specification";
+                        return name.toLowerCase();
                     } else if (myElement instanceof VariableDecl) {
                         VariableDecl var = (VariableDecl) myElement;
                         String name = var.getDeclName();
@@ -274,30 +306,35 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                     } else if (myElement instanceof RecordTypeDecl) {
                         RecordTypeDecl type = (RecordTypeDecl) myElement;
                         String name = type.getDeclName();
-                        return name.toLowerCase() + " [Record Type]";
+                        locationString =  "Record Type";
+                        return name.toLowerCase();
                     } else if (myElement instanceof TableCollectionDecl) {
                         TableCollectionDecl type = (TableCollectionDecl) myElement;
                         String name = type.getDeclName();
-                        return name.toLowerCase() + " [Collection Type]";
+                        locationString =  "Collection Type";
+                        return name.toLowerCase();
                     } else if (myElement instanceof VarrayCollectionDecl) {
                         VarrayCollectionDecl type = (VarrayCollectionDecl) myElement;
                         String name = type.getDeclName();
-                        return name.toLowerCase() + " [Varray Type]";
+                        locationString =  "Varray Type";
+                        return name.toLowerCase();
                     } else if (myElement instanceof ObjectTypeDecl) {
                         ObjectTypeDecl type = (ObjectTypeDecl) myElement;
                         String name = type.getDeclName();
-                        return name.toLowerCase() + " [Object Type]";
+                        locationString =  "Object Type";
+                        return name.toLowerCase();
                     } else if (myElement instanceof PackageInitSection) {
                         return "INIT SECTION";
                     } else if (myElement instanceof TableDefinition) {
                         TableDefinition def = (TableDefinition) myElement;
-                        return "CREATE TABLE [" + def.getTableName().toUpperCase() + "]";
+                        return "CREATE TABLE [" + StringUtils.discloseDoubleQuotes(def.getTableName().toUpperCase()) + "]";
                     } else if (myElement instanceof AlterTable) {
                         AlterTable alter = (AlterTable) myElement;
-                        return "ALTER TABLE [" + alter.getTableName().toUpperCase() + "]";
+                        return "ALTER TABLE [" + StringUtils.discloseDoubleQuotes(alter.getTableName().toUpperCase()) + "]";
                     } else if (myElement instanceof Comment) {
                         Comment alter = (Comment) myElement;
-                        return "COMMENT [" + alter.getComment() + "]";
+                        locationString =  alter.getComment();
+                        return "comment";
                     } else if (myElement instanceof CreateIndex) {
                         CreateIndex alter = (CreateIndex) myElement;
                         return "CREATE INDEX [" + alter.getIndexName().toUpperCase() + " on " + alter.getTableName().toUpperCase() + "]";
@@ -312,6 +349,14 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                     } else if (myElement instanceof CreateTrigger) {
                         CreateTrigger trigger = (CreateTrigger) myElement;
                         return "CREATE TRIGGER [" + trigger.getTriggerName().toUpperCase() + "]";
+                    } else if (myElement instanceof SqlPlusCommand) {
+                        SqlPlusCommand sqlplus = (SqlPlusCommand) myElement;
+                        locationString = "sqlplus command";
+                        return sqlplus.getCommand().getText().toLowerCase();
+                    } else if (myElement instanceof CommitStatement) {
+                        return "COMMIT";
+                    } else if (myElement instanceof RollbackStatement) {
+                        return "ROLLBACK";
                     }
                     return  myElement.getText(); //Name();
                 } catch (SyntaxTreeCorruptedException e) {
@@ -341,7 +386,7 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
             }
 
             public String getLocationString() {
-                return null;
+                return locationString;
             }
 
             public Icon getIcon(boolean open) {

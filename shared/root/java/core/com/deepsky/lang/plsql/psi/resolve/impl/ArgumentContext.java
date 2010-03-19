@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -38,6 +35,7 @@ import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.UserDefinedTypeDescriptor;
 import com.deepsky.lang.plsql.struct.types.RowtypeType;
 import com.deepsky.lang.plsql.struct.types.UserDefinedType;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +52,7 @@ public class ArgumentContext implements ResolveContext777 {
         public VariantsProcessor777 create(int narrow_type){
             Type type = arg.getType();
 //            if (type instanceof UserDefinedType) {
-                UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type((UserDefinedType) type);
+                UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type(arg.getProject(), (UserDefinedType) type);
 //                if (tdesc == null) {
 //                    throw new NameNotResolvedException("Type definition not found: " + type.typeName());
 //                }
@@ -72,36 +70,21 @@ public class ArgumentContext implements ResolveContext777 {
         public ResolveContext777 resolve(PsiElement elem) throws NameNotResolvedException {
             String text = elem.getText();
             Type type = arg.getType();
+            Project project = arg.getProject();
+
             if (type instanceof UserDefinedType) {
                 String packageScope = ResolveHelper.getSurroundPackageName(elem);
-                UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type((UserDefinedType) type, packageScope);
+                UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type(project, (UserDefinedType) type, packageScope);
                 if (tdesc == null) {
                     throw new NameNotResolvedException("Type definition not found: " + type.typeName());
                 }
 
-                return UserDefinedTypeHelper.createResolveContext(tdesc).resolve(elem);
-//                if (tdesc instanceof RecordTypeDescriptor) {
-//                    return new RecordTypeContext(elem.getProject(), (RecordTypeDescriptor) tdesc).resolve(elem);
-//                } else if (tdesc instanceof ObjectTypeDescriptor) {
-//                    ObjectTypeDescriptor otype = (ObjectTypeDescriptor) tdesc;
-//                    RecordTypeItemDescriptor item = otype.findItem(text);
-//                    if (item == null) {
-//                        throw new NameNotResolvedException("Type definition does not have " + text + " item");
-//                    }
-//
-//                    return new RecordTypeItemContext(arg.getProject(), otype, item);
-//                } else if (tdesc instanceof TableCollectionDescriptor) {
-//                    // ...
-//                    return new TableCollectionTypeContext(elem.getProject(), (TableCollectionDescriptor) tdesc).resolve(elem);
-//                } else {
-//                }
-//
-//                throw new NameNotResolvedException("Type not supported");
+                return UserDefinedTypeHelper.createResolveContext(project, tdesc).resolve(elem);
             } else if (type instanceof RowtypeType) {
                 RowtypeType rowtype = (RowtypeType) type;
-                TableDescriptor tdesc = ResolveHelper.describeTable(rowtype.getTableName());
+                TableDescriptor tdesc = ResolveHelper.describeTable(project, rowtype.getTableName());
                 if (tdesc != null) {
-                    return new PlainTableColumnContext(arg.getProject(), tdesc, text);
+                    return new PlainTableColumnContext(project, tdesc, text);
                 }
                 throw new NameNotResolvedException("Table " + rowtype.getTableName() + " does not exist");
             } else {
@@ -112,12 +95,6 @@ public class ArgumentContext implements ResolveContext777 {
 
         public Type getType() throws NameNotResolvedException {
             Type type = arg.getType();
-//            if (type.isUserDefined()) {
-//                UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type(type.typeName());
-//                if (tdesc == null) {
-//                    throw new NameNotResolvedException("Type definition not found: " + type.typeName());
-//                }
-//            }
             return type;
         }
 }

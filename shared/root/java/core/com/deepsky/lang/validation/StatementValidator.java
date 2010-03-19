@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,6 +25,7 @@
 
 package com.deepsky.lang.validation;
 
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.psi.ColumnSpec;
@@ -43,8 +41,7 @@ public class StatementValidator {
 
     public static void validate(AnnotationHolder myHolder, InsertStatement node){
         String table = node.getIntoTable().getTableName();
-         DbObject[] objs = ObjectCacheFactory
-                 .getObjectCache()
+         DbObject[] objs = PluginKeys.OBJECT_CACHE.getData(node.getProject())//ObjectCacheFactory.getObjectCache()
                  .findByNameForType(
                     ObjectCache.TABLE | ObjectCache.VIEW, table
                  );

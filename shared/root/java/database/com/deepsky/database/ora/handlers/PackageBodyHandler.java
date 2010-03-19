@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,21 +25,20 @@
 
 package com.deepsky.database.ora.handlers;
 
+import com.deepsky.database.cache.Cache;
+import com.deepsky.database.cache.UpdatableCache;
 import com.deepsky.database.ora.*;
 
-import com.deepsky.database.ora.desc.PackageBodyDescriptorImpl;
+import com.deepsky.database.ora.desc.*;
 import com.deepsky.database.DBException;
 import com.deepsky.database.ResultSetHelper;
 import com.deepsky.database.MappingHelper;
+import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.struct.*;
+import com.deepsky.lang.plsql.struct.types.UserDefinedType;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.deepsky.lang.plsql.struct.parser.PlSqlASTParser;
-import com.deepsky.lang.plsql.struct.PackageDescriptor;
-import com.deepsky.lang.plsql.struct.SqlScriptLocator;
-import com.deepsky.lang.plsql.struct.DbObject;
-import com.deepsky.lang.plsql.struct.PackageBodyDescriptor;
 import com.deepsky.lang.plsql.parser.WrappedPackageException;
-import com.deepsky.lang.plsql.psi.PlSqlElement;
-import com.deepsky.lang.plsql.psi.PackageBody;
 import com.deepsky.utils.StringUtils;
 
 import java.util.List;
@@ -130,6 +126,7 @@ public class PackageBodyHandler implements BaseHandler {
                         new ParseEventListener.ParseEvent(p.name, content, getId())
                 );
             } catch (Exception e) {
+                log.warn("Could not parse the package body " + p.name + ", owner: " + p.owner);
                 desc = new PackageBodyDescriptorImpl(ctx, p.name);
                 desc.setErrored(true);
 //                desc.setPackageSpecSource("");
@@ -155,6 +152,76 @@ public class PackageBodyHandler implements BaseHandler {
         this.listener = listener;
     }
 
+    public boolean finalUpdate(DbObjectEx dex, Cache cache) {
+        boolean updateNeeded = false;
+        if(dex.dbo instanceof PackageBodyDescriptor){
+            PackageBodyDescriptor pdesc = (PackageBodyDescriptor) dex.dbo;
+            for(PlSqlObject po: pdesc.getObjects()){
+                if (po instanceof FunctionDescriptor) {
+                    FunctionDescriptor f = (FunctionDescriptor) po;
+                    for(String arg: f.getArgumentNames()){
+                        Type t = f.getArgumentType(arg);
+                        updateNeeded |= checkAndcompleteUdtType(t, pdesc, cache);
+                    }
+                } else if (po instanceof ProcedureDescriptor) {
+                    ProcedureDescriptor p = (ProcedureDescriptor) po;
+                    for(String arg: p.getArgumentNames()){
+                        Type t = p.getArgumentType(arg);
+                        updateNeeded |= checkAndcompleteUdtType(t, pdesc, cache);
+                    }
+                } else if (po instanceof VariableDescriptor) {
+                    VariableDescriptor var = (VariableDescriptor) po;
+                    Type t = var.getType();
+                    updateNeeded |= checkAndcompleteUdtType(t, pdesc, cache);
+                } else if (po instanceof RecordTypeDescriptor) {
+                    RecordTypeDescriptor rdesc = (RecordTypeDescriptor) po;
+                    for (RecordTypeItemDescriptor item : rdesc.getItems()) {
+                        Type t = item.getType();
+                        updateNeeded |= checkAndcompleteUdtType(t, pdesc, cache);
+                    }
+                } else if (po instanceof TableCollectionDescriptor) {
+                    TableCollectionDescriptor coll = (TableCollectionDescriptor) po;
+                    Type t = coll.getType();
+                    updateNeeded |= checkAndcompleteUdtType(t, pdesc, cache);
+                } else if (po instanceof VarrayCollectionDescriptor) {
+                    VarrayCollectionDescriptor varray = (VarrayCollectionDescriptor) po;
+                    Type t = varray.getType();
+                    updateNeeded |= checkAndcompleteUdtType(t, pdesc, cache);
+                } else if (po instanceof RefCursorDecl) {
+                    // skip
+                } else {
+                }
+            }
+        }
+
+        return updateNeeded;
+    }
+
+
+    private boolean checkAndcompleteUdtType(Type t, PackageBodyDescriptor pdesc, Cache cache) {
+        if (t instanceof UserDefinedType) {
+            UserDefinedType udt = (UserDefinedType) t;
+            if (udt.getDefinitionPackage() == null) {
+                if (pdesc.findObjectByName(udt.getTypeName2()).length != 0) {
+                    // UDT definition found in the package body, complete UDT
+                    udt.setDefinitionPackage(pdesc.getName());
+                    return true;
+                } else {
+                    // search for type in the Package specification
+                    DbObject dbo = cache.get(pdesc.getName(), DbObject.PACKAGE);
+                    if(dbo != null){
+                        PackageDescriptor _pdesc = (PackageDescriptor) dbo;
+                        if(_pdesc.findObjectByName(udt.getTypeName2()).length != 0){
+                            // UDT definition found in the package spec
+                            udt.setDefinitionPackage(pdesc.getName());
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     private SourceTemp[] loadPackageBodies(ConnectionHolder conn, String[] owners, String[] packageNames) throws DBException {
         String sql = pkgsSourceListSql.replace("<NAMES>", StringUtils.convert2listStrings(packageNames));
@@ -204,6 +271,7 @@ public class PackageBodyHandler implements BaseHandler {
 
     PackageBodyDescriptor parsePackageBody(DbUrl url, String spec) throws Exception {
         Reader r = new StringReader(spec);
+        parser.ignoreSyntaxErrors(true);
         PlSqlElement[] elems = parser.parseStream(r);
 
         if (elems.length == 1) {

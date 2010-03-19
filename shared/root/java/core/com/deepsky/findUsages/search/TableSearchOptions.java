@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -29,7 +26,7 @@
 package com.deepsky.findUsages.search;
 
 import com.deepsky.findUsages.persistence.SqlSearchParameters;
-import com.deepsky.lang.plsql.psi.TableDefinition;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +48,7 @@ public class TableSearchOptions implements GenericSearchOptions {
 
     @NotNull
     public SearchOption[] getSearchOptions() {
-        SqlSearchParameters searchParams = SqlSearchParameters.getInstance();
+        SqlSearchParameters searchParams = SqlSearchParameters.getInstance(table.getProject());
         SearchOption[] out = new SearchOption[2];
         out[0] = new SearchOptionImpl("Usages", searchParams.isTableUsages, 0);
         out[1] = new SearchOptionImpl("Usages of Columns", searchParams.isUsagesOfColumns, 1);
@@ -89,7 +86,7 @@ public class TableSearchOptions implements GenericSearchOptions {
 
         public void setEnabled(boolean value) {
             enabled = value;
-            SqlSearchParameters searchParams = SqlSearchParameters.getInstance();
+            SqlSearchParameters searchParams = SqlSearchParameters.getInstance(table.getProject());
             if(tag == 0){
                 searchParams.isTableUsages = value;
             } else if(tag == 1){

@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -32,8 +29,8 @@ import com.deepsky.lang.plsql.struct.Type;
 
 public class LongType extends TypeBase {
 
-    static final long serialVersionUID = 7927622512849111187L;
+    static final long serialVersionUID = 7927622512849101187L;
     public LongType(){
-        super(Type.LONGTYPE, "LONGTYPE");
+        super(Type.LONGTYPE, "LONG");
     }
 }

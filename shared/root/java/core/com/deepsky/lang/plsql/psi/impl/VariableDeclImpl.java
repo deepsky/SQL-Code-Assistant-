@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -38,9 +35,11 @@ import com.deepsky.lang.plsql.psi.resolve.ASTTreeProcessor;
 import com.deepsky.lang.plsql.psi.resolve.PackageTriggerHandler;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
+import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.PackageDescriptor;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.VariableDescriptor;
+import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -52,14 +51,9 @@ public class VariableDeclImpl extends PlSqlElementBase implements VariableDecl {
         super(astNode);
     }
 
-//    public String getVariableName() {
-//        PsiElement e = this.findChildByType(PLSqlTypesAdopted.VARIABLE_NAME);
-//        if(e != null){
-//            return e.getText();
-//        } else {
-//            throw new SyntaxTreeCorruptedException();
-//        }
-//    }
+    public PsiElement getVariableName() {
+        return this.findChildByType(PLSqlTypesAdopted.VARIABLE_NAME);
+    }
 
     public String getQuickNavigateInfo(){
         StringBuilder out = new StringBuilder();
@@ -160,4 +154,19 @@ public class VariableDeclImpl extends PlSqlElementBase implements VariableDecl {
             throw new SyntaxTreeCorruptedException();
         }
     }
+
+    // [Contex Management Stuff] Start -------------------------------
+    CtxPath cachedCtxPath = null;
+    public CtxPath getCtxPath() {
+        if(cachedCtxPath != null){
+            return cachedCtxPath;
+        } else {
+            CtxPath parent = super.getCtxPath();
+            cachedCtxPath = new CtxPathImpl(
+                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.VARIABLE_DECL, "..$" + getDeclName().toLowerCase()));
+        }
+        return cachedCtxPath;
+    }
+    // [Contex Management Stuff] End ---------------------------------
+
 }

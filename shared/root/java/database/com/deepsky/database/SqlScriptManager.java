@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,12 +25,16 @@
 
 package com.deepsky.database;
 
+import com.deepsky.database.fs.SqlScriptFile;
+import com.deepsky.database.fs.SysObjectSqlFile;
+import com.deepsky.database.ora.DbObjectScriptLocator;
+import com.deepsky.database.ora.SysDbObjectScriptLocator;
 import com.deepsky.lang.common.PlSqlFile;
+import com.deepsky.lang.common.PlSqlSupportLoader;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
 import com.deepsky.lang.plsql.struct.*;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
@@ -42,6 +43,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.testFramework.LightVirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,12 +88,52 @@ public class SqlScriptManager {
         }
 
         if (file == null) {
-            VirtualFile vf = locator.getScript();
+            VirtualFile vf = getScriptForLocator(project, locator); //locator.getScript();
             file = (PlSqlFile) PsiManager.getInstance(project).findFile(vf);
         }
         return file;
     }
 
+
+    /**
+     * todo - DIRTY WORKAROUND should be fixed ASAP
+     *
+     * @param locator
+     * @return
+     */
+    private static VirtualFile getScriptForLocator(Project project, SqlScriptLocator locator) {
+        if (locator instanceof DbObjectScriptLocator) {
+            DbObjectScriptLocator dbol = (DbObjectScriptLocator) locator;
+            CacheManager cacheManager = PluginKeys.CACHE_MANAGER.getData(project);
+            if (cacheManager != null) {
+                String content = cacheManager.getDbObjectSource(dbol.url, dbol.type, dbol.name);
+                if (content != null) {
+                    return new SqlScriptFile(content, dbol);
+                }
+            }
+
+            return null;
+
+        } else if (locator instanceof SysDbObjectScriptLocator) {
+            SysDbObjectScriptLocator sysl = (SysDbObjectScriptLocator) locator;
+            CacheManager cacheManager = PluginKeys.CACHE_MANAGER.getData(project);
+            if (cacheManager != null) {
+//            String content = CacheManager3.getInstance().getSysDbObjectSource(type, name);
+                String content = cacheManager.getSysDbObjectSource(sysl.type, sysl.name);
+                if (content != null) {
+                    return new SysObjectSqlFile(content, sysl);
+                }
+            }
+//        String content = CacheManager3.getInstance().getSysDbObjectSource(type, name);
+//        if(content != null){
+//            return new SysObjectSqlFile(content, this);
+//        }
+            return new LightVirtualFile(sysl.name, PlSqlSupportLoader.PLSQL, "");
+        } else {
+            // FileBasedContextUrl
+            return getScriptForLocator(project, locator); //locator.getScript();
+        }
+    }
 
     public static boolean openFileInEditor(Project project, DbObject dbo) {
 
@@ -106,17 +148,25 @@ public class SqlScriptManager {
         for (VirtualFile v : fileEditorManager.getOpenFiles()) {
             if (v.getPath().equals(url)) {
                 //
-                fileEditorManager.openFile(v, true);
-                return true;
+//                fileEditorManager.openFile(v, true);
+                PsiFile file = PsiManager.getInstance(project).findFile(v);
+                if (file != null) {
+//            VirtualFile vfile = file.getViewProvider().getVirtualFile();
+//            fileEditorManager.openFile(vfile, true);
+                    int offset = locatePsiElement((PlSqlFile) file, dbo).getTextOffset();
+                    return moveToOffset((PlSqlFile) file, offset);
+                }
+                return false;
             }
         }
 
-        VirtualFile vf = locator.getScript();
+        VirtualFile vf = getScriptForLocator(project, locator); //locator.getScript();
         PsiFile file = PsiManager.getInstance(project).findFile(vf);
         if (file != null) {
-            VirtualFile vfile = file.getViewProvider().getVirtualFile();
-            fileEditorManager.openFile(vfile, true);
-            return true;
+//            VirtualFile vfile = file.getViewProvider().getVirtualFile();
+//            fileEditorManager.openFile(vfile, true);
+            int offset = locatePsiElement((PlSqlFile) file, dbo).getTextOffset();
+            return moveToOffset((PlSqlFile) file, offset);
         }
 
         return false;
@@ -168,13 +218,13 @@ todo -- there is need a mapping facilities Obj DEF -> Obj DECL and vise verse
             log.warn("Source locator not found for: " + dbo.getClass().getSimpleName());
             return null;
         }
-        VirtualFile vf = locator.getScript();
+        VirtualFile vf = getScriptForLocator(project, locator); //locator.getScript();
         // we do not expect any more files
         return PsiManager.getInstance(project).findFile(vf);
     }
 
     public static PsiElement openFile(Project project, String user, int type, String name) {
-        ObjectCache ocache = ObjectCacheFactory.getObjectCache();
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project); //ObjectCacheFactory.getObjectCache();
         if (ocache.isReady()) {
             DbObject[] objects = ocache.findByNameForType(user, type, name);
             for (DbObject dbo : objects) {
@@ -183,7 +233,7 @@ todo -- there is need a mapping facilities Obj DEF -> Obj DECL and vise verse
                     log.warn("Source locator not found for: " + dbo.getClass().getSimpleName());
                     continue;
                 }
-                VirtualFile vf = locator.getScript();
+                VirtualFile vf = getScriptForLocator(project, locator); //locator.getScript();
                 // we do not expect any more files
                 return PsiManager.getInstance(project).findFile(vf);
             }
@@ -193,6 +243,34 @@ todo -- there is need a mapping facilities Obj DEF -> Obj DECL and vise verse
         return null;
     }
 
+
+    private static PlSqlElement locatePsiElement(PlSqlFile file, DbObject dbo) {
+        PlSqlElement out = null;
+        if (file != null) {
+            if (dbo instanceof ViewDescriptor) {
+                out = (PlSqlElement) file.findDeclaration((ViewDescriptor) dbo);
+            } else if (dbo instanceof TableDescriptor) {
+                out = (PlSqlElement) file.findDeclaration((TableDescriptor) dbo);
+            } else if (dbo instanceof ColumnDescriptor) {
+                out = (PlSqlElement) file.findDeclaration((ColumnDescriptor) dbo);
+            } else if (dbo instanceof VariableDescriptor) {
+                out = (PlSqlElement) file.findDeclaration((VariableDescriptor) dbo);
+            } else if (dbo instanceof RefCursorTypeDescriptor) {
+                out = (PlSqlElement) file.findDeclaration((RefCursorTypeDescriptor) dbo);
+            } else if (dbo instanceof UserDefinedTypeDescriptor) {
+                out = (PlSqlElement) file.findDeclaration((UserDefinedTypeDescriptor) dbo);
+            } else if (dbo instanceof RecordTypeItemDescriptor) {
+                out = (PlSqlElement) file.findDeclaration((RecordTypeItemDescriptor) dbo);
+            } else if (dbo instanceof PackageBodyDescriptor) {
+                out = (PlSqlElement) file.findDeclaration((PackageBodyDescriptor) dbo);
+            } else if (dbo instanceof PackageDescriptor) {
+                out = (PlSqlElement) file.findDeclaration((PackageDescriptor) dbo);
+            } else if (dbo instanceof ExecutableDescriptor) {
+                out = (PlSqlElement) file.findDeclaration((ExecutableDescriptor) dbo);
+            }
+        }
+        return out != null ? out : file;
+    }
 
     public static PlSqlElement mapToPsiTree(Project project, DbObject dbo) {
 
@@ -213,42 +291,44 @@ todo -- there is need a mapping facilities Obj DEF -> Obj DECL and vise verse
         }
 
         if (file == null) {
-            VirtualFile vf = locator.getScript();
+            VirtualFile vf = getScriptForLocator(project, locator); //locator.getScript();
             if (vf != null) {
                 file = (PlSqlFile) PsiManager.getInstance(project).findFile(vf);
             }
         }
 
-        if (file != null) {
-            if (dbo instanceof ViewDescriptor) {
-                return (PlSqlElement) file.findDeclaration((ViewDescriptor) dbo);
-            } else if (dbo instanceof TableDescriptor) {
-                return (PlSqlElement) file.findDeclaration((TableDescriptor) dbo);
-            } else if (dbo instanceof ColumnDescriptor) {
-                return (PlSqlElement) file.findDeclaration((ColumnDescriptor) dbo);
-            } else if (dbo instanceof VariableDescriptor) {
-                return (PlSqlElement) file.findDeclaration((VariableDescriptor) dbo);
-            } else if (dbo instanceof RefCursorTypeDescriptor) {
-                return (PlSqlElement) file.findDeclaration((RefCursorTypeDescriptor) dbo);
-            } else if (dbo instanceof UserDefinedTypeDescriptor) {
-                return (PlSqlElement) file.findDeclaration((UserDefinedTypeDescriptor) dbo);
-            } else if (dbo instanceof RecordTypeItemDescriptor) {
-                return (PlSqlElement) file.findDeclaration((RecordTypeItemDescriptor) dbo);
-            } else if (dbo instanceof PackageBodyDescriptor) {
-                return (PlSqlElement) file.findDeclaration((PackageBodyDescriptor) dbo);
-            } else if (dbo instanceof PackageDescriptor) {
-                return (PlSqlElement) file.findDeclaration((PackageDescriptor) dbo);
-            } else if (dbo instanceof ExecutableDescriptor) {
-                return (PlSqlElement) file.findDeclaration((ExecutableDescriptor) dbo);
-            }
-        }
-
-        // not found
-        return file;
+        return locatePsiElement(file, dbo);
+//        if (file != null) {
+//            if (dbo instanceof ViewDescriptor) {
+//                return (PlSqlElement) file.findDeclaration((ViewDescriptor) dbo);
+//            } else if (dbo instanceof TableDescriptor) {
+//                return (PlSqlElement) file.findDeclaration((TableDescriptor) dbo);
+//            } else if (dbo instanceof ColumnDescriptor) {
+//                return (PlSqlElement) file.findDeclaration((ColumnDescriptor) dbo);
+//            } else if (dbo instanceof VariableDescriptor) {
+//                return (PlSqlElement) file.findDeclaration((VariableDescriptor) dbo);
+//            } else if (dbo instanceof RefCursorTypeDescriptor) {
+//                return (PlSqlElement) file.findDeclaration((RefCursorTypeDescriptor) dbo);
+//            } else if (dbo instanceof UserDefinedTypeDescriptor) {
+//                return (PlSqlElement) file.findDeclaration((UserDefinedTypeDescriptor) dbo);
+//            } else if (dbo instanceof RecordTypeItemDescriptor) {
+//                return (PlSqlElement) file.findDeclaration((RecordTypeItemDescriptor) dbo);
+//            } else if (dbo instanceof PackageBodyDescriptor) {
+//                return (PlSqlElement) file.findDeclaration((PackageBodyDescriptor) dbo);
+//            } else if (dbo instanceof PackageDescriptor) {
+//                return (PlSqlElement) file.findDeclaration((PackageDescriptor) dbo);
+//            } else if (dbo instanceof ExecutableDescriptor) {
+//                return (PlSqlElement) file.findDeclaration((ExecutableDescriptor) dbo);
+//            }
+//        }
+//
+//        // not found
+//        return file;
     }
 
     public static boolean moveToOffset(@NotNull PlSqlFile plSqlFile, int offset) {
-        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+//        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+        Project project = plSqlFile.getProject();
 
         final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
         OpenFileDescriptor desc = new OpenFileDescriptor(project, plSqlFile.getVirtualFile(), offset);

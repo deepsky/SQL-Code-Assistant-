@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,6 +25,7 @@
 
 package com.deepsky.lang.common;
 
+import com.deepsky.lang.plsql.ConfigurationException;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
@@ -48,13 +46,14 @@ public class PluginKey<T> {
     }
 
     public static <T> PluginKey<T> create(@NotNull String name) {
-        return new PluginKey(name);
+        return new PluginKey<T>(name);
     }
 
     public void putData(@NotNull T object, @NotNull Project project){
         project.putUserData(tt, object);    
     }
 
+/*
     @Nullable
     public T getData() {
         Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
@@ -63,12 +62,13 @@ public class PluginKey<T> {
         }
         return null;
     }
+*/
 
-    @Nullable
+    @NotNull
     public T getData(Project project) {
         if (project != null) {
             return project.getUserData(tt);
         }
-        return null;
+        throw new ConfigurationException("Project is NULL!");
     }
 }

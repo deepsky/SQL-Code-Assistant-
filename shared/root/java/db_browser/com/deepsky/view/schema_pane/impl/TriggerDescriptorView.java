@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -35,6 +32,7 @@ import com.deepsky.lang.plsql.struct.TriggerDescriptor;
 import com.deepsky.view.Icons;
 import com.deepsky.view.schema_pane.ItemViewWrapper;
 import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.Project;
@@ -56,7 +54,8 @@ public class TriggerDescriptorView extends ItemViewWrapperBase implements ItemVi
     Cache cache;
     String name;
 
-    public TriggerDescriptorView(ItemViewWrapper parent, Cache cache, String name) {
+    public TriggerDescriptorView(Project project, ItemViewWrapper parent, Cache cache, String name) {
+        super(project);
         this.cache = cache;
         this.name = name;
         this.parent = parent;
@@ -103,11 +102,11 @@ public class TriggerDescriptorView extends ItemViewWrapperBase implements ItemVi
         return new ToggleAction[]{open}; //, drop, enable, disable};
     }
 
-    public void handle(int command) {
+    public void handle(AnActionEvent event, int command) {
         switch (command) {
             case OPEN: {
                 DbObject dbo = cache.get(name, DbObject.TRIGGER);
-                Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
 
                 boolean result = SqlScriptManager.openFileInEditor(project, dbo);
                 break;
@@ -141,7 +140,7 @@ public class TriggerDescriptorView extends ItemViewWrapperBase implements ItemVi
 
     public void runDefaultAction() {
         DbObject dbo = cache.get(name, DbObject.TRIGGER);
-        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+        //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
         boolean result = SqlScriptManager.openFileInEditor(project, dbo);
     }
 

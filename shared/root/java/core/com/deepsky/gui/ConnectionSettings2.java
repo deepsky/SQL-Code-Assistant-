@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,9 +25,11 @@
 
 package com.deepsky.gui;
 
+import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.ConnectionManagerImpl;
 import com.deepsky.database.ConnectionStatus;
 import com.deepsky.database.ora.DbUrl;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.ConfigurationException;
 import com.deepsky.view.utils.ProgressIndicatorHelper;
 import com.deepsky.view.utils.ProgressIndicatorListener;
@@ -90,12 +89,14 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
         testConnectionButton.addActionListener(this);
     }
 
+/*
     public ConnectionSettings2(
             String host, String serviceName, String port, String userName, String password,
             int refreshPeriod, boolean loginOnStartup, boolean reconnect) {
         this(LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext()), host, serviceName, port, userName, password,
                 refreshPeriod, loginOnStartup, reconnect);
     }
+*/
 
 //    public ConnectionSettings2(Project project, String host, String serviceName, String port, String userName, String password) {
 //        super(project, false);
@@ -255,8 +256,7 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
     public void actionPerformed(ActionEvent e) {
 
         if (e.getActionCommand().equals(TEST_CONNECTION)) {
-
-            ProgressIndicatorHelper progress = new ProgressIndicatorHelper("Test Connection");
+            ProgressIndicatorHelper progress = new ProgressIndicatorHelper(project, "Test Connection");
             final String[] message = new String[1];
             final String hostName = ((String) host.getSelectedItem()).trim();
             boolean res = progress.run(new ProgressIndicatorListener() {
@@ -271,7 +271,9 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
 
                 public boolean isComplete() {
                     try {
-                        ConnectionStatus st = ConnectionManagerImpl.getInstance().checkConnectionEx(url);
+                        ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+//                        ConnectionStatus st = ConnectionManagerImpl.getInstance().checkConnectionEx(url);
+                        ConnectionStatus st = manager.checkConnectionEx(url);
                         result = st.isConnected();
                         message[0] = st.getErrorMessage();
                     } catch (ConfigurationException e1) {

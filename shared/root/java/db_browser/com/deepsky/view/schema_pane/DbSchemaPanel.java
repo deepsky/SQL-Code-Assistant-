@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,6 +25,8 @@
 
 package com.deepsky.view.schema_pane;
 
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.wm.ToolWindow;
@@ -58,12 +57,15 @@ public class DbSchemaPanel extends JPanel {
     private DbSchemaItemPropertySheetPanel _propertyPanel;
     private ToolWindow _toolWindow;
     private JSplitPane _splitPane;
+    final Project project;
+
     private final ViewerTreeSelectionListener _treeSelectionListener = new ViewerTreeSelectionListener();
 //    private final PlSqlProjectComponent _projectComponent;
     DBBrowserWindow window;
 
-    public DbSchemaPanel(DBBrowserWindow window) {
+    public DbSchemaPanel(Project project, DBBrowserWindow window) {
         this.window = window;
+        this.project = project;
         buildGUI();
     }
 
@@ -102,7 +104,6 @@ public class DbSchemaPanel extends JPanel {
             _tree.setSelectionPath(path);
             _tree.scrollPathToVisible(path);
         }
-    */
     private TreePath resetSelectionPath(TreePath path) {
         Object parent = _model.getRoot();
         java.util.List pathList = new ArrayList();
@@ -134,6 +135,7 @@ public class DbSchemaPanel extends JPanel {
     private ToolWindow getToolWindow() {
         return _toolWindow;
     }
+    */
 
 
     public void setToolWindow(ToolWindow toolWindow) {
@@ -143,7 +145,7 @@ public class DbSchemaPanel extends JPanel {
 
     private void buildGUI() {
         setLayout(new BorderLayout());
-        _tree = new DbSchemaTree(_model);
+        _tree = new DbSchemaTree(project, _model);
         _tree.getSelectionModel().addTreeSelectionListener(_treeSelectionListener);
 
         _tree.addMouseListener(new MouseAdapter(){
@@ -181,7 +183,7 @@ public class DbSchemaPanel extends JPanel {
         inputMap.put(KeyStroke.getKeyStroke(115, 0, true), "EditSource");
         _propertyPanel = new DbSchemaItemPropertySheetPanel();
 
-        _splitPane = new JSplitPane(0, new JScrollPane(_tree), _propertyPanel) {
+        _splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(_tree), _propertyPanel) {
 
             public void setDividerLocation(int location) {
 //                DbSchemaPanel.debug("Divider location changed to " + location + " component below " + (getRightComponent().isVisible() ? "visible" : "not visible"));
@@ -265,7 +267,7 @@ public class DbSchemaPanel extends JPanel {
 //                LOG.warn("ancestorAdded");
                 _model = new DbSchemaTreeModel();
 
-                ItemViewWrapper root = new ConnectionItemListView();
+                ItemViewWrapper root = new ConnectionItemListView(project);
                 root.setListener(new ItemViewListenerImpl());
 
                 _model.setRoot(root);

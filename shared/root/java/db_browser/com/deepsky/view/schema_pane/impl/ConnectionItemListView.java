@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -29,15 +26,18 @@
 package com.deepsky.view.schema_pane.impl;
 
 import com.deepsky.database.ConnectionInfo;
+import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.ConnectionManagerImpl;
 import com.deepsky.database.DbConfigurationException;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.gui.ConnectionSettings2;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.view.Icons;
 import com.deepsky.view.schema_pane.ItemViewListener;
 import com.deepsky.view.schema_pane.ItemViewWrapper;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataConstants;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -48,9 +48,15 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 public class ConnectionItemListView extends ItemViewWrapperBase implements ItemViewWrapper, ItemViewListener {
 
-    public ConnectionItemListView() {
-        for (ConnectionInfo cinfo : ConnectionManagerImpl.getInstance().getSessionList()) {
-            DbSchemaItemView schema = new DbSchemaItemView(this, cinfo);
+    ConnectionManager manager;
+
+    public ConnectionItemListView(Project project) {
+        super(project);
+        manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+
+//        for (ConnectionInfo cinfo : ConnectionManagerImpl.getInstance().getSessionList()) {
+        for (ConnectionInfo cinfo : manager.getSessionList()) {
+            DbSchemaItemView schema = new DbSchemaItemView(project, this, cinfo);
             schema.setListener(this);
             children.add(schema);
         }
@@ -84,7 +90,8 @@ public class ConnectionItemListView extends ItemViewWrapperBase implements ItemV
         if (command == ItemViewListener.REMOVE_NODE && o instanceof DbSchemaItemView) {
             listener.updated(ItemViewListener.REMOVE_NODE, o);
             DbSchemaItemView schema = (DbSchemaItemView) o;
-            ConnectionManagerImpl.getInstance().removeSession(schema.cinfo);
+            manager.removeSession(schema.cinfo);
+//            ConnectionManagerImpl.getInstance().removeSession(schema.cinfo);
         } else {
             listener.updated(command, o);
         }
@@ -112,8 +119,10 @@ public class ConnectionItemListView extends ItemViewWrapperBase implements ItemV
 
         public void setSelected(AnActionEvent event, boolean b) {
 
-            final Project project = (Project) event.getDataContext().getData(DataConstants.PROJECT);
-            String[] hosts = ConnectionManagerImpl.getInstance().getHostList();
+            final Project project = event.getData(LangDataKeys.PROJECT);
+            ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+//            String[] hosts = ConnectionManagerImpl.getInstance().getHostList();
+            String[] hosts = manager.getHostList();
             ConnectionSettings2 settings = new ConnectionSettings2(project, hosts);
             settings.show();
 
@@ -132,9 +141,11 @@ public class ConnectionItemListView extends ItemViewWrapperBase implements ItemV
                 int period = settings.getRefreshPeriod();
 
                 try {
-                    ConnectionInfo cinfo = ConnectionManagerImpl.getInstance().createSession(url, loginOnStartup, repair, period );
+//                    ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+                    ConnectionInfo cinfo = manager.createSession(url, loginOnStartup, repair, period );
+//                    ConnectionInfo cinfo = ConnectionManagerImpl.getInstance().createSession(url, loginOnStartup, repair, period );
 
-                    DbSchemaItemView item = new DbSchemaItemView(itself(), cinfo);
+                    DbSchemaItemView item = new DbSchemaItemView(project, itself(), cinfo);
                     children.add(item);
                     item.setListener(itself());
 

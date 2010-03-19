@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -32,7 +29,9 @@ import com.deepsky.database.ora.desc.FunctionDescriptorImpl;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.*;
+import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.deepsky.lang.plsql.struct.types.UserDefinedType;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.lang.ASTNode;
@@ -48,6 +47,15 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
 
     public FunctionImpl(ASTNode astNode) {
         super(astNode);
+    }
+
+    public ObjectName getObjectName(){
+        ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
+        if(child == null){
+            throw new SyntaxTreeCorruptedException();
+        }
+
+        return (ObjectName) child.getPsi();
     }
 
     public String getEName() {
@@ -98,10 +106,14 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
 
     @NotNull
     public Declaration[] getDeclarationList() {
-        DeclarationList alist = (DeclarationList) this.findChildByType(PLSqlTypesAdopted.DECLARE_LIST);
-        if(alist != null){
-            return alist.getDeclList();
+        PlSqlBlock block = (PlSqlBlock)this.findChildByType(PLSqlTypesAdopted.PLSQL_BLOCK);
+        if(block != null){
+            return block.getDeclarations();
         }
+//        DeclarationList alist = (DeclarationList) this.findChildByType(PLSqlTypesAdopted.DECLARE_LIST);
+//        if(alist != null){
+//            return alist.getDeclList();
+//        }
         return new Declaration[0];
     }
 
@@ -211,8 +223,20 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
                 + getReturnType().typeName();
     }
 
-    public String getCtxPath() {
-        return super.getCtxPath() + "Fb:" + getEName();
+
+    // [Contex Management Stuff] Start -------------------------------
+    CtxPath cachedCtxPath = null;
+    public CtxPath getCtxPath() {
+        if(cachedCtxPath != null){
+            return cachedCtxPath;
+        } else {
+            CtxPath parent = super.getCtxPath();
+            cachedCtxPath = new CtxPathImpl(
+                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.FUNCTION_BODY, parent.getSeqNEXT() + "$"
+                    + this.getEName().toLowerCase()));
+        }
+        return cachedCtxPath;
     }
+    // [Contex Management Stuff] End ---------------------------------
 
 }

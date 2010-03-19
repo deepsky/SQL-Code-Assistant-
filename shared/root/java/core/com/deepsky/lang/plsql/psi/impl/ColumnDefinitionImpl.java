@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -32,12 +29,16 @@ import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
-import com.deepsky.lang.plsql.psi.TableDefinition;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
+import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.parser.ASTParseHelper;
+import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
@@ -53,10 +54,7 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
     }
 
     public String getName(){
-//        return super.getName();
-        String name =  this.findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL).getText();
-        log.info("getName() = " + name + " this: " + this);
-        return name;
+        return  this.findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL).getText();
     }
     
     public String getColumnName() {
@@ -86,10 +84,6 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
         TableDefinition t = findParent(TableDefinition.class);
         if (t != null) {
             String tableName = t.getTableName();
-//            TableDescriptor desc = t.describe();
-//            if(desc != null){
-//                desc.
-//            }
             return "[Table] " + tableName.toLowerCase()
                     + "\n [Column] " + getColumnName().toLowerCase() + " "
                     + getType().toString().toUpperCase();
@@ -118,7 +112,8 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
     }
 
     public ForeignKeySpec getForeignKeySpec() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // todo
+        return null;
     }
 
     public TableDefinition getTableDefinition() {
@@ -133,4 +128,27 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
     public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException {
         return null;
     }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitColumnDefinition(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
+    // [Contex Management Stuff] Start -------------------------------
+    CtxPath cachedCtxPath = null;
+    public CtxPath getCtxPath() {
+        if(cachedCtxPath != null){
+            return cachedCtxPath;
+        } else {
+            CtxPath parent = super.getCtxPath();
+            cachedCtxPath = new CtxPathImpl(
+                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.COLUMN_DEF, "..$" + getColumnName().toLowerCase()));
+        }
+        return cachedCtxPath;
+    }
+    // [Contex Management Stuff] End ---------------------------------
+
 }

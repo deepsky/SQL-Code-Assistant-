@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -36,6 +33,7 @@ import com.deepsky.findUsages.search.*;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.CreateView;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.ddl.VColumnDefinition;
 import com.deepsky.lang.plsql.psi.impl.NameFragmentRefImpl;
 import com.deepsky.lang.plsql.psi.ref.DDLTable;
@@ -59,12 +57,15 @@ import org.jetbrains.annotations.NotNull;
 public class SqlFindUsagesHelper {
 
     public static void runFindUsages(Project project, PsiElement _psi) {
+        runFindUsages(project, _psi, false);
+    }
+
+    public static void runFindUsages(Project project, PsiElement _psi, boolean databaseDefaultScope) {
         GenericSearchOptions p = canApplyFindUsagesTo(_psi);
 
         if (p != null) {
             _psi = p.getTarget();
-
-            FindUsagesOptions options = new FindUsagesOptionsAdopted(project, DataManager.getInstance().getDataContext());
+            FindUsagesOptions options = new FindUsagesOptionsAdopted(project, DataManager.getInstance().getDataContext(), databaseDefaultScope);
 
             SqlFindUsagesDialog dialog = new SqlFindUsagesDialog(
                     project, options, true, true, false, p
@@ -92,7 +93,7 @@ public class SqlFindUsagesHelper {
 
                 UsageViewManager uvmanager = UsageViewManager.getInstance(project);
                 uvmanager.searchAndShowUsages(utargets,
-                        new SqlSpecificSearchRunner.SearchUsageFactory(descriptor, options),
+                        new SqlSpecificSearchRunner.SearchUsageFactory(project, descriptor, options),
                         true, true,
                         uvpresentation,
                         new UsageViewManager.UsageViewStateListener() {
@@ -108,6 +109,57 @@ public class SqlFindUsagesHelper {
         }
     }
 
+    public static boolean canApp3lyFindUsagesTo(PsiElement element) {
+        if (element == null) {
+            return false;
+        }
+
+        final PsiElement[] etype = new PsiElement[]{null};
+        ASTTreeProcessor treeProcessor = new ASTTreeProcessor();
+        treeProcessor.add(new ASTNodeHandler() {
+            @NotNull
+            public TokenSet getTokenSet() {
+                return TokenSet.create(
+/*
+                        PlSqlElementTypes.PACKAGE_NAME,
+                        PlSqlElementTypes.OBJECT_NAME, // name of Procedure or Function
+                        PlSqlElementTypes.VAR_REF, // name of variable or table column
+*/
+                        PlSqlElementTypes.TABLE_NAME,
+                        PlSqlElementTypes.VIEW_NAME_DDL,
+                        PlSqlElementTypes.COLUMN_NAME_DDL,
+                        PlSqlElementTypes.TABLE_NAME_DDL,
+/*
+                        PlSqlElementTypes.TYPE_NAME_REF,
+*/
+                        PlSqlElementTypes.COLUMN_NAME_REF,
+/*
+                        PlSqlElementTypes.CALLABLE_NAME_REF, //
+                        PlSqlElementTypes.SEQUENCE_EXPR,
+*/
+                        PlSqlElementTypes.COLUMN_SPEC,
+                        PlSqlElementTypes.NAME_FRAGMENT,
+/*
+                        PlSqlElementTypes.VARIABLE_NAME,
+                        PlSqlElementTypes.PARAMETER_NAME,
+                        PlSqlElementTypes.PLSQL_VAR_REF,
+*/
+
+                        PlSqlElementTypes.CREATE_VIEW,
+                        PlSqlElementTypes.TABLE_DEF
+                );
+            }
+
+            public boolean handleNode(@NotNull ASTNode node) {
+                etype[0] = node.getPsi();
+                return true;
+            }
+        });
+
+        treeProcessor.process(element.getNode(), true /* break on first hit*/);
+
+        return !(etype[0] == null || etype[0].getNode() == null);
+    }
 
     public static GenericSearchOptions canApplyFindUsagesTo(PsiElement element) {
         if (element == null) {
@@ -157,7 +209,7 @@ public class SqlFindUsagesHelper {
         IElementType ietype = etype[0].getNode().getElementType();
 
         if (ietype == PlSqlElementTypes.PACKAGE_NAME) {
-            return new PackageSearchOptions(etype[0].getText());
+            return new PackageSearchOptions(etype[0].getProject(), etype[0].getText());
         } else if (ietype == PlSqlElementTypes.NAME_FRAGMENT) {
             PsiElement referenced = ((NameFragmentRefImpl) etype[0]).resolve();
             if (referenced instanceof VColumnDefinition) {
@@ -167,23 +219,41 @@ public class SqlFindUsagesHelper {
                 ColumnDefinition columnDef = (ColumnDefinition) referenced;
                 return new TableColumnSearchOptions(columnDef);
             } else if (referenced instanceof VariableDecl) {
+/*
+// todo -- not supported in 0.9.1
                 VariableDecl var = (VariableDecl) referenced;
                 return new VariableSearchOptions(var);
+*/
             } else if (referenced instanceof Argument) {
+/*
+// todo -- not supported in 0.9.1
                 Argument argument = (Argument) referenced;
                 return new ArgumentSearchOptions(argument);
+*/
             } else if (referenced instanceof Function) {
+/*
+// todo -- not supported in 0.9.1
                 Function exec = (Function) referenced;
                 return new FunctionSearchOptions(exec);
+*/
             } else if (referenced instanceof Procedure) {
+/*
+// todo -- not supported in 0.9.1
                 Procedure exec = (Procedure) referenced;
                 return new ProcedureSearchOptions(exec);
+*/
             } else if(referenced instanceof FunctionSpec){
+/*
+// todo -- not supported in 0.9.1
                 FunctionSpec exec = (FunctionSpec) referenced;
                 return new FunctionSearchOptions(exec);
+*/
             } else if(referenced instanceof ProcedureSpec){
+/*
+// todo -- not supported in 0.9.1
                 ProcedureSpec exec = (ProcedureSpec) referenced;
                 return new ProcedureSearchOptions(exec);
+*/
             } else {
                 // todo --
             }
@@ -229,14 +299,22 @@ public class SqlFindUsagesHelper {
                 // todo --
             }
         } else if (ietype == PlSqlElementTypes.VARIABLE_NAME) {
+/*
+// todo -- not supported in 0.9.1
             VariableName varName = (VariableName) etype[0];
             VariableDecl var = varName.getVariableDecl();
             return new VariableSearchOptions(var);
+*/
         } else if (ietype == PlSqlElementTypes.PARAMETER_NAME) {
+/*
+// todo -- not supported in 0.9.1
             ParameterName varName = (ParameterName) etype[0];
             Argument argument = varName.getArgument();
             return new ArgumentSearchOptions(argument);
+*/
         } else if (ietype == PlSqlElementTypes.OBJECT_NAME) {
+/*
+// todo -- not supported in 0.9.1
             PsiElement parent = etype[0].getParent();
             if(parent instanceof Function){
                 Function exec = (Function) parent;
@@ -251,6 +329,7 @@ public class SqlFindUsagesHelper {
                 ProcedureSpec exec = (ProcedureSpec) parent;
                 return new ProcedureSearchOptions(exec);
             }
+*/
         } else if (ietype == PlSqlElementTypes.VAR_REF) {
             // todo --
         } else if (ietype == PlSqlElementTypes.TYPE_NAME_REF) {

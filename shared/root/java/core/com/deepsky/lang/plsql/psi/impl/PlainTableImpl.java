@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -31,6 +28,7 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.psi.PlainTable;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.ref.Table;
 import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
 import com.deepsky.lang.plsql.psi.utils.PsiTreeHelpers;
 import com.deepsky.lang.plsql.struct.TableDescriptorLegacy;
@@ -42,6 +40,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -54,20 +53,20 @@ public class PlainTableImpl extends GenericTableBase implements PlainTable {
     }
 
     public String getTableName() {
-        PsiElement elem = getTableNameElement();
-        if(elem == null){
-            throw new SyntaxTreeCorruptedException();
-        }
-
-
-        return StringUtils.discloseDoubleQuotes(elem.getText());
+        Table elem = getTableNameElement();
+        return elem.getTableName();
     }
 
     // table_spec ( alias )?
     // table_spec:  ( schema_name DOT )? table_name ( AT_SIGN link_name )?
     // alias:       ( "as" )?  identifier
-    public PsiElement getTableNameElement() {
-        return this.findChildByType(PLSqlTypesAdopted.TABLE_NAME);
+    public Table getTableNameElement() {
+        ASTNode node = getNode().findChildByType(TokenSet.create(PLSqlTypesAdopted.TABLE_NAME, PLSqlTypesAdopted.TABLE_NAME_WITH_LINK));
+        if(node != null && node.getPsi() instanceof Table){
+            return (Table) node.getPsi();
+        } else {
+            throw new SyntaxTreeCorruptedException();
+        }
     }
 
     public String getQuickNavigateInfo() {
@@ -117,7 +116,7 @@ public class PlainTableImpl extends GenericTableBase implements PlainTable {
 
     protected TableDescriptorLegacy describeInternal() {
         String name = getTableName();
-        TableDescriptor _tdesc = ResolveHelper.describeTable(name);
+        TableDescriptor _tdesc = describeTable(name);
 
         if(_tdesc != null){
             return new TableDescriptorForRegular(_tdesc, getAlias());

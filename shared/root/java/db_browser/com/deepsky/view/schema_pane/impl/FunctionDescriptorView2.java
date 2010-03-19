@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,30 +25,31 @@
 
 package com.deepsky.view.schema_pane.impl;
 
+import com.deepsky.database.SqlScriptManager;
 import com.deepsky.database.cache.Cache;
+import com.deepsky.lang.plsql.psi.utils.Formatter;
 import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.lang.plsql.struct.ExecutableDescriptor;
-import com.deepsky.lang.plsql.psi.utils.Formatter;
-import com.deepsky.view.schema_pane.ItemViewWrapper;
-import com.deepsky.view.schema_pane.ItemViewListener;
+import com.deepsky.lang.plsql.struct.FunctionDescriptor;
 import com.deepsky.view.Icons;
+import com.deepsky.view.schema_pane.ItemViewListener;
+import com.deepsky.view.schema_pane.ItemViewWrapper;
 import com.intellij.openapi.actionSystem.ToggleAction;
-
-import javax.swing.tree.DefaultTreeCellRenderer;
-import java.util.List;
-import java.util.ArrayList;
-
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-public class FunctionDescriptorView2  extends ItemViewWrapperBase {
+import javax.swing.tree.DefaultTreeCellRenderer;
+import java.util.ArrayList;
+import java.util.List;
 
-    ItemViewWrapper parent;
+public class FunctionDescriptorView2 extends ItemViewWrapperBase {
+
     Cache c0;
     String name;
     String signature;
 
-    public FunctionDescriptorView2(ItemViewWrapper parent, Cache c0, String name){
-        this.parent = parent;
+    public FunctionDescriptorView2(Project project, ItemViewWrapper parent, Cache c0, String name) {
+        super(project, parent);
         this.c0 = c0;
         this.name = name;
 
@@ -86,6 +84,14 @@ public class FunctionDescriptorView2  extends ItemViewWrapperBase {
     public ToggleAction[] getActions() {
         return new ToggleAction[0];
     }
+
+    public void runDefaultAction() {
+        FunctionDescriptor f = (FunctionDescriptor) c0.get(name, DbObject.FUNCTION);
+        if (signature.equals(Formatter.formatHtmlBasedSignature(f))) {
+            boolean result = SqlScriptManager.openFileInEditor(project, f);
+        }
+    }
+
 
     public void setListener(ItemViewListener listener) {
 

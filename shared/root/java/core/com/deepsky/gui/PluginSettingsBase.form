@@ -160,12 +160,12 @@
                   <text value="Auto Commit:"/>
                 </properties>
               </component>
-              <component id="31c94" class="javax.swing.JCheckBox" binding="checkBox1" default-binding="true">
+              <component id="31c94" class="javax.swing.JCheckBox" binding="autoCommitCheckBox">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <enabled value="false"/>
+                  <enabled value="true"/>
                   <selected value="true"/>
                   <text value=""/>
                 </properties>

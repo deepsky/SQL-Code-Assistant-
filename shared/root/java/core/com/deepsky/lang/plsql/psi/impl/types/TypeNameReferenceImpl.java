@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -139,7 +136,7 @@ public class TypeNameReferenceImpl extends PlSqlCompositeNameBase implements Typ
         List<ResolveContext777> collisions = new ArrayList<ResolveContext777>();
         // 1. package name (usage: sql statement, function/procedure definition)
         if (nodes.length == 2) {
-            PackageDescriptor pdesc = ResolveHelper.resolve_Package(nodes[0].getText());
+            PackageDescriptor pdesc = resolve_Package(nodes[0].getText());
             if (pdesc != null) {
                 collisions.add(new PackageContext(pdesc, getProject())); //.resolve(nodes[1].getPsi()));
             } else {
@@ -147,9 +144,9 @@ public class TypeNameReferenceImpl extends PlSqlCompositeNameBase implements Typ
             }
         } else if (nodes.length == 1) {
             // is the type schema-wide?
-            UserDefinedTypeDescriptor udt = ResolveHelper.resolve_Type(nodes[0].getText());
+            UserDefinedTypeDescriptor udt = ResolveHelper.resolve_Type(getProject(), nodes[0].getText());
             if (udt != null) {
-                return UserDefinedTypeHelper.createResolveContext(udt);
+                return UserDefinedTypeHelper.createResolveContext(getProject(), udt);
             } else {
 //                PlSqlElement context = getUsageContext(TokenSet.create(
 //                        PlSqlElementTypes.PACKAGE_BODY, PlSqlElementTypes.PACKAGE_SPEC)
@@ -168,11 +165,11 @@ public class TypeNameReferenceImpl extends PlSqlCompositeNameBase implements Typ
 
                     // 2. Type defined inside package specification
                     String pkgName = context.getPackageBody().getPackageName();
-                    UserDefinedTypeDescriptor udt2 = ResolveHelper.resolve_Type(pkgName, nodes[0].getText());
+                    UserDefinedTypeDescriptor udt2 = ResolveHelper.resolve_Type(getProject(), pkgName, nodes[0].getText());
                     if(udt2 != null){
                         try {
                             collisions.add(
-                                    UserDefinedTypeHelper.createResolveContext(udt2)
+                                    UserDefinedTypeHelper.createResolveContext(getProject(), udt2)
                             );
                         } catch (NameNotResolvedException e) {
                         }

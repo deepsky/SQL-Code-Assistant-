@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,17 +25,18 @@
 
 package com.deepsky.view.query_pane;
 
+import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.deepsky.view.Icons;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.awt.event.*;
 
 public class StatusLinePanel extends JPanel {
 
     JLabel timeSpentLabel;
     JLabel rowsAffectedLabel;
-    JLabel schemaLabel;
 
     public StatusLinePanel() {
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -68,45 +66,60 @@ public class StatusLinePanel extends JPanel {
         int height = timeSpentLabel.getPreferredSize().getSize().height;
         timeSpentLabel.setPreferredSize(new Dimension(40, height));
         add(timeSpentLabel);
-//        timeSpent.add(timeSpentLabel);
-//        timeSpent.setBorder(new EtchedBorder());
-//        this.add(timeSpent);
 
         JLabel separator = new JLabel(Icons.SEPARATOR);
         separator.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
-        add( separator);
+        add(separator);
 
         // row number
-//        JPanel rowNbr = new JPanel();
-//        FlowLayout lman3 = new FlowLayout();
-//        rowNbr.setLayout(lman3);
-//        lman3.setVgap(2);
         rowsAffectedLabel = new JLabel("0 rows fetched");
+//        int height2 = rowsAffectedLabel.getPreferredSize().getSize().height;
+//        rowsAffectedLabel.setPreferredSize(new Dimension(140, height2));
         add(rowsAffectedLabel);
-//        rowNbr.add(rowsAffectedLabel);
-//        rowNbr.setBorder(new EtchedBorder());
-//        this.add(rowNbr);
 
+        separator = new JLabel(Icons.SEPARATOR);
+        separator.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
 /*
-        JLabel separator2 = new JLabel(Icons.SEPARATOR);
-        separator2.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
-        add( separator2);
-        // db name
-//        JPanel dbname = new JPanel();
-//        FlowLayout lman4 = new FlowLayout();
-//        dbname.setLayout(lman4);
-//        lman4.setVgap(2);
+        add(separator);
+        autocommitMode = new JLabel("Autocommit On");
+        add(autocommitMode);
 
-        schemaLabel = new JLabel("Not logged in");
-        add(schemaLabel);
-*/
+        this.addComponentListener(new ComponentListener(){
+            public void componentResized(ComponentEvent e) {
+            }
 
-//        dbname.add(schemaLabel);
-//        dbname.setBorder(new EtchedBorder());
-//        this.add(dbname);
+            public void componentMoved(ComponentEvent e) {
+            }
 
-        //this.setSize(-1, 12);
-//        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+            public void componentShown(ComponentEvent e) {
+                logger.info("StatusLine shown");
+            }
+
+            public void componentHidden(ComponentEvent e) {
+                logger.info("StatusLine hidden");
+            }
+        });
+
+        this.addContainerListener(new ContainerListener(){
+            public void componentAdded(ContainerEvent e) {
+                logger.info("StatusLine comp added");
+            }
+
+            public void componentRemoved(ContainerEvent e) {
+                logger.info("StatusLine comp removed");
+            }
+        });
+
+        this.addFocusListener(new FocusListener(){
+            public void focusGained(FocusEvent e) {
+                logger.info("StatusLine focus gained");
+            }
+
+            public void focusLost(FocusEvent e) {
+                logger.info("StatusLine focus lost");
+            }
+        });
+*/  
     }
 
     public void setTimeSpent(long ms) {
@@ -116,15 +129,4 @@ public class StatusLinePanel extends JPanel {
     public void setResponseMessage(String text) {
         rowsAffectedLabel.setText(text);
     }
-
-//    public void setSchemaName(final String name) {
-//        // todo - dirty hack, needs to be fixed asap
-//        SwingUtilities.invokeLater(
-//                new Runnable() {
-//                    public void run() {
-//                        schemaLabel.setText(name);
-//                    }
-//                }
-//        );
-//    }
 }

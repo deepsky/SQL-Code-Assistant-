@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,6 +25,8 @@
 
 package com.deepsky.view.query_pane;
 
+import com.deepsky.lang.plsql.workarounds.LoggerProxy;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.UIUtil;
 import com.deepsky.database.exec.RowSetModel;
 import com.deepsky.database.*;
@@ -41,8 +40,9 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.*;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -55,10 +55,10 @@ public class DataGridPanel extends JPanel implements QueryResultPanel, //Connect
     final static int EXPORT_DATA = 4;
 
     private JComponent central;
-    TableModel model;
     JTable _table;
     StatusLinePanel statusLine;
     RowSetModel rsModel;
+    Project project;
 
     //    KeyStroke copy;
 //    boolean isConnected = false;
@@ -66,8 +66,9 @@ public class DataGridPanel extends JPanel implements QueryResultPanel, //Connect
     private DataGridPanel(LayoutManager2 layout) {
         setLayout(layout);
     }
-    public DataGridPanel() {
+    public DataGridPanel(Project project) {
         this(new BorderLayout());
+        this.project = project;
 //        setLayout(new BorderLayout());
 //        copy = KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK, false);
 
@@ -106,6 +107,45 @@ public class DataGridPanel extends JPanel implements QueryResultPanel, //Connect
 
         ConnectionManagerImpl.getInstance().addStateListener(this);
 */
+
+/*
+        this.addComponentListener(new ComponentListener(){
+            public void componentResized(ComponentEvent e) {
+            }
+
+            public void componentMoved(ComponentEvent e) {
+            }
+
+            public void componentShown(ComponentEvent e) {
+                logger.info("StatusLine shown");
+            }
+
+            public void componentHidden(ComponentEvent e) {
+                logger.info("StatusLine hidden");
+            }
+        });
+
+        this.addContainerListener(new ContainerListener(){
+            public void componentAdded(ContainerEvent e) {
+                logger.info("StatusLine comp added");
+            }
+
+            public void componentRemoved(ContainerEvent e) {
+                logger.info("StatusLine comp removed");
+            }
+        });
+
+        this.addFocusListener(new FocusListener(){
+            public void focusGained(FocusEvent e) {
+                logger.info("StatusLine focus gained");
+            }
+
+            public void focusLost(FocusEvent e) {
+                logger.info("StatusLine focus lost");
+            }
+        });
+*/
+
     }
 
 
@@ -134,25 +174,6 @@ public class DataGridPanel extends JPanel implements QueryResultPanel, //Connect
     }
 
 /*
-    public void setTarget(@NotNull SQLUpdateStatistics stats) {
-        this.rsModel = null;
-        setVisible(false);
-
-        if (central != null) {
-            remove(central);
-        }
-        central = new JPanel(new BorderLayout());
-        central.setBackground(UIUtil.getTreeTextBackground());
-        add(central, BorderLayout.CENTER);
-
-        statusLine.setResponseMessage(stats.resultMessage());
-        statusLine.setTimeSpent(stats.timeSpent());
-
-        setVisible(true);
-    }
-*/
-
-/*
     class TableHeaderRenderer1 implements TableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             return null;
@@ -176,9 +197,10 @@ public class DataGridPanel extends JPanel implements QueryResultPanel, //Connect
     DateRenderer dateRenderer = new DateRenderer();
 */
 
+    final JPopupMenu popupMenu = new JPopupMenu();
     private JScrollPane createTable2(RowSetModel model) {
 
-        DataGridSorter mm = new DataGridSorter(model);
+        DataGridSorter mm = new DataGridSorter(project, model);
         mm.addTableModelListener(this);
         if (_table != null) {
             _table.getModel().removeTableModelListener(this);
@@ -205,6 +227,38 @@ public class DataGridPanel extends JPanel implements QueryResultPanel, //Connect
         _table.setRowSelectionAllowed(true);
         _table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
+
+
+        JMenuItem menuItem = new JMenuItem("Copy to Clipboard");
+        menuItem.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                String content = extractContent(",", false, false);
+                if(content != null){
+                    // save in Clipboard
+                    StringSelection stsel = new StringSelection(content);
+                    Clipboard system = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    system.setContents(stsel, stsel);
+                }
+            }
+        });
+        popupMenu.add(menuItem);
+
+
+        _table.addMouseListener(new MouseAdapter(){
+            public void mousePressed(MouseEvent e) {
+              showPopup(e);
+            }
+
+            public void mouseReleased(MouseEvent e) {
+              showPopup(e);
+            }
+
+            private void showPopup(MouseEvent e) {
+              if (e.isPopupTrigger()) {
+                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+              }
+            }
+        });
         //_table.getSeSelectionModel().
         //Cell selection is ok in this mode.
 
@@ -234,6 +288,55 @@ public class DataGridPanel extends JPanel implements QueryResultPanel, //Connect
 
     public void refresh() throws DBException {
         rsModel.refresh();
+    }
+
+    public String extractContent(String delimiter, boolean saveHeader, boolean ecloseWithDowbleQuotes) {
+        int numcols = _table.getSelectedColumnCount();
+        int numrows = _table.getSelectedRowCount();
+
+        if (numcols > 0 && numrows > 0) {
+            StringBuffer sbf = new StringBuffer();
+            int[] rowsselected = _table.getSelectedRows();
+            int[] colsselected = _table.getSelectedColumns();
+
+            if (saveHeader) {
+                // put header name list
+                for (int j = 0; j < numcols; j++) {
+                    String text = (String) _table.getTableHeader().getColumnModel().getColumn(colsselected[j]).getHeaderValue();
+                    sbf.append(text);
+                    if (j < numcols - 1) sbf.append(delimiter);
+                }
+                sbf.append("\n");
+            }
+
+            // put content
+            for (int i = 0; i < numrows; i++) {
+                if(i > 0){
+                    sbf.append("\n");
+                }
+                for (int j = 0; j < numcols; j++) {
+                    Object value = _table.getValueAt(rowsselected[i], colsselected[j]);
+                    String _value = "";
+                    if (value != null) {
+                        _value = value.toString();
+                    }
+                    if (ecloseWithDowbleQuotes) {
+                        sbf.append("\"").append(_value).append("\"");
+                    } else {
+                        sbf.append(_value);
+                    }
+
+                    if (j < numcols - 1) sbf.append(delimiter);
+                }
+            }
+
+//            StringSelection stsel = new StringSelection(sbf.toString());
+//            Clipboard system = Toolkit.getDefaultToolkit().getSystemClipboard();
+//            system.setContents(stsel, stsel);
+            return sbf.toString();
+        }
+
+        return null;
     }
 
     private static class CopyAction extends AbstractAction {
@@ -334,82 +437,4 @@ public class DataGridPanel extends JPanel implements QueryResultPanel, //Connect
         return comp.getPreferredSize().width;
     }
 
-//    private Clipboard system;
-//    private StringSelection stsel;
-
-/*
-    class LocalToggleAction extends ToggleAction {
-
-        int command;
-        boolean selected = false;
-
-        public LocalToggleAction(String actionName, String toolTip, Icon icon, int command) {
-            super(actionName, toolTip, icon);
-            this.getTemplatePresentation().setEnabled(true); //isConnected && rsModel != null);
-            this.command = command;
-        }
-
-        public boolean isSelected(AnActionEvent event) {
-            return selected;
-        }
-
-        public void setSelected(AnActionEvent event, boolean b) {
-            switch (command) {
-                case REFRESH_RESULTSET:
-                    if (isConnected && rsModel != null) {
-                        try {
-                            rsModel.refresh();
-                        } catch (DBException e) {
-                        }
-                    }
-                    break;
-                case STICKY_OPTION:
-                    selected ^= true;
-                    break;
-                case EXPORT_DATA: {
-                    int numcols = _table.getSelectedColumnCount();
-                    int numrows = _table.getSelectedRowCount();
-
-                    if (numcols > 0 && numrows > 0) {
-                        StringBuffer sbf = new StringBuffer();
-                        int[] rowsselected = _table.getSelectedRows();
-                        int[] colsselected = _table.getSelectedColumns();
-                        // Check to ensure we have selected only a contiguous block of cells
-//                    if (!((numrows - 1 == rowsselected[rowsselected.length - 1] - rowsselected[0] &&
-//                            numrows == rowsselected.length) &&
-//                            (numcols - 1 == colsselected[colsselected.length - 1] - colsselected[0] &&
-//                                    numcols == colsselected.length))) {
-//                        Messages.showErrorDialog("Invalid Copy Selection", "Invalid Copy Selection");
-//                        return;
-//                    }
-                        // put header name list
-                        for (int j = 0; j < numcols; j++) {
-                            String text = (String) _table.getTableHeader().getColumnModel().getColumn(colsselected[j]).getHeaderValue();
-                            sbf.append(text);
-                            if (j < numcols - 1) sbf.append("\t");
-                        }
-                        sbf.append("\n");
-
-                        // put content
-                        for (int i = 0; i < numrows; i++) {
-                            for (int j = 0; j < numcols; j++) {
-                                Object value = _table.getValueAt(rowsselected[i], colsselected[j]);
-                                if (value != null) {
-                                    sbf.append(value);
-                                }
-                                if (j < numcols - 1) sbf.append("\t");
-                            }
-                            sbf.append("\n");
-                        }
-                        stsel = new StringSelection(sbf.toString());
-                        system = Toolkit.getDefaultToolkit().getSystemClipboard();
-                        system.setContents(stsel, stsel);
-                    }
-                    break;
-                }
-            }
-            //notifyListeners(command);
-        }
-    }
-*/
 }

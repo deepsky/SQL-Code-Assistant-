@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,10 +25,18 @@
 
 package com.deepsky.lang.validation;
 
+import com.deepsky.database.ObjectCache;
+import com.deepsky.database.ObjectCacheFactory;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
+import com.deepsky.lang.common.PluginKeys;
+import com.deepsky.lang.plsql.psi.resolve.TypeNotResolvedException;
+import com.deepsky.lang.plsql.struct.DbObject;
+import com.deepsky.lang.plsql.struct.TableDescriptor;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.types.RowtypeType;
 import com.deepsky.lang.plsql.struct.types.TableColumnRefType;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.HashMap;
 
 import java.util.*;
@@ -380,14 +385,6 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
         );
 
-        pp.put(pair2string(Type.VARCHAR2, Type.NULL ),
-                new OperationHolder(Type.VARCHAR2)
-                        .add(PLSqlTokenTypes.CONCAT_OP)
-                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
-                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
-                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
-        );
-
         pp.put(pair2string(Type.ANY, Type.ANY ),
                 new OperationHolder(Type.ANY)
                         .add(PLSqlTokenTypes.PLUS_OP)
@@ -438,6 +435,70 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+        );
+
+        pp.put(pair2string(Type.VARCHAR2, Type.NULL ),
+                new OperationHolder(Type.VARCHAR2)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.VARCHAR, Type.NULL ),
+                new OperationHolder(Type.VARCHAR)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.CHAR, Type.NULL ),
+                new OperationHolder(Type.CHAR)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.TIMESTAMP, Type.NULL ),
+                new OperationHolder(Type.TIMESTAMP)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.DATE, Type.NULL ),
+                new OperationHolder(Type.DATE)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.INTEGER, Type.NULL ),
+                new OperationHolder(Type.INTEGER)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.PLS_INTEGER, Type.NULL ),
+                new OperationHolder(Type.PLS_INTEGER)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.NUMBER, Type.NULL ),
+                new OperationHolder(Type.NUMBER)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
         pp.put(pair2string(Type.ANY, Type.DATE),
@@ -538,7 +599,23 @@ public class TypeValidationHelper {
     }
 
 
-    public static int evaluate(Type l, Type r, int op) {
+    private static Type getRealType(Project project, TableColumnRefType ref){
+        DbObject[] objects = PluginKeys.OBJECT_CACHE.getData(project).findByNameForType(ObjectCache.TABLE, ref.table);
+
+        if (objects.length == 1 && objects[0] instanceof TableDescriptor) {
+            TableDescriptor tdesc = (TableDescriptor) objects[0];
+            Type t = tdesc.getColumnType(ref.column);
+            if(t != null){
+                return t;
+            } else {
+                throw new TypeNotResolvedException("Table " + ref.table + " has no column " + ref.column);
+            }
+        } else {
+            throw new TypeNotResolvedException("Table not found: " + ref.table);
+        }
+    }
+
+    public static int evaluate(PsiElement psi, Type l, Type r, int op) {
 
         String key = l.typeId() + ":" + r.typeId(); //l + ":" + r;
         OperationHolder holder = pp.get(key);
@@ -548,18 +625,18 @@ public class TypeValidationHelper {
 
             Type _l, _r;
             if( l.typeId() == Type.TABLE_COLUMN_REF_TYPE){
-                _l = ((TableColumnRefType) l).getRealType();
+                _l = getRealType(psi.getProject(), (TableColumnRefType) l); //((TableColumnRefType) l).getRealType();
             } else {
                 _l = l;
             }
 
             if( r.typeId() == Type.TABLE_COLUMN_REF_TYPE){
-                _r = ((TableColumnRefType) r).getRealType();
+                _r = getRealType(psi.getProject(), (TableColumnRefType) r); //_r = ((TableColumnRefType) r).getRealType();
             } else {
                 _r = r;
             }
 
-            return evaluate(_l, _r, op);
+            return evaluate(psi, _l, _r, op);
         } else {
             return Type.UNKNOWN;
         }
@@ -593,7 +670,7 @@ public class TypeValidationHelper {
         }
     }
 
-    public static boolean canBeAssigned(Type t, Type t1) {
+    public static boolean canBeAssigned(PsiElement psi, Type t, Type t1) {
         String key = t.typeId() + ":" + t1.typeId();
         OperationHolder holder = pp.get(key);
         if (holder != null ){
@@ -607,13 +684,13 @@ public class TypeValidationHelper {
 
             Type l, r;
             if( t.typeId() == Type.TABLE_COLUMN_REF_TYPE){
-                l = ((TableColumnRefType) t).getRealType();
+                l = getRealType(psi.getProject(), (TableColumnRefType) t); //((TableColumnRefType) t).getRealType();
             } else {
                 l = t;
             }
 
             if( t1.typeId() == Type.TABLE_COLUMN_REF_TYPE){
-                r = ((TableColumnRefType) t1).getRealType();
+                r = getRealType(psi.getProject(), (TableColumnRefType) t1); //((TableColumnRefType) t1).getRealType();
             } else {
                 r = t1;
             }

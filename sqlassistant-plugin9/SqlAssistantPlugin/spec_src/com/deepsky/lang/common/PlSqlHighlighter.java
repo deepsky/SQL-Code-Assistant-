@@ -1,5 +1,7 @@
 package com.deepsky.lang.common;
 
+import com.deepsky.lang.lexer.PlSqlHiLexer;
+import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.HighlighterColors;
@@ -24,7 +26,8 @@ public class PlSqlHighlighter  extends SyntaxHighlighterBase {
 
     @NotNull
     public Lexer getHighlightingLexer() {
-        return new PlSqlBaseLexer();
+        return new PlSqlHiLexer();
+//        return new PlSqlBaseLexer();
     }
 
     static final TextAttributesKey PLSQL_KEYWORD = TextAttributesKey.createTextAttributesKey(
@@ -47,6 +50,7 @@ public class PlSqlHighlighter  extends SyntaxHighlighterBase {
             // todo --- 8.0 !!!
             SyntaxHighlighterColors.NUMBER.getDefaultAttributes()
     );
+
 
 //    static final TextAttributesKey AJ_REGEXP = TextAttributesKey.createTextAttributesKey(
 //            "AJ.REGEXP",
@@ -119,6 +123,32 @@ public class PlSqlHighlighter  extends SyntaxHighlighterBase {
 
 
     /// -----
+    static final TextAttributesKey PLSQL_VAR = TextAttributesKey.createTextAttributesKey(
+            "PLSQL.VAR",
+            new TextAttributes(new Color(124, 26, 132), null, null, null, Font.BOLD)
+    );
+
+    static final TextAttributesKey PLSQL_SYSFUNC = TextAttributesKey.createTextAttributesKey(
+            "PLSQL.SYSFUNC",
+            new TextAttributes(new Color(190, 13, 3), null, null, null, Font.BOLD)
+            //new TextAttributes(new Color(166, 68, 87), null, null, null, Font.BOLD)
+    );
+
+    static final TextAttributesKey PLSQL_ERR_HIGHTL = TextAttributesKey.createTextAttributesKey(
+            "PLSQL.ERR_HIGHTL",
+            new TextAttributes(Color.black, null, Color.RED, EffectType.WAVE_UNDERSCORE, Font.PLAIN)
+    );
+
+    static final TextAttributesKey PLSQL_SYSFUNC_ERRORED = TextAttributesKey.createTextAttributesKey(
+            "PLSQL.SYSFUNC.ERRORED",
+            new TextAttributes(new Color(166, 68, 87), null, Color.RED, EffectType.WAVE_UNDERSCORE, Font.BOLD)
+    );
+
+    static final TextAttributesKey SQLPLUS_CMD = TextAttributesKey.createTextAttributesKey(
+            "SQLPLUS.CMD",
+            new TextAttributes(new Color(157, 24, 207), null, null, null, Font.BOLD)
+    );
+
     static final TextAttributesKey SQL_TABLE = TextAttributesKey.createTextAttributesKey(
             "SQL.TABLE",
             new TextAttributes(new Color(102, 36, 89), null, null, null, Font.PLAIN)

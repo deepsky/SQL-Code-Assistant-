@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -58,21 +55,21 @@ public class DboDescriptorViewFactory {
 
         for (String name : l0) {
             if (DbObject.TABLE.equalsIgnoreCase(type)) {
-                out.add(new TableDescriptorView(parent, c0, name));
+                out.add(new TableDescriptorView(parent.getProject(), parent, c0, name));
             } else if (DbObject.VIEW.equalsIgnoreCase(type)) {
-                out.add(new ViewDescriptorView(parent, c0, name));
+                out.add(new ViewDescriptorView(parent.getProject(), parent, c0, name));
             } else if (DbObject.PACKAGE.equalsIgnoreCase(type)) {
-                out.add(new PackageDescriptorView(parent, c0, name));
+                out.add(new PackageDescriptorView(parent.getProject(), parent, c0, name));
             } else if (DbObject.SEQUENCE.equalsIgnoreCase(type)) {
-                out.add(new SequenceDescriptorView(parent, c0, name));
+                out.add(new SequenceDescriptorView(parent.getProject(), parent, c0, name));
             } else if (DbObject.TYPE.equalsIgnoreCase(type)) {
-                out.add(new TypeDescriptorView(c0, name));
+                out.add(new TypeDescriptorView(parent.getProject(), c0, name));
             } else if (DbObject.FUNCTION.equalsIgnoreCase(type)) {
-                out.add(new FunctionDescriptorView2(parent, c0, name));
+                out.add(new FunctionDescriptorView2(parent.getProject(), parent, c0, name));
             } else if (DbObject.PROCEDURE.equalsIgnoreCase(type)) {
-                out.add(new ProcedureDescriptorView2(parent, c0, name));
+                out.add(new ProcedureDescriptorView2(parent.getProject(), parent, c0, name));
             } else if (DbObject.TRIGGER.equalsIgnoreCase(type)) {
-                out.add(new TriggerDescriptorView(parent, c0, name));
+                out.add(new TriggerDescriptorView(parent.getProject(), parent, c0, name));
             } else {
                 log.warn("View Type descriptor: " + type + " not defined");
             }
@@ -81,27 +78,27 @@ public class DboDescriptorViewFactory {
         return out;
     }
 
-    public static ItemViewWrapper createPackageItemView(ItemViewWrapper parent, DbObject dbo) {
+    public static ItemViewWrapper createPackageItemView(ItemViewWrapper parent, DbObject dbo, Cache cache) {
         if (DbObject.TABLE.equalsIgnoreCase(dbo.getTypeName())) {
             // todo -
-            return new GenericDbObjectDescriptorView(parent, dbo);
+            return new GenericDbObjectDescriptorView(parent.getProject(), parent, dbo);
         } else if (DbObject.PACKAGE.equalsIgnoreCase(dbo.getTypeName())) {
             // todo -
-            return new GenericDbObjectDescriptorView(parent, dbo);
+            return new GenericDbObjectDescriptorView(parent.getProject(), parent, dbo);
         } else if (DbObject.SEQUENCE.equalsIgnoreCase(dbo.getTypeName())) {
             // todo -
-            return new GenericDbObjectDescriptorView(parent, dbo);
+            return new GenericDbObjectDescriptorView(parent.getProject(), parent, dbo);
         } else if (DbObject.TYPE.equalsIgnoreCase(dbo.getTypeName())) {
-            return new TypeDescriptorView(parent, (UserDefinedTypeDescriptor) dbo);
+            return new TypeDescriptorView(parent.getProject(), parent, (UserDefinedTypeDescriptor) dbo, cache);
         } else if (DbObject.FUNCTION.equalsIgnoreCase(dbo.getTypeName())) {
-            return new FunctionDescriptorView(parent, (FunctionDescriptor) dbo);
+            return new FunctionDescriptorView(parent.getProject(), parent, (FunctionDescriptor) dbo, cache);
         } else if (DbObject.PROCEDURE.equalsIgnoreCase(dbo.getTypeName())) {
-            return new ProcedureDescriptorView(parent, (ProcedureDescriptor) dbo);
+            return new ProcedureDescriptorView(parent.getProject(), parent, (ProcedureDescriptor) dbo, cache);
         } else if (DbObject.VARIABLE.equalsIgnoreCase(dbo.getTypeName())) {
-            return new VariableDescriptorView(parent, (VariableDescriptor) dbo);
+            return new VariableDescriptorView(parent.getProject(), parent, (VariableDescriptor) dbo, cache);
         } else {
             // todo -
-            return new GenericDbObjectDescriptorView(parent, dbo);
+            return new GenericDbObjectDescriptorView(parent.getProject(), parent, dbo);
         }
     }
 }

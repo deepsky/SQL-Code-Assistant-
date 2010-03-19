@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -40,7 +37,9 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PackageContext2 implements ResolveContext777   {
 
@@ -54,9 +53,32 @@ public class PackageContext2 implements ResolveContext777   {
     
     @NotNull
     public VariantsProcessor777 create(int narrow_type) throws NameNotResolvedException {
-        // todo --
-        return null;
+        return new PackageItemVariantsProcessor777(0);
     }
+
+    class PackageItemVariantsProcessor777 implements VariantsProcessor777 {
+
+        int narrow_type;
+        public PackageItemVariantsProcessor777(int narrow_type){
+            this.narrow_type = narrow_type;
+        }
+
+        public String[] getVariants(String prefix) {
+
+            Set<String> out = new HashSet<String>();
+            //BitMask mask = new BitMask(narrow_type);
+            for(DbObject dbo: pa.getObjects()){
+                if(//mask.member(DbObjectHelper.dbo2typecode(dbo)) &&
+                        (prefix.length() == 0 || dbo.getName().toUpperCase().startsWith(prefix.toUpperCase()))){
+                    // todo - consider to return PsiElement instead of an object's name
+                    out.add(dbo.getName());
+                }
+            }
+
+            return out.toArray(new String[out.size()]);
+        }
+    }
+
 
     public PsiElement getDeclaration() {
         return SqlScriptManager.mapToPsiTree(project, pa.getPackageSpec()); // todo --SqlScriptManager.mapToPsiTree(project, pdesc);
@@ -71,7 +93,7 @@ public class PackageContext2 implements ResolveContext777   {
         for (DbObject dbo : objects) {
             if(dbo instanceof UserDefinedTypeDescriptor){
                 out.add(
-                    UserDefinedTypeHelper.createResolveContext((UserDefinedTypeDescriptor) dbo)
+                    UserDefinedTypeHelper.createResolveContext(elem.getProject(), (UserDefinedTypeDescriptor) dbo)
                 );
             } else if (dbo instanceof VariableDescriptor) {
                 VariableDescriptor vdesc = (VariableDescriptor) dbo;
@@ -82,11 +104,11 @@ public class PackageContext2 implements ResolveContext777   {
                         UserDefinedTypeDescriptor tdesc = resolve_Type((UserDefinedType) t);
                         if (tdesc instanceof TableCollectionDescriptor) {
                             TableCollectionDescriptor cdesc = (TableCollectionDescriptor) tdesc;
-                            out.add(new TableCollectionItemAccessorCtx(vdesc, cdesc));
+                            out.add(new TableCollectionItemAccessorCtx(elem.getProject(), vdesc, cdesc));
                             continue;
                         } else if( tdesc instanceof VarrayCollectionDescriptor){
                             VarrayCollectionDescriptor vvdesc = (VarrayCollectionDescriptor) tdesc;
-                            out.add(new VarrayItemAccessorCtx(vdesc, vvdesc));
+                            out.add(new VarrayItemAccessorCtx(elem.getProject(), vdesc, vvdesc));
                             continue;
                         }
                     }

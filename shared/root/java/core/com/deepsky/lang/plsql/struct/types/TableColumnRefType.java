@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -38,8 +35,8 @@ import com.deepsky.database.ObjectCache;
 public class TableColumnRefType extends TypeBase{
     static final long serialVersionUID = 2216176371502220275L;
 
-    String table;
-    String column;
+    public String table;
+    public String column;
 
     public TableColumnRefType(String table, String column){
         super(Type.TABLE_COLUMN_REF_TYPE, "TABLE_COLUMN_REF_TYPE");
@@ -68,6 +65,8 @@ public class TableColumnRefType extends TypeBase{
     }
 
     public Type getRealType(){
+/*
+// todo -- call to ObjectCacheFactory.getObjectCache() not safe 
         DbObject[] objects = ObjectCacheFactory
                 .getObjectCache()
                 .findByNameForType(ObjectCache.TABLE, table);
@@ -83,5 +82,7 @@ public class TableColumnRefType extends TypeBase{
         } else {
             throw new TypeNotResolvedException("Table not found: " + table);
         }
+*/
+        throw new TypeNotResolvedException("Table not found: " + table);
     }
 }

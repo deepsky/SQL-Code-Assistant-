@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -37,6 +34,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 public class GenericDbObjectDescriptorView extends ItemViewWrapperBase { //implements ItemViewWrapper {
@@ -44,7 +42,8 @@ public class GenericDbObjectDescriptorView extends ItemViewWrapperBase { //imple
     DbObject dbo;
     ItemViewWrapper parent;
 
-    public GenericDbObjectDescriptorView(ItemViewWrapper parent, DbObject dbo) {
+    public GenericDbObjectDescriptorView(Project project, ItemViewWrapper parent, DbObject dbo) {
+        super(project);
         this.dbo = dbo;
         this.parent = parent;
     }

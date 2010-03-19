@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -40,6 +37,7 @@ public class Icons {
 
     public static final Icon PACKAGE_BODY;
     public static final Icon PACKAGE_SPEC;
+    public static final Icon REFRESH_SESSION;
 
     public static final Icon FUNCTION_BODY;
     public static final Icon FUNCTION_SPEC;
@@ -110,8 +108,13 @@ public class Icons {
 
     public static final Icon PLUGIN_SETTINGS;
 
+    public static final Icon AUTOCOMMIT_IS_ON;
+    public static final Icon AUTOCOMMIT_IS_OFF;
 
     static {
+        AUTOCOMMIT_IS_ON = Helpers.getIcon("/icons/autocommitOn.png");
+        AUTOCOMMIT_IS_OFF = Helpers.getIcon("/icons/autocommitOff.png");
+
         FIND = Helpers.getIcon("/icons/find.png");
         DB_BROWSER = Helpers.getIcon("/icons/db_browser.png");
         QUERY_RESULT_PANE = Helpers.getIcon("/icons/query_result_pane.png");
@@ -119,6 +122,7 @@ public class Icons {
         SCHEMA_LIST = Helpers.getIcon("/icons/schema_list.png");
         DB_SCHEMA = Helpers.getIcon("/icons/db_schema.png");
         DB_SCHEMA_DISABLED = Helpers.getIcon("/icons/db_schema_disabled.png");
+        REFRESH_SESSION = Helpers.getIcon("/icons/sync.png"); 
 
         PACKAGE_BODY = Helpers.getIcon("/icons/pkg_body.png");
         PACKAGE_SPEC = Helpers.getIcon("/icons/pkg_spec.png");

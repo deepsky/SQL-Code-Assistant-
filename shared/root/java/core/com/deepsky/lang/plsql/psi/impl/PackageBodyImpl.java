@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -37,9 +34,11 @@ import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
 import com.deepsky.lang.plsql.psi.resolve.ResolveHelper3;
+import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.FileBasedContextUrl;
 import com.deepsky.lang.plsql.struct.PackageBodyDescriptor;
 import com.deepsky.lang.plsql.struct.PackageDescriptor;
+import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -101,7 +100,7 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
     @NotNull
     public PackageBodyDescriptor describe() {
         if (getContainingFile().getVirtualFile() instanceof DbOriginatedSqlFile) {
-            PackageBodyDescriptor dbo = ResolveHelper.resolve_PackageBody(this.getPackageName());
+            PackageBodyDescriptor dbo = resolve_PackageBody(this.getPackageName());
             if (dbo != null) {
                 return dbo;
             }
@@ -161,7 +160,7 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
 
     public PackageSpec getPackageSpecification() {
         // todo -- there is a need Context aware search of the package spec   
-        PackageDescriptor pdesc = ResolveHelper.resolve_Package(getPackageName());
+        PackageDescriptor pdesc = resolve_Package(getPackageName());
         if (pdesc != null) {
             return (PackageSpec) SqlScriptManager.mapToPsiTree(getProject(), pdesc);
         }
@@ -212,8 +211,18 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
         }
     }
 
-    public String getCtxPath() {
-        return super.getCtxPath() + "Pb:" + getPackageName();
+    // [Contex Management Stuff] Start -------------------------------
+    CtxPath cachedCtxPath = null;
+    public CtxPath getCtxPath() {
+        if(cachedCtxPath != null){
+            return cachedCtxPath;
+        } else {
+            CtxPath parent = super.getCtxPath();
+            cachedCtxPath = new CtxPathImpl(
+                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.PACKAGE_BODY,"..$" + this.getPackageName().toLowerCase()));
+        }
+        return cachedCtxPath;
     }
-    
+    // [Contex Management Stuff] End ---------------------------------
+
 }

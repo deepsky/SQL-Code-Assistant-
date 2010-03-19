@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -30,8 +27,11 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.database.ora.desc.ProcedureDescriptorImpl;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.*;
+import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.deepsky.lang.plsql.struct.types.UserDefinedType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
@@ -44,6 +44,15 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
         super(astNode);
     }
 
+    public ObjectName getObjectName(){
+        ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
+        if(child == null){
+            throw new SyntaxTreeCorruptedException();
+        }
+
+        return (ObjectName) child.getPsi();
+    }
+    
     public String getEName() {
         ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
         return child.getText();
@@ -81,10 +90,14 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
 
     @NotNull
     public Declaration[] getDeclarationList() {
-        DeclarationList alist = (DeclarationList) this.findChildByType(PLSqlTypesAdopted.DECLARE_LIST);
-        if (alist != null) {
-            return alist.getDeclList();
+        PlSqlBlock block = (PlSqlBlock)this.findChildByType(PLSqlTypesAdopted.PLSQL_BLOCK);
+        if(block != null){
+            return block.getDeclarations();
         }
+//        DeclarationList alist = (DeclarationList) this.findChildByType(PLSqlTypesAdopted.DECLARE_LIST);
+//        if (alist != null) {
+//            return alist.getDeclList();
+//        }
         return new Declaration[0];
     }
 
@@ -183,8 +196,19 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
                 + ((out.length() > 0) ? " (" + out.toString().toLowerCase() + ") " : " ");
     }
 
-    public String getCtxPath() {
-        return super.getCtxPath() + "PRb:" + getEName();
+    // [Contex Management Stuff] Start -------------------------------
+    CtxPath cachedCtxPath = null;
+    public CtxPath getCtxPath() {
+        if(cachedCtxPath != null){
+            return cachedCtxPath;
+        } else {
+            CtxPath parent = super.getCtxPath();
+            cachedCtxPath = new CtxPathImpl(
+                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.PROCEDURE_BODY, parent.getSeqNEXT() + "$"
+                    + this.getEName().toLowerCase()));
+        }
+        return cachedCtxPath;
     }
-    
+    // [Contex Management Stuff] End ---------------------------------
+
 }

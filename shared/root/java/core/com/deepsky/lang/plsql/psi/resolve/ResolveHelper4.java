@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,7 +25,9 @@
 
 package com.deepsky.lang.plsql.psi.resolve;
 
+import com.deepsky.database.ObjectCache;
 import com.deepsky.database.ObjectCacheFactory;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.CreateTrigger;
@@ -42,6 +41,7 @@ import com.deepsky.lang.plsql.struct.PackageDescriptor;
 import com.deepsky.lang.plsql.struct.SystemFunctionDescriptor;
 import com.deepsky.lang.plsql.struct.TableDescriptorLegacy;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class ResolveHelper4 {
     public static ResolveContext777 resolveContext2(final NameFragmentRef elem, final int argc) throws NameNotResolvedException {
 
         final List<ResolveContext777> collisions = new ArrayList<ResolveContext777>();
-
+        final Project project = elem.getProject();
 //        if(++counter777 % 200 == 0){
 //            log.info("error --- counter777: " + counter777);
 //        }
@@ -68,13 +68,13 @@ public class ResolveHelper4 {
                 }
             }
 
-            public void handleDecl(Declaration decl) {
-                if (decl instanceof VariableDecl) {
-                    if (((VariableDecl) decl).getDeclName().equalsIgnoreCase(elem.getFragmentText())) {
-                        collisions.add(new PsiVariableContext((VariableDecl) decl));
-                    }
-                }
-            }
+//            public void handleDecl(Declaration decl) {
+//                if (decl instanceof VariableDecl) {
+//                    if (((VariableDecl) decl).getDeclName().equalsIgnoreCase(elem.getFragmentText())) {
+//                        collisions.add(new PsiVariableContext((VariableDecl) decl));
+//                    }
+//                }
+//            }
         });
 
         // name of variable defined in the DECLARE section of the block 
@@ -101,9 +101,10 @@ public class ResolveHelper4 {
             public void handleTriggerBody(CreateTrigger trigger) {
                 // look up among system fumnctions without arguments
                 List<String> errors = new ArrayList<String>();
-                for (SystemFunctionDescriptor sdesc : ObjectCacheFactory.getObjectCache().findSystemFunction(elem.getText())) {
+                ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
+                for (SystemFunctionDescriptor sdesc : ocache.findSystemFunction(elem.getText())) {
                     if (sdesc.getValidator().validate(new CallArgument[0], errors)) {
-                        collisions.add(new ExecutableContext(sdesc, elem.getProject()));
+                        collisions.add(new ExecutableContext(sdesc, project));
                     }
                 }
 
@@ -137,12 +138,12 @@ public class ResolveHelper4 {
                             CallArgument[] callArgs = exec.getCallArgumentList();
                             List<String> errors = new ArrayList<String>();
                             if (ResolveHelper3.validateCallArgumentList(edesc, callArgs, errors)) {
-                                collisions.add(new ExecutableContext(edesc, elem.getProject()));
+                                collisions.add(new ExecutableContext(edesc, project));
                             }
 
                         } else if (elem.getParent() instanceof ObjectReference) {
                             // executable without arguments
-                            collisions.add(new ExecutableContext(edesc, elem.getProject()));
+                            collisions.add(new ExecutableContext(edesc, project));
                         } else {
                             // skip --
                         }
@@ -274,14 +275,14 @@ public class ResolveHelper4 {
             // 3. package name (usage: sql statement, function/procedure definition)
             //  <package_name>.<variable>
             //  <package_name>.<function_without_args>
-            PackageDescriptor pdesc = ResolveHelper.resolve_Package(elem.getFragmentText());
+            PackageDescriptor pdesc = ResolveHelper.resolve_Package(project, elem.getFragmentText());
             if (pdesc != null) {
-                collisions.add(new PackageContext(pdesc, elem.getProject()));
+                collisions.add(new PackageContext(pdesc, project));
             }
         } else if (argc == 3) {
             // 4. package name (usage: sql statement, function/procedure definition)
             //  <package_name>.<variable_table_collection_type>.{FIRST|LAST}
-            PackageDescriptor pdesc = ResolveHelper.resolve_Package(elem.getFragmentText());
+            PackageDescriptor pdesc = ResolveHelper.resolve_Package(project, elem.getFragmentText());
             if (pdesc != null) {
                 collisions.add(new PackageContext(pdesc, elem.getProject()));
             }
@@ -290,6 +291,11 @@ public class ResolveHelper4 {
 
         // 2. reference to a variable or cursor thru LOOP index
         runner.add(new LoopHandler(elem) {
+            @Override
+            protected void handleForALLLoopSpec(ASTNode loopSpec) {
+                //todo --
+            }
+
             public void handleNumericLoopSpec(ASTNode node) {
                 ASTNode lindex = node.findChildByType(PlSqlElementTypes.LOOP_INDEX);
                 if (lindex != null && lindex.getPsi() instanceof LoopIndex) {

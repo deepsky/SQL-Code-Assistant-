@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -44,9 +41,9 @@ public class ProgressIndicatorHelper {
     Project project;
     final boolean[] result = new boolean[1];
 
-    public ProgressIndicatorHelper(String title) {
-        this.title = title;
-    }
+//    public ProgressIndicatorHelper(String title) {
+//        this.title = title;
+//    }
 
     public ProgressIndicatorHelper(Project project, String title) {
         this.project = project;
@@ -56,7 +53,7 @@ public class ProgressIndicatorHelper {
     public boolean run(final ProgressIndicatorListener listener) {
 
         DataContext dataContext = DataManager.getInstance().getDataContext();
-        Project project = LangDataKeys.PROJECT.getData(dataContext);
+//        Project project = LangDataKeys.PROJECT.getData(dataContext);
 
         return ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
             public void run() {
@@ -85,7 +82,7 @@ public class ProgressIndicatorHelper {
     public boolean runDeterminateProgressInd(final ProgressIndicatorListener listener) {
 
         DataContext dataContext = DataManager.getInstance().getDataContext();
-        Project project = LangDataKeys.PROJECT.getData(dataContext);
+        //Project project = LangDataKeys.PROJECT.getData(dataContext);
 
         return ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
             public void run() {
@@ -143,7 +140,7 @@ public class ProgressIndicatorHelper {
     public ProgressIndicatorHelper run2(final ProgressIndicatorListener listener) throws TaskCanceledException {
 
         DataContext dataContext = DataManager.getInstance().getDataContext();
-        Project project = LangDataKeys.PROJECT.getData(dataContext);
+        //Project project = LangDataKeys.PROJECT.getData(dataContext);
 
         boolean res = ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
             public void run() {
@@ -204,7 +201,7 @@ public class ProgressIndicatorHelper {
                 @NotNull MyProgressIndicator reporter,
                 boolean cancelable,
                 boolean startInBackground) {
-            super(title, cancelable);
+            super(project, title, cancelable);
             this.startInBackground = startInBackground;
             this.reporter = reporter;
         }
@@ -238,7 +235,7 @@ public class ProgressIndicatorHelper {
                         final String errors = reporter.getErrorMessage();
                         ApplicationManager.getApplication().invokeLater(new Runnable(){
                             public void run() {
-                                Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                                //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
                                 Messages.showInfoMessage(project, errors, "Connection failed");
                             }
                         });
@@ -284,7 +281,7 @@ public class ProgressIndicatorHelper {
                 ProgressIndicatorController reporter,
                 boolean cancelable,
                 boolean startInBackground) {
-            super(title, cancelable);
+            super(project, title, cancelable);
             this.reporter = reporter;
             this.startInBackground = startInBackground;
         }
@@ -308,7 +305,7 @@ public class ProgressIndicatorHelper {
                         final String errorDialogTitle = reporter.errorDialogTitle(); 
                         ApplicationManager.getApplication().invokeLater(new Runnable(){
                             public void run() {
-                                Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                                //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
                                 Messages.showInfoMessage(project, errors, errorDialogTitle);
                             }
                         });

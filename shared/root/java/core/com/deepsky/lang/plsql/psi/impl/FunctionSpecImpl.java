@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -31,8 +28,11 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.database.ora.desc.FunctionDescriptorImpl;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.*;
+import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.deepsky.lang.plsql.struct.types.UserDefinedType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -60,6 +60,16 @@ public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
     public String getEName() {
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
         return node.getText();
+    }
+
+
+    public ObjectName getObjectName() {
+        ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
+        if(child == null){
+            throw new SyntaxTreeCorruptedException();
+        }
+
+        return (ObjectName) child.getPsi();
     }
 
     public Type getReturnType() {
@@ -182,6 +192,23 @@ public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
             super.accept(visitor);
         }
     }
+
+
+    // [Contex Management Stuff] Start -------------------------------
+    CtxPath cachedCtxPath = null;
+    public CtxPath getCtxPath() {
+        if(cachedCtxPath != null){
+            return cachedCtxPath;
+        } else {
+            CtxPath parent = super.getCtxPath();
+            cachedCtxPath = new CtxPathImpl(
+                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.FUNCTION_SPEC, parent.getSeqNEXT() + "$"
+                    + this.getEName().toLowerCase()));
+        }
+        return cachedCtxPath;
+    }
+    // [Contex Management Stuff] End ---------------------------------
+
 
 //    @NotNull
 //    public PsiElement getNavigationElement(){

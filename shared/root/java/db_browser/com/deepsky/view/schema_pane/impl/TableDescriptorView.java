@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,12 +25,14 @@
 
 package com.deepsky.view.schema_pane.impl;
 
+import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.ConnectionManagerImpl;
 import com.deepsky.database.DBException;
 import com.deepsky.database.SqlScriptManager;
 import com.deepsky.database.cache.Cache;
 import com.deepsky.database.exec.RowSetModel;
 import com.deepsky.database.ora.desc.OraTableDescriptor;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.struct.ColumnDescriptor;
 import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.lang.plsql.struct.TableDescriptor;
@@ -65,7 +64,8 @@ public class TableDescriptorView extends ItemViewWrapperBase implements ItemView
     String name;
     int tableType;
 
-    public TableDescriptorView(ItemViewWrapper parent, Cache cache, String name) {
+    public TableDescriptorView(Project project, ItemViewWrapper parent, Cache cache, String name) {
+        super(project);
         this.cache = cache;
         this.name = name;
         this.parent = parent;
@@ -142,6 +142,13 @@ public class TableDescriptorView extends ItemViewWrapperBase implements ItemView
         return new ToggleAction[]{open, queryData};
     }
 
+    @NotNull
+    public ToggleAction[] getPopupActions() {
+        LocalToggleAction open = new LocalToggleAction("Create Script", "Create Script", Icons.VIEW_DEF, CREATE_SCRIPT);
+        LocalToggleAction queryData = new LocalToggleAction("Query Data", "Query Data", Icons.QUERY_DATA, QUERY);
+        return new ToggleAction[]{open, queryData};
+    }
+
     private void notifyListeners(int command) {
         switch (command) {
             case CREATE_SCRIPT: {
@@ -158,7 +165,7 @@ public class TableDescriptorView extends ItemViewWrapperBase implements ItemView
 //                }
 
                 OraTableDescriptor dbo = (OraTableDescriptor) cache.get(name, DbObject.TABLE);
-                Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
                 boolean result = SqlScriptManager.openFileInEditor(project, dbo);
                 break;
             }
@@ -172,17 +179,20 @@ public class TableDescriptorView extends ItemViewWrapperBase implements ItemView
 //                break;
             case QUERY:
                 try {
-                    RowSetModel t = ConnectionManagerImpl.getInstance().getSQLExecutor().executeQuery("SELECT * FROM " + name);
-                    QueryResultPanel resultPanel = QueryResultWindow.getInstance().createResultPanel(
+                    ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+                    QueryResultWindow qrwn = PluginKeys.QR_WINDOW.getData(project);
+//                    RowSetModel t = ConnectionManagerImpl.getInstance().getSQLExecutor().executeQuery("SELECT * FROM " + name);
+                    RowSetModel t = manager.getSQLExecutor().executeQuery("SELECT * FROM " + name);
+                    QueryResultPanel resultPanel = qrwn.createResultPanel(
                             QueryResultPanel.SELECT_RESULT, getTabName(), Icons.TABLE, null /* ToolTip text */
                     );
                     resultPanel.init(t);
 
                     // show content pane
-                    QueryResultWindow.getInstance().showContent(getTabName());
+                    qrwn.showContent(getTabName());
 
                 } catch (DBException e) {
-                    Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                    //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
                     Messages.showErrorDialog(project, e.getMessage(), "Data load failed");
                 }
 
@@ -215,7 +225,7 @@ public class TableDescriptorView extends ItemViewWrapperBase implements ItemView
 
     public void runDefaultAction() {
         OraTableDescriptor dbo = (OraTableDescriptor) cache.get(name, DbObject.TABLE);
-        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+        //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
         boolean result = SqlScriptManager.openFileInEditor(project, dbo);
     }
 }

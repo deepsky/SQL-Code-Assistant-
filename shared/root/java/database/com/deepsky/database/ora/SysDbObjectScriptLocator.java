@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -43,8 +40,8 @@ public class SysDbObjectScriptLocator implements SqlScriptLocator {
 
     static final long serialVersionUID = -3267944036751679496L;
     
-    String type;
-    String name;
+    public String type;
+    public String name;
 
     public SysDbObjectScriptLocator(String type, String name){
         this.type = type;
@@ -53,13 +50,19 @@ public class SysDbObjectScriptLocator implements SqlScriptLocator {
 
     @NotNull
     public String getPresentableUrl() {
-        DbUrl url = ConnectionManagerImpl.getInstance().getDbUrl();
+        // todo -- should be revised!!!!
+/*
+        DbUrl url = PluginKeys.CONNECTION_MANAGER.getData().getDbUrl();
+//        DbUrl url = ConnectionManagerImpl.getInstance().getDbUrl();
         String s = "";
         if(url != null){
             s = name + " [SYS" + "@" + url.getHostPortServiceName() + "]";
         } else {
             s = name;
         }
+        return s.toLowerCase();
+*/
+        String s = name + " [SYS]";
         return s.toLowerCase();
     }
 
@@ -70,6 +73,9 @@ public class SysDbObjectScriptLocator implements SqlScriptLocator {
 
     @NotNull
     public VirtualFile getScript() {
+        // todo -- moved to SqlScriptManager
+
+/*
         CacheManager cacheManager = PluginKeys.CACHE_MANAGER.getData();
         if(cacheManager != null){
 //            String content = CacheManager3.getInstance().getSysDbObjectSource(type, name);
@@ -83,6 +89,8 @@ public class SysDbObjectScriptLocator implements SqlScriptLocator {
 //            return new SysObjectSqlFile(content, this);
 //        }
         return new LightVirtualFile(name, PlSqlSupportLoader.PLSQL, "");
+*/
+        return null;
     }
 
 }

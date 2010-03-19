@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -33,6 +30,7 @@ import com.intellij.find.findUsages.FindUsagesOptions;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadActionProcessor;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.TextRange;
@@ -57,11 +55,11 @@ public class SqlSpecificSearchRunner {
         final UsageInfoToUsageConverter.TargetElementsDescriptor descriptor;
         final FindUsagesOptions options;
 
-        public SearchUsageFactory(final UsageInfoToUsageConverter.TargetElementsDescriptor descriptor, final FindUsagesOptions options) {
+        public SearchUsageFactory(Project project, final UsageInfoToUsageConverter.TargetElementsDescriptor descriptor, final FindUsagesOptions options) {
             this.descriptor = descriptor;
             this.options = options;
 
-            SqlSearchParameters searchParams = SqlSearchParameters.getInstance();
+            SqlSearchParameters searchParams = SqlSearchParameters.getInstance(project);
             searchParams.searchScope = options.searchScope; 
         }
 

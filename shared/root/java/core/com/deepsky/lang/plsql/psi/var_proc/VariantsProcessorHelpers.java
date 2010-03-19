@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -38,6 +35,7 @@ import com.deepsky.lang.plsql.psi.resolve.TableEnumerator;
 import com.deepsky.lang.plsql.struct.TableDescriptorLegacy;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,18 +49,50 @@ public class VariantsProcessorHelpers {
     public static String[] getVariableVariants(PsiElement reference, final String prefix) {
         ASTTreeProcessor runner = new ASTTreeProcessor();
         final TokenSet tokenSet = TokenSet.create(
-                PlSqlElementTypes.PROCEDURE_BODY,
-                PlSqlElementTypes.FUNCTION_BODY,
-                PlSqlElementTypes.CREATE_TRIGGER
+                PlSqlElementTypes.PLSQL_BLOCK
         );
                               
         final List<String> variants = new ArrayList<String>();
         runner.add(new ContextEnumerator(tokenSet){
             public void handleASTNode(@NotNull ASTNode node) {
+                IElementType etype = node.getTreeParent().getElementType();
+                if(etype == PlSqlElementTypes.CREATE_TRIGGER){
+                    PlSqlBlock block = (PlSqlBlock) node.getPsi();
+                    Declaration[] decls = block.getDeclarations();
+                    variants.addAll(processDeclarations(decls, prefix));
+                } else if(etype == PlSqlElementTypes.PROCEDURE_BODY){
+                    // create variants including variables and arguments
+                    Procedure proc = (Procedure) node.getTreeParent().getPsi();
+                    Argument[] args = proc.getArguments();
+                    variants.addAll(processArguments(args, prefix));
+
+                    PlSqlBlock block = (PlSqlBlock) node.getPsi();
+                    Declaration[] decls = block.getDeclarations();
+                    variants.addAll(processDeclarations(decls, prefix));
+
+                } if(etype == PlSqlElementTypes.FUNCTION_BODY){
+                    // create variants including variables and arguments
+                    Function proc = (Function) node.getTreeParent().getPsi();
+                    Argument[] args = proc.getArguments();
+                    variants.addAll(processArguments(args, prefix));
+
+                    PlSqlBlock block = (PlSqlBlock) node.getPsi();
+                    Declaration[] decls = block.getDeclarations();
+                    variants.addAll(processDeclarations(decls, prefix));
+
+                } else {
+                    PlSqlBlock block = (PlSqlBlock) node.getPsi();
+                    Declaration[] decls = block.getDeclarations();
+                    variants.addAll(processDeclarations(decls, prefix));
+                }
+
+            }
+/*
+            public void handleASTNode(@NotNull ASTNode node) {
                 if(node.getElementType() == PlSqlElementTypes.CREATE_TRIGGER){
                     // create variants including variables and arguments
                     if(node.getPsi() instanceof CreateTrigger){
-                        ASTNode blk = node.findChildByType(PlSqlElementTypes.BEGIN_BLOCK);
+                        ASTNode blk = node.findChildByType(PlSqlElementTypes.PLSQL_BLOCK);
                         if(blk != null){
                             ASTNode declare  = blk.findChildByType(PlSqlElementTypes.DECLARE_LIST);
                             if(declare != null){
@@ -88,6 +118,7 @@ public class VariantsProcessorHelpers {
                     variants.addAll(processArguments(args, prefix));
                 }
             }
+*/
         });
 
         runner.process(reference.getNode());
@@ -106,19 +137,19 @@ public class VariantsProcessorHelpers {
         return out;
     }
 
-    private static List<String> processDeclarations(DeclarationList declList, String prefix){
-        List<String> out = new ArrayList<String>();
-        for(Declaration decl: declList.getDeclList()){
-            if(decl instanceof VariableDecl){
-                if(prefix.length() == 0
-                    || ((VariableDecl)decl).getDeclName().toUpperCase().startsWith(prefix.toUpperCase())){
-                    out.add(((VariableDecl)decl).getDeclName());
-                }
-            }
-        }
-
-        return out;
-    }
+//    private static List<String> processDeclarations(DeclarationList declList, String prefix){
+//        List<String> out = new ArrayList<String>();
+//        for(Declaration decl: declList.getDeclList()){
+//            if(decl instanceof VariableDecl){
+//                if(prefix.length() == 0
+//                    || ((VariableDecl)decl).getDeclName().toUpperCase().startsWith(prefix.toUpperCase())){
+//                    out.add(((VariableDecl)decl).getDeclName());
+//                }
+//            }
+//        }
+//
+//        return out;
+//    }
 
     private static List<String> processDeclarations(Declaration[] declList, String prefix){
         List<String> out = new ArrayList<String>();

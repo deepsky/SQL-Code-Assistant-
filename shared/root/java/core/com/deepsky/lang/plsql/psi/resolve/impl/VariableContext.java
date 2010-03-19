@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -65,12 +62,12 @@ public class VariableContext implements ResolveContext777 {
 
         type = vdesc.getType();
         if (type instanceof UserDefinedType) {
-            UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type((UserDefinedType) type);
+            UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type(project, (UserDefinedType) type);
             if (tdesc == null) {
                 throw new NameNotResolvedException("Type definition not found: " + type.typeName());
             }
 
-            return UserDefinedTypeHelper.createResolveContext(tdesc);
+            return UserDefinedTypeHelper.createResolveContext(project, tdesc);
 //            if (tdesc instanceof RecordTypeDescriptor) {
 //                return new RecordTypeContext(elem.getProject(), (RecordTypeDescriptor) tdesc).resolve(elem);
 //            } else if (tdesc instanceof ObjectTypeDescriptor) {
@@ -89,7 +86,7 @@ public class VariableContext implements ResolveContext777 {
 //            throw new NameNotResolvedException("Type not supported");
         } else if (type instanceof RowtypeType) {
             RowtypeType rowtype = (RowtypeType) type;
-            TableDescriptor tdesc = ResolveHelper.describeTable(rowtype.getTableName());
+            TableDescriptor tdesc = ResolveHelper.describeTable(project, rowtype.getTableName());
             if (tdesc != null) {
                 return new PlainTableColumnContext(project, tdesc, text);
             }

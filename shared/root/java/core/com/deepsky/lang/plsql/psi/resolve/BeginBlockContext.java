@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,32 +25,41 @@
 
 package com.deepsky.lang.plsql.psi.resolve;
 
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.lang.ASTNode;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.Declaration;
 import com.deepsky.lang.plsql.psi.DeclarationList;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BeginBlockContext implements ASTNodeHandler {
 
-    final static TokenSet beginBlock = TokenSet.create(PlSqlElementTypes.BEGIN_BLOCK);
+    final static TokenSet beginBlock = TokenSet.create(
+            PlSqlElementTypes.PLSQL_BLOCK,
+            PlSqlElementTypes.FUNCTION_BODY,
+            PlSqlElementTypes.PROCEDURE_BODY,
+            PlSqlElementTypes.CREATE_TRIGGER
+    );
+
     @NotNull
     public TokenSet getTokenSet() {
         return beginBlock;
     }
 
     public boolean handleNode(@NotNull ASTNode node) {
-        ASTNode _declareList = node.findChildByType(PlSqlElementTypes.DECLARE_LIST);
-        if(_declareList != null){
-            DeclarationList declareList = (DeclarationList) _declareList.getPsi();
-            for(Declaration decl: declareList.getDeclList()){
-                handleDecl(decl);
+        if (node.getElementType() == PlSqlElementTypes.PLSQL_BLOCK) {
+            ASTNode _declareList = node.findChildByType(PlSqlElementTypes.DECLARE_LIST);
+            if (_declareList != null) {
+                DeclarationList declareList = (DeclarationList) _declareList.getPsi();
+                for (Declaration decl : declareList.getDeclList()) {
+                    handleDecl(decl);
+                }
             }
+            // todo -- should be revised
+            return false;
+        } else {
+            return true;
         }
-
-        // todo -- TRUE should be revised
-        return true;
     }
 
     public abstract void handleDecl(Declaration decl);

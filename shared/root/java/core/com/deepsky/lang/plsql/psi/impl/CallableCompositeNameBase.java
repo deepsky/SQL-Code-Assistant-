@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -30,6 +27,7 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.database.ObjectCache;
 import com.deepsky.database.ObjectCacheFactory;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
@@ -38,6 +36,7 @@ import com.deepsky.lang.plsql.psi.resolve.collection.TableCollectionItemAccessor
 import com.deepsky.lang.plsql.psi.resolve.collection.VarrayItemAccessorCtx;
 import com.deepsky.lang.plsql.psi.resolve.impl.ExecutableContext;
 import com.deepsky.lang.plsql.psi.resolve.impl.PackageContext2;
+import com.deepsky.lang.plsql.psi.resolve.impl.SystemFunctionProxy;
 import com.deepsky.lang.plsql.psi.resolve.impl.VarrayCollectionContext;
 import com.deepsky.lang.plsql.psi.resolve.psibased.PsiArgumentContext;
 import com.deepsky.lang.plsql.psi.resolve.psibased.PsiVariableContext;
@@ -88,7 +87,7 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
         }
 
         public String[] getVariants(String prefix) {
-            ObjectCache cache = ObjectCacheFactory.getObjectCache();
+            ObjectCache cache = PluginKeys.OBJECT_CACHE.getData(getProject()); //ObjectCacheFactory.getObjectCache();
 
             String user = cache.getCurrentUser();
             String[] objects = cache.findByNamePrefix2(user, type, prefix);
@@ -213,7 +212,7 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
             CollectionMethodCall cmethod = (CollectionMethodCall) praparent;
             return cmethod.getResolveContext();
         }
-
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(getProject());
         ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.NAME_FRAGMENT));
         Callable callable = getCallable();
         boolean isFunctionCall = callable instanceof FunctionCall;
@@ -227,7 +226,7 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
                 // 2. the name of function/procedure in the current package or SYS's
                 // (without arguments or arguments with default values)
 
-                PackageDescriptorAggregate2 pa = new PackageDescriptorAggregate2(packageName);
+                PackageDescriptorAggregate2 pa = new PackageDescriptorAggregate2(ocache, packageName);
                 for (PlSqlObject plsql : pa.findObjectByName(nodes[0].getText())) {
                     if (isFunctionCall && plsql instanceof FunctionDescriptor) {
                         ExecutableDescriptor edesc = (ExecutableDescriptor) plsql;
@@ -251,11 +250,10 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
             }
 
             // 3. System function
-            for (SystemFunctionDescriptor sdesc : ObjectCacheFactory.getObjectCache().findSystemFunction(nodes[0].getText())) {
-                Callable exec = getCallable();
+            for (SystemFunctionDescriptor sdesc : ocache.findSystemFunction(nodes[0].getText())) {
                 List<String> errors = new ArrayList<String>();
-                if (ResolveHelper3.validateCallArgumentList(sdesc, callArgs, errors)) {
-                    collisions.add(new ExecutableContext(sdesc, getProject()));
+                if(sdesc.getValidator().validate(callArgs, errors)){
+                    collisions.add(new SystemFunctionProxy(sdesc, getProject()));
                 }
             }
 
@@ -268,7 +266,7 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
                         VariableDecl var = (VariableDecl) e;
                         Type t = var.getType();
                         if (t instanceof UserDefinedType) {
-                            UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type((UserDefinedType) t, ctx);
+                            UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type(getProject(), (UserDefinedType) t, ctx);
                             if (tdesc instanceof TableCollectionDescriptor) {
                                 TableCollectionDescriptor cdesc = (TableCollectionDescriptor) tdesc;
                                 collisions.add(new TableCollectionItemAccessorCtx(var, cdesc));
@@ -281,7 +279,7 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
                         Argument arg = (Argument) e;
                         Type t = arg.getType();
                         if (t instanceof UserDefinedType) {
-                            UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type((UserDefinedType) t, ctx);
+                            UserDefinedTypeDescriptor tdesc = ResolveHelper.resolve_Type(getProject(),(UserDefinedType) t, ctx);
                             if (tdesc instanceof TableCollectionDescriptor) {
                                 TableCollectionDescriptor cdesc = (TableCollectionDescriptor) tdesc;
                                 collisions.add(new TableCollectionItemAccessorCtx(arg, cdesc));
@@ -296,12 +294,12 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
 
         } else {
             // 1. package name (usage: sql statement, function/procedure definition)
-            DbObject[] objects = ObjectCacheFactory.getObjectCache().findByNameForType(ObjectCache.PACKAGE, nodes[0].getText());
+            DbObject[] objects = ocache.findByNameForType(ObjectCache.PACKAGE, nodes[0].getText());
             if (objects.length == 1 && objects[0] instanceof PackageSpecDescriptor) {
                 try {
                     collisions.add(
                             new PackageContext2(
-                                    new PackageDescriptorAggregate2((PackageSpecDescriptor) objects[0]), getProject())//.resolve(nodes[1].getPsi())
+                                    new PackageDescriptorAggregate2(ocache, (PackageSpecDescriptor) objects[0]), getProject())//.resolve(nodes[1].getPsi())
                     );
                 } catch (NameNotResolvedException e) {
                     // ignore

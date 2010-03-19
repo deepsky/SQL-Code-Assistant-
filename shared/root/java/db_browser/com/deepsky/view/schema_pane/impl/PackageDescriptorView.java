@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -36,6 +33,7 @@ import com.deepsky.view.schema_pane.ItemViewWrapper;
 import com.deepsky.view.schema_pane.DboDescriptorViewFactory;
 import com.deepsky.view.Icons;
 import com.deepsky.view.schema_pane.ItemViewListener;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
@@ -61,7 +59,8 @@ public class PackageDescriptorView extends ItemViewWrapperBase implements Toggle
     boolean packageSpecAvailable = true;
     boolean packageBodyAvailable = true;
 
-    public PackageDescriptorView(ItemViewWrapper parent, Cache cache, String name) {
+    public PackageDescriptorView(Project project, ItemViewWrapper parent, Cache cache, String name) {
+        super(project);
         this.cache = cache;
 
         packageSpecAvailable = cache.get(name, DbObject.PACKAGE) != null;
@@ -92,7 +91,7 @@ public class PackageDescriptorView extends ItemViewWrapperBase implements Toggle
         });
 
         for (DbObject dbo : dbos) {
-            out.add(DboDescriptorViewFactory.createPackageItemView(this, dbo));
+            out.add(DboDescriptorViewFactory.createPackageItemView(this, dbo, cache));
         }
 
         lastUpdateDate = desc.getLastDDLTime();
@@ -138,14 +137,26 @@ public class PackageDescriptorView extends ItemViewWrapperBase implements Toggle
     }
 
 
+    @NotNull
+    public ToggleAction[] getPopupActions() {
+        LocalToggleAction openSpec = new LocalToggleAction(
+                "Open Specification", "Open", Icons.VIEW_PKG_SPEC, OPEN_SPEC, this, packageSpecAvailable
+            );
+        LocalToggleAction openBody = new LocalToggleAction(
+                "Open Body", "Open", Icons.VIEW_PKG_BODY, OPEN_BODY, this, packageBodyAvailable
+            );
+
+        return new ToggleAction[]{openSpec, openBody};
+    }
+
     public void setListener(ItemViewListener listener) {
     }
 
-    public void handle(int command) {
+    public void handle(AnActionEvent event, int command) {
         switch (command) {
             case OPEN_SPEC: {
                 DbObject dbo =  cache.get(name, DbObject.PACKAGE);
-                Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
                 boolean result = SqlScriptManager.openFileInEditor(project, dbo);
                 // todo -- analyze the result
 
@@ -154,7 +165,7 @@ public class PackageDescriptorView extends ItemViewWrapperBase implements Toggle
             case OPEN_BODY:{
                 DbObject dbo =  cache.get(name, DbObject.PACKAGE_BODY);
                 if(dbo != null){
-                    Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                    //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
                     boolean result = SqlScriptManager.openFileInEditor(project, dbo);
                     // todo -- analyze the result
                 } else {

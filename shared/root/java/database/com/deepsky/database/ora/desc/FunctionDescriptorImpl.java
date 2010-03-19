@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -130,7 +127,8 @@ public class FunctionDescriptorImpl implements FunctionDescriptor {
         return arguments.toArray(new String[arguments.size()]);
     }
 
-    public Type getArgumentType(String argName) {
+    public Type getArgumentType(String _argName) {
+        String argName = _argName.toUpperCase();
         ParamStuff p = argTypes.get(argName);
         if (p != null) {
             return p.type;
@@ -152,7 +150,8 @@ public class FunctionDescriptorImpl implements FunctionDescriptor {
         return isEmbedded;
     }
 
-    public boolean hasDefault(String name) {
+    public boolean hasDefault(String _name) {
+        String name = _name.toUpperCase();
         ParamStuff p = argTypes.get(name);
         return p != null && p.hasDefault;
     }
@@ -169,13 +168,15 @@ public class FunctionDescriptorImpl implements FunctionDescriptor {
         }
     }
 
-    public void addParameter(Type type, String name) {
+    public void addParameter(Type type, String _name) {
+        String name = _name.toUpperCase();
         arguments.add(name);
         argTypes.put(name, new ParamStuff(type, false));
         reqArgs++;
     }
 
-    public void addParameter(Type type, String name, boolean def) {
+    public void addParameter(Type type, String _name, boolean def) {
+        String name = _name.toUpperCase();
         arguments.add(name);
         argTypes.put(name, new ParamStuff(type, def));
         reqArgs = (def) ? reqArgs : reqArgs + 1;

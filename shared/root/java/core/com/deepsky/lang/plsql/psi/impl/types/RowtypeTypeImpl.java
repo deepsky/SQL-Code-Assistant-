@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -56,9 +53,7 @@ public class RowtypeTypeImpl extends PlSqlElementBase implements RowtypeType {
 
     public void validate() {
         try {
-            ResolveHelper.validateType(
-                    getType()
-            );
+            ResolveHelper.validateType(getProject(), getType() );
         } catch (NameNotResolvedException e1) {
             throw new ValidationException(e1.getMessage());
         }
@@ -67,7 +62,7 @@ public class RowtypeTypeImpl extends PlSqlElementBase implements RowtypeType {
     @NotNull
     public ResolveContext777 resolveType() throws NameNotResolvedException {
         String tableName = getNode().findChildByType(PLSqlTypesAdopted.TABLE_NAME).getText();
-        TableDescriptor tdesc = ResolveHelper.describeTable(tableName);
+        TableDescriptor tdesc = describeTable(tableName);
         if (tdesc != null) {
             return new TableContext(getProject(), tdesc);
         } else {

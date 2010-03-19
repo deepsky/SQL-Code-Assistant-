@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,23 +25,27 @@
 
 package com.deepsky.view.schema_pane.impl;
 
+import com.deepsky.database.SqlScriptManager;
 import com.deepsky.database.cache.Cache;
+import com.deepsky.lang.plsql.struct.FunctionDescriptor;
+import com.deepsky.lang.plsql.struct.ProcedureDescriptor;
 import com.deepsky.view.schema_pane.ItemViewWrapper;
 import com.deepsky.view.Icons;
 import com.deepsky.lang.plsql.struct.ExecutableDescriptor;
 import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.lang.plsql.psi.utils.Formatter;
+import com.intellij.openapi.project.Project;
 
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-public class ProcedureDescriptorView2 extends ItemViewWrapperBase implements ItemViewWrapper {
+public class ProcedureDescriptorView2 extends ItemViewWrapperBase {
 
     Cache c0;
     String name;
     String signature;
 
-    public ProcedureDescriptorView2(ItemViewWrapper parent, Cache c0, String name){
-        this.parent = parent;
+    public ProcedureDescriptorView2(Project project, ItemViewWrapper parent, Cache c0, String name){
+        super(project, parent);
         this.c0 = c0;
         this.name = name;
 
@@ -57,6 +58,14 @@ public class ProcedureDescriptorView2 extends ItemViewWrapperBase implements Ite
         renderer.setText(signature);
         renderer.setIcon(Icons.PROCEDURE_BODY);
     }
+
+    public void runDefaultAction() {
+        ProcedureDescriptor p = (ProcedureDescriptor) c0.get(name, DbObject.PROCEDURE);
+        if (signature.equals(Formatter.formatHtmlBasedSignature(p))) {
+            boolean result = SqlScriptManager.openFileInEditor(project, p);
+        }
+    }
+
 
 }
 

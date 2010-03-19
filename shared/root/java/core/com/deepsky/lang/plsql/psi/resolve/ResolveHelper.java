@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -33,10 +30,10 @@ import com.deepsky.database.ObjectCacheFactory;
 import com.deepsky.database.SqlScriptManager;
 import com.deepsky.database.fs.CachedVirtualFileSystem;
 import com.deepsky.integration.PlSqlElementType;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.ddl.CreateTriggerDML;
 import com.deepsky.lang.plsql.psi.utils.PsiTreeHelpers;
 import com.deepsky.lang.plsql.struct.*;
 import com.deepsky.lang.plsql.struct.types.RowtypeType;
@@ -57,10 +54,11 @@ import java.util.List;
 public class ResolveHelper {
 
 
-    public static TableDescriptor describeTable(String name) {
+    public static TableDescriptor describeTable(Project project, String name) {
         String cutted = StringUtils.trimDoubleQuites(name);
-        DbObject[] objects = ObjectCacheFactory
-                .getObjectCache()
+
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
+        DbObject[] objects = ocache //ObjectCacheFactory.getObjectCache()
                 .findByNameForType(ObjectCache.TABLE | ObjectCache.VIEW, cutted);
 
         if (objects.length == 1 && objects[0] instanceof TableDescriptor) {
@@ -112,9 +110,10 @@ public class ResolveHelper {
         return new Executable[0];
     }
 
-    public static PackageDescriptor resolve_Package(String name) {
-        DbObject[] objects = ObjectCacheFactory
-                .getObjectCache()
+    public static PackageDescriptor resolve_Package(Project project, String name) {
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
+        DbObject[] objects = ocache //ObjectCacheFactory
+                //.getObjectCache()
                 .findByNameForType(ObjectCache.PACKAGE, name);
 
         if (objects.length == 1 && objects[0] instanceof PackageDescriptor) {
@@ -125,9 +124,10 @@ public class ResolveHelper {
     }
 
 
-    public static PackageBodyDescriptor resolve_PackageBody(String name) {
-        DbObject[] objects = ObjectCacheFactory
-                .getObjectCache()
+    public static PackageBodyDescriptor resolve_PackageBody(Project project, String name) {
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
+        DbObject[] objects = ocache //ObjectCacheFactory
+                //.getObjectCache()
                 .findByNameForType(ObjectCache.PACKAGE_BODY, name);
 
         if (objects.length == 1 && objects[0] instanceof PackageBodyDescriptor) {
@@ -267,12 +267,12 @@ public class ResolveHelper {
 //        }
 //    }
 
-    public static UserDefinedTypeDescriptor resolve_Type(UserDefinedType type) {
-        return resolve_Type(type, (String)null);
+    public static UserDefinedTypeDescriptor resolve_Type(Project project,UserDefinedType type) {
+        return resolve_Type(project, type, (String) null);
     }
 
 
-    public static String getSurroundPackageName(PsiElement elem){
+    public static String getSurroundPackageName(PsiElement elem) {
         PsiElement pkg =
                 PsiTreeHelpers
                         .findParentNode(
@@ -294,26 +294,26 @@ public class ResolveHelper {
     }
 
 
-    public static UserDefinedTypeDescriptor resolve_Type(UserDefinedType type, UsageContext uctx) {
-        return resolve_Type(type, uctx.getPackageName());
+    public static UserDefinedTypeDescriptor resolve_Type(Project project, UserDefinedType type, UsageContext uctx) {
+        return resolve_Type(project, type, uctx.getPackageName());
     }
 
-    public static UserDefinedTypeDescriptor resolve_Type(UserDefinedType type, String usedInPackage) {
+    public static UserDefinedTypeDescriptor resolve_Type(Project project, UserDefinedType type, String usedInPackage) {
         String defPkg = type.getDefinitionPackage();
+
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
 
         DbObject[] objects;
         if (defPkg == null) {
             // look for types defined in the schema scope
-            objects = ObjectCacheFactory
-                    .getObjectCache()
+            objects = ocache
                     .findByNameForType(ObjectCache.USER_DEFINED_TYPE, type.getTypeName2());
 
             if (objects.length == 1 && objects[0] instanceof UserDefinedTypeDescriptor) {
                 return (UserDefinedTypeDescriptor) objects[0];
-            } else if(usedInPackage != null){
+            } else if (usedInPackage != null) {
                 // type has been used inside a package, is the type defined inside the package also?
-                objects = ObjectCacheFactory
-                        .getObjectCache()
+                objects = ocache
                         .findByNameForType(ObjectCache.PACKAGE, usedInPackage);
 
                 if (objects.length == 1) {
@@ -325,8 +325,7 @@ public class ResolveHelper {
             }
 
         } else {
-            objects = ObjectCacheFactory
-                    .getObjectCache()
+            objects = ocache
                     .findByNameForType(ObjectCache.PACKAGE, defPkg);
 
             if (objects.length == 1) {
@@ -358,13 +357,13 @@ public class ResolveHelper {
     }
 */
 
-    public static Type resolve_TypeReference(Type t) throws NameNotResolvedException {
+    public static Type resolve_TypeReference(Project project, Type t) throws NameNotResolvedException {
         if (t instanceof TableColumnRefType) {
             String table = ((TableColumnRefType) t).getTable();
             String column = ((TableColumnRefType) t).getColumn();
 
-            DbObject[] objects = ObjectCacheFactory
-                    .getObjectCache()
+            ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
+            DbObject[] objects = ocache
                     .findByNameForType(ObjectCache.TABLE, table);
             if (objects.length == 1) {
                 ColumnDescriptor cdesc = ((TableDescriptor) objects[0]).getColumnDescriptor(column);
@@ -381,13 +380,13 @@ public class ResolveHelper {
     }
 
 
-    public static void validateType(Type t) throws NameNotResolvedException {
+    public static void validateType(Project project, Type t) throws NameNotResolvedException {
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
         if (t instanceof TableColumnRefType) {
             String table = ((TableColumnRefType) t).getTable();
             String column = ((TableColumnRefType) t).getColumn();
 
-            DbObject[] objects = ObjectCacheFactory
-                    .getObjectCache()
+            DbObject[] objects = ocache
                     .findByNameForType(ObjectCache.TABLE, table);
             if (objects.length == 1) {
                 ColumnDescriptor cdesc = ((TableDescriptor) objects[0]).getColumnDescriptor(column);
@@ -401,8 +400,7 @@ public class ResolveHelper {
             }
         } else if (t instanceof RowtypeType) {
             String table = ((RowtypeType) t).getTableName();
-            DbObject[] objects = ObjectCacheFactory
-                    .getObjectCache()
+            DbObject[] objects = ocache
                     .findByNameForType(ObjectCache.TABLE, table);
 
             if (objects.length == 1) {
@@ -488,43 +486,52 @@ public class ResolveHelper {
     }
 */
 
-    public static CursorDecl resolveCursorRef(PsiElement cursorRef){
+    public static CursorDecl resolveCursorRef(PsiElement cursorRef) {
         PsiElement psiElement =
                 PsiTreeHelpers
                         .findParentNode(
                                 cursorRef,
                                 new PlSqlElementType[]{
-                                        PlSqlElementTypes.FUNCTION_BODY,
-                                        PlSqlElementTypes.PROCEDURE_BODY,
-                                        PlSqlElementTypes.DML_TRIGGER_CLAUSE
-//                                        PlSqlElementTypes.PLSQL_BLOCK
+//                                        PlSqlElementTypes.FUNCTION_BODY,
+//                                        PlSqlElementTypes.PROCEDURE_BODY,
+//                                        PlSqlElementTypes.DML_TRIGGER_CLAUSE
+                                        PlSqlElementTypes.PLSQL_BLOCK
                                 }
                         );
 
-        if(psiElement != null){
-            if( psiElement instanceof Executable){
-                Executable e = (Executable) psiElement;
-                for(Declaration d: e.getDeclarationList()){
-                    if(d instanceof CursorDecl){
-                        String name = cursorRef.getText();
-                        if(name.equalsIgnoreCase(((CursorDecl)d).getDeclName())){
-                            return (CursorDecl)d;
-                        }
+        if (psiElement instanceof PlSqlBlock) { //psiElement != null){
+            PlSqlBlock block = (PlSqlBlock) psiElement;
+            for (Declaration d : block.getDeclarations()) {
+                if (d instanceof CursorDecl) {
+                    String name = cursorRef.getText();
+                    if (name.equalsIgnoreCase( d.getDeclName())) {
+                        return (CursorDecl) d;
                     }
                 }
-
-            } else if( psiElement instanceof CreateTriggerDML){
-                CreateTriggerDML dml = (CreateTriggerDML) psiElement;
-                for(Declaration d: dml.getDeclarationList()){
-                    if(d instanceof CursorDecl){
-                        String name = cursorRef.getText();
-                        if(name.equalsIgnoreCase(((CursorDecl)d).getDeclName())){
-                            return (CursorDecl)d;
-                        }
-                    }
-                }
-
             }
+
+//            if( psiElement instanceof Executable){
+//                Executable e = (Executable) psiElement;
+//                for(Declaration d: e.getDeclarationList()){
+//                    if(d instanceof CursorDecl){
+//                        String name = cursorRef.getText();
+//                        if(name.equalsIgnoreCase(((CursorDecl)d).getDeclName())){
+//                            return (CursorDecl)d;
+//                        }
+//                    }
+//                }
+//
+//            } else if( psiElement instanceof CreateTriggerDML){
+//                CreateTriggerDML dml = (CreateTriggerDML) psiElement;
+//                for(Declaration d: dml.getDeclarationList()){
+//                    if(d instanceof CursorDecl){
+//                        String name = cursorRef.getText();
+//                        if(name.equalsIgnoreCase(((CursorDecl)d).getDeclName())){
+//                            return (CursorDecl)d;
+//                        }
+//                    }
+//                }
+//            }
         }
 
         return null;
@@ -532,22 +539,28 @@ public class ResolveHelper {
 
     /**
      * Search for a sequence descriptor for the current user
+     *
      * @param text - sequence name
      * @return - descriptor
      */
-    public static DbObject[] resolve_Sequence(String text) {
-        ObjectCache cache = ObjectCacheFactory.getObjectCache();
-        String user = cache.getCurrentUser();
-        return cache.findByNameForType(user, ObjectCache.TABLE, text);
+    public static DbObject[] resolve_Sequence(Project project, String text) {
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
+        String user = ocache.getCurrentUser();
+        if(user == null){
+            return new DbObject[0];
+        } else {
+            return ocache.findByNameForType(user, ObjectCache.TABLE, text);
+        }
     }
 
 
     /**
-        Schema-wide Type Definition
+     * Schema-wide Type Definition
+     *
      * @param typeName -
      * @return - type descriptor
      */
-    public static UserDefinedTypeDescriptor resolve_Type(String typeName) {
+    public static UserDefinedTypeDescriptor resolve_Type(Project project, String typeName) {
 
 //        DbObject[] objects;
 //        // is this type a schema scope?
@@ -559,27 +572,28 @@ public class ResolveHelper {
 //        }
 //
 //        return null;
-        return resolve_Type((String)null, typeName);
+        return resolve_Type(project, (String) null, typeName);
     }
 
-    public static UserDefinedTypeDescriptor resolve_Type(String pkgName, String typeName) {
+    public static UserDefinedTypeDescriptor resolve_Type(Project project, String pkgName, String typeName) {
 
-        if(pkgName == null){
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
+        if (pkgName == null) {
             // type seems to be a schema-wide
-            DbObject[] objects = ObjectCacheFactory.getObjectCache()
+            DbObject[] objects = ocache
                     .findByNameForType(ObjectCache.USER_DEFINED_TYPE, typeName);
 
             if (objects.length == 1 && objects[0] instanceof UserDefinedTypeDescriptor) {
                 return (UserDefinedTypeDescriptor) objects[0];
             }
         } else {
-            DbObject[] objects = ObjectCacheFactory.getObjectCache()
+            DbObject[] objects = ocache
                     .findByNameForType(ObjectCache.PACKAGE, pkgName);
             if (objects.length == 1) {
                 PackageSpecDescriptor spec = (PackageSpecDescriptor) objects[0];
                 DbObject[] candidates = spec.findObjectByName(typeName);
-                for(DbObject dbo: candidates){
-                    if(dbo instanceof UserDefinedTypeDescriptor){
+                for (DbObject dbo : candidates) {
+                    if (dbo instanceof UserDefinedTypeDescriptor) {
                         return (UserDefinedTypeDescriptor) dbo;
                     }
                 }
@@ -1289,14 +1303,14 @@ public class ResolveHelper {
     }
 */
 
-    public static PackageBody resolve_PackageBody(VirtualFileSystem vfs, String packageName) {
+    public static PackageBody resolve_PackageBody(Project project, VirtualFileSystem vfs, String packageName) {
 
-        if(vfs.getProtocol().equals(CachedVirtualFileSystem.PROTOCOL)){
-            PackageBodyDescriptor pdesc = resolve_PackageBody(packageName);
-            if(pdesc != null){
-                Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+        if (vfs.getProtocol().equals(CachedVirtualFileSystem.PROTOCOL)) {
+            PackageBodyDescriptor pdesc = resolve_PackageBody(project, packageName);
+            if (pdesc != null) {
+                //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
                 PlSqlElement elem = SqlScriptManager.mapToPsiTree(project, pdesc);
-                if(elem instanceof PackageBody){
+                if (elem instanceof PackageBody) {
                     return (PackageBody) elem;
                 }
             }

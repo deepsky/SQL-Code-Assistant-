@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -37,6 +34,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ObjectNameImpl extends PlSqlElementBase implements ObjectName {
 
@@ -64,20 +62,31 @@ public class ObjectNameImpl extends PlSqlElementBase implements ObjectName {
         return getText();
     }
 
-    @NotNull
-    public PsiElement getNavigationElement(){
-        PackageSpec spec = (PackageSpec) getUsageContext(TokenSet.create(PlSqlElementTypes.PACKAGE_SPEC));
-        if(spec != null){
-            PackageBody body = spec.getPackageBody();
-            if(body != null){
-                ExecutableSpec espec = (ExecutableSpec) getUsageContext(
-                        TokenSet.create(PlSqlElementTypes.PROCEDURE_SPEC, PlSqlElementTypes.FUNCTION_SPEC)
-                );
-
-                Executable exec = body.findExecutableByDecl(espec);
-                return exec != null? exec: this;
-            }
+    @Nullable
+    public String getQuickNavigateInfo() {
+        PsiElement parent = getParent();
+        if(parent instanceof ExecutableSpec){
+            return ((ExecutableSpec)parent).getQuickNavigateInfo();
+        } else if(parent instanceof Executable){
+            return ((Executable)parent).getQuickNavigateInfo();
         }
-        return this;
+        return null;
     }
+
+//    @NotNull
+//    public PsiElement getNavigationElement(){
+//        PackageSpec spec = (PackageSpec) getUsageContext(TokenSet.create(PlSqlElementTypes.PACKAGE_SPEC));
+//        if(spec != null){
+//            PackageBody body = spec.getPackageBody();
+//            if(body != null){
+//                ExecutableSpec espec = (ExecutableSpec) getUsageContext(
+//                        TokenSet.create(PlSqlElementTypes.PROCEDURE_SPEC, PlSqlElementTypes.FUNCTION_SPEC)
+//                );
+//
+//                Executable exec = body.findExecutableByDecl(espec);
+//                return exec != null? exec: this;
+//            }
+//        }
+//        return this;
+//    }
 }

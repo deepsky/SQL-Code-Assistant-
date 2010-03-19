@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -57,13 +54,37 @@ public class TriggerColumnNameRefImpl extends PlSqlCompositeNameBase implements 
     }
 
     @NotNull
+    public ResolveContext777 resolve(NameFragmentRef namePart) throws NameNotResolvedException {
+
+        NameFragmentRef[] pieces = getNamePieces();
+        int pos = namePart == null ? pieces.length - 1 : getFragmentIndex(namePart);
+
+        if (pos == -1) {
+            String text = namePart == null ? getText() : namePart.getText();
+            throw new NameNotResolvedException("Could not resolve name: " + text);
+        }
+
+        ResolveContext777 ctx = getResolveContext();
+        return ctx.resolve(pieces[pos]);
+//        int i = 1;
+//        try {
+//            for (; --pos >= 0; i++) {
+//                ctx = ctx.resolve(pieces[i]);
+//            }
+//        } catch (NameNotResolvedException e) {
+//             throw new NameNotResolvedException(pieces[i], "Name not resolved");
+//        }
+//        return ctx;
+    }
+
+    @NotNull
     public ResolveContext777 getResolveContext() throws NameNotResolvedException {
         final TableDescriptor[] tdesc = new TableDescriptor[]{null};
         ASTTreeProcessor runner = new ASTTreeProcessor();
         runner.add(new TriggerNodeHandler() {
             protected void handleTriggerDefintion(CreateTrigger trigger) {
                 if (trigger instanceof CreateTriggerDML) {
-                    tdesc[0] = ResolveHelper.describeTable(
+                    tdesc[0] = describeTable(
                             ((CreateTriggerDML) trigger).getTableName()
                     );
                 }
@@ -85,17 +106,17 @@ public class TriggerColumnNameRefImpl extends PlSqlCompositeNameBase implements 
 
         ASTNode[] nodes = getNode().getChildren(tokens);
 
-        if(nodes == null || nodes.length != 2){
+        if(nodes == null || nodes.length != 1){
             return null;
         }
 
-        final String column = nodes[1].getText();
+        final String column = nodes[0].getText();
 
         ASTTreeProcessor runner = new ASTTreeProcessor();
         runner.add(new TriggerNodeHandler() {
             protected void handleTriggerDefintion(CreateTrigger trigger) {
                 if (trigger instanceof CreateTriggerDML) {
-                    TableDescriptor tdesc = ResolveHelper.describeTable(
+                    TableDescriptor tdesc = describeTable(
                             ((CreateTriggerDML) trigger).getTableName()
                     );
 

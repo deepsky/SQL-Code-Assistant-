@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -43,23 +40,38 @@ import org.jetbrains.annotations.Nullable;
 public class FindUsagesOptionsAdopted extends FindUsagesOptions {
 
     public FindUsagesOptionsAdopted(@NotNull Project project, @Nullable DataContext dataContext) {
-        super(project, dataContext);
+        this(project, dataContext, false);    
+    }
 
-        String defaultScopeName = FindSettings.getInstance().getDefaultScopeName();
-        if (!searchScope.getDisplayName().equals(defaultScopeName)) {
-            // search among external specified
+    public FindUsagesOptionsAdopted(@NotNull Project project, @Nullable DataContext dataContext, boolean preselectDatabaseScope) {
+        super(project, dataContext);
+        if (preselectDatabaseScope) {
             for (ScopeDescriptorProvider provider : Extensions.getExtensions(ScopeDescriptorProvider.EP_NAME)) {
                 for (ScopeDescriptor scopeDescriptor : provider.getScopeDescriptors(project)) {
-                    if (defaultScopeName.equals(scopeDescriptor.getDisplay())) {
-                        // specified Search Scope found!
-                        // todo - dirty workaround! we are not interesed in any scope except of SQL specific 
-                        if (scopeDescriptor instanceof DbScopeDescriptorProvider.DbScopeDescriptor) {
-                            searchScope = scopeDescriptor.getScope();
-                            return;
+                    if (scopeDescriptor instanceof DbScopeDescriptorProvider.DbScopeDescriptor) {
+                        searchScope = scopeDescriptor.getScope();
+                        return;
+                    }
+                }
+            }
+        } else {
+            String defaultScopeName = FindSettings.getInstance().getDefaultScopeName();
+            if (!searchScope.getDisplayName().equals(defaultScopeName)) {
+                // search among external specified
+                for (ScopeDescriptorProvider provider : Extensions.getExtensions(ScopeDescriptorProvider.EP_NAME)) {
+                    for (ScopeDescriptor scopeDescriptor : provider.getScopeDescriptors(project)) {
+                        if (defaultScopeName.equals(scopeDescriptor.getDisplay())) {
+                            // specified Search Scope found!
+                            // todo - dirty workaround! we are not interesed in any scope except of SQL specific
+                            if (scopeDescriptor instanceof DbScopeDescriptorProvider.DbScopeDescriptor) {
+                                searchScope = scopeDescriptor.getScope();
+                                return;
+                            }
                         }
                     }
                 }
             }
         }
     }
+
 }

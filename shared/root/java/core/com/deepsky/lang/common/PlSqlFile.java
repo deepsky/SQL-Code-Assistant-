@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -33,8 +30,10 @@ import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.parser.ParserException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.CreateView;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
+import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
 import com.deepsky.lang.plsql.struct.*;
-import com.deepsky.lang.plsql.struct.parser.PlSqlASTParser;
+import com.deepsky.lang.plsql.struct.parser.PlSqlASTParser0;
 import com.deepsky.lang.plsql.struct.parser.SyntaxErrorException;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.deepsky.view.Icons;
@@ -86,30 +85,37 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
 
         long ms = System.currentTimeMillis();
 
-        PlSqlASTParser parser = new PlSqlASTParser();
+        PlSqlASTParser0 parser = new PlSqlASTParser0();
         parser.ignoreSyntaxErrors(true);
         parser.syntaxErrorToStdout(false);
-
+        String fileType = "SQL_SCRIPT";
         try {
             Reader r = new InputStreamReader(vfile.getInputStream());
             PlSqlElement[] elems = parser.parseStream(r);
 
             switch (elems.length) {
                 case 0: // file empty?
+                    fileType = "EMPTY";
                     break;
                 case 1: // analize element
                     if (elems[0] instanceof PackageBody) {
                         icon = Icons.PACKAGE_BODY;
+                        fileType = "PACKAGE_BODY";
                     } else if (elems[0] instanceof PackageSpec) {
                         icon = Icons.PACKAGE_SPEC;
+                        fileType = "PACKAGE_SPEC";
                     } else if (elems[0] instanceof Function) {
                         icon = Icons.FUNCTION_BODY;
+                        fileType = "FUNCTION_BODY";
                     } else if (elems[0] instanceof FunctionSpec) {
                         icon = Icons.FUNCTION_SPEC;
+                        fileType = "FUNCTION_SPEC";
                     } else if (elems[0] instanceof Procedure) {
                         icon = Icons.PROCEDURE_BODY;
+                        fileType = "PROCEDURE_BODY";
                     } else if (elems[0] instanceof ProcedureSpec) {
                         icon = Icons.PROCEDURE_SPEC;
+                        fileType = "PROCEDURE_SPEC";
                     }
                     break;
                 default:
@@ -132,7 +138,7 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
         SqlScriptManager.getInstance().setAttribute(vfile, ATTR_TIMESTAMP, timestamp);
         SqlScriptManager.getInstance().setAttribute(vfile, ATTR_FILE_ICON, icon);
 
-        log.info("[ctor] file: " + path + ", parsing taken, ms: " + ms);
+        log.info("[ctor] file: " + path + ", type: " + fileType + ", parsing taken, ms: " + ms);
 
         return icon;
     }
@@ -153,10 +159,6 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
 
     public void process(Visitor proc) {
         // todo -
-    }
-
-    public String getCtxPath() {
-        return "[File]"; 
     }
 
     public Icon getIcon(int i) {
@@ -205,14 +207,16 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
                     PlSqlElement[] execs = ((PackageSpec) psi).findObjectByName(edesc.getName());
                     for (PlSqlElement e : execs) {
                         if (e instanceof ExecutableSpec && ((ExecutableSpec) e).equals2(edesc)) {
-                            return e;
+                            return ((ExecutableSpec)e).getObjectName();
+//                            return e;
                         }
                     }
                 } else if (psi instanceof PackageBody) {
                     Executable[] execs = ((PackageBody) psi).findExecutableByName(edesc.getName());
                     for (Executable e : execs) {
                         if (e.equals(edesc)) {
-                            return e;
+                            return e.getObjectName();
+//                            return e;
                         }
                     }
                 }
@@ -228,6 +232,7 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
                 return t;
             }
         }
+
         return null;
     }
 
@@ -238,6 +243,7 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
                 return t;
             }
         }
+
         return null;
     }
 
@@ -284,6 +290,7 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
         } else {
             // todo - needs to support
         }
+
         return null;
     }
 
@@ -311,7 +318,7 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
         } else {
             // todo - needs to support
         }
-        return this;
+        return null;
     }
 
     //    public PsiElement findDeclaration(RecordTypeDescriptor tdesc, RecordTypeItemDescriptor item) {
@@ -363,7 +370,7 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
                 // todo - needs to support
             }
         }
-        return this;
+        return null;
     }
 
 
@@ -430,6 +437,7 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
                 }
             }
         }
+
         return null;
     }
 
@@ -443,5 +451,23 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
         return sqlStmtModel;         
     }
 
-    
+
+    CtxPath cachedCtxPath = null;
+    public CtxPath getCtxPath() {
+        if(cachedCtxPath == null){
+            cachedCtxPath = new CtxPath(){
+                public String getPath() {
+                    // todo
+                    return "";
+                }
+
+                public String getSeqNEXT() {
+                    // todo
+                    return "";
+                }
+            };
+        }
+        return cachedCtxPath;
+    }
+
 }

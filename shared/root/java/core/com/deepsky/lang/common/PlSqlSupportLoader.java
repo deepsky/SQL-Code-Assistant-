@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -164,12 +161,12 @@ public class PlSqlSupportLoader implements ApplicationComponent {
     public UpdatableCache getUserObjectCache(String name) {
         GenericCache gcache = userObjs.getCache(name);
         Object o = gcache.get(VersionMarker.TAG);
-        if(o == null){
+        if (o == null) {
             // new cache?
             VersionMarker marker = new VersionMarker();
             gcache.update(VersionMarker.TAG, marker);
             userObjs.flush();
-        } else if(!(o instanceof VersionMarker) || !o.equals(new VersionMarker())){
+        } else if (!(o instanceof VersionMarker) || !o.equals(new VersionMarker())) {
             // version marker corrupted or obsoleted
             log.info("Version marker not found or differ, clean up cache: " + name);
             gcache.removeAll();
@@ -192,54 +189,107 @@ public class PlSqlSupportLoader implements ApplicationComponent {
 //        __assertShutdown__();
 //        __reportStartupProgress__(INIT_USER_CACHE, "Initializing USER object cache ...");
 
-        userObjs = new EhcacheWrapper2(); //"USER");
-        userObjs.setFileName("USER");
-        userObjs.setStoreDir(storeDir);
-        userObjs.init();
-
-        for (String cacheName : userObjs.getCacheNames()) {
-            GenericCache c = userObjs.getCache(cacheName);
-            Object o = c.get(VersionMarker.TAG);
-            if (!(o instanceof VersionMarker) || !o.equals(new VersionMarker())) {
-                // version marke is absent of obsoleted,  reinitialize the cache
-                log.info("Version marker not found or differ, clean up the USER cache");
-                c.removeAll();
-
-                VersionMarker marker = new VersionMarker();
-                c.update(VersionMarker.TAG, marker);
+        try {
+            userObjs = startupUserCache(storeDir, "USER");
+        } catch (Throwable e) {
+            if (new File(storeDir).exists() && new File(storeDir).isDirectory()) {
+                removeCacheStuffFiles(new File(storeDir), "USER");
             }
+            // try initialize one more
+            userObjs = startupUserCache(storeDir, "USER");
         }
-        userObjs.flush();
 
         // sys schema
 //        __assertShutdown__();
 //        __reportStartupProgress__(INIT_SYS_CACHE, "Initializing SYS object cache ...");
 
-        sysObjs = new EhcacheWrapper2(); //"SYS");
-        sysObjs.setFileName("SYS");
-        sysObjs.setStoreDir(storeDir);
-        sysObjs.init();
-
-        for (String version : dbSupportedVersions) {
-            GenericCache c = sysObjs.getCache(version);
-            Object o = c.get(VersionMarker.TAG);
-            if (!(o instanceof VersionMarker) || !o.equals(new VersionMarker())) {
-                // reinitialize cache
-                c.removeAll();
-                log.info("Start load objects for " + version + " ...");
-                boolean result = bootstrapSysCache(version, c);
-                if (result) {
-                    log.info("... done.");
-                } else {
-                    log.info("... failed.");
-                }
+        try {
+            sysObjs = startupSysCache(storeDir, "SYS");
+        } catch (Throwable e) {
+            if (new File(storeDir).exists() && new File(storeDir).isDirectory()) {
+                removeCacheStuffFiles(new File(storeDir), "SYS");
             }
+            // try initialize one more
+            sysObjs = startupSysCache(storeDir, "SYS");
         }
 
-        sysObjs.flush();
         log.info("[bootstrap cache] end");
 
 //        __assertShutdown__();
+    }
+
+
+    private EhcacheWrapper2 startupSysCache(String storeDir, String name) {
+        EhcacheWrapper2 sysObjs = null;
+        try {
+            sysObjs = new EhcacheWrapper2(); //"SYS");
+            sysObjs.setFileName(name);
+            sysObjs.setStoreDir(storeDir);
+            sysObjs.init();
+
+            for (String version : dbSupportedVersions) {
+                GenericCache c = sysObjs.getCache(version);
+                Object o = c.get(VersionMarker.TAG);
+                if (!(o instanceof VersionMarker) || !o.equals(new VersionMarker())) {
+                    // reinitialize cache
+                    c.removeAll();
+                    log.info("Start load objects for " + version + " ...");
+                    boolean result = bootstrapSysCache(version, c);
+                    if (result) {
+                        log.info("... done.");
+                    } else {
+                        log.info("... failed.");
+                    }
+                }
+            }
+
+            sysObjs.flush();
+            return sysObjs;
+        } catch (Throwable e) {
+            if(sysObjs != null){
+                sysObjs.shutdown();
+            }
+            throw new Error(e);
+        }
+    }
+
+    private EhcacheWrapper2 startupUserCache(String storeDir, String name) {
+        EhcacheWrapper2 userObjs = null;
+        try {
+            userObjs = new EhcacheWrapper2(); //"USER");
+            userObjs.setFileName(name);
+            userObjs.setStoreDir(storeDir);
+            userObjs.init();
+
+            for (String cacheName : userObjs.getCacheNames()) {
+                GenericCache c = userObjs.getCache(cacheName);
+                Object o = c.get(VersionMarker.TAG);
+                if (!(o instanceof VersionMarker) || !o.equals(new VersionMarker())) {
+                    // version marke is absent of obsoleted,  reinitialize the cache
+                    log.info("Version marker not found or differ, clean up the USER cache");
+                    c.removeAll();
+
+                    VersionMarker marker = new VersionMarker();
+                    c.update(VersionMarker.TAG, marker);
+                }
+            }
+            userObjs.flush();
+            return userObjs;
+        } catch (Throwable e) {
+            if(userObjs != null){
+                userObjs.shutdown();
+            }
+            throw new Error(e);
+        }
+    }
+
+    private void removeCacheStuffFiles(File storeDir, String cacheName) {
+        File[] files = storeDir.listFiles();
+        for (File f : files) {
+            if (f.getName().toLowerCase().startsWith(cacheName.toLowerCase() + ".")) {
+                boolean res = f.delete();
+            }
+        }
     }
 
     private boolean bootstrapSysCache(String version, GenericCache gcache) {

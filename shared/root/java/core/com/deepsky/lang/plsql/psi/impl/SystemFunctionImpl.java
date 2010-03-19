@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -70,17 +67,12 @@ public class SystemFunctionImpl extends PlSqlElementBase implements SystemFuncti
         return new CallArgument[0];
     }
 
-    @Nullable
-    public CallArgumentList getCallArgumentListNode() {
-        // todo - not supported at the moment
-        return null;
-    }
-
     @NotNull
     public Type getExpressionType() {
         return type;
     }
 
+    
     // todo -----------------------------------
     @NotNull
     public ResolveContext777 resolveContext() throws NameNotResolvedException {

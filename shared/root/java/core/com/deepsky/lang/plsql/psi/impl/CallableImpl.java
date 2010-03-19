@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -61,7 +58,7 @@ public class CallableImpl extends PlSqlElementBase implements Callable {
     @NotNull
     public CallableCompositeName getCompositeName() {
         return (CallableCompositeName) getNode().findChildByType(
-                PlSqlElementTypes.CALLABLE_NAME_REF //TokenSet.create(PlSqlElementTypes.FUNC_NAME_REF, PlSqlElementTypes.PROC_NAME_REF)
+                PlSqlElementTypes.CALLABLE_NAME_REF
         ).getPsi();
     }
 
@@ -80,16 +77,6 @@ public class CallableImpl extends PlSqlElementBase implements Callable {
             }
         }
         return new CallArgument[0];
-    }
-
-    @Nullable
-    public CallArgumentList getCallArgumentListNode() {
-        ASTNode callList = getNode().findChildByType(PlSqlElementTypes.CALL_ARGUMENT_LIST);
-        if(callList != null){
-            return (CallArgumentList) callList.getPsi();
-        } else {
-            return null;
-        }
     }
 
 

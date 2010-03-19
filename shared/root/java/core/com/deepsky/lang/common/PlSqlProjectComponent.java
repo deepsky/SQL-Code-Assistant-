@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -80,7 +77,7 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
     }
 
     public void projectOpened() {
-        PluginSettingsBean current = getPluginSettings();
+        final PluginSettingsBean current = getPluginSettings();
 
         connectionListener = new StateListenerImpl();
         cacheListener = new CacheManagerListenerImpl();
@@ -92,20 +89,25 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
         objectCache = new OraObjectCache3(cacheManager);
         PluginKeys.OBJECT_CACHE.putData(objectCache, project);
 
-        connectionManager = new ConnectionManagerImpl(cacheManager);
+        connectionManager = new ConnectionManagerImpl(project, cacheManager);
         PluginKeys.CONNECTION_MANAGER.putData(connectionManager, project);
         connectionManager.addStateListener(connectionListener);
 
         // activate connection if it is elgable for logging on start
-        String session = current.getLastConnection();
+        final String session = current.getLastConnection();
         if (session != null) {
-            try {
-                DbUrl dbUrl = new DbUrl(session);
-                connectionManager.activateSessionOnStart(dbUrl);
-            } catch (ConfigurationException e) {
-                // incorrect URL ?
-                current.setLastConnection(null);
-            }
+            // run some later to avoid collisions with setting of Project ref in the context
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                public void run() {
+                    try {
+                        DbUrl dbUrl = new DbUrl(session);
+                        connectionManager.activateSessionOnStart(dbUrl);
+                    } catch (ConfigurationException e) {
+                        // incorrect URL ?
+                        current.setLastConnection(null);
+                    }
+                }
+            });
         }
 
         MyProgressIndicator indicator = connectionManager.getStartupConnectionIndicator();

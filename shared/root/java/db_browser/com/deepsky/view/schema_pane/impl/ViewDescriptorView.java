@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,11 +25,12 @@
 
 package com.deepsky.view.schema_pane.impl;
 
-import com.deepsky.database.ConnectionManagerImpl;
+import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.DBException;
 import com.deepsky.database.SqlScriptManager;
 import com.deepsky.database.cache.Cache;
 import com.deepsky.database.exec.RowSetModel;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.struct.ColumnDescriptor;
 import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.lang.plsql.struct.ViewDescriptor;
@@ -41,6 +39,7 @@ import com.deepsky.view.query_pane.QueryResultPanel;
 import com.deepsky.view.query_pane.QueryResultWindow;
 import com.deepsky.view.schema_pane.ItemViewWrapper;
 import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.Project;
@@ -60,7 +59,8 @@ public class ViewDescriptorView  extends ItemViewWrapperBase implements ItemView
     Cache cache;
     String name;
 
-    public ViewDescriptorView(ItemViewWrapper parent, Cache cache, String name){
+    public ViewDescriptorView(Project project, ItemViewWrapper parent, Cache cache, String name){
+        super(project);
         this.cache = cache;
         this.name = name;
         this.parent = parent;
@@ -104,11 +104,19 @@ public class ViewDescriptorView  extends ItemViewWrapperBase implements ItemView
         return new ToggleAction[]{open, query};
     }
 
-    public void handle(int command) {
+    @NotNull
+    public ToggleAction[] getPopupActions() {
+        LocalToggleAction open = new LocalToggleAction("Open Definition", "Open Definition", Icons.VIEW_DEF, OPEN, this);
+        LocalToggleAction query = new LocalToggleAction("Query Data", "Query Data", Icons.QUERY_DATA, QUERY, this);
+
+        return new ToggleAction[]{open, query};
+    }
+
+    public void handle(AnActionEvent event, int command) {
         switch (command) {
             case OPEN: {
                 DbObject dbo = cache.get(name, DbObject.VIEW);
-                Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
 
                 boolean result = SqlScriptManager.openFileInEditor(project, dbo);
                 break;
@@ -117,17 +125,21 @@ public class ViewDescriptorView  extends ItemViewWrapperBase implements ItemView
                 break;
             case QUERY:
                 try {
-                    RowSetModel t = ConnectionManagerImpl.getInstance().getSQLExecutor().executeQuery("SELECT * FROM " + name);
-                    QueryResultPanel resultPanel = QueryResultWindow.getInstance().createResultPanel(
+                    ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+                    QueryResultWindow qrwn = PluginKeys.QR_WINDOW.getData(project);
+
+//                    RowSetModel t = ConnectionManagerImpl.getInstance().getSQLExecutor().executeQuery("SELECT * FROM " + name);
+                    RowSetModel t = manager.getSQLExecutor().executeQuery("SELECT * FROM " + name);
+                    QueryResultPanel resultPanel = qrwn.createResultPanel(
                             QueryResultPanel.SELECT_RESULT, getTabName(), Icons.VIEW, null /* ToolTip text */
                         );
                     resultPanel.init(t);
 
                     // show content pane
-                    QueryResultWindow.getInstance().showContent(getTabName());
+                    qrwn.showContent(getTabName());
 
                 } catch (DBException e) {
-                    Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+                    //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
                     Messages.showErrorDialog(project, e.getMessage(), "Data load failed");
                 }
                 break;
@@ -140,7 +152,7 @@ public class ViewDescriptorView  extends ItemViewWrapperBase implements ItemView
 
     public void runDefaultAction(){
         DbObject dbo = cache.get(name, DbObject.VIEW);
-        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+        //Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
         boolean result = SqlScriptManager.openFileInEditor(project, dbo);
     }
 }

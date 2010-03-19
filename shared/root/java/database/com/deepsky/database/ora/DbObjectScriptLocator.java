@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -40,9 +37,9 @@ public class DbObjectScriptLocator implements SqlScriptLocator {
 
     static final long serialVersionUID = -6826784692210371235L;
 
-    String url;
-    String type;
-    String name;
+    public String url;
+    public String type;
+    public String name;
 
     public DbObjectScriptLocator(DbUrl url, String type, String name) {
         this.url = url.getUserHostPortServiceName();
@@ -67,13 +64,14 @@ public class DbObjectScriptLocator implements SqlScriptLocator {
 
     @NotNull
     public VirtualFile getScript() {
-        CacheManager cacheManager = PluginKeys.CACHE_MANAGER.getData();
-        if(cacheManager != null){
-            String content = cacheManager.getDbObjectSource(url, type, name);
-            if(content != null){
-                return new SqlScriptFile(content, this);
-            }
-        }
+        // todo -- moved to SqlScriptManager
+//        CacheManager cacheManager = PluginKeys.CACHE_MANAGER.getData();
+//        if(cacheManager != null){
+//            String content = cacheManager.getDbObjectSource(url, type, name);
+//            if(content != null){
+//                return new SqlScriptFile(content, this);
+//            }
+//        }
 
         return null;
     }

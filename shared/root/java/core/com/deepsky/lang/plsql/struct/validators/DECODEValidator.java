@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -29,10 +26,13 @@
 package com.deepsky.lang.plsql.struct.validators;
 
 import com.deepsky.lang.plsql.psi.CallArgument;
+import com.deepsky.lang.plsql.psi.resolve.TypeNotResolvedException;
 import com.deepsky.lang.plsql.struct.ExecutableDescriptor;
 import com.deepsky.lang.plsql.struct.SystemFunctionValidator;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.validation.TypeValidationHelper;
+import com.deepsky.lang.validation.ValidationException;
+
 import java.util.List;
 
 
@@ -60,39 +60,56 @@ DECODE (warehouse_id, 1, 'Southlake',
         Type evenType = null;
         int len = args.length;
         for (int i = 0; i < len; i++) {
-            if(i==0){
-                // defined type of expression
-                exprType = args[i].getExpression().getExpressionType();
-            } else if(i >= 3 && i == len-1){
-                // check type of the default argument
-                Type t = args[i].getExpression().getExpressionType();
-                if (!TypeValidationHelper.canBeAssigned(evenType, t)) {
-                    errors.add("DECODE: different types in the 'result' argument, position: " + (i + 1));
-                    return false;
-                }
-            } else {
-                if(i%2 != 0){
-                    // odd position, check argument typa against exprType
+            try {
+                if (i == 0) {
+                    // defined type of expression
+                    exprType = args[i].getExpression().getExpressionType();
+                } else if (i >= 3 && i == len - 1) {
+                    // pass validation if type of any arguments is NULL
+//                    if(evenType.typeId() == Type.NULL){
+//                        continue;
+//                    }
+                    // check type of the default argument
                     Type t = args[i].getExpression().getExpressionType();
-                    if (!TypeValidationHelper.canBeAssigned(exprType, t)) {
-                        errors.add("DECODE: argument type does not fit the formal parameter, position: " + (i + 1));
+//                    if(t.typeId() == Type.NULL){
+//                        continue;
+//                    }
+                    if (!TypeValidationHelper.canBeAssigned(args[i], evenType, t)) {
+                        errors.add("DECODE: different types in the 'result' argument, position: " + (i + 1));
                         return false;
                     }
-
                 } else {
-                    // even position, make sure all of arguments in even position have the same type
-                    if(evenType != null){
+                    if (i % 2 != 0) {
+                        // odd position, check argument typa against exprType
                         Type t = args[i].getExpression().getExpressionType();
-                        if (!TypeValidationHelper.canBeAssigned(evenType, t)) {
-                            errors.add("DECODE: different types in the 'result' argument, position: " + (i + 1));
+                        if (!TypeValidationHelper.canBeAssigned(args[i], exprType, t)) {
+                            errors.add("DECODE: argument type does not fit the formal parameter, position: " + (i + 1));
                             return false;
                         }
+
                     } else {
-                        evenType = args[i].getExpression().getExpressionType();
+                        // even position, make sure all of arguments in even position have the same type
+                        if (evenType != null) {
+                            Type t = args[i].getExpression().getExpressionType();
+                            if (!TypeValidationHelper.canBeAssigned(args[i], evenType, t)) {
+                                errors.add("DECODE: different types in the 'result' argument, position: " + (i + 1));
+                                return false;
+                            }
+                        } else {
+                            evenType = args[i].getExpression().getExpressionType();
+                        }
                     }
                 }
-            }
 
+            } catch (ValidationException e) {
+                // exception on type discovering ... lets pretend that checks pass
+                continue;
+            } catch (TypeNotResolvedException e) {
+                // exception on type discovering ... lets pretend that checks pass
+                continue;
+            } catch (Throwable e) {
+                // todo --
+            }
         }
 
         return true;

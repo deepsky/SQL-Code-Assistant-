@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -119,6 +116,7 @@ public class CacheManager3 implements CacheManager, Runnable {
     Thread schemaMonitor;
     boolean stop = false;
     boolean firstUpdateDone = false;
+    boolean forceWakeup = false;
 
     String storeDir;
     File dbObjectSpoolDir;
@@ -358,7 +356,6 @@ public class CacheManager3 implements CacheManager, Runnable {
     public void run() {
 
         boolean init = true;
-
         setState(CacheManagerListener.STARTED);
 
         try {
@@ -474,6 +471,12 @@ public class CacheManager3 implements CacheManager, Runnable {
         log.info("Cache got down");
     }
 
+    public void refresh() {
+        synchronized (synch) {
+            forceWakeup = true;
+            synch.notify();
+        }
+    }
 
     boolean readyForCheckup(long finishedTime) {
         try {
@@ -484,8 +487,9 @@ public class CacheManager3 implements CacheManager, Runnable {
             }
             synch.wait(timeout);
 
-            if (System.currentTimeMillis() - ms1 >= (timeout - 5)) {
+            if (forceWakeup || System.currentTimeMillis() - ms1 >= (timeout - 5)) {
                 // time to check the database
+                forceWakeup = false;
                 return true;
             }
 
@@ -503,13 +507,8 @@ public class CacheManager3 implements CacheManager, Runnable {
 
         Map<DbObjectKey, DbObjectEx> _dbObjList = new HashMap<DbObjectKey, DbObjectEx>();
 
-        int counter = 0;
         while (l.size() > 0) {
             __assertShutdown__();
-//                            if (queueItem2Update.size() > 0) {
-//                                ItemToUpdate i = queueItem2Update.remove(0);
-//                                l.force(i);
-//                            }
 
             Mix ordered_items = l.pop2();
             BaseHandler h = type2handler.get(ordered_items.type);
@@ -550,6 +549,7 @@ public class CacheManager3 implements CacheManager, Runnable {
         int counter0 = 0;
         int counter1 = 0;
 
+        List<DbObjectEx> _2phaseList = new ArrayList<DbObjectEx>();
         // Update the cache
         // 1. go thru list to get list of object being updated (added or updated)
         for (ItemToUpdate item : dbObjVsCacheObj) {
@@ -570,6 +570,8 @@ public class CacheManager3 implements CacheManager, Runnable {
                     } else {
                         int hh =0;
                     }
+
+                    _2phaseList.add(dbo);
                 } else {
                     // looks strange, object is not up to date but was not loaded, error on load?
                     // todo -
@@ -585,18 +587,36 @@ public class CacheManager3 implements CacheManager, Runnable {
         for (ItemToUpdate item : cacheObj) {
             if (!objectExists(dbObjVsCacheObj, item)) {
                 // object not found in the database, delete it from the cache
-                ecache.remove(item.name, item.type);
+                ecache.remove(item.type, item.name);
                 counter1++;
-
-                // remove object text source from spool directroy
-//                userObjs.removeText(item.type, item.name);
-//                new File(dbObjectSpoolDir, Utils.encryptFileName(item.type, item.name)).delete();
             }
         }
+
+        // 3. Final updating of loaded objects
+        for(DbObjectEx dex: _2phaseList){
+            BaseHandler h = type2handler.get(dex.dbo.getTypeName());
+            if(h != null){
+                if( h.finalUpdate(dex, ecache) ){
+                    ecache.update(dex.dbo.getTypeName(), dex.dbo.getName(), dex.dbo);
+                }
+            }
+        }
+
         ecache.flush();
+
         log.info("[" + userName + "] ... done, updated/deleted " + counter0 + "/" + counter1 + " nbr objects in cache: ???");
         return counter0 + counter1;
     }
+
+//    private void finalUpdate(DbObjectEx dex, Cache ecache) {
+//        if(dex.dbo.getTypeName().equals(DbObject.PACKAGE)){
+//            PackageSpecDescriptor pdesc = (PackageSpecDescriptor) dex.dbo;
+//
+//        } else if(dex.dbo.getTypeName().equals(DbObject.PACKAGE)){
+//            PackageBodyDescriptor pdesc = (PackageBodyDescriptor) dex.dbo;
+//
+//        }
+//    }
 
 
     List<ItemToUpdate> createUserObjList(final String user, final UpdatableCache _ddata, String _sql, String[] types) throws DBException {

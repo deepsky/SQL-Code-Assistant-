@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -36,14 +33,18 @@ public class PluginSettingsBean {
     private int fetchRecords = 200;
 //    private int chunkSize = 200;
     private int numberOfTabs = 5;
-    private boolean resolveReference = true;
+    private boolean resolveReference = false;
     private boolean resolveUdt = true;
-    private boolean validateFunc = true;
+    private boolean validateFunc = false;
     private boolean validateTables = true;
-    private boolean validateInsert = true;
+    private boolean validateInsert = false;
     private boolean highlightSyntaxErrors = true;
 
+    private boolean autoCommit = true;
+
     private String connection;
+
+    private int dbBrowserSplitDividerLocation;
 
     public String getDateFormat() {
         return dateFormat;
@@ -184,5 +185,21 @@ public class PluginSettingsBean {
         } else {
             this.highlightSyntaxErrors = highlightSyntaxErrors;
         }
+    }
+
+    public int getDbBrowserSplitDividerLocation() {
+        return dbBrowserSplitDividerLocation;
+    }
+
+    public void setDbBrowserSplitDividerLocation(int dbBrowserSplitDividerLocation) {
+        this.dbBrowserSplitDividerLocation = dbBrowserSplitDividerLocation;
+    }
+
+    public boolean isAutoCommit() {
+        return autoCommit;
+    }
+
+    public void setAutoCommit(boolean autoCommit) {
+        this.autoCommit = autoCommit;
     }
 }

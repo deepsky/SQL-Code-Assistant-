@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -33,8 +30,6 @@ import com.intellij.psi.tree.TokenSet;
 
 public interface PlSqlElementTypes extends PLSqlTypesAdopted{
 
-//    IFileElementType FILE = new IFileElementType(Language.findInstance(PlSqlLanguage.class));
-
     TokenSet STATEMENTS = TokenSet.create(
       PLSQL_BLOCK, RAISE_STATEMENT, LOOP_STATEMENT, ASSIGNMENT_STATEMENT, IF_STATEMENT,
       CASE_STATEMENT, COMMIT_STATEMENT, NULL_STATEMENT,
@@ -46,12 +41,11 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
     );
 
     TokenSet SELECT_FROM_CLAUSE = TokenSet.create(
-//            FROM_PLAIN_TABLE, FROM_SUBQUERY
             TABLE_ALIAS, FROM_SUBQUERY            
     );
 
     TokenSet LOOP_SPEC_TYPES = TokenSet.create(
-            NUMERIC_LOOP_SPEC, CURSOR_REF_LOOP_SPEC, CURSOR_IMPL_LOOP_SPEC            
+            NUMERIC_LOOP_SPEC, CURSOR_REF_LOOP_SPEC, CURSOR_IMPL_LOOP_SPEC, FORALL_LOOP_SPEC            
     );
 
 
@@ -69,11 +63,32 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
 
     TokenSet EXECUTABLE_STATEMENTS = TokenSet.create(
             SELECT_EXPRESSION,
+
+            MERGE_COMMAND,
             INSERT_COMMAND,
             UPDATE_COMMAND,
             DELETE_COMMAND,
+
             TABLE_DEF,
             CREATE_VIEW,
+            CREATE_SEQUENCE,
+            ALTER_TABLE,
+            CREATE_INDEX,
+            DROP_TABLE,
+            DROP_VIEW,
+            DROP_FUNCTION,
+            DROP_PROCEDURE,
+            DROP_PACKAGE,
+            DROP_SEQUENCE,
+
+            COMMIT_STATEMENT,
+            ROLLBACK_STATEMENT
+    );
+
+    TokenSet DDL_STATEMENTS = TokenSet.create(
+            TABLE_DEF,
+            CREATE_VIEW,
+            CREATE_SEQUENCE,
             ALTER_TABLE,
             CREATE_INDEX,
             DROP_TABLE,
@@ -134,7 +149,6 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
     );
 
     TokenSet  SQL_STATEMENTS = TokenSet.create(
-//            INSERT_SUBQUERY,
             SELECT_EXPRESSION,
             INSERT_COMMAND,
             DELETE_COMMAND,
@@ -150,6 +164,7 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
 
     TokenSet  DML_STATEMENTS = TokenSet.create(
 //            INSERT_SUBQUERY,
+            MERGE_COMMAND,
             INSERT_COMMAND,
             DELETE_COMMAND,
             UPDATE_COMMAND

@@ -10,9 +10,6 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     3. The name of the author may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission from the author.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -28,6 +25,7 @@
 
 package com.deepsky.actions;
 
+import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.ConnectionManagerImpl;
 import com.deepsky.database.DBException;
 import com.deepsky.database.exec.RowSetModel;
@@ -35,6 +33,7 @@ import com.deepsky.database.exec.SQLExecutor;
 import com.deepsky.database.exec.SQLUpdateStatistics;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlLanguage;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.NotSupportedException;
@@ -45,10 +44,12 @@ import com.deepsky.view.Icons;
 import com.deepsky.view.query_pane.QueryResultPanel;
 import com.deepsky.view.query_pane.QueryResultWindow;
 import com.deepsky.view.query_pane.markup.SqlStatementMarker;
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -62,7 +63,7 @@ public class ExecuteSQLStatementAction extends AnAction {
     SqlRunnerHelper lastRunner = null;
 
     public ExecuteSQLStatementAction() {
-        super("ExecSql", "Execute SQL Statement", Icons.EXEC_SQL_STMT);
+        super("ExecSql");
         getTemplatePresentation().setEnabled(lastEnabled);
     }
 
@@ -81,11 +82,16 @@ public class ExecuteSQLStatementAction extends AnAction {
             int spos = (start != null) ? start.getTextOffset() : 0;
             int epos = (end != null) ? end.getTextOffset() + end.getTextLength() : psi.getTextLength();
 
-            Node ancestor = null;
+            ASTNode ancestor = null;
             if (select.getSelectedText().length() > 0) {
                 String text = psi.getText().substring(spos, epos);
                 try {
                     MarkupGenerator generator = new MarkupGenerator();
+                    ASTNode root = generator.parse(text);
+                    if(root != null){
+                        ancestor = root.findChildByType(PlSqlElementTypes.EXECUTABLE_STATEMENTS);
+                    }
+/*
                     TreeNodeBuilder builder = generator.parse0(text);
                     Node root = builder.buildASTTree();
 
@@ -93,6 +99,7 @@ public class ExecuteSQLStatementAction extends AnAction {
                     if (nodes.length == 1) {
                         ancestor = nodes[0];
                     }
+*/
 
                 } catch (Throwable e1) {
                     // error
@@ -100,12 +107,14 @@ public class ExecuteSQLStatementAction extends AnAction {
             }
 
             if (ancestor != null) {
-                int _st = spos + ancestor.getRange().getStart();
-                int _end = spos + ancestor.getRange().getEnd();
-//                SqlStatementMarker marker = psi.getModel().addMarker(_st, _end);
-
+//                int _st = spos + ancestor.getRange().getStart();
+//                int _end = spos + ancestor.getRange().getEnd();
+                int _st = spos + ancestor.getTextRange().getStartOffset();
+                int _end = spos + ancestor.getTextRange().getEndOffset();
+                Project project = event.getData(LangDataKeys.PROJECT);
+                
                 try {
-                    executeStatement(ancestor, psi, _st, _end);
+                    executeStatement(project, ancestor, psi, _st, _end);
                 } catch (DBException e1) {
                     Messages.showErrorDialog(e1.getMessage(), "SQL query error");
                     return;
@@ -121,32 +130,36 @@ public class ExecuteSQLStatementAction extends AnAction {
         }
     }
 
-    private void executeStatement(Node statement, final PlSqlFile psi, final int _st, final int _end) throws DBException {
-
-        SQLExecutor executor = ConnectionManagerImpl.getInstance().getSQLExecutor();
+    protected void executeStatement(Project project, ASTNode statement, final PlSqlFile psi, final int _st, final int _end) throws DBException {
+        ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+        final QueryResultWindow qrwn = PluginKeys.QR_WINDOW.getData(project); 
+//        SQLExecutor executor = ConnectionManagerImpl.getInstance().getSQLExecutor();
+        SQLExecutor executor = manager.getSQLExecutor();
         if (statement.getElementType() == PLSqlTypesAdopted.SELECT_EXPRESSION) {
-            lastRunner = new SqlRunnerHelper(executor, statement.getText(), new SqlRunnerHelper.QueryResultListener(){
+            lastRunner = new SqlRunnerHelper(project, executor, statement.getText(), new SqlRunnerHelper.QueryResultListener(){
                 public void handleQueryResult(RowSetModel result) {
                     SqlStatementMarker marker = psi.getModel().addMarker(_st, _end);
-                    QueryResultPanel resultPane = QueryResultWindow.getInstance().createResultPanel(
+                    QueryResultPanel resultPane = qrwn.createResultPanel(
                             QueryResultPanel.SELECT_RESULT, marker, Icons.SELECT_RESULTSET, null /* ToolTip text */
                     );
                     resultPane.init(result);
                     // show content pane
-                    QueryResultWindow.getInstance().showContent(marker.getName());
+//                    QueryResultWindow.getInstance().showContent(marker.getName());
+                    qrwn.showContent(marker);
                 }
             });
         } else {
             // rely completely on types in "availableStmtSet"
-            lastRunner = new SqlRunnerHelper(executor, statement, new SqlRunnerHelper.DMLResultListener(){
+            lastRunner = new SqlRunnerHelper(project, executor, statement, new SqlRunnerHelper.DMLResultListener(){
                 public void handleDMLResult(SQLUpdateStatistics result) {
                     SqlStatementMarker marker = psi.getModel().addMarker(_st, _end);
-                    QueryResultPanel resultPane = QueryResultWindow.getInstance().createResultPanel(
+                    QueryResultPanel resultPane = qrwn.createResultPanel(
                             QueryResultPanel.DML_QUERY_RESULT, marker, Icons.DML_RESULT, null /* ToolTip text */
                     );
                     resultPane.init(result);
                     // show content pane
-                    QueryResultWindow.getInstance().showContent(marker.getName());
+                    qrwn.showContent(marker);
+//                    QueryResultWindow.getInstance().showContent(marker.getName());
                 }
             });
         }
@@ -220,7 +233,7 @@ public class ExecuteSQLStatementAction extends AnAction {
     int startPos = -1;
     int endPos = -1;
 
-    boolean isSQLAvailable(SelectionModel select, PsiFile psi) {
+    private boolean isSQLAvailable(SelectionModel select, PsiFile psi) {
         PsiElement start = psi.findElementAt(select.getSelectionStart());
         PsiElement end = psi.findElementAt(select.getSelectionEnd() - 1);
 
@@ -238,31 +251,23 @@ public class ExecuteSQLStatementAction extends AnAction {
             endPos = epos;
         }
 
-//        log.info("#update: startPos: " + startPos + ", endPos: " + endPos + ", checkSelection: " + checkSelection + ", lastEnabled: " + lastEnabled);
         if (checkSelection) {
-//            long ms = System.currentTimeMillis();
             String text = psi.getText().substring(spos, epos);
 
-//            Reader r = new StringReader(text);
-//            PlSqlASTParser parser = new PlSqlASTParser();
-            boolean ret = false;
             try {
 
                 MarkupGenerator generator = new MarkupGenerator();
-                TreeNodeBuilder builder = generator.parse0(text);
-                Node root = builder.buildASTTree();
+                ASTNode ast = generator.parse(text);
+                if(ast != null){
+                    ASTNode[] children = ast.getChildren(PlSqlElementTypes.EXECUTABLE_STATEMENTS);
+                    return children.length == 1;
+                }
 
-                Node[] nodes = root.findChildrenByTypes(PlSqlElementTypes.EXECUTABLE_STATEMENTS);
-                return nodes.length == 1;
-
-//                PlSqlElement[] elems = parser.parseStream(r);
-//                ret = elems.length == 1 && elems[0] instanceof SelectStatement;
             } catch (Throwable e) {
                 // error
+                int hh = 0;
             }
-//            ms = System.currentTimeMillis() - ms;
-//            log.info("#update: selected text parsed: " + ms + ", result: " + ret + " text: ");
-            return ret;
+            return false;
         }
 
         return lastEnabled;
