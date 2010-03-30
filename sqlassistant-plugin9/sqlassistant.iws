@@ -15,223 +15,14 @@
     <option name="historyRevisionsNumber" value="4" />
   </component>
   <component name="ChangeListManager" verified="true">
-    <list default="true" id="39888d23-b453-4991-be4c-f0964caf1b9b" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SysdateExpressionImpl.java" afterPath="" />
+    <list default="true" readonly="true" id="39888d23-b453-4991-be4c-f0964caf1b9b" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SqlAssistantPlugin/plugin_build.xml" afterPath="$PROJECT_DIR$/SqlAssistantPlugin/plugin_build.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sqlassistant.iws" afterPath="$PROJECT_DIR$/sqlassistant.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/ConnectionManager.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/ConnectionManager.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SelectFieldAsteriskImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/ObjectCache.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/ObjectCache.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\ASTParseHelper.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/fs/DbOriginatedSqlFile.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/fs/DbOriginatedSqlFile.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/RecordTypeItemImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/RecordTypeItemImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PlSqlParserDefinition.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PlSqlParserDefinition.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\CountFuncImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/completion/ComplContributorEP.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/completion/ComplContributorEP.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/result_pane/com/deepsky/view/query_pane/QueryResultWindow.java" afterPath="$PROJECT_DIR$/../shared/root/java/result_pane/com/deepsky/view/query_pane/QueryResultWindow.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ref/DDLTable.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ref/DDLTable.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ArgumentListImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PlSqlSupportLoader.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PlSqlSupportLoader.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\CreateTriggerDMLImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\sqlassistant-plugin9\SqlAssistantPlugin\spec_src\com\deepsky\lang\common\PlSqlBraceMatcher.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ExecutableSpec.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ExecutableSpec.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\IndexImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ForeignKeyConstraintImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/LoopIndexImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/LoopIndexImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ExceptionDeclImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PlSqlProjectComponent.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PlSqlProjectComponent.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\VarrayTypeDeclImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\PlSqlBlockImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ddl/CreateTempTable.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ddl/CreateTempTable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/cache/UpdatableSourceTextProvider.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/cache/UpdatableSourceTextProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ddl/CreateIndex.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ddl/CreateIndex.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\IntervalExpressionImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/VarrayCollectionDeclImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/VarrayCollectionDeclImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\icons\icons\Thumbs.db" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\TrimFunctionImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/ConnectionManagerImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/ConnectionManagerImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\InConditionImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/view/utils/ProgressIndicatorController.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/view/utils/ProgressIndicatorController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SqlAssistantPlugin/readme.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sqlassistant.ipr" afterPath="$PROJECT_DIR$/sqlassistant.ipr" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/search/ProcedureSearchOptions.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/search/ProcedureSearchOptions.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ddl/SqlDDLStatement.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ddl/SqlDDLStatement.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\AtTimeZoneExpressionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\InsertStatementImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/actions/ExecuteSQLStatementAction.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/actions/ExecuteSQLStatementAction.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\LogicalExpressionImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/index/BuildIndexException.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/index/BuildIndexException.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\FunctionBodyDTO.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SystimestampLiteralImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\core\com\deepsky\lang\plsql\resolver\ResolveUtils.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\TimestampLiteralImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ProcedureImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/PlSqlElement.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/PlSqlElement.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ObjectReference.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ObjectReference.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/view/Icons.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/view/Icons.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ObjectName.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ObjectName.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\RefCursorDeclImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ColumnSpecListImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\CreateSequenceImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/exec/impl/SQLExecutorDefault.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/exec/impl/SQLExecutorDefault.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ObjectReferenceImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ObjectReferenceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/TableCollectionDeclImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/TableCollectionDeclImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/scopes/DbScopeDescriptorProvider.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/scopes/DbScopeDescriptorProvider.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\CommentImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/index/TrivialWordIndexer.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/index/TrivialWordIndexer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ArgumentImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ArgumentImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\RownumLiteral.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/FunctionImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/FunctionImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SqlAssistantPlugin/META-INF/plugin.xml" afterPath="$PROJECT_DIR$/SqlAssistantPlugin/META-INF/plugin.xml" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SubqueryExpressionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\grammars\grammar_plsql.g" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ColumnDefinitionImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ColumnDefinitionImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/src/resources/sysfunc_list.xml" afterPath="$PROJECT_DIR$/../shared/root/src/resources/sysfunc_list.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/resolve/psibased/PsiVariableContext.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/resolve/psibased/PsiVariableContext.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\MergeStatementImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/var_proc/VariantsProcessor777_PlSqlVar.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/var_proc/VariantsProcessor777_PlSqlVar.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\core\com\deepsky\lang\completion\LookupElementImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\BooleanLiteralImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\PackageBodyImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/PlSqlElementBase.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/PlSqlElementBase.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ColumnSpecImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/TableDefinitionImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/TableDefinitionImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ExtractFunctionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\PLSqlParserEx.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/db_browser/com/deepsky/view/schema_pane/DBBrowserWindow.java" afterPath="$PROJECT_DIR$/../shared/root/java/db_browser/com/deepsky/view/schema_pane/DBBrowserWindow.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\RelationConditionImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/resolve/impl/SystemFunctionProxy.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/resolve/impl/SystemFunctionProxy.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\PragmaExceptionInitImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/PackageSpecImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/PackageSpecImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\TableDefinitionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ExtractFuncCallArgumentImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PlSqlTokenTypes.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PlSqlTokenTypes.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/ora/OraObjectCache3.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/ora/OraObjectCache3.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/RecordItemName.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/RecordItemName.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\FunctionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SequenceExprImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ColumnOuterJoinImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ObjectTypeDeclImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/actions/ExecSQLStmtStructurePopupAction.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/actions/ExecSQLStmtStructurePopupAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ProcedureSpecImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ProcedureSpecImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\sqlassistant-plugin9\SqlAssistantPlugin\spec_src\com\deepsky\lang\common\PlSqlHighlighter.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/search/FunctionSearchOptions.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/search/FunctionSearchOptions.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\SchemaTableName.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\StringLiteralImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\CaseExpressionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\CreateViewImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ProcedureSpecImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\BetweenConditionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\sqlassistant-plugin9\SqlAssistantPlugin\spec_src\com\deepsky\lang\common\PlSqlLanguage.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/SharedConstants.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/SharedConstants.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\LikeConditionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\core\com\deepsky\lang\plsql\struct\parser\ContextTracker.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\ReferencedName.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\CurrentTimestampLiteral.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/fs/CachedVirtualFileSystem.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/fs/CachedVirtualFileSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/PlSqlElementVisitor.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/PlSqlElementVisitor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/FunctionSpecImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/FunctionSpecImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\VarrayCollectionDeclImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\sqlassistant-plugin9\SqlAssistantPlugin\spec_src\com\deepsky\view\query_pane\ContentFactoryEx.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\DeleteStatementImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\core\com\deepsky\lang\plsql\struct\parser\ContextPath.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SqlPlusCommandImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/ora/handlers/TableDefGenerator.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/ora/handlers/TableDefGenerator.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\FunctionCallImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\sqlassistant-plugin9\SqlAssistantPlugin\spec_src\com\deepsky\lang\common\PlSqlStructureViewFactory.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SqlAssistantPlugin/SqlAssistantPlugin.iml" afterPath="$PROJECT_DIR$/SqlAssistantPlugin/SqlAssistantPlugin.iml" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ColumnImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/SelectStatementImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/SelectStatementImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ReferencedNameImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\DBTimeZoneImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\TableAliasDTO.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\ExtAST.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\NullLiteralImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\AnsiFromClauseImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SQLCODE_SysvarImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ParenthesizedExprImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\CastExpressionImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/validation/PlSqlAnnotatingVisitor.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/validation/PlSqlAnnotatingVisitor.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\ASTInterpretationException.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\PrimaryKeyConstraintImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/var_proc/VariantsProcessor777_TableColumn.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/var_proc/VariantsProcessor777_TableColumn.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/SqlFindUsagesDialog.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/SqlFindUsagesDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/TypeDeclaration.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/TypeDeclaration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PlSqlFile.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PlSqlFile.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ExistsConditionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\TypeNameRefHolder.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ObjectNameImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ObjectNameImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\VariableDeclImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\PlainTableImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\IsNullConditionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\RowcountExpressionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SelectFieldExprImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\PlSqlASTParser.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\ArgumentDTO.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/RecordTypeDeclImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/RecordTypeDeclImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\WhereConditionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\FunctionSpecImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/RefCursorDeclImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/RefCursorDeclImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SelectStatementUnionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SelectSubqueryImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\CallArgumentImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/Visitor.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/Visitor.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\VirtualTableImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\UpdateStatementImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\PlSqlASTParser0.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/cache/SourceTextProvider.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/cache/SourceTextProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ddl/CreateTempTableImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ddl/CreateTempTableImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/parser/WordProcessor.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/parser/WordProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/SqlScriptManager.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/SqlScriptManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ColumnNameDDL.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ColumnNameDDL.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ColumnDefinitionImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/index/SqlTextIndexer.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/index/SqlTextIndexer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/VariableDeclImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/VariableDeclImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/PackageBodyImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/PackageBodyImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\PackageSpecImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\sqlassistant-plugin9\SqlAssistantPlugin\spec_src\com\deepsky\lang\lexer\PlSqlBaseLexer.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/parser/PLSqlIndexingLexer.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/parser/PLSqlIndexingLexer.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\CollectionMethodCallImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\NumericLiteralImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\RecordTypeItemImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ddl/CreateViewImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ddl/CreateViewImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ProcedureCallImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\ContextTrackerImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SQLERRM_SysvarImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\parser\FunctionNameDTO.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/var_proc/VariantsProcessor777_GenericRef.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/var_proc/VariantsProcessor777_GenericRef.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ObjectTypeDeclImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ObjectTypeDeclImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\AlterTableImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\USERCONST_Sysvar.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ProcedureImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ProcedureImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\OrderByClauseImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\VColumnDefinitionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\sqlassistant-plugin9\SqlAssistantPlugin\spec_src\com\deepsky\lang\common\DocumentationProviderImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/SelectFieldIdentAsterisk.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/SelectFieldIdentAsterisk.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/parser/plsql/PlSqlElementTypes.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/parser/plsql/PlSqlElementTypes.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PluginKeys.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PluginKeys.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ArithmeticExpressionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SubqueryImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ParameterName.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/ParameterName.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\MemberOfImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\PsiElementDumb.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\FromClauseImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\sqlassistant-plugin9\SqlAssistantPlugin\spec_src\com\deepsky\lang\common\PlSqlHighlighterFactory.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\TableCollectionDeclImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\RecordTypeDeclImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/cache/impl/CacheImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/cache/impl/CacheImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/actions/SqlRunnerHelper.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/actions/SqlRunnerHelper.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ArgumentImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/parser/PLSqlFilteredLexerImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/parser/PLSqlFilteredLexerImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/completion/ComplContributor.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/completion/ComplContributor.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\ConditionCompilationStatementImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/search/ArgumentSearchOptions.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/search/ArgumentSearchOptions.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\SelectExpressionImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ParameterNameImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/ParameterNameImpl.java" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\sqlassistant-plugin9\SqlAssistantPlugin\spec_src\com\deepsky\lang\common\PlSqlCommenter.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\git-repo2\SQL-Code-Assistant-\shared\root\java\ast_parser\com\deepsky\lang\plsql\struct\impl\TempTableDefinitionImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/exec/SQLExecutor.java" afterPath="$PROJECT_DIR$/../shared/root/java/database/com/deepsky/database/exec/SQLExecutor.java" />
     </list>
-    <ignored path="plsql-plugin-0.1.1.iws" />
     <ignored path=".idea/workspace.xml" />
+    <ignored path="plsql-plugin-0.1.1.iws" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -299,8 +90,8 @@
       <property name="field_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByClasses" value="true" />
       <property name="exception_breakpoints_viewId" value="TABLE" />
-      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="exception_breakpoints_groupByClasses" value="true" />
+      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="method_breakpoints_groupByMethods" value="false" />
     </ui_properties>
   </component>
@@ -310,10 +101,19 @@
   <component name="FileColors" enabled="false" enabledForTabs="false" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="plugin_build.xml" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="plugin_build.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SqlAssistantPlugin/plugin_build.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="147" column="0" selection-start="6483" selection-end="6483" vertical-scroll-proportion="0.20593692">
+            <state line="79" column="39" selection-start="3795" selection-end="3816" vertical-scroll-proportion="-10.25">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="readme.txt" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SqlAssistantPlugin/readme.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="15" column="62" selection-start="491" selection-end="491" vertical-scroll-proportion="0.32650447">
               <folding />
             </state>
           </provider>
@@ -334,7 +134,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/struct/parser/ContextPathPsiTracker.java" />
         <option value="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/PlSqlElement.java" />
         <option value="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/PlSqlElementBase.java" />
         <option value="$PROJECT_DIR$/SqlAssistantPlugin/spec_src/com/deepsky/lang/plsql/struct/impl/PsiElementDumb.java" />
@@ -348,8 +147,9 @@
         <option value="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/common/PlSqlParserDefinition.java" />
         <option value="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/TypeNameReference.java" />
         <option value="$PROJECT_DIR$/SqlAssistantPlugin/build.properties" />
-        <option value="$PROJECT_DIR$/SqlAssistantPlugin/plugin_build.xml" />
         <option value="$PROJECT_DIR$/../shared/root/java/tools/com/deepsky/tools/SymbolTableGenerator.java" />
+        <option value="$PROJECT_DIR$/SqlAssistantPlugin/plugin_build.xml" />
+        <option value="$PROJECT_DIR$/SqlAssistantPlugin/readme.txt" />
       </list>
     </option>
   </component>
@@ -420,40 +220,49 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Problems" />
-        <subPane subId="All">
+      <pane id="PackagesPane">
+        <subPane />
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
           <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sqlassistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sqlassistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="SqlAssistantPlugin">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SqlAssistantPlugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SqlAssistantPlugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sqlassistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="SqlAssistantPlugin">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SqlAssistantPlugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="SqlAssistantPlugin">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
+            <PATH_ELEMENT>
+              <option name="myItemId" value="root" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Problems" />
         <subPane subId="Unnamed">
           <PATH>
             <PATH_ELEMENT USER_OBJECT="Root">
@@ -490,12 +299,38 @@
             </PATH_ELEMENT>
           </PATH>
         </subPane>
-      </pane>
-      <pane id="PackagesPane">
-        <subPane />
-      </pane>
-      <pane id="ProjectPane">
-        <subPane />
+        <subPane subId="All">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="SqlAssistantPlugin">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="SqlAssistantPlugin">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="SqlAssistantPlugin">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
       </pane>
       <pane id="Favorites">
         <subPane subId="plsql-plugin-0.1.1" />
@@ -505,15 +340,15 @@
   <component name="PropertiesComponent">
     <property name="project.structure.last.edited" value="Modules" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="249" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="193" />
-    <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="193" />
     <property name="options.splitter.main.proportions" value="0.19166666" />
     <property name="RunManagerConfig.showSettingsBeforeRunnig" value="false" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
-    <property name="recentsLimit" value="5" />
-    <property name="MemberChooser.sorted" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="139" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="last_opened_file_path" value="D:\git-test\sqlassistant" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="254" />
@@ -528,16 +363,16 @@
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
     <property name="options.lastSelected" value="com.maddyhome.idea.copyright.ui.CopyrightProfilesPanel" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="PsiViewer.ProjectComponent">
     <option name="HIGHLIGHT" value="false" />
@@ -774,22 +609,21 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="-4" width="1032" height="748" extended-state="0" />
+    <frame x="-4" y="-4" width="1288" height="968" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20364238" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17709179" sideWeight="0.5339926" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3930399" sideWeight="0.5872093" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.78547853" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7029703" sideWeight="0.0" order="24" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7564895" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.68646866" sideWeight="0.5" order="22" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32178217" sideWeight="0.5" order="23" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39236394" sideWeight="0.5872093" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4790174" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290008" sideWeight="0.5648949" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2988741" sideWeight="0.2029703" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="20" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.282697" sideWeight="0.2029703" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2250203" sideWeight="0.5512979" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7029703" sideWeight="0.0" order="24" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.76143384" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7564895" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34281072" sideWeight="0.5339926" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Class Cloud" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.6096059" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
       <window_info id="DBHelper" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -798,9 +632,8 @@
       <window_info id="SQL Schema" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32881773" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32927817" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="SVN Repositories" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3305369" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Query ResultPane" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32881773" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32793522" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2250203" sideWeight="0.5512979" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Query ResultPane" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32881773" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="DB Browser" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32927817" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="DB Execution Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29679802" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24979724" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -810,15 +643,17 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="SQL" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4827586" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.78547853" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Profile" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32881773" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
       <window_info id="UML Diagrams" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.45336577" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.68646866" sideWeight="0.5" order="22" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39967507" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Web Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32885906" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Graphical Navigator" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.6001622" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="21" side_tool="false" content_ui="tabs" />
+      <window_info id="Graphical Navigator" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.6001622" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6125828" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="DBOutput" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
     </layout>
@@ -932,35 +767,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../shared/root/java/antlr_patch/antlr/ToolPatched.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="190" column="0" selection-start="8022" selection-end="8022" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="190" column="0" selection-start="8022" selection-end="8022" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../shared/root/java/commons/com/deepsky/utils/FileUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="0" selection-start="1400" selection-end="1400" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="27" column="0" selection-start="1400" selection-end="1400" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../shared/root/java/tools/com/deepsky/tools/SymbolTableGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="0" selection-start="1760" selection-end="1760" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="40" column="0" selection-start="1760" selection-end="1760" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SqlAssistantPlugin/build.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="29" selection-end="29" vertical-scroll-proportion="0.05862069">
-          <folding />
-        </state>
+        <state line="2" column="0" selection-start="29" selection-end="29" vertical-scroll-proportion="0.05862069" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SqlAssistantPlugin/plugin_build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="147" column="0" selection-start="6483" selection-end="6483" vertical-scroll-proportion="0.20593692">
+        <state line="79" column="39" selection-start="3795" selection-end="3816" vertical-scroll-proportion="-10.25">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SqlAssistantPlugin/readme.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="62" selection-start="491" selection-end="491" vertical-scroll-proportion="0.32650447">
           <folding />
         </state>
       </provider>

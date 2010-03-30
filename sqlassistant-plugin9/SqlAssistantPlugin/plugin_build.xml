@@ -399,24 +399,6 @@
         </jar>
     </target>
 
-    <target name="build_help_jar" description="Build JavaHelp jar">
-
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${build.dir}/lib"/>
-
-        <!-- build javahelp jar  -->
-        <jar destfile="${build.dir}/lib/help.jar">
-
-            <fileset dir="${help.dir}" includes="css/*"/>
-            <fileset dir="${help.dir}" includes="html/*"/>
-            <fileset dir="${help.dir}" includes="images/*"/>
-
-            <fileset dir="${help.dir}" includes="*.hs"/>
-            <fileset dir="${help.dir}" includes="*.html"/>
-            <fileset dir="${help.dir}" includes="*.xml"/>
-        </jar>
-    </target>
-
     <target name="build_SYS_schema_package" description="build_SYS_schema_package">
 
         <mkdir dir="${unzip.dir}"/>
