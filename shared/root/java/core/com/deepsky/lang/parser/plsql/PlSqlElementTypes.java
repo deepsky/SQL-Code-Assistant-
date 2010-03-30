@@ -68,18 +68,26 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
             INSERT_COMMAND,
             UPDATE_COMMAND,
             DELETE_COMMAND,
+            TRUNCATE_TABLE,
 
             TABLE_DEF,
+            CREATE_TEMP_TABLE,
             CREATE_VIEW,
             CREATE_SEQUENCE,
             ALTER_TABLE,
             CREATE_INDEX,
+            CREATE_DIRECTORY,
+            CREATE_DB_LINK,
+
             DROP_TABLE,
             DROP_VIEW,
+            DROP_INDEX,
             DROP_FUNCTION,
             DROP_PROCEDURE,
             DROP_PACKAGE,
             DROP_SEQUENCE,
+            DROP_DIRECTORY,
+            DROP_DB_LINK,
 
             COMMIT_STATEMENT,
             ROLLBACK_STATEMENT

@@ -30,16 +30,20 @@ import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.*;
-import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.deepsky.lang.plsql.struct.types.UserDefinedType;
+import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
 
@@ -192,35 +196,5 @@ public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
             super.accept(visitor);
         }
     }
-
-
-    // [Contex Management Stuff] Start -------------------------------
-    CtxPath cachedCtxPath = null;
-    public CtxPath getCtxPath() {
-        if(cachedCtxPath != null){
-            return cachedCtxPath;
-        } else {
-            CtxPath parent = super.getCtxPath();
-            cachedCtxPath = new CtxPathImpl(
-                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.FUNCTION_SPEC, parent.getSeqNEXT() + "$"
-                    + this.getEName().toLowerCase()));
-        }
-        return cachedCtxPath;
-    }
-    // [Contex Management Stuff] End ---------------------------------
-
-
-//    @NotNull
-//    public PsiElement getNavigationElement(){
-//        PackageSpec spec = (PackageSpec) getUsageContext(TokenSet.create(PlSqlElementTypes.PACKAGE_SPEC));
-//        if(spec != null){
-//            PackageBody body = spec.getPackageBody();
-//            if(body != null){
-//                Executable exec = body.findExecutableByDecl(this);
-//                return exec != null? exec: this;
-//            }
-//        }
-//        return this;
-//    }
 
 }

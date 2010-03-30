@@ -26,31 +26,23 @@
 package com.deepsky.database.exec.impl;
 
 import com.deepsky.database.ConnectionManager;
-import com.deepsky.database.ConnectionManagerImpl;
 import com.deepsky.database.exec.SQLExecutor;
 import com.deepsky.database.exec.RowSetModel;
 import com.deepsky.database.exec.TableResizeListener;
 import com.deepsky.database.exec.SQLUpdateStatistics;
 import com.deepsky.database.DBException;
 import com.deepsky.lang.common.PluginKeys;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.NotSupportedException;
-import com.deepsky.lang.plsql.tree.TreeNodeBuilder;
-import com.deepsky.lang.plsql.tree.Node;
-import com.deepsky.lang.plsql.tree.MarkupGenerator;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.conf.PluginSettingsBean;
-import com.deepsky.lang.common.SharedObjectPool;
-import com.deepsky.lang.common.SharedConstants;
 
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
@@ -107,103 +99,103 @@ public class SQLExecutorDefault implements SQLExecutor {
     }
 
     private String adoptOrderByClause(String sql_text, int columnId, int dir) {
-        MarkupGenerator generator = new MarkupGenerator();
-        ASTNode ast = generator.parse(sql_text);
-        ASTNode _select = ast != null? ast.findChildByType(PLSqlTypesAdopted.SELECT_EXPRESSION): null;
-        if (_select != null) {
-            SelectStatement select = (SelectStatement) _select.getPsi();
-            OrderByClause orderBy = select.getOrderByClause();
-            String cuttedSql = sql_text;
-            if (orderBy != null) {
-                // only one 'ORDER BY' allowed
-                // remove the clause
-                int start = orderBy.getTextRange().getStartOffset();
-                int end = orderBy.getTextRange().getEndOffset();
-                cuttedSql = sql_text.substring(0, start) + sql_text.substring(end, sql_text.length());
-            }
-
-            cuttedSql += " ORDER BY " + (columnId + 1) + ((dir == RowSetModel.DESCENDING) ? " DESC" : " ASC");
-            return cuttedSql;
-        } else {
-            throw new SyntaxTreeCorruptedException();
+        String hh = ".*(order[ \n]+by.+)$";
+        Pattern p = Pattern.compile(hh);
+        Matcher m1 = p.matcher(sql_text.replace("\n", " "));
+        String cuttedSql = sql_text;
+        if(m1.find()){
+            cuttedSql = sql_text.substring(0, m1.start(1));
         }
+
+        cuttedSql += " ORDER BY " + (columnId + 1) + ((dir == RowSetModel.DESCENDING) ? " DESC" : " ASC");
+        return cuttedSql;
+
     }
 
-    public SQLUpdateStatistics execute(ASTNode node) throws DBException {
+    public SQLUpdateStatistics execute(String statement, IElementType etype) throws DBException {
         String responseMessage = "";
         int size = 0;
 
         // close result set if exists
         close();
 
-        IElementType etype = node.getElementType();
         long ms = System.currentTimeMillis();
 
         // DML statement processing
         if (etype == PLSqlTypesAdopted.DELETE_COMMAND){
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = size + " rows deleted";
         } else if ( etype == PLSqlTypesAdopted.INSERT_COMMAND){
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = size + " rows inserted";
         } else if (etype == PLSqlTypesAdopted.UPDATE_COMMAND){
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = size + " rows updated";
         } else if (etype == PLSqlTypesAdopted.MERGE_COMMAND){
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = size + " rows updated";
 
             // DDL statement processing
+        } else if (etype == PLSqlTypesAdopted.TRUNCATE_TABLE){
+            size = executeUpdate(statement);
+            responseMessage = "Table truncated";
         } else if (etype == PLSqlTypesAdopted.TABLE_DEF){
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
+            responseMessage = "Table created";
+        } else if (etype == PLSqlTypesAdopted.CREATE_TEMP_TABLE){
+            size = executeUpdate(statement);
             responseMessage = "Table created";
         } else if (etype == PLSqlTypesAdopted.CREATE_VIEW) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "View created";
+        } else if (etype == PLSqlTypesAdopted.CREATE_DIRECTORY) {
+            size = executeUpdate(statement);
+            responseMessage = "Directory created";
         } else if (etype == PLSqlTypesAdopted.ALTER_TABLE) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "Table altered";
         } else if (etype == PLSqlTypesAdopted.CREATE_SEQUENCE) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "Sequence created";
         } else if (etype == PLSqlTypesAdopted.CREATE_INDEX) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "Index created";
         } else if (etype == PLSqlTypesAdopted.DROP_TABLE) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "Table dropped";
         } else if (etype == PLSqlTypesAdopted.DROP_VIEW) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "View dropped";
         } else if (etype == PLSqlTypesAdopted.DROP_FUNCTION) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "Function dropped";
         } else if (etype == PLSqlTypesAdopted.DROP_PROCEDURE) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "Procedure dropped";
         } else if (etype == PLSqlTypesAdopted.DROP_PACKAGE) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "Package dropped";
         } else if (etype == PLSqlTypesAdopted.DROP_SEQUENCE) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "Sequence dropped";
         } else if (etype == PLSqlTypesAdopted.COMMIT_STATEMENT) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "Commited";
         } else if (etype == PLSqlTypesAdopted.ROLLBACK_STATEMENT) {
-            size = executeUpdate(node.getText());
+            size = executeUpdate(statement);
             responseMessage = "Rollbacked";
         } else {
             throw new NotSupportedException("Specified SQL statement not supported");
         }
         ms = System.currentTimeMillis() - ms;
 
-        connectionManager.addProcessedStatement(node);
+        connectionManager.addProcessedStatement(statement, etype);
         return new SQLUpdateStatisticsImpl(size, ms, responseMessage);
     }
 
     private int executeUpdate(String _text) throws DBException {
-        String text = _text.endsWith(";")? _text.substring(0, _text.length()-1): _text;
+        String trimmed = _text.trim();
+        String text = trimmed.endsWith(";")? trimmed.substring(0, trimmed.length()-1): trimmed;
         try {
             stmt = conn.createStatement();
             int size = stmt.executeUpdate(text);

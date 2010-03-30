@@ -25,8 +25,9 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiNamedElement;
 
-public interface ObjectName extends PlSqlElement, PsiNamedElement {
+public interface ObjectName extends PlSqlElement, NavigationItem, PsiNamedElement {
     String getObjectName();
 }

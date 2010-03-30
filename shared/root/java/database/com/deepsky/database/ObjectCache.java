@@ -97,6 +97,7 @@ public interface ObjectCache {
      * @return
      */
     boolean isReady();
+    int getUpdateCounter();
 
     void close();
 

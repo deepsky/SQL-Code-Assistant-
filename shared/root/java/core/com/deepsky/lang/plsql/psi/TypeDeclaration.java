@@ -25,7 +25,9 @@
 
 package com.deepsky.lang.plsql.psi;
 
-public interface TypeDeclaration extends Declaration{
+import com.intellij.navigation.NavigationItem;
+
+public interface TypeDeclaration extends Declaration, NavigationItem {
 
     /**
      * Get name of the package where the type is defined

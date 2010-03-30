@@ -71,15 +71,6 @@ public class DbScopeDescriptorProvider implements ScopeDescriptorProvider {
             return false;
         }
 
-//        @NotNull
-//        public SearchScope intersectWith(@NotNull SearchScope scope2) {
-//            return this;
-//        }
-//
-//        @NotNull
-//        public SearchScope union(@NotNull SearchScope scope) {
-//            return this;
-//        }
 
         public String getDisplayName() {
           return "Database schema";

@@ -35,6 +35,7 @@ import com.deepsky.utils.StringUtils;
 import com.deepsky.view.Icons;
 import com.deepsky.view.query_pane.markup.SqlStatementMarker;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Key;
@@ -69,6 +70,7 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
     final static int STICKY_OPTION = 3;
     final static int EXPORT_DATA = 4;
     final static int CLOSE_PANEL = 5;
+    final static int HELP = 6;
 
     Project project;
     ConnectionManager connectionManager;
@@ -265,8 +267,6 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
     }
 
     private void removeTab(@NotNull Content content, String displayName) {
-//        Component[] comps = (content.getComponent()).getComponents();
-//        JTabbedPane tabbedPane = (JTabbedPane) comps[1];
         JTabbedPane tabbedPane = getTabComponent(content);
         int index = tabbedPane.indexOfTab(displayName);
         if (index == -1) {
@@ -277,8 +277,6 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
     }
 
     private QueryResultPanel getSelectedTab(@NotNull Content content) {
-//        Component[] comps = (content.getComponent()).getComponents();
-//        JTabbedPane tabbedPane = (JTabbedPane) comps[1];
         JTabbedPane tabbedPane = getTabComponent(content);
         int index = tabbedPane.getSelectedIndex();
         if (index == -1) {
@@ -350,17 +348,16 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
             actionGroup.addSeparator();
 // todo -- check problem with keeping sql markers and tabs in sync
             actionGroup.add(new LocalToggleAction("Close Result Pane", "Close", Icons.CLOSE_PANEL, CLOSE_PANEL));
+            actionGroup.addSeparator();
+            actionGroup.add(new LocalToggleAction("Help", "Help", Icons.HELP, HELP));
 
             ActionManager actionManager = ActionManager.getInstance();
             ActionToolbar toolBar = actionManager.createActionToolbar("DataGridActionToolbar", actionGroup, false);
             jpanel.add(toolBar.getComponent(), "West");
             jpanel.add(tabbedPane, "Center");
 
-//            ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-//            ContentFactory contentFactory = PeerFactory.getInstance().getContentFactory();
             ContentFactory contentFactory = ContentFactoryEx.getContentFactory();
             content = contentFactory.createContent(jpanel, contentName, false);
-            //content.setActions(actionGroup, "UKNOWN", null);
             content.setIcon(Icons.DISCONNECT);
             wm.getContentManager().addContent(content);
         }
@@ -572,6 +569,9 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
                 }
                 case CLOSE_PANEL:
                     close();
+                    break;
+                case HELP:
+                    HelpManager.getInstance().invokeHelp("sqlassistant.queryResultPane");
                     break;
                 case STICKY_OPTION:
                     selected ^= true;

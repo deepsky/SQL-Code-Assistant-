@@ -66,12 +66,6 @@ public class SqlFindUsagesDialog extends AbstractFindUsagesDialog {
         return labelText;
     }
 
-    @Override
-    protected void doHelpAction() {
-        // todo --
-        // HelpManager.getInstance().invokeHelp(FindUsagesManager.getHelpID(myPsiElement));
-    }
-
 
     protected void doOKAction() {
         if (shouldDoOkAction()) {
@@ -98,6 +92,11 @@ public class SqlFindUsagesDialog extends AbstractFindUsagesDialog {
             return true;
         }
     }
+
+    protected String getHelpId() {
+      return "sqlassistant.findUsage";
+    }
+
 
     private JPanel createFindWhatPanel(GenericSearchOptions.SearchOption[] options) {
         if (options.length == 0) {

@@ -31,7 +31,6 @@ import com.deepsky.lang.plsql.parser.ParserException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.CreateView;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
-import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
 import com.deepsky.lang.plsql.struct.*;
 import com.deepsky.lang.plsql.struct.parser.PlSqlASTParser0;
 import com.deepsky.lang.plsql.struct.parser.SyntaxErrorException;
@@ -159,6 +158,10 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
 
     public void process(Visitor proc) {
         // todo -
+    }
+
+    public String getCtxPath() {
+        return "[File]"; 
     }
 
     public Icon getIcon(int i) {
@@ -451,23 +454,5 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement {
         return sqlStmtModel;         
     }
 
-
-    CtxPath cachedCtxPath = null;
-    public CtxPath getCtxPath() {
-        if(cachedCtxPath == null){
-            cachedCtxPath = new CtxPath(){
-                public String getPath() {
-                    // todo
-                    return "";
-                }
-
-                public String getSeqNEXT() {
-                    // todo
-                    return "";
-                }
-            };
-        }
-        return cachedCtxPath;
-    }
-
+    
 }

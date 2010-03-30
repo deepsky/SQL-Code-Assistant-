@@ -28,13 +28,18 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.plsql.resolver.ResolveUtils;
-import com.deepsky.lang.plsql.struct.parser.ContextPath;
+import com.deepsky.navigation.PlSqlPackageUtil;
+import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 public class ObjectTypeDeclImpl extends PlSqlElementBase implements ObjectTypeDecl {
     public ObjectTypeDeclImpl(ASTNode astNode) {
@@ -77,18 +82,51 @@ public class ObjectTypeDeclImpl extends PlSqlElementBase implements ObjectTypeDe
         }
     }
 
-    // [Contex Management Stuff] Start -------------------------------
-    CtxPath cachedCtxPath = null;
-    public CtxPath getCtxPath() {
-        if(cachedCtxPath != null){
-            return cachedCtxPath;
-        } else {
-            CtxPath parent = super.getCtxPath();
-            cachedCtxPath = new CtxPathImpl(
-                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.OBJECT_TYPE,"..$" + this.getDeclName().toLowerCase()));
-        }
-        return cachedCtxPath;
+
+    // presentation stuff
+    public Icon getIcon(int flags){
+        return Icons.OBJECT_TYPE_DECL;
     }
-    // [Contex Management Stuff] End ---------------------------------
+
+    @Nullable
+    public ItemPresentation getPresentation() {
+        return new TablePresentation();
+    }
+
+    public FileStatus getFileStatus() {
+        return null;
+    }
+
+    public String getName() {
+        return getDeclName();
+    }
+
+
+    class TablePresentation implements ItemPresentation {
+        public String getPresentableText(){
+            return getDeclName().toLowerCase();
+        }
+
+        @Nullable
+        public String getLocationString(){
+            String pkgName = PlSqlPackageUtil.findPackageNameForElement(ObjectTypeDeclImpl.this);
+            if(pkgName != null){
+                return "in " + pkgName + " (Object Type)";
+            } else {
+                return "(Object Type)";
+            }
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open){
+            return Icons.OBJECT_TYPE_DECL;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey(){
+            return null;
+        }
+    }
+
 
 }

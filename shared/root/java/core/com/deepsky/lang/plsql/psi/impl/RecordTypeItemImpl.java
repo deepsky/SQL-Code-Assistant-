@@ -25,21 +25,16 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.RecordTypeItem;
 import com.deepsky.lang.plsql.psi.Expression;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
-import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 public class RecordTypeItemImpl extends PlSqlElementBase implements RecordTypeItem {
 
@@ -83,27 +78,4 @@ public class RecordTypeItemImpl extends PlSqlElementBase implements RecordTypeIt
     public Expression getDefaultExpr() {
         return null;
     }
-
-    public void accept(@NotNull PsiElementVisitor visitor) {
-        if (visitor instanceof PlSqlElementVisitor) {
-            ((PlSqlElementVisitor) visitor).visitRecordTypeItem(this);
-        } else {
-            super.accept(visitor);
-        }
-    }
-
-    // [Contex Management Stuff] Start -------------------------------
-    CtxPath cachedCtxPath = null;
-    public CtxPath getCtxPath() {
-        if(cachedCtxPath != null){
-            return cachedCtxPath;
-        } else {
-            CtxPath parent = super.getCtxPath();
-            cachedCtxPath = new CtxPathImpl(
-                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.RECORD_ITEM,"..$" + this.getRecordItemName().toLowerCase()));
-        }
-        return cachedCtxPath;
-    }
-    // [Contex Management Stuff] End ---------------------------------
-
 }

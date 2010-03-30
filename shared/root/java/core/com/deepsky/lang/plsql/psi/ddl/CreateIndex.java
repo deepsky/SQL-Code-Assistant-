@@ -25,8 +25,9 @@
 
 package com.deepsky.lang.plsql.psi.ddl;
 
+import com.deepsky.lang.plsql.psi.PlSqlElement;
 
-public interface CreateIndex extends SqlDDLStatement { 
+public interface CreateIndex extends SqlDDLStatement { //PlSqlElement {
 
     String getIndexName();
     String getTableName();

@@ -26,9 +26,10 @@
 package com.deepsky.lang.plsql.psi;
 
 import com.deepsky.lang.plsql.struct.ExecutableDescriptor;
+import com.intellij.navigation.NavigationItem;
 import org.jetbrains.annotations.NotNull;
 
-public interface ExecutableSpec extends PlSqlElement {
+public interface ExecutableSpec extends PlSqlElement, NavigationItem {
 
     ArgumentList getArgumentList();
 

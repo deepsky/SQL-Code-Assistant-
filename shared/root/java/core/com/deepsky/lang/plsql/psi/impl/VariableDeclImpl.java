@@ -35,11 +35,9 @@ import com.deepsky.lang.plsql.psi.resolve.ASTTreeProcessor;
 import com.deepsky.lang.plsql.psi.resolve.PackageTriggerHandler;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
-import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.PackageDescriptor;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.VariableDescriptor;
-import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -154,19 +152,4 @@ public class VariableDeclImpl extends PlSqlElementBase implements VariableDecl {
             throw new SyntaxTreeCorruptedException();
         }
     }
-
-    // [Contex Management Stuff] Start -------------------------------
-    CtxPath cachedCtxPath = null;
-    public CtxPath getCtxPath() {
-        if(cachedCtxPath != null){
-            return cachedCtxPath;
-        } else {
-            CtxPath parent = super.getCtxPath();
-            cachedCtxPath = new CtxPathImpl(
-                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.VARIABLE_DECL, "..$" + getDeclName().toLowerCase()));
-        }
-        return cachedCtxPath;
-    }
-    // [Contex Management Stuff] End ---------------------------------
-
 }

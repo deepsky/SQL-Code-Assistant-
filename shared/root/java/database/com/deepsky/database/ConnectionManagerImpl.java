@@ -31,13 +31,10 @@ import com.deepsky.database.ora.ConnectionHolder;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.tree.MarkupGenerator;
-import com.deepsky.lang.plsql.tree.Node;
-import com.deepsky.lang.plsql.tree.TreeNodeBuilder;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
-import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -196,15 +193,8 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
         // TODO ---- should be simplified !!!!
         SQLExecutor exec = null;
         try {
-            MarkupGenerator generator = new MarkupGenerator();
-            ASTNode node = generator.parse("ROLLBACK");
-            ASTNode rollback = node.findChildByType(PlSqlElementTypes.ROLLBACK_STATEMENT);
-            if(rollback != null){
-                exec = getSQLExecutor();
-                exec.execute(rollback);
-            }
-
 /*
+            MarkupGenerator generator = new MarkupGenerator();
             TreeNodeBuilder builder = generator.parse0("ROLLBACK");
             Node root = builder.buildASTTree();
 
@@ -214,6 +204,8 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
                 exec.execute(nodes[0]);
             }
 */
+            exec = getSQLExecutor();
+            exec.execute("ROLLBACK", PlSqlElementTypes.ROLLBACK_STATEMENT);
 
         } catch (DBException e) {
             // todo -- handle error
@@ -405,14 +397,14 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
     }
 
 
-    public void addProcessedStatement(ASTNode node) {
+    public void addProcessedStatement(String text, IElementType etype) {
         if (!connHelper.getAutoCommit()) {
             // AutoCommit is OFF, check issued DML statements
-            if (PlSqlElementTypes.DML_STATEMENTS.contains(node.getElementType())) {
-                dmlStatementList.add(node.getText());
-            } else if (node.getElementType() == PlSqlElementTypes.COMMIT_STATEMENT) {
+            if (PlSqlElementTypes.DML_STATEMENTS.contains(etype)) {
+                dmlStatementList.add(text);
+            } else if (etype == PlSqlElementTypes.COMMIT_STATEMENT) {
                 dmlStatementList.clear();
-            } else if (node.getElementType() == PlSqlElementTypes.ROLLBACK_STATEMENT) {
+            } else if (etype == PlSqlElementTypes.ROLLBACK_STATEMENT) {
                 dmlStatementList.clear();
             } else {
                 // todo
@@ -422,7 +414,7 @@ public class ConnectionManagerImpl implements ConnectionManager, CacheManagerLis
         }
 
         // refresh db cache if DDL was run
-        if (PlSqlElementTypes.DDL_STATEMENTS.contains(node.getElementType())) {
+        if (PlSqlElementTypes.DDL_STATEMENTS.contains(etype)) {
             refreshSession();
         }
     }

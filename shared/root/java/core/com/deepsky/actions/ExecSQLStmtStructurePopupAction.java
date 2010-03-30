@@ -32,9 +32,8 @@ import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
 import com.deepsky.lang.plsql.psi.Statement;
 import com.deepsky.lang.plsql.psi.ddl.SqlDDLStatement;
+import com.deepsky.lang.plsql.struct.parser.PlSqlASTParser;
 import com.deepsky.lang.plsql.structure_view.PlSqlStructureViewElement;
-import com.deepsky.lang.plsql.tree.MarkupGenerator;
-import com.intellij.lang.ASTNode;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
@@ -42,22 +41,20 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.tree.IElementType;
 
 public class ExecSQLStmtStructurePopupAction extends ExecuteSQLStatementAction {
 
-//    private final Icon myExecSqlIcon;
-
-    public ExecSQLStmtStructurePopupAction() {
-//        myExecSqlIcon = Icons.EXEC_SQL_STMT;
+    public ExecSQLStmtStructurePopupAction(){
     }
 
     public void actionPerformed(AnActionEvent event) {
-        PsiFile psi = event.getData(LangDataKeys.PSI_FILE); //LangDataKeys.PSI_FILE.getData(DataManager.getInstance().getDataContext());
+        PsiFile psi = event.getData(LangDataKeys.PSI_FILE);
         if (psi instanceof PlSqlFile) {
-            Navigatable elem = event.getData(LangDataKeys.NAVIGATABLE); //LangDataKeys.NAVIGATABLE.getData(DataManager.getInstance().getDataContext());
+            Navigatable elem = event.getData(LangDataKeys.NAVIGATABLE);
             Project project = event.getData(LangDataKeys.PROJECT);
 
-            if (elem instanceof PlSqlStructureViewElement) {
+            if(elem instanceof PlSqlStructureViewElement){
                 PlSqlStructureViewElement structure = (PlSqlStructureViewElement) elem;
                 PlSqlElement plSqlElement = structure.getValue();
 
@@ -81,11 +78,12 @@ public class ExecSQLStmtStructurePopupAction extends ExecuteSQLStatementAction {
                 }
 
                 try {
-                    MarkupGenerator generator = new MarkupGenerator();
-                    ASTNode root = generator.parse(text);
-                    if (root != null) {
-                        ASTNode astStmt = root.findChildByType(PlSqlElementTypes.EXECUTABLE_STATEMENTS);
-                        executeStatement(project, astStmt, (PlSqlFile) psi, _st, _end);
+                    PlSqlASTParser parser = new PlSqlASTParser();
+                    PlSqlElement[] elems = parser.parse(text);
+                    if(elems.length == 1 &&
+                        PlSqlElementTypes.EXECUTABLE_STATEMENTS.contains(elems[0].getNode().getElementType())){
+                        IElementType itype = elems[0].getNode().getElementType();
+                        executeStatement(project, text, itype, (PlSqlFile) psi, _st, _end);
                     }
 
                 } catch (NotSupportedException e1) {
@@ -102,15 +100,13 @@ public class ExecSQLStmtStructurePopupAction extends ExecuteSQLStatementAction {
 
     public void update(AnActionEvent event) {
 
-        PsiFile psi = event.getData(LangDataKeys.PSI_FILE); //LangDataKeys.PSI_FILE.getData(DataManager.getInstance().getDataContext());
+        PsiFile psi = event.getData(LangDataKeys.PSI_FILE);
         if (psi instanceof PlSqlFile) {
             Presentation presentation = event.getPresentation();
-//            presentation.setText("Exec SQLL");
-//            presentation.setIcon(myExecSqlIcon);
             presentation.setVisible(true);
 
-            Navigatable elem = event.getData(LangDataKeys.NAVIGATABLE); //LangDataKeys.NAVIGATABLE.getData(DataManager.getInstance().getDataContext());
-            if (elem instanceof PlSqlStructureViewElement) {
+            Navigatable elem = event.getData(LangDataKeys.NAVIGATABLE);
+            if(elem instanceof PlSqlStructureViewElement){
                 PlSqlStructureViewElement structure = (PlSqlStructureViewElement) elem;
                 PlSqlElement plSqlElement = structure.getValue();
                 if (plSqlElement instanceof Statement) {
@@ -122,17 +118,6 @@ public class ExecSQLStmtStructurePopupAction extends ExecuteSQLStatementAction {
                 }
             }
 
-//            Project p = psi.getProject();
-//            Editor e = FileEditorManager.getInstance(p).getSelectedTextEditor();
-//            if(e == null){
-//                Presentation presentation = event.getPresentation();
-//                presentation.setVisible(true);
-//                presentation.setEnabled(false);
-//            } else {
-//                super.update(event);
-//            }
-            //Editor e = LangDataKeys.EDITOR.getData(DataManager.getInstance().getDataContext());
-            //super.update(event);
         } else {
             Presentation presentation = event.getPresentation();
             presentation.setVisible(false);

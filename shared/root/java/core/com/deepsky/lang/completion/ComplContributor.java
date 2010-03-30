@@ -25,26 +25,19 @@
 
 package com.deepsky.lang.completion;
 
-import com.deepsky.lang.common.PlSqlFile;
-import com.deepsky.lang.plsql.psi.Statement;
-import com.deepsky.view.Icons;
+import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementPresentation;
-import com.intellij.codeInsight.lookup.LookupElementRenderer;
+import com.intellij.codeInsight.lookup.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
+import com.deepsky.view.Icons;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.Set;
 
 public class ComplContributor extends CompletionContributor {
     private static final Logger log = Logger.getInstance("#ComplContributor");
 
-    @Override
-    public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
-        log.info("Hello!!!");
+  @Override
+  public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
+      log.info("Hello!!!");
 
 /*
       LookupElementBuilder builder = LookupElementBuilder.create("uuiwye");
@@ -60,43 +53,24 @@ public class ComplContributor extends CompletionContributor {
 */
 //      final LookupElement item = TailTypeDecorator.withTail(LookupElementBuilder.create("ejhdhd"), TailType.LPARENTH);
 //      result.addElement(item); //builder); //.new LookupElementImpl("uuiwye"));
-        result.addElement(new LookupElementImpl(parameters.getPosition()));
-//        PsiElement elem = parameters.getPosition();
-//        PsiElement parent = elem.getParent();
-//        if(!(parent instanceof PlSqlFile)){
-//            if(parent.getParent() instanceof Statement){
-//                // todo
-//                int ii =0;
-//            }
-//
-//            int gh =0;
-//        }
+      result.addElement(new LookupElementImpl("u90wye"));
+//      return super.fillCompletionVariants(parameters, result);
+      super.fillCompletionVariants(parameters, result);
+  }
 
-        super.fillCompletionVariants(parameters, result);
-    }
-/*
     class LookupElementImpl extends LookupElement {
         String lookUpStr;
 
-        public LookupElementImpl(String var) {
+        public LookupElementImpl(String var){
             this.lookUpStr = var;
         }
-
-//        public LookupElementImpl(String[] vars) {
-//            this.lookUpStr = var;
-//        }
-
         @NotNull
         public String getLookupString() {
             return lookUpStr;
         }
 
-        public Set<String> getAllLookupStrings() {
-            return Collections.singleton(getLookupString());
-        }
-
         public void handleInsert(InsertionContext context) {
-            int jj = 0;
+            int jj =0;
         }
 
         public void renderElement(LookupElementPresentation presentation) {
@@ -108,7 +82,7 @@ public class ComplContributor extends CompletionContributor {
         }
 
 
-        class LookupElementRendererImpl extends LookupElementRenderer<LookupElementImpl> {
+        class LookupElementRendererImpl extends LookupElementRenderer <LookupElementImpl>{
             public void renderElement(LookupElementImpl lookupElement, LookupElementPresentation lookupElementPresentation) {
 //                lookupElementPresentation.setItemText("itemText", false , true);
                 lookupElementPresentation.setIcon(Icons.SQL_FILE);
@@ -123,9 +97,9 @@ public class ComplContributor extends CompletionContributor {
             public void handleInsert(InsertionContext insertionContext, LookupElementImpl lookupElement) {
                 // todo
                 //insertionContext.
-                int hh = 0;
+                int hh =0;
             }
         }
     }
-*/
+
 }

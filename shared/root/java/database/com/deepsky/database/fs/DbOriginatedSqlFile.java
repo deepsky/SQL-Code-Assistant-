@@ -25,6 +25,7 @@
 
 package com.deepsky.database.fs;
 
+import com.deepsky.database.ora.DbObjectScriptLocator;
 import com.deepsky.lang.common.PlSqlSupportLoader;
 import com.deepsky.lang.plsql.struct.SqlScriptLocator;
 import com.intellij.openapi.fileTypes.FileType;
@@ -43,7 +44,6 @@ public class DbOriginatedSqlFile  extends LightVirtualFile {
 
     public DbOriginatedSqlFile(@NotNull String content, SqlScriptLocator locator) {
         super(locator.getScriptName() + ".sql", PlSqlSupportLoader.PLSQL, content);
-//        super(locator.getScriptName(), PlSqlSupportLoader.PLSQL, content);
         this.content = content;
         this.locator = locator;
         this.setWritable(false);
@@ -64,6 +64,13 @@ public class DbOriginatedSqlFile  extends LightVirtualFile {
       return dbDumpedSourcesFS;
     }
 
+    public String getDatabaseUrl(){
+        if(locator instanceof DbObjectScriptLocator){
+            return ((DbObjectScriptLocator)locator).url;
+        } else {
+            return "";
+        }
+    }
 
     public boolean isValid() {
         return true;

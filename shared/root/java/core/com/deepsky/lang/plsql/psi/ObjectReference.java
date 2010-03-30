@@ -57,7 +57,4 @@ public interface ObjectReference extends Expression, CompositeName  {
 //    VariantsProcessor777 getVariantProcessor(PlSqlElement elem) throws SyntaxTreeCorruptedException;
 
 //    PsiElement[] getComposingNames();
-
-    // todo -- workaround, later ObjectReference should be splitted for GenericRef and PlSqlRef   
-    boolean isPlSqlVarRef();
 }

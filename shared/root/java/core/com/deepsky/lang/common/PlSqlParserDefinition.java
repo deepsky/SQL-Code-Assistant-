@@ -107,19 +107,17 @@ public class PlSqlParserDefinition implements ParserDefinition {
 
     @NotNull
     public PsiElement createElement(ASTNode node) {
-        PsiElement element = createElement2(node);
-        if(element == null){
-            return new ASTWrapperPsiElement(node);
-        } else {
-            return element;
-        }
+        return createElement2(node);
     }
 
     public static PsiElement createElement2(ASTNode node) {
         final IElementType type = node.getElementType();
-        int ttype = PlSqlElementType.mapTo_TokenType(type);
-
-        switch(ttype){
+        int etype = -101;
+        if(type instanceof PlSqlElementType){
+            etype = ((PlSqlElementType)type).getElementTyoe();     
+        }
+        
+        switch(etype){
             case PLSqlTokenTypes.SELECT_EXPRESSION:
                 return new SelectStatementImpl(node);
             case PLSqlTokenTypes.SELECT_EXPRESSION_UNION:
@@ -205,9 +203,9 @@ public class PlSqlParserDefinition implements ParserDefinition {
             case PLSqlTokenTypes.CALLABLE_NAME_REF:
                 return new CallableCompositeNameBase(node);
             case PLSqlTokenTypes.VAR_REF:
-                return new ObjectReferenceImpl(node, false);
+                return new ObjectReferenceImpl(node);
             case PLSqlTokenTypes.PLSQL_VAR_REF:
-                return new ObjectReferenceImpl(node, true);
+                return new ObjectReferenceImpl(node);
             case PLSqlTokenTypes.PARAMETER_REF:
                 return new ParameterReferenceImpl(node);
             case PLSqlTokenTypes.TRIGGER_COLUMN_REF:
@@ -314,19 +312,15 @@ public class PlSqlParserDefinition implements ParserDefinition {
 
             case PLSqlTokenTypes.RECORD_TYPE_DECL:
                 RecordTypeDecl r = new RecordTypeDeclImpl(node);
-//                updateCache(RECORD_TYPE_DECL, r.getDeclName(), r.getCtxPath());
                 return r;
             case PLSqlTokenTypes.TABLE_COLLECTION:
                 TableCollectionDecl tc = new TableCollectionDeclImpl(node);
-//                updateCache(TABLE_COLLECTION, tc.getDeclName(), tc.getCtxPath());
                 return tc;
             case PLSqlTokenTypes.VARRAY_COLLECTION:
                 VarrayCollectionDecl varray = new VarrayCollectionDeclImpl(node);
-//                updateCache(VARRAY_COLLECTION, varray.getDeclName(), varray.getCtxPath());
                 return varray;
             case PLSqlTokenTypes.OBJECT_TYPE_DEF:
                 ObjectTypeDecl ot = new ObjectTypeDeclImpl(node);
-//                updateCache(OBJECT_TYPE_DEF, ot.getDeclName(), ot.getCtxPath());
                 return ot;
             case PLSqlTokenTypes.REF_CURSOR:
                 return new RefCursorDeclImpl(node);
@@ -443,12 +437,8 @@ public class PlSqlParserDefinition implements ParserDefinition {
             case PLSqlTokenTypes.ROLLBACK_STATEMENT:
                 return new RollbackStatementImpl(node);
         }
-        return null;
+        return new ASTWrapperPsiElement(node);
     }
 
-    private static void updateCache(int type, String name, String path){
-        // todo --
-        int oo =0;
-    }
 
 }

@@ -30,8 +30,6 @@ import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.resolver.ResolveUtils;
-import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -148,20 +146,5 @@ public class SelectStatementImpl extends PlSqlElementBase implements SelectState
         }
     }
 
-
-    // [Contex Management Stuff] Start -------------------------------
-    CtxPath cachedCtxPath = null;
-    public CtxPath getCtxPath() {
-        if(cachedCtxPath != null){
-            return cachedCtxPath;
-        } else {
-            CtxPath parent = super.getCtxPath();
-            cachedCtxPath = new CtxPathImpl(
-                    parent.getPath()
-                            + ResolveUtils.encodeCtx(ContextPath.SELECT_EXPR,parent.getSeqNEXT() + "$"));
-        }
-        return cachedCtxPath;
-    }
-    // [Contex Management Stuff] End ---------------------------------
 
 }

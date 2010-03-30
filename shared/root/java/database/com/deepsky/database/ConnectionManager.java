@@ -27,8 +27,7 @@ package com.deepsky.database;
 
 import com.deepsky.database.exec.SQLExecutor;
 import com.deepsky.database.ora.DbUrl;
-import com.deepsky.lang.plsql.tree.Node;
-import com.intellij.lang.ASTNode;
+import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -68,5 +67,5 @@ public interface ConnectionManager {
      */
     void refreshSession();
 
-    void addProcessedStatement(ASTNode node);
+    void addProcessedStatement(String text, IElementType etype);
 }

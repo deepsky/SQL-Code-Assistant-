@@ -26,17 +26,20 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.types.TypeSpec;
-import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.struct.parser.ContextPath;
+import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 public class VarrayCollectionDeclImpl extends PlSqlElementBase implements VarrayCollectionDecl {
 
@@ -45,8 +48,8 @@ public class VarrayCollectionDeclImpl extends PlSqlElementBase implements Varray
     }
 
     public Type getBaseType() {
-        ASTNode[] types = getNode().getChildren(PlSqlElementTypes.TYPES);
-        return ((TypeSpec)types[0].getPsi()).getType();
+        // todo ---
+        return null;
     }
 
     public Expression getCollectionSize() {
@@ -86,18 +89,44 @@ public class VarrayCollectionDeclImpl extends PlSqlElementBase implements Varray
         }
     }
 
-    // [Contex Management Stuff] Start -------------------------------
-    CtxPath cachedCtxPath = null;
-    public CtxPath getCtxPath() {
-        if(cachedCtxPath != null){
-            return cachedCtxPath;
-        } else {
-            CtxPath parent = super.getCtxPath();
-            cachedCtxPath = new CtxPathImpl(
-                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.VARRAY_TYPE,"..$" + this.getDeclName().toLowerCase()));
-        }
-        return cachedCtxPath;
+    // presentation stuff
+    public Icon getIcon(int flags){
+        return Icons.VARRAY_TYPE_DECL;
     }
-    // [Contex Management Stuff] End ---------------------------------
+
+    @Nullable
+    public ItemPresentation getPresentation() {
+        return new TablePresentation();
+    }
+
+    public FileStatus getFileStatus() {
+        return null;
+    }
+
+    public String getName() {
+        return getDeclName();
+    }
+
+
+    class TablePresentation implements ItemPresentation {
+        public String getPresentableText(){
+            return getDeclName().toLowerCase();
+        }
+
+        @Nullable
+        public String getLocationString(){
+            return "(Varray)";
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open){
+            return Icons.VARRAY_TYPE_DECL;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey(){
+            return null;
+        }
+    }
 
 }

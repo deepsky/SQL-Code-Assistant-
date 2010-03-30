@@ -29,12 +29,11 @@ import com.deepsky.database.DBException;
 import com.deepsky.database.exec.RowSetModel;
 import com.deepsky.database.exec.SQLExecutor;
 import com.deepsky.database.exec.SQLUpdateStatistics;
-import com.deepsky.lang.plsql.tree.Node;
 import com.deepsky.view.utils.ProgressIndicatorController;
 import com.deepsky.view.utils.ProgressIndicatorHelper;
-import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.tree.IElementType;
 
 public class SqlRunnerHelper implements Runnable {
 
@@ -42,8 +41,8 @@ public class SqlRunnerHelper implements Runnable {
     QueryResultListener queryListener;
     DMLResultListener dmlListener;
 
-    String select;
-    ASTNode statement;
+    String statement;
+    IElementType etype;
     Project project;
     SqlQueryRunnerIndicatorImpl ind;
     String errorMessage = "";
@@ -54,15 +53,16 @@ public class SqlRunnerHelper implements Runnable {
     public SqlRunnerHelper(Project project, SQLExecutor executor, String select, QueryResultListener queryListener) {
         this.project = project;
         this.executor = executor;
-        this.select = select;
+        this.statement = select;
         this.queryListener = queryListener;
     }
 
 
-    public SqlRunnerHelper(Project project, SQLExecutor executor, ASTNode statement, DMLResultListener dmlListener) {
+    public SqlRunnerHelper(Project project, SQLExecutor executor, String statement, IElementType etype,  DMLResultListener dmlListener) {
         this.project = project;
         this.executor = executor;
         this.statement = statement;
+        this.etype = etype;
         this.dmlListener = dmlListener;
     }
 
@@ -84,7 +84,7 @@ public class SqlRunnerHelper implements Runnable {
             startMs = System.currentTimeMillis();
             if (queryListener != null) {
                 // run Query
-                final RowSetModel rowSet = executor.executeQuery(select);
+                final RowSetModel rowSet = executor.executeQuery(statement);
                 status = ProgressIndicatorController.DONE_SUCCESSFUL;
 
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -94,7 +94,7 @@ public class SqlRunnerHelper implements Runnable {
                 });
             } else {
                 // run DML or DDL
-                final SQLUpdateStatistics stats = executor.execute(statement);
+                final SQLUpdateStatistics stats = executor.execute(statement, etype);
                 status = ProgressIndicatorController.DONE_SUCCESSFUL;
 
                 ApplicationManager.getApplication().invokeLater(new Runnable() {

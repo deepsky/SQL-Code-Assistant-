@@ -32,18 +32,21 @@ import com.deepsky.lang.plsql.psi.PackageSpec;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.tree.TokenSet;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class RefCursorDeclImpl extends PlSqlElementBase implements RefCursorDecl {
 
     public RefCursorDeclImpl(ASTNode astNode) {
         super(astNode);
     }
-
-//    public Type getDataType() {
-//        return null;  //To change body of implemented methods use File | Settings | File Templates.
-//    }
 
     public String getDeclName() {
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.TYPE_NAME);
@@ -63,4 +66,45 @@ public class RefCursorDeclImpl extends PlSqlElementBase implements RefCursorDecl
 
         return null;
     }
+
+    // presentation stuff
+    public Icon getIcon(int flags){
+        return Icons.CURSOR_DECL;
+    }
+
+    @Nullable
+    public ItemPresentation getPresentation() {
+        return new TablePresentation();
+    }
+
+    public FileStatus getFileStatus() {
+        return null;
+    }
+
+    public String getName() {
+        return getDeclName();
+    }
+
+
+    class TablePresentation implements ItemPresentation {
+        public String getPresentableText(){
+            return getDeclName().toLowerCase();
+        }
+
+        @Nullable
+        public String getLocationString(){
+            return "(Ref Cursor)";
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open){
+            return Icons.CURSOR_DECL;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey(){
+            return null;
+        }
+    }
+    
 }

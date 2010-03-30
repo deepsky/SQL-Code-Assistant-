@@ -114,10 +114,10 @@ public class PlSqlAnnotatingVisitor extends PlSqlElementVisitor implements Annot
         CollectionMethodCallImpl.resolveCache.clear();
         CallableCompositeNameBase.resolveCache.clear();
 
-
-        for (Map.Entry<String, ProfileData> e : metrics.entrySet()) {
-            log.info(" -- profiler: " + e.getKey() + " counter: " + e.getValue().counter + " timespent: " + e.getValue().timespent);
-        }
+//
+//        for (Map.Entry<String, ProfileData> e : metrics.entrySet()) {
+//            log.info(" -- profiler: " + e.getKey() + " counter: " + e.getValue().counter + " timespent: " + e.getValue().timespent);
+//        }
 
         // validate RangeHighlighter
         node.getModel().validate();

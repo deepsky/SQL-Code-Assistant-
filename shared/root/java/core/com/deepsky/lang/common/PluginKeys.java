@@ -29,6 +29,7 @@ import com.deepsky.database.CacheManager;
 import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.ObjectCache;
 import com.deepsky.lang.conf.PluginSettingsBean;
+import com.deepsky.navigation.DbObjectContributor;
 import com.deepsky.view.query_pane.QueryResultWindow;
 
 
@@ -36,6 +37,7 @@ public final class PluginKeys {
 
     public static final PluginKey<CacheManager> CACHE_MANAGER = PluginKey.create(SharedConstants.CACHE_MANAGER);
     public static final PluginKey<ConnectionManager> CONNECTION_MANAGER = PluginKey.create(SharedConstants.CONNECTION_MANAGER);
+    public static final PluginKey<DbObjectContributor> DB_OBJECT_CONTR = PluginKey.create(SharedConstants.DB_OBJECT_CONTR);
     public static final PluginKey<ObjectCache> OBJECT_CACHE = PluginKey.create(SharedConstants.OBJECT_CACHE);
 
     public static final PluginKey<QueryResultWindow> QR_WINDOW = PluginKey.create(SharedConstants.QR_WINDOW);

@@ -52,10 +52,8 @@ import java.util.Set;
 
 public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements ObjectReference {
 
-    boolean isPlSqlVarRef;
-    public ObjectReferenceImpl(ASTNode astNode, boolean isPlSqlVarRef) {
+    public ObjectReferenceImpl(ASTNode astNode) {
         super(astNode);
-        this.isPlSqlVarRef = isPlSqlVarRef;
     }
 
     @NotNull
@@ -179,9 +177,5 @@ public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements Objec
     public ResolveContext777 getResolveContext() throws NameNotResolvedException {
         ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.NAME_FRAGMENT));
         return ResolveHelper4.resolveContext2((NameFragmentRef) nodes[0].getPsi(), nodes.length);
-    }
-
-    public boolean isPlSqlVarRef() {
-        return isPlSqlVarRef;
     }
 }

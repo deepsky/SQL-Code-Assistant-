@@ -27,19 +27,23 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.*;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.database.ora.desc.ProcedureDescriptorImpl;
-import com.deepsky.lang.plsql.struct.parser.ContextPath;
 import com.deepsky.lang.plsql.struct.types.UserDefinedType;
+import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec {
     public ProcedureSpecImpl(ASTNode astNode) {
@@ -171,21 +175,5 @@ public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec
             super.accept(visitor);
         }
     }
-
-    // [Contex Management Stuff] Start -------------------------------
-    CtxPath cachedCtxPath = null;
-    public CtxPath getCtxPath() {
-        if(cachedCtxPath != null){
-            return cachedCtxPath;
-        } else {
-            CtxPath parent = super.getCtxPath();
-            cachedCtxPath = new CtxPathImpl(
-                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.PROCEDURE_SPEC, parent.getSeqNEXT() + "$"
-                    + this.getEName().toLowerCase()));
-        }
-        return cachedCtxPath;
-    }
-    // [Contex Management Stuff] End ---------------------------------
-
 
 }

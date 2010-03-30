@@ -25,7 +25,5 @@
 
 package com.deepsky.lang.plsql.psi.ddl;
 
-public interface CreateTempTable extends SqlDDLStatement {
-
-    String getTableName();
+public interface CreateTempTable extends TableDefinition {
 }

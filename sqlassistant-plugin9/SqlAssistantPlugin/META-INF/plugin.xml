@@ -11,15 +11,15 @@
     Feature list:
     <ul>
         <li>Syntax and error highlighting</li>
-        <li>Context aware code completion</li>
-        <li>Structure View panel lets to examine the logical structure of SQL scripts or PL/SQL code</li>
-        <li>Navigation to a declaration lets to browse through the functions, procedures, table columns, variables and user defined types declared in SQL scripts or PL/SQL code</li>
-        <li>Find Usages of tables, views and columns in the Project Scope, Database Schema scope, etc. (since version 0.9.0)</li>
-        <li>Code folding</li>
-        <li>Brace matching</li>
-        <li>Code commenting</li>
+        <li>Highlighting of keywords, types, system functions, table names, pl/sql varaible, etc</li>
         <li>Static code analysis (arithmetic expression evaluation, resolving references)</li>
-        <li>Database Objects Browser</li>
+        <li>Context aware code completion</li>
+        <li>Viewing the Structure of SQL or PL/SQL code</li>
+        <li>Code Navigation</li>
+        <li>Find Usages tables, views and columns in the Project and Database Schema scope, etc. (since version 0.9.0)</li>
+        <li>Code Folding and bracket matching support</li>
+        <li>Code commenting</li>
+        <li>Database Schema Browsing</li>
         <li>SQL statement execution with sortable query result</li>
         <li>Connection management</li>
     </ul>
@@ -28,18 +28,36 @@
     <b><font color=Blue>IMPORTANT: </font></b>In order to use Find Usages, Code Navigation, Reference Resolving and other features connect to the database first.<br>
     To connect to the database go to DatabaseBrowser ToolWindow choose "New Connection" to create a new conection or Log in using an existing one.<br><br>
 
-    <b><font color=red>NOTE: </font></b>At the monent, version 0.9.0 is available for Intellij IDEA only.<br><br>
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>0.9.1.9</version>
+    <version>0.9.3.9</version>
     <vendor email="plsql.assistant@gmail.com" logo="/general/ijLogo.png">Serhiy Kulyk</vendor>
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>0.9.3.9</b>
+                <ul>
+                    - Parser became faster<br>
+                    - [NEW] Added action: 'Go To Database Object' (Similar 'Go To Class') activated with Ctrl-P shortcut<br>
+                    - [NEW] Help Topic added<br>
+                </ul>
+            </li>
+            <li><b>0.9.2.9</b>
+                <ul>
+                    - More stable release<br>
+                    - [FIX] Some fixes in the SQL parser and the resolver<br>
+                    - [NEW] Added highlighting of Oracle DML functions and PLSQL variables<br>
+                </ul>
+            </li>
             <li><b>0.9.1.x</b>
                 <ul>
-                    - [FIX] Some fixes in the parser related to SQL syntax<br>
+                    - [FIX] Many fixes in the SQL parser and the resolver<br><br>
+                    - [NEW] Plugin supports enabling/disabling AutoCommit mode. Control is available in the Result Pane or in the Plugin Settings menu<br>
+                    - [NEW] Go to Declaration/Go to Implementation feature is supported.<br>
+                    - [NEW] Structure View Panel supports running of SQL statements from the context menu.<br>
+                    - [NEW] Added hightlighting of SQLPLUS commands in the editor.<br>
+                    - [NEW] Added button Refresh in the Database Browsers.<br>
                 </ul>
             </li>
             <li><b>0.9.0.x</b>
@@ -106,6 +124,7 @@
         <usageGroupingRuleProvider implementation="com.deepsky.findUsages.SqlUsageGroupingRuleProviderImpl"/>
         <scopeDescriptorProvider implementation="com.deepsky.findUsages.scopes.DbScopeDescriptorProvider"/>
         <definitionsSearch implementation="com.deepsky.navigation.ImplementationsSearcher"/>
+        <targetElementEvaluator language="PlSql" implementationClass="com.deepsky.navigation.PlSqlTargetElementEvaluator"/>
 
         <projectService serviceInterface="com.deepsky.findUsages.persistence.SqlSearchParameters"
                         serviceImplementation="com.deepsky.findUsages.persistence.SqlSearchParameters"/>
@@ -121,9 +140,6 @@
         <component>
             <implementation-class>com.deepsky.lang.common.PlSqlSupportLoader</implementation-class>
         </component>
-        <!--<component>-->
-          <!--<implementation-class>com.deepsky.findUsages.UsageConvertorImpl</implementation-class>-->
-        <!--</component>-->
     </application-components>
 
     <!-- Component's actions -->
@@ -135,16 +151,35 @@
           <add-to-group group-id="EditorPopupMenu1" anchor="before" relative-to-action="AnalyzeMenu"/>
         </action>
         
+        <action id="ActionsSample.ActionsPlugin.ExecSQL2"
+                class="com.deepsky.actions.ExecSQLStmtStructurePopupAction"
+                text="Execute SQL Statement" description="Execute SQL Statement ..."
+                icon="/icons/exec_sql.png">
+          <add-to-group group-id="StructureViewPopupMenu" anchor="first"/>
+        </action>
+
       <!-- We use "PluginName.ComponentName.ActionName" notation for "id" to avoid conflicts -->
       <action id="ActionsSample.ActionsPlugin.ExecSQL" class="com.deepsky.actions.ExecuteSQLStatementAction"
-              text="Execute SQL Statement" description="Execute SQL Statement">
+              text="Execute SQL Statement" description="Execute SQL Statement"
+              icon="/icons/exec_sql.png">
+          <add-to-group group-id="MainToolBar" anchor="before" relative-to-action="HelpTopics"/>
+          <keyboard-shortcut first-keystroke="control shift M" keymap="$default"/>
+          <!--<keyboard-shortcut first-keystroke="ctrl B" keymap="$default"/>-->
       </action>
+        <action id="com.deepsky.navigation.GotoDbObjectAction" class="com.deepsky.navigation.GotoDbObjectAction"
+                text="GotoDbObject" description="Open Database Object in the Editor">
+            <add-to-group group-id="GoToMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl P"/>
+        </action>
 
-      <group id="Actions.ActionsPlugin.SampleGroup" text="Sample" description="Sample group">
-        <reference ref="ActionsSample.ActionsPlugin.ExecSQL"/>
+        <group id="Actions.ActionsPlugin.SampleGroup" text="Sample" description="Sample group">
+        <!--<reference ref="ActionsSample.ActionsPlugin.ExecSQL"/>-->
         <separator/>
         <add-to-group group-id="MainToolBar" anchor="before" relative-to-action="HelpTopics"/>
       </group>
     </actions>
+
+    <helpset file="help.jar" path="/helpset.hs" />
+
 
 </idea-plugin>

@@ -41,8 +41,8 @@ public class PsiVariableContext implements ResolveContext777 {
     }
 
     @NotNull
-    public VariantsProcessor777 create(int narrow_type /* constants from ObjectCache */) throws NameNotResolvedException {
-        throw new NameNotResolvedException("");
+    public VariantsProcessor777 create(int narrow_type /* constants from ObjectCache */) {
+        return null;
     }
 
     public PsiElement getDeclaration() {

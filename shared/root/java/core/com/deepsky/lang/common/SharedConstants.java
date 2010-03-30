@@ -42,6 +42,7 @@ public interface SharedConstants {
     String CACHE_MANAGER = "cache_manager";
     String CONNECTION_MANAGER = "connection_manager";
     String OBJECT_CACHE = "object_cache";
+    String DB_OBJECT_CONTR = "db_object_contributor";
     String QR_WINDOW = "QUERY_RESULT_WINDOW";
     String SEARCH_PARAMS = "SEARCH_PARAMS";
 }

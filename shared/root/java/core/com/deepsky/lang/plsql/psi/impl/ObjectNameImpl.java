@@ -27,7 +27,12 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.navigation.PlSqlPackageUtil;
+import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
@@ -35,6 +40,8 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class ObjectNameImpl extends PlSqlElementBase implements ObjectName {
 
@@ -73,20 +80,70 @@ public class ObjectNameImpl extends PlSqlElementBase implements ObjectName {
         return null;
     }
 
-//    @NotNull
-//    public PsiElement getNavigationElement(){
-//        PackageSpec spec = (PackageSpec) getUsageContext(TokenSet.create(PlSqlElementTypes.PACKAGE_SPEC));
-//        if(spec != null){
-//            PackageBody body = spec.getPackageBody();
-//            if(body != null){
-//                ExecutableSpec espec = (ExecutableSpec) getUsageContext(
-//                        TokenSet.create(PlSqlElementTypes.PROCEDURE_SPEC, PlSqlElementTypes.FUNCTION_SPEC)
-//                );
-//
-//                Executable exec = body.findExecutableByDecl(espec);
-//                return exec != null? exec: this;
-//            }
-//        }
-//        return this;
-//    }
+
+    // presentation stuff
+    public Icon getIcon(int flags){
+        PsiElement parent = getParent();
+        if(parent instanceof FunctionSpec){
+            return Icons.FUNCTION_SPEC;
+        } else if(parent instanceof Function){
+            return Icons.FUNCTION_BODY;
+        } else if(parent instanceof ProcedureSpec){
+            return Icons.PROCEDURE_SPEC;
+        } else if(parent instanceof Procedure){
+            return Icons.PROCEDURE_BODY;
+        }
+        return null;
+    }
+
+    @Nullable
+    public ItemPresentation getPresentation() {
+        return new TablePresentation();
+    }
+
+    public FileStatus getFileStatus() {
+        return null;
+    }
+
+    class TablePresentation implements ItemPresentation {
+        public String getPresentableText(){
+            return getText();
+        }
+
+        @Nullable
+        public String getLocationString(){
+            PsiElement parent = getParent();
+            String pkgName = PlSqlPackageUtil.findPackageNameForElement( parent);
+            if(parent instanceof FunctionSpec){
+                return pkgName != null? ("in " + pkgName + " (Function Spec)"): "(Function Spec)";
+            } else if(parent instanceof Function){
+                return pkgName != null? ("in " + pkgName + " (Function Body)"): "(Function Body)";
+            } else if(parent instanceof ProcedureSpec){
+                return pkgName != null? ("in " + pkgName + " (Procedure Spec)"): "(Procedure Spec)";
+            } else if(parent instanceof Procedure){
+                return pkgName != null? ("in " + pkgName + " (Procedure Body)"): "(Procedure Body)";
+            }
+            return null;
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open){
+            PsiElement parent = getParent();
+            if(parent instanceof FunctionSpec){
+                return Icons.FUNCTION_SPEC;
+            } else if(parent instanceof Function){
+                return Icons.FUNCTION_BODY;
+            } else if(parent instanceof ProcedureSpec){
+                return Icons.PROCEDURE_SPEC;
+            } else if(parent instanceof Procedure){
+                return Icons.PROCEDURE_BODY;
+            }
+            return null;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey(){
+            return null;
+        }
+    }
 }

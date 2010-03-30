@@ -30,11 +30,13 @@ import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
-import com.deepsky.lang.plsql.resolver.ResolveUtils;
 import com.deepsky.lang.plsql.struct.FileBasedContextUrl;
 import com.deepsky.lang.plsql.struct.PackageDescriptor;
-import com.deepsky.lang.plsql.struct.parser.ContextPath;
+import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.PsiElement;
@@ -43,6 +45,7 @@ import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,18 +176,43 @@ public class PackageSpecImpl extends PlSqlElementBase implements PackageSpec {
     }
 
 
-    // [Contex Management Stuff] Start -------------------------------
-    CtxPath cachedCtxPath = null;
-    public CtxPath getCtxPath() {
-        if(cachedCtxPath != null){
-            return cachedCtxPath;
-        } else {
-            CtxPath parent = super.getCtxPath();
-            cachedCtxPath = new CtxPathImpl(
-                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.PACKAGE_SPEC,"..$" + this.getPackageName().toLowerCase()));
-        }
-        return cachedCtxPath;
+    public Icon getIcon(int flags){
+        return Icons.PACKAGE_SPEC;
     }
-    // [Contex Management Stuff] End ---------------------------------
+
+    @Nullable
+    public ItemPresentation getPresentation() {
+        return new TablePresentation();
+    }
+
+    public FileStatus getFileStatus() {
+        return null;
+    }
+
+    public String getName() {
+        return getPackageName();
+    }
+
+
+    class TablePresentation implements ItemPresentation {
+        public String getPresentableText(){
+            return getPackageName();
+        }
+
+        @Nullable
+        public String getLocationString(){
+            return "(package specification)";
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open){
+            return Icons.PACKAGE_SPEC;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey(){
+            return null;
+        }
+    }
     
 }

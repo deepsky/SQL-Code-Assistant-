@@ -93,9 +93,6 @@ public class PlSqlSupportLoader implements ApplicationComponent {
         //FileTypeManager fman = FileTypeManager.getInstance();
         FileTypeManager.getInstance().registerFileType(PLSQL, "sql", "pks", "pkb");
 
-
-// todo -- how to access outside?
-//      PlSqlSupportLoader c = (PlSqlSupportLoader) ApplicationManager.getApplication().getComponent(PlSqlSupportLoader.PLSQL_APPLICATION);
     }
 
     public void disposeComponent() {
@@ -186,8 +183,6 @@ public class PlSqlSupportLoader implements ApplicationComponent {
     private void bootstrapCaches() {
         // user schema
         log.info("[bootstrap cache] start");
-//        __assertShutdown__();
-//        __reportStartupProgress__(INIT_USER_CACHE, "Initializing USER object cache ...");
 
         try {
             userObjs = startupUserCache(storeDir, "USER");
@@ -200,9 +195,6 @@ public class PlSqlSupportLoader implements ApplicationComponent {
         }
 
         // sys schema
-//        __assertShutdown__();
-//        __reportStartupProgress__(INIT_SYS_CACHE, "Initializing SYS object cache ...");
-
         try {
             sysObjs = startupSysCache(storeDir, "SYS");
         } catch (Throwable e) {

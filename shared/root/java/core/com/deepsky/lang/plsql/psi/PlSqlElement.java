@@ -33,10 +33,4 @@ public interface PlSqlElement extends PsiElement {
 
     void process(Visitor proc);
 
-    CtxPath getCtxPath();
-
-    public interface CtxPath {
-        String getPath();
-        String getSeqNEXT();
-    }
 }

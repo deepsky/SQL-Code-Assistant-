@@ -29,7 +29,9 @@ import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.plsql.psi.ctrl.CommitStatement;
 import com.deepsky.lang.plsql.psi.ctrl.RollbackStatement;
 import com.deepsky.lang.plsql.psi.ddl.*;
-import com.deepsky.lang.plsql.psi.impl.*;
+import com.deepsky.lang.plsql.psi.impl.DeclarationListImpl;
+import com.deepsky.lang.plsql.psi.impl.ParameterReferenceImpl;
+import com.deepsky.lang.plsql.psi.impl.SqlPlusPromptRem;
 import com.deepsky.lang.plsql.psi.impl.ctrl.CommitStatementImpl;
 import com.deepsky.lang.plsql.psi.impl.ctrl.RollbackStatementImpl;
 import com.deepsky.lang.plsql.psi.ref.DDLTable;
@@ -134,7 +136,6 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
 
 
     public void visitArithmeticExpression(ArithmeticExpression node) {
-        visitElement(node);
     }
 
     public void visitCallArgument(CallArgument node) {
@@ -168,9 +169,6 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitCallArgumentList(CallArgumentList node) {
-        for(CallArgument arg: node.getArguments()){
-            arg.accept(this);
-        }
     }
 
     public void visitTable(Table table) {
@@ -193,10 +191,7 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitRecordTypeDecl(RecordTypeDecl node) {
-        for(RecordTypeItem ri: node.getItems()){
-            ri.accept(this);
-        }
-//        visitElement(node);
+        visitElement(node);
     }
 
     public void visitTableCollectionDecl(TableCollectionDecl node) {
@@ -230,9 +225,7 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
             constr.accept(this);
         }
 
-        for(ColumnDefinition cdef: tableDefinition.getColumnDefs()){
-            cdef.accept(this);            
-        }
+        // todo -- columns?
     }
 
     public void visitCreateView(CreateView view) {
@@ -253,11 +246,9 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitAlterTable(AlterTable table) {
-        visitElement(table);
     }
 
     public void visitCreateIndex(CreateIndex index) {
-        visitElement(index);
     }
 
     public void visitCreateTrigger(CreateTrigger trigger) {
@@ -288,6 +279,7 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
         for(ColumnNameDDL c: constraint.getReferencedColumns2()){
             c.accept(this);
         }
+        ///visitElement(constraint);
     }
 
     public void visitColumnNameDDL(ColumnNameDDL columnNameDDL) {
@@ -314,11 +306,9 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitMergeStatement(MergeStatement stmt) {
-        visitElement(stmt);
     }
 
     public void visitTableWithLink(TableWithLink tableNameWithLink) {
-        visitElement(tableNameWithLink);
     }
 
     public void visitSqlPlusCommand(SqlPlusCommand command) {
@@ -331,26 +321,5 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitDeclarationList(DeclarationList declarationList) {
-        for(Declaration decl: declarationList.getDeclList()){
-            decl.accept(this);
-        }
-    }
-
-    public void visitLoopIndex(LoopIndex loopIndex) {
-    }
-
-    public void visitRecordTypeItem(RecordTypeItem recordTypeItem) {
-        visitElement(recordTypeItem);
-    }
-
-    public void visitArgument(Argument argument) {
-        argument.getTypeSpec().accept(this);
-        Expression expr = argument.getDefaultExpr();
-        if(expr != null){
-            expr.accept(this);
-        }
-    }
-
-    public void visitColumnDefinition(ColumnDefinition definition) {
     }
 }

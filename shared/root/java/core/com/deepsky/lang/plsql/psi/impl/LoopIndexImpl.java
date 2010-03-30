@@ -26,11 +26,9 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.plsql.psi.LoopIndex;
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class LoopIndexImpl extends PlSqlElementBase implements LoopIndex {
@@ -42,13 +40,4 @@ public class LoopIndexImpl extends PlSqlElementBase implements LoopIndex {
     public Type getExpressionType() {
         return TypeFactory.createTypeById(Type.INTEGER);
     }
-
-    public void accept(@NotNull PsiElementVisitor visitor) {
-        if (visitor instanceof PlSqlElementVisitor) {
-            ((PlSqlElementVisitor) visitor).visitLoopIndex(this);
-        } else {
-            super.accept(visitor);
-        }
-    }
-
 }

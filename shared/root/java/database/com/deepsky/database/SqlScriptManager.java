@@ -69,32 +69,6 @@ public class SqlScriptManager {
     }
 
 
-    PlSqlFile findDbObjectDefinition(Project project, DbObject dbo) {
-
-        SqlScriptLocator locator = dbo.getLocator();
-        if (locator == null) {
-            log.warn("Source locator not found for: " + dbo.getClass().getSimpleName());
-            return null;
-        }
-
-        PlSqlFile file = null;
-        String url = locator.getPresentableUrl();
-        final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
-        for (VirtualFile v : fileEditorManager.getOpenFiles()) {
-            if (v.getPath().equals(url)) {
-                file = (PlSqlFile) PsiManager.getInstance(project).findFile(v);
-                break;
-            }
-        }
-
-        if (file == null) {
-            VirtualFile vf = getScriptForLocator(project, locator); //locator.getScript();
-            file = (PlSqlFile) PsiManager.getInstance(project).findFile(vf);
-        }
-        return file;
-    }
-
-
     /**
      * todo - DIRTY WORKAROUND should be fixed ASAP
      *
@@ -201,16 +175,6 @@ todo -- there is need a mapping facilities Obj DEF -> Obj DECL and vise verse
     }
 */
 
-//    private PlSqlFile lookIntoTheCache(Project project, @NotNull SqlScriptLocator locator){
-//        project.getUserData()
-//    }
-
-
-//    class PlSqlFileCache {
-//        WeakHashMap weakMap = new WeakHashMap();
-//
-//        public void addFile()
-//    }
 
     public static PsiElement openFile(Project project, DbObject dbo) {
         SqlScriptLocator locator = dbo.getLocator();
@@ -224,7 +188,7 @@ todo -- there is need a mapping facilities Obj DEF -> Obj DECL and vise verse
     }
 
     public static PsiElement openFile(Project project, String user, int type, String name) {
-        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project); //ObjectCacheFactory.getObjectCache();
+        ObjectCache ocache = PluginKeys.OBJECT_CACHE.getData(project);
         if (ocache.isReady()) {
             DbObject[] objects = ocache.findByNameForType(user, type, name);
             for (DbObject dbo : objects) {
@@ -298,36 +262,9 @@ todo -- there is need a mapping facilities Obj DEF -> Obj DECL and vise verse
         }
 
         return locatePsiElement(file, dbo);
-//        if (file != null) {
-//            if (dbo instanceof ViewDescriptor) {
-//                return (PlSqlElement) file.findDeclaration((ViewDescriptor) dbo);
-//            } else if (dbo instanceof TableDescriptor) {
-//                return (PlSqlElement) file.findDeclaration((TableDescriptor) dbo);
-//            } else if (dbo instanceof ColumnDescriptor) {
-//                return (PlSqlElement) file.findDeclaration((ColumnDescriptor) dbo);
-//            } else if (dbo instanceof VariableDescriptor) {
-//                return (PlSqlElement) file.findDeclaration((VariableDescriptor) dbo);
-//            } else if (dbo instanceof RefCursorTypeDescriptor) {
-//                return (PlSqlElement) file.findDeclaration((RefCursorTypeDescriptor) dbo);
-//            } else if (dbo instanceof UserDefinedTypeDescriptor) {
-//                return (PlSqlElement) file.findDeclaration((UserDefinedTypeDescriptor) dbo);
-//            } else if (dbo instanceof RecordTypeItemDescriptor) {
-//                return (PlSqlElement) file.findDeclaration((RecordTypeItemDescriptor) dbo);
-//            } else if (dbo instanceof PackageBodyDescriptor) {
-//                return (PlSqlElement) file.findDeclaration((PackageBodyDescriptor) dbo);
-//            } else if (dbo instanceof PackageDescriptor) {
-//                return (PlSqlElement) file.findDeclaration((PackageDescriptor) dbo);
-//            } else if (dbo instanceof ExecutableDescriptor) {
-//                return (PlSqlElement) file.findDeclaration((ExecutableDescriptor) dbo);
-//            }
-//        }
-//
-//        // not found
-//        return file;
     }
 
     public static boolean moveToOffset(@NotNull PlSqlFile plSqlFile, int offset) {
-//        Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
         Project project = plSqlFile.getProject();
 
         final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);

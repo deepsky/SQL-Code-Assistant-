@@ -27,26 +27,14 @@ package com.deepsky.database.exec;
 
 
 import com.deepsky.database.DBException;
-import com.intellij.lang.ASTNode;
+import com.intellij.psi.tree.IElementType;
 
 
 public interface SQLExecutor {
 
     // synchronous statement running
     RowSetModel executeQuery(String stmt) throws DBException;
-
-    SQLUpdateStatistics execute(ASTNode node) throws DBException;
-
-    // Object specific management -- todo -- should be revised
-
-    boolean dropTable(String name) throws DBException;
-    boolean dropPackage(String name) throws DBException;
-    boolean compilePackage(String name) throws DBException;
-    boolean dropView(String name) throws DBException;
-    boolean dropTrigger(String name) throws DBException;
-    boolean enableTrigger(String name) throws DBException;
-    boolean disableTrigger(String name) throws DBException;
-    //
+    SQLUpdateStatistics execute(String stmt, IElementType etype) throws DBException;
 
     /**
      * Cancel current query

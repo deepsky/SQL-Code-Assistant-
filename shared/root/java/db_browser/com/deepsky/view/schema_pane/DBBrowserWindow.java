@@ -39,6 +39,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
@@ -51,6 +52,9 @@ public class DBBrowserWindow implements ToggleActionListener {
     private final Logger log = Logger.getInstance("#DBBrowserWindow");
 
     public static final String DB_BROWSER_PANE = "DatabaseBrowser";
+
+    final static int PLUGIN_SEETTINGS = 1;
+    final static int HELP = 2;
 
     Project project;
     DbSchemaPanel _viewerPanel;
@@ -74,7 +78,9 @@ public class DBBrowserWindow implements ToggleActionListener {
         DefaultActionGroup actionGroup = new DefaultActionGroup("DBSchemaActionGroup", false);
         actionGroup.add(new PropertyToggleAction("Sort Alphabetically", "Sort Alphabetically", Helpers.getIcon("/general/autoscrollToSource.png"), this, "autoScrollToSource"));
         actionGroup.add(new PropertyToggleAction("Sort by Type", "Sort by Type", Helpers.getIcon("/general/autoscrollFromSource.png"), this, "autoScrollFromSource"));
-        actionGroup.add(new LocalToggleAction("Settings", "Settings", Icons.PLUGIN_SETTINGS, 1, this));
+        actionGroup.add(new LocalToggleAction("Settings", "Settings", Icons.PLUGIN_SETTINGS, PLUGIN_SEETTINGS));
+        actionGroup.addSeparator();
+        actionGroup.add(new LocalToggleAction("Help", "Help", Icons.HELP, HELP));
 
         ActionToolbar toolBar = actionManager.createActionToolbar("DBSchemaActionToolbar", actionGroup, true);
         _viewerPanel.add(toolBar.getComponent(), "North");
@@ -183,18 +189,6 @@ public class DBBrowserWindow implements ToggleActionListener {
         });
     }
 
-//    private void updateAnnotator(PluginSettingsBean bean) {
-//        PlSqlAnnotatingVisitor ann = ReleaseSpecificCode.getAnnotator(); //PlSqlAnnotatingVisitor) lang.getAnnotator();
-//        if (ann != null) {
-//            ann.setResolveReference(bean.getResolveReference());
-//            ann.setResolveUdt(bean.getResolveUdt());
-//            ann.setValidateFunc(bean.getValidateFunc());
-//            ann.setValidateTables(bean.getValidateTables());
-//            ann.setValidateInsert(bean.getValidateInsert());
-//        }
-//    }
-
-
     public void close() {
         _viewerPanel = null;
 
@@ -205,15 +199,6 @@ public class DBBrowserWindow implements ToggleActionListener {
     public class LocalToggleAction extends ToggleAction {
 
         int command;
-        ToggleActionListener listener;
-
-        public LocalToggleAction(String actionName, String toolTip, Icon icon, int command, ToggleActionListener listener) {
-            super(actionName, toolTip, icon);
-            boolean enabled = true;
-            this.getTemplatePresentation().setEnabled(enabled);
-            this.command = command;
-            this.listener = listener;
-        }
 
         public LocalToggleAction(String actionName, String toolTip, Icon icon, int command) {
             super(actionName, toolTip, icon);
@@ -227,13 +212,15 @@ public class DBBrowserWindow implements ToggleActionListener {
         }
 
         public void setSelected(AnActionEvent event, boolean b) {
-            if (listener != null) {
-                listener.handle(event, command);
+            switch(command){
+                case PLUGIN_SEETTINGS:
+                    handle(event, command);
+                    break;
+                case HELP:
+                    HelpManager.getInstance().invokeHelp("sqlassistant.dbBrowser");
+                    break;
             }
         }
 
-        public void setListener(ToggleActionListener listener) {
-            this.listener = listener;
-        }
     }
 }

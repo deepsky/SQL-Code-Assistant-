@@ -31,6 +31,8 @@ import com.deepsky.database.ora.DbUrl;
 import com.deepsky.database.ora.OraObjectCache3;
 import com.deepsky.lang.conf.PluginSettingsBean;
 import com.deepsky.lang.plsql.ConfigurationException;
+import com.deepsky.navigation.DbObjectContributor;
+import com.deepsky.navigation.DbObjectContributorImpl;
 import com.deepsky.view.query_pane.QueryResultWindow;
 import com.deepsky.view.schema_pane.DBBrowserWindow;
 import com.deepsky.view.utils.ProgressIndicatorHelper;
@@ -102,6 +104,12 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
                     try {
                         DbUrl dbUrl = new DbUrl(session);
                         connectionManager.activateSessionOnStart(dbUrl);
+                        MyProgressIndicator indicator = connectionManager.getStartupConnectionIndicator();
+                        if (indicator != null) {
+                            String url = indicator.targetDatabase();
+                            new ProgressIndicatorHelper(project, "Connecting to " + url).runBackgrounableWithProgressInd(indicator, true);
+                        }
+
                     } catch (ConfigurationException e) {
                         // incorrect URL ?
                         current.setLastConnection(null);
@@ -110,98 +118,26 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
             });
         }
 
+/*
         MyProgressIndicator indicator = connectionManager.getStartupConnectionIndicator();
         if (indicator != null) {
             String url = indicator.targetDatabase();
             new ProgressIndicatorHelper(project, "Connecting to " + url).runBackgrounableWithProgressInd(indicator, true);
         }
+*/
 
         qrWindow = new QueryResultWindow(project, connectionManager);
         PluginKeys.QR_WINDOW.putData(qrWindow, project);
 
         dbBrowser = new DBBrowserWindow(project);
 
+        DbObjectContributor dbObjContrib = new DbObjectContributorImpl();
+        PluginKeys.DB_OBJECT_CONTR.putData(dbObjContrib, project);
+
         // Setup annotator
 //        updateAnnotator(current);
         // --------------
 
-
-//        ProjectRootManager man = ProjectRootManager.getInstance(project);
-//        ProjectFileIndex idx = man.getFileIndex();
-//        idx.iterateContent(new ContentIterator(){
-//            public boolean processFile(VirtualFile fileOrDir) {
-//                log.info("$$$$$ " + fileOrDir.getPath());
-//                return false;
-//            }
-//        });
-
-/*
-        Module[] modules = ModuleManager.getInstance(project).getModules();
-        for (Module module : modules) {
-          VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
-          for (VirtualFile contentRoot : contentRoots) {
-
-            // todo
-          }
-        }
-*/
-
-/*
-        VirtualFileManager man = VirtualFileManager.getInstance();
-        man.addVirtualFileListener(new VirtualFileListener(){
-            public void propertyChanged(VirtualFilePropertyEvent event) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void contentsChanged(VirtualFileEvent event) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void fileCreated(VirtualFileEvent event) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void fileDeleted(VirtualFileEvent event) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void fileMoved(VirtualFileMoveEvent event) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void fileCopied(VirtualFileCopyEvent event) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void beforePropertyChange(VirtualFilePropertyEvent event) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void beforeContentsChange(VirtualFileEvent event) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void beforeFileDeletion(VirtualFileEvent event) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void beforeFileMovement(VirtualFileMoveEvent event) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
-*/
-/*
-        PsiManager psiManager = PsiManager.getInstance(project);
-        final PsiModificationTracker modificationTracker =  psiManager.getModificationTracker();
-
-          final MessageBus bus = project.getMessageBus();
-          bus.connect().subscribe(ProjectTopics.MODIFICATION_TRACKER, new PsiModificationTracker.Listener() {
-              public void modificationCountChanged() {
-                  modificationTracker.
-                  //To change body of implemented methods use File | Settings | File Templates.
-              }
-          });
-*/
     }
 
 

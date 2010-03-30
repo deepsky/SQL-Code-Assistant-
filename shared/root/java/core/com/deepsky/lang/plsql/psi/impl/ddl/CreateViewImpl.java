@@ -31,10 +31,17 @@ import com.deepsky.lang.plsql.psi.ddl.CreateView;
 import com.deepsky.lang.plsql.psi.ddl.VColumnDefinition;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class CreateViewImpl extends PlSqlElementBase implements CreateView {
 
@@ -122,4 +129,44 @@ public class CreateViewImpl extends PlSqlElementBase implements CreateView {
             super.accept(visitor);
         }
     }
+
+    public Icon getIcon(int flags){
+        return Icons.VIEW;
+    }
+
+    @Nullable
+    public ItemPresentation getPresentation() {
+        return new TablePresentation();
+    }
+
+    public FileStatus getFileStatus() {
+        return null;
+    }
+
+    public String getName() {
+        return getViewName();
+    }
+
+
+    class TablePresentation implements ItemPresentation {
+        public String getPresentableText(){
+            return getViewName();
+        }
+
+        @Nullable
+        public String getLocationString(){
+            return "(view)";
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open){
+            return Icons.VIEW;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey(){
+            return TextAttributesKey.find("SQL.VIEW");
+        }
+    }
+
 }

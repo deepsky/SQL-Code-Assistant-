@@ -37,6 +37,7 @@ import java.util.HashMap;
 
 public class TableDefGenerator implements ScriptGenerator {
 
+    final static private String CREATE_TABLE = "CREATE TABLE";
     public String generate(DbObject dbo) {
         return generate(dbo, false);
     }
@@ -45,7 +46,7 @@ public class TableDefGenerator implements ScriptGenerator {
             TableDescriptor tdesc = (TableDescriptor) dbo;
 
             StringBuilder bld = new StringBuilder();
-            bld.append("CREATE TABLE ").append(tdesc.getName().toUpperCase()).append(" (\n");
+            bld.append(CREATE_TABLE).append(" ").append(tdesc.getName().toUpperCase()).append(" (\n");
 
             List<ColumnDescriptor> pkList = new ArrayList<ColumnDescriptor>();
             List<ColumnDescriptor> fkList = new ArrayList<ColumnDescriptor>();
@@ -187,9 +188,23 @@ public class TableDefGenerator implements ScriptGenerator {
     public String generate(TableHandler.DbObjectAttributed attributed) {
         if( attributed.dbo.getType() == TableDescriptor.EXTERNAL){
             return generateExtTable(attributed);
-        } else {
+        } else if( attributed.dbo.getType() == TableDescriptor.TEMPORARY){
+            return generateTempTable(attributed);
+        } else{
             return generate(attributed.dbo, false);
         }
+    }
+
+    private String generateTempTable(TableHandler.DbObjectAttributed attributed) {
+        StringBuilder bld = new StringBuilder();
+
+        String base = generate(attributed.dbo, true);
+        bld.append(base.replace(CREATE_TABLE, "CREATE GLOBAL TEMPORARY TABLE").trim());
+        // todo -- actually, just a stub
+        bld.append(" ON COMMIT PRESERVE ROWS;\n");
+        bld.append("-- Table script is not complete and should be used for referencing only\n");
+        bld.append("-- Tablespace and storage parameters are not supported\n");
+        return bld.toString();
     }
 
     private String generateExtTable(TableHandler.DbObjectAttributed attributed) {

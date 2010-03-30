@@ -26,6 +26,10 @@
         <arg name="EXPRESSION" type="NUMBER"/>
         <arg name="EXPRESSION" type="NUMBER"/>
     </function>
+    <function name="bitor" return-type="NUMBER" desc="bitor(15,1)">
+        <arg name="EXPRESSION" type="NUMBER"/>
+        <arg name="EXPRESSION" type="NUMBER"/>
+    </function>
     <function name="abs" return-type="NUMBER" desc="abs(15)">
         <arg name="EXPRESSION" type="NUMBER"/>
     </function>
@@ -62,6 +66,11 @@
     </function>
 
     <!-- Character Functions Returning Character Values -->
+    <function name="replace" return-type="CHAR" desc="REPLACE(lc_tz_cond,':h_tz_id','v.tz_id')">
+        <arg name="SOURCE" type="CHAR"/>
+        <arg name="PATTERN" type="CHAR"/>
+        <arg name="VALUE" type="CHAR"/>
+    </function>
     <function name="upper" return-type="CHAR">
         <arg name="EXPRESSION" type="CHAR"/>
     </function>
@@ -74,6 +83,10 @@
     <function name="ltrim" return-type="CHAR">
         <arg name="value" type="CHAR"/>
         <arg name="set" type="CHAR"/>
+    </function>
+    <function name="lpad" return-type="CHAR">
+        <arg name="value" type="CHAR"/>
+        <arg name="set" type="NUMBER"/>
     </function>
     <function name="translate" return-type="CHAR">
         <arg name="STRING" type="CHAR"/>
@@ -126,6 +139,9 @@
         <arg name="value" type="DATE" />
         <arg name="format" type="CHAR"/>
     </function>
+    <function name="trunc" return-type="DATE" desc="TRUNC(TO_DATE('27-OCT-92','DD-MON-YY'))">
+        <arg name="value" type="DATE" />
+    </function>
     <function name="add_months" return-type="DATE" desc="ADD_MONTHS(hire_date,1)">
         <arg name="value" type="DATE" />
         <arg name="value_to_add" type="NUMBER"/>
@@ -136,6 +152,14 @@
     <function name="from_tz" return-type="DATE" desc="FROM_TZ(l_load_st_dt, TZ)">
         <arg name="value" type="DATE" />
         <arg name="timezone" type="CHAR"/>
+    </function>
+    <function name="numtodsinterval" return-type="INTERVAL" desc="NUMTODSINTERVAL(EXTRACT (HOUR FROM PDP_CONTEXT_STOP_TIME),'HOUR')">
+        <arg name="value" type="NUMBER" />
+        <arg name="expression" type="CHAR"/>
+    </function>
+    <function name="numtoyminterval" return-type="INTERVAL" desc="NUMTOYMINTERVAL(1,'year')">
+        <arg name="value" type="NUMBER" />
+        <arg name="expression" type="CHAR"/>
     </function>
 
     <!-- Misc -->

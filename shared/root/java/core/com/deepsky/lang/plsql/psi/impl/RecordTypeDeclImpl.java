@@ -28,13 +28,18 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.resolver.ResolveUtils;
-import com.deepsky.lang.plsql.struct.parser.ContextPath;
+import com.deepsky.navigation.PlSqlPackageUtil;
+import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class RecordTypeDeclImpl extends PlSqlElementBase implements RecordTypeDecl {
     
@@ -81,60 +86,54 @@ public class RecordTypeDeclImpl extends PlSqlElementBase implements RecordTypeDe
     }
 
 
-
-    // [Contex Management Stuff] Start -------------------------------
-    CtxPath cachedCtxPath = null;
-    public CtxPath getCtxPath() {
-        if(cachedCtxPath != null){
-            return cachedCtxPath;
-        } else {
-            CtxPath parent = super.getCtxPath();
-            cachedCtxPath = new CtxPathImpl(
-                    parent.getPath() + ResolveUtils.encodeCtx(ContextPath.RECORD_TYPE,"..$" + this.getDeclName().toLowerCase()));
-        }
-        return cachedCtxPath;
+    public Icon getIcon(int flags){
+        return Icons.RECORD_TYPE_DECL;
     }
-    // [Contex Management Stuff] End ---------------------------------
 
-/*
-    public TypeItem[] getTypeItems() {
-        ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.RECORD_ITEM));
+    @Nullable
+    public ItemPresentation getPresentation() {
+        return new TablePresentation();
+    }
 
-        if(nodes == null){
-            return new TypeItem[0];
-        } else {
-            for(ASTNode node : nodes){
-                //     
+    public FileStatus getFileStatus() {
+        return null;
+    }
+
+    public String getName() {
+        return getDeclName();
+    }
+
+
+    class TablePresentation implements ItemPresentation {
+        public String getPresentableText(){
+            return getDeclName();
+        }
+
+        @Nullable
+        public String getLocationString(){
+            PlSqlElement pkg = PlSqlPackageUtil.findPackageForElement(RecordTypeDeclImpl.this);
+            if(pkg instanceof PackageSpec){
+                String packageName = ((PackageSpec)pkg).getPackageName();
+                return "in " + packageName + " (Record Type)";
+            } else if(pkg instanceof PackageBody){
+                String packageName = ((PackageBody)pkg).getPackageName();
+                return "in " + packageName + " (Record Type)";
+            } else {
+                return "(Record Type)";
             }
-            //
-            return new TypeItem[0];
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open){
+            return Icons.RECORD_TYPE_DECL;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey(){
+            return null;
         }
     }
 
-
-    class TypeItemImpl implements TypeItem {
-        String name;
-        Type type;
-        Expression expr;
-
-        public TypeItemImpl(String name, Type type, Expression expr){
-            this.name = name;
-            this.type = type;
-            this.expr = expr;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Type getType() {
-            return type;
-        }
-
-        public Expression getDefault() {
-            return expr;
-        }
-    }
-*/
+    
 }
 

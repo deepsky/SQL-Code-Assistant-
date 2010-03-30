@@ -43,13 +43,15 @@ import java.lang.reflect.Method;
 
 public class OraObjectCache3 implements ObjectCache, CacheManagerListener {
 
-    List<StateListener> lnrs = new ArrayList<StateListener>();
-    CacheManager cacheManager;
+    private List<StateListener> lnrs = new ArrayList<StateListener>();
+    private CacheManager cacheManager;
 
-    Map<String, List<SystemFunctionDescriptor>> sysFuncs;
-    Map<String, Cache> caches = new HashMap<String, Cache>();
+    private Map<String, List<SystemFunctionDescriptor>> sysFuncs;
+    private Map<String, Cache> caches = new HashMap<String, Cache>();
 
-    boolean isReady = false;
+    private boolean isReady = false;
+    private int updateCounter = 0;
+
 
     public OraObjectCache3(CacheManager cacheManager){
 
@@ -88,6 +90,10 @@ public class OraObjectCache3 implements ObjectCache, CacheManagerListener {
 
     public boolean isReady() {
         return isReady;
+    }
+
+    public int getUpdateCounter(){
+        return updateCounter;
     }
 
     // lightweight query methods
@@ -602,8 +608,10 @@ public class OraObjectCache3 implements ObjectCache, CacheManagerListener {
     public void handleUpdate(int state) {
         if (CacheManagerListener.CACHE_UPDATED == state) {
             caches = cacheManager.getCaches();
+            updateCounter++;
             isReady = true;
         } else if (CacheManagerListener.STOPPED == state) {
+            updateCounter++;
             isReady = false;
         }
     }

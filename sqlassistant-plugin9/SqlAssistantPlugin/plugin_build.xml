@@ -1,0 +1,468 @@
+<?xml version="1.0"?>
+<project name="Sql Code Assistant Plugin builder" default="">
+
+    <!-- Global build parameters -->
+    <property file="build.properties"/>
+
+    <property name="base.dir" value="."/>
+    <property name="build.dir" value="${base.dir}/build"/>
+    <property name="unzip.dir" value="${base.dir}/unzip"/>
+    <property name="sys.dest" value="${base.dir}/sysdest"/>
+
+    <property name="help.dir" value="../../help"/>
+    <property name="shared.dir" value="../../shared"/>
+    <property name="shared.root.dir" value="${shared.dir}/root"/>
+    <property name="shared.lib.dir" value="${shared.dir}/lib"/>
+    <property name="shared.resources.dir" value="${shared.root.dir}/resources"/>
+
+    <property name="shared.src.dir" value="${shared.dir}/root/src"/>
+    <property name="grammars.dir" value="${shared.dir}/root/grammars"/>
+    <property name="classes.dir" value="${base.dir}/classes"/>
+
+    <!-- ...... -->
+
+    <property name="shared.java.dir" value="${shared.dir}/root/java"/>
+
+    <property name="antlr_path.dir" value="${shared.java.dir}/antlr_patch"/>
+    <property name="commons.dir" value="${shared.java.dir}/commons"/>
+    <property name="core.dir" value="${shared.java.dir}/core"/>
+    <property name="database.dir" value="${shared.java.dir}/database"/>
+    <property name="db_browser.dir" value="${shared.java.dir}/db_browser"/>
+    <property name="gen.dir" value="${shared.java.dir}/generated"/>
+    <property name="icons.dir" value="${shared.java.dir}/icons"/>
+    <property name="parser.dir" value="${shared.java.dir}/parser"/>
+    <property name="result_pane.dir" value="${shared.java.dir}/result_pane"/>
+    <property name="tools.dir" value="${shared.java.dir}/tools"/>
+
+    <property name="castor.gen.dir" value="${gen.dir}"/>
+    <property name="castor.pkg" value="com.deepsky.lang.plsql.castor.mapping"/>
+    <property name="castor.pkg.dir" value="com/deepsky/lang/plsql/castor/mapping"/>
+
+    <property name="tools.gen.path" value="${gen.dir}/com/deepsky/tools/generated"/>
+    <property name="plsql_parser.gen.path" value="${gen.dir}/com/deepsky/generated/plsql"/>
+
+    <property name="bundle.dir" value="${build.dir}/to_send"/>
+
+    <!--
+        ATTENTION!!! bundle.name should be in sync with CacheLocator.SQL_ASSISTANT_PLUGIN_BUNDLED_NAME
+    -->
+    <property name="bundle.name" value="sql_assistant"/>
+
+
+    <path id="module.classpath">
+        <pathelement location="${idea.lib.dir}/annotations.jar"/>
+        <pathelement location="${idea.lib.dir}/picocontainer.jar"/>
+        <pathelement location="${idea.lib.dir}/bcel.jar"/>
+        <pathelement location="${idea.lib.dir}/openapi.jar"/>
+        <pathelement location="${idea.lib.dir}/idea.jar"/>
+        <pathelement location="${idea.lib.dir}/util.jar"/>
+        <pathelement location="${idea.lib.dir}/extensions.jar"/>
+
+        <pathelement location="${shared.lib.dir}/forms_rt.jar"/>
+        <pathelement location="${shared.lib.dir}/javac2.jar"/>
+        <pathelement location="${shared.lib.dir}/trove4j.jar"/>
+        <pathelement location="${shared.lib.dir}/yjp-controller-api-redist.jar"/>
+        <pathelement location="${shared.lib.dir}/xmlrpc-1.1.jar"/>
+        <pathelement location="${shared.lib.dir}/jdom.jar"/>
+        <pathelement location="${shared.lib.dir}/ehcache-1.6.0-beta5.jar"/>
+
+        <pathelement location="${shared.lib.dir}/log4j-1.2.9.jar"/>
+        <pathelement location="${shared.lib.dir}/junit-3.8.1.jar"/>
+        <pathelement location="${shared.lib.dir}/antlr-2.7.6.jar"/>
+    </path>
+
+    <path id="castor.class.path">
+        <pathelement location="${shared.lib.dir}/castor-1.2.jar"/>
+        <pathelement location="${shared.lib.dir}/castor-1.2-codegen.jar"/>
+        <pathelement location="${shared.lib.dir}/castor-1.2-xml.jar"/>
+    </path>
+
+    <target name="generate_plsql_parser" description="Generate PlSql parser">
+        <mkdir dir="${plsql_parser.gen.path}"/>
+
+        <!-- Cleanup generated files -->
+        <delete>
+            <fileset dir="${gen.dir}">
+                <include name="**/*"/>
+                <exclude name="${castor.pkg.dir}/**/*"/>
+            </fileset>
+        </delete>
+
+        <mkdir dir="${dest.dir}"/>
+        <delete includeemptydirs="true">
+            <fileset dir="${dest.dir}" includes="**/*.class"/>
+        </delete>
+
+        <!-- compile Tool package -->
+        <javac destdir="${dest.dir}"
+               debug="on"
+               failonerror="true" fork="true">
+            <src path="${commons.dir}"/>
+            <src path="${tools.dir}"/>
+            <src path="${antlr_path.dir}"/>
+
+            <exclude name="com/deepsky/tools/GrammarConvertor.java"/>
+            <exclude name="com/deepsky/tools/SYSSchemaSerializer.java"/>
+
+            <classpath>
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <pathelement location="${shared.lib.dir}/log4j-1.2.9.jar"/>
+                <path refid="module.classpath"/>
+            </classpath>
+        </javac>
+
+        <!-- Generate lexer for PlSql language
+             NOTE: the order is significant!   -->
+        <java classname="antlr.ToolPatched" failonerror="true" fork="true">
+            <arg line="-o ${plsql_parser.gen.path}"/>
+            <arg value="${grammars.dir}/plsql_lexer.g"/>
+            <classpath>
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <pathelement path="${dest.dir}"/>
+            </classpath>
+        </java>
+
+
+        <!-- Generate parser for PlSql language -->
+        <java classname="antlr.ToolPatched" failonerror="true" fork="true">
+            <arg line="-o ${plsql_parser.gen.path}"/>
+            <arg value="${grammars.dir}/plsql_parser.g"/>
+            <classpath>
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <pathelement path="${dest.dir}"/>
+            </classpath>
+        </java>
+
+        <!-- Generate parser for the AST definition string -->
+        <java classname="antlr.ToolPatched" failonerror="true" fork="true">
+            <arg line="-o ${tools.gen.path}"/>
+            <arg value="${grammars.dir}/ast_string.g"/>
+            <classpath>
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <pathelement path="${dest.dir}"/>
+            </classpath>
+        </java>
+
+        <!-- Generate Symbol Table for separated parser -->
+        <java classname="com.deepsky.tools.SymbolTableGenerator" failonerror="true" fork="true">
+            <arg line="${plsql_parser.gen.path}/PLSql2TokenTypes.txt ${plsql_parser.gen.path}/PLSqlTokenTypes.txt  ${gen.dir}"/>
+            <classpath>
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <pathelement path="${dest.dir}"/>
+            </classpath>
+        </java>
+
+        <!-- compile PlSql lexer/parser  -->
+        <javac destdir="${dest.dir}"
+               debug="on"
+               failonerror="true" fork="true">
+
+            <src path="${gen.dir}"/>
+            <src path="${parser.dir}"/>
+            <exclude name="com/deepsky/lang/**/*.java"/>
+            <exclude name="com/deepsky/integration/**/*.java"/>
+
+            <!-- compile rest of the source files -->
+            <src path="${tools.dir}"/>
+
+            <!--<include name="com/deepsky/generated/plsql/*.java"/>-->
+            <exclude name="com/deepsky/integration/lexer/generated/PlSqlBaseTokenTypes.java"/>
+            <exclude name="com/deepsky/integration/lexer/generated/PlSqlTokenTypesMapping.java"/>
+            <exclude name="com/deepsky/tools/SYSSchemaSerializer.java"/>
+            <classpath>
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <path refid="castor.class.path"/>
+                <!--<path refid="module.classpath"/>-->
+                <!--<pathelement path="${classes.dir}"/>-->
+            </classpath>
+        </javac>
+
+        <!--
+            1. Convert plsql_parser.g -> plsql_parser_ex.g
+            2. create interface PLSqlTypesAdopted (list of parser types)
+        -->
+        <echo message="Convert plsql_parser.g to plsql_parser_ex.g"/>
+        <java classname="com.deepsky.tools.GrammarConvertor" failonerror="true" fork="true">
+            <arg line="${grammars.dir}/plsql_parser.g  ${grammars.dir}/plsql_parser_ex.g"/>
+            <classpath>
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <pathelement path="${dest.dir}"/>
+            </classpath>
+        </java>
+
+        <!-- 3. Process plsql_parser_ex.g file -->
+        <echo message="Clean up directory ${plsql_parser.gen.path}/adopted"/>
+        <mkdir dir="${plsql_parser.gen.path}/adopted"/>
+        <delete>
+            <fileset dir="${plsql_parser.gen.path}/adopted" includes="*.java"/>
+            <fileset dir="${plsql_parser.gen.path}/adopted" includes="*.g"/>
+            <fileset dir="${plsql_parser.gen.path}/adopted" includes="*.txt"/>
+        </delete>
+
+        <echo message="Generate PlSqlParser from plsql_parser_ex.g grammar "/>
+
+        <!-- Make Lexer's Token Types available for adopted parser -->
+        <copyfile src="${plsql_parser.gen.path}/PLSql2TokenTypes.txt" dest="${plsql_parser.gen.path}/adopted/PLSql2TokenTypes.txt"/>
+        <!--<copyfile src="${generated.dir}/PLSql2TokenTypes.txt" dest="${generated.dir}/adopted/PLSql2TokenTypes.txt"/>-->
+
+        <java classname="antlr.ToolPatched" failonerror="true" fork="true">
+            <arg line="-o ${plsql_parser.gen.path}/adopted"/>
+            <arg value="${grammars.dir}/plsql_parser_ex.g"/>
+            <classpath>
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <pathelement path="${dest.dir}"/>
+            </classpath>
+        </java>
+
+        <!-- compile adopted package -->
+        <javac destdir="${dest.dir}"
+               debug="on"
+               failonerror="true" fork="true">
+
+            <src path="${gen.dir}"/>
+            <src path="${parser.dir}"/>
+            <exclude name="com/deepsky/lang/**/*.java"/>
+            <exclude name="com/deepsky/integration/**/*.java"/>
+
+            <src path="${tools.dir}"/>
+
+            <exclude name="com/deepsky/integration/lexer/generated/PlSqlBaseTokenTypes.java"/>
+            <exclude name="com/deepsky/integration/lexer/generated/PlSqlTokenTypesMapping.java"/>
+            <exclude name="com/deepsky/tools/SYSSchemaSerializer.java"/>
+            <classpath>
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <path refid="castor.class.path"/>
+            </classpath>
+        </javac>
+
+        <property name="adopted_types_pkg" value="${gen.dir}/com/deepsky/lang/parser/plsql"/>
+
+        <!-- Process com.deepsky.generated.plsql.adopted.PLSqlParserAdopted class -> generate derived class *Ext -->
+        <mkdir dir="${adopted_types_pkg}"/>
+        <java classname="com.deepsky.tools.InterfaceExtractor" failonerror="true" fork="true">
+            <arg line="${adopted_types_pkg}"/>
+            <!--<arg line="${shared.src.dir}/com/deepsky/lang/parser/plsql"/>-->
+            <classpath>
+                <pathelement path="${dest.dir}"/>
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <path refid="module.classpath"/>
+            </classpath>
+        </java>
+
+        <move file="${grammars.dir}/PLSqlTypesAdopted.java" todir="${adopted_types_pkg}"/>
+        <move file="${grammars.dir}/ANTLRType2AdoptedType.java" todir="${adopted_types_pkg}"/>
+
+        <!-- patch adopted parser -->
+        <replace file="${plsql_parser.gen.path}/adopted/PLSqlParserAdopted.java" token="public final" value="public"/>
+
+        <replace file="${plsql_parser.gen.path}/adopted/PLSqlParserAdopted.java">
+          <replacetoken><![CDATA[else if ((_tokenSet_4.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {]]></replacetoken>
+          <replacevalue><![CDATA[else if(true){]]></replacevalue>
+        </replace>
+        <replace file="${plsql_parser.gen.path}/PLSqlParser.java">
+          <replacetoken><![CDATA[else if ((_tokenSet_4.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {]]></replacetoken>
+          <replacevalue><![CDATA[else if(true){]]></replacevalue>
+        </replace>
+    </target>
+
+
+    <target name="generate_system_function_mapping"
+            description="Generate Java source files from XSD.">
+
+        <taskdef name="castor-srcgen"
+                 classname="org.castor.anttask.CastorCodeGenTask"
+                 classpathref="castor.class.path"/>
+        <!--<mkdir dir="generated" />-->
+        <castor-srcgen file="${shared.root.dir}/castor/sysfunction_def.xsd"
+                       todir="${gen.dir}"
+                       package="${castor.pkg}"
+                       types="j2"
+                       warnings="false"/>
+
+    </target>
+
+    <path id="castor.class.path1">
+        <pathelement location="../../lib/castor-1.2.jar"/>
+        <pathelement location="../../lib/castor-1.2-codegen.jar"/>
+        <pathelement location="file:///D:/git-test/sqlassistant/shared/lib/castor-1.2-anttasks.jar"/>
+        <pathelement location="../../lib/castor-1.2-xml.jar"/>
+    </path>
+
+
+    <target name="bundle_plugin" description="Bundle PL/SQL plugin libs">
+        <mkdir dir="${bundle.dir}"/>
+        <delete includeemptydirs="true">
+            <fileset dir="${bundle.dir}" includes="**/*"/>
+        </delete>
+
+        <mkdir dir="${bundle.dir}/${bundle.name}"/>
+        <mkdir dir="${bundle.dir}/${bundle.name}/lib"/>
+        <!--<mkdir dir="${bundle.dir}/${bundle.name}/META-INF"/>-->
+
+
+        <copy todir="${bundle.dir}/${bundle.name}/lib">
+            <fileset dir="${shared.lib.dir}">
+                <include name="antlr-2.7.5-patched.jar"/>
+                <include name="castor-1.2.jar"/>
+                <include name="const_storage.jar"/>
+                <include name="ehcache-1.6.0-beta5.jar"/>
+                <include name="commons-logging-1.1.jar"/>
+                <include name="ojdbc14.jar"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${bundle.dir}/${bundle.name}/lib">
+            <fileset dir="${shared.root.dir}/licenses">
+                <include name="castor_license.txt"/>
+                <include name="ehcache_LICENSE.txt"/>
+                <include name="oracle_jdbc_driver_license.txt"/>
+                <include name="sql_code_assistant_plugin_license.txt"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${bundle.dir}/${bundle.name}/lib">
+            <fileset dir="${build.dir}/lib/">
+                <include name="sql-assistant-${plugin.ver}.jar"/>
+            </fileset>
+        </copy>
+
+        <zip destfile="${bundle.dir}/${bundle.name}.zip">
+            <zipfileset dir="${bundle.dir}" includes="${bundle.name}/**/*"/>
+        </zip>
+    </target>
+
+
+    <target name="build_plugin" description="Build PL/SQL plugin sources">
+
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/classes"/>
+
+        <delete includeemptydirs="true">
+            <fileset dir="${build.dir}/classes"/>
+        </delete>
+        <mkdir dir="${build.dir}/classes"/>
+
+        <delete dir="${build.dir}/lib"/>
+        <delete dir="${build.dir}/META-INF"/>
+        <delete file="*.zip"/>
+
+        <!-- Trick! -->
+        <copy todir="${build.dir}/classes">
+            <fileset dir="${classes.dir}">
+                <include name="com/intellij/uiDesigner/core/*.class"/>
+            </fileset>
+        </copy>
+
+        <!-- Compile -->
+        <javac destdir="${build.dir}/classes" debug="on" target="1.5">
+            <src path="${gen.dir}"/>
+            <src path="${antlr_path.dir}"/>
+            <src path="${parser.dir}"/>
+            <src path="${core.dir}"/>
+            <src path="${commons.dir}"/>
+            <src path="${database.dir}"/>
+            <src path="${db_browser.dir}"/>
+            <src path="${result_pane.dir}"/>
+
+            <include name="com/**"/>
+
+            <classpath>
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <path refid="castor.class.path"/>
+                <path refid="module.classpath"/>
+            </classpath>
+        </javac>
+
+        <mkdir dir="${build.dir}/lib"/>
+        <mkdir dir="${build.dir}/META-INF"/>
+
+        <copy todir="${build.dir}/META-INF">
+            <fileset dir="${base.dir}/META-INF">
+                <include name="plugin.xml"/>
+            </fileset>
+        </copy>
+
+        <!-- build plugin's jar  -->
+        <jar destfile="${build.dir}/lib/sql-assistant-${plugin.ver}.jar">
+
+            <!-- It looks like Intellij uses some tricks to build Swing Forms,
+                so some patching are needed -->
+            <fileset dir="${build.dir}/classes">
+                <!--<exclude name="com/deepsky/gui/**/*.class"/>-->
+                <exclude name="com/deepsky/tools/**"/>
+                <exclude name="com/intellij/openapi/**"/>
+            </fileset>
+            <fileset dir="${build.dir}" includes="META-INF/*.xml"/>
+
+            <fileset dir="${shared.src.dir}" includes="resources/*.xml"/>
+            <fileset dir="${icons.dir}" includes="icons/*.png"/>
+        </jar>
+    </target>
+
+    <target name="build_help_jar" description="Build JavaHelp jar">
+
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/lib"/>
+
+        <!-- build javahelp jar  -->
+        <jar destfile="${build.dir}/lib/help.jar">
+
+            <fileset dir="${help.dir}" includes="css/*"/>
+            <fileset dir="${help.dir}" includes="html/*"/>
+            <fileset dir="${help.dir}" includes="images/*"/>
+
+            <fileset dir="${help.dir}" includes="*.hs"/>
+            <fileset dir="${help.dir}" includes="*.html"/>
+            <fileset dir="${help.dir}" includes="*.xml"/>
+        </jar>
+    </target>
+
+    <target name="build_SYS_schema_package" description="build_SYS_schema_package">
+
+        <mkdir dir="${unzip.dir}"/>
+        <delete includeemptydirs="true">
+            <fileset dir="${unzip.dir}" includes="*"/>
+        </delete>
+
+        <!-- 1. unzip content const_storage.jar to the local directory -->
+        <unzip src="${shared.lib.dir}/const_storage.jar" dest="${unzip.dir}"/>
+
+        <!-- 2. create sys<database_version>#serialed file -->
+        <java classname="com.deepsky.tools.SYSSchemaSerializer" fork="true">
+            <jvmarg line="-Xms128m"/>
+            <jvmarg line="-Xmx512m"/>
+            <!-- Specify an oracle lib and a driver class -->
+            <sysproperty key="oracle.lib" value="${shared.lib.dir}/ojdbc14.jar"/>
+            <sysproperty key="oracle.jdbc.driver" value="oracle.jdbc.driver.OracleDriver"/>
+            <sysproperty key="output.dir" value="${unzip.dir}"/>
+
+            <arg line="jdbc:oracle:thin:user/user@localhost:1521:mysid"/>
+
+            <classpath>
+                <pathelement path="${base.dir}/classes"/>
+                <pathelement location="${shared.lib.dir}/log4j-1.2.9.jar"/>
+                <!--<pathelement location="${shared.lib.dir}/ojdbc14.jar"/>-->
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <path refid="module.classpath"/>
+            </classpath>
+        </java>
+
+        <!-- 3. build const_storage.jar  -->
+        <jar destfile="${base.dir}/const_storage.jar" compress="true">
+            <fileset dir="${unzip.dir}/" includes="**/*"/>
+        </jar>
+
+        <!-- 4. save const_storage.jar in the lib directory -->
+        <copy todir="${shared.lib.dir}" overwrite="true">
+            <fileset dir="${base.dir}">
+                <include name="const_storage.jar"/>
+            </fileset>
+        </copy>
+
+        <!-- 5. delete temporary const_storage.jar from base.dir -->
+        <delete>
+            <fileset dir="${base.dir}" includes="const_storage.jar"/>
+        </delete>
+    </target>
+
+</project>

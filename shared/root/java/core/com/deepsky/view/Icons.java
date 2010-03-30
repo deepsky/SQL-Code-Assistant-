@@ -62,6 +62,8 @@ public class Icons {
 
     public static final Icon RECORD_TYPE_DECL;
     public static final Icon TABLE_COLL_DECL;
+    public static final Icon OBJECT_TYPE_DECL;
+    public static final Icon VARRAY_TYPE_DECL;
 
     public static final Icon EXEC_SQL_STMT;
     public static final Icon SELECT_RESULTSET;
@@ -87,6 +89,7 @@ public class Icons {
 
     public static final Icon SEPARATOR;
     public static final Icon CLOSE_PANEL;
+    public static final Icon HELP;
 
     public static final Icon GUTTER_00;
     public static final Icon GUTTER_01;
@@ -142,6 +145,7 @@ public class Icons {
         EXT_TABLE = Helpers.getIcon("/icons/ext_tab.png");
 
         VIEW = Helpers.getIcon("/icons/view.png");
+        HELP = Helpers.getIcon("/icons/help.png");
 
         TRIGGER = Helpers.getIcon("/icons/trigger.png");
         ENABLE_TRIGGER = Helpers.getIcon("/icons/enable_trigger.png");
@@ -149,6 +153,8 @@ public class Icons {
 
         TABLE_COLL_DECL = Helpers.getIcon("/icons/tabcoll_type.png");
         RECORD_TYPE_DECL = Helpers.getIcon("/icons/record_type.png");
+        OBJECT_TYPE_DECL = Helpers.getIcon("/icons/tabcoll_type.png");
+        VARRAY_TYPE_DECL = Helpers.getIcon("/icons/tabcoll_type.png"); 
 
         EXEC_SQL_STMT = Helpers.getIcon("/icons/exec_sql.png");
         // todo
