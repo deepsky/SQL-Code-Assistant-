@@ -25,12 +25,17 @@
 
 package com.deepsky.database;
 
+import com.intellij.util.messages.Topic;
+
 
 public interface CacheManagerListener {
 
     int STARTED = 1;
     int STOPPED = 2;
     int CACHE_UPDATED = 3;
+
+    Topic<CacheManagerListener> TOPIC = new Topic("CacheManagerListener", CacheManagerListener.class);
+
 
     int BOOTSTRAP_SYS_TABLES = 0;
     int BOOTSTRAP_SYS_PACKAGES = 1;

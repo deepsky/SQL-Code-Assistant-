@@ -25,18 +25,15 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.TriggerColumnNameRef;
-import com.deepsky.lang.plsql.psi.resolve.*;
-import com.deepsky.lang.plsql.psi.resolve.impl.*;
 import com.deepsky.lang.plsql.psi.ddl.CreateTrigger;
 import com.deepsky.lang.plsql.psi.ddl.CreateTriggerDML;
-//import com.deepsky.lang.plsql.psi.resolve.*;
-import com.deepsky.lang.plsql.struct.TableDescriptor;
+import com.deepsky.lang.plsql.psi.resolve.ASTTreeProcessor;
+import com.deepsky.lang.plsql.psi.resolve.TriggerNodeHandler;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.plsql.NotSupportedException;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
@@ -44,15 +41,16 @@ import org.jetbrains.annotations.NotNull;
 public class TriggerColumnNameRefImpl extends PlSqlCompositeNameBase implements TriggerColumnNameRef {
 
     final private static TokenSet tokens = TokenSet.create(
-                // todo -- must be revise -- mixed types!
-                PLSqlTypesAdopted.NAME_FRAGMENT,
-                PlSqlTokenTypes.COLON_NEW,
-                PlSqlTokenTypes.COLON_OLD);
+            // todo -- must be revise -- mixed types!
+            PLSqlTypesAdopted.NAME_FRAGMENT,
+            PlSqlTokenTypes.COLON_NEW,
+            PlSqlTokenTypes.COLON_OLD);
 
     public TriggerColumnNameRefImpl(ASTNode astNode) {
         super(astNode);
     }
 
+/*
     @NotNull
     public ResolveContext777 resolve(NameFragmentRef namePart) throws NameNotResolvedException {
 
@@ -66,15 +64,6 @@ public class TriggerColumnNameRefImpl extends PlSqlCompositeNameBase implements 
 
         ResolveContext777 ctx = getResolveContext();
         return ctx.resolve(pieces[pos]);
-//        int i = 1;
-//        try {
-//            for (; --pos >= 0; i++) {
-//                ctx = ctx.resolve(pieces[i]);
-//            }
-//        } catch (NameNotResolvedException e) {
-//             throw new NameNotResolvedException(pieces[i], "Name not resolved");
-//        }
-//        return ctx;
     }
 
     @NotNull
@@ -98,6 +87,7 @@ public class TriggerColumnNameRefImpl extends PlSqlCompositeNameBase implements 
             throw new NameNotResolvedException("");
         }
     }
+*/
 
     @NotNull
     public Type getExpressionType() {
@@ -106,7 +96,7 @@ public class TriggerColumnNameRefImpl extends PlSqlCompositeNameBase implements 
 
         ASTNode[] nodes = getNode().getChildren(tokens);
 
-        if(nodes == null || nodes.length != 1){
+        if (nodes == null || nodes.length != 1) {
             return null;
         }
 
@@ -116,6 +106,8 @@ public class TriggerColumnNameRefImpl extends PlSqlCompositeNameBase implements 
         runner.add(new TriggerNodeHandler() {
             protected void handleTriggerDefintion(CreateTrigger trigger) {
                 if (trigger instanceof CreateTriggerDML) {
+/*
+        // todo -- resolve stuff refactoring
                     TableDescriptor tdesc = describeTable(
                             ((CreateTriggerDML) trigger).getTableName()
                     );
@@ -123,6 +115,7 @@ public class TriggerColumnNameRefImpl extends PlSqlCompositeNameBase implements 
                     if(tdesc != null){
                         out[0] = tdesc.getColumnType(column);
                     }
+*/
                 }
             }
         });
@@ -156,7 +149,6 @@ public class TriggerColumnNameRefImpl extends PlSqlCompositeNameBase implements 
             return -1;
         }
     }
-
 
 
 /*

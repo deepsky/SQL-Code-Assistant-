@@ -28,6 +28,8 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -54,8 +56,8 @@ public class PlSqlBlockImpl extends PlSqlElementBase implements PlSqlBlock {
 
     public Declaration[] getDeclarations() {
         final ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.DECLARE_LIST);
-        if(node != null){
-            return ((DeclarationList)node.getPsi()).getDeclList();
+        if (node != null) {
+            return ((DeclarationList) node.getPsi()).getDeclList();
         }
         return new Declaration[0];
     }

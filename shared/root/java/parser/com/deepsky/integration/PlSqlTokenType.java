@@ -26,6 +26,7 @@
 
 package com.deepsky.integration;
 
+import com.deepsky.lang.common.PlSqlFileType;
 import com.intellij.psi.tree.IElementType;
 import com.deepsky.lang.common.PlSqlSupportLoader;
 
@@ -34,7 +35,7 @@ public class PlSqlTokenType extends IElementType {
     int tokenId;
 
     public PlSqlTokenType(int tokenId, @org.jetbrains.annotations.NotNull String s) {
-        super(s, PlSqlSupportLoader.PLSQL.getLanguage());
+        super(s, PlSqlFileType.FILE_TYPE.getLanguage());
         this.tokenId = tokenId;
     }
 

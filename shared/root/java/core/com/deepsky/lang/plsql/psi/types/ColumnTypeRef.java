@@ -25,15 +25,16 @@
 
 package com.deepsky.lang.plsql.psi.types;
 
+import com.deepsky.lang.plsql.psi.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.TableScope;
-import com.intellij.psi.PsiElement;
+import com.deepsky.lang.plsql.psi.ref.TableRef;
 import org.jetbrains.annotations.NotNull;
 
 public interface ColumnTypeRef extends TypeSpec, TableScope {
 
     @NotNull
-    PsiElement getTableName2();
+    TableRef getTableRef();
 
     @NotNull
-    PsiElement getColumnName();
+    ColumnNameRef getColumnRef();
 }

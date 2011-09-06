@@ -25,7 +25,6 @@
 
 package com.deepsky.lang.plsql.struct;
 
-import org.jetbrains.annotations.NotNull;
 
 public interface PackageBodyDescriptor extends PackageDescriptor {
     PackageSpecDescriptor findSpecification();

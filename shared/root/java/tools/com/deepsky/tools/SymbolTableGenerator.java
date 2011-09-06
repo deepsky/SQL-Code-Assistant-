@@ -38,6 +38,9 @@ public class SymbolTableGenerator {
     Map<String, Integer> lexerTokens = new HashMap<String, Integer>();
     Map<String, Integer> symboltab = new HashMap<String, Integer>();
 
+    final static String KEYWORD_EXT_DIRPATH_PROP = "keyword.source.dir";
+    final static String KEYWORD_EXT_FILES_PROP = "keyword.files";
+
     final String SYMBOL_TABLE_PATH = "com/deepsky/generated/plsql";
     final String TOKEN_TABLE_PATH = "com/deepsky/integration/lexer/generated";
 
@@ -55,8 +58,11 @@ public class SymbolTableGenerator {
 
     private static Pattern keywordExtPat = Pattern.compile("(//)? *([A-Z0-9_]+)");
 
+    List<File> keywordExtSources = new ArrayList<File>();
+
     Map<String, Boolean> reservedKeywords = new HashMap<String, Boolean>();
     final String KEYWORD_PREFIX = "KEYWORD_";
+
 
     public SymbolTableGenerator(File lexer_tab, File parser_tab, File srcPath) throws IOException {
         // 1. load Lexer table
@@ -117,21 +123,78 @@ public class SymbolTableGenerator {
         srcDir = srcPath;
     }
 
+    private void setKeywordExtSources(List<File> keywordExtSources) {
+        this.keywordExtSources = keywordExtSources;
+    }
 
     private void generateClasses() throws IOException {
         // 4. generate SymbolTable class
         generateSymbolTable();
 
-        // 5. generate IElementToken table
+        // 5. generate mapping table: ANTLR Token type to IElementType (PlSqlBaseLexer)
         generateTokenMapTable(tableSize + 1);
 
-        // 6. generate Token Table
+        // 6. populate keyword table from external sources
+        reservedKeywords = populateKeywordTable(keywordExtSources);
+
+        // 7. generate Token Table
         generateTokenTable();
+
+    }
+
+    public static Map<String, Boolean> populateKeywordTable(List<File> _keywordExtSources) {
+        System.out.println("Populate keywords from external files.");
+        Map<String, Boolean> reservedKeywords = new HashMap<String, Boolean>();
+        for (File f : _keywordExtSources) {
+            System.out.println("Load keywords from file: " + f.getPath());
+            BufferedReader in = null;
+            try {
+                in = new BufferedReader(new FileReader(f));
+
+                String line = null;
+                while ((line = in.readLine()) != null) {
+                    // primitive validation
+                    if (line.matches("[/A-Z0-9_]+")) {
+                        // "(//)? *([A-Z_]+)"
+                        Matcher m2 = keywordExtPat.matcher(line);
+                        if (m2.find()) {
+                            String comment = m2.group(1);
+                            String second = m2.group(2);
+
+                            reservedKeywords.put(second.toUpperCase(), comment == null);
+                        }
+                    } else {
+                        // skip, only alphabet characters allowed
+                        System.out.println("\tstring does not match criteria: " + line);
+                    }
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+
+        return reservedKeywords;
     }
 
 
-
     private void generateTokenTable() throws IOException {
+/*
+package com.deepsky.integration.lexer.generated;
+
+public interface PlSqlTokenTypes {
+
+//    IElementType NUMBER = new PlSqlTokenType(38, "NUMBER");
+//    IElementType IDENTIFIER = new PlSqlTokenType(13, "IDENTIFIER");
+}
+*/
         String header =
                 "package com.deepsky.integration.lexer.generated;\n\n" +
                         "import com.intellij.psi.tree.IElementType;\n" +
@@ -194,6 +257,13 @@ public class SymbolTableGenerator {
 
             String t = "\t\t" + createTableItem(tokenName);
             out.write((t + ",\n").getBytes());
+
+//            String t = "\t\t" + tokenName;
+//            out.write(t.getBytes());
+//            if(i+1 < tokenNames.size()){
+//                out.write(",".getBytes());
+//            }
+//            out.write("\n".getBytes());
         }
 
         // put border array element
@@ -250,6 +320,23 @@ public class SymbolTableGenerator {
 
 
     private void generateTokenMapTable(int tableSize) throws IOException {
+/*
+package com.deepsky.integration.lexer.generated;
+
+public class PlSqlTokenTypesMapping {
+    protected static IElementType[] table;
+
+    static {
+        table = new IElementType[515];
+
+        // IElementType[1] = null; -- EOF
+        ....
+        table[13] = PlSqlTokenTypes.IDENTIFIER;
+        table[38] = PlSqlTokenTypes.IDENTIFIER;
+    }
+}
+ */
+
         String header =
                 "package com.deepsky.integration.lexer.generated;\n\n" +
                         "import com.intellij.psi.tree.IElementType;\n\n" +
@@ -372,7 +459,28 @@ public class SymbolTableGenerator {
         File sym_tab = new File(args[2]);
         System.out.println("3d argument: " + args[2]);
 
+        // locate external KEYWORD files
+        List<File> keywordExtSources = new ArrayList<File>();
+        String path = System.getProperty(KEYWORD_EXT_DIRPATH_PROP);
+        String files = System.getProperty(KEYWORD_EXT_FILES_PROP);
+        if (path != null && files != null) {
+            if (!new File(path).exists()) {
+                System.out.println("Path does not exist: " + path + ". External keywords will be ignored");
+            } else {
+                String[] keywordFiles = files.split(new String(new char[]{File.pathSeparatorChar}));
+                for (String f : keywordFiles) {
+                    if (new File(new File(path), f).exists()) {
+                        keywordExtSources.add(new File(new File(path), f));
+                    } else {
+                        System.out.println("File does not exist: " + new File(new File(path), f).toString());
+                    }
+                }
+            }
+        }
+
         SymbolTableGenerator gen = new SymbolTableGenerator(lexer_tab, parser_tab, sym_tab);
+        gen.setKeywordExtSources(keywordExtSources);
+//        extr.extractInterface("com.deepsky.generated.plsql.adopted.PLSqlParserAdopted", System.out);
 
         System.out.println("Run Symbol Table Generator");
         gen.generateClasses();

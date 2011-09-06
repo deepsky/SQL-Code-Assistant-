@@ -26,12 +26,10 @@
 package com.deepsky.navigation;
 
 
-import com.deepsky.database.fs.DbOriginatedSqlFile;
 import com.deepsky.lang.common.PluginKeys;
-import com.deepsky.lang.plsql.psi.PackageBody;
-import com.deepsky.lang.plsql.psi.PackageSpec;
-import com.deepsky.lang.plsql.psi.PlSqlElement;
-import com.deepsky.view.Icons;
+import com.deepsky.lang.plsql.sqlIndex.DbDumpedSqlFile;
+import com.deepsky.lang.plsql.sqlIndex.FSSqlFile;
+import com.deepsky.lang.plsql.sqlIndex.SysSqlFile;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
@@ -42,7 +40,6 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ui.UIUtil;
@@ -104,13 +101,25 @@ public class GotoDbObjectModel implements ChooseByNameModel {
 
                     protected void customizeCellRenderer(Object value, int index, boolean selected, boolean hasFocus) {
                         text1 = "";
-                        if (value instanceof PsiElement) {
+                        if (value instanceof NavigationItemEx) {
+                            text1 = "[" + ((NavigationItemEx) value).getSchemaAlias() + "]";
+                        } else if (value instanceof PsiElement) {
                             PsiElement element = (PsiElement) value;
                             if (element.isValid()) {
                                 PsiFile psiFile = element.getContainingFile();
-                                if(psiFile.getVirtualFile() instanceof DbOriginatedSqlFile){
-                                    DbOriginatedSqlFile dbOrig = (DbOriginatedSqlFile) psiFile.getVirtualFile();
-                                    text1 = dbOrig.getDatabaseUrl();
+                                VirtualFile file = psiFile.getVirtualFile();
+//                                if (psiFile.getVirtualFile() instanceof DbOriginatedSqlFile) {
+//                                    DbOriginatedSqlFile dbOrig = (DbOriginatedSqlFile) psiFile.getVirtualFile();
+//                                    text1 = dbOrig.getDatabaseUrl();
+//                                } else
+                                if (psiFile.getVirtualFile() instanceof FSSqlFile) {
+                                    text1 = "[Project]";
+                                } else if (psiFile.getVirtualFile() instanceof DbDumpedSqlFile) {
+                                    text1 = "[" + ((DbDumpedSqlFile) file).getDbUrl().getUserHostPortServiceName() + "]";
+                                } else if (psiFile.getVirtualFile() instanceof SysSqlFile) {
+                                    text1 = "[" + ((SysSqlFile) file).getDbUrl().getUserHostPortServiceName() + "]";
+                                } else {
+                                    text1 = "[Project222]";
                                 }
                             }
                         }
@@ -155,7 +164,10 @@ public class GotoDbObjectModel implements ChooseByNameModel {
     }
 
     public String getHelpId() {
-        return "sqlassistant.findUsage";
-//        return "procedures.navigating.goto.class";
+        return "sqlassistant.navigation";
+    }
+
+    public boolean willOpenEditor() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

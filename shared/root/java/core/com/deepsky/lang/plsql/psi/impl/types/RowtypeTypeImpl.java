@@ -25,19 +25,11 @@
 
 package com.deepsky.lang.plsql.psi.impl.types;
 
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
 import com.deepsky.lang.plsql.psi.types.RowtypeType;
-import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.impl.PlainTableColumnContext;
-import com.deepsky.lang.plsql.psi.resolve.impl.TableContext;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.plsql.struct.TableDescriptor;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
-import org.jetbrains.annotations.NotNull;
 
 public class RowtypeTypeImpl extends PlSqlElementBase implements RowtypeType {
 
@@ -47,18 +39,18 @@ public class RowtypeTypeImpl extends PlSqlElementBase implements RowtypeType {
 
     public Type getType() {
         return new com.deepsky.lang.plsql.struct.types.RowtypeType(
-                getNode().findChildByType(PLSqlTypesAdopted.TABLE_NAME).getText()
+                getNode().findChildByType(PLSqlTypesAdopted.TABLE_REF).getText()
         );
     }
 
-    public void validate() {
-        try {
-            ResolveHelper.validateType(getProject(), getType() );
-        } catch (NameNotResolvedException e1) {
-            throw new ValidationException(e1.getMessage());
-        }
+    public boolean isTypeValid() {
+        final ASTNode t = getNode().findChildByType(PLSqlTypesAdopted.TABLE_REF);
+        return t != null && getResolveFacade()
+                .getLLResolver()
+                .resolveTableRef(t.getText()) != null;
     }
 
+/*
     @NotNull
     public ResolveContext777 resolveType() throws NameNotResolvedException {
         String tableName = getNode().findChildByType(PLSqlTypesAdopted.TABLE_NAME).getText();
@@ -69,4 +61,5 @@ public class RowtypeTypeImpl extends PlSqlElementBase implements RowtypeType {
             throw new NameNotResolvedException("Table " + tableName + " does not exist");
         }
     }
+*/
 }

@@ -26,11 +26,13 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
+import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.Expression;
 import com.deepsky.lang.plsql.psi.RelationCondition;
+import com.deepsky.lang.plsql.resolver.ResolveFacade;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
 import com.deepsky.lang.validation.TypeCastException;
@@ -49,18 +51,18 @@ public class RelationConditionImpl extends ConditionBase implements RelationCond
     @NotNull
     public Type getExpressionType() {
         ASTNode[] node = getNode().getChildren(PlSqlElementTypes.EXPR_TYPES);
-        if(node == null || node.length != 2){
+        if (node == null || node.length != 2) {
             throw new SyntaxTreeCorruptedException();
         } else {
             ASTNode op = getNode().findChildByType(PlSqlElementTypes.RELATION_OP);
-            if( op != null ){
+            if (op != null) {
                 ASTNode child = op.getFirstChildNode();
                 int _op = type2op(child.getElementType());
 
-                Type l = ((Expression)node[0].getPsi()).getExpressionType();
-                Type r = ((Expression)node[1].getPsi()).getExpressionType();
+                Type l = ((Expression) node[0].getPsi()).getExpressionType();
+                Type r = ((Expression) node[1].getPsi()).getExpressionType();
                 Type result = evaluate(l, r, _op);
-                if(result == null){
+                if (result == null) {
                     int hh = 0;
                 }
                 return result;
@@ -71,14 +73,16 @@ public class RelationConditionImpl extends ConditionBase implements RelationCond
     }
 
 
-    public Type evaluate(Type l, Type r, int type) {
+    private Type evaluate(Type l, Type r, int opType) {
         int resultType = Type.UNKNOWN;
         try {
-            resultType = TypeValidationHelper.evaluate( this,  l, r, type);
-        } catch(Throwable e){
+            ResolveFacade resolver = ((PlSqlFile)getContainingFile()).getResolver();
+            resultType = new TypeValidationHelper(resolver).evaluate(l, r, opType);
+            //resultType = TypeValidationHelper.evaluate(this, l, r, opType);
+        } catch (Throwable e) {
         }
 
-        if(resultType == Type.BOOLEAN ){
+        if (resultType == Type.BOOLEAN) {
             return TypeFactory.createTypeById(resultType);
         } else {
             throw new TypeCastException("Invalid relational operator");
@@ -88,7 +92,7 @@ public class RelationConditionImpl extends ConditionBase implements RelationCond
     private int type2op(IElementType itype) {
         if (itype == PlSqlTokenTypes.EQ) {
             return PLSqlTokenTypes.EQ;
-        } else if (itype == PlSqlTokenTypes.NOT_EQ ) {
+        } else if (itype == PlSqlTokenTypes.NOT_EQ) {
             return PLSqlTokenTypes.NOT_EQ;
         } else if (itype == PlSqlTokenTypes.LT) {
             return PLSqlTokenTypes.LT;
@@ -104,12 +108,12 @@ public class RelationConditionImpl extends ConditionBase implements RelationCond
 
     public Expression getLeftExpr() {
         ASTNode[] node = getNode().getChildren(PlSqlElementTypes.EXPR_TYPES);
-        return (Expression)node[0].getPsi();
+        return (Expression) node[0].getPsi();
     }
 
     public Expression getRightExpr() {
         ASTNode[] node = getNode().getChildren(PlSqlElementTypes.EXPR_TYPES);
-        return (Expression)node[1].getPsi();
+        return (Expression) node[1].getPsi();
     }
 
     public String getRelationOp() {

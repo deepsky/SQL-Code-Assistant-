@@ -25,11 +25,12 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.psi.ErrorTokenWrapper;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
@@ -42,15 +43,20 @@ public class ErrorTokenWrapperImpl extends PlSqlReferenceBase implements ErrorTo
         super(astNode);
     }
 
+    @Override
+    protected PsiElement resolveInternal() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     @NotNull
     public Object[] getVariants(String text) {
         IElementType itype = getParent().getNode().getElementType();
         log.info("Context: " + itype);
 
         // todo - generate variants appropriate to the context
-        if(itype == PLSqlTypesAdopted.STATEMENT_LIST){
-        } else if(itype == PLSqlTypesAdopted.PACKAGE_BODY){
-        } else if(itype == PLSqlTypesAdopted.ARITHMETIC_EXPR){
+        if (itype == PLSqlTypesAdopted.STATEMENT_LIST) {
+        } else if (itype == PLSqlTypesAdopted.PACKAGE_BODY) {
+        } else if (itype == PLSqlTypesAdopted.ARITHMETIC_EXPR) {
         }
 
         return new Object[0];

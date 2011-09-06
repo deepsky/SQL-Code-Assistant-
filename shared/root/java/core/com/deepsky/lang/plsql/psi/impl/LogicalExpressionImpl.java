@@ -25,15 +25,14 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.LogicalExpression;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.ConfigurationException;
 import com.deepsky.lang.plsql.psi.Expression;
+import com.deepsky.lang.plsql.psi.LogicalExpression;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
-import com.deepsky.lang.plsql.ConfigurationException;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public class LogicalExpressionImpl extends ConditionBase implements LogicalExpression {
 
@@ -60,7 +59,13 @@ public class LogicalExpressionImpl extends ConditionBase implements LogicalExpre
         throw new ConfigurationException("Not supported at the moment");
     }
 
-    public List<Expression> getList() {
-        throw new ConfigurationException("Not supported at the moment");
+    public Expression[] getList() {
+        ASTNode[] nodes = this.getNode().getChildren(PlSqlElementTypes.CONDITION_EXPR);
+        Expression[] out = new Expression[nodes.length];
+        for (int i = 0; i < nodes.length; i++) {
+            out[i] = (Expression) nodes[i].getPsi();
+        }
+
+        return out;
     }
 }

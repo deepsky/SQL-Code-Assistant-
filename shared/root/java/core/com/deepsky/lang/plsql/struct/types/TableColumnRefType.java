@@ -26,11 +26,7 @@
 package com.deepsky.lang.plsql.struct.types;
 
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.plsql.struct.DbObject;
-import com.deepsky.lang.plsql.struct.TableDescriptor;
-import com.deepsky.lang.plsql.psi.resolve.TypeNotResolvedException;
-import com.deepsky.database.ObjectCacheFactory;
-import com.deepsky.database.ObjectCache;
+
 
 public class TableColumnRefType extends TypeBase{
     static final long serialVersionUID = 2216176371502220275L;
@@ -40,8 +36,8 @@ public class TableColumnRefType extends TypeBase{
 
     public TableColumnRefType(String table, String column){
         super(Type.TABLE_COLUMN_REF_TYPE, "TABLE_COLUMN_REF_TYPE");
-        this.table = table;
-        this.column = column;
+        this.table = table.toLowerCase();
+        this.column = column.toLowerCase();
     }
 
     public boolean isTypeReference() {
@@ -64,25 +60,4 @@ public class TableColumnRefType extends TypeBase{
         return table + "." + column + "%type";
     }
 
-    public Type getRealType(){
-/*
-// todo -- call to ObjectCacheFactory.getObjectCache() not safe 
-        DbObject[] objects = ObjectCacheFactory
-                .getObjectCache()
-                .findByNameForType(ObjectCache.TABLE, table);
-
-        if (objects.length == 1 && objects[0] instanceof TableDescriptor) {
-            TableDescriptor tdesc = (TableDescriptor) objects[0];
-            Type t = tdesc.getColumnType(column);
-            if(t != null){
-                return t;
-            } else {
-                throw new TypeNotResolvedException("Table " + table + " has no column " + column);
-            }
-        } else {
-            throw new TypeNotResolvedException("Table not found: " + table);
-        }
-*/
-        throw new TypeNotResolvedException("Table not found: " + table);
-    }
 }

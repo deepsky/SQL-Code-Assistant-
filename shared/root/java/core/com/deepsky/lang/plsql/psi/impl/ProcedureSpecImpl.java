@@ -25,25 +25,19 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.struct.*;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.database.ora.desc.ProcedureDescriptorImpl;
-import com.deepsky.lang.plsql.struct.types.UserDefinedType;
-import com.deepsky.view.Icons;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.deepsky.lang.plsql.struct.ExecutableDescriptor;
+import com.deepsky.lang.plsql.struct.ProcedureDescriptor;
 import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
+import org.jetbrains.annotations.Nullable;
 
 public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec {
     public ProcedureSpecImpl(ASTNode astNode) {
@@ -57,23 +51,24 @@ public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec
     @NotNull
     public Argument[] getArguments() {
         ArgumentList al = (ArgumentList) this.findChildByType(PLSqlTypesAdopted.ARGUMENT_LIST);
-        return (al != null)? al.getArguments(): new Argument[0];
+        return (al != null) ? al.getArguments() : new Argument[0];
     }
-    
+
     public String getEName() {
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
         return node.getText();
     }
 
-    public ObjectName getObjectName() {
+    public ObjectName getEObjectName() {
         ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
-        if(child == null){
+        if (child == null) {
             throw new SyntaxTreeCorruptedException();
         }
 
         return (ObjectName) child.getPsi();
     }
 
+/*
     public boolean equals2(ExecutableDescriptor edesc) {
         if (!(edesc instanceof ProcedureDescriptor)) {
             return false;
@@ -84,7 +79,7 @@ public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec
 
             // check out arguments
             ArgumentList lst = getArgumentList();
-            Argument[] args = lst != null? lst.getArguments(): new Argument[0]; //getArgumentList();
+            Argument[] args = lst != null ? lst.getArguments() : new Argument[0]; //getArgumentList();
             if (args.length == names.length) {
                 for (int i = 0; i < names.length; i++) {
                     if (!args[i].getArgumentName().equalsIgnoreCase(names[i]) ||
@@ -100,8 +95,13 @@ public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec
         }
         return false;
     }
+*/
 
     public ExecutableDescriptor describe() {
+        // todo -- resolve stuff refactoring
+        throw new NotSupportedException();
+
+/*
         PlSqlElement context = getUsageContext(TokenSet.create(
                 PlSqlElementTypes.PACKAGE_BODY, PlSqlElementTypes.PACKAGE_SPEC)
         );
@@ -138,19 +138,20 @@ public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec
         }
 
         return fd;
+*/
     }
 
 
-    public String getPackageName(){
+    public String getPackageName() {
         PsiElement parent = this.getParent();
-        if(parent instanceof PackageBody){
-            return ((PackageBody)parent).getPackageName();
-        } else if(parent instanceof PackageSpec){
-            return ((PackageSpec)parent).getPackageName();
+        if (parent instanceof PackageBody) {
+            return ((PackageBody) parent).getPackageName();
+        } else if (parent instanceof PackageSpec) {
+            return ((PackageSpec) parent).getPackageName();
         }
         return null;
     }
-    
+
     @Nullable
     public String getQuickNavigateInfo() {
         ArgumentList alist = getArgumentList();
@@ -165,7 +166,7 @@ public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec
         }
         return "[Procedure] "
                 + getEName().toLowerCase()
-                + ((out.length()>0)? " (" + out.toString().toLowerCase() + ") ": " ");
+                + ((out.length() > 0) ? " (" + out.toString().toLowerCase() + ") " : " ");
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {

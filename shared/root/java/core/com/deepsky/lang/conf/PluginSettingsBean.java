@@ -44,7 +44,9 @@ public class PluginSettingsBean {
 
     private String connection;
 
+    private String dbBrowserSelectedConnection;
     private int dbBrowserSplitDividerLocation;
+
 
     public String getDateFormat() {
         return dateFormat;
@@ -195,11 +197,21 @@ public class PluginSettingsBean {
         this.dbBrowserSplitDividerLocation = dbBrowserSplitDividerLocation;
     }
 
+
+
     public boolean isAutoCommit() {
         return autoCommit;
     }
 
     public void setAutoCommit(boolean autoCommit) {
         this.autoCommit = autoCommit;
+    }
+
+    public String getDbBrowserSelectedConnection() {
+        return dbBrowserSelectedConnection;
+    }
+
+    public void setDbBrowserSelectedConnection(String dbBrowserSelectedConnection) {
+        this.dbBrowserSelectedConnection = dbBrowserSelectedConnection;
     }
 }

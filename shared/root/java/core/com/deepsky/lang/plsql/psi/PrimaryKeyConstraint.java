@@ -25,6 +25,12 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface PrimaryKeyConstraint extends GenericConstraint {
     String[] getPrimaryKeys();
+
+    @NotNull
+    ColumnNameRef[] getPKColumns();
+
 }

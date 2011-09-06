@@ -25,13 +25,17 @@
 
 package com.deepsky.lang.plsql.psi.impl.ddl;
 
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
 import com.deepsky.lang.plsql.psi.GenericConstraint;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
 import com.deepsky.lang.plsql.psi.ddl.CreateTempTable;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.psi.ddl.PartitionSpecification;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
+import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
@@ -100,8 +104,21 @@ public class CreateTempTableImpl extends PlSqlElementBase implements CreateTempT
         }
     }
 
+    public int getTableType() {
+        return TableDefinition.TEMPORARY;
+    }
+
+    public int getPartitionType() {
+        return TableDefinition.PARTITION_NONE;
+    }
+
+    public PartitionSpecification getPartitionSpec() {
+        // TEMPORARY table can not be partitioned
+        return null;
+    }
+
     // presentation stuff
-    public Icon getIcon(int flags){
+    public Icon getIcon(int flags) {
         return Icons.TEMP_TABLE;
     }
 
@@ -120,22 +137,22 @@ public class CreateTempTableImpl extends PlSqlElementBase implements CreateTempT
 
 
     class TablePresentation implements ItemPresentation {
-        public String getPresentableText(){
+        public String getPresentableText() {
             return getTableName().toLowerCase();
         }
 
         @Nullable
-        public String getLocationString(){
-            return "(temporary table)";
+        public String getLocationString() {
+            return null; //"(temporary table)";
         }
 
         @Nullable
-        public Icon getIcon(boolean open){
+        public Icon getIcon(boolean open) {
             return Icons.TEMP_TABLE;
         }
 
         @Nullable
-        public TextAttributesKey getTextAttributesKey(){
+        public TextAttributesKey getTextAttributesKey() {
             return TextAttributesKey.find("SQL.TABLE");
         }
     }

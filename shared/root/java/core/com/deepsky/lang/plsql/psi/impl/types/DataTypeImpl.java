@@ -25,23 +25,64 @@
 
 package com.deepsky.lang.plsql.psi.impl.types;
 
+import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
 import com.deepsky.lang.plsql.psi.types.DataType;
 import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
-import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
-import com.deepsky.lang.common.PlSqlTokenTypes;
-import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 public class DataTypeImpl extends PlSqlElementBase implements DataType {
+
+    private static TokenSet DATATYPE_KEYWORDS = TokenSet.create(
+//         PlSqlTokenTypes.NUMBER,
+
+         PlSqlTokenTypes.KEYWORD_BINARY_INTEGER,
+         PlSqlTokenTypes.KEYWORD_NATURAL,
+         PlSqlTokenTypes.KEYWORD_POSITIVE,
+         PlSqlTokenTypes.KEYWORD_NUMBER,
+         PlSqlTokenTypes.KEYWORD_CHAR,
+         PlSqlTokenTypes.KEYWORD_LONG,
+            PlSqlTokenTypes.KEYWORD_RAW,
+            PlSqlTokenTypes.KEYWORD_BOOLEAN,
+            PlSqlTokenTypes.KEYWORD_DATE,
+            PlSqlTokenTypes.KEYWORD_TIMESTAMP,
+            PlSqlTokenTypes.KEYWORD_WITH,
+            PlSqlTokenTypes.KEYWORD_LOCAL,
+            PlSqlTokenTypes.KEYWORD_TIME,
+            PlSqlTokenTypes.KEYWORD_ZONE,
+            PlSqlTokenTypes.KEYWORD_INTERVAL,
+            PlSqlTokenTypes.KEYWORD_YEAR,
+            PlSqlTokenTypes.KEYWORD_DAY,
+            PlSqlTokenTypes.KEYWORD_TO,
+            PlSqlTokenTypes.KEYWORD_MONTH,
+            PlSqlTokenTypes.KEYWORD_SECOND,
+            PlSqlTokenTypes.KEYWORD_SMALLINT,
+            PlSqlTokenTypes.KEYWORD_REAL,
+            PlSqlTokenTypes.KEYWORD_NUMERIC,
+            PlSqlTokenTypes.KEYWORD_INT,
+            PlSqlTokenTypes.KEYWORD_INTEGER,
+            PlSqlTokenTypes.KEYWORD_PLS_INTEGER,
+            PlSqlTokenTypes.KEYWORD_DOUBLE,
+            PlSqlTokenTypes.KEYWORD_PRECISION,
+            PlSqlTokenTypes.KEYWORD_FLOAT,
+            PlSqlTokenTypes.KEYWORD_DECIMAL,
+            PlSqlTokenTypes.KEYWORD_VARCHAR,
+            PlSqlTokenTypes.KEYWORD_VARCHAR2,
+            PlSqlTokenTypes.KEYWORD_NVARCHAR,
+            PlSqlTokenTypes.KEYWORD_NVARCHAR2,
+            PlSqlTokenTypes.KEYWORD_CHARACTER,
+            PlSqlTokenTypes.KEYWORD_ROWID,
+            PlSqlTokenTypes.KEYWORD_BLOB,
+            PlSqlTokenTypes.KEYWORD_CLOB,
+            PlSqlTokenTypes.KEYWORD_BFILE
+    );
 
     public DataTypeImpl(ASTNode astNode) {
         super(astNode);
@@ -49,45 +90,64 @@ public class DataTypeImpl extends PlSqlElementBase implements DataType {
 
     public Type getType() {
 
+/*
+       ASTNode[] keywords = getNode().getChildren(DATATYPE_KEYWORDS);
+
+       for(int i = 0; i<keywords.length; i++){
+          DATATYPE_KEYWORDS.
+
+       }
+*/
+
         ASTNodeIterator iterator = new ASTNodeIterator(getNode().getFirstChildNode());
 
         String typeName = null;
         String length = null;
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             ASTNode node = iterator.next();
-            if(typeName == null){
+            if (typeName == null) {
                 typeName = node.getText();
-            } else if(node.getElementType() == PlSqlTokenTypes.NUMBER){
+            } else if (node.getElementType() == PlSqlTokenTypes.NUMBER) {
                 //
                 length = node.getText();
                 node = iterator.next();
-                if(node.getText().equalsIgnoreCase("char")){
+                if (node.getText().equalsIgnoreCase("char")) {
                     // todo - process 'char'
-                } else if(node.getText().equalsIgnoreCase("byte")){
+                } else if (node.getText().equalsIgnoreCase("byte")) {
                     // todo - process 'byte'
                 }
             }
         }
 
-        if(length != null){
-            return TypeFactory.createTypeByName(typeName, Integer.parseInt(length));
+        if (length != null) {
+            try {
+                return TypeFactory.createTypeByName(typeName, Integer.parseInt(length));
+            }catch (NumberFormatException e){
+                try {
+                    return TypeFactory.createTypeByName(typeName, (int)Float.parseFloat(length));
+                } catch(Throwable e1){
+                    return TypeFactory.createTypeByName(typeName);
+                }
+            }
         } else {
             return TypeFactory.createTypeByName(typeName);
         }
     }
 
-    public void validate() {
-        // valid always by syntax 
-    }
-
-    @NotNull
-    public ResolveContext777 resolveType() throws NameNotResolvedException {
-        throw new NameNotResolvedException("");
+    public boolean isTypeValid() {
+        // valid always by syntax
+        return true;
     }
 
 
-    public PsiElement getTypeName(){
-        return this.getFirstChild();
+    public PsiElement[] getTypeName() {
+       ASTNode[] keywords = getNode().getChildren(DATATYPE_KEYWORDS);
+       PsiElement[] out = new PsiElement[keywords.length];
+       for(int i =0;i <keywords.length; i++){
+         out[i] = keywords[i].getPsi();
+       }
+
+        return out;//this.getFirstChild();
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {

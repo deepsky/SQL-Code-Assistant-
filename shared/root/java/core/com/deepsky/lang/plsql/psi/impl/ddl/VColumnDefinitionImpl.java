@@ -32,9 +32,6 @@ import com.deepsky.lang.plsql.psi.SelectFieldExpr;
 import com.deepsky.lang.plsql.psi.ddl.CreateView;
 import com.deepsky.lang.plsql.psi.ddl.VColumnDefinition;
 import com.deepsky.lang.plsql.psi.impl.PlSqlCompositeNameBase;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.psibased.PsiPlainViewColumnContext;
 import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -50,7 +47,7 @@ public class VColumnDefinitionImpl extends PlSqlCompositeNameBase implements VCo
     @NotNull
     public CreateView getViewDefinition() {
         PsiElement psi = getParent();
-        if(psi instanceof CreateView){
+        if (psi instanceof CreateView) {
             return (CreateView) psi;
         }
         throw new SyntaxTreeCorruptedException();
@@ -71,10 +68,12 @@ public class VColumnDefinitionImpl extends PlSqlCompositeNameBase implements VCo
 //        return 0;
 //    }
 
+/*
     @NotNull
     public ResolveContext777 getResolveContext() throws NameNotResolvedException {
         return new PsiPlainViewColumnContext(getViewDefinition(), this);
     }
+*/
 
 //    @NotNull
 //    public VariantsProcessor777 createVariantsProcessor(PlSqlElement elem) throws NameNotResolvedException {
@@ -94,16 +93,16 @@ public class VColumnDefinitionImpl extends PlSqlCompositeNameBase implements VCo
 
         CreateView view = getViewDefinition();
         int pos = view.getColumnPos(getColumnName());
-        if(pos >=0){
+        if (pos >= 0) {
             SelectFieldCommon[] fields = view.getSelectExpr().getSelectFieldList();
-            if(fields.length>=pos){
-                if( fields[pos] instanceof SelectFieldExpr){
+            if (fields.length >= pos) {
+                if (fields[pos] instanceof SelectFieldExpr) {
                     try {
-                        Type t = ((SelectFieldExpr)fields[pos]).getExpression().getExpressionType();
+                        Type t = ((SelectFieldExpr) fields[pos]).getExpression().getExpressionType();
                         return "[View]   " + view.getViewName().toLowerCase()
-                        + "\n [Column] " + getColumnName().toLowerCase() + " "
-                        + t.toString().toUpperCase();
-                    } catch(Throwable e){
+                                + "\n [Column] " + getColumnName().toLowerCase() + " "
+                                + t.toString().toUpperCase();
+                    } catch (Throwable e) {
                     }
                 }
             }

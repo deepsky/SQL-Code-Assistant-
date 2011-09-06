@@ -58,6 +58,14 @@ public class PLSqlLexerEx extends PLSqlLexer {
 
     public Token nextToken() throws TokenStreamException {
 
+//        if(deffered == null){
+//            return super.nextToken();
+//        } else {
+//            Token t = deffered;
+//            deffered = null;
+//            return t;
+//        }
+
         if(deffered != null){
             Token t = deffered;
             deffered = null;
@@ -66,12 +74,18 @@ public class PLSqlLexerEx extends PLSqlLexer {
 
         Token token =  super.nextToken();
 
+        // workaround to get "prompt" and "rem" clauses (SQLPLUS tool) processed correctly
+
         if (prompt) {
             if (token == null) {
+                //if( token.getType() == PLSqlTokenTypes.LF) {
                 int h =0;
             } else if( token.getType() == PLSqlTokenTypes.LF || token.getType() == PLSqlTokenTypes.EOF) {
+                //aLexer.putBack(token);
                 deffered = token;
                 token = new CommonToken(PLSqlTokenTypes.CUSTOM_TOKEN, "");
+//                token = new CommonToken(PLSqlTokenTypes.CUSTOM_TOKEN, token.getText());
+                //token.
                 prompt = false;
             }
         } else if (token != null &&

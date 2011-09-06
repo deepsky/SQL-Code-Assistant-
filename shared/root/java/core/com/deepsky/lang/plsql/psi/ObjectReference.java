@@ -25,36 +25,8 @@
 
 package com.deepsky.lang.plsql.psi;
 
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.VariantsProcessor777;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.intellij.psi.PsiElement;
+public interface ObjectReference extends Expression, CompositeName {
 
-public interface ObjectReference extends Expression, CompositeName  {
-
-//    final int NON_RESOLVED = -1;
-//    final int COLUMN_REFERENCE = 1;
-//    final int SEQUENCE_REFERENCE = 2;
-//    final int FUNCTION_CALL = 3;
-//    final int VARIABLE_REF = 4;
-//    final int PACKAGE_CONST_REF = 5;
-
-//    boolean isResolved();
-//    int getRefType();
-
-    /**
-     * Get detail error message
-     * @return
-     */
-//    String getResolveErrorMessage();
-//    ResolveContext getColumnContext();
-
-//    PlSqlElement resolve();
-
-    // todo - for test only
-//    ResolveContext777 resolve2(PlSqlElement elem) throws SyntaxTreeCorruptedException;
-//    VariantsProcessor777 getVariantProcessor(PlSqlElement elem) throws SyntaxTreeCorruptedException;
-
-//    PsiElement[] getComposingNames();
+    // todo -- workaround, later ObjectReference should be splitted for GenericRef and PlSqlRef   
+    boolean isPlSqlVarRef();
 }

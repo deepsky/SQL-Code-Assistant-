@@ -54,8 +54,19 @@ public class GotoDbObjectAction extends GotoActionBase implements DumbAware {
 
             public void elementChosen(Object element) {
                 if (element == null) return;
-                final PsiFile file = ((PsiElement) element).getContainingFile();
-                final int offset = ((PsiElement) element).getTextOffset();
+                PsiElement psiElement = null;
+                if(element instanceof NavigationItemEx){
+                    psiElement = ((NavigationItemEx)element).loadPhisicalElement();
+                } else {
+                    psiElement = (PsiElement) element;
+                }
+
+                if(psiElement == null){
+                    // todo -- FIX ME the case when the requested object is in excluded folder (?)
+                    return;
+                }
+                final PsiFile file = psiElement.getContainingFile();
+                final int offset = psiElement.getTextOffset();
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     public void run() {
                         final OpenFileDescriptor descriptor = new OpenFileDescriptor(project, file.getVirtualFile(), offset);

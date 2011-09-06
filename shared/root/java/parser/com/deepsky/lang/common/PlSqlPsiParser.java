@@ -31,12 +31,16 @@ import antlr.TokenStream;
 import antlr.TokenStreamException;
 import antlr.collections.impl.BitSet;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
+import com.deepsky.integration.CustomRecognitionException;
 import com.deepsky.integration.PlSqlTokenType;
 import com.deepsky.lang.parser.plsql.ANTLRType2AdoptedType;
 import com.deepsky.lang.parser.plsql.PLSqlParserAdoptedExt;
+import com.deepsky.lang.plsql.parser.WrappedPackageException;
+import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
+import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,6 +48,8 @@ import java.util.LinkedList;
 
 
 public class PlSqlPsiParser implements PsiParser {
+
+    static final LoggerProxy log = LoggerProxy.getInstance("#PlSqlPsiParser");
 
     PLSqlParser2 parser;
     PsiBuilder builder;
@@ -55,18 +61,57 @@ public class PlSqlPsiParser implements PsiParser {
     public ASTNode parse(IElementType root, PsiBuilder builder) {
 
         this.builder = builder;
-        parser = new PLSqlParser2(new TokenStreamAdapter(builder), builder);
-        PsiBuilder.Marker rootMarker = builder.mark();
+//        builder.setDebugMode(true);
 
+        long ms1 = System.currentTimeMillis();
+        parser = new PLSqlParser2(new TokenStreamAdapter(builder), builder);
+        ms1 = System.currentTimeMillis() - ms1;
+
+        long ms2 = 0L, ms4 =0L;
+        ASTNode astNode = null;
+        long ms2_ = System.currentTimeMillis();
+
+        PsiBuilder.Marker rootMarker = builder.mark();
         try {
-            parser.start_rule();
-        } catch (RecognitionException e) {
-        } catch (TokenStreamException e) {
+            try {
+                parser.start_rule();
+            } catch (RecognitionException e) {
+                log.warn("[PARSER EXCEPTION] : " + e.getMessage());
+            } catch (TokenStreamException e) {
+                log.warn("[PARSER EXCEPTION] : " + e.getMessage());
+            }
+
+            rootMarker.done(root);
+            ms2 = System.currentTimeMillis() - ms2_;
+
+            long ms3_ = System.currentTimeMillis();
+            astNode = builder.getTreeBuilt();
+            ms4 = System.currentTimeMillis() - ms3_;
+
+        } finally {
+            log.debug("[PARSER] create parser: " + ms1 + ", parsing: " + ms2 + " build tree: " + ms4);
         }
 
-        rootMarker.done(root);
-        return builder.getTreeBuilt();
+        return astNode;
     }
+
+
+/* NOTE: for evaluation only
+    int treeWalker(ASTNode parent) {
+        ASTNode child = parent.getFirstChildNode();
+        int ret = 0;
+        while (child != null) {
+            ret++;
+            if (!(child instanceof LeafElement)) {
+                ret += treeWalker(child);
+            }
+            child = child.getTreeNext();
+        }
+
+
+        return ret;
+    }
+*/
 
     private LinkedList<Token> cached = new LinkedList<Token>();
     final static Token EOF_TOKEN = new Token(PLSqlTokenTypes.EOF, null);
@@ -143,6 +188,17 @@ public class PlSqlPsiParser implements PsiParser {
         public void consume() throws TokenStreamException {
             PlSqlTokenType etype = (PlSqlTokenType) builder.getTokenType();
             if (predicting == 0 && etype != null) {
+                // let's save some resources - skip non significant (leaf) tokens
+//                boolean skipMarker =
+//                        // todo -- should be skipped all elements except defined in the PLSqlTypesAdopted interface
+//                        etype == PlSqlTokenTypes.NUMBER
+//                        || etype == PlSqlTokenTypes.IDENTIFIER
+//                        || etype == PlSqlTokenTypes.QUOTED_STR
+//                        || etype == PlSqlTokenTypes.COMMA
+//                        || etype == PlSqlTokenTypes.DOT
+//                        || etype == PlSqlTokenTypes.OPEN_PAREN
+//                        || etype == PlSqlTokenTypes.CLOSE_PAREN;
+
                 boolean doNotSkipMarker =
                         etype == PlSqlTokenTypes.COLON_NEW
                                 || etype == PlSqlTokenTypes.COLON_OLD;
@@ -162,15 +218,81 @@ public class PlSqlPsiParser implements PsiParser {
             super.consume();
         }
 
+        public void reportError(RecognitionException ex) {
+//            log.warn("[PARSER] Syntax Error: " + ex); // + ", RulezzCameUp: " + RulezzCameUp);
+        }
+
+        /**
+         * Parser error-reporting function can be overridden in subclass
+         */
+        public void reportError(String s) {
+//            log.debug("[PARSER] Syntax Error2: " + s);
+        }
+
         public void recover(RecognitionException ex, BitSet tokenSet) throws TokenStreamException {
+//            log.warn("[PARSER] Recover start ------------");
             PsiBuilder.Marker m = builder.mark();
             super.recover(ex, tokenSet);
             m.done(ANTLRType2AdoptedType.type2etype[ERROR_TOKEN_A]);
+
+//            log.warn("[PARSER] Recover end --------------");
         }
 
         protected void process_wrapped_package(String package_name) {
             // ignore wrapped package
         }
+
+        public void procedure_spec() throws RecognitionException, TokenStreamException {
+            try {
+                super.procedure_spec();
+            } catch (CustomRecognitionException ex) {
+                returnType = -1;
+                recover(ex, _tokenSet_10101);
+            }
+            returnAST = null;
+        }
+
+        public void function_spec() throws RecognitionException, TokenStreamException {
+            try {
+                super.function_spec();
+            } catch (CustomRecognitionException ex) {
+                returnType = -1;
+                recover(ex, _tokenSet_10101);
+            }
+            returnAST = null;
+        }
+
+/*
+        public void function_body() throws RecognitionException, TokenStreamException {
+            try {
+                super.function_body();
+            } catch (CustomRecognitionException ex) {
+                returnType = -1;
+                recover(ex, _tokenSet_10101);
+            }
+            returnAST = null;
+        }
+
+        public void procedure_body() throws RecognitionException, TokenStreamException {
+            try {
+                super.procedure_body();
+            } catch (CustomRecognitionException ex) {
+                returnType = -1;
+                recover(ex, _tokenSet_10101);
+            }
+            returnAST = null;
+        }
+*/
+    }
+
+    public static final BitSet _tokenSet_10101 = new BitSet();
+
+    static {
+        _tokenSet_10101.add(PLSqlTokenTypes.LITERAL_procedure);
+        _tokenSet_10101.add(PLSqlTokenTypes.LITERAL_function);
+        _tokenSet_10101.add(PLSqlTokenTypes.LITERAL_type);
+        _tokenSet_10101.add(PLSqlTokenTypes.LITERAL_subtype);
+        _tokenSet_10101.add(PLSqlTokenTypes.LITERAL_pragma);
     }
 }
 

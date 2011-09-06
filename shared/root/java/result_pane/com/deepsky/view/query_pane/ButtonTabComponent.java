@@ -25,9 +25,9 @@
 
 package com.deepsky.view.query_pane;
 
+import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
 import com.deepsky.view.query_pane.markup.SqlStatementMarker;
 import com.deepsky.view.query_pane.markup.SqlStatementMarkerListener;
-import com.deepsky.database.SqlScriptManager;
 import com.deepsky.lang.plsql.psi.utils.Formatter;
 import com.deepsky.view.Icons;
 
@@ -216,7 +216,7 @@ public class ButtonTabComponent extends JPanel implements SqlStatementMarkerList
             if (pane.getSelectedIndex() == i) {
                 if (toggle && sqlMarker != null) {
                     if (sqlMarker.valid()) {
-                        SqlScriptManager.moveToOffset(
+                        PlSqlUtil.moveToOffset(
                                 sqlMarker.getPlSqlFile(),
                                 sqlMarker.getHighlighter().getStartOffset()
                         );

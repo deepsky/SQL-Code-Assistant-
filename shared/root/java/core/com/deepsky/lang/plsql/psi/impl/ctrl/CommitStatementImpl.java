@@ -44,5 +44,5 @@ public class CommitStatementImpl extends PlSqlElementBase implements CommitState
             super.accept(visitor);
         }
     }
-    
+
 }

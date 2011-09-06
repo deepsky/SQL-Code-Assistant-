@@ -25,11 +25,15 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.lang.ASTNode;
-import com.deepsky.lang.plsql.psi.PrimaryKeyConstraint;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.psi.ColumnNameRef;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.PrimaryKeyConstraint;
+import com.deepsky.utils.StringUtils;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.TokenSet;
+import org.jetbrains.annotations.NotNull;
 
 public class PrimaryKeyConstraintImpl extends PlSqlElementBase implements PrimaryKeyConstraint {
 
@@ -38,17 +42,43 @@ public class PrimaryKeyConstraintImpl extends PlSqlElementBase implements Primar
     }
 
     public String[] getPrimaryKeys() {
-        ASTNode[] columnLists = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_LIST));
-        ASTNode[] columns= columnLists[0].getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_DDL));
-        String[] out = new String[columns==null? 0: columns.length];
-        for(int i=0; i<out.length; i++){
-            out[i] = columns[i].getText();
+        ASTNode pkSpec = getNode().findChildByType(PLSqlTypesAdopted.PK_SPEC);
+        __ASSERT_NOT_NULL__(pkSpec);
+        ASTNode[] columnLists = pkSpec.getChildren(TokenSet.create(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST));
+        ASTNode[] columns = columnLists[0].getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_REF));
+        String[] out = new String[columns == null ? 0 : columns.length];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = StringUtils.discloseDoubleQuotes(columns[i].getText());
         }
 
         return out;
     }
 
-    public String getConstraintName() {
-        return getNode().findChildByType(PLSqlTypesAdopted.CONSTRAINT_NAME).getText();
+    @NotNull
+    public ColumnNameRef[] getPKColumns() {
+        ASTNode pkSpec = getNode().findChildByType(PLSqlTypesAdopted.PK_SPEC);
+        __ASSERT_NOT_NULL__(pkSpec);
+        ASTNode columnList = pkSpec.findChildByType(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST);
+        ASTNode[] columns = columnList.getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_REF));
+        ColumnNameRef[] out = new ColumnNameRef[columns == null ? 0 : columns.length];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = (ColumnNameRef) columns[i].getPsi();
+        }
+        return out;
     }
+
+    public String getConstraintName() {
+        return StringUtils.discloseDoubleQuotes(
+                getNode().findChildByType(PLSqlTypesAdopted.CONSTRAINT_NAME).getText()
+        );
+    }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitPrimaryKeyConstraint(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
 }

@@ -25,14 +25,11 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.BetweenCondition;
 import com.deepsky.lang.plsql.psi.Expression;
-import com.deepsky.lang.plsql.psi.Visitor;
-import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
-import com.deepsky.lang.validation.ValidationException;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,7 +46,7 @@ public class BetweenConditionImpl extends ConditionBase implements BetweenCondit
 
     public Expression getLead() {
         ASTNode[] rr = getNode().getChildren(PlSqlElementTypes.EXPR_TYPES);
-        if(rr.length == 3){
+        if (rr.length == 3) {
             return (Expression) rr[0].getPsi();
         }
         return null;
@@ -57,7 +54,7 @@ public class BetweenConditionImpl extends ConditionBase implements BetweenCondit
 
     public Expression getLeft() {
         ASTNode[] rr = getNode().getChildren(PlSqlElementTypes.EXPR_TYPES);
-        if(rr.length == 3){
+        if (rr.length == 3) {
             return (Expression) rr[1].getPsi();
         }
         return null;
@@ -65,8 +62,8 @@ public class BetweenConditionImpl extends ConditionBase implements BetweenCondit
 
     public Expression getRight() {
         ASTNode[] rr = getNode().getChildren(PlSqlElementTypes.EXPR_TYPES);
-        if(rr.length == 3){
-            return (Expression) rr[2].getPsi();    
+        if (rr.length == 3) {
+            return (Expression) rr[2].getPsi();
         }
         return null;
     }
@@ -76,5 +73,5 @@ public class BetweenConditionImpl extends ConditionBase implements BetweenCondit
         return false;
     }
 
-   
+
 }

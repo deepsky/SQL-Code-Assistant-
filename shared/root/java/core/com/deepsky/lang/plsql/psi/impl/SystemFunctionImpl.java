@@ -25,30 +25,37 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.deepsky.lang.plsql.psi.SystemFunction;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.CallArgument;
 import com.deepsky.lang.plsql.psi.CallableCompositeName;
-import com.deepsky.lang.plsql.psi.CallArgumentList;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.SystemFunction;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.utils.StringUtils;
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class SystemFunctionImpl extends PlSqlElementBase implements SystemFunction {
 
     String name;
     Type type;
+    boolean isAggregate = false;
+
     public SystemFunctionImpl(ASTNode astNode, String name, Type type) {
         super(astNode);
         this.name = name;
         this.type = type;
+    }
+
+    public SystemFunctionImpl(ASTNode astNode, String name, Type type, boolean isAggregate) {
+        super(astNode);
+        this.name = name;
+        this.type = type;
+        this.isAggregate = isAggregate;
     }
 
     @NotNull
@@ -62,7 +69,7 @@ public class SystemFunctionImpl extends PlSqlElementBase implements SystemFuncti
     }
 
     @NotNull
-    public CallArgument[] getCallArgumentList() {
+    public CallArgument[] getCallArguments() {
         // todo - not supported at the moment
         return new CallArgument[0];
     }
@@ -72,64 +79,16 @@ public class SystemFunctionImpl extends PlSqlElementBase implements SystemFuncti
         return type;
     }
 
-    
-    // todo -----------------------------------
-    @NotNull
-    public ResolveContext777 resolveContext() throws NameNotResolvedException {
-        throw new NameNotResolvedException("Not supported");
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitSystemFunctionCall(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
-    public String getFragmentText() {
-        return StringUtils.discloseDoubleQuotes(getText());
+    public boolean isAggregate() {
+        return isAggregate;
     }
-
-
-    // todo -- [start] PsiReference specific
-    public PsiElement getElement() {
-        // todo --
-        return null;
-    }
-
-    public TextRange getRangeInElement() {
-        // todo --
-        return null;
-    }
-
-    public PsiElement resolve() {
-        // todo --
-        return null;
-    }
-
-    public String getCanonicalText() {
-        // todo --
-        return null;
-    }
-
-    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        // todo --
-        return null;
-    }
-
-    public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-        // todo --
-        return null;
-    }
-
-    public boolean isReferenceTo(PsiElement element) {
-        // todo --
-        return false;
-    }
-
-    @NotNull
-    public Object[] getVariants() {
-        // todo --
-        return new Object[0];
-    }
-
-    public boolean isSoft() {
-        // todo --
-        return false;
-    }
-    // todo -- [end] PsiReference specific
-
 }

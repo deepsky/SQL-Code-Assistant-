@@ -25,14 +25,16 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.Expression;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.SelectFieldExpr;
 import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SelectFieldExprImpl extends PlSqlElementBase implements SelectFieldExpr {
 
@@ -42,7 +44,7 @@ public class SelectFieldExprImpl extends PlSqlElementBase implements SelectField
 
     public String getAlias() {
         ASTNode alias = getNode().findChildByType(PlSqlElementTypes.ALIAS_NAME);
-        if(alias != null){
+        if (alias != null) {
             return alias.findChildByType(PlSqlElementTypes.ALIAS_IDENT).getText();
         } else {
             return null;
@@ -51,7 +53,7 @@ public class SelectFieldExprImpl extends PlSqlElementBase implements SelectField
 
     public Expression getExpression() {
         ASTNode expr = getNode().findChildByType(PlSqlElementTypes.EXPR_TYPES);
-        if(expr != null){
+        if (expr != null) {
             return (Expression) expr.getPsi();
         } else {
             throw new SyntaxTreeCorruptedException();
@@ -59,7 +61,7 @@ public class SelectFieldExprImpl extends PlSqlElementBase implements SelectField
     }
 
     @Nullable
-    public String getQuickNavigateInfo(){
+    public String getQuickNavigateInfo() {
 
 //        if(findParent(Subquery.class) != null){
 //            Expression expr = getExpression();
@@ -78,32 +80,31 @@ public class SelectFieldExprImpl extends PlSqlElementBase implements SelectField
 //                return _expr;
 //            }
 //        } else if(findParent(SelectStatement.class) != null){
-            Expression expr = getExpression();
-            String _expr = expr.getText();
-            if(_expr.length() > 14){
-                _expr = _expr.substring(0, 14) + " ...";
-            }
+        Expression expr = getExpression();
+        String _expr = expr.getText();
+        if (_expr.length() > 14) {
+            _expr = _expr.substring(0, 14) + " ...";
+        }
 
-            String alias = getAlias();
-            if(alias != null ){
-                _expr += "  AS " + alias.toUpperCase();
-            }
-            try {
-                return _expr + " [Type] " + expr.getExpressionType().typeName().toLowerCase();
-            }catch (ValidationException e){
-                return _expr;
-            }
+        String alias = getAlias();
+        if (alias != null) {
+            _expr += "  AS " + alias.toUpperCase();
+        }
+        try {
+            return _expr + " [Type] " + expr.getExpressionType().typeName().toLowerCase();
+        } catch (ValidationException e) {
+            return _expr;
+        }
 //        }
 //        return null;
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitSelectFieldExpr(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitSelectFieldExpr(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
 }

@@ -28,19 +28,32 @@ package com.deepsky.lang.plsql.folding;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.common.PlSqlTokenTypes;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.ArrayList;
 
 public class PlSqlCodeFoldingBuilder implements FoldingBuilder {
+    static final Logger log = Logger.getInstance("#PlSqlCodeFoldingBuilder");
 
-    public FoldingDescriptor[] buildFoldRegions(ASTNode node, Document document) {
+
+    @NotNull
+    public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
         List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
-        appendDescriptors(node, document, descriptors);
+        if(node.getElementType() == PlSqlTokenTypes.FILE){
+            long ms = System.currentTimeMillis();
+            appendDescriptors(node, document, descriptors);
+            ms = System.currentTimeMillis() - ms;
+            log.info("Time spent: " + ms);
+        } else {
+            appendDescriptors(node, document, descriptors);
+            log.info("Not FILE but " + node.getElementType());
+        }
         return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
     }
 

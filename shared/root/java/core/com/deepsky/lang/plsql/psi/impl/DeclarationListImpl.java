@@ -25,17 +25,13 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.DeclarationList;
-import com.deepsky.lang.plsql.psi.Declaration;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.psi.Declaration;
+import com.deepsky.lang.plsql.psi.DeclarationList;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DeclarationListImpl extends PlSqlElementBase implements DeclarationList {
     public DeclarationListImpl(ASTNode astNode) {
@@ -45,9 +41,9 @@ public class DeclarationListImpl extends PlSqlElementBase implements Declaration
     @NotNull
     public Declaration[] getDeclList() {
         ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.DECLARATIONS);
-        Declaration[] out = new Declaration[(nodes==null)? 0: nodes.length];
+        Declaration[] out = new Declaration[(nodes == null) ? 0 : nodes.length];
 
-        for(int i=0; i<out.length; i++){
+        for (int i = 0; i < out.length; i++) {
             out[i] = (Declaration) nodes[i].getPsi();
         }
 

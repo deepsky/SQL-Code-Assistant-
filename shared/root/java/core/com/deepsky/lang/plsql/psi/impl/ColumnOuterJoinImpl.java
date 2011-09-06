@@ -25,13 +25,11 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ColumnOuterJoin;
 import com.deepsky.lang.plsql.psi.ColumnSpec;
-import com.deepsky.lang.plsql.psi.resolve.*;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,13 +44,13 @@ public class ColumnOuterJoinImpl extends PlSqlElementBase implements ColumnOuter
     }
 
     @NotNull
-    private ColumnSpec getColumnSpec(){
+    private ColumnSpec getColumnSpec() {
         ASTNode column_spec = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_SPEC);
-        if(column_spec == null){
+        if (column_spec == null) {
             throw new SyntaxTreeCorruptedException();
         }
 
-        return (ColumnSpec)column_spec.getPsi();
+        return (ColumnSpec) column_spec.getPsi();
     }
 
     @NotNull

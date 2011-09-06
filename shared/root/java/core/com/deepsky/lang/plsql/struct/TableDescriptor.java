@@ -37,6 +37,7 @@ public interface TableDescriptor extends DbObject {
 
     String[] getColumnNames();
     Type getColumnType(String column);
+
     boolean isColumnNullable(String column);
 
     ColumnDescriptor getColumnDescriptor(String column);

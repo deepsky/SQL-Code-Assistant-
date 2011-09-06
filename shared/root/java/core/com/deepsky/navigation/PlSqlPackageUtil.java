@@ -29,8 +29,8 @@ import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.PackageBody;
 import com.deepsky.lang.plsql.psi.PackageSpec;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
-import com.deepsky.lang.plsql.psi.resolve.ASTNodeHandler;
-import com.deepsky.lang.plsql.psi.resolve.ASTTreeProcessor;
+//import com.deepsky.lang.plsql.psi.resolve.ASTNodeHandler;
+//import com.deepsky.lang.plsql.psi.resolve.ASTTreeProcessor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
@@ -48,6 +48,8 @@ public class PlSqlPackageUtil {
             return null;
         } else {
             final String[] out = {null};
+/*
+todo -- resolve stuff refactoring
             ASTTreeProcessor runner = new ASTTreeProcessor();
             runner.add(new ASTNodeHandler() {
                 @NotNull
@@ -66,6 +68,7 @@ public class PlSqlPackageUtil {
             });
 
             runner.process(elem.getNode());
+*/
             return out[0];
         }
     }
@@ -76,6 +79,9 @@ public class PlSqlPackageUtil {
             return null;
         } else {
             final PlSqlElement[] out = {null};
+/*
+todo -- resolve stuff refactoring
+
             ASTTreeProcessor runner = new ASTTreeProcessor();
             runner.add(new ASTNodeHandler() {
                 @NotNull
@@ -94,6 +100,7 @@ public class PlSqlPackageUtil {
             });
 
             runner.process(elem.getNode());
+*/
             return out[0];
         }
     }

@@ -26,36 +26,29 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.integration.PlSqlElementType;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.common.PlSqlFile;
+import com.deepsky.lang.common.ResolveProvider;
 import com.deepsky.lang.plsql.NotSupportedException;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.ObjectReference;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.resolve.*;
-import com.deepsky.lang.plsql.psi.var_proc.VariantsProcessor777_GenericRef;
-import com.deepsky.lang.plsql.psi.var_proc.VariantsProcessor777_PlSqlVar;
-import com.deepsky.lang.plsql.psi.var_proc.VariantsProcessor777_TableColumn;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
 import java.util.Set;
 
 
 public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements ObjectReference {
 
-    public ObjectReferenceImpl(ASTNode astNode) {
+    boolean isPlSqlVarRef;
+
+    public ObjectReferenceImpl(ASTNode astNode, boolean isPlSqlVarRef) {
         super(astNode);
+        this.isPlSqlVarRef = isPlSqlVarRef;
     }
 
+/*
     @NotNull
     protected VariantsProcessor777 createVariantsProcessorFront() throws NameNotResolvedException {
         IElementType type = getParent().getNode().getElementType();
@@ -133,10 +126,11 @@ public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements Objec
 
         throw new NameNotResolvedException("Name not resolved");
     }
+*/
 
-    private boolean contains(Set<PlSqlElementType> nodes, PlSqlElementType ... probes ){
-        for(PlSqlElementType type: probes){
-            if(nodes.contains(type)){
+    private boolean contains(Set<PlSqlElementType> nodes, PlSqlElementType... probes) {
+        for (PlSqlElementType type : probes) {
+            if (nodes.contains(type)) {
                 return true;
             }
         }
@@ -153,29 +147,10 @@ public class ObjectReferenceImpl extends PlSqlCompositeNameBase implements Objec
 
     @NotNull
     public Type getExpressionType() {
-
-        NameFragmentRef[] fragments = getNamePieces();
-        NameFragmentRef last = fragments[fragments.length - 1];
-
-        try {
-            ResolveContext777 ctx = last.resolveContext();
-            return ctx.getType();
-        } catch (SyntaxTreeCorruptedException e1) {
-            throw new ValidationException("Name '" + getText() + "' not resolved", getNode());
-        } catch (ProcessCanceledException e) {
-            String text = getText();
-            throw e;
-        } catch (NotSupportedException e) {
-            throw new ValidationException("Name '" + getText() + "' not resolved", getNode());
-        } catch (NameNotResolvedException e1) {
-            throw new ValidationException(e1.getMessage(), getNode());
-        }
+        return ((ResolveProvider) getContainingFile()).getResolver().resolveType(this);
     }
 
-
-    @NotNull
-    public ResolveContext777 getResolveContext() throws NameNotResolvedException {
-        ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.NAME_FRAGMENT));
-        return ResolveHelper4.resolveContext2((NameFragmentRef) nodes[0].getPsi(), nodes.length);
+    public boolean isPlSqlVarRef() {
+        return isPlSqlVarRef;
     }
 }

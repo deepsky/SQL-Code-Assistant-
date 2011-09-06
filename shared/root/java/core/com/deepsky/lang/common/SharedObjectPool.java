@@ -25,11 +25,8 @@
 
 package com.deepsky.lang.common;
 
-import com.intellij.openapi.util.UserDataHolder;
-import com.intellij.openapi.util.Key;
-
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class SharedObjectPool {
 
@@ -44,21 +41,21 @@ public class SharedObjectPool {
         String lib = System.getProperty(ORACLE_LIB_PROP);
         String driver = System.getProperty(JDBC_DRIVER_PROP);
 
-        if(lib != null){
+        if (lib != null) {
             userDataMap.put(SharedConstants.ORACLE_JDBC_JAR_PATH, lib);
         }
 
-        if(driver != null){
+        if (driver != null) {
             userDataMap.put(SharedConstants.ORACLE_JDBC_DRIVER, driver);
         }
-       
+
     }
 
-    public static synchronized Object getUserData(String key){
+    public static synchronized Object getUserData(String key) {
         return userDataMap.get(key);
     }
 
-    public static synchronized void putUserData(String key, Object o){
+    public static synchronized void putUserData(String key, Object o) {
         userDataMap.put(key, o);
     }
 

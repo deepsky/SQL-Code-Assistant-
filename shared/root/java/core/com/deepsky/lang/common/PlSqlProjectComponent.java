@@ -26,37 +26,36 @@
 package com.deepsky.lang.common;
 
 import com.deepsky.database.*;
-import com.deepsky.database.ora.CacheManager3;
+import com.deepsky.database.impl.ConnectionManagerImpl;
 import com.deepsky.database.ora.DbUrl;
-import com.deepsky.database.ora.OraObjectCache3;
-import com.deepsky.lang.conf.PluginSettingsBean;
+import com.deepsky.database.ora.DbUrlSID;
+import com.deepsky.database.ora2.DbSchemaIndexer;
+import com.deepsky.lang.integration.LocalFSChangeTracker;
+import com.deepsky.lang.integration.PlSqlFileChangeTracker;
 import com.deepsky.lang.plsql.ConfigurationException;
+import com.deepsky.lang.plsql.indexMan.FSIndexer;
+import com.deepsky.lang.plsql.indexMan.IndexManagerImpl;
+import com.deepsky.lang.plsql.sqlIndex.IndexManager;
+import com.deepsky.navigation.NameLookupService;
+import com.deepsky.navigation.impl.NameLookupServiceImpl;
 import com.deepsky.navigation.DbObjectContributor;
-import com.deepsky.navigation.DbObjectContributorImpl;
+import com.deepsky.navigation.impl.DbObjectContribNewImpl;
+import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.view.query_pane.QueryResultWindow;
-import com.deepsky.view.schema_pane.DBBrowserWindow;
+//import com.deepsky.view.schema_pane.DBBrowserWindow;
+import com.deepsky.view.query_pane.converters.TIMESTAMPLTZ_Convertor;
+import com.deepsky.view.query_pane.converters.TIMESTAMPTZ_Convertor;
+import com.deepsky.view.query_pane.converters.TIMESTAMP_Convertor;
 import com.deepsky.view.utils.ProgressIndicatorHelper;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 
-@State(
-        name = PlSqlProjectComponent.componentName,
-        storages = {@Storage(id = "myId", file = "$PROJECT_FILE$")}
-)
-public class PlSqlProjectComponent implements ProjectComponent, PersistentStateComponent<PluginSettingsBean> {
+public class PlSqlProjectComponent implements ProjectComponent {
 
     private final Logger log = Logger.getInstance("#PlSqlProjectComponent");
 
@@ -67,44 +66,74 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
     ConnectionManagerListener connectionListener;
     CacheManagerListener cacheListener;
 
-    CacheManager cacheManager;
     ConnectionManagerImpl connectionManager;
-    ObjectCache objectCache;
 
     QueryResultWindow qrWindow;
-    DBBrowserWindow dbBrowser;
+//    DBBrowserWindow dbBrowser;
+
+    DbSchemaIndexer dbIndexer;
+    FSIndexer fsIndexer;
+    IndexManager indexManager;
+
+    DbUrl dbUrl;
+    NameLookupService nameLookupService;
 
     public PlSqlProjectComponent(Project project) {
         this.project = project;
     }
 
     public void projectOpened() {
-        final PluginSettingsBean current = getPluginSettings();
+        dbUrl = new DbUrlSID(IndexManager.FS_URL.getFullUrl()){
+            public String getAlias() {
+                return project.getName();
+            }
+        };
+        PluginKeys.LOCAL_FS_URL.putData(dbUrl, project);
+
+        final SqlCodeAssistantSettings settings = SqlCodeAssistantSettings.getInstance(project);
+        PluginKeys.PLUGIN_SETTINGS.putData(settings, project);
+
+        PluginKeys.TS_CONVERTOR.putData(new TIMESTAMP_Convertor(settings), project);
+        PluginKeys.TSTZ_CONVERTOR.putData(new TIMESTAMPTZ_Convertor(settings), project);
+        PluginKeys.TSLTZ_CONVERTOR.putData(new TIMESTAMPLTZ_Convertor(settings), project);
 
         connectionListener = new StateListenerImpl();
         cacheListener = new CacheManagerListenerImpl();
 
-        cacheManager = new CacheManager3();
-        PluginKeys.CACHE_MANAGER.putData(cacheManager, project);
-        cacheManager.addListener(cacheListener);
+//        cacheManager = new CacheManager3();
+//        PluginKeys.CACHE_MANAGER.putData(cacheManager, project);
+//        cacheManager.addListener(cacheListener);
+//
+//        objectCache = new OraObjectCache3(null); //cacheManager);
+//        PluginKeys.OBJECT_CACHE.putData(objectCache, project);
 
-        objectCache = new OraObjectCache3(cacheManager);
-        PluginKeys.OBJECT_CACHE.putData(objectCache, project);
+        indexManager = new IndexManagerImpl(project);
+        PluginKeys.SQL_INDEX_MAN.putData(indexManager, project);
+        indexManager.start();
 
-        connectionManager = new ConnectionManagerImpl(project, cacheManager);
+
+        // create USER schema database index
+        dbIndexer = new DbSchemaIndexer(project, indexManager);
+        PluginKeys.DB_NAMES_INDEXER.putData(dbIndexer, project);
+        dbIndexer.addListener(cacheListener);
+
+        // create SYS schema database index
+        // todo -- implement
+
+        connectionManager = new ConnectionManagerImpl(project, dbIndexer);
         PluginKeys.CONNECTION_MANAGER.putData(connectionManager, project);
         connectionManager.addStateListener(connectionListener);
+        connectionManager.addStateListener(indexManager);
 
-        // activate connection if it is elgable for logging on start
-        final String session = current.getLastConnection();
+        // activate connection if it is elegable for logging on start
+        final String session = settings.getConnection();
         if (session != null) {
             // run some later to avoid collisions with setting of Project ref in the context
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 public void run() {
                     try {
-                        DbUrl dbUrl = new DbUrl(session);
-                        connectionManager.activateSessionOnStart(dbUrl);
-                        MyProgressIndicator indicator = connectionManager.getStartupConnectionIndicator();
+                        DbUrl dbUrl = DbUrl.parse(session);
+                        MyProgressIndicator indicator = connectionManager.activateSessionOnStart(dbUrl);
                         if (indicator != null) {
                             String url = indicator.targetDatabase();
                             new ProgressIndicatorHelper(project, "Connecting to " + url).runBackgrounableWithProgressInd(indicator, true);
@@ -112,31 +141,144 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
 
                     } catch (ConfigurationException e) {
                         // incorrect URL ?
-                        current.setLastConnection(null);
+                        settings.setConnection(null);
                     }
                 }
             });
         }
 
+        long ms = System.currentTimeMillis();
+        // preload indexes on start
+        int nbr = 0;
+
+        boolean flag = settings.isAccessOfflineEnabled();
+        ConnectionInfo[] infos = connectionManager.getSessionList();
+        DbUrl[] urls = new DbUrl[infos.length];
+        for(int i =0; i<infos.length; i++){
+            urls[i] = infos[i].getUrl();
+            nbr++;
+        }
+        indexManager.enableOfflineCache(urls, flag);
+
 /*
-        MyProgressIndicator indicator = connectionManager.getStartupConnectionIndicator();
-        if (indicator != null) {
-            String url = indicator.targetDatabase();
-            new ProgressIndicatorHelper(project, "Connecting to " + url).runBackgrounableWithProgressInd(indicator, true);
+        for(ConnectionInfo info: connectionManager.getSessionList()){
+            DbUrl url = info.getUrl();
+            //indexManager.findOrCreateIndex(url);
+            nbr++;
         }
 */
+        ms = System.currentTimeMillis() - ms;
+        log.info("Nbr preloaded indexes: " + nbr + ", time spent: " + ms);
 
+        // Create the Request Result Pane
         qrWindow = new QueryResultWindow(project, connectionManager);
         PluginKeys.QR_WINDOW.putData(qrWindow, project);
 
-        dbBrowser = new DBBrowserWindow(project);
+        // Create DB Browser window
+//        dbBrowser = new DBBrowserWindow(project);
 
-        DbObjectContributor dbObjContrib = new DbObjectContributorImpl();
+        DbObjectContributor dbObjContrib = new DbObjectContribNewImpl(); //utorImpl();
         PluginKeys.DB_OBJECT_CONTR.putData(dbObjContrib, project);
 
+        // create SQL file indexer
+        fsIndexer = new FSIndexer(project, indexManager.getFSIndex());
+        fsIndexer.start();
+//        PluginKeys.FS_SQL_NAMES_INDEXER.putData(fsIndexManager, project);
+
+/*
+        MessageBus bus1 = project.getMessageBus();
+        TestEventListener ll = new TestEventListener(){
+
+            public void checkMe() {
+                int hh =0;
+            }
+        };
+        bus1.connect().subscribe(TestEventListener.TOPIC, ll);
+*/
+
+/*
+        PsiTreeChangeAggregator aggr = new PsiTreeChangeAggregator();
+//        PsiManager.getInstance(project).addPsiTreeChangeListener(aggr, project);
+
+        MessageBus bus1 = project.getMessageBus();
+        bus1.connect().subscribe(PsiDocumentTransactionListener.TOPIC, aggr);
+*/
+
+/*
+        PluginKeys.EVNT_CHANNEL.putData(aggr, project);
+*/
+
+        LocalFSChangeTracker localFSAggr = new LocalFSChangeTracker(project, fsIndexer);
+        localFSAggr.start();
+
+        PlSqlFileChangeTracker tracker = new PlSqlFileChangeTracker();
+        PluginKeys.PLSQLFILE_CHANGE_TRACKER.putData(tracker, project);
+
+        nameLookupService = new NameLookupServiceImpl(project);
+        PluginKeys.NAME_LOOKUP.putData(nameLookupService, project);
+
+//        Class clazz = StoresFactory.getProjectStoreClass(false);
+
+        int hh = 0;
         // Setup annotator
 //        updateAnnotator(current);
         // --------------
+
+//        VirtualFileManager vfman = VirtualFileManager.getInstance();
+
+
+/*
+        MessageBus bus = project.getMessageBus();
+        bus.connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+            public void before(List<? extends VFileEvent> events) {
+                for (VFileEvent event : events) {
+                    String path = event.getPath().toLowerCase();
+                    for(FileNameMatcher m : FileTypeManager.getInstance().getAssociations(PlSqlSupportLoader.PLSQL)){
+                        if( m.accept(path)){
+                            log.info("###### " + event );
+                        }
+                    }
+//                    if (path.endsWith(".sql") || path.endsWith(".pkb") || path.endsWith(".pks")) {
+//                        log.info("###### " + event.getPath());
+//                    }
+                }
+            }
+
+            public void after(List<? extends VFileEvent> events) {
+                for (VFileEvent event : events) {
+                    String path = event.getPath().toLowerCase();
+                    for(FileNameMatcher m : FileTypeManager.getInstance().getAssociations(PlSqlSupportLoader.PLSQL)){
+                        if( m.accept(path)){
+                            log.info("_____ " + event );
+                        }
+                    }
+//                    if (path.endsWith(".sql") || path.endsWith(".pkb") || path.endsWith(".pks")) {
+//                        log.info("_____ " + event.getPath());
+//                    }
+                }
+            }
+        });
+*/
+
+/*
+        bus.connect().subscribe(ProjectTopics.MODULES, new ModuleListener() {
+            public void moduleAdded(Project project, Module module) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public void beforeModuleRemoved(Project project, Module module) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public void moduleRemoved(Project project, Module module) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public void modulesRenamed(Project project, List<Module> modules) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
+*/
 
     }
 
@@ -144,13 +286,15 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
     public void projectClosed() {
 //        log.info("#projectClosed :" + project);
         connectionManager.removeStateListener(connectionListener);
-        cacheManager.removeListener(cacheListener);
 
         connectionManager.close();
-        objectCache.close();
+//        objectCache.close();
 
         qrWindow.close();
-        dbBrowser.close();
+//        dbBrowser.close();
+
+        fsIndexer.stop();
+        indexManager.stop();
     }
 
     @NotNull
@@ -166,7 +310,7 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
         int h = 0;
     }
 
-    class CacheManagerListenerImpl implements CacheManagerListener {
+    private class CacheManagerListenerImpl implements CacheManagerListener {
         public void handleUpdate(int state) {
             if (state == CacheManagerListener.CACHE_UPDATED) {
                 runCodeAnalyzer();
@@ -174,20 +318,23 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
         }
     }
 
-    class StateListenerImpl implements ConnectionManagerListener {
+    private class StateListenerImpl implements ConnectionManagerListener {
         public void handleUpdate(StateEvent state) {
             if (state.getStatus() == ConnectionManagerListener.DISCONNECTED) {
 
-                PluginSettingsBean current = getPluginSettings();
-                current.setLastConnection(null);
-                savePluginSettings(current);
+//                PluginSettingsBean current = getPluginSettings();
+//                current.setLastConnection(null);
+//                savePluginSettings(current);
 
+                PluginKeys.PLUGIN_SETTINGS.getData(project).setConnection(null);
                 runCodeAnalyzer();
             } else if (state.getStatus() == ConnectionManagerListener.CONNECTED) {
-
-                PluginSettingsBean current = getPluginSettings();
-                current.setLastConnection(connectionManager.getDbUrl().getFullUrl());
-                savePluginSettings(current);
+//                PluginSettingsBean current = getPluginSettings();
+//                current.setLastConnection(connectionManager.getDbUrl().getFullUrl());
+//                savePluginSettings(current);
+                PluginKeys.PLUGIN_SETTINGS.getData(project).setConnection(
+                        connectionManager.getDbUrl().getFullUrl()
+                );
             }
         }
     }
@@ -204,6 +351,7 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
         });
     }
 
+/*
     @Nls
     public String getDisplayName() {
         return "SQL Code Assistant";
@@ -218,7 +366,9 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
     public String getHelpTopic() {
         return null;
     }
+*/
 
+/*
     public PluginSettingsBean getState() {
         PluginSettingsBean current = getPluginSettings();
         PluginSettingsBean bean = new PluginSettingsBean();
@@ -243,13 +393,15 @@ public class PlSqlProjectComponent implements ProjectComponent, PersistentStateC
     @NotNull
     private PluginSettingsBean getPluginSettings() {
 
-        PluginSettingsBean settings = PluginKeys.PLUGIN_SETTINGS.getData(project);
+        PluginSettingsBean settings = PluginKeys.PLUGIN_SETTINGS.getData2(project);
         if (settings == null) {
             settings = new PluginSettingsBean();
             PluginKeys.PLUGIN_SETTINGS.putData(settings, project);
         }
         return settings;
     }
+*/
+
 
 }
 

@@ -77,7 +77,7 @@ public class PlSqlLevel0_FileStructureGroupRuleProvider implements FileStructure
                         PlSqlElementTypes.PACKAGE_BODY,
                         PlSqlElementTypes.PACKAGE_SPEC
                 );
-            }
+            }   // add a file if nothing from above not found
 
             public boolean handleNode(@NotNull ASTNode node) {
                 etype[0] = node.getPsi();

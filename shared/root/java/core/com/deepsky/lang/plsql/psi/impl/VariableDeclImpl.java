@@ -25,25 +25,29 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.database.ora.desc.VariableDescriptorImpl;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.ddl.CreateTrigger;
+import com.deepsky.lang.plsql.psi.Expression;
+import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.VariableDecl;
+import com.deepsky.lang.plsql.psi.resolve.ASTNodeHandler;
 import com.deepsky.lang.plsql.psi.resolve.ASTTreeProcessor;
-import com.deepsky.lang.plsql.psi.resolve.PackageTriggerHandler;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
-import com.deepsky.lang.plsql.struct.PackageDescriptor;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.VariableDescriptor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
-public class VariableDeclImpl extends PlSqlElementBase implements VariableDecl {
+public class VariableDeclImpl extends PlSqlDeclarationBase implements VariableDecl {
 
     public VariableDeclImpl(ASTNode astNode) {
         super(astNode);
@@ -53,12 +57,12 @@ public class VariableDeclImpl extends PlSqlElementBase implements VariableDecl {
         return this.findChildByType(PLSqlTypesAdopted.VARIABLE_NAME);
     }
 
-    public String getQuickNavigateInfo(){
+    public String getQuickNavigateInfo() {
         StringBuilder out = new StringBuilder();
         ASTNode child = getNode().getFirstChildNode();
         ASTNodeIterator iterator = new ASTNodeIterator(child);
-        while(iterator.hasNext() && !iterator.peek().getText().equals(";")){
-            if(out.length() > 0){
+        while (iterator.hasNext() && !iterator.peek().getText().equals(";")) {
+            if (out.length() > 0) {
                 out.append(" ");
             }
             out.append(iterator.next().getText());
@@ -66,15 +70,15 @@ public class VariableDeclImpl extends PlSqlElementBase implements VariableDecl {
 
         return out.toString();
     }
-    
+
     public Type getType() {
         return getTypeSpec().getType();
     }
 
-    public TypeSpec getTypeSpec(){
+    public TypeSpec getTypeSpec() {
         ASTNode type = getNode().findChildByType(PlSqlElementTypes.TYPES);
-        if(type != null){
-            return (TypeSpec)type.getPsi();
+        if (type != null) {
+            return (TypeSpec) type.getPsi();
         } else {
             throw new SyntaxTreeCorruptedException();
         }
@@ -105,9 +109,14 @@ public class VariableDeclImpl extends PlSqlElementBase implements VariableDecl {
         return null;
     }
 
+
+
+/*
     @NotNull
     public VariableDescriptor describe() {
 
+        // todo -- resolve stuff refactoring
+        throw new NotSupportedException();
         final PackageDescriptor[] pdesc = new PackageDescriptor[]{null};
         // [start] search definition context --------------------
         ASTTreeProcessor runner = new ASTTreeProcessor();
@@ -129,12 +138,13 @@ public class VariableDeclImpl extends PlSqlElementBase implements VariableDecl {
         // [end] search definition context ------------------------
 
         if(pdesc[0] != null){
-//            return new VariableDescriptorImpl(pdesc[0], getVariableName(), getType(), false /* todo --*/);
-            return new VariableDescriptorImpl(pdesc[0], getDeclName(), getType(), false /* todo --*/);
+//            return new VariableDescriptorImpl(pdesc[0], getVariableName(), getType(), false );
+            return new VariableDescriptorImpl(pdesc[0], getDeclName(), getType(), false );
         } else {
             throw new SyntaxTreeCorruptedException();
         }
     }
+*/
 
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
@@ -146,10 +156,11 @@ public class VariableDeclImpl extends PlSqlElementBase implements VariableDecl {
 
     public String getDeclName() {
         PsiElement e = this.findChildByType(PLSqlTypesAdopted.VARIABLE_NAME);
-        if(e != null){
+        if (e != null) {
             return e.getText();
         } else {
             throw new SyntaxTreeCorruptedException();
         }
     }
+
 }

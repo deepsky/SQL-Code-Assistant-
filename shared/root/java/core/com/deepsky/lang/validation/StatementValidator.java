@@ -25,33 +25,34 @@
 
 package com.deepsky.lang.validation;
 
-import com.deepsky.lang.common.PluginKeys;
-import com.deepsky.lang.plsql.struct.DbObject;
-import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.psi.ColumnSpec;
 import com.deepsky.lang.plsql.psi.Expression;
-import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.deepsky.lang.plsql.psi.InsertStatement;
-import com.deepsky.database.ObjectCacheFactory;
-import com.deepsky.database.ObjectCache;
-import com.intellij.openapi.util.TextRange;
+import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.deepsky.lang.plsql.struct.DbObject;
+import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.openapi.util.TextRange;
 
 public class StatementValidator {
 
-    public static void validate(AnnotationHolder myHolder, InsertStatement node){
+    public static void validate(AnnotationHolder myHolder, InsertStatement node) {
         String table = node.getIntoTable().getTableName();
+        DbObject[] objs = new DbObject[0];
+/*
+    // todo -- refactoring: getting rid of ObjectCache
          DbObject[] objs = PluginKeys.OBJECT_CACHE.getData(node.getProject())//ObjectCacheFactory.getObjectCache()
                  .findByNameForType(
                     ObjectCache.TABLE | ObjectCache.VIEW, table
                  );
+*/
 
-        if(objs.length != 0){
+        if (objs.length != 0) {
             // 1. validate column names
             ColumnSpec[] columns = node.getColumnList();
             Type[] columnSpecTypes = new Type[columns.length];
-            int i =0;
-            for(ColumnSpec column: columns){
+            int i = 0;
+            for (ColumnSpec column : columns) {
                 try {
                     // we are not interested in the actual type
                     columnSpecTypes[i] = column.getColumnType();
@@ -64,11 +65,11 @@ public class StatementValidator {
             // 2. validate number of columns in specification against number of values
             // identify type of INSERT
             Expression[] exprs = node.getValues();
-            if(exprs != null){
+            if (exprs != null) {
                 // INSERT FROM VALUES
-                if(columnSpecTypes.length != exprs.length){
+                if (columnSpecTypes.length != exprs.length) {
                     int startOffset = columns[0].getTextOffset();
-                    int endOffset = columns[columns.length-1].getTextRange().getEndOffset();
+                    int endOffset = columns[columns.length - 1].getTextRange().getEndOffset();
                     myHolder.createErrorAnnotation(
                             new TextRange(startOffset, endOffset),
                             "Number of specified columns differ from number of values.");

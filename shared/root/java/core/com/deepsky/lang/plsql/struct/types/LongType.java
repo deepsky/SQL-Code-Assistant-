@@ -29,8 +29,8 @@ import com.deepsky.lang.plsql.struct.Type;
 
 public class LongType extends TypeBase {
 
-    static final long serialVersionUID = 7927622512849101187L;
+    static final long serialVersionUID = 7227622512849101187L;
     public LongType(){
-        super(Type.LONGTYPE, "LONG");
+        super(Type.LONG, "LONG");
     }
 }

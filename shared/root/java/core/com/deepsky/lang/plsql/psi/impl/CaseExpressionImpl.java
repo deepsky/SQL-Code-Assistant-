@@ -35,11 +35,12 @@ import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CaseExpressionImpl extends PlSqlElementBase implements CaseExpression {
     int case_type;
+
     public CaseExpressionImpl(ASTNode astNode, int case_type) {
         super(astNode);
         this.case_type = case_type;
@@ -61,22 +62,22 @@ public class CaseExpressionImpl extends PlSqlElementBase implements CaseExpressi
         ASTNodeIterator iterator = new ASTNodeIterator(child);
 
         List<Integer> types = new ArrayList<Integer>();
-        if(case_type == CaseExpression.SEARCHED){
+        if (case_type == CaseExpression.SEARCHED) {
             // ( "when" plsql_condition t:"then" plsql_expression )+
             ASTNode _case = iterator.next();
-            while(iterator.hasNext() && iterator.peek().getText().equalsIgnoreCase("when")){
+            while (iterator.hasNext() && iterator.peek().getText().equalsIgnoreCase("when")) {
                 ASTNode when = iterator.next();
                 ASTNode when_expr = iterator.next();
                 ASTNode then = iterator.next();
                 ASTNode then_expr = iterator.next();
-                Type type = ((Expression)then_expr.getPsi()).getExpressionType();
+                Type type = ((Expression) then_expr.getPsi()).getExpressionType();
                 types.add(type.typeId());
             }
 
-            if(iterator.hasNext() && iterator.peek().getText().equalsIgnoreCase("else")){
+            if (iterator.hasNext() && iterator.peek().getText().equalsIgnoreCase("else")) {
                 ASTNode _else = iterator.next();
                 ASTNode else_expr = iterator.next();
-                Type type = ((Expression)else_expr.getPsi()).getExpressionType();
+                Type type = ((Expression) else_expr.getPsi()).getExpressionType();
                 types.add(type.typeId());
             }
 
@@ -86,26 +87,26 @@ public class CaseExpressionImpl extends PlSqlElementBase implements CaseExpressi
             // smpl:plsql_expression ("when" plsql_expression "then" plsql_expression)+
             ASTNode _case = iterator.next();
             ASTNode expr = iterator.next();
-            while(iterator.hasNext() && iterator.peek().getText().equalsIgnoreCase("when")){
+            while (iterator.hasNext() && iterator.peek().getText().equalsIgnoreCase("when")) {
                 ASTNode when = iterator.next();
                 ASTNode when_expr = iterator.next();
                 ASTNode then = iterator.next();
                 ASTNode then_expr = iterator.next();
-                Type type = ((Expression)then_expr.getPsi()).getExpressionType();
+                Type type = ((Expression) then_expr.getPsi()).getExpressionType();
                 types.add(type.typeId());
             }
 
-            if(iterator.hasNext() && iterator.peek().getText().equalsIgnoreCase("else")){
+            if (iterator.hasNext() && iterator.peek().getText().equalsIgnoreCase("else")) {
                 ASTNode _else = iterator.next();
                 ASTNode else_expr = iterator.next();
-                Type type = ((Expression)else_expr.getPsi()).getExpressionType();
+                Type type = ((Expression) else_expr.getPsi()).getExpressionType();
                 types.add(type.typeId());
             }
 
             ASTNode end = iterator.next();
         }
         // validate types
-        if(!TypeValidationHelper.typesEquivalented(types)){
+        if (!TypeValidationHelper.typesEquivalented(types)) {
             throw new ValidationException("Argument types not equvalented", this);
         }
 

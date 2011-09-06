@@ -64,10 +64,16 @@ public class ASTNodeIterator {
         } else {
             while (cur != null) {
                 IElementType itype = cur.getElementType();
+                if(PlSqlTokenTypes.WS_TOKENS.contains(itype)){
+                    // skip
+                    cur = cur.getTreeNext();
+/*
+                }
                 if (itype == TokenType.WHITE_SPACE || itype == PlSqlTokenTypes.ML_COMMENT
                     || itype == PlSqlTokenTypes.SL_COMMENT || itype == PlSqlTokenTypes.LF) {
                     // skip
                     cur = cur.getTreeNext();
+*/
                 } else {
                     break;
                 }

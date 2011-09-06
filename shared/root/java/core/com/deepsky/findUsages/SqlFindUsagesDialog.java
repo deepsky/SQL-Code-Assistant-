@@ -25,16 +25,21 @@
 
 package com.deepsky.findUsages;
 
-import com.deepsky.findUsages.search.GenericSearchOptions;
+import com.deepsky.findUsages.options.SqlSearchOptions;
 import com.intellij.find.FindSettings;
 import com.intellij.find.findUsages.AbstractFindUsagesDialog;
 import com.intellij.find.findUsages.FindUsagesOptions;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.IdeBorderFactory;
+import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.StateRestoringCheckBox;
+import com.intellij.usageView.UsageViewUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +47,7 @@ public class SqlFindUsagesDialog extends AbstractFindUsagesDialog {
 
     private JPanel findWhatPanel;
     private String labelText;
+    private String searchScopeName;
 
     public SqlFindUsagesDialog(
             @NotNull Project project,
@@ -49,10 +55,11 @@ public class SqlFindUsagesDialog extends AbstractFindUsagesDialog {
             boolean toShowInNewTab,
             boolean mustOpenInNewTab,
             boolean isSingleFile,
-            GenericSearchOptions searchOptions) {
+            SqlSearchOptions searchOptions) {
         super(project, findUsagesOptions, toShowInNewTab, mustOpenInNewTab, isSingleFile, false, false);
         this.labelText = searchOptions.getSearchTitle();
         findWhatPanel = createFindWhatPanel(searchOptions.getSearchOptions());
+        searchScopeName = searchOptions.getTargetSchema().getAlias();
         init();
     }
 
@@ -66,6 +73,17 @@ public class SqlFindUsagesDialog extends AbstractFindUsagesDialog {
         return labelText;
     }
 
+    @Override
+    protected void doHelpAction() {
+        // todo --
+        // HelpManager.getInstance().invokeHelp(FindUsagesManager.getHelpID(myPsiElement));
+    }
+
+
+    @Override
+    public void configureLabelComponent(SimpleColoredComponent simpleColoredComponent) {
+        simpleColoredComponent.append(labelText);
+    }
 
     protected void doOKAction() {
         if (shouldDoOkAction()) {
@@ -93,12 +111,7 @@ public class SqlFindUsagesDialog extends AbstractFindUsagesDialog {
         }
     }
 
-    protected String getHelpId() {
-      return "sqlassistant.findUsage";
-    }
-
-
-    private JPanel createFindWhatPanel(GenericSearchOptions.SearchOption[] options) {
+    private JPanel createFindWhatPanel(SqlSearchOptions.SearchOption[] options) {
         if (options.length == 0) {
             return null;
         }
@@ -108,7 +121,7 @@ public class SqlFindUsagesDialog extends AbstractFindUsagesDialog {
         findPanel.setLayout(new BoxLayout(findPanel, BoxLayout.Y_AXIS));
 //        addUsagesOptions(findPanel);
 
-        for (GenericSearchOptions.SearchOption op : options) {
+        for (SqlSearchOptions.SearchOption op : options) {
             StateRestoringCheckBox sb = addCheckboxToPanel(op.getOptionName(), FindSettings.getInstance().isSkipResultsWithOneUsage(), findPanel, false);
             sb.setSelected(op.isEnabled());
             optionsList.add(new Pair(sb, op));
@@ -120,12 +133,62 @@ public class SqlFindUsagesDialog extends AbstractFindUsagesDialog {
     List<Pair> optionsList = new ArrayList<Pair>();
 
     private class Pair {
-        public Pair(StateRestoringCheckBox sb, GenericSearchOptions.SearchOption op) {
+        public Pair(StateRestoringCheckBox sb, SqlSearchOptions.SearchOption op) {
             this.sb = sb;
             this.op = op;
         }
 
         public StateRestoringCheckBox sb;
-        public GenericSearchOptions.SearchOption op;
+        public SqlSearchOptions.SearchOption op;
     }
+
+
+    protected JPanel createAllOptionsPanel() {
+        JPanel allOptionsPanel = new JPanel();
+
+        JPanel findWhatPanel = createFindWhatPanel();
+        JPanel usagesOptionsPanel = createUsagesOptionsPanel();
+        int grids = 0;
+        if (findWhatPanel != null) {
+            grids++;
 }
+        if (usagesOptionsPanel != null) {
+            grids++;
+        }
+        if (grids != 0) {
+            allOptionsPanel.setLayout(new GridLayout(1, grids, 8, 0));
+            if (findWhatPanel != null) {
+                allOptionsPanel.add(findWhatPanel);
+            }
+            if (usagesOptionsPanel != null) {
+                allOptionsPanel.add(usagesOptionsPanel);
+            }
+        }
+
+        JPanel scopePanel = createSearchScopePanel();
+        if (scopePanel != null) {
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.add(allOptionsPanel, BorderLayout.CENTER);
+            panel.add(scopePanel, BorderLayout.SOUTH);
+            return panel;
+        }
+
+        return allOptionsPanel;
+    }
+
+
+    private JPanel createSearchScopePanel(){
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new BorderLayout(0, 0));
+        panel3.setBorder(BorderFactory.createTitledBorder("Search Scope"));
+        JLabel searchScope = new JLabel();
+        searchScope.setOpaque(true);
+        searchScope.setText(searchScopeName);
+        searchScope.setBorder(new EmptyBorder(2, 2, 2, 2));
+        searchScope.setBackground(new Color(180, 180, 180));
+        panel3.add(searchScope, BorderLayout.CENTER);
+        return panel3;
+    }
+
+}
+

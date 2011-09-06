@@ -29,5 +29,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface DeleteStatement extends Statement {
     @NotNull
-    PlainTable getTargetTable();
+    TableAlias getTargetTable();
 }

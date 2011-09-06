@@ -25,8 +25,9 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.psi.spices.CompilableObject;
 import com.deepsky.lang.plsql.struct.Type;
 
-public interface Function extends Executable {
+public interface Function extends Executable, CompilableObject {
     Type getReturnType();
 }

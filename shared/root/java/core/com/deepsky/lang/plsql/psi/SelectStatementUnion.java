@@ -25,5 +25,16 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface SelectStatementUnion extends SelectStatement {
+
+    @NotNull
+    SelectStatement[] getSelectStatements();
+    int[] getSelectStatementTypes();
+
+    final int NONE = 0;
+    final int UNION_TYPE = 1;
+    final int INTERSECT_TYPE = 2;
+    final int MINUS_TYPE = 3;
 }

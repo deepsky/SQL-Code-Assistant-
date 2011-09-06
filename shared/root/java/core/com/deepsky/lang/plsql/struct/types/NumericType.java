@@ -33,16 +33,16 @@ public class NumericType extends TypeBase{
     int part;
 
     public NumericType(int size){
-        super(Type.NUMBER, "NUMERIC", size);
+        super(Type.NUMERIC, "NUMERIC", size);
     }
 
     public NumericType(int size, int part){
-        super(Type.NUMBER, "NUMERIC", size);
+        super(Type.NUMERIC, "NUMERIC", size);
         this.part = part;
     }
 
     public NumericType(){
-        super(Type.NUMBER, "NUMERIC", 22);
+        super(Type.NUMERIC, "NUMERIC", 22);
     }
 
     public String toString(){

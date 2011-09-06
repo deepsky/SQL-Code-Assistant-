@@ -27,7 +27,8 @@ package com.deepsky.lang.plsql.psi;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface Subquery extends GenericTable {
+public interface Subquery extends PlSqlElement {
+
     @NotNull
     SelectStatement getSelectStatement();
 }

@@ -25,7 +25,6 @@
 
 package com.deepsky.lang.plsql.psi;
 
-import com.intellij.psi.PsiReference;
-
-public interface ColumnNameDDL extends PlSqlElement, PsiReference {
+public interface ColumnNameDDL extends PlSqlElement { //}, PsiReference {
+    ColumnDefinition getColumnDefinition();        
 }

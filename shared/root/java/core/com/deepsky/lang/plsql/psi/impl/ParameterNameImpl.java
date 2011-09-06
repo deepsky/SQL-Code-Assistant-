@@ -29,7 +29,6 @@ import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.Argument;
 import com.deepsky.lang.plsql.psi.ParameterName;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 
 public class ParameterNameImpl extends PlSqlElementBase implements ParameterName {
     public ParameterNameImpl(ASTNode astNode) {
@@ -41,7 +40,7 @@ public class ParameterNameImpl extends PlSqlElementBase implements ParameterName
     }
 
     public Argument getArgument() {
-        if(getParent() instanceof Argument){
+        if (getParent() instanceof Argument) {
             return (Argument) getParent();
         }
         throw new SyntaxTreeCorruptedException();

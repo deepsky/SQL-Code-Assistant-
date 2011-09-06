@@ -25,36 +25,36 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.lang.ASTNode;
-import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.FromClause;
+import com.deepsky.lang.plsql.psi.InsertSubquery;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.SelectFieldCommon;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
-public class InsertSubqueryImpl extends PlSqlElementBase  implements InsertSubquery {
+public class InsertSubqueryImpl extends PlSqlElementBase implements InsertSubquery {
 
     public InsertSubqueryImpl(ASTNode astNode) {
         super(astNode);
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitInsertSubquery(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitInsertSubquery(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
     public SelectFieldCommon[] getSelectFieldList() {
         final ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.DISPLAYED_COLUMN);
         SelectFieldCommon[] columns = new SelectFieldCommon[nodes.length];
-        for(int i=0; i<columns.length; i++){
-            columns[i]  = (SelectFieldCommon) nodes[i].getPsi();
+        for (int i = 0; i < columns.length; i++) {
+            columns[i] = (SelectFieldCommon) nodes[i].getPsi();
         }
         return columns;
     }
@@ -62,7 +62,7 @@ public class InsertSubqueryImpl extends PlSqlElementBase  implements InsertSubqu
     @NotNull
     public FromClause getFromClause() {
         final ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.TABLE_REFERENCE_LIST_FROM);
-        if(node != null){
+        if (node != null) {
             return (FromClause) node.getPsi();
         } else {
             throw new SyntaxTreeCorruptedException();

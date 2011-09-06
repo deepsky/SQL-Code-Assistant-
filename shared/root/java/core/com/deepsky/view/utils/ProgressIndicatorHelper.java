@@ -28,7 +28,6 @@ package com.deepsky.view.utils;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ide.DataManager;
@@ -41,9 +40,6 @@ public class ProgressIndicatorHelper {
     Project project;
     final boolean[] result = new boolean[1];
 
-//    public ProgressIndicatorHelper(String title) {
-//        this.title = title;
-//    }
 
     public ProgressIndicatorHelper(Project project, String title) {
         this.project = project;
@@ -137,57 +133,9 @@ public class ProgressIndicatorHelper {
 //    }
 
 
-    public ProgressIndicatorHelper run2(final ProgressIndicatorListener listener) throws TaskCanceledException {
-
-        DataContext dataContext = DataManager.getInstance().getDataContext();
-        //Project project = LangDataKeys.PROJECT.getData(dataContext);
-
-        boolean res = ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-            public void run() {
-//                ClassLoader parent = Thread.currentThread().getContextClassLoader();
-//
-//                if (!(parent instanceof CustomClassLoader)) {
-//                    try {
-//                        Thread.currentThread().setContextClassLoader(
-//                                new CustomClassLoader(parent, "D:\\Projects7.0\\plsql-plugin-0.1.1\\PlSqlPlugin\\resources\\jars\\ojdbc14.jar")
-//                        );
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-
-                final com.intellij.openapi.progress.ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
-                listener.updated(ProgressIndicatorListener.PROGRESS_IND_IS_ABOUT_START);
-                try {
-                    if (progressIndicator != null) {
-                        progressIndicator.setIndeterminate(true);
-
-                        do {
-                            progressIndicator.setText(listener.getText());
-                            Thread.sleep(1000);
-                        } while (!(progressIndicator.isCanceled() || listener.isComplete()));
-
-                        result[0] = listener.getResult();
-                    }
-                } catch (InterruptedException e) {
-                    result[0] = false;
-                }
-                listener.updated(ProgressIndicatorListener.PROGRESS_IND_COMPLETED);
-            }
-        }, title, true, project);
-
-        if (!res) {
-            throw new TaskCanceledException();
-        }
-
-        
-        return this;
-    }
-
     public boolean getResult() {
         return result[0];
     }
-
 
     class BackgroundableTaskImpl extends BackgroundableTask {
 
@@ -217,7 +165,7 @@ public class ProgressIndicatorHelper {
             this.reporter = reporter;
         }
 
-        public void run(com.intellij.openapi.progress.ProgressIndicator progressIndicator) {
+        public void run(@NotNull com.intellij.openapi.progress.ProgressIndicator progressIndicator) {
 
             if(!(reporter.getStatus() == MyProgressIndicator.ProgressStatus.INPROGRESS)){
                 // all done
@@ -271,7 +219,7 @@ public class ProgressIndicatorHelper {
 
 
 
-    class BackgroundableIndeterminateTaskImpl extends BackgroundableTask {
+    private class BackgroundableIndeterminateTaskImpl extends BackgroundableTask {
 
         boolean startInBackground;
         ProgressIndicatorController reporter;
@@ -286,7 +234,7 @@ public class ProgressIndicatorHelper {
             this.startInBackground = startInBackground;
         }
 
-        public void run(com.intellij.openapi.progress.ProgressIndicator progressIndicator) {
+        public void run(@NotNull com.intellij.openapi.progress.ProgressIndicator progressIndicator) {
 
             if(!(reporter.getStatus() == ProgressIndicatorController.INPROGRESS)){
                 // all done
@@ -298,7 +246,7 @@ public class ProgressIndicatorHelper {
                     case ProgressIndicatorController.INPROGRESS:
                         break;
                     case ProgressIndicatorController.CANCELED:
-                    case ProgressIndicatorController.DONE_SUCCESSFUL:
+                    case ProgressIndicatorController.DONE_SUCCESSFULLY:
                         return;
                     case ProgressIndicatorController.FAILED:
                         final String errors = reporter.getErrorMessage();
@@ -347,119 +295,4 @@ public class ProgressIndicatorHelper {
  }
 */
 
-
-/*
-    class BackgroundableTaskImpl extends BackgroundableTask {
-
-        boolean completed = false;
-        boolean startInBackground;
-
-        ProcessStatusReporter reporter;
-
-        String lastTitle;
-        String lastText2;
-
-        public BackgroundableTaskImpl(
-                @NotNull ProcessStatusReporter reporter,
-                boolean cancelable,
-                boolean startInBackground) {
-            super(reporter.getTitle(), cancelable);
-            this.startInBackground = startInBackground;
-            this.reporter = reporter;
-        }
-
-        public void run(com.intellij.openapi.progress.ProgressIndicator progressIndicator) {
-
-            if(reporter.isCompleted()){
-                // all done
-                return;
-            }
-
-            lastTitle = reporter.getTitle();
-            lastText2 = reporter.getCurrentStepName();
-
-            progressIndicator.setIndeterminate(
-                    reporter.getNumberOfChunks() == -1
-                );
-
-            double fr = 0.;
-            while (!reporter.isCompleted()){
-
-                if(progressIndicator.isCanceled()){
-                    reporter.cancel();
-                }
-
-                try {
-                    progressIndicator.setText(reporter.getCurrentStepName());
-
-                    if(reporter.getNumberOfChunks() == -1){
-                        progressIndicator.setIndeterminate(true);
-                    } else {
-                        progressIndicator.setIndeterminate(false);
-                        fr = ((double)reporter.getCurrentStep())/reporter.getNumberOfChunks();
-                        progressIndicator.setFraction(fr);
-                    }
-
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-
-            int hh =0;
-        }
-
-        public boolean shouldStartInBackground() {
-            return startInBackground;
-        }
-    }
-*/
-
-/*
-    class BackgroundableTaskImpl2 extends BackgroundableTask {
-
-        boolean completed = false;
-        boolean startInBackground;
-
-
-        String lastTitle;
-        String lastText2;
-
-        public BackgroundableTaskImpl2(
-                boolean cancelable,
-                boolean startInBackground) {
-            super("Tetst", cancelable);
-            this.startInBackground = startInBackground;
-        }
-
-        public void run(ProgressIndicator progressIndicator) {
-
-            progressIndicator.setIndeterminate(
-                    true
-                );
-
-            double fr = 0.;
-            while ( !progressIndicator.isCanceled() && fr <= 1 ) {
-                try {
-                    progressIndicator.setText("gege + " + fr);
-                    progressIndicator.setFraction(fr);
-                    Thread.sleep(500);
-                    fr += 0.1;
-//                    if(fr > 0.5){
-//                        progressIndicator.setIndeterminate(false);
-//                    }
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-
-            int hh =0;
-        }
-
-
-        public boolean shouldStartInBackground() {
-            return startInBackground;
-        }
-    }
-*/
 }

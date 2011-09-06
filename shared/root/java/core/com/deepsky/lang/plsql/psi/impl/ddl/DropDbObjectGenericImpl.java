@@ -34,6 +34,7 @@ import com.intellij.lang.ASTNode;
 public class DropDbObjectGenericImpl extends PlSqlElementBase implements DropDbObjectGeneric {
 
     String type;
+
     public DropDbObjectGenericImpl(ASTNode astNode, String type) {
         super(astNode);
         this.type = type;
@@ -41,7 +42,7 @@ public class DropDbObjectGenericImpl extends PlSqlElementBase implements DropDbO
 
     public String getObjectName() {
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
-        if(node == null){
+        if (node == null) {
             throw new SyntaxTreeCorruptedException();
         } else {
             return node.getText();

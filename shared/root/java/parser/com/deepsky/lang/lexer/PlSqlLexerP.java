@@ -25,26 +25,31 @@
 
 package com.deepsky.lang.lexer;
 
-import com.deepsky.lang.parser.adoptee.CharBufferAdapted;
 import com.deepsky.integration.PLSqlLexerEx;
+import com.deepsky.lang.parser.adoptee.CharBufferAdopted;
 
-public class PlSqlLexerP extends PlSqlBaseLexer {
+public class PlSqlLexerP extends PlSqlPsiLexer {
 
     public void start(CharSequence charSequence, int i, int i1, int i2) {
         this.charSequence = charSequence;
 
+//        long ms = System.currentTimeMillis();
         String rt = charSequence.toString();
         int start = rt.indexOf("IntellijIdeaRulezzz ");
         this.chars = rt.toCharArray();
         if(start != -1){
             this.chars[start+19] = '1';
         }
+//        ms = System.currentTimeMillis() - ms;
 
         this.offset = i;
         this.size = i1;
-        CharBufferAdapted adapter = new CharBufferAdapted(chars, i, i1 - i);
+        CharBufferAdopted adapter = new CharBufferAdopted(chars, i, i1 - i);
+
+//        log.info("#start: i: " + i + ", i1: " + i1 + ", i2: " + i2 + ", ms: " + ms);
 
         aLexer = new PLSqlLexerEx(adapter);
+//        aLexer = new PLSqlIdxFilterLexer(adapter);
         advance0();
     }
 }

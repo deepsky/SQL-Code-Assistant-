@@ -47,7 +47,8 @@ public class CreateTableUsageGroup extends SqlGenericUsageGroup<TableDefinition>
 
     @Override
     public Icon getIcon(boolean isOpen) {
-        return Icons.TABLE;
+        TableDefinition t = getElement();
+        return t != null? t.getIcon(0): Icons.TABLE;
     }
 
 }

@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 
 public class PluginPathProcessor {
 
-    static private Pattern p = Pattern.compile(".*/plugins/(.*)/lib/([^/]+\\.jar)$");
+    static private Pattern p = Pattern.compile(".*/plugins/(.*)/lib/([^/]+\\.(?:jar|zip))$");
 
     String path;
     String jarName;

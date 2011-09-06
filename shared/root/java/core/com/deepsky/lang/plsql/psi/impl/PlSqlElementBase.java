@@ -25,54 +25,79 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.common.PlSqlSupportLoader;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.common.PlSqlFileType;
+import com.deepsky.lang.common.ResolveProvider;
+import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.ddl.CreateTrigger;
-import com.deepsky.lang.plsql.psi.resolve.*;
-import com.deepsky.lang.plsql.psi.utils.PsiTreeHelpers;
-import com.deepsky.lang.plsql.struct.PackageBodyDescriptor;
-import com.deepsky.lang.plsql.struct.PackageDescriptor;
-import com.deepsky.lang.plsql.struct.TableDescriptor;
+import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.deepsky.lang.plsql.psi.Visitor;
+import com.deepsky.lang.plsql.resolver.ResolveFacade;
+import com.deepsky.lang.plsql.resolver.factory.ContextPathManager;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
+import com.intellij.openapi.command.impl.DummyProject;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.TokenSet;
+import com.intellij.psi.PsiInvalidElementAccessException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
 public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlElement {
 
+    //    private final Logger log = Logger.getInstance("#PlSqlElementBase");
+    protected ResolveFacade facade;
+
+
     public PlSqlElementBase(ASTNode astNode) {
         super(astNode);
     }
 
-    /// UTILITIES ---------------------------
-    protected TableDescriptor describeTable(String name){
-        return ResolveHelper.describeTable(getProject(), name);
+
+    final protected void __ensure_resolver_available__() {
+        if (facade == null) {
+            facade = ((ResolveProvider) getContainingFile()).getResolver();
+        }
     }
 
-    protected PackageDescriptor resolve_Package(String name){
-        return ResolveHelper.resolve_Package(getProject(), name);
+    final protected ResolveFacade getResolveFacade() {
+        __ensure_resolver_available__();
+        return facade;
     }
-
-    protected PackageBodyDescriptor resolve_PackageBody(String name){
-        return ResolveHelper.resolve_PackageBody(getProject(), name);        
-    }
-    /// UTILITIES ---------------------------
 
 
     @NotNull
+    public Project getProject() {
+        try {
+            return super.getProject();
+        } catch (PsiInvalidElementAccessException e) {
+            // helpful in standalone runnings
+            return DummyProject.getInstance();
+        }
+    }
+
+    @NotNull
+    public PsiElement[] getChildren() {
+        PsiElement psiChild = getFirstChild();
+        if (psiChild == null) return EMPTY_ARRAY;
+
+        List<PsiElement> result = new ArrayList<PsiElement>();
+        while (psiChild != null) {
+//        if (psiChild.getNode() instanceof CompositeElement) {
+            result.add(psiChild);
+//        }
+            psiChild = psiChild.getNextSibling();
+        }
+        return result.toArray(new PsiElement[result.size()]);
+    }
+
+    @NotNull
     public Language getLanguage() {
-        return PlSqlSupportLoader.PLSQL.getLanguage();
+        return PlSqlFileType.FILE_TYPE.getLanguage();
     }
 
     @Nullable
@@ -81,7 +106,9 @@ public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlEleme
     }
 
     public String getStrippedText() {
-        return PsiTreeHelpers.stripText(this.getText()).trim();
+        // todo -- resolve stuff refactoring
+        throw new NotSupportedException();
+//        return PsiTreeHelpers.stripText(this.getText()).trim();
     }
 
     public void process(Visitor proc) {
@@ -89,6 +116,7 @@ public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlEleme
     }
 
 
+/*
     protected PlSqlElement getUsageContext(final TokenSet set) {
         // [start] search definition context --------------------
         final PlSqlElement[] elem = new PlSqlElement[1];
@@ -109,6 +137,7 @@ public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlEleme
 
         return elem[0];
     }
+*/
 
 
     public <T> T findParent(Class clazz) {
@@ -149,6 +178,7 @@ public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlEleme
 //        }
 //    }
 
+/*
     static private TokenSet CONTEXT = TokenSet.create(
             PlSqlElementTypes.PACKAGE_BODY,
             PlSqlElementTypes.PACKAGE_SPEC,
@@ -188,190 +218,11 @@ public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlEleme
         runner.process(getNode());
         return usage;
     }
-//    public UsageContext getUsageContext() {
-//
-//        final UsageContextImpl usage = new UsageContextImpl();
-//        ASTTreeProcessor runner = new ASTTreeProcessor();
-//        runner.add(new PackageTriggerHandler() {
-//            public void handleTriggerBody(CreateTrigger trigger) {
-//                usage.setTrigger(trigger);
-//            }
-//
-//            public void handlePackageBody(PackageBody pkg) {
-//                usage.setPackageBody(pkg);
-//            }
-//
-//            public void handlePackageSpec(PackageSpec pkg) {
-//                usage.setPackageSpec(pkg);
-//            }
-//        });
-//
-//        runner.process(getNode());
-//        return usage;
-//    }
+*/
 
-
-    class UsageContextImpl implements UsageContext {
-
-        PackageSpec spec;
-        PackageBody body;
-        CreateTrigger trigger;
-        Procedure procedure;
-        Function function;
-
-        public String getPackageName() {
-            if (spec != null) {
-                return spec.getPackageName();
-            } else if (body != null) {
-                return body.getPackageName();
-            }
-            return null;
-        }
-
-        public PackageDescriptorAggregate getPackage() {
-            if (spec != null) {
-                return new PackageDescriptorAggregateImpl(spec);
-            } else if (body != null) {
-                return new PackageDescriptorAggregateImpl(body);
-            }
-            return null;
-        }
-
-        public PackageBody getPackageBody() {
-            return body;
-        }
-
-        public PackageSpec getPackageSpec() {
-            return spec;
-        }
-
-        public CreateTrigger getTrigger() {
-            return trigger;
-        }
-
-        @NotNull
-        public PlSqlElement[] searchForDeclWithName(String name) {
-            List<PlSqlElement> out = new ArrayList<PlSqlElement>();
-            if (trigger != null) {
-                // todo --
-            } else {
-                if (function != null || procedure != null) {
-
-                    Executable exec = function != null ? function : procedure;
-                    for (Argument a : exec.getArguments()) {
-                        if (a.getArgumentName().equalsIgnoreCase(name)) {
-                            out.add(a);
-                        }
-                    }
-
-                    for (Declaration d : exec.getDeclarationList()) {
-                        if (d.getDeclName().equalsIgnoreCase(name)) {
-                            out.add(d);
-                        }
-                    }
-                }
-
-                if (body != null) {
-                    out.addAll(Arrays.asList(body.findObjectByName(name)));
-                } else if (spec != null) {
-                    out.addAll(Arrays.asList(spec.findObjectByName(name)));
-                }
-            }
-
-            return out.toArray(new PlSqlElement[out.size()]);
-        }
-
-        public void setPackageSpec(PackageSpec spec) {
-            this.spec = spec;
-        }
-
-        public void setPackageBody(PackageBody body) {
-            this.body = body;
-        }
-
-        public void setTrigger(CreateTrigger trigger) {
-            this.trigger = trigger;
-        }
-
-        public void setFunctionBody(Function function) {
-            this.function = function;
-        }
-
-        public void setProcedureBody(Procedure procedure) {
-            this.procedure = procedure;
-        }
+    final public CtxPath getCtxPath1() {
+        //return ((CompositeElementExt) getNode()).getCtxPath1();
+        return ContextPathManager.getCtxPath(getNode());
     }
 
-
-    class PackageDescriptorAggregateImpl implements PackageDescriptorAggregate {
-        PackageSpec spec;
-        PackageBody body;
-
-        public PackageDescriptorAggregateImpl(PackageSpec spec) {
-            this.spec = spec;
-        }
-
-        public PackageDescriptorAggregateImpl(PackageBody body) {
-            this.body = body;
-        }
-
-        public PlSqlElement[] getObjects() {
-            if (spec != null) {
-                // search specification only
-                return spec.getObjects();
-            } else {
-                // search specification and body
-                PackageSpec spec = body.getPackageSpecification();
-                PlSqlElement[] elems1 = spec.getObjects();
-                List<PlSqlElement> out = new ArrayList<PlSqlElement>(Arrays.asList(elems1));
-                PlSqlElement[] elems2 = body.getObjects();
-                out.addAll(Arrays.asList(elems2));
-                return out.toArray(new PlSqlElement[out.size()]);
-            }
-        }
-
-        public PlSqlElement[] findObjectsByName(String name) {
-            if (spec != null) {
-                return spec.findObjectByName(name);
-            } else {
-                PackageSpec spec = body.getPackageSpecification();
-                if (spec != null) {
-                    PlSqlElement[] elems1 = spec.findObjectByName(name);
-                    List<PlSqlElement> out = new ArrayList<PlSqlElement>(Arrays.asList(elems1));
-                    PlSqlElement[] elems2 = body.findObjectByName(name);
-                    out.addAll(Arrays.asList(elems2));
-                    return out.toArray(new PlSqlElement[out.size()]);
-                } else {
-                    return new PlSqlElement[0];
-                }
-            }
-        }
-
-        public TypeDeclaration[] getUdtDecl() {
-            List<TypeDeclaration> out = new ArrayList<TypeDeclaration>();
-            if (spec != null) {
-                for (PlSqlElement e : spec.getObjects()) {
-                    if (e instanceof TypeDeclaration) {
-                        out.add((TypeDeclaration) e);
-                    }
-                }
-            } else {
-                PackageSpec spec = body.getPackageSpecification();
-                if (spec != null) {
-                    for (PlSqlElement e : spec.getObjects()) {
-                        if (e instanceof TypeDeclaration) {
-                            out.add((TypeDeclaration) e);
-                        }
-                    }
-                }
-
-                for (PlSqlElement e : body.getObjects()) {
-                    if (e instanceof TypeDeclaration) {
-                        out.add((TypeDeclaration) e);
-                    }
-                }
-            }
-            return out.toArray(new TypeDeclaration[out.size()]);
-        }
-    }
 }

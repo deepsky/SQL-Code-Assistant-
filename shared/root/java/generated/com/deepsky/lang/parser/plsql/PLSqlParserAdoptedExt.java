@@ -19,74 +19,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		builder = b;
 	}
 
-	public void transform() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.transform();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-		} else {
-			super.transform();
-		}
-		returnType = -1;
-	}
-
-	public void location() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.location();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-		} else {
-			super.location();
-		}
-		returnType = -1;
-	}
-
-	public void alias() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.alias();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-		} else {
-			super.alias();
-		}
-		returnType = -1;
-	}
-
-	public void handle_ws(int arg0){
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.handle_ws(arg0);
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-		} else {
-			super.handle_ws(arg0);
-		}
-		returnType = -1;
-	}
-
 	public void package_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.package_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.package_name();
@@ -97,29 +42,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void no_one_should_call_me() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.no_one_should_call_me();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.no_one_should_call_me();
-		}
-		returnType = -1;
-	}
-
-	public void identifier() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.identifier();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.identifier();
+			super.no_one_should_call_me();
 		}
 		returnType = -1;
 	}
@@ -127,11 +62,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void start_rule() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.start_rule();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.start_rule();
@@ -142,11 +82,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void start_rule_inner() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.start_rule_inner();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.start_rule_inner();
@@ -157,11 +102,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void create_or_replace() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.create_or_replace();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.create_or_replace();
@@ -169,14 +119,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void package_body() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.package_body();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.package_body();
+		}
+		returnType = -1;
+	}
+
 	public void package_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.package_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.package_spec();
@@ -187,11 +162,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void function_body() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.function_body();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.function_body();
@@ -202,11 +182,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void procedure_body() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.procedure_body();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.procedure_body();
@@ -214,14 +199,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void create_trigger() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.create_trigger();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.create_trigger();
+		}
+		returnType = -1;
+	}
+
 	public void sql_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.sql_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.sql_statement();
@@ -232,11 +242,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void alter_command() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.alter_command();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.alter_command();
@@ -244,17 +259,22 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void comment() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void associate_statistics() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.comment();
+			try {
+			super.associate_statistics();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.comment();
+			super.associate_statistics();
 		}
 		returnType = -1;
 	}
@@ -262,11 +282,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void type_definition() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.type_definition();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.type_definition();
@@ -277,11 +302,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void drop_command() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.drop_command();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.drop_command();
@@ -292,11 +322,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void truncate_command() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.truncate_command();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.truncate_command();
@@ -307,11 +342,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void sqlplus_command_internal() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.sqlplus_command_internal();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.sqlplus_command_internal();
@@ -319,17 +359,22 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void table_name_ddl() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void table_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.table_name_ddl();
+			try {
+			super.table_ref();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.table_name_ddl();
+			super.table_ref();
 		}
 		returnType = -1;
 	}
@@ -337,11 +382,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void callable_name_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.callable_name_ref();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.callable_name_ref();
@@ -352,11 +402,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void schema_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.schema_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.schema_name();
@@ -367,11 +422,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void index_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.index_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.index_name();
@@ -382,14 +442,239 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void object_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.object_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.object_name();
+		}
+		returnType = -1;
+	}
+
+	public void column_association() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.column_association();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.column_association();
+		}
+		returnType = -1;
+	}
+
+	public void function_association() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.function_association();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.function_association();
+		}
+		returnType = -1;
+	}
+
+	public void storage_table_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.storage_table_clause();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.storage_table_clause();
+		}
+		returnType = -1;
+	}
+
+	public void column_spec_ex() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.column_spec_ex();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.column_spec_ex();
+		}
+		returnType = -1;
+	}
+
+	public void using_statistics_type() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.using_statistics_type();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.using_statistics_type();
+		}
+		returnType = -1;
+	}
+
+	public void name_fragment2() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.name_fragment2();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.name_fragment2();
+		}
+		returnType = -1;
+	}
+
+	public void column_name_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.column_name_ref();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.column_name_ref();
+		}
+		returnType = -1;
+	}
+
+	public void ident_list() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.ident_list();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.ident_list();
+		}
+		returnType = -1;
+	}
+
+	public void default_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.default_clause();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.default_clause();
+		}
+		returnType = -1;
+	}
+
+	public void numeric_literal() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.numeric_literal();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.numeric_literal();
+		}
+		returnType = -1;
+	}
+
+	public void statistics_type() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.statistics_type();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.statistics_type();
 		}
 		returnType = -1;
 	}
@@ -397,29 +682,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void comment_string() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.comment_string();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.comment_string();
-		}
-		returnType = -1;
-	}
-
-	public void column_name_ddl() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.column_name_ddl();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.column_name_ddl();
+			super.comment_string();
 		}
 		returnType = -1;
 	}
@@ -427,11 +702,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void string_literal() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.string_literal();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.string_literal();
@@ -442,14 +722,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void column_def() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.column_def();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.column_def();
+		}
+		returnType = -1;
+	}
+
+	public void column_name_ddl() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.column_name_ddl();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.column_name_ddl();
 		}
 		returnType = -1;
 	}
@@ -457,29 +762,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void type_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.type_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.type_spec();
-		}
-		returnType = -1;
-	}
-
-	public void numeric_literal() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.numeric_literal();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.numeric_literal();
+			super.type_spec();
 		}
 		returnType = -1;
 	}
@@ -487,11 +782,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void not_null() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.not_null();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.not_null();
@@ -499,14 +799,59 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void column_constraint2() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.column_constraint2();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.column_constraint2();
+		}
+		returnType = -1;
+	}
+
+	public void row_movement_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.row_movement_clause();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.row_movement_clause();
+		}
+		returnType = -1;
+	}
+
 	public void pk_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.pk_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.pk_spec();
@@ -517,14 +862,59 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void fk_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.fk_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.fk_spec();
+		}
+		returnType = -1;
+	}
+
+	public void constraint_name() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.constraint_name();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.constraint_name();
+		}
+		returnType = -1;
+	}
+
+	public void condition() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.condition();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.condition();
 		}
 		returnType = -1;
 	}
@@ -532,29 +922,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void column_constraint() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.column_constraint();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.column_constraint();
-		}
-		returnType = -1;
-	}
-
-	public void row_movement_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.row_movement_clause();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.row_movement_clause();
+			super.column_constraint();
 		}
 		returnType = -1;
 	}
@@ -562,11 +942,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void identifier2() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.identifier2();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.identifier2();
@@ -577,11 +962,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void sqlplus_command() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.sqlplus_command();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.sqlplus_command();
@@ -592,11 +982,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void base_expression() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.base_expression();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.base_expression();
@@ -607,11 +1002,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void datatype() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.datatype();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.datatype();
@@ -622,11 +1022,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void sqlplus_exec_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.sqlplus_exec_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.sqlplus_exec_statement();
@@ -637,11 +1042,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void plsql_expression() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.plsql_expression();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.plsql_expression();
@@ -652,11 +1062,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void identifier4() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.identifier4();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.identifier4();
@@ -667,11 +1082,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void sqlplus_path() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.sqlplus_path();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.sqlplus_path();
@@ -682,11 +1102,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void begin_block() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.begin_block();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.begin_block();
@@ -697,11 +1122,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void plsql_lvalue() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.plsql_lvalue();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.plsql_lvalue();
@@ -712,11 +1142,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void assignment_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.assignment_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.assignment_statement();
@@ -727,11 +1162,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void procedure_call() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.procedure_call();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.procedure_call();
@@ -742,29 +1182,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void identifier3() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.identifier3();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.identifier3();
-		}
-		returnType = -1;
-	}
-
-	public void package_body() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.package_body();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.package_body();
+			super.identifier3();
 		}
 		returnType = -1;
 	}
@@ -772,11 +1202,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void create_view() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.create_view();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.create_view();
@@ -784,14 +1219,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void create_view_column_def() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.create_view_column_def();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.create_view_column_def();
+		}
+		returnType = -1;
+	}
+
 	public void create_table2() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.create_table2();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.create_table2();
@@ -802,11 +1262,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void create_temp_table2() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.create_temp_table2();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.create_temp_table2();
@@ -817,29 +1282,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void create_index2() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.create_index2();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.create_index2();
-		}
-		returnType = -1;
-	}
-
-	public void create_trigger() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.create_trigger();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.create_trigger();
+			super.create_index2();
 		}
 		returnType = -1;
 	}
@@ -847,11 +1302,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void create_directory() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.create_directory();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.create_directory();
@@ -862,11 +1322,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void create_db_link() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.create_db_link();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.create_db_link();
@@ -877,14 +1342,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void create_sequence() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.create_sequence();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.create_sequence();
+		}
+		returnType = -1;
+	}
+
+	public void create_synonym() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.create_synonym();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.create_synonym();
 		}
 		returnType = -1;
 	}
@@ -892,11 +1382,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void sequence_opt() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.sequence_opt();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.sequence_opt();
@@ -904,14 +1399,59 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void synonym_name() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.synonym_name();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.synonym_name();
+		}
+		returnType = -1;
+	}
+
+	public void synonym_obj() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.synonym_obj();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.synonym_obj();
+		}
+		returnType = -1;
+	}
+
 	public void trigger_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.trigger_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.trigger_name();
@@ -922,11 +1462,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void dml_trigger() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.dml_trigger();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.dml_trigger();
@@ -937,11 +1482,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void ddl_trigger() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.ddl_trigger();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.ddl_trigger();
@@ -952,11 +1502,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void db_event_trigger() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.db_event_trigger();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.db_event_trigger();
@@ -967,11 +1522,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void instead_of_trigger() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.instead_of_trigger();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.instead_of_trigger();
@@ -982,11 +1542,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void for_each() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.for_each();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.for_each();
@@ -997,11 +1562,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void referencing_old_new() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.referencing_old_new();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.referencing_old_new();
@@ -1012,11 +1582,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void trigger_when() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.trigger_when();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.trigger_when();
@@ -1027,11 +1602,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void trigger_target() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.trigger_target();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.trigger_target();
@@ -1042,44 +1622,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void insert_update_delete() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.insert_update_delete();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.insert_update_delete();
-		}
-		returnType = -1;
-	}
-
-	public void view_name_ddl() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.view_name_ddl();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-		} else {
-			super.view_name_ddl();
-		}
-		returnType = -1;
-	}
-
-	public void condition() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.condition();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-		} else {
-			super.condition();
 		}
 		returnType = -1;
 	}
@@ -1087,11 +1642,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void alter_trigger() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.alter_trigger();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.alter_trigger();
@@ -1102,11 +1662,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void enable_disable_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.enable_disable_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.enable_disable_clause();
@@ -1117,11 +1682,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void index_column_spec_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.index_column_spec_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.index_column_spec_list();
@@ -1132,11 +1702,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void physical_properties() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.physical_properties();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.physical_properties();
@@ -1147,11 +1722,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void table_properties() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.table_properties();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.table_properties();
@@ -1159,14 +1739,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void table_name_ddl() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.table_name_ddl();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.table_name_ddl();
+		}
+		returnType = -1;
+	}
+
 	public void constaraint() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.constaraint();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.constaraint();
@@ -1177,11 +1782,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void organization_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.organization_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.organization_spec();
@@ -1192,11 +1802,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void select_expression() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.select_expression();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.select_expression();
@@ -1207,11 +1822,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void cache_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.cache_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.cache_clause();
@@ -1222,11 +1842,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void segment_attributes_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.segment_attributes_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.segment_attributes_clause();
@@ -1237,11 +1862,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void physical_attributes_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.physical_attributes_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.physical_attributes_clause();
@@ -1252,11 +1882,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void logging_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.logging_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.logging_clause();
@@ -1267,11 +1902,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void table_compression() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.table_compression();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.table_compression();
@@ -1282,11 +1922,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void storage_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.storage_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.storage_spec();
@@ -1297,11 +1942,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void table_partitioning_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.table_partitioning_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.table_partitioning_clause();
@@ -1312,11 +1962,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void parallel_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.parallel_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.parallel_clause();
@@ -1327,11 +1982,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void alter_table_options() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.alter_table_options();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.alter_table_options();
@@ -1342,11 +2002,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void monitoring_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.monitoring_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.monitoring_clause();
@@ -1357,11 +2022,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void range_partitions() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.range_partitions();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.range_partitions();
@@ -1372,11 +2042,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void hash_partitions() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.hash_partitions();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.hash_partitions();
@@ -1387,11 +2062,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void local_partitioned_index() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.local_partitioned_index();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.local_partitioned_index();
@@ -1402,11 +2082,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void partition_item() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.partition_item();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.partition_item();
@@ -1417,11 +2102,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void range_values_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.range_values_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.range_values_clause();
@@ -1432,11 +2122,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void table_partition_description() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.table_partition_description();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.table_partition_description();
@@ -1447,11 +2142,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void individual_hash_partitions() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.individual_hash_partitions();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.individual_hash_partitions();
@@ -1462,11 +2162,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void hash_partitions_by_quantity() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.hash_partitions_by_quantity();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.hash_partitions_by_quantity();
@@ -1477,11 +2182,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void partition_storage_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.partition_storage_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.partition_storage_clause();
@@ -1492,11 +2202,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void external_table_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.external_table_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.external_table_spec();
@@ -1507,11 +2222,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void reject_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.reject_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.reject_spec();
@@ -1522,29 +2242,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void storage_params() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.storage_params();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.storage_params();
-		}
-		returnType = -1;
-	}
-
-	public void constraint_name() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.constraint_name();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.constraint_name();
+			super.storage_params();
 		}
 		returnType = -1;
 	}
@@ -1552,11 +2262,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void pk_spec_constr() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.pk_spec_constr();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.pk_spec_constr();
@@ -1567,14 +2282,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void fk_spec_constr() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.fk_spec_constr();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.fk_spec_constr();
+		}
+		returnType = -1;
+	}
+
+	public void check_condition() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.check_condition();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.check_condition();
 		}
 		returnType = -1;
 	}
@@ -1582,11 +2322,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void unique_contsr() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.unique_contsr();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.unique_contsr();
@@ -1594,17 +2339,42 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void column_name_ddl_list() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void owner_column_name_ref_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.column_name_ddl_list();
+			try {
+			super.owner_column_name_ref_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.column_name_ddl_list();
+			super.owner_column_name_ref_list();
+		}
+		returnType = -1;
+	}
+
+	public void column_name_ref_list() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.column_name_ref_list();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.column_name_ref_list();
 		}
 		returnType = -1;
 	}
@@ -1612,11 +2382,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void referential_actions() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.referential_actions();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.referential_actions();
@@ -1627,11 +2402,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void alter_table() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.alter_table();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.alter_table();
@@ -1642,11 +2422,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void constraint_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.constraint_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.constraint_clause();
@@ -1657,11 +2442,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void add_syntax_1() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.add_syntax_1();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.add_syntax_1();
@@ -1672,11 +2462,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void add_syntax_2() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.add_syntax_2();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.add_syntax_2();
@@ -1687,11 +2482,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void modify_constraint_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.modify_constraint_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.modify_constraint_clause();
@@ -1702,11 +2502,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void modify_syntax_2() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.modify_syntax_2();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.modify_syntax_2();
@@ -1717,11 +2522,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void modify_syntax_1() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.modify_syntax_1();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.modify_syntax_1();
@@ -1732,11 +2542,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void drop_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.drop_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.drop_clause();
@@ -1744,17 +2559,22 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void column_def_alter() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void column_add_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.column_def_alter();
+			try {
+			super.column_add_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.column_def_alter();
+			super.column_add_name();
 		}
 		returnType = -1;
 	}
@@ -1762,11 +2582,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void inline_out_of_line_constraint() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.inline_out_of_line_constraint();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.inline_out_of_line_constraint();
@@ -1774,14 +2599,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void column_modi_name() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.column_modi_name();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.column_modi_name();
+		}
+		returnType = -1;
+	}
+
 	public void constraint() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.constraint();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.constraint();
@@ -1792,11 +2642,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void using_index_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.using_index_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.using_index_clause();
@@ -1807,11 +2662,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void enable_disable_clause2() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.enable_disable_clause2();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.enable_disable_clause2();
@@ -1822,11 +2682,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void index_properties() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.index_properties();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.index_properties();
@@ -1837,11 +2702,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void index_attributes() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.index_attributes();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.index_attributes();
@@ -1852,11 +2722,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void global_partitioned_index() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.global_partitioned_index();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.global_partitioned_index();
@@ -1867,11 +2742,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void index_partitioning_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.index_partitioning_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.index_partitioning_clause();
@@ -1882,11 +2762,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void on_range_partitioned_table() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.on_range_partitioned_table();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.on_range_partitioned_table();
@@ -1897,11 +2782,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void local_partition_item() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.local_partition_item();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.local_partition_item();
@@ -1912,11 +2802,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void type_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.type_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.type_name();
@@ -1924,14 +2819,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void type_name_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.type_name_ref();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.type_name_ref();
+		}
+		returnType = -1;
+	}
+
 	public void record_item() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.record_item();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.record_item();
@@ -1942,14 +2862,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void record_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.record_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.record_name();
+		}
+		returnType = -1;
+	}
+
+	public void view_name_ddl() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.view_name_ddl();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.view_name_ddl();
 		}
 		returnType = -1;
 	}
@@ -1957,29 +2902,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void v_column_def() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.v_column_def();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.v_column_def();
-		}
-		returnType = -1;
-	}
-
-	public void name_fragment() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.name_fragment();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.name_fragment();
+			super.v_column_def();
 		}
 		returnType = -1;
 	}
@@ -1987,11 +2922,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void serially_reusable_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.serially_reusable_pragma();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.serially_reusable_pragma();
@@ -2002,11 +2942,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void package_obj_spec_ex() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.package_obj_spec_ex();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.package_obj_spec_ex();
@@ -2017,11 +2962,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void package_obj_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.package_obj_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.package_obj_spec();
@@ -2029,14 +2979,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void package_obj_spec_addon() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.package_obj_spec_addon();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.package_obj_spec_addon();
+		}
+		returnType = -1;
+	}
+
 	public void cond_comp_seq() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.cond_comp_seq();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.cond_comp_seq();
@@ -2047,11 +3022,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void error_cond_compliation() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.error_cond_compliation();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.error_cond_compliation();
@@ -2062,11 +3042,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void package_obj_body() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.package_obj_body();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.package_obj_body();
@@ -2077,11 +3062,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void package_init_section() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.package_init_section();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.package_init_section();
@@ -2092,29 +3082,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void seq_of_statements() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.seq_of_statements();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.seq_of_statements();
-		}
-		returnType = -1;
-	}
-
-	public void variable_declaration() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.variable_declaration();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.variable_declaration();
+			super.seq_of_statements();
 		}
 		returnType = -1;
 	}
@@ -2122,11 +3102,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void subtype_declaration() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.subtype_declaration();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.subtype_declaration();
@@ -2137,11 +3122,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void cursor_declaration() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.cursor_declaration();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.cursor_declaration();
@@ -2152,11 +3142,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void cursor_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.cursor_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.cursor_spec();
@@ -2167,11 +3162,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void procedure_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.procedure_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.procedure_spec();
@@ -2182,14 +3182,59 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void function_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.function_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.function_spec();
+		}
+		returnType = -1;
+	}
+
+	public void pragmas() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.pragmas();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.pragmas();
+		}
+		returnType = -1;
+	}
+
+	public void variable_declaration() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.variable_declaration();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.variable_declaration();
 		}
 		returnType = -1;
 	}
@@ -2197,104 +3242,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void exception_declaration() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.exception_declaration();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.exception_declaration();
 		}
 		returnType = -1;
 	}
 
-	public void exception_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void complex_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.exception_pragma();
+			try {
+			super.complex_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.exception_pragma();
-		}
-		returnType = -1;
-	}
-
-	public void restrict_ref_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.restrict_ref_pragma();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.restrict_ref_pragma();
-		}
-		returnType = -1;
-	}
-
-	public void interface_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.interface_pragma();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-		} else {
-			super.interface_pragma();
-		}
-		returnType = -1;
-	}
-
-	public void builtin_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.builtin_pragma();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-		} else {
-			super.builtin_pragma();
-		}
-		returnType = -1;
-	}
-
-	public void fipsflag_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.fipsflag_pragma();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-		} else {
-			super.fipsflag_pragma();
-		}
-		returnType = -1;
-	}
-
-	public void timestamp_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.timestamp_pragma();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-		} else {
-			super.timestamp_pragma();
+			super.complex_name();
 		}
 		returnType = -1;
 	}
@@ -2302,11 +3282,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void condition_compilation() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.condition_compilation();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.condition_compilation();
@@ -2317,11 +3302,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void cond_comp_seq2() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.cond_comp_seq2();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.cond_comp_seq2();
@@ -2332,11 +3322,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void function_declaration() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.function_declaration();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.function_declaration();
@@ -2347,11 +3342,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void procedure_declaration() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.procedure_declaration();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.procedure_declaration();
@@ -2362,11 +3362,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void variable_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.variable_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.variable_name();
@@ -2377,29 +3382,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void default1() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.default1();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.default1();
-		}
-		returnType = -1;
-	}
-
-	public void table_name() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.table_name();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.table_name();
+			super.default1();
 		}
 		returnType = -1;
 	}
@@ -2407,11 +3402,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void cursor_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.cursor_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.cursor_name();
@@ -2422,11 +3422,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void argument_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.argument_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.argument_list();
@@ -2437,11 +3442,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void select_command() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.select_command();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.select_command();
@@ -2452,11 +3462,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void statement_tmpl() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.statement_tmpl();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.statement_tmpl();
@@ -2467,11 +3482,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.statement();
@@ -2482,11 +3502,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void label_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.label_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.label_name();
@@ -2497,11 +3522,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void loop_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.loop_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.loop_statement();
@@ -2512,11 +3542,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void forall_loop() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.forall_loop();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.forall_loop();
@@ -2527,11 +3562,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void if_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.if_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.if_statement();
@@ -2542,11 +3582,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void goto_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.goto_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.goto_statement();
@@ -2557,11 +3602,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void raise_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.raise_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.raise_statement();
@@ -2572,11 +3622,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void exit_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.exit_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.exit_statement();
@@ -2587,11 +3642,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void null_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.null_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.null_statement();
@@ -2602,11 +3662,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void return_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.return_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.return_statement();
@@ -2617,11 +3682,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void case_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.case_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.case_statement();
@@ -2632,11 +3702,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void immediate_command() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.immediate_command();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.immediate_command();
@@ -2647,11 +3722,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void lock_table_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.lock_table_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.lock_table_statement();
@@ -2662,11 +3742,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void open_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.open_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.open_statement();
@@ -2677,11 +3762,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void close_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.close_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.close_statement();
@@ -2692,11 +3782,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void fetch_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.fetch_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.fetch_statement();
@@ -2707,11 +3802,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void set_transaction_command() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.set_transaction_command();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.set_transaction_command();
@@ -2722,11 +3822,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void savepoint_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.savepoint_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.savepoint_statement();
@@ -2734,14 +3839,79 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void name_fragment_ex() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.name_fragment_ex();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.name_fragment_ex();
+		}
+		returnType = -1;
+	}
+
+	public void exec_name_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.exec_name_ref();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.exec_name_ref();
+		}
+		returnType = -1;
+	}
+
+	public void procedure_call_no_args() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.procedure_call_no_args();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.procedure_call_no_args();
+		}
+		returnType = -1;
+	}
+
 	public void sql_percentage() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.sql_percentage();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.sql_percentage();
@@ -2752,11 +3922,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void declare_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.declare_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.declare_spec();
@@ -2764,17 +3939,42 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void pragma_autonomous_transaction() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.pragma();
+			try {
+			super.pragma_autonomous_transaction();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.pragma();
+			super.pragma_autonomous_transaction();
+		}
+		returnType = -1;
+	}
+
+	public void exception_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.exception_pragma();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.exception_pragma();
 		}
 		returnType = -1;
 	}
@@ -2782,11 +3982,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void rvalue() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.rvalue();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.rvalue();
@@ -2794,14 +3999,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void name_fragment() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.name_fragment();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.name_fragment();
+		}
+		returnType = -1;
+	}
+
 	public void function_call() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.function_call();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.function_call();
@@ -2812,11 +4042,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void c_record_item_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.c_record_item_ref();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.c_record_item_ref();
@@ -2824,17 +4059,22 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void host_variable() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void bind_variable() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.host_variable();
+			try {
+			super.bind_variable();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.host_variable();
+			super.bind_variable();
 		}
 		returnType = -1;
 	}
@@ -2842,11 +4082,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void collection_method() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.collection_method();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.collection_method();
@@ -2857,14 +4102,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void field_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.field_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.field_name();
+		}
+		returnType = -1;
+	}
+
+	public void datatype_param_info() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.datatype_param_info();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.datatype_param_info();
 		}
 		returnType = -1;
 	}
@@ -2872,59 +4142,59 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void percentage_type() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.percentage_type();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.percentage_type();
 		}
 		returnType = -1;
 	}
 
-	public void type_name_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void percentage_type_w_schema() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.type_name_ref();
+			try {
+			super.percentage_type_w_schema();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.type_name_ref();
+			super.percentage_type_w_schema();
 		}
 		returnType = -1;
 	}
 
-	public void column_name_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void sequence_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.column_name_ref();
+			try {
+			super.sequence_ref();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.column_name_ref();
-		}
-		returnType = -1;
-	}
-
-	public void name_fragment_ex() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.name_fragment_ex();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.name_fragment_ex();
+			super.sequence_ref();
 		}
 		returnType = -1;
 	}
@@ -2932,11 +4202,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void parameter_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.parameter_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.parameter_spec();
@@ -2947,11 +4222,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void parameter_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.parameter_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.parameter_name();
@@ -2962,11 +4242,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void character_set() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.character_set();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.character_set();
@@ -2977,11 +4262,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void return_type() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.return_type();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.return_type();
@@ -2992,11 +4282,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void exception_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.exception_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.exception_name();
@@ -3007,11 +4302,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void exception_package_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.exception_package_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.exception_package_name();
@@ -3019,17 +4319,102 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void complex_name() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void restrict_ref_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.complex_name();
+			try {
+			super.restrict_ref_pragma();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.complex_name();
+			super.restrict_ref_pragma();
+		}
+		returnType = -1;
+	}
+
+	public void interface_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.interface_pragma();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.interface_pragma();
+		}
+		returnType = -1;
+	}
+
+	public void builtin_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.builtin_pragma();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.builtin_pragma();
+		}
+		returnType = -1;
+	}
+
+	public void fipsflag_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.fipsflag_pragma();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.fipsflag_pragma();
+		}
+		returnType = -1;
+	}
+
+	public void timestamp_pragma() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.timestamp_pragma();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.timestamp_pragma();
 		}
 		returnType = -1;
 	}
@@ -3037,11 +4422,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void oracle_err_number() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.oracle_err_number();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.oracle_err_number();
@@ -3052,11 +4442,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void record_item_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.record_item_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.record_item_name();
@@ -3067,11 +4462,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void func_proc_statements() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.func_proc_statements();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.func_proc_statements();
@@ -3082,11 +4482,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void declare_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.declare_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.declare_list();
@@ -3097,11 +4502,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void plsql_block() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.plsql_block();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.plsql_block();
@@ -3112,11 +4522,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void exception_section() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.exception_section();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.exception_section();
@@ -3127,11 +4542,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void exception_handler() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.exception_handler();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.exception_handler();
@@ -3142,11 +4562,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void call_argument_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.call_argument_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.call_argument_list();
@@ -3157,11 +4582,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void forall_header() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.forall_header();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.forall_header();
@@ -3169,17 +4599,22 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void loop_index() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void num_loop_index() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.loop_index();
+			try {
+			super.num_loop_index();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.loop_index();
+			super.num_loop_index();
 		}
 		returnType = -1;
 	}
@@ -3187,11 +4622,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void forall_boundary() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.forall_boundary();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.forall_boundary();
@@ -3202,11 +4642,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void numeric_loop_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.numeric_loop_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.numeric_loop_spec();
@@ -3217,11 +4662,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void cursor_loop_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.cursor_loop_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.cursor_loop_spec();
@@ -3229,14 +4679,79 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void numeric_loop_spec2() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.numeric_loop_spec2();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.numeric_loop_spec2();
+		}
+		returnType = -1;
+	}
+
+	public void cursor_loop_index() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.cursor_loop_index();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.cursor_loop_index();
+		}
+		returnType = -1;
+	}
+
+	public void cursor_loop_spec2() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.cursor_loop_spec2();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.cursor_loop_spec2();
+		}
+		returnType = -1;
+	}
+
 	public void boolean_literal() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.boolean_literal();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.boolean_literal();
@@ -3247,11 +4762,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void integer_expr() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.integer_expr();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.integer_expr();
@@ -3262,11 +4782,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void num_expression() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.num_expression();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.num_expression();
@@ -3277,11 +4802,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void num_term() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.num_term();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.num_term();
@@ -3292,11 +4822,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void num_factor() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.num_factor();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.num_factor();
@@ -3307,29 +4842,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void may_be_negate_base_expr() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.may_be_negate_base_expr();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.may_be_negate_base_expr();
-		}
-		returnType = -1;
-	}
-
-	public void sign() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.sign();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.sign();
+			super.may_be_negate_base_expr();
 		}
 		returnType = -1;
 	}
@@ -3337,11 +4862,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void may_be_at_time_zone() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.may_be_at_time_zone();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.may_be_at_time_zone();
@@ -3352,11 +4882,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void timezone_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.timezone_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.timezone_spec();
@@ -3364,32 +4899,42 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void plsql_expr_list() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void expr_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.plsql_expr_list();
+			try {
+			super.expr_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.plsql_expr_list();
+			super.expr_list();
 		}
 		returnType = -1;
 	}
 
-	public void parentesized_plsql_exp_list() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void parentesized_exp_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.parentesized_plsql_exp_list();
+			try {
+			super.parentesized_exp_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.parentesized_plsql_exp_list();
+			super.parentesized_exp_list();
 		}
 		returnType = -1;
 	}
@@ -3397,11 +4942,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void logical_term() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.logical_term();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.logical_term();
@@ -3412,11 +4962,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void maybe_neg_factor() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.maybe_neg_factor();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.maybe_neg_factor();
@@ -3427,11 +4982,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void plsql_expression33() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.plsql_expression33();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.plsql_expression33();
@@ -3442,11 +5002,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void subquery() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.subquery();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.subquery();
@@ -3457,11 +5022,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void relational_op() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.relational_op();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.relational_op();
@@ -3472,11 +5042,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void exp_set() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.exp_set();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.exp_set();
@@ -3484,17 +5059,22 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void cast_proc() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void cast_function() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.cast_proc();
+			try {
+			super.cast_function();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.cast_proc();
+			super.cast_function();
 		}
 		returnType = -1;
 	}
@@ -3502,11 +5082,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void trim_function() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.trim_function();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.trim_function();
@@ -3517,11 +5102,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void count_function() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.count_function();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.count_function();
@@ -3532,11 +5122,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void case_expression() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.case_expression();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.case_expression();
@@ -3544,14 +5139,79 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void multiset_operator() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.multiset_operator();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.multiset_operator();
+		}
+		returnType = -1;
+	}
+
+	public void lag_function() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.lag_function();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.lag_function();
+		}
+		returnType = -1;
+	}
+
+	public void lead_function() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.lead_function();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.lead_function();
+		}
+		returnType = -1;
+	}
+
 	public void dence_rank_analytics_func() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.dence_rank_analytics_func();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.dence_rank_analytics_func();
@@ -3562,11 +5222,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void extract_date_function() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.extract_date_function();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.extract_date_function();
@@ -3577,11 +5242,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void ident_percentage() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.ident_percentage();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.ident_percentage();
@@ -3592,11 +5262,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void pseudo_column() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.pseudo_column();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.pseudo_column();
@@ -3607,11 +5282,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void column_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.column_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.column_spec();
@@ -3622,14 +5302,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void sequence_expr() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.sequence_expr();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.sequence_expr();
+		}
+		returnType = -1;
+	}
+
+	public void query_partition_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.query_partition_clause();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.query_partition_clause();
 		}
 		returnType = -1;
 	}
@@ -3637,11 +5342,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void order_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.order_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.order_clause();
@@ -3649,14 +5359,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void lag_lead_func_arg_list() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.lag_lead_func_arg_list();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.lag_lead_func_arg_list();
+		}
+		returnType = -1;
+	}
+
 	public void asterisk_column() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.asterisk_column();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.asterisk_column();
@@ -3667,11 +5402,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void ident_asterisk_column() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.ident_asterisk_column();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.ident_asterisk_column();
@@ -3679,14 +5419,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void extract_date_func_arg_list() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.extract_date_func_arg_list();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.extract_date_func_arg_list();
+		}
+		returnType = -1;
+	}
+
 	public void extract_consts() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.extract_consts();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.extract_consts();
@@ -3697,11 +5462,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void date_literal() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.date_literal();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.date_literal();
@@ -3712,11 +5482,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void commit_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.commit_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.commit_statement();
@@ -3727,11 +5502,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void elsif_statements() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.elsif_statements();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.elsif_statements();
@@ -3742,11 +5522,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void else_statements() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.else_statements();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.else_statements();
@@ -3757,11 +5542,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void insert_command() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.insert_command();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.insert_command();
@@ -3772,11 +5562,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void update_command() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.update_command();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.update_command();
@@ -3787,11 +5582,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void delete_command() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.delete_command();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.delete_command();
@@ -3802,14 +5602,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void merge_command() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.merge_command();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.merge_command();
+		}
+		returnType = -1;
+	}
+
+	public void grant_revoke_command() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.grant_revoke_command();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.grant_revoke_command();
 		}
 		returnType = -1;
 	}
@@ -3817,11 +5642,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void rollback_statement() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.rollback_statement();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.rollback_statement();
@@ -3829,14 +5659,39 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void privilege() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.privilege();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.privilege();
+		}
+		returnType = -1;
+	}
+
 	public void select_first() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.select_first();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.select_first();
@@ -3847,11 +5702,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void select_up_to_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.select_up_to_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.select_up_to_list();
@@ -3862,11 +5722,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void into_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.into_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.into_clause();
@@ -3877,11 +5742,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void table_reference_list_from() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.table_reference_list_from();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.table_reference_list_from();
@@ -3892,11 +5762,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void where_condition() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.where_condition();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.where_condition();
@@ -3907,11 +5782,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void connect_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.connect_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.connect_clause();
@@ -3922,11 +5802,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void group_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.group_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.group_clause();
@@ -3937,11 +5822,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void update_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.update_clause();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.update_clause();
@@ -3952,29 +5842,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void plsql_lvalue_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.plsql_lvalue_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.plsql_lvalue_list();
-		}
-		returnType = -1;
-	}
-
-	public void select_list() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.select_list();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.select_list();
+			super.plsql_lvalue_list();
 		}
 		returnType = -1;
 	}
@@ -3982,11 +5862,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void displayed_column() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.displayed_column();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.displayed_column();
@@ -3997,11 +5882,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void expr_column() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.expr_column();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.expr_column();
@@ -4012,11 +5902,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void plsql_exp_list_using() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.plsql_exp_list_using();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.plsql_exp_list_using();
@@ -4027,11 +5922,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void alter_system_session() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.alter_system_session();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.alter_system_session();
@@ -4042,11 +5942,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void selected_table() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.selected_table();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.selected_table();
@@ -4057,11 +5962,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void ansi_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.ansi_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.ansi_spec();
@@ -4072,11 +5982,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void table_reference_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.table_reference_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.table_reference_list();
@@ -4087,11 +6002,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void call_argument() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.call_argument();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.call_argument();
@@ -4102,29 +6022,19 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void parameter_name_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.parameter_name_ref();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
-		} else {
-			super.parameter_name_ref();
-		}
-		returnType = -1;
-	}
-
-	public void table_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			super.table_ref();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
+			} catch(antlr.RecognitionException ex){
 				m.drop();
+				throw ex;
 			}
 		} else {
-			super.table_ref();
+			super.parameter_name_ref();
 		}
 		returnType = -1;
 	}
@@ -4132,11 +6042,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void alias_ident() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.alias_ident();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.alias_ident();
@@ -4144,17 +6059,42 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void row_proc() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void trim_func_arg_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.row_proc();
+			try {
+			super.trim_func_arg_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.row_proc();
+			super.trim_func_arg_list();
+		}
+		returnType = -1;
+	}
+
+	public void table_func() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.table_func();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.table_func();
 		}
 		returnType = -1;
 	}
@@ -4162,11 +6102,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void the_proc() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.the_proc();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.the_proc();
@@ -4177,11 +6122,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void from_subquery() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.from_subquery();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.from_subquery();
@@ -4192,11 +6142,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void table_alias() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.table_alias();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.table_alias();
@@ -4207,11 +6162,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void from_plain_table() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.from_plain_table();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.from_plain_table();
@@ -4222,11 +6182,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void table_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.table_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.table_spec();
@@ -4234,17 +6199,42 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void table_name2() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void cast_func_arg_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
-			super.table_name2();
+			try {
+			super.cast_func_arg_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
-			super.table_name2();
+			super.cast_func_arg_list();
+		}
+		returnType = -1;
+	}
+
+	public void table_ref_ex() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.table_ref_ex();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.table_ref_ex();
 		}
 		returnType = -1;
 	}
@@ -4252,11 +6242,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void link_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.link_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.link_name();
@@ -4267,11 +6262,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void connect_clause_internal() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.connect_clause_internal();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.connect_clause_internal();
@@ -4282,11 +6282,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void sorted_def() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.sorted_def();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.sorted_def();
@@ -4297,11 +6302,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void column_spec_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.column_spec_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.column_spec_list();
@@ -4312,11 +6322,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void variable_ref() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.variable_ref();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.variable_ref();
@@ -4327,11 +6342,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void returning() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.returning();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.returning();
@@ -4342,11 +6362,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void subquery_update() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.subquery_update();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.subquery_update();
@@ -4357,11 +6382,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void simple_update() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.simple_update();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.simple_update();
@@ -4372,11 +6402,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void when_action() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.when_action();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.when_action();
@@ -4387,11 +6422,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void insert_columns() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.insert_columns();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.insert_columns();
@@ -4402,11 +6442,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void lock_mode() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.lock_mode();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.lock_mode();
@@ -4417,11 +6462,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void savepoint_name() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.savepoint_name();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.savepoint_name();
@@ -4432,11 +6482,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void oracle_loader_params() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.oracle_loader_params();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.oracle_loader_params();
@@ -4447,11 +6502,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void oracle_datapump_params() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.oracle_datapump_params();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.oracle_datapump_params();
@@ -4462,11 +6522,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void directory_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.directory_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.directory_spec();
@@ -4477,11 +6542,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void access_parameters() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.access_parameters();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.access_parameters();
@@ -4492,11 +6562,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void write_access_parameters() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.write_access_parameters();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.write_access_parameters();
@@ -4507,11 +6582,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void file_location_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.file_location_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.file_location_spec();
@@ -4522,11 +6602,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void record_format_info() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.record_format_info();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.record_format_info();
@@ -4537,11 +6622,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void field_definitions() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.field_definitions();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.field_definitions();
@@ -4552,11 +6642,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void column_transforms() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.column_transforms();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.column_transforms();
@@ -4567,11 +6662,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void rec_format() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.rec_format();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.rec_format();
@@ -4582,11 +6682,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void rec_format_tail() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.rec_format_tail();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.rec_format_tail();
@@ -4597,11 +6702,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void delim_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.delim_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.delim_spec();
@@ -4612,11 +6722,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void trim_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.trim_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.trim_spec();
@@ -4627,11 +6742,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void field_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.field_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.field_list();
@@ -4642,11 +6762,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void const_str() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.const_str();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.const_str();
@@ -4657,11 +6782,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void lobfile_attr_list() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.lobfile_attr_list();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.lobfile_attr_list();
@@ -4672,11 +6802,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void field_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.field_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.field_spec();
@@ -4687,11 +6822,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void pos_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.pos_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.pos_spec();
@@ -4702,11 +6842,16 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void datatype_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.datatype_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
 			}
 		} else {
 			super.datatype_spec();
@@ -4717,14 +6862,139 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 	public void date_format_spec() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
+			try {
 			super.date_format_spec();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
 				m.drop();
 			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
 		} else {
 			super.date_format_spec();
+		}
+		returnType = -1;
+	}
+
+	public void transform() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.transform();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.transform();
+		}
+		returnType = -1;
+	}
+
+	public void location() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.location();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.location();
+		}
+		returnType = -1;
+	}
+
+	public void comment() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.comment();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.comment();
+		}
+		returnType = -1;
+	}
+
+	public void identifier() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.identifier();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.identifier();
+		}
+		returnType = -1;
+	}
+
+	public void sign() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.sign();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.sign();
+		}
+		returnType = -1;
+	}
+
+	public void alias() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.alias();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.alias();
 		}
 		returnType = -1;
 	}

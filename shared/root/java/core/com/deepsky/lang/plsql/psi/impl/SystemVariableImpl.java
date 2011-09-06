@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SystemVariableImpl extends PlSqlElementBase implements SystemVariable {
     Type type;
+
     public SystemVariableImpl(ASTNode astNode, Type type) {
         super(astNode);
         this.type = type;

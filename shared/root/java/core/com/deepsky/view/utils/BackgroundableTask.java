@@ -40,11 +40,7 @@ public abstract class BackgroundableTask extends Task.Backgroundable {
         super(project, title, cancellable);
     }
 
-//    public BackgroundableTask(@NotNull String title, boolean cancellable){
-//        super(LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext()), title, cancellable);
-//    }
-
-    abstract public void run(ProgressIndicator progressIndicator);
+    abstract public void run(@NotNull ProgressIndicator progressIndicator);
 
     public boolean shouldStartInBackground() {
         return true;

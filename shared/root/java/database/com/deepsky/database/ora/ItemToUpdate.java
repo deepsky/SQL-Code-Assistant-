@@ -33,6 +33,7 @@ public class ItemToUpdate {
     public String type;
     public String name;
     public Date lastDDL;
+    public boolean isValid = true;
     public boolean upToDate;
 
     public ItemToUpdate(String owner, String name, String type, Date lastDDL, boolean upToDate) {
@@ -58,4 +59,21 @@ public class ItemToUpdate {
         this.lastDDL = null;
         this.upToDate = false;
     }
+
+    public String getKey(){
+        return (type+"|"+name).toLowerCase();        
+    }
+
+    public boolean equals(Object o){
+        return o instanceof ItemToUpdate && ((ItemToUpdate) o).getKey().equals(getKey());
+    }
+
+    public void setValid(boolean valid){
+        this.isValid = valid;
+    }
+    
+    public int hashCode(){
+        return getKey().hashCode();
+    }
+
 }

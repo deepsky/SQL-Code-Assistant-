@@ -25,7 +25,15 @@
 
 package com.deepsky.lang.plsql.psi;
 
+
 public interface Declaration extends PlSqlElement {
     String getDeclName();
+
+    /**
+     * Definition context of the object declaration:
+     *  PackageSpec, PackageBody, FunctionBody, ProcedureBody, Trigger
+     * @return - context
+     */
+    PlSqlElement getDefinitionContext();
 
 }

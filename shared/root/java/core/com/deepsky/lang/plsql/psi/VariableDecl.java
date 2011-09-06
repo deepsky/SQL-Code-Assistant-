@@ -25,15 +25,15 @@
 
 package com.deepsky.lang.plsql.psi;
 
-import com.deepsky.lang.plsql.struct.VariableDescriptor;
-import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
+import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 public interface VariableDecl extends Declaration {
 
     PsiElement getVariableName();
+
     Type getType();
 
     Expression getDefaultExpr();
@@ -41,12 +41,16 @@ public interface VariableDecl extends Declaration {
     TypeSpec getTypeSpec();
 
     boolean isConstant();
+
     boolean isNotNull();
+
     boolean isBeingAssigned();
+
     boolean isDefault();
 
-    @NotNull
-    VariableDescriptor describe();
+
+//    @NotNull
+//    VariableDescriptor describe();
 
 /*
     DefinitionContextSpec getDefContext();

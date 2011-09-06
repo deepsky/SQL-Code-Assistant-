@@ -30,7 +30,10 @@ import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
 import com.deepsky.lang.plsql.psi.GenericConstraint;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.ddl.PartitionSpecification;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.deepsky.utils.StringUtils;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
@@ -49,27 +52,14 @@ import java.util.List;
 
 public class TableDefinitionImpl extends PlSqlElementBase implements TableDefinition {
 
-    IElementType organization_type = null;
-
     public TableDefinitionImpl(ASTNode astNode) {
         super(astNode);
-
-        ASTNode organization_node = astNode.findChildByType(TokenSet.create(
-                PLSqlTypesAdopted.IOT_TYPE,
-                PLSqlTypesAdopted.HEAP_ORGINIZED,
-                PLSqlTypesAdopted.EXTERNAL_TYPE
-            )
-        );
-
-        if(organization_node != null){
-            organization_type = organization_node.getElementType();
-        }
     }
 
     public String getTableName() {
         PsiElement psi = this.findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL);
         if (psi != null) {
-            return psi.getText();
+            return StringUtils.discloseDoubleQuotes(psi.getText());
         } else {
             throw new SyntaxTreeCorruptedException();
         }
@@ -89,6 +79,11 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
         return null;
     }
 
+    public String getQuickNavigateInfo() {
+        return "[Table] " + getTableName().toLowerCase();
+    }
+
+
     @NotNull
     public GenericConstraint[] getConstraints() {
         ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.CONSTRAINT));
@@ -104,6 +99,58 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
         return new GenericConstraint[0];
     }
 
+    public int getTableType() {
+        ASTNode node = getNode().findChildByType(TokenSet.create(
+                PLSqlTypesAdopted.IOT_TYPE,
+                PLSqlTypesAdopted.HEAP_ORGINIZED,
+                PLSqlTypesAdopted.EXTERNAL_TYPE
+        ));
+
+        if (node != null) {
+            if (node.getElementType() == PLSqlTypesAdopted.IOT_TYPE) {
+                return TableDefinition.IOT_ORGANIZED;
+            } else if (node.getElementType() == PLSqlTypesAdopted.HEAP_ORGINIZED) {
+                return TableDefinition.HEAP_ORGANIZED;
+            } else if (node.getElementType() == PLSqlTypesAdopted.EXTERNAL_TYPE) {
+                return TableDefinition.EXTERNAL_ORGANIZED;
+            }
+        }
+        return TableDefinition.REGULAR;
+    }
+
+
+//    public TableDescriptor describe() {
+//        DbObject[] objs = ObjectCacheFactory.getObjectCache().findByNameForType(ObjectCache.TABLE, getTableName());
+//        return (TableDescriptor) (objs.length>0? objs[0]: null);
+//    }
+
+    public int getPartitionType() {
+        ASTNode partition = getNode().findChildByType(PLSqlTypesAdopted.PARTITION_SPEC);
+        if (partition != null) {
+            if (partition.findChildByType(PLSqlTypesAdopted.RANGE_PARTITION) != null) {
+                return TableDefinition.PARTITION_BY_RANGE;
+            } else if (partition.findChildByType(PLSqlTypesAdopted.HASH_PARTITION) != null) {
+                return TableDefinition.PARTITION_BY_RANGE;
+            }
+        }
+
+        return TableDefinition.PARTITION_NONE;
+    }
+
+    public PartitionSpecification getPartitionSpec() {
+        ASTNode partition = getNode().findChildByType(PLSqlTypesAdopted.PARTITION_SPEC);
+        if (partition != null) {
+            ASTNode spec =  partition.findChildByType(
+                    TokenSet.create(
+                            PLSqlTypesAdopted.RANGE_PARTITION,
+                            PLSqlTypesAdopted.HASH_PARTITION
+                    )
+            );
+
+            return spec != null? (PartitionSpecification) spec.getPsi() : null;
+        }
+        return null;
+    }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
@@ -113,21 +160,79 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
         }
     }
 
-    // presentation stuff
-    public Icon getIcon(int flags){
-        if(organization_type != null){
-            if(organization_type == PLSqlTypesAdopted.IOT_TYPE){
-                return Icons.TABLE;
-            } else if(organization_type == PLSqlTypesAdopted.HEAP_ORGINIZED){
-                return Icons.TABLE;
-            } else if(organization_type == PLSqlTypesAdopted.EXTERNAL_TYPE){
-                return Icons.EXT_TABLE;
-            }
-        }
 
-        return Icons.TABLE;
+    public static Icon chooseIcon(int tableType, int partitionType){
+        switch(tableType){
+            case TableDefinition.IOT_ORGANIZED:
+                return Icons.IOT_TABLE;
+            case TableDefinition.HEAP_ORGANIZED:
+                return Icons.HEAP_TABLE;
+            case TableDefinition.EXTERNAL_ORGANIZED:
+                return Icons.EXT_TABLE;
+            case TableDefinition.TEMPORARY:
+                return Icons.TEMP_TABLE;
+            default:
+                return (partitionType != -1)? Icons.PARTI_TABLE: Icons.TABLE;
+        }
     }
 
+    private Icon chooseIcon() {
+        ASTNode[] nodes = getNode().getChildren(TokenSet.create(
+                PLSqlTypesAdopted.IOT_TYPE,
+                PLSqlTypesAdopted.HEAP_ORGINIZED,
+                PLSqlTypesAdopted.EXTERNAL_TYPE,
+                PLSqlTypesAdopted.PARTITION_SPEC
+        ));
+        switch (nodes.length) {
+            case 0:
+                return Icons.TABLE;
+            case 1: {
+                IElementType t = nodes[0].getElementType();
+                if (t == PLSqlTypesAdopted.IOT_TYPE) {
+                    return Icons.IOT_TABLE;
+                } else if (t == PLSqlTypesAdopted.HEAP_ORGINIZED) {
+                    return Icons.HEAP_TABLE;
+                } else if (t == PLSqlTypesAdopted.EXTERNAL_TYPE) {
+                    return Icons.EXT_TABLE;
+                } else if (t == PLSqlTypesAdopted.PARTITION_SPEC) {
+                    return Icons.PARTI_TABLE;
+                } else {
+                    return Icons.TABLE;
+                }
+            }
+            default: {
+                IElementType t = nodes[0].getElementType();
+                if (t == PLSqlTypesAdopted.IOT_TYPE) {
+                    return Icons.IOT_TABLE;
+                } else if (t == PLSqlTypesAdopted.HEAP_ORGINIZED) {
+                    return Icons.HEAP_TABLE;
+                } else if (t == PLSqlTypesAdopted.EXTERNAL_TYPE) {
+                    return Icons.EXT_TABLE;
+                } else {
+                    // table partitioned and IOT or HEAP organized
+                    t = nodes[1].getElementType();
+                    if (t == PLSqlTypesAdopted.IOT_TYPE) {
+                        return Icons.IOT_TABLE;
+                    } else if (t == PLSqlTypesAdopted.HEAP_ORGINIZED) {
+                        return Icons.HEAP_TABLE;
+                    } else if (t == PLSqlTypesAdopted.EXTERNAL_TYPE) {
+                        return Icons.EXT_TABLE;
+                    } else if (t == PLSqlTypesAdopted.PARTITION_SPEC) {
+                        return Icons.PARTI_TABLE;
+                    } else {
+                        return Icons.TABLE;
+                    }
+                }
+            }
+        }
+    }
+
+
+    public Icon getIcon(int flags) {
+        return chooseIcon(); //Icons.TEMP_TABLE;
+    }
+
+    // presentation stuff
     @Nullable
     public ItemPresentation getPresentation() {
         return new TablePresentation();
@@ -143,32 +248,22 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
 
 
     class TablePresentation implements ItemPresentation {
-        public String getPresentableText(){
+        public String getPresentableText() {
             return getTableName().toLowerCase();
         }
 
         @Nullable
-        public String getLocationString(){
-            if(organization_type != null){
-                if(organization_type == PLSqlTypesAdopted.IOT_TYPE){
-                    return "(index-organized table)";
-                } else if(organization_type == PLSqlTypesAdopted.HEAP_ORGINIZED){
-                    return "(heap-organized table)";
-                } else if(organization_type == PLSqlTypesAdopted.EXTERNAL_TYPE){
-                    return "(external table)";
-                }
-            }
-
-            return "(regular table)";
+        public String getLocationString() {
+            return null;///"(temporary table)";
         }
 
         @Nullable
-        public Icon getIcon(boolean open){
-            return Icons.TABLE;
+        public Icon getIcon(boolean open) {
+            return chooseIcon();//Icons.TEMP_TABLE;
         }
 
         @Nullable
-        public TextAttributesKey getTextAttributesKey(){
+        public TextAttributesKey getTextAttributesKey() {
             return TextAttributesKey.find("SQL.TABLE");
         }
     }

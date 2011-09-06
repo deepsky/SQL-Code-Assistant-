@@ -26,13 +26,9 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.CompositeName;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
-import com.deepsky.lang.plsql.psi.PlSqlElement;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.VariantsProcessor777;
+import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +39,15 @@ public abstract class PlSqlCompositeNameBase extends PlSqlElementBase implements
         super(astNode);
     }
 
+
+    public ResolveDescriptor resolveLight() {
+
+        return getResolveFacade().getLLResolver().resolveGenericReference(
+                getText(), getCtxPath1().getPath()
+        );
+    }
+
+/*
     @NotNull
     public VariantsProcessor777 createVariantsProcessor(PlSqlElement elem) throws NameNotResolvedException {
         NameFragmentRef[] names = getNamePieces();
@@ -75,6 +80,7 @@ public abstract class PlSqlCompositeNameBase extends PlSqlElementBase implements
     protected VariantsProcessor777 createVariantsProcessorFront() throws NameNotResolvedException {
         throw new NameNotResolvedException("Name not resolved");
     }
+*/
 
     @NotNull
     public NameFragmentRef[] getNamePieces() {
@@ -102,7 +108,17 @@ public abstract class PlSqlCompositeNameBase extends PlSqlElementBase implements
         }
     }
 
+    public NameFragmentRef getFragmentByPos(int position) {
+        ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.NAME_FRAGMENT));
+        if (nodes.length > position && position >= 0) {
+            return (NameFragmentRef) nodes[position].getPsi();
+        }
 
+        return null;
+    }
+
+
+/*
     @NotNull
     public ResolveContext777 resolve(NameFragmentRef namePart) throws NameNotResolvedException {
 
@@ -125,5 +141,6 @@ public abstract class PlSqlCompositeNameBase extends PlSqlElementBase implements
         }
         return ctx;
     }
+*/
 
 }

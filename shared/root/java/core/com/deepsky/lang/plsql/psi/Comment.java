@@ -25,7 +25,13 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.psi.ref.TableRef;
+import org.jetbrains.annotations.NotNull;
+
 
 public interface Comment extends PlSqlElement {
     String getComment();
+    @NotNull
+    TableRef getTableRef();
+
 }

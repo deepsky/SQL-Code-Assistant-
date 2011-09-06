@@ -25,12 +25,16 @@
 
 package com.deepsky.lang.plsql.psi.impl.ddl;
 
-import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.deepsky.lang.plsql.psi.Subquery;
 import com.deepsky.lang.plsql.psi.ddl.CreateView;
 import com.deepsky.lang.plsql.psi.ddl.VColumnDefinition;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
@@ -57,8 +61,8 @@ public class CreateViewImpl extends PlSqlElementBase implements CreateView {
     @NotNull
     public VColumnDefinition[] getColumnDefs() {
         ASTNode[] columns = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.V_COLUMN_DEF));
-        VColumnDefinition[] out = new VColumnDefinition[columns==null? 0: columns.length];
-        for(int i=0; i<out.length; i++){
+        VColumnDefinition[] out = new VColumnDefinition[columns == null ? 0 : columns.length];
+        for (int i = 0; i < out.length; i++) {
             out[i] = (VColumnDefinition) columns[i].getPsi();
         }
         return out;
@@ -96,10 +100,10 @@ public class CreateViewImpl extends PlSqlElementBase implements CreateView {
     public int getColumnPos(String columnName) {
         ASTNode[] columns = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.V_COLUMN_DEF));
 
-        if(columns != null && columns.length > 0){
+        if (columns != null && columns.length > 0) {
             int pos = 0;
-            for(ASTNode node: columns){
-                if(columnName.equalsIgnoreCase(node.getText())){
+            for (ASTNode node : columns) {
+                if (columnName.equalsIgnoreCase(node.getText())) {
                     return pos;
                 } else {
                     pos++;
@@ -113,10 +117,14 @@ public class CreateViewImpl extends PlSqlElementBase implements CreateView {
     public SelectStatement getSelectExpr() {
         ASTNode select = getNode().findChildByType(
                 TokenSet.create(PLSqlTypesAdopted.SELECT_EXPRESSION, PLSqlTypesAdopted.SELECT_EXPRESSION_UNION)
-            );
-        if(select != null){
+        );
+        if (select != null) {
             return (SelectStatement) select.getPsi();
         } else {
+            ASTNode subquery = getNode().findChildByType(PLSqlTypesAdopted.SUBQUERY);
+            if (subquery != null) {
+                return ((Subquery) subquery.getPsi()).getSelectStatement();
+            }
             throw new SyntaxTreeCorruptedException();
         }
     }
@@ -130,7 +138,7 @@ public class CreateViewImpl extends PlSqlElementBase implements CreateView {
         }
     }
 
-    public Icon getIcon(int flags){
+    public Icon getIcon(int flags) {
         return Icons.VIEW;
     }
 
@@ -149,22 +157,22 @@ public class CreateViewImpl extends PlSqlElementBase implements CreateView {
 
 
     class TablePresentation implements ItemPresentation {
-        public String getPresentableText(){
+        public String getPresentableText() {
             return getViewName();
         }
 
         @Nullable
-        public String getLocationString(){
+        public String getLocationString() {
             return "(view)";
         }
 
         @Nullable
-        public Icon getIcon(boolean open){
+        public Icon getIcon(boolean open) {
             return Icons.VIEW;
         }
 
         @Nullable
-        public TextAttributesKey getTextAttributesKey(){
+        public TextAttributesKey getTextAttributesKey() {
             return TextAttributesKey.find("SQL.VIEW");
         }
     }

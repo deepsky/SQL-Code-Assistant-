@@ -26,10 +26,10 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.psi.CallArgument;
-import com.deepsky.lang.plsql.psi.Expression;
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.utils.SqlTreeUtil;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,9 +39,9 @@ public class CallArgumentImpl extends PlSqlElementBase implements CallArgument {
         super(astNode);
     }
 
-    public String getVariableName() {
+    public String getParameterName() {
         ASTNode name = getNode().findChildByType(PlSqlElementTypes.PARAMETER_REF);
-        if(name != null){
+        if (name != null) {
             return name.getText();
         }
 
@@ -53,13 +53,33 @@ public class CallArgumentImpl extends PlSqlElementBase implements CallArgument {
         return (Expression) node.getPsi();
     }
 
+    public Callable getCallable() {
+        PsiElement parent = getParent();
+        if(parent instanceof CallArgumentList){
+            PsiElement grandpa = parent.getParent();
+            if(grandpa instanceof Callable){
+                return (Callable) grandpa;
+            }
+        }
+
+        return null;
+    }
+
+    public CallArgumentList getCallArgumentList() {
+        PsiElement parent = getParent();
+        if(parent instanceof CallArgumentList){
+            return (CallArgumentList) parent;
+        }
+
+        return null;
+    }
+
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitCallArgument(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitCallArgument(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
 }

@@ -25,22 +25,18 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.database.ora.desc.ProcedureDescriptorImpl;
+import com.deepsky.lang.common.ResolveProvider;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.struct.*;
-import com.deepsky.lang.plsql.struct.types.UserDefinedType;
-import com.deepsky.view.Icons;
+import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
+import com.deepsky.lang.plsql.resolver.ResolveFacade;
+import com.deepsky.lang.plsql.struct.ExecutableDescriptor;
+import com.deepsky.lang.plsql.struct.ProcedureDescriptor;
 import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public class ProcedureImpl extends PlSqlElementBase implements Procedure {
 
@@ -48,15 +44,15 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
         super(astNode);
     }
 
-    public ObjectName getObjectName(){
+    public ObjectName getEObjectName() {
         ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
-        if(child == null){
+        if (child == null) {
             throw new SyntaxTreeCorruptedException();
         }
 
         return (ObjectName) child.getPsi();
     }
-    
+
     public String getEName() {
         ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
         return child.getText();
@@ -82,9 +78,9 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
 
     public Argument getArgumentByName(String parameterName) {
         ArgumentList alist = (ArgumentList) this.findChildByType(PLSqlTypesAdopted.ARGUMENT_LIST);
-        if(alist != null){
-            for(Argument arg: alist.getArguments()){
-                if(arg.getArgumentName().equalsIgnoreCase(parameterName)){
+        if (alist != null) {
+            for (Argument arg : alist.getArguments()) {
+                if (arg.getArgumentName().equalsIgnoreCase(parameterName)) {
                     return arg;
                 }
             }
@@ -93,9 +89,28 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
     }
 
     @NotNull
+    public String getObjectType() {
+        return "PROCEDURE";
+    }
+
+    @NotNull
+    public String getObjectName() {
+        ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
+        if(child == null){
+            throw new SyntaxTreeCorruptedException();
+        }
+        return child.getText().toUpperCase();
+    }
+
+    @NotNull
+    public String getCreateQuery() {
+        return PlSqlUtil.completeCreateScript(this);
+    }
+
+    @NotNull
     public Declaration[] getDeclarationList() {
-        PlSqlBlock block = (PlSqlBlock)this.findChildByType(PLSqlTypesAdopted.PLSQL_BLOCK);
-        if(block != null){
+        PlSqlBlock block = (PlSqlBlock) this.findChildByType(PLSqlTypesAdopted.PLSQL_BLOCK);
+        if (block != null) {
             return block.getDeclarations();
         }
 //        DeclarationList alist = (DeclarationList) this.findChildByType(PLSqlTypesAdopted.DECLARE_LIST);
@@ -113,9 +128,10 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+/*
     public ExecutableDescriptor describe() {
 
-        PackageBody body = getParent() instanceof PackageBody? (PackageBody) getParent() : null;
+        PackageBody body = getParent() instanceof PackageBody ? (PackageBody) getParent() : null;
         PackageDescriptor pdesc = null;
 
         String name = getEName();
@@ -124,15 +140,15 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
             pdesc = body.describe();
             fdesc = new ProcedureDescriptorImpl(pdesc, name);
         } else {
-            fdesc = new ProcedureDescriptorImpl((SqlScriptLocator)null, name);
+            fdesc = new ProcedureDescriptorImpl((SqlScriptLocator) null, name);
         }
-        
+
         Argument[] args = getArguments();
         for (Argument a : args) {
             Type t = a.getType();
-            if(t.typeId() == Type.USER_DEFINED){
+            if (t.typeId() == Type.USER_DEFINED) {
                 UserDefinedType udt = (UserDefinedType) t;
-                if(udt.getDefinitionPackage() == null && pdesc != null){
+                if (udt.getDefinitionPackage() == null && pdesc != null) {
                     // complete the FQN of the UDT
                     udt.setDefinitionPackage(pdesc.getName());
                 }
@@ -143,11 +159,17 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
 
         return fdesc;
     }
+*/
 
 
-    public String getPackageName(){
-        PackageBody pkg = this.getParent() instanceof PackageBody? (PackageBody) this.getParent() : null;
-        return pkg!=null? pkg.getPackageName(): null;
+    public String getPackageName() {
+        PackageBody pkg = this.getParent() instanceof PackageBody ? (PackageBody) this.getParent() : null;
+        return pkg != null ? pkg.getPackageName() : null;
+    }
+
+    public ExecutableSpec getSpecification() {
+        ResolveFacade facade = ((ResolveProvider) getContainingFile()).getResolver();
+        return facade.findSpecificationFor(this);
     }
 
     public boolean equals(ExecutableDescriptor edesc) {
@@ -200,6 +222,4 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
                 + ((out.length() > 0) ? " (" + out.toString().toLowerCase() + ") " : " ");
     }
 
-
 }
-

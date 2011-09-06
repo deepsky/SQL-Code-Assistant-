@@ -25,13 +25,10 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.ProcedureCall;
-import com.deepsky.lang.plsql.psi.CallArgument;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.psi.ProcedureCall;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 public class ProcedureCallImpl extends CallableImpl implements ProcedureCall {
@@ -41,12 +38,11 @@ public class ProcedureCallImpl extends CallableImpl implements ProcedureCall {
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitProcedureCall(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitProcedureCall(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
 

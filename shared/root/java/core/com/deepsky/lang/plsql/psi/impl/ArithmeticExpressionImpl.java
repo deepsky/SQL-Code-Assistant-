@@ -25,16 +25,19 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.common.PlSqlFile;
+import com.deepsky.lang.common.ResolveProvider;
 import com.deepsky.lang.plsql.psi.ArithmeticExpression;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.impl.expr_eval.ArithmeticExprTypeEvaluator;
 import com.deepsky.lang.plsql.psi.impl.expr_eval.Expr;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.validation.ValidationException;
 import com.deepsky.lang.validation.TypeCastException;
+import com.deepsky.lang.validation.TypeValidationHelper;
+import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -58,8 +61,8 @@ public class ArithmeticExpressionImpl extends PlSqlElementBase implements Arithm
 //        }
 //        log.info("[" + tt + "]");
 
-        if(_cachedType != null){
-            if(!getText().equals(_name)){
+        if (_cachedType != null) {
+            if (!getText().equals(_name)) {
                 // clean the cache
                 _cachedType = null;
                 _name = "";
@@ -70,8 +73,9 @@ public class ArithmeticExpressionImpl extends PlSqlElementBase implements Arithm
 
         ASTNode node = this.getNode().getFirstChildNode();
         try {
-        _cachedType = new ArithmeticExprTypeEvaluator(new Expr(node)).calc();
-        } catch(TypeCastException e){
+            TypeValidationHelper validator = new TypeValidationHelper(((ResolveProvider)getContainingFile()).getResolver());
+            _cachedType = new ArithmeticExprTypeEvaluator(validator,new Expr(node)).calc();
+        } catch (TypeCastException e) {
             throw new ValidationException(e.getMessage(), this);
         }
         _name = getText();

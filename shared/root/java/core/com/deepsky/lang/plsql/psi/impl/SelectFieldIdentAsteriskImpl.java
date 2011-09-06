@@ -27,17 +27,10 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.plsql.psi.GenericTable;
-import com.deepsky.lang.plsql.psi.PlainTable;
 import com.deepsky.lang.plsql.psi.SelectFieldIdentAsterisk;
 import com.deepsky.lang.plsql.psi.Visitor;
-import com.deepsky.lang.plsql.psi.resolve.*;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class SelectFieldIdentAsteriskImpl extends PlSqlCompositeNameBase implements SelectFieldIdentAsterisk {
 
@@ -48,12 +41,13 @@ public class SelectFieldIdentAsteriskImpl extends PlSqlCompositeNameBase impleme
     @NotNull
     public String getTableRef() {
         ASTNode alias = getNode().findChildByType(PLSqlTypesAdopted.NAME_FRAGMENT); //TABLE_REF);
-        if(alias == null){
+        if (alias == null) {
             throw new SyntaxTreeCorruptedException();
         }
         return alias.getText();
     }
 
+/*
     @NotNull
     public ResolveContext777 getResolveContext() throws NameNotResolvedException {
         throw new NameNotResolvedException("");
@@ -63,12 +57,14 @@ public class SelectFieldIdentAsteriskImpl extends PlSqlCompositeNameBase impleme
     protected VariantsProcessor777 createVariantsProcessorFront() throws NameNotResolvedException {
         return new VariantsProcessor777Front(this);
     }
+*/
 
     public void process(Visitor proc) {
         proc.accept(this);
     }
 
 
+/*
     class VariantsProcessor777Front implements VariantsProcessor777 {
 
         SelectFieldIdentAsterisk elem;
@@ -118,5 +114,6 @@ public class SelectFieldIdentAsteriskImpl extends PlSqlCompositeNameBase impleme
             return out.toArray(new String[out.size()]);
         }
     }
+*/
 
 }

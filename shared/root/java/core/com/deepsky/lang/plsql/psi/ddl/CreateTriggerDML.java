@@ -35,4 +35,8 @@ public interface CreateTriggerDML extends CreateTrigger {
     @NotNull
     Declaration[] getDeclarationList();
 
+    // BEFORE INSERT OR UPDATE
+    // AFTER INSERT OR UPDATE OR DELETE
+    String getConditionClause();
+
 }

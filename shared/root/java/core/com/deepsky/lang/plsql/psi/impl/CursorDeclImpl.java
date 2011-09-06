@@ -25,18 +25,20 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.CursorDecl;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CursorDeclImpl extends PlSqlElementBase implements CursorDecl {
+public class CursorDeclImpl extends PlSqlDeclarationBase implements CursorDecl {
 
     public CursorDeclImpl(ASTNode astNode) {
         super(astNode);
@@ -50,16 +52,10 @@ public class CursorDeclImpl extends PlSqlElementBase implements CursorDecl {
         }
     }
 
-//    @NotNull
-//    public String getCursorName() {
-//        ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.CURSOR_NAME);
-//        return node != null ? node.getText() : "";
-//    }
-
     @NotNull
     public SelectStatement getSelect() {
         ASTNode node = getNode().findChildByType(PlSqlElementTypes.SUBQUERY_SELECTS);
-        if(node == null){
+        if (node == null) {
             throw new SyntaxTreeCorruptedException();
         }
 
@@ -75,4 +71,6 @@ public class CursorDeclImpl extends PlSqlElementBase implements CursorDecl {
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.CURSOR_NAME);
         return node != null ? node.getText() : "";
     }
+
+
 }

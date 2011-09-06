@@ -36,12 +36,10 @@ public interface ColumnDefinition extends PlSqlElement {
 
     boolean isNotNull();
     boolean isPrimaryKey();
-    ForeignKeySpec getForeignKeySpec();
+    boolean hasCheckConstraint();
 
+    ColumnPKSpec getPrimaryKeySpec();
+    ColumnFKSpec getForeignKeySpec();
     TableDefinition getTableDefinition();
 
-    interface ForeignKeySpec {
-        String getReferencedTable();
-        String getReferencedColumn();
-    }
 }

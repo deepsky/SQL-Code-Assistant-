@@ -29,7 +29,7 @@ public interface ProgressIndicatorController {
 
     final static int INPROGRESS = 1;
     final static int CANCELED = 2;
-    final static int DONE_SUCCESSFUL = 3;
+    final static int DONE_SUCCESSFULLY = 3;
     final static int FAILED = 4;
 
     int getStatus();

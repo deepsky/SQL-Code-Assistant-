@@ -25,86 +25,36 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.RefCursorDecl;
-import com.deepsky.lang.plsql.psi.PlSqlElement;
-import com.deepsky.lang.plsql.psi.PackageBody;
-import com.deepsky.lang.plsql.psi.PackageSpec;
-import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.view.Icons;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.RefCursorDecl;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
-public class RefCursorDeclImpl extends PlSqlElementBase implements RefCursorDecl {
+public class RefCursorDeclImpl extends PlSqlDeclarationBase implements RefCursorDecl {
 
     public RefCursorDeclImpl(ASTNode astNode) {
         super(astNode);
     }
+
+//    public Type getDataType() {
+//        return null;  //To change body of implemented methods use File | Settings | File Templates.
+//    }
 
     public String getDeclName() {
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.TYPE_NAME);
         return node.getText();
     }
 
-    public String getPackageName() {
-        PlSqlElement context = getUsageContext(TokenSet.create(
-                PlSqlElementTypes.PACKAGE_BODY, PlSqlElementTypes.PACKAGE_SPEC)
-        );
-
-        if(context instanceof PackageBody){
-            return ((PackageBody)context).getPackageName();
-        } else if(context instanceof PackageSpec){
-            return ((PackageSpec)context).getPackageName();
-        }
-
-        return null;
-    }
-
-    // presentation stuff
-    public Icon getIcon(int flags){
-        return Icons.CURSOR_DECL;
-    }
-
-    @Nullable
-    public ItemPresentation getPresentation() {
-        return new TablePresentation();
-    }
-
-    public FileStatus getFileStatus() {
-        return null;
-    }
-
-    public String getName() {
-        return getDeclName();
-    }
-
-
-    class TablePresentation implements ItemPresentation {
-        public String getPresentableText(){
-            return getDeclName().toLowerCase();
-        }
-
-        @Nullable
-        public String getLocationString(){
-            return "(Ref Cursor)";
-        }
-
-        @Nullable
-        public Icon getIcon(boolean open){
-            return Icons.CURSOR_DECL;
-        }
-
-        @Nullable
-        public TextAttributesKey getTextAttributesKey(){
-            return null;
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitRefCursorDecl(this);
+        } else {
+            super.accept(visitor);
         }
     }
-    
+
 }

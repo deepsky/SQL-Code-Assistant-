@@ -25,7 +25,10 @@
 
 package com.deepsky.lang.plsql.psi;
 
-public interface CallArgument extends PlSqlElement, ContextAware {
-    String getVariableName();
+public interface CallArgument extends PlSqlElement {
+    String getParameterName();
     Expression getExpression();
+
+    Callable getCallable();
+    CallArgumentList getCallArgumentList();
 }

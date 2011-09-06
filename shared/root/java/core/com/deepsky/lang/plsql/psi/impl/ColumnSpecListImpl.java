@@ -25,10 +25,10 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.psi.ColumnSpec;
 import com.deepsky.lang.plsql.psi.ColumnSpecList;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.ColumnSpec;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
@@ -41,21 +41,20 @@ public class ColumnSpecListImpl extends PlSqlElementBase implements ColumnSpecLi
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitColumnSpecList(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitColumnSpecList(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
     public ColumnSpec[] getColumns() {
         final ASTNode[] nodes = getNode().getChildren(TokenSet.create(PlSqlElementTypes.COLUMN_SPEC));
-        ColumnSpec[] out = new ColumnSpec[nodes != null? nodes.length: 0];
-        if(nodes != null){
-            int i =0;
-            for(ASTNode node: nodes){
-                out[i++] = (ColumnSpec) node.getPsi();    
+        ColumnSpec[] out = new ColumnSpec[nodes != null ? nodes.length : 0];
+        if (nodes != null) {
+            int i = 0;
+            for (ASTNode node : nodes) {
+                out[i++] = (ColumnSpec) node.getPsi();
             }
         }
         return out;

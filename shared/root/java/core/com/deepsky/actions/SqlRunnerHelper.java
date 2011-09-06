@@ -26,14 +26,19 @@
 package com.deepsky.actions;
 
 import com.deepsky.database.DBException;
-import com.deepsky.database.exec.RowSetModel;
+import com.deepsky.database.exec.RowSetManager;
 import com.deepsky.database.exec.SQLExecutor;
 import com.deepsky.database.exec.SQLUpdateStatistics;
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.deepsky.lang.plsql.psi.Subquery;
 import com.deepsky.view.utils.ProgressIndicatorController;
 import com.deepsky.view.utils.ProgressIndicatorHelper;
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.IElementType;
+import com.intellij.openapi.ui.Messages;
 
 public class SqlRunnerHelper implements Runnable {
 
@@ -41,8 +46,8 @@ public class SqlRunnerHelper implements Runnable {
     QueryResultListener queryListener;
     DMLResultListener dmlListener;
 
-    String statement;
-    IElementType etype;
+//    String select;
+    ASTNode statement;
     Project project;
     SqlQueryRunnerIndicatorImpl ind;
     String errorMessage = "";
@@ -50,19 +55,18 @@ public class SqlRunnerHelper implements Runnable {
 
     int status = ProgressIndicatorController.INPROGRESS;
 
-    public SqlRunnerHelper(Project project, SQLExecutor executor, String select, QueryResultListener queryListener) {
+    public SqlRunnerHelper(Project project, SQLExecutor executor, ASTNode statement, QueryResultListener queryListener) {
         this.project = project;
         this.executor = executor;
-        this.statement = select;
+        this.statement = statement;
         this.queryListener = queryListener;
     }
 
 
-    public SqlRunnerHelper(Project project, SQLExecutor executor, String statement, IElementType etype,  DMLResultListener dmlListener) {
+    public SqlRunnerHelper(Project project, SQLExecutor executor, ASTNode statement, DMLResultListener dmlListener) {
         this.project = project;
         this.executor = executor;
         this.statement = statement;
-        this.etype = etype;
         this.dmlListener = dmlListener;
     }
 
@@ -75,18 +79,43 @@ public class SqlRunnerHelper implements Runnable {
         schemaMonitor.setDaemon(true);
         schemaMonitor.start();
 
-        // run progress indicator
-        new ProgressIndicatorHelper(project, "Execute SQL statement").runBackgrounableWithProgressInd(ind, false);
+        // if query was executed qickly - do not run progress indicator
+        sleep(500, false);
+
+        switch (status) {
+            case ProgressIndicatorController.INPROGRESS:
+                // run progress indicator
+                new ProgressIndicatorHelper(project, "Execute SQL statement").runBackgrounableWithProgressInd(ind, false);
+                return;
+            case ProgressIndicatorController.FAILED:
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    public void run() {
+                        Messages.showErrorDialog(project, errorMessage, "SQL statement execution failed");
+                    }
+                });
+                break;
+        }
     }
 
     public void run() {
         try {
             startMs = System.currentTimeMillis();
             if (queryListener != null) {
+                SelectStatement select;
+                Subquery subquery;
+                final RowSetManager rowSet;
+                if(statement.getElementType() == PLSqlTypesAdopted.SUBQUERY){
+                    rowSet = executor.executeQuery((Subquery)statement.getPsi());
+                    //select = ((Subquery)statement.getPsi()).getSelectStatement();
+                } else {
+                    //select = (SelectStatement) statement.getPsi();
+                    rowSet = executor.executeQuery((SelectStatement) statement.getPsi());
+                }
                 // run Query
-                final RowSetModel rowSet = executor.executeQuery(statement);
-                status = ProgressIndicatorController.DONE_SUCCESSFUL;
+                //final RowSetManager rowSet = executor.executeQuery(select!=null? select: subquery);
+                status = ProgressIndicatorController.DONE_SUCCESSFULLY;
 
+                sleep(100, false);
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     public void run() {
                         queryListener.handleQueryResult(rowSet);
@@ -94,9 +123,10 @@ public class SqlRunnerHelper implements Runnable {
                 });
             } else {
                 // run DML or DDL
-                final SQLUpdateStatistics stats = executor.execute(statement, etype);
-                status = ProgressIndicatorController.DONE_SUCCESSFUL;
+                final SQLUpdateStatistics stats = executor.execute(statement);
+                status = ProgressIndicatorController.DONE_SUCCESSFULLY;
 
+                sleep(100, false);
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     public void run() {
                         dmlListener.handleDMLResult(stats);
@@ -107,16 +137,33 @@ public class SqlRunnerHelper implements Runnable {
         } catch (DBException e) {
             errorMessage = e.getMessage();
             status = ProgressIndicatorController.FAILED;
+        } catch (SyntaxTreeCorruptedException e) {
+            errorMessage = "Cannot recognize syntax of the statement";
+            status = ProgressIndicatorController.FAILED;
         } catch (Throwable e) {
             errorMessage = e.getMessage();
             status = ProgressIndicatorController.FAILED;
         }
     }
 
+
+    private void sleep(int time, boolean reportError) {
+        Object synh = new Object();
+        synchronized (synh) {
+            try {
+                synh.wait(time);
+            } catch (InterruptedException e) {
+                if (reportError) {
+                    errorMessage = "Internal Error: " + e.getMessage();
+                    status = ProgressIndicatorController.FAILED;
+                }
+            }
+        }
+    }
+
     public boolean isCompleted() {
         return status != ProgressIndicatorController.INPROGRESS;
     }
-
 
     private class SqlQueryRunnerIndicatorImpl implements ProgressIndicatorController {
 
@@ -150,7 +197,7 @@ public class SqlRunnerHelper implements Runnable {
     }
 
     public interface QueryResultListener {
-        void handleQueryResult(RowSetModel result);
+        void handleQueryResult(RowSetManager result);
     }
 
     public interface DMLResultListener {

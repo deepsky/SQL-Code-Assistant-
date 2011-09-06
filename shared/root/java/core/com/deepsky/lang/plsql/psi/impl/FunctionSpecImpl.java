@@ -25,25 +25,21 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.database.ora.desc.FunctionDescriptorImpl;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.struct.*;
-import com.deepsky.lang.plsql.struct.types.UserDefinedType;
-import com.deepsky.view.Icons;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.deepsky.lang.plsql.struct.ExecutableDescriptor;
+import com.deepsky.lang.plsql.struct.FunctionDescriptor;
+import com.deepsky.lang.plsql.struct.Type;
+import com.deepsky.lang.plsql.struct.TypeFactory;
 import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
 
@@ -58,7 +54,7 @@ public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
     @NotNull
     public Argument[] getArguments() {
         ArgumentList al = (ArgumentList) this.findChildByType(PLSqlTypesAdopted.ARGUMENT_LIST);
-        return (al != null)? al.getArguments(): new Argument[0];
+        return (al != null) ? al.getArguments() : new Argument[0];
     }
 
     public String getEName() {
@@ -67,9 +63,9 @@ public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
     }
 
 
-    public ObjectName getObjectName() {
+    public ObjectName getEObjectName() {
         ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
-        if(child == null){
+        if (child == null) {
             throw new SyntaxTreeCorruptedException();
         }
 
@@ -78,46 +74,51 @@ public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
 
     public Type getReturnType() {
         PsiElement type = this.findChildByType(PLSqlTypesAdopted.RETURN_TYPE);
-        if(type != null){
+        if (type != null) {
             return TypeFactory.createTypeByName(type.getText());
         } else {
             return TypeFactory.createTypeById(Type.UNKNOWN);
         }
     }
 
+/*
     public boolean equals2(ExecutableDescriptor edesc) {
-        if(!(edesc instanceof FunctionDescriptor)){
+        if (!(edesc instanceof FunctionDescriptor)) {
             return false;
         }
 
         FunctionDescriptor fdesc = (FunctionDescriptor) edesc;
-        if(edesc.getName().equalsIgnoreCase(getEName())){
+        if (edesc.getName().equalsIgnoreCase(getEName())) {
             String[] names = edesc.getArgumentNames();
 
             // check out arguments
             ArgumentList lst = getArgumentList();
-            Argument[] args = (lst == null)? new Argument[0]: lst.getArguments();
-            if(args.length == names.length){
-                for(int i=0; i<names.length; i++){
-                   if(!args[i].getArgumentName().equalsIgnoreCase(names[i]) ||
-                       args[i].getType().typeId() != edesc.getArgumentType(names[i]).typeId()){
-                       return false;
-                   }
+            Argument[] args = (lst == null) ? new Argument[0] : lst.getArguments();
+            if (args.length == names.length) {
+                for (int i = 0; i < names.length; i++) {
+                    if (!args[i].getArgumentName().equalsIgnoreCase(names[i]) ||
+                            args[i].getType().typeId() != edesc.getArgumentType(names[i]).typeId()) {
+                        return false;
+                    }
                 }
             } else {
                 return false;
             }
 
             // check return type
-            if( getReturnType().typeId() != fdesc.getReturnType().typeId()){
+            if (getReturnType().typeId() != fdesc.getReturnType().typeId()) {
                 return false;
             }
             return true;
         }
         return false;
     }
+*/
 
+/*
     public ExecutableDescriptor describe() {
+        // todo -- resolve stuff refactoring
+        throw new NotSupportedException();
         PlSqlElement context = getUsageContext(TokenSet.create(
                 PlSqlElementTypes.PACKAGE_BODY, PlSqlElementTypes.PACKAGE_SPEC)
         );
@@ -158,18 +159,19 @@ public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
 
         return fd;
     }
+*/
 
 
-    public String getPackageName(){
+    public String getPackageName() {
         PsiElement parent = this.getParent();
-        if(parent instanceof PackageBody){
-            return ((PackageBody)parent).getPackageName();
-        } else if(parent instanceof PackageSpec){
-            return ((PackageSpec)parent).getPackageName();
+        if (parent instanceof PackageBody) {
+            return ((PackageBody) parent).getPackageName();
+        } else if (parent instanceof PackageSpec) {
+            return ((PackageSpec) parent).getPackageName();
         }
         return null;
     }
-    
+
     @Nullable
     public String getQuickNavigateInfo() {
         ArgumentList alist = getArgumentList();
@@ -184,7 +186,7 @@ public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
         }
         return "[Function] "
                 + getEName().toLowerCase()
-                + ((out.length()>0)? " (" + out.toString().toLowerCase() + ") ": " ")
+                + ((out.length() > 0) ? " (" + out.toString().toLowerCase() + ") " : " ")
                 + getReturnType().typeName();
     }
 
@@ -196,5 +198,20 @@ public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
             super.accept(visitor);
         }
     }
+
+
+
+//    @NotNull
+//    public PsiElement getNavigationElement(){
+//        PackageSpec spec = (PackageSpec) getUsageContext(TokenSet.create(PlSqlElementTypes.PACKAGE_SPEC));
+//        if(spec != null){
+//            PackageBody body = spec.getPackageBody();
+//            if(body != null){
+//                Executable exec = body.findExecutableByDecl(this);
+//                return exec != null? exec: this;
+//            }
+//        }
+//        return this;
+//    }
 
 }

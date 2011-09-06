@@ -32,8 +32,8 @@ import java.util.regex.Pattern;
 
 public class DbObjectUtil {
 
-    static private Pattern pkg_obj_rest = Pattern.compile("([a-zA-Z0-9_\\$]*):([a-zA-Z0-9_ ]*)\\.([a-zA-Z0-9_\\$]*):([a-zA-Z0-9_ ]*)\\?([a-zA-Z0-9_\\$:\\.!,]*)");
-    static private Pattern args_ret_type = Pattern.compile("([a-zA-Z0-9_:\\.\\$,]*)!([a-zA-Z0-9_]*)");
+    static private Pattern pkg_obj_rest = Pattern.compile("([a-zA-Z0-9_\\$#]*):([a-zA-Z0-9_ ]*)\\.([a-zA-Z0-9_\\$#]*):([a-zA-Z0-9_ ]*)\\?([a-zA-Z0-9_\\$:\\.!,#%]*)");
+    static private Pattern args_ret_type = Pattern.compile("([a-zA-Z0-9_:\\.\\$,#%]*)!([a-zA-Z0-9_]*)");
 
     // any object except function/procedure
     // [pkg-name]:[pkg-type].[object-name]:[object-type]?

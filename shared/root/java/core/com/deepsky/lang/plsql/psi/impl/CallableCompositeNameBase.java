@@ -25,33 +25,18 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.database.ObjectCache;
-import com.deepsky.database.ObjectCacheFactory;
-import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.resolve.*;
-import com.deepsky.lang.plsql.psi.resolve.collection.TableCollectionItemAccessorCtx;
-import com.deepsky.lang.plsql.psi.resolve.collection.VarrayItemAccessorCtx;
-import com.deepsky.lang.plsql.psi.resolve.impl.ExecutableContext;
-import com.deepsky.lang.plsql.psi.resolve.impl.PackageContext2;
-import com.deepsky.lang.plsql.psi.resolve.impl.SystemFunctionProxy;
-import com.deepsky.lang.plsql.psi.resolve.impl.VarrayCollectionContext;
-import com.deepsky.lang.plsql.psi.resolve.psibased.PsiArgumentContext;
-import com.deepsky.lang.plsql.psi.resolve.psibased.PsiVariableContext;
-import com.deepsky.lang.plsql.psi.utils.Formatter;
-import com.deepsky.lang.plsql.struct.*;
-import com.deepsky.lang.plsql.struct.types.UserDefinedType;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
+import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
 
 
 public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements CallableCompositeName {
@@ -62,6 +47,7 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
         super(astNode);
     }
 
+/*
     @NotNull
     protected VariantsProcessor777 createVariantsProcessorFront() throws NameNotResolvedException {
         if (getNamePieces().length > 1) {
@@ -98,6 +84,17 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
             return objects; //extractNames(objects);
         }
     }
+*/
+
+    public ResolveDescriptor resolveLight() {
+        Callable callable = getCallable();
+        String name = getCName();
+        int type = callable instanceof FunctionCall? ContextPath.FUNC_CALL: ContextPath.PROC_CALL;
+
+        return getResolveFacade().getLLResolver().resolveCallable(
+                type, getCtxPath1().getPath(), name, callable.getCallArguments()
+        );
+    }
 
 
     private String[] extractNames(DbObject[] objs) {
@@ -109,9 +106,12 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
         return out;
     }
 
+    private static TokenSet nameComposite =
+            TokenSet.create(PLSqlTypesAdopted.NAME_FRAGMENT, PLSqlTypesAdopted.EXEC_NAME_REF);
+
     public String getCName() {
         StringBuffer out = new StringBuffer();
-        ASTNode[] names = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.NAME_FRAGMENT));
+        ASTNode[] names = getNode().getChildren(nameComposite);
 
         for (ASTNode n : names) {
             if (out.length() > 0) {
@@ -119,14 +119,52 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
             }
             out.append(n.getText());
         }
-
-//        ASTNodeIterator iterator = new ASTNodeIterator(getNode());
-//        while (iterator.hasNext()) {
-//            out.append(iterator.next().getText());
-//        }
         return out.toString();
     }
 
+
+    static TokenSet nameSet = TokenSet.create(
+            PLSqlTypesAdopted.NAME_FRAGMENT, PLSqlTypesAdopted.EXEC_NAME_REF
+    );
+
+    @NotNull
+    public NameFragmentRef[] getNamePieces() {
+        ASTNode[] nodes = getNode().getChildren(nameSet);
+        NameFragmentRef[] out = new NameFragmentRef[nodes != null ? nodes.length : 0];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = (NameFragmentRef) nodes[i].getPsi();
+        }
+
+        return out;
+    }
+
+    public int getFragmentIndex(@NotNull NameFragmentRef fragment) {
+        ASTNode[] nodes = getNode().getChildren(nameSet);
+        if (nodes == null) {
+            return -1;
+        } else {
+            for (int i = 0; i < nodes.length; i++) {
+                if (nodes[i].getPsi() == fragment) {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+    }
+
+    public NameFragmentRef getFragmentByPos(int position) {
+        ASTNode[] nodes = getNode().getChildren(nameSet);
+        if (nodes.length > position && position >= 0) {
+            return (NameFragmentRef) nodes[position].getPsi();
+        }
+
+        return null;
+    }
+
+
+
+/*
     public CallableNameDesc describe() {
         ASTNode[] names = getNode().getChildren(
                 TokenSet.create(PLSqlTypesAdopted.NAME_FRAGMENT)
@@ -155,12 +193,14 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
             throw new SyntaxTreeCorruptedException();
         }
     }
+*/
 
     @NotNull
     public Callable getCallable() {
         return (Callable) getParent();
     }
 
+/*
 
     // todo - dirty hack which should be fixed asap
     static public Map<String, RefElement> resolveCache = new HashMap<String, RefElement>();
@@ -196,13 +236,15 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
             throw e;
         }
     }
+*/
 
-    public void subtreeChanged() {
-        super.subtreeChanged();
-        LOG.info("subtreeChanged: " + getText());
-    }
+//    public void subtreeChanged() {
+//        super.subtreeChanged();
+//        LOG.info("subtreeChanged: " + getText());
+//    }
 
 
+/*
     @NotNull
     private ResolveContext777 getResolveContextInternal() throws NameNotResolvedException {
 
@@ -345,6 +387,7 @@ public class CallableCompositeNameBase extends PlSqlCompositeNameBase implements
         }
     }
 
+*/
 
     class CallableNameDescImpl implements CallableNameDesc {
 

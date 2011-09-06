@@ -25,9 +25,9 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class SqlPlusPromptRem extends PlSqlElementBase {

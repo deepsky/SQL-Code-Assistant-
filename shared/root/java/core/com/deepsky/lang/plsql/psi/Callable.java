@@ -25,11 +25,10 @@
 
 package com.deepsky.lang.plsql.psi;
 
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-public interface Callable extends PlSqlElement, ContextAware {
-//    String getPackageName();
+public interface Callable extends PlSqlElement {
+
     @NotNull
     String getFunctionName();
 
@@ -37,6 +36,6 @@ public interface Callable extends PlSqlElement, ContextAware {
     CallableCompositeName getCompositeName();
 
     @NotNull
-    CallArgument[] getCallArgumentList();
+    CallArgument[] getCallArguments();
 
 }

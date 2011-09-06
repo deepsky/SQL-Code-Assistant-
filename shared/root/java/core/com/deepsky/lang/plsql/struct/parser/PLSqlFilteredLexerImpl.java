@@ -35,7 +35,7 @@ import com.deepsky.integration.PLSqlLexerEx;
 import java.io.ByteArrayInputStream;
 import java.io.Reader;
 
-public class PLSqlFilteredLexerImpl extends PLSqlLexerEx implements PLSqlFilteredLexer { // allow ignoring lexer errors - //PLSqlLexer {
+public class PLSqlFilteredLexerImpl extends PLSqlLexerEx implements PLSqlFilteringLexer { // allow ignoring lexer errors - //PLSqlLexer {
 
     public PLSqlFilteredLexerImpl(Reader in) {
         super(in);

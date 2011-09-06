@@ -26,13 +26,9 @@
 package com.deepsky.lang.common;
 
 import com.deepsky.lang.plsql.ConfigurationException;
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class PluginKey<T> {
 
@@ -49,8 +45,8 @@ public class PluginKey<T> {
         return new PluginKey<T>(name);
     }
 
-    public void putData(@NotNull T object, @NotNull Project project){
-        project.putUserData(tt, object);    
+    public void putData(@NotNull T object, @NotNull Project project) {
+        project.putUserData(tt, object);
     }
 
 /*
@@ -70,5 +66,13 @@ public class PluginKey<T> {
             return project.getUserData(tt);
         }
         throw new ConfigurationException("Project is NULL!");
+    }
+
+    public T getData2(Project project) {
+        if (project != null) {
+            return project.getUserData(tt);
+        } else {
+            return null;
+        }
     }
 }

@@ -30,4 +30,8 @@ public class WrappedPackageException extends ParserException {
     public WrappedPackageException(String message) {
         super(message);
     }
+
+    public WrappedPackageException() {
+        super("");
+    }
 }

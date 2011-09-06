@@ -25,9 +25,10 @@
 
 package com.deepsky.lang.plsql.psi.ddl;
 
+import com.deepsky.lang.plsql.psi.spices.CompilableObject;
 import org.jetbrains.annotations.NotNull;
 
-public interface CreateTrigger extends SqlDDLStatement {
+public interface CreateTrigger extends SqlDDLStatement, CompilableObject {
     @NotNull
     String getTriggerName();
 }

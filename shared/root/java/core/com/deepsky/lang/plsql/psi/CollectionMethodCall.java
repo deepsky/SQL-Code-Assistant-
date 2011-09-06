@@ -25,13 +25,14 @@
 
 package com.deepsky.lang.plsql.psi;
 
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
 import org.jetbrains.annotations.NotNull;
 
-public interface CollectionMethodCall extends Expression { //}, CompositeName {
+public interface CollectionMethodCall extends Expression {
 
+/*
+todo -- resolve stuff refactoring
     @NotNull
     ResolveContext777 getResolveContext() throws NameNotResolvedException;
+*/
 
 }

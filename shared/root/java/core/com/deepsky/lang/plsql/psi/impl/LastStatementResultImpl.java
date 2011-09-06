@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public class LastStatementResultImpl extends PlSqlElementBase implements Expression {
 
     Type type;
+
     public LastStatementResultImpl(ASTNode astNode, Type type) {
         super(astNode);
         this.type = type;

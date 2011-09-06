@@ -29,6 +29,7 @@ public interface ColumnDescriptor extends DbObject {
     Type getType();
     String getTableName();
     boolean isNullable();
+    String defaultData();
 
     boolean isPK();
     boolean isFK();

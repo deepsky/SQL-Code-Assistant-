@@ -25,9 +25,14 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.lang.ASTNode;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.psi.Expression;
 import com.deepsky.lang.plsql.psi.OrderByClause;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.TokenSet;
+import org.jetbrains.annotations.NotNull;
 
 public class OrderByClauseImpl extends PlSqlElementBase implements OrderByClause {
     public OrderByClauseImpl(ASTNode node) {
@@ -35,7 +40,46 @@ public class OrderByClauseImpl extends PlSqlElementBase implements OrderByClause
     }
 
     public OrderPair[] getOrderPairList() {
-        // todo
-        return new OrderPair[0];
+        ASTNode[] sortedSpec = getNode().getChildren(TokenSet.create(PlSqlElementTypes.SORTED_DEF));
+        OrderPair[] out = new OrderPair[sortedSpec.length];
+        for (int i = 0; i < sortedSpec.length; i++) {
+            ASTNode expr = sortedSpec[i].findChildByType(PlSqlElementTypes.ORDER_BY_EXPR);
+            if (expr == null) {
+                // ORDER_BY_EXPR is not COMPLETE!??
+                continue;
+            }
+
+            ASTNode tag = expr.getTreeNext();
+            out[i] = new OrderPairImpl((Expression) expr.getPsi(), tag != null ? tag.getText() : null);
+        }
+        return out;
+    }
+
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitOrderByClause(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
+    private class OrderPairImpl implements OrderPair {
+
+        Expression e;
+        String order;
+
+        public OrderPairImpl(Expression e, String order) {
+            this.e = e;
+            this.order = order;
+        }
+
+        public Expression getExpession() {
+            return e;
+        }
+
+        public String getSortOrder() {
+            return order;
+        }
     }
 }

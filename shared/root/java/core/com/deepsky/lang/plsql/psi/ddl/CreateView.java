@@ -31,7 +31,7 @@ import com.intellij.navigation.NavigationItem;
 import org.jetbrains.annotations.NotNull;
 
 
-public interface CreateView extends SqlDDLStatement { //PlSqlElement, NavigationItem {
+public interface CreateView extends SqlDDLStatement {
 
     @NotNull
     String getViewName();

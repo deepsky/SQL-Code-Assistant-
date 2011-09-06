@@ -29,10 +29,9 @@ import com.deepsky.lang.plsql.psi.GenericTable;
 import com.deepsky.lang.plsql.struct.TableDescriptorLegacy;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 abstract public class GenericTableBase extends PlSqlElementBase implements GenericTable {
 
@@ -51,12 +50,12 @@ abstract public class GenericTableBase extends PlSqlElementBase implements Gener
     public TableDescriptorLegacy describe() {
 
         Holder holder = cache.get(this.toString());
-        if(holder == null){
+        if (holder == null) {
             holder = new Holder();
             cache.put(this.toString(), holder);
         }
 
-        if(holder.descSeq != textSeq){
+        if (holder.descSeq != textSeq) {
             holder.tdesc = describeInternal();
             holder.descSeq = textSeq;
             return holder.tdesc;
@@ -67,23 +66,30 @@ abstract public class GenericTableBase extends PlSqlElementBase implements Gener
 
     public GenericTableBase(ASTNode astNode) {
         super(astNode);
-        cachedText = getText();
+        // todo -- is the caching really needed?
+        cachedText = ""; //getText();
     }
 
 
     abstract public String getAlias();
+
     abstract protected TableDescriptorLegacy describeInternal();
 
 
-    public boolean isColumnNameCorrect(String columnRef) {
-        return columnRef.matches("^[a-zA-Z][a-zA-Z0-9_]*");
+    public static boolean isColumnNameCorrect(String columnRef) {
+        return columnRef.matches("^[a-zA-Z][a-zA-Z0-9_\\$\\#]*");
     }
 
-    public void subtreeChanged(){
-        if(!cachedText.equals(getText())){
+    public static boolean isColumnNameCorrectWithDot(String columnRef) {
+        return columnRef.matches("^[a-zA-Z][a-zA-Z0-9_\\$\\#]*\\.{1}[a-zA-Z0-9_\\$\\#]*");
+    }
+
+
+    public void subtreeChanged() {
+        if (!cachedText.equals(getText())) {
             cachedText = getText();
             textSeq++;
-            log.info("Subtree changed!        " + " == " + this);
+            //log.info("Subtree changed!        " + " == " + this);
         }
     }
 

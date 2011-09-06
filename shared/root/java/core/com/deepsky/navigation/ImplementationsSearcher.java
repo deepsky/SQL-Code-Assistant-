@@ -25,11 +25,9 @@
 
 package com.deepsky.navigation;
 
-import com.deepsky.database.SqlScriptManager;
 import com.deepsky.database.fs.CachedVirtualFileSystem;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
-import com.deepsky.lang.plsql.struct.*;
+//import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Processor;
@@ -44,6 +42,9 @@ public class ImplementationsSearcher implements QueryExecutor<PsiElement, PsiEle
                 ExecutableSpec spec = (ExecutableSpec) sourceElement.getParent();
                 String packageName = spec.getPackageName();
                 if(packageName != null){
+/*
+        // todo -- resolve stuff refactoring
+
                     PackageBodyDescriptor desc = ResolveHelper.resolve_PackageBody(sourceElement.getProject(), packageName);
                     if(desc != null){
                         DbObject[] dbos = desc.findObjectByName(spec.getEName());
@@ -75,6 +76,7 @@ public class ImplementationsSearcher implements QueryExecutor<PsiElement, PsiEle
                             }
                         }
                     }
+*/
                 }
             }
             return true;

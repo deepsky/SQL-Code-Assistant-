@@ -25,20 +25,16 @@
 
 package com.deepsky.lang.plsql.struct.types;
 
+
 public class UserDefinedType extends TypeBase {
 
     static final long serialVersionUID = -8979206642323525203L;
     
     String pkgName;
 
-// todo - a typename can be defined inside a context only (package, schema, function/procedure)     
-//    public UserDefinedType(String typeName){
-//        super(USER_DEFINED, typeName);
-//    }
-
     public UserDefinedType(String pkgName, String typeName) {
-        super(USER_DEFINED, typeName);
-        this.pkgName = pkgName;
+        super(USER_DEFINED, typeName.toLowerCase());
+        this.pkgName = (pkgName != null)? pkgName.toLowerCase(): null;
     }
 
     public String getDefinitionPackage(){

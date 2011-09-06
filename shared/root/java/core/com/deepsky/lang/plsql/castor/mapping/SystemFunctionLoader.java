@@ -27,10 +27,10 @@ package com.deepsky.lang.plsql.castor.mapping;
 
 import com.deepsky.lang.plsql.ConfigurationException;
 import com.deepsky.lang.plsql.struct.SystemFunctionDescriptor;
-import com.deepsky.lang.plsql.struct.SystemFunctionValidator;
+import com.deepsky.lang.plsql.resolver.FunctionValidator;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
-import com.deepsky.lang.plsql.struct.validators.GenericValidator;
+import com.deepsky.lang.plsql.resolver.validators.GenericValidator;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.ValidationException;
@@ -69,8 +69,8 @@ public class SystemFunctionLoader {
                     try {
                         Class validatorClazz = Class.forName(validatorClass);
                         Object o = validatorClazz.newInstance();
-                        if(o instanceof SystemFunctionValidator){
-                            desc.setValidator((SystemFunctionValidator) o);
+                        if(o instanceof FunctionValidator){
+                            desc.setValidator((FunctionValidator) o);
                         } else {
                             log.warn("Configuration exception: validator class is not instance of SystemFunctionValidator, " + o.getClass());
                         }

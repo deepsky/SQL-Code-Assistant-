@@ -31,7 +31,7 @@ import com.deepsky.lang.plsql.struct.types.BooleanType;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
-public class BooleanLiteral  extends PlSqlElementBase implements Literal {
+public class BooleanLiteral extends PlSqlElementBase implements Literal {
 
     public BooleanLiteral(ASTNode astNode) {
         super(astNode);
@@ -45,5 +45,5 @@ public class BooleanLiteral  extends PlSqlElementBase implements Literal {
     public String valueToString() {
         return getText();
     }
-    
+
 }

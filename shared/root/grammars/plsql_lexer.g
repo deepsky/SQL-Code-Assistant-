@@ -18,7 +18,10 @@ options {
     caseSensitive = false;
 
     caseSensitiveLiterals = false;
-    charVocabulary = '\3' .. '\377';
+//    charVocabulary = '\3' .. '\377';
+
+    // Allow any char but \uFFFF (16 bit -1)
+    charVocabulary='\u0000'..'\uFFFE';
 }
 
 tokens {
@@ -50,6 +53,16 @@ TABLE_NAME_SPEC options { testLiterals=true; }
 
 */
 
+PLSQL_ENV_VAR:
+    '&' '&' ( 'a' .. 'z' | '0' .. '9' | '_')+ ('.')?
+    //  ('a' .. 'z' | '_') ( 'a' .. 'z' | '0' .. '9' | '_' | '$' | '#')* ('.')?
+    ;
+
+protected ANY_CHARACTER:
+        'a' .. 'z'
+        ;
+
+/*
 IDENTIFIER options { testLiterals=true; }
     :
        ('a' .. 'z' | '_') ( 'a' .. 'z' | '0' .. '9' | '_' | '$' | '#'
@@ -58,18 +71,21 @@ IDENTIFIER options { testLiterals=true; }
          | '@' {$setType(PLSql2TokenTypes.TABLE_NAME_SPEC);}
         )*
     ;
-
-PLSQL_ENV_VAR:
-    '&' '&' ( 'a' .. 'z' | '0' .. '9' | '_')+ ('.')? 
-    //  ('a' .. 'z' | '_') ( 'a' .. 'z' | '0' .. '9' | '_' | '$' | '#')* ('.')?
+*/
+IDENTIFIER options { testLiterals=true; }
+    :
+      (('q' '\'') => ('q' QUOTED_STR) {$setType(PLSql2TokenTypes.QUOTED_STR);})
+      | (
+            ('a' .. 'z' | '_') ( 'a' .. 'z' | '0' .. '9' | '_' | '$' | '#'
+                | '@' {$setType(PLSql2TokenTypes.TABLE_NAME_SPEC);}
+            )* (PLSQL_ENV_VAR)? ( 'a' .. 'z' | '0' .. '9' | '_' | '$' | '#'
+                | '@' {$setType(PLSql2TokenTypes.TABLE_NAME_SPEC);}
+            )*
+      )
     ;
 
-protected ANY_CHARACTER:
-        'a' .. 'z'
-        ;
-
 QUOTED_STR:
-		('q')? '\'' (~('\'' | '\uFFFF' ))*
+		'\'' (~('\'' | '\uFFFF' ))*
 	        ('\''
 	            | (('\uFFFF') => {$setType(PLSql2TokenTypes.BAD_CHAR_LITERAL);})
 	        )
@@ -77,7 +93,6 @@ QUOTED_STR:
 
 
 DOUBLE_QUOTED_STRING :
-//      ( '"' ( ~'"' )* '"' )+
       '"' ( ~('"' | '\uFFFF' ))*
       ( '"'
       | (('\uFFFF') => {$setType(PLSql2TokenTypes.BAD_CHAR_LITERAL);})
@@ -152,14 +167,12 @@ WS :        (' '
 */
 
 WS :        (' '|'\t')+
-//        { $setType(Token.SKIP); }
         ;
 
 LF :   (
             '\n' {newline();} 
             | ('\r'('\n')?) {newline();}
        )+
-//        { $setType(Token.SKIP); }
         ;
 
 // Single-line comments
@@ -170,8 +183,6 @@ SL_COMMENT
                     |'\r'('\n')? {newline();}
                     |{ int dummy = 0;}  ///'\uFFFF'
                 )
-
-//        { $setType(Token.SKIP); }
         ;
 
 
@@ -202,36 +213,22 @@ ML_COMMENT :          "/*"
 //        { $setType(Token.SKIP); }
 ;
 
-/*
-COLON_NEW:
-    COLON "new"
-    ;
-
-COLON_OLD:
-    COLON "old"
-    ;
-*/
 IF_COND_CMPL:
-//    "$if"
     DOLLAR "if"
     ;
 THEN_COND_CMPL:
-//    "$then"
     DOLLAR "then"
     ;
 
 
 ELSE_COND_CMPL:
-//    "$else"
     DOLLAR "else"
     ;
 
 END_COND_CMPL:
-//    "$end"
     DOLLAR "end"
     ;
 
 ERROR_COND_CMPL:
-//    "$error"
     DOLLAR "error"
     ;

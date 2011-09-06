@@ -96,6 +96,10 @@ public class OraTableDescriptor  implements TableDescriptor, Serializable {
         return true;
     }
     
+    public void addColumn(String name, Type type, boolean nullable, int columnId, String defaultValue){
+        columns.put(name, new ColumnHelper(type, columnId, nullable, false, defaultValue));
+    }
+
     public void addColumn(String name, Type type, boolean nullable, int columnId){
         columns.put(name, new ColumnHelper(type, columnId, nullable, false));
     }

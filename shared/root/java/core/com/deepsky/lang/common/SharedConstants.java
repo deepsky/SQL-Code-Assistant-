@@ -34,7 +34,7 @@ public interface SharedConstants {
 
 //    String DATE_FORMAT = "DATE_FORMAT";
 //    String TIME_FORMAT = "TIME_FORMAT";
-//    String RS_CHUNK_SIZE = "RS_CHUNK_SIZE";
+    //    String RS_CHUNK_SIZE = "RS_CHUNK_SIZE";
 //    String FETCH_RECORDS = "FETCH_RECORDS";
 //    String QR_TABS = "QR_TABS";
     String PLUGIN_SETTINGS = "PLUGIN_SETTINGS";
@@ -45,4 +45,20 @@ public interface SharedConstants {
     String DB_OBJECT_CONTR = "db_object_contributor";
     String QR_WINDOW = "QUERY_RESULT_WINDOW";
     String SEARCH_PARAMS = "SEARCH_PARAMS";
+    String SQL_RESOLVER = "SQL_RESOLVER";
+    String FS_SQL_INDEX = "FS_SQL_INDEX";
+    String DB_NAMES_INDEX = "DB_NAMES_INDEX";
+    String EVNT_CHANNEL = "EVNT_CHANNEL";
+
+    String LOCAL_FS = "local_fs";
+
+    String SCHEMA_FACADE_PROVIDER = "SCHEMA_FACADE_PROVIDER";
+    String SQL_INDEX_MANAGER = "SQL_INDEX_MANAGER";
+    String PLSQLFILE_CHANGE_TRACKER = "PLSQLFILE_CHANGE_TRACKER"; 
+    String NAME_LOOKUP = "NAME_LOOKUP";
+    String WORD_INDEX_MAN = "WORD_INDEX_MAN";
+    String LOCAL_FS_URL = "LOCAL_FS_URL";
+    String TIMESTAMP_ValueConvertor = "TIMESTAMP_ValueConvertor";
+    String TIMESTAMPTZ_ValueConvertor = "TIMESTAMPTZ_ValueConvertor";
+    String TIMESTAMPLTZ_ValueConvertor = "TIMESTAMPLTZ_ValueConvertor";
 }

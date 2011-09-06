@@ -25,10 +25,11 @@
 
 package com.deepsky.lang.plsql.psi.impl.ddl;
 
-import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
-import com.deepsky.lang.plsql.psi.ddl.CreateIndex;
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.ddl.CreateIndex;
+import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
+import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -39,11 +40,15 @@ public class CreateIndexImpl extends PlSqlElementBase implements CreateIndex {
     }
 
     public String getIndexName() {
-        return getNode().findChildByType(PLSqlTypesAdopted.INDEX_NAME).getText();
+        return StringUtils.discloseDoubleQuotes(
+                getNode().findChildByType(PLSqlTypesAdopted.INDEX_NAME).getText()
+        );
     }
 
     public String getTableName() {
-        return getNode().findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL).getText();
+        return StringUtils.discloseDoubleQuotes(
+            getNode().findChildByType(PLSqlTypesAdopted.TABLE_REF).getText()
+        );
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {

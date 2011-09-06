@@ -25,31 +25,20 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.database.SqlScriptManager;
-import com.deepsky.database.fs.DbOriginatedSqlFile;
-import com.deepsky.database.ora.desc.PackageBodyDescriptorImpl;
+import com.deepsky.lang.common.ResolveProvider;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
-import com.deepsky.lang.plsql.psi.resolve.ResolveHelper3;
-import com.deepsky.lang.plsql.struct.FileBasedContextUrl;
-import com.deepsky.lang.plsql.struct.PackageBodyDescriptor;
-import com.deepsky.lang.plsql.struct.PackageDescriptor;
+import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
+import com.deepsky.lang.plsql.resolver.ResolveFacade;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
-import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +72,11 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
         return out.toArray(new Executable[0]);
     }
 
+    @NotNull
+    public String getCreateQuery() {
+        return PlSqlUtil.completeCreateScript(this);
+    }
+
 
     public ExecutableSpec[] findExecutableSpecByName(String name) {
         List<ExecutableSpec> out = new ArrayList<ExecutableSpec>();
@@ -101,8 +95,13 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
         return out.toArray(new ExecutableSpec[0]);
     }
 
+/*
     @NotNull
     public PackageBodyDescriptor describe() {
+        // todo -- resolve stuff refactoring
+        throw new NotSupportedException();
+*/
+/*
         if (getContainingFile().getVirtualFile() instanceof DbOriginatedSqlFile) {
             PackageBodyDescriptor dbo = resolve_PackageBody(this.getPackageName());
             if (dbo != null) {
@@ -119,7 +118,10 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
         }
 
         throw new NotSupportedException();
+*//*
+
     }
+*/
 
     @NotNull
     public PlSqlElement[] findObjectByName(String name) {
@@ -163,16 +165,15 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
     }
 
     public PackageSpec getPackageSpecification() {
-        // todo -- there is a need Context aware search of the package spec   
-        PackageDescriptor pdesc = resolve_Package(getPackageName());
-        if (pdesc != null) {
-            return (PackageSpec) SqlScriptManager.mapToPsiTree(getProject(), pdesc);
-        }
-        return null;
+        ResolveFacade facade = ((ResolveProvider) getContainingFile()).getResolver();
+        return facade.findPackageSpecification(this);
     }
 
     public Executable findExecutableByDecl(ExecutableSpec spec) {
+        // todo -- resolve stuff refactoring
+        throw new NotSupportedException();
 
+/*
         ASTNode[] nodes = getNode().getChildren(
                 TokenSet.create(
                         PlSqlElementTypes.FUNCTION_BODY,
@@ -200,12 +201,13 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
         }
 
         return null;
+*/
     }
 
 
-    public void subtreeChanged(){
-        log.info("[subtreeChanged] PackageBody: " + getPackageName() );
-    }
+//    public void subtreeChanged(){
+//        log.info("[subtreeChanged] PackageBody: " + getPackageName() );
+//    }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
@@ -216,43 +218,19 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
     }
 
 
-    public Icon getIcon(int flags){
-        return Icons.PACKAGE_BODY;        
-    }
-
     @Nullable
-    public ItemPresentation getPresentation() {
-        return new TablePresentation();
+    public String getQuickNavigateInfo() {
+        return "[Package] " + getPackageName().toLowerCase();
     }
 
-    public FileStatus getFileStatus() {
-        return null;
+
+    @NotNull
+    public String getObjectType() {
+        return "PACKAGE BODY";
     }
 
-    public String getName() {
+    @NotNull
+    public String getObjectName() {
         return getPackageName();
     }
-
-
-    class TablePresentation implements ItemPresentation {
-        public String getPresentableText(){
-            return getPackageName();
-        }
-
-        @Nullable
-        public String getLocationString(){
-            return "(package body)";
-        }
-
-        @Nullable
-        public Icon getIcon(boolean open){
-            return Icons.PACKAGE_BODY;
-        }
-
-        @Nullable
-        public TextAttributesKey getTextAttributesKey(){
-            return null;
-        }
-    }
-
 }

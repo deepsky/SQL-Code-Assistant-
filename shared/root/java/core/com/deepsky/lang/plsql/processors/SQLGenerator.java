@@ -26,7 +26,7 @@
 package com.deepsky.lang.plsql.processors;
 
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.ReferencedName;
+//import com.deepsky.lang.plsql.ReferencedName;
 
 import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
@@ -91,6 +91,7 @@ public class SQLGenerator implements Visitor {
             select.getGroupByClause().process(this);
         }
 
+/* todo --
         switch (select.getFollowingSelectStatementType()) {
             case SelectStatement.NONE:
                 break;
@@ -110,6 +111,7 @@ public class SQLGenerator implements Visitor {
                 select.getFollowingSelectStatement().process(this);
                 break;
         }
+*/
 
         if (select.getOrderByClause() != null) {
             w.outln();
@@ -182,14 +184,14 @@ public class SQLGenerator implements Visitor {
     }
 
     public void accept(AnsiFromClause fromClause) {
-//        XDV_STG_AMACS_AGR_15M_T EXT
-//        LEFT JOIN XDV_SINGTEL_AMACS_APP_TYPE_DT AT_
+//        OTA_STG_T EXT
+//        LEFT JOIN OTA_AMACS_APP_TYPE_T AT_
 //            ON EXT.SERVICE_TYPE = AT_.SERVICE_TYPE
-//        LEFT JOIN XDV_SINGTEL_AMACS_ACT_DT ACT
+//        LEFT JOIN OTA_AMACS_ACT_DT ACT
 //            ON EXT.TRAFFIC_CLASS = ACT.TRAFFIC_CLASS
-//        LEFT JOIN XDV_TRN_QOS_DT QOS
+//        LEFT JOIN OTA_TRN_QOS_T QOS
 //            ON EXT.CALL_SETUP_RESULT_CODE = QOS.RQOS_HEXID
-//        LEFT JOIN XDV_TRN_CAUSES_DT CA
+//        LEFT JOIN OTA_TRN_T CA
 //            ON (EXT.TERMINATING_REASON = CA.PRIMARY_CAUSE_ID AND CA.INTERFACE = 'AMACS' AND CA.AMK_ID = 0)
 
         w.out("FROM").outln();
@@ -213,7 +215,7 @@ public class SQLGenerator implements Visitor {
         w.decrementIndent();
     }
 
-    public void accept(PlainTable t) {
+    public void accept(TableAlias t) {
         if (t.getSchemaName() != null && t.getSchemaName().length() > 0) {
             w.out(t.getSchemaName() + ".");
         }
@@ -242,11 +244,11 @@ public class SQLGenerator implements Visitor {
 
     public void accept(LogicalExpression expression) {
         String link = expression.isOr() ? "OR" : "AND";
-        for (int i = 0; i < expression.getList().size(); i++) {
+        for (int i = 0; i < expression.getList().length; i++) {
             if (i > 0) {
                 w.out(" ").out(link).out(" ");
             }
-            expression.getList().get(i).process(this);
+            expression.getList()[i].process(this);
         }
     }
 
@@ -299,9 +301,9 @@ public class SQLGenerator implements Visitor {
     public void accept(FunctionCall call) {
 
         w.out(call.getFunctionName());
-        if (call.getCallArgumentList() != null && call.getCallArgumentList().length > 0) {
+        if (call.getCallArguments() != null && call.getCallArguments().length > 0) {
             w.out("(");
-            CallArgument[] args = call.getCallArgumentList();
+            CallArgument[] args = call.getCallArguments();
             for (int i = 0; i < args.length; i++) {
                 if (i > 0) {
                     w.out(", ");
@@ -318,15 +320,15 @@ public class SQLGenerator implements Visitor {
         if (call.getAsterisk() != null) {
             w.out(call.getAsterisk());
         } else {
-            call.getCallArgumentList()[0].process(this);
+            call.getCallArguments()[0].process(this);
         }
         w.out(")");
     }
 
     public void accept(CallArgument argument) {
-        if (argument.getVariableName() != null) {
+        if (argument.getParameterName() != null) {
             // name binding
-            w.out(argument.getVariableName()).out(" => ");
+            w.out(argument.getParameterName()).out(" => ");
         }
         argument.getExpression().process(this);
     }
@@ -336,9 +338,9 @@ public class SQLGenerator implements Visitor {
         argument.getExpression().process(this);
     }
 
-    public void accept(ReferencedName name) {
-        w.out(name.getFullName());
-    }
+//    public void accept(ReferencedName name) {
+//        w.out(name.getFullName());
+//    }
 
     public void accept(LikeCondition condition) {
         condition.getLeftExpr().process(this);
@@ -351,10 +353,10 @@ public class SQLGenerator implements Visitor {
         condition.getRightExpr().process(this);
     }
 
-    public void accept(Subquery subquery) {
+    public void accept(FromSubquery subquery) {
         w.out("(");
         w.incrementIndent();
-        subquery.getSelectStatement().process(this);
+        subquery.getSubquery().getSelectStatement().process(this);
         w.decrementIndent();
         w.out(")");
         if (subquery.getAlias() != null) {
@@ -394,7 +396,8 @@ public class SQLGenerator implements Visitor {
     }
 
     public void accept(SequenceExpr expr) {
-        w.out(expr.getSequenceName().getText()).out(".").out(expr.getMethod());
+//        w.out(expr.getSequenceName().getText()).out(".").out(expr.getMethod());
+        w.out(expr.getSequence().getText()).out(".").out(expr.getMethod());
     }
 
     public void accept(IntervalExpression expression) {

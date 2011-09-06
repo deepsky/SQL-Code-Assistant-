@@ -27,9 +27,8 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.VariableDecl;
-import com.intellij.psi.PsiElement;
-import com.intellij.lang.ASTNode;
 import com.deepsky.lang.plsql.psi.VariableName;
+import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
 public class VariableNameImpl extends PlSqlElementBase implements VariableName {
@@ -45,7 +44,7 @@ public class VariableNameImpl extends PlSqlElementBase implements VariableName {
 
     @NotNull
     public VariableDecl getVariableDecl() {
-        if(getParent() instanceof VariableDecl){
+        if (getParent() instanceof VariableDecl) {
             return (VariableDecl) getParent();
         }
         throw new SyntaxTreeCorruptedException();

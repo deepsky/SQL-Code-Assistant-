@@ -25,6 +25,7 @@
 
 package com.deepsky.findUsages.scopes;
 
+import com.deepsky.database.ora.DbUrl;
 import com.intellij.ide.util.scopeChooser.ScopeDescriptor;
 import com.intellij.ide.util.scopeChooser.ScopeDescriptorProvider;
 import com.intellij.openapi.module.Module;
@@ -50,6 +51,7 @@ public class DbScopeDescriptorProvider implements ScopeDescriptorProvider {
 
 
     public static class DbSearchScope extends GlobalSearchScope {
+        private DbUrl dbUrl;
 
         @Override
         public boolean contains(VirtualFile file) {
@@ -71,10 +73,22 @@ public class DbScopeDescriptorProvider implements ScopeDescriptorProvider {
             return false;
         }
 
+//        @NotNull
+//        public SearchScope intersectWith(@NotNull SearchScope scope2) {
+//            return this;
+//        }
+//
+//        @NotNull
+//        public SearchScope union(@NotNull SearchScope scope) {
+//            return this;
+//        }
 
         public String getDisplayName() {
           return "Database schema";
         }
 
+        public DbUrl getDbUrl() {
+            return dbUrl;
+        }
     }
 }

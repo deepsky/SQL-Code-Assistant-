@@ -27,11 +27,6 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.plsql.psi.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.TableScope;
-import com.deepsky.lang.plsql.psi.resolve.impl.PlainTableColumnContext;
-import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.struct.TableDescriptor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -46,6 +41,8 @@ public class ColumnNameRefImpl extends PlSqlReferenceBase implements ColumnNameR
 
     @NotNull
     public Object[] getVariants(String text) {
+/*
+todo -- resolve stuff refactoring
         if (getParent() instanceof TableScope) {
             TableScope tscope = (TableScope) getParent();
 
@@ -58,27 +55,14 @@ public class ColumnNameRefImpl extends PlSqlReferenceBase implements ColumnNameR
                 }
             }
         }
+*/
 
         // todo --
         return new Object[0];
     }
 
-    public PsiElement resolve() {
-        if (getParent() instanceof TableScope) {
-            TableScope tscope = (TableScope) getParent();
-
-            TableDescriptor tdesc = describeTable(tscope.getTableName());
-            if (tdesc != null) {
-                try {
-                    return new PlainTableColumnContext(getProject(), tdesc, getText()).getDeclaration();
-                } catch (NameNotResolvedException e1) {
-                    // todo --
-                }
-            }
-        }
-
-        // todo --
-        return null;
+    protected PsiElement resolveInternal() {
+        return facade.resolveColumnNameRef(this);
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
@@ -88,11 +72,5 @@ public class ColumnNameRefImpl extends PlSqlReferenceBase implements ColumnNameR
             super.accept(visitor);
         }
     }
-
-    public boolean isReferenceTo(PsiElement psiElement) {
-        PsiElement resolved = resolve();
-        return psiElement == resolved;
-    }
-
 
 }

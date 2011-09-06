@@ -25,24 +25,41 @@
 
 package com.deepsky.integration;
 
+import com.deepsky.lang.common.PlSqlFileType;
 import com.intellij.psi.tree.IElementType;
-import com.deepsky.lang.common.PlSqlSupportLoader;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class PlSqlElementType extends IElementType {
 
-    int elementType;
+    static private final Map<Short, Integer> ielem2antlr_tokentype = new HashMap<Short, Integer>();
 
-    public PlSqlElementType(String debugName, int elementType) {
-        super(debugName, PlSqlSupportLoader.PLSQL.getLanguage());
-        this.elementType = elementType;
+    static final public int NOT_REGISTER = -1;
+    int antlrTokenType;
+
+    public PlSqlElementType(String debugName, int antlrTokenType) {
+        super(debugName, PlSqlFileType.FILE_TYPE.getLanguage());
+        this.antlrTokenType = antlrTokenType;
+
+        ielem2antlr_tokentype.put(getIndex(), antlrTokenType);
     }
 
     public String toString() {
         return "PLSQL:" + super.toString();
     }
 
-    public int getElementTyoe(){
-        return elementType;
+    public int getElementTyoe() {
+        return antlrTokenType;
+    }
+
+    static public int mapTo_TokenType(IElementType elem) {
+        Integer tokenType = ielem2antlr_tokentype.get(elem.getIndex());
+        if (tokenType != null) {
+            return tokenType;
+        } else {
+            return NOT_REGISTER;
+        }
     }
 }

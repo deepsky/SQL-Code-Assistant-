@@ -34,12 +34,16 @@ public class PrioritizedList {
     List<ItemToUpdate> forced; // = new LinkedList<ItemToUpdate>();
     int next = 0;
 
-    public PrioritizedList(final List<ItemToUpdate> items, List<ItemToUpdate> forced) {
+    int CHUNK_SIZE = 10;
+
+    public PrioritizedList(final Collection<ItemToUpdate> items, List<ItemToUpdate> forced) {
 
         List<ItemToUpdate> _queue = new ArrayList<ItemToUpdate>();
         for(ItemToUpdate item: items){
             if(!item.upToDate){
                 _queue.add(item);
+            } else {
+                // item is UP TO DATE, updating not needed
             }
         }
         queue = _queue.toArray(new ItemToUpdate[_queue.size()]);
@@ -48,7 +52,12 @@ public class PrioritizedList {
         // todo - any sort?
     }
 
-    
+
+    public PrioritizedList(final Collection<ItemToUpdate> items, List<ItemToUpdate> forced, int chunkSize) {
+        this(items, forced);
+        this.CHUNK_SIZE = chunkSize;
+    }
+
     public void force(ItemToUpdate i) {
         forced.add(i);
     }
@@ -63,7 +72,6 @@ public class PrioritizedList {
 //        }
 //    }
 
-    final int CHUNK_SIZE = 10;
 
     public Mix pop() {
 

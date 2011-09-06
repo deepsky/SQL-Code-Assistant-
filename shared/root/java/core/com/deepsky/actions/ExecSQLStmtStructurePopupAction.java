@@ -25,15 +25,19 @@
 
 package com.deepsky.actions;
 
+import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.DBException;
+import com.deepsky.database.exec.impl.RespMessageTable;
+import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PlSqlFile;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
-import com.deepsky.lang.plsql.psi.Statement;
-import com.deepsky.lang.plsql.psi.ddl.SqlDDLStatement;
-import com.deepsky.lang.plsql.struct.parser.PlSqlASTParser;
+import com.deepsky.lang.plsql.sqlIndex.IndexManager;
 import com.deepsky.lang.plsql.structure_view.PlSqlStructureViewElement;
+import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
@@ -41,11 +45,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
 
 public class ExecSQLStmtStructurePopupAction extends ExecuteSQLStatementAction {
 
-    public ExecSQLStmtStructurePopupAction(){
+    public ExecSQLStmtStructurePopupAction() {
     }
 
     public void actionPerformed(AnActionEvent event) {
@@ -54,36 +57,49 @@ public class ExecSQLStmtStructurePopupAction extends ExecuteSQLStatementAction {
             Navigatable elem = event.getData(LangDataKeys.NAVIGATABLE);
             Project project = event.getData(LangDataKeys.PROJECT);
 
-            if(elem instanceof PlSqlStructureViewElement){
+            boolean isOnline = isTargerDBConnected((PlSqlFile)psi);
+            if(!isOnline){
+                // todo -- issue message "Not connected"
+                DbUrl dbUrl = ((PlSqlFile)psi).getDbUrl();
+                String message = "";
+                if(IndexManager.FS_URL.equals(dbUrl)){
+                    // there is not active connection
+                    message = "Not connected to the database. Connect to the database first and try to execute SQL statement once more.";
+                } else {
+                    // selected conection is not active
+                    message = "Not connected to the " + dbUrl.getUserHostPortServiceName()
+                            + ". Connect to the database first and try to execute SQL statement once more.";
+                }
+
+                Messages.showErrorDialog(message, "SQL execution error");
+                return;
+            }
+            if (elem instanceof PlSqlStructureViewElement) {
                 PlSqlStructureViewElement structure = (PlSqlStructureViewElement) elem;
                 PlSqlElement plSqlElement = structure.getValue();
 
-                String text = "";
-                int _st = 0;
-                int _end = 0;
-
-                if (plSqlElement instanceof Statement) {
-                    Statement stmt = (Statement) plSqlElement;
-                    text = stmt.getText();
-                    _st = stmt.getTextRange().getStartOffset();
-                    _end = stmt.getTextRange().getEndOffset();
-                } else if (plSqlElement instanceof SqlDDLStatement) {
-                    SqlDDLStatement stmt = (SqlDDLStatement) plSqlElement;
-                    text = stmt.getText();
-                    _st = stmt.getTextRange().getStartOffset();
-                    _end = stmt.getTextRange().getEndOffset();
-                } else {
-                    // do not know how to process
-                    return;
-                }
+                String text = plSqlElement.getText();
+                int _st = plSqlElement.getTextRange().getStartOffset();;
+                int _end = plSqlElement.getTextRange().getEndOffset();
 
                 try {
-                    PlSqlASTParser parser = new PlSqlASTParser();
-                    PlSqlElement[] elems = parser.parse(text);
-                    if(elems.length == 1 &&
-                        PlSqlElementTypes.EXECUTABLE_STATEMENTS.contains(elems[0].getNode().getElementType())){
-                        IElementType itype = elems[0].getNode().getElementType();
-                        executeStatement(project, text, itype, (PlSqlFile) psi, _st, _end);
+                    MarkupGeneratorEx2 generator = new MarkupGeneratorEx2();
+                    ASTNode root = generator.parse(text);
+                    if (root != null ){
+                        ASTNode astStmt = root.findChildByType(
+                                RespMessageTable.getExecutableStmts()
+                        );
+                        //PlSqlElementTypes.EXECUTABLE_STATEMENTS);
+                        if(astStmt != null){
+                            if( astStmt.getElementType() == PlSqlElementTypes.SQLPLUS_COMMAND){
+                                ASTNode plsqlBlk = astStmt.findChildByType(PlSqlElementTypes.PLSQL_BLOCK);
+                                if(plsqlBlk != null){
+                                    executeStatement(project, plsqlBlk, (PlSqlFile) psi, _st, _end);
+                                }
+                            } else {
+                                executeStatement(project, astStmt, (PlSqlFile) psi, _st, _end);
+                            }
+                        }
                     }
 
                 } catch (NotSupportedException e1) {
@@ -98,6 +114,20 @@ public class ExecSQLStmtStructurePopupAction extends ExecuteSQLStatementAction {
         }
     }
 
+    private boolean isTargerDBConnected(PlSqlFile plSqlFile) {
+        DbUrl dbUrl = plSqlFile.getDbUrl();
+        ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(plSqlFile.getProject());
+        if( manager.isConnected()){
+            if(manager.getDbUrl().equals(dbUrl)){
+                return true;
+            } else if(IndexManager.FS_URL.equals(dbUrl)){
+                //
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void update(AnActionEvent event) {
 
         PsiFile psi = event.getData(LangDataKeys.PSI_FILE);
@@ -106,15 +136,15 @@ public class ExecSQLStmtStructurePopupAction extends ExecuteSQLStatementAction {
             presentation.setVisible(true);
 
             Navigatable elem = event.getData(LangDataKeys.NAVIGATABLE);
-            if(elem instanceof PlSqlStructureViewElement){
+            if (elem instanceof PlSqlStructureViewElement) {
                 PlSqlStructureViewElement structure = (PlSqlStructureViewElement) elem;
                 PlSqlElement plSqlElement = structure.getValue();
-                if (plSqlElement instanceof Statement) {
-                    presentation.setEnabled(true);
-                } else if (plSqlElement instanceof SqlDDLStatement) {
-                    presentation.setEnabled(true);
-                } else {
-                    presentation.setEnabled(false);
+                if (plSqlElement != null && plSqlElement.getNode() != null) {
+                    if (RespMessageTable.getExecutableStmts().contains(plSqlElement.getNode().getElementType())) {
+                        presentation.setEnabled(true);
+                    } else {
+                        presentation.setEnabled(false);
+                    }
                 }
             }
 

@@ -26,9 +26,12 @@
 package com.deepsky.lang.plsql.psi.utils;
 
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.resolver.utils.ArgumentSpec;
 import com.deepsky.lang.plsql.struct.FunctionDescriptor;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.ExecutableDescriptor;
+
+import java.awt.*;
 
 public class Formatter {
 
@@ -69,8 +72,23 @@ public class Formatter {
      * @return - argument spec
      */
     public static String formatArgList(Executable exec) {
+        return formatArgList(exec, true);
+    }
+
+    public static String formatArgList(Executable exec, boolean encloseInParen) {
         Argument[] args = exec.getArguments();
-        return argument2str(args);
+        return argument2str(args, encloseInParen);
+    }
+
+    /**
+     * Building the argument list for an executable object based on DEFINITION of the executable object
+     * and using argument names
+     * @param exec
+     * @return - argument spec
+     */
+    public static String formatArgListLong(Executable exec, boolean encloseInParen) {
+        Argument[] args = exec.getArguments();
+        return argument2strLong(args, encloseInParen);
     }
 
     /**
@@ -78,17 +96,24 @@ public class Formatter {
      * @param exec
      * @return - argument spec
      */
-    public static String formatArgList(ExecutableSpec exec) {
+    public static String formatArgList(ExecutableSpec exec, boolean encloseInParen) {
         ArgumentList alist = exec.getArgumentList();
         if(alist != null){
             Argument[] args = alist.getArguments();
-            return argument2str(args);
+            return argument2str(args, encloseInParen);
         }
         return "";
     }
 
+    public static String formatArgList(ExecutableSpec exec) {
+        return formatArgList(exec, true);
+    }
 
     private static String argument2str(Argument[] args){
+        return argument2str(args, true);
+    }
+
+    private static String argument2str(Argument[] args, boolean encloseInParen){
         StringBuilder bld = new StringBuilder();
         for(Argument a: args){
             if(bld.length() > 0){
@@ -104,9 +129,36 @@ public class Formatter {
             }
         }
 
-        return bld.length()>0? "(" + bld.toString() + ")": "";
+        if(encloseInParen){
+            return bld.length()>0? "(" + bld.toString() + ")": "";
+        } else {
+            return bld.length()>0? bld.toString(): "";
+        }
     }
 
+    public static String argument2strLong(Argument[] args, boolean encloseInParen){
+        StringBuilder bld = new StringBuilder();
+        for(Argument a: args){
+            if(bld.length() > 0){
+                bld.append(", ");
+            }
+            bld.append(a.getType().typeName().toLowerCase());
+            if(a.isIn()){
+                bld.append(" ").append("in");
+            }
+
+            if(a.isOut()){
+                bld.append(" ").append("out");
+            }
+            bld.append(" ").append(a.getArgumentName());
+        }
+
+        if(encloseInParen){
+            return bld.length()>0? "(" + bld.toString() + ")": "";
+        } else {
+            return bld.length()>0? bld.toString(): "";
+        }
+    }
 
     public static String formatArgList(ExecutableDescriptor dbo) {
         StringBuilder bld = new StringBuilder();
@@ -179,7 +231,7 @@ public class Formatter {
 
 
     public static String formatSignature(Callable exec) {
-        String argList = formatArgList(exec.getCallArgumentList());
+        String argList = formatArgList(exec.getCallArguments());
         String out= exec.getFunctionName() + argList;
         return out.toLowerCase();
     }
@@ -198,17 +250,54 @@ public class Formatter {
         return out.toLowerCase();
     }
 
+    public static String formatSignature(Executable exec, int maxSize) {
+        String argList = formatArgList(exec);
+        String out = exec.getEName() + argList;
+
+        if(out.length() > maxSize && maxSize > 4){
+            // cutoff
+            out = out.substring(0, maxSize-4) + " ..)";
+        }
+
+        if(exec instanceof Function){
+            String returnType = ((Function)exec).getReturnType().typeName().toLowerCase();
+            out += ":" + returnType;
+        } else {
+            // procedure
+        }
+        return out.toLowerCase();
+    }
+
     public static String formatSignature(ExecutableSpec exec) {
         String argList = formatArgList(exec);
         String out = exec.getEName() + argList;
 
-        if(exec instanceof Function){
+        if(exec instanceof FunctionSpec){
             String returnType = ((FunctionSpec)exec).getReturnType().typeName().toLowerCase();
             out += ":" + returnType;
         } else {
             // procedure
         }
         return out.toLowerCase();
+    }
+
+
+    public static String formatSignature(ExecutableSpec exec, int maxSize) {
+        String argList = formatArgList(exec);
+        String out = exec.getEName() + argList;
+
+        if(out.length() > maxSize && maxSize > 4){
+            // cutoff
+            out = out.substring(0, maxSize-4) + " ..)";
+        }
+
+        if(exec instanceof FunctionSpec){
+            String returnType = ((FunctionSpec)exec).getReturnType().typeName(); //.toLowerCase();
+            out += ":" + returnType;
+        } else {
+            // procedure
+        }
+        return out; //.toLowerCase();
     }
 
     public static String formatSqlStatement(SelectStatement select){
@@ -219,8 +308,8 @@ public class Formatter {
                 tabList = tabList + ",";
             }
             String tabName = "";
-            if (tabs[i] instanceof PlainTable) {
-                tabName = ((PlainTable) tabs[i]).getTableName().toUpperCase();
+            if (tabs[i] instanceof TableAlias) {
+                tabName = ((TableAlias) tabs[i]).getTableName().toUpperCase();
             } else {
                 tabName = "SUBQUERY";
             }
@@ -247,5 +336,189 @@ public class Formatter {
     public static String formatSqlStatement(UpdateStatement update){
         String tab = update.getTargetTable().getTableName();
         return "UPDATE [table " + tab.toUpperCase() + "]";
+    }
+
+    public static String formatFunctionSignature(String name, ArgumentSpec[] args, Type type) {
+        String argString = formatArgList(args);
+        String out = name + argString + ":" + type.typeName();
+        return out.toLowerCase();
+    }
+
+    public static String formatFunctionSignature2(String name, ArgumentSpec[] args, Type type) {
+        String argString = formatArgListTypeOnly(args);
+        String out = name + argString + ":" + type.typeName();
+        return out.toLowerCase();
+    }
+
+    public static String formatFunctionSignature(String name, ArgumentSpec[] args, Type type, int maxLength) {
+        String argString = formatArgList(args);
+        String typeName = type.typeName();
+        String out = name + argString + ":" + typeName;
+        if(maxLength > out.length()){
+            return out.toLowerCase();
+        } else {
+            int argLen = maxLength - name.length() - typeName.length();
+            return (name + formatArgListTypeOnly(args, argLen) + ":" + typeName).toLowerCase();
+        }
+    }
+
+    public static String formatFunctionSignatureHtmlBased(String name, ArgumentSpec[] args, Type type) {
+        String argString = formatArgListHtmlBased(args);
+        String out = "<html>" + name + argString + ":<b>" + type.typeName() + "</b>";
+        return out.toLowerCase();
+    }
+
+    public static String formatFunctionSignatureHtmlBased(String name, Color c, ArgumentSpec[] args, Type type) {
+        String argString = formatArgListHtmlBased(args);
+        String out = "<html><font color=\"" + endcodeColor(c) + "\">" + name + argString + ":<b>" + type.typeName() + "</b></font>";
+        return out.toLowerCase();
+    }
+
+
+    private static String endcodeColor(Color c){
+        return "#" + Integer.toHexString(c.getRed())
+                + Integer.toHexString(c.getGreen())
+                + Integer.toHexString(c.getBlue());
+    }
+
+    public static String formatProcedureSignature(String name, ArgumentSpec[] args) {
+        String argString = formatArgList(args);
+        String out = name + argString;
+        return out.toLowerCase();
+    }
+
+    public static String formatProcedureSignature2(String name, ArgumentSpec[] args) {
+        String argString = formatArgListTypeOnly(args);
+        String out = name + argString;
+        return out.toLowerCase();
+    }
+
+    public static String formatProcedureSignature(String name, ArgumentSpec[] args, int maxLength) {
+        String argString = formatArgList(args);
+        String out = name + argString;
+        if(maxLength > out.length()){
+            return out.toLowerCase();
+        } else {
+            int argLen = maxLength - name.length();
+            return (name + formatArgListTypeOnly(args, argLen)).toLowerCase();
+        }
+    }
+
+    public static String formatProcedureSignatureHtmlBased(String name, ArgumentSpec[] args) {
+        String argString = formatArgListHtmlBased(args);
+        String out = "<html>" + name + argString;
+        return out.toLowerCase();
+    }
+
+    public static String formatProcedureSignatureHtmlBased(String name, Color c, ArgumentSpec[] args) {
+        String argString = formatArgListHtmlBased(args);
+        String out = "<html><font color=\"" + endcodeColor(c) + "\">" + name + argString + "</font>";
+        return out.toLowerCase();
+    }
+
+    public static String formatTextHtmlBased(String name, Color c) {
+        String out = "<html><font color=\"" + endcodeColor(c) + "\">" + name + "</font>";
+        return out.toLowerCase();
+    }
+
+    public static String formatArgList(ArgumentSpec[] args, boolean doEncloseInParen) {
+        StringBuilder bld = new StringBuilder();
+        for(ArgumentSpec arg: args){
+            Type t = arg.getType();
+            if(bld.length() > 0){
+                bld.append(", ");
+            }
+
+            bld.append(arg.getName()).append(" ").append(t.typeName().toUpperCase());
+        }
+
+        if(doEncloseInParen){
+            return bld.length()>0? "(" + bld.toString() + ")": "";
+        } else {
+            return bld.length()>0? bld.toString(): "";
+        }
+    }
+
+    public static String formatArgList(ArgumentSpec[] args) {
+        return formatArgList(args, true);
+    }
+
+
+    public static String formatArgListTypeOnly(ArgumentSpec[] args) {
+        StringBuilder bld = new StringBuilder();
+        for(ArgumentSpec arg: args){
+            Type t = arg.getType();
+            if(bld.length() > 0){
+                bld.append(", ");
+            }
+
+            bld.append(t.typeName());
+        }
+
+        return bld.length()>0? "(" + bld.toString() + ")": "";
+    }
+
+    private static String formatArgList(ArgumentSpec[] args, int maxLength) {
+        StringBuilder bld = new StringBuilder();
+        for(ArgumentSpec arg: args){
+            Type t = arg.getType();
+            if(bld.length() > 0){
+                bld.append(", ");
+            }
+
+            bld.append(arg.getName()).append(" ").append(t.typeName());
+        }
+
+        if(bld.length() == 0){
+            return "";
+        } else if(bld.length() < maxLength){
+            return "(" + bld.toString() + ")";
+        } else {
+            // bld.length() > maxLength
+            if(maxLength > "( .. )".length()){
+                return "(" + bld.toString().substring(0, maxLength-5) + " .. )";
+            } else {
+                return "( .. )";
+            }
+        }
+    }
+
+    private static String formatArgListTypeOnly(ArgumentSpec[] args, int maxLength) {
+        StringBuilder bld = new StringBuilder();
+        for(ArgumentSpec arg: args){
+            Type t = arg.getType();
+            if(bld.length() > 0){
+                bld.append(", ");
+            }
+
+            bld.append(t.typeName());
+        }
+
+        if(bld.length() == 0){
+            return "";
+        } else if(bld.length() < maxLength){
+            return "(" + bld.toString() + ")";
+        } else {
+            // bld.length() > maxLength
+            if(maxLength > "( .. )".length()){
+                return "(" + bld.toString().substring(0, maxLength-5) + " .. )";
+            } else {
+                return "( .. )";
+            }
+        }
+    }
+
+    public static String formatArgListHtmlBased(ArgumentSpec[] args) {
+        StringBuilder bld = new StringBuilder();
+        for(ArgumentSpec arg: args){
+            Type t = arg.getType();
+            if(bld.length() > 0){
+                bld.append(", ");
+            }
+
+            bld.append(arg.getName()).append(" <b>").append(t.typeName()).append("</b>");
+        }
+
+        return bld.length()>0? "(" + bld.toString() + ")": "";
     }
 }

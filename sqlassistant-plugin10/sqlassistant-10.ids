@@ -1,0 +1,156 @@
+<?xml version="1.0"?><component name="dataSourceStorage">
+  <data-source source="LOCAL" name="Data Source" product="Oracle" version="Oracle Database 11g Release 11.1.0.0.0 - Production" jdbc-version="10.2" driver-version="10.2.0.1.0" uuid="95bf47bc-f31b-4b79-ba4b-531bcc8192c6">
+    <extra-name-characters>$#</extra-name-characters>
+    <identifier-quote-string>"</identifier-quote-string>
+    <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+    <jdbc-url>jdbc:oracle:thin:@localhost:1521:orcl</jdbc-url>
+    <user-name>hr</user-name>
+    <user-password>dfdbdfdddfcfdf9bdf98df99</user-password>
+    <schema-pattern>*.HR</schema-pattern>
+    <default-schemas>*.HR</default-schemas>
+    <libraries>
+      <library>
+        <url>file://$PROJECT_DIR$/../shared/lib/ojdbc14.jar</url>
+      </library>
+    </libraries>
+    <table name="A12" schema="HR" catalog="" type="TABLE">
+      <column name="ID" sqlType="NUMBER" length="22" precision="0" nullable="true" jdbcType="3" />
+    </table>
+    <table name="AA" schema="HR" catalog="" type="TABLE">
+      <column name="ID" sqlType="NUMBER" length="22" precision="0" nullable="true" jdbcType="3" />
+    </table>
+    <table name="AA378" schema="HR" catalog="" type="TABLE">
+      <column name="ID" sqlType="NUMBER" length="22" precision="0" nullable="true" jdbcType="3" />
+      <column name="NAME" sqlType="CHAR" length="34" precision="0" nullable="true" jdbcType="1" />
+    </table>
+    <table name="COUNTRIES" schema="HR" catalog="" type="TABLE">
+      <column name="COUNTRY_ID" sqlType="CHAR" length="2" precision="0" nullable="false" jdbcType="1" />
+      <column name="COUNTRY_NAME" sqlType="VARCHAR2" length="40" precision="0" nullable="true" jdbcType="12" />
+      <column name="REGION_ID" sqlType="NUMBER" length="22" precision="0" nullable="true" jdbcType="3" />
+      <primary-key name="COUNTRY_C_ID_PK" columns="country_id" />
+      <foreign-key name="COUNTR_REG_FK" columns="REGION_ID" ref-table="REGIONS" ref-schema="HR" ref-catalog="" ref-columns="REGION_ID" cascade-update="true" />
+    </table>
+    <table name="DEPARTMENTS" schema="HR" catalog="" type="TABLE">
+      <column name="DEPARTMENT_ID" sqlType="NUMBER" length="4" precision="0" nullable="false" jdbcType="3" />
+      <column name="DEPARTMENT_NAME" sqlType="VARCHAR2" length="30" precision="0" nullable="false" jdbcType="12" />
+      <column name="MANAGER_ID" sqlType="NUMBER" length="6" precision="0" nullable="true" jdbcType="3" />
+      <column name="LOCATION_ID" sqlType="NUMBER" length="4" precision="0" nullable="true" jdbcType="3" />
+      <primary-key name="DEPT_ID_PK" columns="department_id" />
+      <foreign-key name="DEPT_MGR_FK" columns="MANAGER_ID" ref-table="EMPLOYEES" ref-schema="HR" ref-catalog="" ref-columns="EMPLOYEE_ID" cascade-update="true" />
+      <foreign-key name="DEPT_LOC_FK" columns="LOCATION_ID" ref-table="LOCATIONS" ref-schema="HR" ref-catalog="" ref-columns="LOCATION_ID" cascade-update="true" />
+      <index name="DEPT_LOCATION_IX" unique="false" columns="LOCATION_ID" />
+    </table>
+    <table name="DEPARTMENTS_SEQ" schema="HR" catalog="" type="SEQUENCE" />
+    <table name="EMPLOYEES" schema="HR" catalog="" type="TABLE">
+      <column name="EMPLOYEE_ID" sqlType="NUMBER" length="6" precision="0" nullable="false" jdbcType="3" version="true" />
+      <column name="FIRST_NAME" sqlType="VARCHAR2" length="20" precision="0" nullable="true" jdbcType="12" />
+      <column name="LAST_NAME" sqlType="VARCHAR2" length="25" precision="0" nullable="false" jdbcType="12" />
+      <column name="EMAIL" sqlType="VARCHAR2" length="25" precision="0" nullable="false" jdbcType="12" />
+      <column name="PHONE_NUMBER" sqlType="VARCHAR2" length="20" precision="0" nullable="true" jdbcType="12" />
+      <column name="HIRE_DATE" sqlType="DATE" length="7" precision="0" nullable="false" jdbcType="91" version="true" />
+      <column name="JOB_ID" sqlType="VARCHAR2" length="10" precision="0" nullable="false" jdbcType="12" version="true" />
+      <column name="SALARY" sqlType="NUMBER" length="8" precision="2" nullable="true" jdbcType="3" />
+      <column name="COMMISSION_PCT" sqlType="NUMBER" length="2" precision="2" nullable="true" jdbcType="3" />
+      <column name="MANAGER_ID" sqlType="NUMBER" length="6" precision="0" nullable="true" jdbcType="3" />
+      <column name="DEPARTMENT_ID" sqlType="NUMBER" length="4" precision="0" nullable="true" jdbcType="3" version="true" />
+      <primary-key name="EMP_EMP_ID_PK" columns="employee_id" />
+      <foreign-key name="EMP_DEPT_FK" columns="DEPARTMENT_ID" ref-table="DEPARTMENTS" ref-schema="HR" ref-catalog="" ref-columns="DEPARTMENT_ID" cascade-update="true" />
+      <foreign-key name="EMP_MANAGER_FK" columns="MANAGER_ID" ref-table="EMPLOYEES" ref-schema="HR" ref-catalog="" ref-columns="EMPLOYEE_ID" cascade-update="true" />
+      <foreign-key name="EMP_JOB_FK" columns="JOB_ID" ref-table="JOBS" ref-schema="HR" ref-catalog="" ref-columns="JOB_ID" cascade-update="true" />
+      <index name="EMP_EMAIL_UK" unique="true" columns="EMAIL" />
+      <index name="EMP_DEPARTMENT_IX" unique="false" columns="DEPARTMENT_ID" />
+      <index name="EMP_JOB_IX" unique="false" columns="JOB_ID" />
+      <index name="EMP_MANAGER_IX" unique="false" columns="MANAGER_ID" />
+      <index name="EMP_NAME_IX" unique="false" columns="LAST_NAME" />
+      <index name="EMP_NAME_IX" unique="false" columns="FIRST_NAME" />
+    </table>
+    <table name="EMPLOYEES_SEQ" schema="HR" catalog="" type="SEQUENCE" />
+    <table name="EMP_DETAILS_VIEW" schema="HR" catalog="" type="VIEW">
+      <column name="EMPLOYEE_ID" sqlType="NUMBER" length="6" precision="0" nullable="false" jdbcType="3" />
+      <column name="JOB_ID" sqlType="VARCHAR2" length="10" precision="0" nullable="false" jdbcType="12" />
+      <column name="MANAGER_ID" sqlType="NUMBER" length="6" precision="0" nullable="true" jdbcType="3" />
+      <column name="DEPARTMENT_ID" sqlType="NUMBER" length="4" precision="0" nullable="true" jdbcType="3" />
+      <column name="LOCATION_ID" sqlType="NUMBER" length="4" precision="0" nullable="true" jdbcType="3" />
+      <column name="COUNTRY_ID" sqlType="CHAR" length="2" precision="0" nullable="true" jdbcType="1" />
+      <column name="FIRST_NAME" sqlType="VARCHAR2" length="20" precision="0" nullable="true" jdbcType="12" />
+      <column name="LAST_NAME" sqlType="VARCHAR2" length="25" precision="0" nullable="false" jdbcType="12" />
+      <column name="SALARY" sqlType="NUMBER" length="8" precision="2" nullable="true" jdbcType="3" />
+      <column name="COMMISSION_PCT" sqlType="NUMBER" length="2" precision="2" nullable="true" jdbcType="3" />
+      <column name="DEPARTMENT_NAME" sqlType="VARCHAR2" length="30" precision="0" nullable="false" jdbcType="12" />
+      <column name="JOB_TITLE" sqlType="VARCHAR2" length="35" precision="0" nullable="false" jdbcType="12" />
+      <column name="CITY" sqlType="VARCHAR2" length="30" precision="0" nullable="false" jdbcType="12" />
+      <column name="STATE_PROVINCE" sqlType="VARCHAR2" length="25" precision="0" nullable="true" jdbcType="12" />
+      <column name="COUNTRY_NAME" sqlType="VARCHAR2" length="40" precision="0" nullable="true" jdbcType="12" />
+      <column name="REGION_NAME" sqlType="VARCHAR2" length="25" precision="0" nullable="true" jdbcType="12" />
+    </table>
+    <table name="EMP_DETAILS_VIEW_SYN" schema="HR" catalog="" type="SYNONYM" />
+    <table name="EPLOYEES_TEST" schema="HR" catalog="" type="TABLE">
+      <column name="EMPLOYEE_ID" sqlType="NUMBER" length="6" precision="0" nullable="true" jdbcType="3" />
+      <column name="FIRST_NAME" sqlType="VARCHAR2" length="20" precision="0" nullable="true" jdbcType="12" />
+      <column name="LAST_NAME" sqlType="VARCHAR2" length="25" precision="0" nullable="false" jdbcType="12" />
+      <column name="EMAIL" sqlType="VARCHAR2" length="25" precision="0" nullable="false" jdbcType="12" />
+      <column name="PHONE_NUMBER" sqlType="VARCHAR2" length="20" precision="0" nullable="true" jdbcType="12" />
+      <column name="HIRE_DATE" sqlType="DATE" length="7" precision="0" nullable="false" jdbcType="91" />
+      <column name="JOB_ID" sqlType="VARCHAR2" length="10" precision="0" nullable="false" jdbcType="12" />
+      <column name="SALARY" sqlType="NUMBER" length="8" precision="2" nullable="true" jdbcType="3" />
+      <column name="COMMISSION_PCT" sqlType="NUMBER" length="2" precision="2" nullable="true" jdbcType="3" />
+      <column name="MANAGER_ID" sqlType="NUMBER" length="6" precision="0" nullable="true" jdbcType="3" />
+      <column name="DEPARTMENT_ID" sqlType="NUMBER" length="4" precision="0" nullable="true" jdbcType="3" />
+    </table>
+    <table name="JOBS" schema="HR" catalog="" type="TABLE">
+      <column name="JOB_ID" sqlType="VARCHAR2" length="10" precision="0" nullable="false" jdbcType="12" />
+      <column name="JOB_TITLE" sqlType="VARCHAR2" length="35" precision="0" nullable="false" jdbcType="12" />
+      <column name="MIN_SALARY" sqlType="NUMBER" length="6" precision="0" nullable="true" jdbcType="3" />
+      <column name="MAX_SALARY" sqlType="NUMBER" length="6" precision="0" nullable="true" jdbcType="3" />
+      <primary-key name="JOB_ID_PK" columns="job_id" />
+    </table>
+    <table name="JOB_HISTORY" schema="HR" catalog="" type="TABLE">
+      <column name="EMPLOYEE_ID" sqlType="NUMBER" length="6" precision="0" nullable="false" jdbcType="3" />
+      <column name="START_DATE" sqlType="DATE" length="7" precision="0" nullable="false" jdbcType="91" />
+      <column name="END_DATE" sqlType="DATE" length="7" precision="0" nullable="false" jdbcType="91" />
+      <column name="JOB_ID" sqlType="VARCHAR2" length="10" precision="0" nullable="false" jdbcType="12" />
+      <column name="DEPARTMENT_ID" sqlType="NUMBER" length="4" precision="0" nullable="true" jdbcType="3" />
+      <primary-key name="JHIST_EMP_ID_ST_DATE_PK" columns="employee_id,start_date" />
+      <foreign-key name="JHIST_DEPT_FK" columns="DEPARTMENT_ID" ref-table="DEPARTMENTS" ref-schema="HR" ref-catalog="" ref-columns="DEPARTMENT_ID" cascade-update="true" />
+      <foreign-key name="JHIST_EMP_FK" columns="EMPLOYEE_ID" ref-table="EMPLOYEES" ref-schema="HR" ref-catalog="" ref-columns="EMPLOYEE_ID" cascade-update="true" />
+      <foreign-key name="JHIST_JOB_FK" columns="JOB_ID" ref-table="JOBS" ref-schema="HR" ref-catalog="" ref-columns="JOB_ID" cascade-update="true" />
+      <index name="JHIST_DEPARTMENT_IX" unique="false" columns="DEPARTMENT_ID" />
+      <index name="JHIST_EMPLOYEE_IX" unique="false" columns="EMPLOYEE_ID" />
+      <index name="JHIST_JOB_IX" unique="false" columns="JOB_ID" />
+    </table>
+    <table name="LOCATIONS" schema="HR" catalog="" type="TABLE">
+      <column name="LOCATION_ID" sqlType="NUMBER" length="4" precision="0" nullable="false" jdbcType="3" />
+      <column name="STREET_ADDRESS" sqlType="VARCHAR2" length="40" precision="0" nullable="true" jdbcType="12" />
+      <column name="POSTAL_CODE" sqlType="VARCHAR2" length="12" precision="0" nullable="true" jdbcType="12" />
+      <column name="CITY" sqlType="VARCHAR2" length="30" precision="0" nullable="false" jdbcType="12" />
+      <column name="STATE_PROVINCE" sqlType="VARCHAR2" length="25" precision="0" nullable="true" jdbcType="12" />
+      <column name="COUNTRY_ID" sqlType="CHAR" length="2" precision="0" nullable="true" jdbcType="1" />
+      <primary-key name="LOC_ID_PK" columns="location_id" />
+      <foreign-key name="LOC_C_ID_FK" columns="COUNTRY_ID" ref-table="COUNTRIES" ref-schema="HR" ref-catalog="" ref-columns="COUNTRY_ID" cascade-update="true" />
+      <index name="LOC_CITY_IX" unique="false" columns="CITY" />
+      <index name="LOC_COUNTRY_IX" unique="false" columns="COUNTRY_ID" />
+      <index name="LOC_STATE_PROVINCE_IX" unique="false" columns="STATE_PROVINCE" />
+    </table>
+    <table name="LOCATIONS_SEQ" schema="HR" catalog="" type="SEQUENCE" />
+    <table name="REGIONS" schema="HR" catalog="" type="TABLE">
+      <column name="REGION_ID" sqlType="NUMBER" length="22" precision="0" nullable="false" jdbcType="3" />
+      <column name="REGION_NAME" sqlType="VARCHAR2" length="25" precision="0" nullable="true" jdbcType="12" />
+      <primary-key name="REG_ID_PK" columns="region_id" />
+    </table>
+    <table name="T123" schema="HR" catalog="" type="TABLE">
+      <column name="IB" sqlType="NUMBER" length="22" precision="0" nullable="true" jdbcType="3" />
+      <column name="NAME" sqlType="VARCHAR2" length="1" precision="0" nullable="true" jdbcType="12" />
+    </table>
+  </data-source>
+  <data-source source="LOCAL" name="Data Source2" product="" version="" jdbc-version="" driver-version="" uuid="02760a78-a1d0-498b-bb01-543f54656195">
+    <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
+    <jdbc-url>jdbc:oracle:thin:@localhost:1521:orcl</jdbc-url>
+    <user-name>pln</user-name>
+    <user-password>dfdadfc6dfc4</user-password>
+    <libraries>
+      <library>
+        <url>file://$PROJECT_DIR$/../shared/lib/ojdbc14.jar</url>
+      </library>
+    </libraries>
+  </data-source>
+</component>

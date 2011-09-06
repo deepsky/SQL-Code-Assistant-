@@ -25,14 +25,14 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.ArgumentList;
-import com.deepsky.lang.plsql.psi.Argument;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.psi.Argument;
+import com.deepsky.lang.plsql.psi.ArgumentList;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ArgumentListImpl extends PlSqlElementBase implements ArgumentList {
 
@@ -62,7 +62,7 @@ public class ArgumentListImpl extends PlSqlElementBase implements ArgumentList {
             if (child.getElementType() == PLSqlTypesAdopted.PARAMETER_SPEC) {
                 count++;
                 Argument a = (Argument) child.getPsi();
-                defaultCount = a.getDefaultExpr() != null? defaultCount + 1: defaultCount;
+                defaultCount = a.getDefaultExpr() != null ? defaultCount + 1 : defaultCount;
             }
             child = child.getTreeNext();
         }
@@ -75,7 +75,7 @@ public class ArgumentListImpl extends PlSqlElementBase implements ArgumentList {
         while (child != null) {
             if (child.getElementType() == PLSqlTypesAdopted.PARAMETER_SPEC) {
                 Argument a = (Argument) child.getPsi();
-                if(a.getArgumentName().equalsIgnoreCase(var)){
+                if (a.getArgumentName().equalsIgnoreCase(var)) {
                     return a;
                 }
             }
@@ -89,7 +89,7 @@ public class ArgumentListImpl extends PlSqlElementBase implements ArgumentList {
         int count = 0;
         while (child != null) {
             if (child.getElementType() == PLSqlTypesAdopted.PARAMETER_SPEC) {
-                if(count++ == pos){
+                if (count++ == pos) {
                     return (Argument) child.getPsi();
                 }
             }

@@ -25,36 +25,30 @@
 
 package com.deepsky.view.query_pane;
 
-import com.deepsky.database.exec.TableResizeListener;
-import com.deepsky.database.exec.RowSetModel;
 import com.deepsky.database.DBException;
+import com.deepsky.database.exec.RecordCache;
+import com.deepsky.database.exec.RowSetManager;
+import com.deepsky.database.exec.TableResizeListener;
 import com.deepsky.gui.DataGridOrderSettings;
 import com.deepsky.view.Icons;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.ide.DataManager;
 
-import javax.swing.table.*;
-import javax.swing.event.TableModelListener;
-import javax.swing.event.TableModelEvent;
 import javax.swing.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.awt.event.MouseListener;
+import javax.swing.table.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.*;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
-public class DataGridSorter extends AbstractTableModel {
+public abstract class DataGridSorter extends AbstractTableModel implements TableResizeListener{
 
     private static final Logger log = Logger.getInstance("#DataGridSorter");
 
-    protected TableModel tableModel;
-    TableModelAdapter adapter;
-    RowSetModel rowsetModel;
+    RecordCache recordCache;
 
     public static final int DESCENDING = -1;
     public static final int NOT_SORTED = 0;
@@ -64,49 +58,17 @@ public class DataGridSorter extends AbstractTableModel {
 
     private JTableHeader tableHeader;
     private MouseListener mouseListener;
-    private TableModelListener tableModelListener;
     private List sortingColumns = new ArrayList();
 
     Project project;
 
-    public DataGridSorter(Project project, RowSetModel rowsetModel) {
+    public DataGridSorter(Project project, RecordCache recordCache) {
         this.project = project;
         this.mouseListener = new MouseHandler();
-        this.rowsetModel = rowsetModel;
-        adapter = new TableModelAdapter(rowsetModel);
-        setTableModel(adapter);
-    }
+        this.recordCache = recordCache;
 
-//    public DataGridSorter(TableModel tableModel, JTableHeader tableHeader) {
-//        this();
-//        setTableHeader(tableHeader);
-//        setTableModel(tableModel);
-//    }
-
-//    private void clearSortingState() {
-//        viewToModel = null;
-//        modelToView = null;
-//    }
-
-    public TableModel getTableModel() {
-        return tableModel;
-    }
-
-    public void setTableModel(TableModel tableModel) {
-        if (this.tableModel != null) {
-            this.tableModel.removeTableModelListener(tableModelListener);
-        }
-
-        this.tableModel = tableModel;
-        if (this.tableModel != null) {
-            //this.tableModel.addTableModelListener(tableModelListener);
-        }
-
+        recordCache.addListener(this);
         fireTableStructureChanged();
-    }
-
-    public JTableHeader getTableHeader() {
-        return tableHeader;
     }
 
 
@@ -115,10 +77,10 @@ public class DataGridSorter extends AbstractTableModel {
         this.tableHeader.addMouseListener(mouseListener);
 
         SortableHeaderRenderer renderer = new SortableHeaderRenderer();
-        Enumeration<TableColumn> en =  this.tableHeader.getColumnModel().getColumns();
-        while(en.hasMoreElements()){
+        Enumeration<TableColumn> en = this.tableHeader.getColumnModel().getColumns();
+        while (en.hasMoreElements()) {
             TableColumn tc0 = en.nextElement();
-            tc0.setHeaderRenderer( renderer );
+            tc0.setHeaderRenderer(renderer);
         }
     }
 
@@ -148,6 +110,10 @@ public class DataGridSorter extends AbstractTableModel {
         }
     }
 
+    public abstract void sortByColumn(int columnIndex, int dir) throws DBException;
+    public abstract boolean isColumnSortable(int columnIndex);
+
+
     public void setSortingStatus(int column, int status) {
 
         try {
@@ -155,10 +121,12 @@ public class DataGridSorter extends AbstractTableModel {
             if (status == NOT_SORTED) {
                 st = "NOT_SORTED";
             } else if (status == DESCENDING) {
-                rowsetModel.orderByColumn(column, RowSetModel.DESCENDING, false);
+                //rowsetModel.getModel().orderByColumn(column+1, RowSetManager.DESCENDING, false);
+                sortByColumn(column, RowSetManager.DESCENDING);
                 st = "DESC";
             } else if (status == ASCENDING) {
-                rowsetModel.orderByColumn(column, RowSetModel.ASCENDING, false);
+//                rowsetModel.getModel().orderByColumn(column+1, RowSetManager.ASCENDING, false);
+                sortByColumn(column, RowSetManager.ASCENDING);
                 st = "ASC";
             } else {
                 st = Integer.toString(status);
@@ -177,7 +145,7 @@ public class DataGridSorter extends AbstractTableModel {
             sortingStatusChanged();
 
         } catch (DBException e) {
-            Messages.showErrorDialog( e.getMessage(), "Query failed");
+            Messages.showErrorDialog(e.getMessage(), "Query failed");
             log.warn("[setSortingStatus] could not perform ordering");
         }
     }
@@ -195,31 +163,65 @@ public class DataGridSorter extends AbstractTableModel {
 
     // TableModel interface methods
 
+    public int getColumnCount() {
+        // it's going to be redefined by reflection
+        return 0;
+    }
     public int getRowCount() {
-        return (tableModel == null) ? 0 : tableModel.getRowCount();
+        // it's going to be redefined by reflection
+        return 0;
+    }
+
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        // it's going to be redefined by reflection
+        return null;
+    }
+/*
+    public int getRowCount() {
+       return rowsetModel.getModel().getFetchedRowCount();
     }
 
     public int getColumnCount() {
-        return (tableModel == null) ? 0 : tableModel.getColumnCount();
+       return rowsetModel.getModel().getColumnCount();
     }
 
-    public String getColumnName(int column) {
-        return tableModel.getColumnName(column);
+    public String getColumnName(int columnIndex) {
+       return rowsetModel.getModel().getColumnName(columnIndex+1);
     }
 
-    public Class getColumnClass(int column) {
-        return tableModel.getColumnClass(column);
+    public Class getColumnClass(int columnIndex) {
+        return rowsetModel.getModel().getColumnClass(columnIndex+1);
     }
 
     public boolean isCellEditable(int row, int column) {
-        return false;
+        return rowsetModel.getModel().isColumnEditable(column+1);
     }
 
-    public Object getValueAt(int row, int column) {
-        return tableModel.getValueAt(row, column);
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        try {
+            return rowsetModel.getModel().getValueAt(rowIndex, columnIndex+1);
+        } catch (DBException e) {
+            return null;
+        }
     }
 
     public void setValueAt(Object aValue, int row, int column) {
+        try {
+            rowsetModel.getModel().setValueAt(row, column + 1, aValue);
+        } catch (DBException ignored) {
+        }
+    }
+*/
+
+   public void handle(final int oldSize, final int newSize) {
+       fireTableDataChanged();
+   }
+
+    /**
+     * Dispose resources
+     */
+    public void dispose() {
+        recordCache.removeListener(this);
     }
 
     private class MouseHandler extends MouseAdapter {
@@ -228,7 +230,7 @@ public class DataGridSorter extends AbstractTableModel {
             TableColumnModel columnModel = h.getColumnModel();
             int viewColumn = h.columnAtPoint(e.getPoint());
             int column = columnModel.getColumn(viewColumn).getModelIndex();
-            if (column != -1) {
+            if (column != -1 && isColumnSortable(column)) {
                 int status = getSortingStatus(column);
 //                if (!e.isControlDown()) {
 //                    cancelSorting();
@@ -238,15 +240,15 @@ public class DataGridSorter extends AbstractTableModel {
 
                 String columnName = (String) columnModel.getColumn(viewColumn).getHeaderValue();
                 int sst =
-                        (status == DESCENDING)?
-                                DataGridOrderSettings.DESC:
-                                ((status == ASCENDING)?DataGridOrderSettings.ASC: DataGridOrderSettings.NOT_SORTED);
+                        (status == DESCENDING) ?
+                                DataGridOrderSettings.DESC :
+                                ((status == ASCENDING) ? DataGridOrderSettings.ASC : DataGridOrderSettings.NOT_SORTED);
 
                 DataGridOrderSettings settings = new DataGridOrderSettings(project, columnName, sst);
                 settings.show();
-                if(settings.isOK()){
+                if (settings.isOK()) {
                     int newStatus;
-                    switch(settings.getSortOption()){
+                    switch (settings.getSortOption()) {
                         case DataGridOrderSettings.DESC:
                             newStatus = DESCENDING;
                             break;
@@ -258,10 +260,23 @@ public class DataGridSorter extends AbstractTableModel {
                             break;
                     }
 
-                    if(newStatus == status){
+                    if (newStatus == status) {
                         // leave sort options as it is
                     } else {
                         setSortingStatus(column, newStatus);
+/*
+                        // check the type of the column being sorted by
+                        int type = DataGridSorter.this.rowsetModel.getModel().getColumnType(column+1);
+                        if(type == Types.LONGVARCHAR || type == Types.LONGNVARCHAR){
+                            // Illegal use of datatype LONG. It was used in a function
+                            // or in a DISTINCT, WHERE, CONNECT BY, GROUP BY, or ORDER BY clause.
+                            // A LONG value can only be used in a SELECT clause.
+                            String errorMessage = "Unable to sort by the column with LONG datatype (ORA-00997)";
+                            Messages.showErrorDialog(project, errorMessage, "SQL statement execution failed");
+                        } else {
+                            setSortingStatus(column, newStatus);
+                        }
+*/
                     }
                 }
             }
@@ -274,7 +289,7 @@ public class DataGridSorter extends AbstractTableModel {
         public SortableHeaderRenderer() {
         }
 
-        protected Icon getIcon(JTable table, int column){
+        protected Icon getIcon(JTable table, int column) {
             int modelColumn = table.convertColumnIndexToModel(column);
             return getHeaderRendererIcon(modelColumn, -1);
         }
@@ -332,61 +347,5 @@ public class DataGridSorter extends AbstractTableModel {
             this.direction = direction;
         }
     }
-
-//    public void fireTableRowsInserted(int firstRow, int lastRow){
-//
-//    }
-
-    class TableModelAdapter implements TableModel, TableResizeListener {
-
-        RowSetModel model;
-//        List<TableModelListener> listeners = new ArrayList<TableModelListener>();
-
-        public TableModelAdapter(RowSetModel model) {
-            this.model = model;
-            this.model.addListener(this);
-        }
-
-        public int getRowCount() {
-            return model.getFetchedRowCount();
-        }
-
-        public int getColumnCount() {
-            return model.getColumnCount();
-        }
-
-        public String getColumnName(int columnIndex) {
-            return model.getColumnName(columnIndex);
-        }
-
-        public Class<?> getColumnClass(int columnIndex) {
-            return Object.class;
-        }
-
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return false;
-        }
-
-        public Object getValueAt(int rowIndex, int columnIndex) {
-            return model.getValueAt(rowIndex, columnIndex);
-        }
-
-        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        }
-
-        public void addTableModelListener(TableModelListener l) {
-//            listeners.add(l);
-        }
-
-        public void removeTableModelListener(TableModelListener l) {
-//            listeners.remove(l);
-        }
-
-        public void handle(int oldSize, int newSize) {
-            TableModelEvent event = null;
-            fireTableRowsInserted(oldSize, newSize);
-        }
-    }
-
 
 }

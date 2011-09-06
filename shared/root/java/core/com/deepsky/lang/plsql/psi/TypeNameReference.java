@@ -28,8 +28,9 @@ package com.deepsky.lang.plsql.psi;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import org.jetbrains.annotations.NotNull;
 
-public interface TypeNameReference extends CompositeName, TypeSpec, ContextAware {
+public interface TypeNameReference extends CompositeName, TypeSpec { //}, ContextAware {
 
+/*
     @NotNull
     UsagePlace getUsagePlace();
 
@@ -37,4 +38,5 @@ public interface TypeNameReference extends CompositeName, TypeSpec, ContextAware
         String getName();
         boolean isPackage();
     }
+*/
 }

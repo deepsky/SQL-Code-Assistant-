@@ -26,11 +26,13 @@
 package com.deepsky.lang.plsql.psi.ref;
 
 import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiReference;
 
-public interface DDLTable  extends PlSqlElement, PsiReference {
+public interface DDLTable  extends PlSqlElement{ //}, PsiReference {
 
     String getTableName();
     TextRange getTableNameRange();
+    TableDefinition getTableDef();
 }

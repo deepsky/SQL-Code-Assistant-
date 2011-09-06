@@ -28,7 +28,7 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.PlainTable;
+import com.deepsky.lang.plsql.psi.TableAlias;
 import com.deepsky.lang.plsql.psi.UpdateStatement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -50,9 +50,9 @@ public class UpdateStatementImpl extends PlSqlElementBase implements UpdateState
     }
 
     @NotNull
-    public PlainTable getTargetTable() {
+    public TableAlias getTargetTable() {
 
-        PlainTable tab;
+        TableAlias tab;
         ASTNode simple_u = getNode().findChildByType(PLSqlTypesAdopted.SIMPLE_UPDATE_COMMAND);
         if (simple_u != null) {
             tab = getTableAlias(simple_u);
@@ -67,13 +67,13 @@ public class UpdateStatementImpl extends PlSqlElementBase implements UpdateState
         return tab;
     }
 
-    private PlainTable getTableAlias(ASTNode ast) {
+    private TableAlias getTableAlias(ASTNode ast) {
         if (ast != null) {
             ASTNode alias = ast.findChildByType(PLSqlTypesAdopted.TABLE_ALIAS);
             if (alias != null) {
                 PsiElement psi = alias.getPsi();
-                if (psi instanceof PlainTable) {
-                    return (PlainTable) psi;
+                if (psi instanceof TableAlias) {
+                    return (TableAlias) psi;
                 }
             }
         }

@@ -25,25 +25,19 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.database.ora.desc.FunctionDescriptorImpl;
+import com.deepsky.lang.common.ResolveProvider;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
+import com.deepsky.lang.plsql.resolver.ResolveFacade;
 import com.deepsky.lang.plsql.struct.*;
-import com.deepsky.lang.plsql.struct.types.UserDefinedType;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
-import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public class FunctionImpl extends PlSqlElementBase implements Function {
 
@@ -53,9 +47,9 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
         super(astNode);
     }
 
-    public ObjectName getObjectName(){
+    public ObjectName getEObjectName() {
         ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
-        if(child == null){
+        if (child == null) {
             throw new SyntaxTreeCorruptedException();
         }
 
@@ -74,7 +68,7 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
     @NotNull
     public Argument[] getArguments() {
         ArgumentList alist = (ArgumentList) this.findChildByType(PLSqlTypesAdopted.ARGUMENT_LIST);
-        if(alist != null){
+        if (alist != null) {
             return alist.getArguments();
         } else {
             return new Argument[0];
@@ -88,9 +82,9 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
 
     public Argument getArgumentByName(String parameterName) {
         ArgumentList alist = (ArgumentList) this.findChildByType(PLSqlTypesAdopted.ARGUMENT_LIST);
-        if(alist != null){
-            for(Argument arg: alist.getArguments()){
-                if(arg.getArgumentName().equalsIgnoreCase(parameterName)){
+        if (alist != null) {
+            for (Argument arg : alist.getArguments()) {
+                if (arg.getArgumentName().equalsIgnoreCase(parameterName)) {
                     return arg;
                 }
             }
@@ -100,24 +94,19 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
 
     public Type getReturnType() {
         PsiElement type = this.findChildByType(PLSqlTypesAdopted.RETURN_TYPE);
-        if(type != null){
+        if (type != null) {
             return TypeFactory.createTypeByName(type.getText());
         } else {
             throw new SyntaxTreeCorruptedException();
-//            return TypeFactory.createTypeById(Type.UNKNOWN);
         }
     }
 
     @NotNull
     public Declaration[] getDeclarationList() {
-        PlSqlBlock block = (PlSqlBlock)this.findChildByType(PLSqlTypesAdopted.PLSQL_BLOCK);
-        if(block != null){
+        PlSqlBlock block = (PlSqlBlock) this.findChildByType(PLSqlTypesAdopted.PLSQL_BLOCK);
+        if (block != null) {
             return block.getDeclarations();
         }
-//        DeclarationList alist = (DeclarationList) this.findChildByType(PLSqlTypesAdopted.DECLARE_LIST);
-//        if(alist != null){
-//            return alist.getDeclList();
-//        }
         return new Declaration[0];
     }
 
@@ -129,69 +118,60 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
         return false;
     }
 
-    public ExecutableDescriptor describe() {
+    public ExecutableSpec getSpecification() {
+        ResolveFacade facade = ((ResolveProvider) getContainingFile()).getResolver();
+        return facade.findSpecificationFor(this);
+    }
+    
 
-        PackageBody body = getParent() instanceof PackageBody? (PackageBody) getParent() : null;
-        PackageDescriptor pdesc = null;
-        FunctionDescriptorImpl fd = null;
-        if(body != null){
-            pdesc = body.describe();
-            fd = new FunctionDescriptorImpl(pdesc, getEName(), getReturnType(), false);
-        } else {
-            fd = new FunctionDescriptorImpl((SqlScriptLocator)null, getEName(), getReturnType(), false);
-        }
-
-
-        for (Argument a : getArguments()) {
-            Type t = a.getType();
-            if(t.typeId() == Type.USER_DEFINED){
-                UserDefinedType udt = (UserDefinedType) t;
-                if(udt.getDefinitionPackage() == null && pdesc != null){
-                    // complete the FQN of the UDT
-                    udt.setDefinitionPackage(pdesc.getName());
-                }
-            }
-
-            fd.addParameter(
-                    t,
-                    a.getArgumentName(),
-                    a.getDefaultExpr() != null
-            );
-        }
-
-        return fd;
+    @NotNull
+    public String getObjectType() {
+        return "FUNCTION";
     }
 
+    @NotNull
+    public String getObjectName() {
+        ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.OBJECT_NAME);
+        if(child == null){
+            throw new SyntaxTreeCorruptedException();
+        }
+        return child.getText().toUpperCase();
+    }
 
-    public String getPackageName(){
-        PackageBody pkg = this.getParent() instanceof PackageBody? (PackageBody) this.getParent() : null;
-        return pkg!=null? pkg.getPackageName(): null;
+    @NotNull
+    public String getCreateQuery() {
+        return PlSqlUtil.completeCreateScript(this);
+    }
+
+    public String getPackageName() {
+        PackageBody pkg = this.getParent() instanceof PackageBody ? (PackageBody) this.getParent() : null;
+        return pkg != null ? pkg.getPackageName() : null;
     }
 
     public boolean equals(ExecutableDescriptor edesc) {
-        if(!(edesc instanceof FunctionDescriptor)){
+        if (!(edesc instanceof FunctionDescriptor)) {
             return false;
         }
 
         FunctionDescriptor fdesc = (FunctionDescriptor) edesc;
-        if(edesc.getName().equalsIgnoreCase(getEName())){
+        if (edesc.getName().equalsIgnoreCase(getEName())) {
             String[] names = edesc.getArgumentNames();
 
             // check out arguments
             Argument[] args = getArguments();
-            if(args.length == names.length){
-                for(int i=0; i<names.length; i++){
-                   if(!args[i].getArgumentName().equalsIgnoreCase(names[i]) ||
-                       args[i].getType().typeId() != edesc.getArgumentType(names[i]).typeId()){
-                       return false;
-                   }
+            if (args.length == names.length) {
+                for (int i = 0; i < names.length; i++) {
+                    if (!args[i].getArgumentName().equalsIgnoreCase(names[i]) ||
+                            args[i].getType().typeId() != edesc.getArgumentType(names[i]).typeId()) {
+                        return false;
+                    }
                 }
             } else {
                 return false;
             }
 
             // check return type
-            if( getReturnType().typeId() != fdesc.getReturnType().typeId()){
+            if (getReturnType().typeId() != fdesc.getReturnType().typeId()) {
                 return false;
             }
             return true;
@@ -199,31 +179,26 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
         return false;
     }
 
-    public void subtreeChanged(){
-        log.info("[subtreeChanged] FunctionBody: " + getEName() );
-    }
-
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitFunction(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitFunction(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
     @Nullable
-    public String getQuickNavigateInfo(){
+    public String getQuickNavigateInfo() {
         StringBuilder out = new StringBuilder();
-        for(Argument a: getArguments()){
-            if(out.length() > 0){
+        for (Argument a : getArguments()) {
+            if (out.length() > 0) {
                 out.append(", ");
             }
             out.append(a.getPresentableForm());
         }
         return "[Function] "
                 + getEName().toLowerCase()
-                + ((out.length()>0)? " (" + out.toString().toLowerCase() + ") ": " ")
+                + ((out.length() > 0) ? " (" + out.toString().toLowerCase() + ") " : " ")
                 + getReturnType().typeName();
     }
 

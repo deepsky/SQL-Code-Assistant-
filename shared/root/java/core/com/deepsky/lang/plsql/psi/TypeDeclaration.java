@@ -29,9 +29,4 @@ import com.intellij.navigation.NavigationItem;
 
 public interface TypeDeclaration extends Declaration, NavigationItem {
 
-    /**
-     * Get name of the package where the type is defined
-     * @return
-     */
-    String getPackageName();
 }

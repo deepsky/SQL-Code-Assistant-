@@ -26,13 +26,14 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.GenericTable;
 import com.deepsky.lang.plsql.psi.MergeStatement;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.PlainTable;
+import com.deepsky.lang.plsql.psi.TableAlias;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 public class MergeStatementImpl extends PlSqlElementBase implements MergeStatement {
@@ -41,15 +42,31 @@ public class MergeStatementImpl extends PlSqlElementBase implements MergeStateme
         super(astNode);
     }
 
+    private static TokenSet mergeStuff = TokenSet.create(
+            PLSqlTypesAdopted.TABLE_ALIAS,
+            PLSqlTypesAdopted.FROM_SUBQUERY
+    );
+
     @NotNull
-    public PlainTable getIntoTable() {
-        ASTNode table = getNode().findChildByType(PLSqlTypesAdopted.TABLE_ALIAS);
-        if(table != null){
-            return (PlainTable) table.getPsi();
+    public TableAlias getIntoTable() {
+        ASTNode[] table = getNode().getChildren(mergeStuff);
+        if (table.length > 0) {
+            return (TableAlias) table[0].getPsi();
         }
 
         throw new SyntaxTreeCorruptedException();
     }
+
+    @NotNull
+    public GenericTable getUsingTable() {
+        ASTNode[] table = getNode().getChildren(mergeStuff);
+        if (table.length > 0) {
+            return (GenericTable) table[1].getPsi();
+        }
+
+        throw new SyntaxTreeCorruptedException();
+    }
+
 
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
@@ -58,5 +75,6 @@ public class MergeStatementImpl extends PlSqlElementBase implements MergeStateme
             super.accept(visitor);
         }
     }
-    
+
+
 }

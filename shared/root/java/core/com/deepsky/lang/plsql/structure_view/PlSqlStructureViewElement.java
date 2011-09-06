@@ -30,12 +30,14 @@ import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ctrl.CommitStatement;
 import com.deepsky.lang.plsql.psi.ctrl.RollbackStatement;
 import com.deepsky.lang.plsql.psi.ddl.*;
+import com.deepsky.lang.plsql.psi.impl.ddl.CreateTriggerGenericImpl;
 import com.deepsky.lang.plsql.psi.utils.Formatter;
 import com.deepsky.utils.StringUtils;
 import com.deepsky.view.Icons;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
+import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 
@@ -103,7 +105,7 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                 childrenElements.add(node);
             }
 
-            public void visitSubquery(final Subquery node) {
+            public void visitSubquery(final FromSubquery node) {
                 childrenElements.add(node);
             }
 
@@ -159,6 +161,10 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                 childrenElements.add(tableDefinition);
             }
 
+            public void visitColumnDefinition(ColumnDefinition columnDefinition) {
+                childrenElements.add(columnDefinition);
+            }
+
             public void visitCreateIndex(CreateIndex index) {
                 childrenElements.add(index);
             }
@@ -177,7 +183,7 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
             public void visitComment(Comment comment){
                 childrenElements.add(comment);
             }
-            public void visitCreateTrigger(CreateTrigger trigger) {
+            public void visitCreateTriggerGeneric(CreateTriggerGenericImpl trigger) {
                 childrenElements.add(trigger);
             }
             public void visitCreateTriggerDML(CreateTriggerDML trigger) {
@@ -196,7 +202,6 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
             public void visitDeclarationList(DeclarationList declarationList) {
                 childrenElements.add(declarationList);
             }
-
         });
 
         StructureViewTreeElement[] children = new StructureViewTreeElement[childrenElements.size()];
@@ -224,8 +229,8 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                                 tabList = tabList + ",";
                             }
                             String tabName = "";
-                            if (tabs[i] instanceof PlainTable) {
-                                tabName = StringUtils.discloseDoubleQuotes(((PlainTable) tabs[i]).getTableName().toUpperCase());
+                            if (tabs[i] instanceof TableAlias) {
+                                tabName = StringUtils.discloseDoubleQuotes(((TableAlias) tabs[i]).getTableName().toUpperCase());
                             } else {
                                 tabName = "SUBQUERY";
                             }
@@ -263,71 +268,86 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                         String name = func.getEName();
                         String argList = Formatter.formatArgList(func);
                         String returnType = func.getReturnType().typeName().toLowerCase();
-                        return name.toLowerCase() + argList + ":" + returnType;
+//                        return name.toLowerCase() + argList + ":" + returnType;
+                        return name + argList + ":" + returnType;
                     } else if (myElement instanceof FunctionSpec) {
                         FunctionSpec func = (FunctionSpec) myElement;
                         String name = func.getEName();
                         String argList = Formatter.formatArgList(func);
                         String returnType = func.getReturnType().typeName().toLowerCase();
-                        return name.toLowerCase() + argList + ":" + returnType;
+//                        return name.toLowerCase() + argList + ":" + returnType;
+                        return name + argList + ":" + returnType;
                     } else if (myElement instanceof PlSqlBlock) {
                         return "PLSQL BLOCK";
                     } else if (myElement instanceof DeclarationList) {
                         return "DECLARE";
-                    } else if (myElement instanceof Subquery) {
+                    } else if (myElement instanceof FromSubquery) {
                         return "SUBQUERY";
                     } else if (myElement instanceof Procedure) {
                         Procedure proc = (Procedure) myElement;
                         String name = proc.getEName();
                         String argList = Formatter.formatArgList(proc);
-                        return name.toLowerCase() + argList;
+//                        return name.toLowerCase() + argList;
+                        return name + argList;
                     } else if (myElement instanceof ProcedureSpec) {
                         ProcedureSpec proc = (ProcedureSpec) myElement;
                         String name = proc.getEName();
                         String argList = Formatter.formatArgList(proc);
-                        return name.toLowerCase() + argList;
+//                        return name.toLowerCase() + argList;
+                        return name + argList;
                     } else if (myElement instanceof CursorDecl) {
                         CursorDecl cursor = (CursorDecl) myElement;
-                        return cursor.getDeclName().toLowerCase() + " [Cursor Declaration]";
+//                        return cursor.getDeclName().toLowerCase() + " [Cursor Declaration]";
+                        return cursor.getDeclName() + " [Cursor Declaration]";
                     } else if (myElement instanceof PackageBody) {
                         PackageBody pkg = (PackageBody) myElement;
                         String name = pkg.getPackageName();
                         locationString =  "Package Body";
-                        return name.toLowerCase();
+//                        return name.toLowerCase();
+                        return name;
                     } else if (myElement instanceof PackageSpec) {
                         PackageSpec pkg = (PackageSpec) myElement;
                         String name = pkg.getPackageName();
                         locationString =  "Package Specification";
-                        return name.toLowerCase();
+//                        return name.toLowerCase();
+                        return name;
                     } else if (myElement instanceof VariableDecl) {
                         VariableDecl var = (VariableDecl) myElement;
                         String name = var.getDeclName();
-                        return name.toLowerCase() + ":" + var.getType().typeName().toLowerCase();
+//                        return name.toLowerCase() + ":" + var.getType().typeName().toLowerCase();
+                        return name + ":" + var.getType().typeName().toLowerCase();
                     } else if (myElement instanceof RecordTypeDecl) {
                         RecordTypeDecl type = (RecordTypeDecl) myElement;
                         String name = type.getDeclName();
                         locationString =  "Record Type";
-                        return name.toLowerCase();
+//                        return name.toLowerCase();
+                        return name;
                     } else if (myElement instanceof TableCollectionDecl) {
                         TableCollectionDecl type = (TableCollectionDecl) myElement;
                         String name = type.getDeclName();
                         locationString =  "Collection Type";
-                        return name.toLowerCase();
+//                        return name.toLowerCase();
+                        return name;
                     } else if (myElement instanceof VarrayCollectionDecl) {
                         VarrayCollectionDecl type = (VarrayCollectionDecl) myElement;
                         String name = type.getDeclName();
                         locationString =  "Varray Type";
-                        return name.toLowerCase();
+//                        return name.toLowerCase();
+                        return name;
                     } else if (myElement instanceof ObjectTypeDecl) {
                         ObjectTypeDecl type = (ObjectTypeDecl) myElement;
                         String name = type.getDeclName();
                         locationString =  "Object Type";
-                        return name.toLowerCase();
+//                        return name.toLowerCase();
+                        return name;
                     } else if (myElement instanceof PackageInitSection) {
                         return "INIT SECTION";
                     } else if (myElement instanceof TableDefinition) {
                         TableDefinition def = (TableDefinition) myElement;
                         return "CREATE TABLE [" + StringUtils.discloseDoubleQuotes(def.getTableName().toUpperCase()) + "]";
+                    } else if (myElement instanceof ColumnDefinition) {
+                        ColumnDefinition column = (ColumnDefinition) myElement;
+                        return column.getColumnName().toUpperCase() + " " + column.getType();
                     } else if (myElement instanceof AlterTable) {
                         AlterTable alter = (AlterTable) myElement;
                         return "ALTER TABLE [" + StringUtils.discloseDoubleQuotes(alter.getTableName().toUpperCase()) + "]";
@@ -376,7 +396,7 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
 //                    attr.setFontType(5);
 //                    return  TextAttributesKey.createTextAttributesKey("PLSQL.01", attr );
                 } else if (myElement instanceof SelectStatement) {
-                    //return CodeInsightColors.ERRORS_ATTRIBUTES;
+//                    return CodeInsightColors.ERRORS_ATTRIBUTES;
 //                    TextAttributes attr = new TextAttributes();
 //                    attr.setFontType(3);
 //                    return  TextAttributesKey.createTextAttributesKey("PLSQL.01", attr );
@@ -426,8 +446,16 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                     // todo -
                 } else if (myElement instanceof UpdateStatement) {
                     // todo -
-                } else if (myElement instanceof Subquery) {
+                } else if (myElement instanceof FromSubquery) {
                     // todo -
+                } else if (myElement instanceof CreateView) {
+                     return Icons.VIEW;
+                } else if (myElement instanceof TableDefinition) {
+                     return ((TableDefinition)myElement).getIcon(0);
+                } else if (myElement instanceof CreateTriggerDML) {
+                   return (myElement).getIcon(0);
+                } else if (myElement instanceof CreateTriggerDDL) {
+                   return (myElement).getIcon(0);                   
                 }
 
                 return null; //myElement.getIcon(Iconable.ICON_FLAG_OPEN);

@@ -25,16 +25,18 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.plsql.psi.ColumnDefinition;
 import com.deepsky.lang.plsql.psi.ColumnNameDDL;
+import com.deepsky.lang.plsql.psi.ColumnNameRef;
+import com.deepsky.lang.plsql.psi.ForeignKeyConstraint;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.ref.DDLTable;
+import com.deepsky.lang.plsql.psi.ref.TableRef;
+import com.deepsky.utils.StringUtils;
+import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
-import com.intellij.lang.ASTNode;
-import com.deepsky.lang.plsql.psi.ForeignKeyConstraint;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import org.jetbrains.annotations.NotNull;
 
 public class ForeignKeyConstraintImpl extends PlSqlElementBase implements ForeignKeyConstraint {
@@ -44,74 +46,101 @@ public class ForeignKeyConstraintImpl extends PlSqlElementBase implements Foreig
     }
 
     public String getReferencedTable() {
-        return getNode().findChildByType(PLSqlTypesAdopted.TABLE_NAME).getText();
+        ASTNode fkSpec = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
+        __ASSERT_NOT_NULL__(fkSpec);
+        ASTNode tableName = fkSpec.findChildByType(PLSqlTypesAdopted.TABLE_REF);
+        __ASSERT_NOT_NULL__(tableName);
+
+        return StringUtils.discloseDoubleQuotes(tableName.getText());
     }
 
     public String[] getReferencedColumns() {
-        ASTNode[] columnLists = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_LIST));
-        ASTNode[] columns= columnLists[1].getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_DDL));
-        String[] out = new String[columns==null? 0: columns.length];
-        for(int i=0; i<out.length; i++){
-            out[i] = columns[i].getText();
+        ASTNode fkSpec = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
+        __ASSERT_NOT_NULL__(fkSpec);
+        ASTNode columnList = fkSpec.findChildByType(PLSqlTypesAdopted.COLUMN_NAME_LIST);
+        ASTNode[] columns = columnList.getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_REF));
+        String[] out = new String[columns == null ? 0 : columns.length];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = StringUtils.discloseDoubleQuotes(columns[i].getText());
         }
 
         return out;
     }
 
     public String[] getOwnColumns() {
-        ASTNode[] columnLists = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_LIST));
-        ASTNode[] columns= columnLists[0].getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_DDL));
-        String[] out = new String[columns==null? 0: columns.length];
-        for(int i=0; i<out.length; i++){
-            out[i] = columns[i].getText();
+        ASTNode fkSpec = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
+        __ASSERT_NOT_NULL__(fkSpec);
+        ASTNode columnList = fkSpec.findChildByType(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST);
+        ASTNode[] columns = columnList.getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_REF));
+        String[] out = new String[columns == null ? 0 : columns.length];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = StringUtils.discloseDoubleQuotes(columns[i].getText());
         }
 
         return out;
     }
 
     @NotNull
-    public DDLTable getReferencedTable2() {
-        ASTNode node = getLevelBelow().findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL);
-        __ASSERT_NOT_NULL__(node);
+    public TableRef getReferencedTable2() {
+        ASTNode fkSpec = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
+        __ASSERT_NOT_NULL__(fkSpec);
+        ASTNode tableName = fkSpec.findChildByType(PLSqlTypesAdopted.TABLE_REF);
+        __ASSERT_NOT_NULL__(tableName);
 
-        return (DDLTable) node.getPsi();
+//        ASTNode node = getLevelBelow().findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL);
+//        __ASSERT_NOT_NULL__(node);
+
+        return (TableRef) tableName.getPsi();
     }
 
 
     @NotNull
-    public ColumnNameDDL[] getReferencedColumns2(){
-        ASTNode[] nodes = getLevelBelow().getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_LIST));
-        if(nodes == null || nodes.length != 2){
+    public ColumnNameRef[] getReferencedColumns2() {
+        ASTNode columnList = getLevelBelow().findChildByType(PLSqlTypesAdopted.COLUMN_NAME_LIST);
+        if (columnList == null) {
             throw new SyntaxTreeCorruptedException();
         }
 
-        ASTNode[] columns= nodes[1].getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_DDL));
-        ColumnNameDDL[] out = new ColumnNameDDL[columns==null? 0: columns.length];
-        for(int i=0; i<out.length; i++){
-            out[i] = (ColumnNameDDL) columns[i].getPsi();
+        ASTNode[] columns = columnList.getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_REF));
+        ColumnNameRef[] out = new ColumnNameRef[columns == null ? 0 : columns.length];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = (ColumnNameRef) columns[i].getPsi();
         }
 
         return out;
     }
 
     @NotNull
-    private ASTNode getLevelBelow(){
+    public ColumnNameRef[] getOwnColumns2() {
+        ASTNode fkSpec = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
+        __ASSERT_NOT_NULL__(fkSpec);
+        ASTNode columnList = fkSpec.findChildByType(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST);
+        ASTNode[] columns = columnList.getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_REF));
+        ColumnNameRef[] out = new ColumnNameRef[columns == null ? 0 : columns.length];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = (ColumnNameRef) columns[i].getPsi();
+        }
+
+        return out;
+    }
+
+    @NotNull
+    private ASTNode getLevelBelow() {
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
         __ASSERT_NOT_NULL__(node);
         return node;
     }
 
     public String getConstraintName() {
-        return getNode().findChildByType(PLSqlTypesAdopted.CONSTRAINT_NAME).getText();
+        return StringUtils.discloseDoubleQuotes(getNode().findChildByType(PLSqlTypesAdopted.CONSTRAINT_NAME).getText());
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitForeignKeyConstraint(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitForeignKeyConstraint(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
 }

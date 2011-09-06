@@ -25,12 +25,12 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.SubqueryExpression;
-import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.SelectFieldCommon;
 import com.deepsky.lang.plsql.psi.SelectFieldExpr;
+import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.deepsky.lang.plsql.psi.SubqueryExpression;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.TokenSet;
@@ -44,13 +44,13 @@ public class SubqueryExpressionImpl extends PlSqlElementBase implements Subquery
 
     public SelectStatement getSelectStatement() {
         final ASTNode node = getNode().findChildByType(PlSqlElementTypes.SUBQUERY);
-        if(node != null){
+        if (node != null) {
             final ASTNode select = node.findChildByType(TokenSet.create(
-                PlSqlElementTypes.SELECT_EXPRESSION, PlSqlElementTypes.SUBQUERY
+                    PlSqlElementTypes.SELECT_EXPRESSION, PlSqlElementTypes.SUBQUERY
             )); //PlSqlElementTypes.SELECT_COMMAND);
 
 //            final ASTNode select = node.findChildByType(PlSqlElementTypes.SELECT_COMMAND);
-            if(select != null){
+            if (select != null) {
                 return (SelectStatement) select.getPsi();
             }
         }
@@ -61,12 +61,12 @@ public class SubqueryExpressionImpl extends PlSqlElementBase implements Subquery
     public Type getExpressionType() {
         SelectFieldCommon[] fields = getSelectStatement().getSelectFieldList();
 
-        if(fields.length != 1){
+        if (fields.length != 1) {
             throw new ValidationException("Error: expected only one field in a subquery expression.", getNode());
-        } else if(!(fields[0] instanceof SelectFieldExpr)){
+        } else if (!(fields[0] instanceof SelectFieldExpr)) {
             throw new ValidationException("Error: field is not correct in the subquery expression.", getNode());
         }
 
-        return ((SelectFieldExpr)fields[0]).getExpression().getExpressionType();
+        return ((SelectFieldExpr) fields[0]).getExpression().getExpressionType();
     }
 }

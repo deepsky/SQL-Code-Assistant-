@@ -28,9 +28,21 @@ package com.deepsky.lang.plsql.psi.ddl;
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
 import com.deepsky.lang.plsql.psi.GenericConstraint;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public interface TableDefinition extends SqlDDLStatement {
+    int REGULAR = 0;
+    int TEMPORARY = 1;
+    int EXTERNAL_ORGANIZED = 2;
+    int IOT_ORGANIZED = 3;
+    int HEAP_ORGANIZED = 4;
+
+    // partition type
+    int PARTITION_BY_RANGE  = 10;
+    int PARTITION_BY_HASH   = 11;
+    int PARTITION_NONE      = -1;
+
     String getTableName();
     @NotNull
     ColumnDefinition[] getColumnDefs();
@@ -40,4 +52,9 @@ public interface TableDefinition extends SqlDDLStatement {
     @NotNull
     GenericConstraint[] getConstraints();
 
+    int getTableType();
+    int getPartitionType();
+
+    @Nullable
+    PartitionSpecification getPartitionSpec();
 }

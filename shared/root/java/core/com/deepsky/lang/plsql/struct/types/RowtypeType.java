@@ -34,7 +34,7 @@ public class RowtypeType extends TypeBase {
 
     public RowtypeType(String tableName){
         super(Type.ROWTYPE, "ROWTYPE");
-        this.tableName = tableName;
+        this.tableName = tableName.toLowerCase();
     }
 
     public String getTableName(){

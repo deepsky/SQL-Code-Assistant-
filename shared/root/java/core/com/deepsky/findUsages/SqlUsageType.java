@@ -28,20 +28,17 @@ package com.deepsky.findUsages;
 import com.intellij.usages.impl.rules.UsageType;
 
 
-public class SqlUsageType extends UsageType {
+public class SqlUsageType { //extends UsageType {
 
     public static final UsageType USAGE_IN_SELECT = new UsageType("Usage in Select Statement");
-    public static final UsageType USAGE_IN_DML = new UsageType("Usage in DML");
+    public static final UsageType USAGE_IN_DML = new UsageType("Usage in DML Statement");
     public static final UsageType USAGE_IN_TABLEDEF = new UsageType("Usage in Table Definition");
-    public static final UsageType USAGE_IN_DDL = new UsageType("Usage in DDL");
+    public static final UsageType USAGE_IN_DDL = new UsageType("Usage in DDL Statement");
     public static final UsageType USAGE_IN_RECORDTYPE_DEF = new UsageType("Usage in Record Type Decl [%ROWTYPE]");
     public static final UsageType USAGE_IN_FIELDTYPE_DEF = new UsageType("Usage in Field Type Decl [%TYPE]");
     public static final UsageType USAGE_IN_CURSOR = new UsageType("Usage in Cursor");
-    public static final UsageType USAGE_IN_VIEW = new UsageType("Usage in View");
-    public static final UsageType USAGE_IN_TRIGGER = new UsageType("Usage in Trigger");
+    public static final UsageType USAGE_IN_VIEW = new UsageType("Usage in View Definition");
+    public static final UsageType USAGE_IN_TRIGGER = new UsageType("Usage in Trigger Definition");
     public static final UsageType USAGE_IN_TYPEDEF = new UsageType("Usage in Type Definition");
 
-    public SqlUsageType(String name) {
-        super(name);
-    }
 }

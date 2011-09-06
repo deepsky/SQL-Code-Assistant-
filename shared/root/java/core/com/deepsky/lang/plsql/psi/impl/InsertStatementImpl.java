@@ -25,10 +25,10 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -39,11 +39,11 @@ public class InsertStatementImpl extends PlSqlElementBase implements InsertState
         super(astNode);
     }
 
-    public PlainTable getIntoTable() {
+    public TableAlias getIntoTable() {
         final ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.TABLE_ALIAS);
 
         if (node != null) {
-            return (PlainTable) node.getPsi();
+            return (TableAlias) node.getPsi();
         } else {
             return null;
         }
@@ -52,7 +52,7 @@ public class InsertStatementImpl extends PlSqlElementBase implements InsertState
     @NotNull
     public ColumnSpec[] getColumnList() {
         final ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_SPEC_LIST);
-        if(node == null){
+        if (node == null) {
             throw new SyntaxTreeCorruptedException();
         }
 
@@ -62,11 +62,11 @@ public class InsertStatementImpl extends PlSqlElementBase implements InsertState
 
     public Expression[] getValues() {
         ASTNode values = getNode().findChildByType(PLSqlTypesAdopted.EXPR_LIST);
-        if(values != null){
+        if (values != null) {
             ASTNode[] exprList = values.getChildren(PlSqlElementTypes.EXPR_TYPES);
             Expression[] out = new Expression[exprList.length];
-            int i =0;
-            for(ASTNode node: exprList){
+            int i = 0;
+            for (ASTNode node : exprList) {
                 out[i++] = (Expression) node.getPsi();
             }
 

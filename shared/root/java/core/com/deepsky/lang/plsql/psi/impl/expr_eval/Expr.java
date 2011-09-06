@@ -25,44 +25,44 @@
 
 package com.deepsky.lang.plsql.psi.impl.expr_eval;
 
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.PsiElement;
-import com.intellij.lang.ASTNode;
 
 public class Expr {
 
     ASTNode node;
 
-    public Expr(ASTNode node){
+    public Expr(ASTNode node) {
         this.node = node;
     }
 
-    public IElementType getElementType(){
+    public IElementType getElementType() {
         return node.getElementType();
     }
 
-    public Expr getTreeNext(){
+    public Expr getTreeNext() {
         ASTNode n = node.getTreeNext();
-        return (n==null)? null : new Expr(n);
+        return (n == null) ? null : new Expr(n);
     }
 
-    public Expr findChildByType(IElementType type){
+    public Expr findChildByType(IElementType type) {
         ASTNode n = node.findChildByType(type);
-        return (n==null)? null : new Expr(n);
+        return (n == null) ? null : new Expr(n);
     }
 
-    public Expr findChildByType(TokenSet type){
+    public Expr findChildByType(TokenSet type) {
         ASTNode n = node.findChildByType(type);
-        return (n==null)? null : new Expr(n);
+        return (n == null) ? null : new Expr(n);
     }
 
-    public Expr getFirstChildNode(){
+    public Expr getFirstChildNode() {
         ASTNode n = node.getFirstChildNode();
-        return (n==null)? null : new Expr(n);
+        return (n == null) ? null : new Expr(n);
     }
 
-    public PsiElement getPsi(){
+    public PsiElement getPsi() {
         return node.getPsi();
     }
 }

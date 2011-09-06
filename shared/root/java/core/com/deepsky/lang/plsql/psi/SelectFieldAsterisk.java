@@ -26,5 +26,5 @@
 package com.deepsky.lang.plsql.psi;
 
 public interface SelectFieldAsterisk extends SelectFieldCommon {
-//    String getTableRef();
+
 }

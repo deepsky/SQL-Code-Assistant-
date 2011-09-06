@@ -26,18 +26,14 @@
 package com.deepsky.lang.plsql.psi;
 
 import com.deepsky.lang.common.PlSqlFile;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ctrl.CommitStatement;
 import com.deepsky.lang.plsql.psi.ctrl.RollbackStatement;
 import com.deepsky.lang.plsql.psi.ddl.*;
-import com.deepsky.lang.plsql.psi.impl.DeclarationListImpl;
-import com.deepsky.lang.plsql.psi.impl.ParameterReferenceImpl;
-import com.deepsky.lang.plsql.psi.impl.SqlPlusPromptRem;
-import com.deepsky.lang.plsql.psi.impl.ctrl.CommitStatementImpl;
-import com.deepsky.lang.plsql.psi.impl.ctrl.RollbackStatementImpl;
-import com.deepsky.lang.plsql.psi.ref.DDLTable;
-import com.deepsky.lang.plsql.psi.ref.DDLView;
-import com.deepsky.lang.plsql.psi.ref.Table;
-import com.deepsky.lang.plsql.psi.ref.TableWithLink;
+import com.deepsky.lang.plsql.psi.impl.*;
+import com.deepsky.lang.plsql.psi.impl.spec_func_call.SpecFunctionCallBaseImpl;
+import com.deepsky.lang.plsql.psi.internal.CreateViewColumnDefInternal;
+import com.deepsky.lang.plsql.psi.ref.*;
 import com.deepsky.lang.plsql.psi.types.ColumnTypeRef;
 import com.deepsky.lang.plsql.psi.types.DataType;
 import com.intellij.psi.PsiElementVisitor;
@@ -74,12 +70,12 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
         visitElement(node);
     }
 
-    public void visitPlainTable(PlainTable node) {
+    public void visitPlainTable(TableAlias node) {
         visitElement(node);
     }
 
     public void visitPlSqlBlock(PlSqlBlock node) {
-        for(PlSqlElement psi: node.getObjectList()){
+        for (PlSqlElement psi : node.getObjectList()) {
             psi.accept(this);
         }
 //        visitElement(node);
@@ -93,6 +89,7 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
         visitElement(node);
     }
 
+//    public void visitSubquery(FromSubquery node) {
     public void visitSubquery(Subquery node) {
         visitElement(node);
     }
@@ -136,6 +133,7 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
 
 
     public void visitArithmeticExpression(ArithmeticExpression node) {
+        visitElement(node);
     }
 
     public void visitCallArgument(CallArgument node) {
@@ -149,14 +147,14 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     public void visitFunctionCall(FunctionCall node) {
 //        visitElement(node);
         node.getCompositeName().accept(this);
-        for(CallArgument arg: node.getCallArgumentList()){
+        for (CallArgument arg : node.getCallArguments()) {
             arg.accept(this);
         }
     }
 
     public void visitProcedureCall(ProcedureCall node) {
         node.getCompositeName().accept(this);
-        for(CallArgument arg: node.getCallArgumentList()){
+        for (CallArgument arg : node.getCallArguments()) {
             arg.accept(this);
         }
     }
@@ -166,13 +164,17 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitPlSqlFile(PlSqlFile plSqlFile) {
+        visitElement(plSqlFile);
     }
 
     public void visitCallArgumentList(CallArgumentList node) {
+        for (CallArgument arg : node.getArguments()) {
+            arg.accept(this);
+        }
     }
 
-    public void visitTable(Table table) {
-    }
+//    public void visitTable(Table table) {
+//    }
 
     public void visitColumnSpecList(ColumnSpecList node) {
         visitElement(node);
@@ -191,7 +193,9 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitRecordTypeDecl(RecordTypeDecl node) {
-        visitElement(node);
+        for (RecordTypeItem ri : node.getItems()) {
+            ri.accept(this);
+        }
     }
 
     public void visitTableCollectionDecl(TableCollectionDecl node) {
@@ -214,6 +218,7 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitSequenceExpr(SequenceExpr expr) {
+        visitElement(expr);
     }
 
     public void visitColumnSpec(ColumnSpec spec) {
@@ -221,11 +226,21 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitTableDefinition(TableDefinition tableDefinition) {
-        for(GenericConstraint constr: tableDefinition.getConstraints()){
-            constr.accept(this);
-        }
-
-        // todo -- columns?
+        // give a chance to catch any exception in the closest catch block
+        visitElement(tableDefinition);
+       
+//        for (GenericConstraint constr : tableDefinition.getConstraints()) {
+//            constr.accept(this);
+//        }
+//
+//        for (ColumnDefinition cdef : tableDefinition.getColumnDefs()) {
+//            cdef.accept(this);
+//        }
+//
+//        PartitionSpecification parti = tableDefinition.getPartitionSpec();
+//        if(parti != null){
+//            parti.accept(this);
+//        }
     }
 
     public void visitCreateView(CreateView view) {
@@ -246,12 +261,14 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitAlterTable(AlterTable table) {
+        visitElement(table);
     }
 
     public void visitCreateIndex(CreateIndex index) {
+        visitElement(index);
     }
 
-    public void visitCreateTrigger(CreateTrigger trigger) {
+    public void visitCreateTriggerGeneric(CreateTriggerGeneric trigger) {
         visitElement(trigger);
     }
 
@@ -274,12 +291,14 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitForeignKeyConstraint(ForeignKeyConstraint constraint) {
-        DDLTable tab = constraint.getReferencedTable2();
+        TableRef tab = constraint.getReferencedTable2();
         tab.accept(this);
-        for(ColumnNameDDL c: constraint.getReferencedColumns2()){
+        for (ColumnNameRef c : constraint.getReferencedColumns2()) {
             c.accept(this);
         }
-        ///visitElement(constraint);
+        for (ColumnNameRef c : constraint.getOwnColumns2()) {
+            c.accept(this);
+        }
     }
 
     public void visitColumnNameDDL(ColumnNameDDL columnNameDDL) {
@@ -289,8 +308,8 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitColumnTypeRef(ColumnTypeRef columnTypeRef) {
-        columnTypeRef.getTableName2().accept(this);
-        columnTypeRef.getColumnName().accept(this);
+        columnTypeRef.getTableRef().accept(this);
+        columnTypeRef.getColumnRef().accept(this);
     }
 
     public void visitColumnNameRef(ColumnNameRef columnNameRef) {
@@ -299,17 +318,19 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     public void visitCallableCompositeName(CallableCompositeName compositeName) {
     }
 
-    public void visitParameterReference(ParameterReferenceImpl reference) {
+    public void visitParameterReference(ParameterReference reference) {
     }
 
     public void visitCRecordItemRef(CRecordItemRef ref) {
     }
 
     public void visitMergeStatement(MergeStatement stmt) {
+        visitElement(stmt);
     }
 
-    public void visitTableWithLink(TableWithLink tableNameWithLink) {
-    }
+//    public void visitTableWithLink(TableWithLink tableNameWithLink) {
+//        visitElement(tableNameWithLink);
+//    }
 
     public void visitSqlPlusCommand(SqlPlusCommand command) {
     }
@@ -321,5 +342,125 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitDeclarationList(DeclarationList declarationList) {
+        for (Declaration decl : declarationList.getDeclList()) {
+            try {
+                decl.accept(this);
+            }catch(SyntaxTreeCorruptedException e){
+                // skip failed declaration
+            }
+        }
+    }
+
+    public void visitLoopIndex(LoopIndex loopIndex) {
+    }
+
+    public void visitRecordTypeItem(RecordTypeItem recordTypeItem) {
+        visitElement(recordTypeItem);
+    }
+
+    public void visitArgument(Argument argument) {
+        argument.getTypeSpec().accept(this);
+        Expression expr = argument.getDefaultExpr();
+        if (expr != null) {
+            expr.accept(this);
+        }
+    }
+
+    public void visitColumnDefinition(ColumnDefinition definition) {
+        visitElement(definition);
+    }
+
+    public void visitLoopStatement(LoopStatement statement) {
+        visitElement(statement);
+    }
+
+    public void visitCollectionMethodCall(CollectionMethodCall methodCall) {
+    }
+
+    public void visitRefCursorDecl(RefCursorDecl refCursorDecl) {
+    }
+
+    public void visitCollectionMethodCall2(CollectionMethodCall2 methodCall2) {
+        visitElement(methodCall2);
+    }
+
+    public void visitCreateSynonym(CreateSynonym synonym) {
+    }
+
+    public void visitCreateSequence(CreateSequence sequence) {
+    }
+
+    public void visitCreateViewColumnDefInternal(CreateViewColumnDefInternal node) {
+    }
+
+    public void visitOrderByClause(OrderByClause orderByClause) {
+        visitElement(orderByClause);
+    }
+
+    public void visitCursorLoopSpec(CursorLoopSpec spec) {
+        visitElement(spec);
+    }
+
+    public void visitPrimaryKeyConstraint(PrimaryKeyConstraint constraint) {
+        for (ColumnNameRef c : constraint.getPKColumns()) {
+            c.accept(this);
+        }
+    }
+
+    public void visitTableRef(TableRef ref) {
+    }
+
+    public void visitTableRefWithLink(TableRefWithLink refWithLink) {
+    }
+
+    public void visitSequenceRef(SequenceRef ref) {
+    }
+
+    public void visitHashPartition(HashPartition partition) {
+        for(ColumnNameRef c: partition.getPartitionColumns()){
+            c.accept(this);
+        }
+    }
+
+    public void visitRangePartition(RangePartition partition) {
+        for(ColumnNameRef c: partition.getPartitionColumns()){
+            c.accept(this);
+        }
+    }
+
+    public void visitColumnFKSpec(ColumnFKSpec columnFKSpec) {
+        visitElement(columnFKSpec);
+    }
+
+    public void visitTrimFunctionCall(FunctionCall function) {
+        visitElement(function);
+    }
+
+    public void visitSystemFunctionCall(FunctionCall function) {
+        visitElement(function);
+    }
+
+    public void visitExtractFunctionCall(FunctionCall function) {
+        visitElement(function);
+    }
+
+    public void visitReturnStatement(ReturnStatement statement) {
+        visitElement(statement);
+    }
+
+    public void visitExpressionList(ExpressionList list) {
+        visitElement(list);
+    }
+
+    public void visitSpecFunctionCall(SpecFunctionCall functionCall) {
+        visitElement(functionCall);
+    }
+
+    public void visitGroupByClause(GroupByClause clause) {
+        visitElement(clause);
+    }
+
+    public void visitForUpdateClause(ForUpdateClause clause) {
+        visitElement(clause);
     }
 }

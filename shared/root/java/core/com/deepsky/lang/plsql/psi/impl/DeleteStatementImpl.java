@@ -25,11 +25,11 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.DeleteStatement;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.PlainTable;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.psi.TableAlias;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -41,21 +41,21 @@ public class DeleteStatementImpl extends PlSqlElementBase implements DeleteState
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitDeleteStatement(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitDeleteStatement(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
     @NotNull
-    public PlainTable getTargetTable() {
+    public TableAlias getTargetTable() {
         ASTNode table = getNode().findChildByType(PLSqlTypesAdopted.TABLE_ALIAS);
-        if(table != null){
-            return (PlainTable) table.getPsi();
+        if (table != null) {
+            return (TableAlias) table.getPsi();
         }
 
         throw new SyntaxTreeCorruptedException();
     }
+
 }

@@ -25,16 +25,14 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.Callable;
-import com.deepsky.lang.plsql.psi.CallArgument;
-import com.deepsky.lang.plsql.psi.CallableCompositeName;
-import com.deepsky.lang.plsql.psi.CallArgumentList;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.CallArgument;
+import com.deepsky.lang.plsql.psi.Callable;
+import com.deepsky.lang.plsql.psi.CallableCompositeName;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class CallableImpl extends PlSqlElementBase implements Callable {
@@ -44,32 +42,31 @@ public class CallableImpl extends PlSqlElementBase implements Callable {
 
     @NotNull
     public String getFunctionName() {
-        CallableCompositeName ccname = getCompositeName();
-        return ccname.getCName();
-//        ASTNode node = getNode().findChildByType(//TokenSet.create(
-//               PlSqlElementTypes.CALLABLE_NAME_REF //PlSqlElementTypes.FUNC_NAME_REF, PlSqlElementTypes.PROC_NAME_REF)
-//        );
-//
-////        ASTNode exec_name = node.findChildByType(PlSqlElementTypes.EXEC_NAME_REF);
-//        ASTNode exec_name = node.findChildByType(PlSqlElementTypes.NAME_FRAGMENT);
-//        return exec_name.getText();
+        return getCompositeName().getCName();
     }
 
     @NotNull
     public CallableCompositeName getCompositeName() {
-        return (CallableCompositeName) getNode().findChildByType(
-                PlSqlElementTypes.CALLABLE_NAME_REF
-        ).getPsi();
+        final ASTNode node = getNode().findChildByType(PlSqlElementTypes.CALLABLE_NAME_REF);
+
+        if(node != null){
+            final PsiElement psi = node.getPsi();
+            if(psi != null){
+                return (CallableCompositeName)psi;
+            }
+        }
+
+        throw new SyntaxTreeCorruptedException();
     }
 
     @NotNull
-    public CallArgument[] getCallArgumentList() {
+    public CallArgument[] getCallArguments() {
         ASTNode callList = getNode().findChildByType(PlSqlElementTypes.CALL_ARGUMENT_LIST);
         if (callList != null) {
             ASTNode[] args = callList.getChildren(TokenSet.create(PlSqlElementTypes.CALL_ARGUMENT));
             if (args != null && args.length > 0) {
                 CallArgument[] out = new CallArgument[args.length];
-                for (int i=0; i<out.length; i++) {
+                for (int i = 0; i < out.length; i++) {
                     out[i] = (CallArgument) args[i].getPsi();
                 }
 
@@ -78,12 +75,4 @@ public class CallableImpl extends PlSqlElementBase implements Callable {
         }
         return new CallArgument[0];
     }
-
-
-    // todo -----------------------------------
-    @NotNull
-    public ResolveContext777 resolveContext() throws NameNotResolvedException {
-        throw new NameNotResolvedException("Not supported"); 
-    }
-
 }

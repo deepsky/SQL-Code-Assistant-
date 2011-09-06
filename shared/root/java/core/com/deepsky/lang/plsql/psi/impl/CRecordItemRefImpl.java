@@ -26,10 +26,7 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.plsql.psi.CRecordItemRef;
-import com.deepsky.lang.plsql.psi.CollectionMethodCall;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -42,7 +39,14 @@ public class CRecordItemRefImpl extends PlSqlReferenceBase implements CRecordIte
     }
 
 
+    protected PsiElement resolveInternal() {
+        return facade.resolveCRecordItemRef(this);
+    }
+
+/*
+        // todo -- resolve stuff refactoring
     public PsiElement resolve() {
+
         if (getParent() instanceof CollectionMethodCall) {
             CollectionMethodCall cmethod = (CollectionMethodCall) getParent();
             try {
@@ -52,18 +56,15 @@ public class CRecordItemRefImpl extends PlSqlReferenceBase implements CRecordIte
                 //
             }
         }
-
         return null;
     }
+*/
 
-
-    public boolean isReferenceTo(PsiElement psiElement) {
-        // todo -- implement me
-        return false;
-    }
 
     @NotNull
     public Object[] getVariants(String text) {
+/*
+        // todo -- resolve stuff refactoring
         if (getParent() instanceof CollectionMethodCall) {
             CollectionMethodCall cmethod = (CollectionMethodCall) getParent();
             try {
@@ -73,6 +74,7 @@ public class CRecordItemRefImpl extends PlSqlReferenceBase implements CRecordIte
                 //
             }
         }
+*/
 
         // todo -- implement me
         return new Object[0];

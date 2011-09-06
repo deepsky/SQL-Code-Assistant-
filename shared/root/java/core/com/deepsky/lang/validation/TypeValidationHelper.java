@@ -25,18 +25,13 @@
 
 package com.deepsky.lang.validation;
 
-import com.deepsky.database.ObjectCache;
-import com.deepsky.database.ObjectCacheFactory;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
-import com.deepsky.lang.common.PluginKeys;
-import com.deepsky.lang.plsql.psi.resolve.TypeNotResolvedException;
-import com.deepsky.lang.plsql.struct.DbObject;
-import com.deepsky.lang.plsql.struct.TableDescriptor;
+import com.deepsky.lang.common.ResolveProvider;
+import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.deepsky.lang.plsql.resolver.ResolveFacade;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.types.RowtypeType;
 import com.deepsky.lang.plsql.struct.types.TableColumnRefType;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.HashMap;
 
 import java.util.*;
@@ -46,11 +41,49 @@ public class TypeValidationHelper {
     static Map<String, OperationHolder> pp;
     static List<Set<Integer>> equaval;
 
+    ResolveFacade resolver;
+
+    public TypeValidationHelper(ResolveFacade resolver) {
+        this.resolver = resolver;
+    }
+
+    public int evaluate(Type l, Type r, int op) {
+
+        String key = l.typeId() + ":" + r.typeId(); //l + ":" + r;
+        OperationHolder holder = pp.get(key);
+        if (holder != null) {
+            return holder.resultTypeForOp(op);
+        } else if (l.typeId() == Type.TABLE_COLUMN_REF_TYPE || r.typeId() == Type.TABLE_COLUMN_REF_TYPE) {
+
+            Type _l, _r;
+            if (l.typeId() == Type.TABLE_COLUMN_REF_TYPE) {
+                _l = resolver.resolveType((TableColumnRefType) l);
+//                _l = getRealType(psi.getProject(), (TableColumnRefType) l); //((TableColumnRefType) l).getRealType();
+            } else {
+                _l = l;
+            }
+
+            if (r.typeId() == Type.TABLE_COLUMN_REF_TYPE) {
+                _r = resolver.resolveType((TableColumnRefType) r);
+//                _r = getRealType(psi.getProject(), (TableColumnRefType) r); //_r = ((TableColumnRefType) r).getRealType();
+            } else {
+                _r = r;
+            }
+
+            return evaluate(_l, _r, op);
+        } else {
+            return Type.UNKNOWN;
+        }
+    }
+
+
     static {
         equaval = new ArrayList<Set<Integer>>();
         equaval.add(new HashSet<Integer>());
         equaval.get(0).add(Type.INTEGER);
         equaval.get(0).add(Type.NUMBER);
+        equaval.get(0).add(Type.PLS_INTEGER);
+        equaval.get(0).add(Type.BINARY_INTEGER);
         equaval.get(0).add(Type.NULL);
 
         equaval.add(new HashSet<Integer>());
@@ -78,6 +111,10 @@ public class TypeValidationHelper {
         equaval.add(new HashSet<Integer>());
         equaval.get(6).add(Type.RECORD_TYPE);
         equaval.get(6).add(Type.NULL);
+
+        equaval.add(new HashSet<Integer>());
+        equaval.get(7).add(Type.USER_DEFINED);
+        equaval.get(7).add(Type.NULL);
 
         pp = new HashMap<String, OperationHolder>();
 
@@ -148,12 +185,12 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.GE, Type.BOOLEAN)
         );
 
-        pp.put(pair2string(Type.PLS_INTEGER, Type.NUMBER),
+        pp.put(pair2string(Type.PLS_INTEGER, Type.BINARY_INTEGER),
                 new OperationHolder(Type.PLS_INTEGER)
-                        .add(PLSqlTokenTypes.PLUS_OP, Type.NUMBER)
-                        .add(PLSqlTokenTypes.MINUS_OP, Type.NUMBER)
-                        .add(PLSqlTokenTypes.MULTIPLICATION_OP, Type.NUMBER)
-                        .add(PLSqlTokenTypes.DIVIDE_OP, Type.NUMBER)
+                        .add(PLSqlTokenTypes.PLUS_OP, Type.INTEGER)
+                        .add(PLSqlTokenTypes.MINUS_OP, Type.INTEGER)
+                        .add(PLSqlTokenTypes.MULTIPLICATION_OP, Type.INTEGER)
+                        .add(PLSqlTokenTypes.DIVIDE_OP, Type.INTEGER)
                         .add(PLSqlTokenTypes.CONCAT_OP, Type.VARCHAR2)
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
@@ -165,12 +202,12 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.GE, Type.BOOLEAN)
         );
 
-        pp.put(pair2string(Type.INTEGER, Type.VARCHAR2),
-                new OperationHolder(Type.INTEGER)
-                        .add(PLSqlTokenTypes.PLUS_OP)
-                        .add(PLSqlTokenTypes.MINUS_OP)
-                        .add(PLSqlTokenTypes.MULTIPLICATION_OP)
-                        .add(PLSqlTokenTypes.DIVIDE_OP)
+        pp.put(pair2string(Type.PLS_INTEGER, Type.NUMBER),
+                new OperationHolder(Type.PLS_INTEGER)
+                        .add(PLSqlTokenTypes.PLUS_OP, Type.NUMBER)
+                        .add(PLSqlTokenTypes.MINUS_OP, Type.NUMBER)
+                        .add(PLSqlTokenTypes.MULTIPLICATION_OP, Type.NUMBER)
+                        .add(PLSqlTokenTypes.DIVIDE_OP, Type.NUMBER)
                         .add(PLSqlTokenTypes.CONCAT_OP, Type.VARCHAR2)
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
@@ -216,8 +253,42 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.GE, Type.BOOLEAN)
         );
 
+        pp.put(pair2string(Type.NUMBER, Type.BINARY_INTEGER),
+                new OperationHolder(Type.NUMBER)
+                        .add(PLSqlTokenTypes.PLUS_OP)
+                        .add(PLSqlTokenTypes.MINUS_OP)
+                        .add(PLSqlTokenTypes.MULTIPLICATION_OP)
+                        .add(PLSqlTokenTypes.DIVIDE_OP)
+                        .add(PLSqlTokenTypes.CONCAT_OP, Type.VARCHAR2)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.LT, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.GT, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.LE, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.GE, Type.BOOLEAN)
+        );
+
         pp.put(pair2string(Type.NUMBER, Type.PLS_INTEGER),
                 new OperationHolder(Type.NUMBER)
+                        .add(PLSqlTokenTypes.PLUS_OP)
+                        .add(PLSqlTokenTypes.MINUS_OP)
+                        .add(PLSqlTokenTypes.MULTIPLICATION_OP)
+                        .add(PLSqlTokenTypes.DIVIDE_OP)
+                        .add(PLSqlTokenTypes.CONCAT_OP, Type.VARCHAR2)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.LT, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.GT, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.LE, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.GE, Type.BOOLEAN)
+        );
+
+        pp.put(pair2string(Type.INTEGER, Type.VARCHAR2),
+                new OperationHolder(Type.INTEGER)
                         .add(PLSqlTokenTypes.PLUS_OP)
                         .add(PLSqlTokenTypes.MINUS_OP)
                         .add(PLSqlTokenTypes.MULTIPLICATION_OP)
@@ -267,6 +338,40 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.GE, Type.BOOLEAN)
         );
 
+        pp.put(pair2string(Type.INTEGER, Type.PLS_INTEGER),
+                new OperationHolder(Type.INTEGER)
+                        .add(PLSqlTokenTypes.PLUS_OP)
+                        .add(PLSqlTokenTypes.MINUS_OP)
+                        .add(PLSqlTokenTypes.MULTIPLICATION_OP)
+                        .add(PLSqlTokenTypes.DIVIDE_OP)
+                        .add(PLSqlTokenTypes.CONCAT_OP, Type.VARCHAR2)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.LT, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.GT, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.LE, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.GE, Type.BOOLEAN)
+        );
+
+        pp.put(pair2string(Type.INTEGER, Type.BINARY_INTEGER),
+                new OperationHolder(Type.INTEGER)
+                        .add(PLSqlTokenTypes.PLUS_OP)
+                        .add(PLSqlTokenTypes.MINUS_OP)
+                        .add(PLSqlTokenTypes.MULTIPLICATION_OP)
+                        .add(PLSqlTokenTypes.DIVIDE_OP)
+                        .add(PLSqlTokenTypes.CONCAT_OP, Type.VARCHAR2)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.LT, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.GT, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.LE, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.GE, Type.BOOLEAN)
+        );
+
         pp.put(pair2string(Type.VARCHAR2, Type.NUMBER),
                 new OperationHolder(Type.VARCHAR2)
                         .add(PLSqlTokenTypes.CONCAT_OP)
@@ -281,6 +386,32 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.VARCHAR2, Type.BINARY_INTEGER),
+                new OperationHolder(Type.VARCHAR2)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.VARCHAR2, Type.PLS_INTEGER),
+                new OperationHolder(Type.VARCHAR2)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.VARCHAR2, Type.LONG),
+                new OperationHolder(Type.VARCHAR2)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+        );
+
+        pp.put(pair2string(Type.CHAR, Type.LONG),
+                new OperationHolder(Type.CHAR)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
         );
 
         pp.put(pair2string(Type.CHAR, Type.VARCHAR2),
@@ -310,10 +441,36 @@ public class TypeValidationHelper {
         pp.put(pair2string(Type.CHAR, Type.NUMBER),
                 new OperationHolder(Type.CHAR)
                         .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.CHAR, Type.ANY ),
+        pp.put(pair2string(Type.CHAR, Type.INTEGER),
+                new OperationHolder(Type.CHAR)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.CHAR, Type.BINARY_INTEGER),
+                new OperationHolder(Type.CHAR)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.CHAR, Type.PLS_INTEGER),
+                new OperationHolder(Type.CHAR)
+                        .add(PLSqlTokenTypes.CONCAT_OP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.CHAR, Type.ANYDATA),
                 new OperationHolder(Type.CHAR)
                         .add(PLSqlTokenTypes.CONCAT_OP)
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
@@ -360,6 +517,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
+        // todo - duplicate case
         pp.put(pair2string(Type.NUMBER, Type.VARCHAR2),
                 new OperationHolder(Type.VARCHAR2)
                         .add(PLSqlTokenTypes.CONCAT_OP)
@@ -368,16 +526,17 @@ public class TypeValidationHelper {
         );
 
 
+
         // todo - dirty workaround should be fixed asap
-        pp.put(pair2string(Type.ANY, Type.VARCHAR2),
-                new OperationHolder(Type.ANY)
+        pp.put(pair2string(Type.ANYDATA, Type.VARCHAR2),
+                new OperationHolder(Type.ANYDATA)
                         .add(PLSqlTokenTypes.CONCAT_OP)
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
         );
 
-        pp.put(pair2string(Type.VARCHAR2, Type.ANY ),
+        pp.put(pair2string(Type.VARCHAR2, Type.ANYDATA),
                 new OperationHolder(Type.VARCHAR2)
                         .add(PLSqlTokenTypes.CONCAT_OP)
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
@@ -385,8 +544,8 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
         );
 
-        pp.put(pair2string(Type.ANY, Type.ANY ),
-                new OperationHolder(Type.ANY)
+        pp.put(pair2string(Type.ANYDATA, Type.ANYDATA),
+                new OperationHolder(Type.ANYDATA)
                         .add(PLSqlTokenTypes.PLUS_OP)
                         .add(PLSqlTokenTypes.MINUS_OP)
                         .add(PLSqlTokenTypes.MULTIPLICATION_OP)
@@ -397,7 +556,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
         );
 
-        pp.put(pair2string(Type.ANY, Type.INTEGER),
+        pp.put(pair2string(Type.ANYDATA, Type.INTEGER),
                 new OperationHolder(Type.INTEGER)
                         .add(PLSqlTokenTypes.PLUS_OP)
                         .add(PLSqlTokenTypes.MINUS_OP)
@@ -409,7 +568,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
         );
 
-        pp.put(pair2string(Type.INTEGER, Type.ANY ),
+        pp.put(pair2string(Type.INTEGER, Type.ANYDATA),
                 new OperationHolder(Type.INTEGER)
                         .add(PLSqlTokenTypes.PLUS_OP)
                         .add(PLSqlTokenTypes.MINUS_OP)
@@ -420,7 +579,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
         );
 
-        pp.put(pair2string(Type.ANY, Type.NUMBER),
+        pp.put(pair2string(Type.ANYDATA, Type.NUMBER),
                 new OperationHolder(Type.NUMBER)
                         .add(PLSqlTokenTypes.PLUS_OP)
                         .add(PLSqlTokenTypes.MINUS_OP)
@@ -430,14 +589,14 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.ANY, Type.TIMESTAMP),
-                new OperationHolder(Type.ANY)
+        pp.put(pair2string(Type.ANYDATA, Type.TIMESTAMP),
+                new OperationHolder(Type.ANYDATA)
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
         );
 
-        pp.put(pair2string(Type.VARCHAR2, Type.NULL ),
+        pp.put(pair2string(Type.VARCHAR2, Type.NULL),
                 new OperationHolder(Type.VARCHAR2)
                         .add(PLSqlTokenTypes.CONCAT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
@@ -445,7 +604,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.VARCHAR, Type.NULL ),
+        pp.put(pair2string(Type.VARCHAR, Type.NULL),
                 new OperationHolder(Type.VARCHAR)
                         .add(PLSqlTokenTypes.CONCAT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
@@ -453,7 +612,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.CHAR, Type.NULL ),
+        pp.put(pair2string(Type.CHAR, Type.NULL),
                 new OperationHolder(Type.CHAR)
                         .add(PLSqlTokenTypes.CONCAT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
@@ -461,7 +620,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.TIMESTAMP, Type.NULL ),
+        pp.put(pair2string(Type.TIMESTAMP, Type.NULL),
                 new OperationHolder(Type.TIMESTAMP)
                         .add(PLSqlTokenTypes.CONCAT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
@@ -469,7 +628,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.DATE, Type.NULL ),
+        pp.put(pair2string(Type.DATE, Type.NULL),
                 new OperationHolder(Type.DATE)
                         .add(PLSqlTokenTypes.CONCAT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
@@ -477,7 +636,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.INTEGER, Type.NULL ),
+        pp.put(pair2string(Type.INTEGER, Type.NULL),
                 new OperationHolder(Type.INTEGER)
                         .add(PLSqlTokenTypes.CONCAT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
@@ -485,7 +644,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.PLS_INTEGER, Type.NULL ),
+        pp.put(pair2string(Type.PLS_INTEGER, Type.NULL),
                 new OperationHolder(Type.PLS_INTEGER)
                         .add(PLSqlTokenTypes.CONCAT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
@@ -493,7 +652,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.NUMBER, Type.NULL ),
+        pp.put(pair2string(Type.NUMBER, Type.NULL),
                 new OperationHolder(Type.NUMBER)
                         .add(PLSqlTokenTypes.CONCAT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
@@ -501,21 +660,21 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.ANY, Type.DATE),
-                new OperationHolder(Type.ANY)
+        pp.put(pair2string(Type.ANYDATA, Type.DATE),
+                new OperationHolder(Type.ANYDATA)
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
         );
 
-        pp.put(pair2string(Type.ANY, Type.CHAR),
-                new OperationHolder(Type.ANY)
+        pp.put(pair2string(Type.ANYDATA, Type.CHAR),
+                new OperationHolder(Type.ANYDATA)
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
         );
 
-        pp.put(pair2string(Type.NUMBER, Type.ANY ),
+        pp.put(pair2string(Type.NUMBER, Type.ANYDATA),
                 new OperationHolder(Type.NUMBER)
                         .add(PLSqlTokenTypes.PLUS_OP)
                         .add(PLSqlTokenTypes.MINUS_OP)
@@ -524,19 +683,31 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.CONCAT_OP)
         );
 
-        pp.put(pair2string(Type.TIMESTAMP, Type.NUMBER ),
+        pp.put(pair2string(Type.TIMESTAMP, Type.NUMBER),
                 new OperationHolder(Type.TIMESTAMP)
                         .add(PLSqlTokenTypes.PLUS_OP)
                         .add(PLSqlTokenTypes.MINUS_OP)
         );
 
-        pp.put(pair2string(Type.TIMESTAMP, Type.INTEGER ),
+        pp.put(pair2string(Type.TIMESTAMP, Type.INTEGER),
                 new OperationHolder(Type.TIMESTAMP)
                         .add(PLSqlTokenTypes.PLUS_OP)
                         .add(PLSqlTokenTypes.MINUS_OP)
         );
 
-        pp.put(pair2string(Type.TIMESTAMP, Type.TIMESTAMP ),
+        pp.put(pair2string(Type.TIMESTAMP, Type.DATE),
+                new OperationHolder(Type.TIMESTAMP)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.LT, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.GT, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.LE, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.GE, Type.BOOLEAN)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.TIMESTAMP, Type.TIMESTAMP),
                 new OperationHolder(Type.BOOLEAN)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
@@ -548,7 +719,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.DATE, Type.DATE ),
+        pp.put(pair2string(Type.DATE, Type.DATE),
                 new OperationHolder(Type.BOOLEAN)
                         .add(PLSqlTokenTypes.MINUS_OP, Type.NUMBER)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
@@ -561,7 +732,7 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.DATE, Type.TIMESTAMP ),
+        pp.put(pair2string(Type.DATE, Type.TIMESTAMP),
                 new OperationHolder(Type.BOOLEAN)
                         .add(PLSqlTokenTypes.EQ, Type.BOOLEAN)
                         .add(PLSqlTokenTypes.NOT_EQ, Type.BOOLEAN)
@@ -573,16 +744,31 @@ public class TypeValidationHelper {
                         .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
 
-        pp.put(pair2string(Type.DATE, Type.NUMBER ),
+        pp.put(pair2string(Type.DATE, Type.NUMBER),
                 new OperationHolder(Type.DATE)
                         .add(PLSqlTokenTypes.PLUS_OP)
                         .add(PLSqlTokenTypes.MINUS_OP)
         );
 
-        pp.put(pair2string(Type.DATE, Type.INTEGER ),
+        pp.put(pair2string(Type.DATE, Type.INTEGER),
                 new OperationHolder(Type.DATE)
                         .add(PLSqlTokenTypes.PLUS_OP)
                         .add(PLSqlTokenTypes.MINUS_OP)
+        );
+
+        pp.put(pair2string(Type.BFILE, Type.BFILE),
+                new OperationHolder(Type.BFILE)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.CLOB, Type.CLOB),
+                new OperationHolder(Type.CLOB)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
+        );
+
+        pp.put(pair2string(Type.BLOB, Type.BLOB),
+                new OperationHolder(Type.BLOB)
+                        .add(PLSqlTokenTypes.ASSIGNMENT_OP)
         );
     }
 
@@ -590,7 +776,7 @@ public class TypeValidationHelper {
 
         String key = l + ":" + r;
         OperationHolder holder = pp.get(key);
-        if (holder != null ){ //&& holder.contains(op)) {
+        if (holder != null) { //&& holder.contains(op)) {
             return holder.resultTypeForOp(op);
 //            return holder.resultType();
         } else {
@@ -599,6 +785,7 @@ public class TypeValidationHelper {
     }
 
 
+/*
     private static Type getRealType(Project project, TableColumnRefType ref){
         DbObject[] objects = PluginKeys.OBJECT_CACHE.getData(project).findByNameForType(ObjectCache.TABLE, ref.table);
 
@@ -614,46 +801,21 @@ public class TypeValidationHelper {
             throw new TypeNotResolvedException("Table not found: " + ref.table);
         }
     }
+*/
 
-    public static int evaluate(PsiElement psi, Type l, Type r, int op) {
 
-        String key = l.typeId() + ":" + r.typeId(); //l + ":" + r;
-        OperationHolder holder = pp.get(key);
-        if (holder != null ){
-            return holder.resultTypeForOp(op);
-        } else if( l.typeId() == Type.TABLE_COLUMN_REF_TYPE || r.typeId() == Type.TABLE_COLUMN_REF_TYPE ){
-
-            Type _l, _r;
-            if( l.typeId() == Type.TABLE_COLUMN_REF_TYPE){
-                _l = getRealType(psi.getProject(), (TableColumnRefType) l); //((TableColumnRefType) l).getRealType();
-            } else {
-                _l = l;
-            }
-
-            if( r.typeId() == Type.TABLE_COLUMN_REF_TYPE){
-                _r = getRealType(psi.getProject(), (TableColumnRefType) r); //_r = ((TableColumnRefType) r).getRealType();
-            } else {
-                _r = r;
-            }
-
-            return evaluate(psi, _l, _r, op);
-        } else {
-            return Type.UNKNOWN;
-        }
-    }
-
-    public static boolean typesEquivalented(List<Integer> l ){
-        for(int k=0; k<equaval.size(); k++){
+    public static boolean typesEquivalented(List<Integer> l) {
+        for (int k = 0; k < equaval.size(); k++) {
             Set<Integer> s = equaval.get(k);
-            int j=0;
-            for(; j<l.size(); j++){
+            int j = 0;
+            for (; j < l.size(); j++) {
                 int i = l.get(j);
-                if( !s.contains(i)){
+                if (!s.contains(i)) {
                     break;
                 }
             }
 
-            if(j == l.size()){
+            if (j == l.size()) {
                 return true;
             }
         }
@@ -663,34 +825,41 @@ public class TypeValidationHelper {
     public static boolean canBeAssigned(int left, int right) {
         String key = left + ":" + right;
         OperationHolder holder = pp.get(key);
-        if (holder != null ){
+        if (holder != null) {
             return holder.resultTypeForOp(PLSqlTokenTypes.ASSIGNMENT_OP) != Type.UNKNOWN;
         } else {
             return false;
         }
     }
 
-    public static boolean canBeAssigned(PsiElement psi, Type t, Type t1) {
+
+
+// todo -- sunbject to review and delete
+    public static boolean canBeAssigned(PlSqlElement psi, Type t, Type t1) {
         String key = t.typeId() + ":" + t1.typeId();
         OperationHolder holder = pp.get(key);
-        if (holder != null ){
+        if (holder != null) {
             return holder.resultTypeForOp(PLSqlTokenTypes.ASSIGNMENT_OP) != Type.UNKNOWN;
-        } else if( t1.typeId() == Type.USER_DEFINED && t.typeId() == t1.typeId()){
+        } else if (t1.typeId() == Type.USER_DEFINED && t.typeId() == t1.typeId()) {
             // NOTE: User Defined Type is expected to be a FQN - <package_name>.<type_name> 
             return t.typeName().equalsIgnoreCase(t1.typeName());
-        } else if( t1.typeId() == Type.ROWTYPE && t.typeId() == t1.typeId() ){
-            return ((RowtypeType)t).getTableName().equalsIgnoreCase(((RowtypeType)t1).getTableName());
-        } else if( t1.typeId() == Type.TABLE_COLUMN_REF_TYPE || t.typeId() == Type.TABLE_COLUMN_REF_TYPE ){ //&& t.typeId() == t1.typeId() ){
+        } else if (t1.typeId() == Type.ROWTYPE && t.typeId() == t1.typeId()) {
+            return ((RowtypeType) t).getTableName().equalsIgnoreCase(((RowtypeType) t1).getTableName());
+        } else if (t1.typeId() == Type.TABLE_COLUMN_REF_TYPE || t.typeId() == Type.TABLE_COLUMN_REF_TYPE) { //&& t.typeId() == t1.typeId() ){
 
             Type l, r;
-            if( t.typeId() == Type.TABLE_COLUMN_REF_TYPE){
-                l = getRealType(psi.getProject(), (TableColumnRefType) t); //((TableColumnRefType) t).getRealType();
+            if (t.typeId() == Type.TABLE_COLUMN_REF_TYPE) {
+                // todo -- it looks a bit ugly, may need to review
+                l = ((ResolveProvider) psi.getContainingFile()).getResolver().resolveType((TableColumnRefType) t);
+//                l = getRealType(psi.getProject(), (TableColumnRefType) t); //((TableColumnRefType) t).getRealType();
             } else {
                 l = t;
             }
 
-            if( t1.typeId() == Type.TABLE_COLUMN_REF_TYPE){
-                r = getRealType(psi.getProject(), (TableColumnRefType) t1); //((TableColumnRefType) t1).getRealType();
+            if (t1.typeId() == Type.TABLE_COLUMN_REF_TYPE) {
+                // todo -- it looks a bit ugly, may need to review
+                r = ((ResolveProvider) psi.getContainingFile()).getResolver().resolveType((TableColumnRefType) t1);
+//                r = getRealType(psi.getProject(), (TableColumnRefType) t1); //((TableColumnRefType) t1).getRealType();
             } else {
                 r = t1;
             }
@@ -699,7 +868,7 @@ public class TypeValidationHelper {
             OperationHolder holder2 = pp.get(key2);
 
             return holder2 != null && holder2.resultTypeForOp(PLSqlTokenTypes.ASSIGNMENT_OP) != Type.UNKNOWN;
-        } else if( t1.typeId() == Type.NULL ){
+        } else if (t1.typeId() == Type.NULL) {
             // todo - it is supposed NULL can be assigned to any type (should be reviewed)
             return true;
         } else {
@@ -776,7 +945,7 @@ public class TypeValidationHelper {
         public int op;
         public int type;
 
-        public Pair(int op, int type){
+        public Pair(int op, int type) {
             this.op = op;
             this.type = type;
         }

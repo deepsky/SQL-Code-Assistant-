@@ -1,25 +1,22 @@
 package com.deepsky.lang.common;
 
 import com.deepsky.lang.lexer.PlSqlHiLexer;
-import com.intellij.openapi.editor.markup.EffectType;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.SyntaxHighlighterColors;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.tree.IElementType;
+import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.StringEscapesTokenTypes;
-import com.intellij.lexer.Lexer;
-import com.deepsky.lang.lexer.PlSqlBaseLexer;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.awt.*;
-
+import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
-public class PlSqlHighlighter  extends SyntaxHighlighterBase {
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+
+public class PlSqlHighlighter extends SyntaxHighlighterBase {
 
     private static Map<IElementType, TextAttributesKey> keys1;
     private static Map<IElementType, TextAttributesKey> keys2;
@@ -111,9 +108,19 @@ public class PlSqlHighlighter  extends SyntaxHighlighterBase {
             new TextAttributes(new Color(102, 36, 89), null, null, null, Font.PLAIN)
     );
 
+    static final TextAttributesKey SQL_TABLE_BOLD = TextAttributesKey.createTextAttributesKey(
+            "SQL.TABLE.BOLD",
+            new TextAttributes(new Color(102, 36, 89), null, null, null, Font.BOLD)
+    );
+
     static final TextAttributesKey SQL_VIEW = TextAttributesKey.createTextAttributesKey(
             "SQL.VIEW",
             new TextAttributes(new Color(44, 131, 81), null, null, null, Font.PLAIN)
+    );
+
+    static final TextAttributesKey SQL_VIEW_BOLD = TextAttributesKey.createTextAttributesKey(
+            "SQL.VIEW.BOLD",
+            new TextAttributes(new Color(44, 131, 81), null, null, null, Font.BOLD)
     );
 
     static final TextAttributesKey SQL_USER_DEFINED_TYPE = TextAttributesKey.createTextAttributesKey(
@@ -125,7 +132,7 @@ public class PlSqlHighlighter  extends SyntaxHighlighterBase {
             "SQL.DATA_TYPE",
             new TextAttributes(new Color(69, 69, 226), null, null, null, Font.BOLD)
     );
-    
+
     static final TextAttributesKey SQL_SYNONYM = TextAttributesKey.createTextAttributesKey(
             "SQL.SYNONYM",
             new TextAttributes(new Color(118, 106, 37), null, null, null, Font.PLAIN)

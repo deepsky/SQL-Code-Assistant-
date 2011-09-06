@@ -25,10 +25,10 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.FromClause;
 import com.deepsky.lang.plsql.psi.GenericTable;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
@@ -45,28 +45,27 @@ public class FromClauseImpl extends PlSqlElementBase implements FromClause {
         final ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.SELECT_FROM_CLAUSE);
         final ASTNode[] nodes2 = getNode().getChildren(TokenSet.create(PlSqlElementTypes.ANSI_JOIN_TAB_SPEC));
 
-        int size = nodes.length + ((nodes2!=null)? nodes2.length: 0);
+        int size = nodes.length + ((nodes2 != null) ? nodes2.length : 0);
         GenericTable[] tabs = new GenericTable[size];
-        int i=0;
-        for(; i<nodes.length; i++){
-            tabs[i]  = (GenericTableBase) nodes[i].getPsi();
+        int i = 0;
+        for (; i < nodes.length; i++) {
+            tabs[i] = (GenericTableBase) nodes[i].getPsi();
         }
-        for(int j=0; i<size; i++, j++){
+        for (int j = 0; i < size; i++, j++) {
             ASTNode[] nodes3 = nodes2[j].getChildren(PlSqlElementTypes.SELECT_FROM_CLAUSE);
             // only one table expected
-            tabs[i]  = (GenericTableBase) nodes3[0].getPsi();
+            tabs[i] = (GenericTableBase) nodes3[0].getPsi();
         }
 
         return tabs;
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitFromClause(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitFromClause(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
 }

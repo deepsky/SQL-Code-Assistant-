@@ -25,11 +25,8 @@
 
 package com.deepsky.lang.plsql.psi.types;
 
-import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import org.jetbrains.annotations.NotNull;
+import com.deepsky.lang.plsql.struct.Type;
 
 /**
  * Class "Bridge", Psi node to Type convertor
@@ -37,9 +34,7 @@ import org.jetbrains.annotations.NotNull;
 public interface TypeSpec extends PlSqlElement {
 
     Type getType();
-    void validate(); // may throw ValidationException
 
-    @NotNull
-    ResolveContext777 resolveType() throws NameNotResolvedException;
+    boolean isTypeValid(); // may throw ValidationException
 
 }

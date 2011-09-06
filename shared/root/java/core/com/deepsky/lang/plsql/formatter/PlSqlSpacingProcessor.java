@@ -70,11 +70,11 @@ public class PlSqlSpacingProcessor extends PlSqlNodeVisitor {
 
     public void visitParentesizedExprList(final ASTNode node) {
 
-        if (type1 == PlSqlTokenTypes.OPEN_PAREN && type2 == PlSqlElementTypes.PLSQL_EXPR_LIST) {
-            setLineBreakSpace(true);
-        } else if (type1 == PlSqlElementTypes.PLSQL_EXPR_LIST && type2 == PlSqlTokenTypes.CLOSE_PAREN) {
-            setLineBreakSpace(true);
-        }
+//        if (type1 == PlSqlTokenTypes.OPEN_PAREN && type2 == PlSqlElementTypes.PLSQL_EXPR_LIST) {
+//            setLineBreakSpace(true);
+//        } else if (type1 == PlSqlElementTypes.PLSQL_EXPR_LIST && type2 == PlSqlTokenTypes.CLOSE_PAREN) {
+//            setLineBreakSpace(true);
+//        }
     }
 
 //    public void visitInsertStatement(final ASTNode node) {

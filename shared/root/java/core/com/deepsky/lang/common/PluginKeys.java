@@ -25,22 +25,36 @@
 
 package com.deepsky.lang.common;
 
-import com.deepsky.database.CacheManager;
 import com.deepsky.database.ConnectionManager;
-import com.deepsky.database.ObjectCache;
-import com.deepsky.lang.conf.PluginSettingsBean;
+import com.deepsky.database.ora.DbUrl;
+import com.deepsky.database.ora2.DbSchemaIndexer;
+import com.deepsky.lang.integration.PlSqlFileChangeTracker;
+import com.deepsky.lang.plsql.sqlIndex.IndexManager;
+import com.deepsky.navigation.NameLookupService;
 import com.deepsky.navigation.DbObjectContributor;
+import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.view.query_pane.QueryResultWindow;
+import com.deepsky.view.query_pane.converters.TIMESTAMPLTZ_Convertor;
+import com.deepsky.view.query_pane.converters.TIMESTAMPTZ_Convertor;
+import com.deepsky.view.query_pane.converters.TIMESTAMP_Convertor;
 
 
 public final class PluginKeys {
 
-    public static final PluginKey<CacheManager> CACHE_MANAGER = PluginKey.create(SharedConstants.CACHE_MANAGER);
     public static final PluginKey<ConnectionManager> CONNECTION_MANAGER = PluginKey.create(SharedConstants.CONNECTION_MANAGER);
     public static final PluginKey<DbObjectContributor> DB_OBJECT_CONTR = PluginKey.create(SharedConstants.DB_OBJECT_CONTR);
-    public static final PluginKey<ObjectCache> OBJECT_CACHE = PluginKey.create(SharedConstants.OBJECT_CACHE);
 
     public static final PluginKey<QueryResultWindow> QR_WINDOW = PluginKey.create(SharedConstants.QR_WINDOW);
-    public static final PluginKey<PluginSettingsBean> PLUGIN_SETTINGS = PluginKey.create(SharedConstants.PLUGIN_SETTINGS);
-//    public static final PluginKey<SqlSearchParameters> SEARCH_PARAMS = PluginKey.create(SharedConstants.SEARCH_PARAMS);
+    public static final PluginKey<SqlCodeAssistantSettings> PLUGIN_SETTINGS = PluginKey.create(SharedConstants.PLUGIN_SETTINGS);
+
+    public static final PluginKey<PlSqlFileChangeTracker> PLSQLFILE_CHANGE_TRACKER = PluginKey.create(SharedConstants.PLSQLFILE_CHANGE_TRACKER);
+    public static final PluginKey<DbSchemaIndexer> DB_NAMES_INDEXER = PluginKey.create(SharedConstants.CACHE_MANAGER);
+    public static final PluginKey<IndexManager> SQL_INDEX_MAN = PluginKey.create(SharedConstants.SQL_INDEX_MANAGER);
+    public static final PluginKey<NameLookupService> NAME_LOOKUP = PluginKey.create(SharedConstants.NAME_LOOKUP);
+    public static final PluginKey<DbUrl> LOCAL_FS_URL = PluginKey.create(SharedConstants.LOCAL_FS_URL);
+
+
+    public static final PluginKey<TIMESTAMP_Convertor> TS_CONVERTOR = PluginKey.create(SharedConstants.TIMESTAMP_ValueConvertor);
+    public static final PluginKey<TIMESTAMPTZ_Convertor> TSTZ_CONVERTOR = PluginKey.create(SharedConstants.TIMESTAMPTZ_ValueConvertor);
+    public static final PluginKey<TIMESTAMPLTZ_Convertor> TSLTZ_CONVERTOR = PluginKey.create(SharedConstants.TIMESTAMPLTZ_ValueConvertor);
 }

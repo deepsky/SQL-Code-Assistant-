@@ -34,11 +34,9 @@ public interface QueryResultPanel {
     final int SELECT_RESULT = 2;
 
     void init(@NotNull Object data);
-    boolean isRefreshSupported();
-    boolean isExportSupported();
-
-    void refresh() throws DBException;
-
-    String extractContent(String delimiter, boolean saveHeader, boolean ecloseWithDowbleQuotes);
-    void close();
+//    boolean isRefreshSupported();
+//    boolean isExportSupported();
+//    void refresh() throws DBException;
+//    String extractContent(String delimiter, boolean saveHeader, boolean ecloseWithDowbleQuotes);
+//    void close();
 }

@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 public interface Executable extends PlSqlElement, NavigationItem {
     String getEName();
     void setEName(String name);
-    ObjectName getObjectName();
+    ObjectName getEObjectName();
 
     @NotNull
     Argument[] getArguments();
@@ -48,9 +48,11 @@ public interface Executable extends PlSqlElement, NavigationItem {
     PlSqlBlock getBlock();
 
     boolean createOrReplace();
-    ExecutableDescriptor describe();
+//    ExecutableDescriptor describe();
     boolean equals(ExecutableDescriptor edesc);
 
     String getPackageName();
+
+    ExecutableSpec getSpecification();
 
 }

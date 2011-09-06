@@ -25,9 +25,10 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.psi.spices.CompilableObject;
 import com.deepsky.lang.plsql.struct.Type;
 
-public interface VarrayCollectionDecl extends TypeDeclaration {
+public interface VarrayCollectionDecl extends TypeDeclaration, CompilableObject {
     Type getBaseType();
     Expression getCollectionSize();
 }

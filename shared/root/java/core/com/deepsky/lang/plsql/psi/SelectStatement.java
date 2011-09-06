@@ -33,7 +33,12 @@ import org.jetbrains.annotations.Nullable;
 public interface SelectStatement extends Statement {
     @NotNull    SelectFieldCommon[] getSelectFieldList();
 
-//    @Nullable   SelectFieldCommon findSelectFieldByName(String alias);
+    /**
+     * Check whether DISTINCT or UNIQUE operator specified in the select list
+     * @return - true if specified
+     */
+    boolean isDistinctOrUniqueSpecified();
+
     @Nullable   SelectFieldExpr findSelectFieldByName(String alias);
     @Nullable   SelectFieldExpr findSelectFieldByAlias(String alias);
 
@@ -41,8 +46,10 @@ public interface SelectStatement extends Statement {
     @Nullable   WhereCondition getWhereCondition();
     @Nullable   OrderByClause getOrderByClause();
 
-    GroupByClause getGroupByClause();
+    @Nullable   GroupByClause getGroupByClause();
+    @Nullable   ForUpdateClause getForUpdateClause();
 
+/*
     @Nullable SelectStatement getFollowingSelectStatement();
     // NONE means - there is no any following statement 
     int getFollowingSelectStatementType();
@@ -51,4 +58,5 @@ public interface SelectStatement extends Statement {
     final int UNION_TYPE = 1;
     final int INTERSECT_TYPE = 2;
     final int MINUS_TYPE = 3;
+*/
 }

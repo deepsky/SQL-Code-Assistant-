@@ -27,14 +27,31 @@ package com.deepsky.database.exec;
 
 
 import com.deepsky.database.DBException;
-import com.intellij.psi.tree.IElementType;
+import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.deepsky.lang.plsql.psi.Subquery;
+import com.intellij.lang.ASTNode;
 
 
 public interface SQLExecutor {
 
     // synchronous statement running
-    RowSetModel executeQuery(String stmt) throws DBException;
-    SQLUpdateStatistics execute(String stmt, IElementType etype) throws DBException;
+    RowSetManager executeQuery(String stmt) throws DBException;
+    RowSetManager executeQuery(SelectStatement select) throws DBException;
+    RowSetManager executeQuery(Subquery subquery) throws DBException;
+
+    // todo -- should be narrowed
+    SQLUpdateStatistics execute(ASTNode node) throws DBException;
+
+    // Object specific management -- todo -- should be revised
+
+    boolean dropTable(String name) throws DBException;
+    boolean dropPackage(String name) throws DBException;
+    boolean compilePackage(String name) throws DBException;
+    boolean dropView(String name) throws DBException;
+    boolean dropTrigger(String name) throws DBException;
+    boolean enableTrigger(String name) throws DBException;
+    boolean disableTrigger(String name) throws DBException;
+    //
 
     /**
      * Cancel current query

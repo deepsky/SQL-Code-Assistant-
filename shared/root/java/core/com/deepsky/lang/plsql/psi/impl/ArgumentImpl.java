@@ -25,16 +25,20 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.Argument;
-import com.deepsky.lang.plsql.psi.Expression;
-import com.deepsky.lang.plsql.psi.types.TypeSpec;
-import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
-import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.Argument;
+import com.deepsky.lang.plsql.psi.Expression;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.types.TypeSpec;
+import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -46,7 +50,7 @@ public class ArgumentImpl extends PlSqlElementBase implements Argument {
 
     public String getArgumentName() {
         PsiElement e = findChildByType(PLSqlTypesAdopted.PARAMETER_NAME);
-        if(e != null){
+        if (e != null) {
             return e.getText();
         } else {
             return "";
@@ -56,34 +60,32 @@ public class ArgumentImpl extends PlSqlElementBase implements Argument {
     @NotNull
     public Type getType() {
         ASTNode type = getNode().findChildByType(PlSqlElementTypes.TYPES);
-        if(type != null){
-            return ((TypeSpec)type.getPsi()).getType();
+        if (type != null) {
+            return ((TypeSpec) type.getPsi()).getType();
         } else {
             throw new SyntaxTreeCorruptedException();
         }
-//        TypeSpecVariant typeSpec = this.findChildByClass(TypeSpecVariant.class);
-//        return typeSpec.getType();
     }
 
-    public TypeSpec getTypeSpec(){
+    public TypeSpec getTypeSpec() {
         ASTNode type = getNode().findChildByType(PlSqlElementTypes.TYPES);
-        if(type != null){
-            return (TypeSpec)type.getPsi();
+        if (type != null) {
+            return (TypeSpec) type.getPsi();
         } else {
             throw new SyntaxTreeCorruptedException();
         }
     }
 
-    public String getQuickNavigateInfo(){
+    public String getQuickNavigateInfo() {
         return getPresentableForm();
     }
 
-    public String getPresentableForm(){
+    public String getPresentableForm() {
         StringBuilder out = new StringBuilder();
         ASTNode child = getNode().getFirstChildNode();
         ASTNodeIterator iterator = new ASTNodeIterator(child);
-        while(iterator.hasNext() && !iterator.peek().getText().equals(";")){
-            if(out.length() > 0){
+        while (iterator.hasNext() && !iterator.peek().getText().equals(";")) {
+            if (out.length() > 0) {
                 out.append(" ");
             }
             out.append(iterator.next().getText());
@@ -112,4 +114,30 @@ public class ArgumentImpl extends PlSqlElementBase implements Argument {
         // todo
         return false;
     }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitArgument(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
+/*
+    // [Contex Management Stuff] Start -------------------------------
+    CtxPath cachedCtxPath = null;
+
+    public CtxPath getCtxPath() {
+        if (cachedCtxPath != null) {
+            return cachedCtxPath;
+        } else {
+            CtxPath parent = super.getCtxPath();
+            cachedCtxPath = new ContextPathUtil.CtxPathImpl(
+                    parent.getPath() + ContextPathUtil.encodeCtx(ContextPath.ARGUMENT, "..$" + getArgumentName().toLowerCase()));
+        }
+        return cachedCtxPath;
+    }
+    // [Contex Management Stuff] End ---------------------------------
+*/
+
 }

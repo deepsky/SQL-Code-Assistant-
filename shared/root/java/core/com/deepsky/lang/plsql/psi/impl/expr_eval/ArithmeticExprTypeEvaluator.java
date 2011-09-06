@@ -25,38 +25,38 @@
 
 package com.deepsky.lang.plsql.psi.impl.expr_eval;
 
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.TokenType;
+import com.deepsky.generated.plsql.PLSqlTokenTypes;
 import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.psi.ArithmeticExpression;
+import com.deepsky.lang.plsql.psi.Expression;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
-import com.deepsky.lang.plsql.psi.Expression;
-import com.deepsky.lang.plsql.psi.ArithmeticExpression;
-import com.deepsky.lang.validation.ValidationException;
-import com.deepsky.lang.validation.TypeValidationHelper;
 import com.deepsky.lang.validation.TypeCastException;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.generated.plsql.PLSqlTokenTypes;
+import com.deepsky.lang.validation.TypeValidationHelper;
+import com.deepsky.lang.validation.ValidationException;
+import com.intellij.psi.TokenType;
+import com.intellij.psi.tree.IElementType;
 
 import java.util.Iterator;
 
 public class ArithmeticExprTypeEvaluator {
 
-    Expr root;
-    TreeIterator ite;
+//    private Expr root;
+    private TreeIterator ite;
+    private TypeValidationHelper validator;
 
-    public Type evaluate(Type l, Type r, int type) {
+    private Type evaluate(Type l, Type r, int opType) {
         int resultType = Type.UNKNOWN;
         try {
-//            resultType = TypeValidationHelper
-//                .evaluate( l.typeId(), r.typeId(), type
-//                );
-            resultType = TypeValidationHelper.evaluate(root.getPsi(), l, r, type );
+            resultType = validator.evaluate(l, r, opType);
+//            resultType = TypeValidationHelper.evaluate(root.getPsi(), l, r, opType);
 
-        } catch(Throwable e){
+        } catch (Throwable e) {
+            int hh =0;
         }
-          
-        if(resultType != Type.UNKNOWN ){
+
+        if (resultType != Type.UNKNOWN) {
             // todo
             return TypeFactory.createTypeById(resultType);
         } else {
@@ -65,9 +65,10 @@ public class ArithmeticExprTypeEvaluator {
     }
 
 
-    public ArithmeticExprTypeEvaluator(Expr root) {
+    public ArithmeticExprTypeEvaluator(TypeValidationHelper validator, Expr root) {
+        this.validator = validator;
         ite = new TreeIterator(root);
-        this.root = root;
+//        this.root = root;
     }
 
     public Type calc() {
@@ -99,7 +100,7 @@ public class ArithmeticExprTypeEvaluator {
         if (_op < 0) {
             throw new ValidationException("It is not an operation");
         }
-       return _op;
+        return _op;
     }
 
     private int type2op(IElementType itype) {
@@ -125,7 +126,7 @@ public class ArithmeticExprTypeEvaluator {
         Expr node = ite.next();
         IElementType op = node.getElementType();
         int _op = type2op(op);
-        if(isAddSubtr(_op)){
+        if (isAddSubtr(_op)) {
             // sign: PLUS or MINUS
             // because it does not change type of expression, just skip it
             node = ite.next();
@@ -141,20 +142,20 @@ public class ArithmeticExprTypeEvaluator {
             //Expr nestedExpr = node.findChildByType(PlSqlElementTypes.PLSQL_EXPRESSION);
             Expr nestedExpr = node.findChildByType(PlSqlElementTypes.EXPR_TYPES);
 
-            if(nestedExpr != null){
-                if(nestedExpr.node instanceof ArithmeticExpression){
+            if (nestedExpr != null) {
+                if (nestedExpr.node instanceof ArithmeticExpression) {
                     Expr child = nestedExpr.getFirstChildNode();
-                    return new ArithmeticExprTypeEvaluator(child).calc();
+                    return new ArithmeticExprTypeEvaluator(validator, child).calc();
                 } else {
-                    return ((Expression)nestedExpr.node.getPsi()).getExpressionType();
+                    return ((Expression) nestedExpr.node.getPsi()).getExpressionType();
                 }
             } else {
                 throw new ValidationException("PARENTHESIZED_EXPR issue!");
             }
         } else {
             try {
-                return ((Expression)node.getPsi()).getExpressionType();
-            }catch(ClassCastException e){
+                return ((Expression) node.getPsi()).getExpressionType();
+            } catch (ClassCastException e) {
                 throw new ValidationException("INTERNAL ERROR! (ClassCastException)", node.getPsi());
             }
         }
@@ -187,9 +188,19 @@ public class ArithmeticExprTypeEvaluator {
             } else {
                 while (cur != null) {
                     IElementType itype = cur.getElementType();
-                    if (itype == TokenType.WHITE_SPACE || itype == PlSqlTokenTypes.ML_COMMENT || itype == PlSqlTokenTypes.SL_COMMENT) {
+                    if(PlSqlTokenTypes.WS_TOKENS.contains(itype)){
                         // skip
                         cur = cur.getTreeNext();
+/*
+                    }
+                    if (itype == TokenType.WHITE_SPACE
+                            || itype == PlSqlTokenTypes.WS
+                            || itype == PlSqlTokenTypes.ML_COMMENT
+                            || itype == PlSqlTokenTypes.SL_COMMENT
+                            || itype == PlSqlTokenTypes.LF) {
+                        // skip
+                        cur = cur.getTreeNext();
+*/
                     } else {
                         break;
                     }

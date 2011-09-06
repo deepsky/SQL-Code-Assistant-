@@ -28,7 +28,6 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.plsql.psi.ExistsCondition;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
-import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,6 +40,5 @@ public class ExistsConditionImpl extends ConditionBase implements ExistsConditio
     @NotNull
     public Type getExpressionType() {
         return TypeFactory.createTypeById(Type.BOOLEAN);
-        // todo throw new ValidationException("EXISTS_CONDITION not supported", this);
     }
 }

@@ -25,5 +25,6 @@
 
 package com.deepsky.lang.plsql.psi;
 
-public interface FunctionCall extends Expression, Callable { //}, NameFragmentRef {
+public interface FunctionCall extends Expression, Callable {
+    boolean isAggregate();
 }

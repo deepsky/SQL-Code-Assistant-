@@ -27,17 +27,14 @@ package com.deepsky.lang.plsql.psi.impl.types;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
+import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.deepsky.lang.plsql.psi.types.ColumnTypeRef;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.types.TableColumnRefType;
-import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,51 +45,40 @@ public class ColumnTypeRefImpl extends PlSqlElementBase implements ColumnTypeRef
     }
 
     public Type getType() {
-        String table = getNode().findChildByType(PLSqlTypesAdopted.TABLE_NAME).getText();
+        String table = getNode().findChildByType(PLSqlTypesAdopted.TABLE_REF).getText();
         String column = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_NAME_REF).getText();
 
         return new TableColumnRefType(table, column);
     }
 
-    public void validate() {
-        try {
-            ResolveHelper.validateType(getProject(),
-                    getType()
-            );
-        } catch (NameNotResolvedException e1) {
-            throw new ValidationException(e1.getMessage());
-        }
-    }
-
-    @NotNull
-    public ResolveContext777 resolveType() throws NameNotResolvedException {
-        throw new NameNotResolvedException("");
+    public boolean isTypeValid() {
+        return getResolveFacade().getLLResolver().resolveType((TableColumnRefType) getType()) != null;
     }
 
 
     @NotNull
     public String getTableName() {
-        return getTableName2().getText();
+        return getTableRef().getText();
     }
 
     @NotNull
-    public PsiElement getTableName2() {
-        ASTNode tab = getNode().findChildByType(PLSqlTypesAdopted.TABLE_NAME);
+    public TableRef getTableRef() {
+        ASTNode tab = getNode().findChildByType(PLSqlTypesAdopted.TABLE_REF);
         if (tab == null) {
             throw new SyntaxTreeCorruptedException();
         }
 
-        return tab.getPsi();
+        return (TableRef) tab.getPsi();
     }
 
     @NotNull
-    public PsiElement getColumnName(){
+    public ColumnNameRef getColumnRef() {
         ASTNode column = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_NAME_REF);
         if (column == null) {
             throw new SyntaxTreeCorruptedException();
         }
 
-        return column.getPsi();
+        return (ColumnNameRef) column.getPsi();
     }
 
 

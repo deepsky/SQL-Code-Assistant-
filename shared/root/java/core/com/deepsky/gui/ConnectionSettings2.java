@@ -26,15 +26,14 @@
 package com.deepsky.gui;
 
 import com.deepsky.database.ConnectionManager;
-import com.deepsky.database.ConnectionManagerImpl;
 import com.deepsky.database.ConnectionStatus;
 import com.deepsky.database.ora.DbUrl;
+import com.deepsky.database.ora.DbUrlSID;
+import com.deepsky.database.ora.DbUrlServiceName;
 import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.ConfigurationException;
 import com.deepsky.view.utils.ProgressIndicatorHelper;
 import com.deepsky.view.utils.ProgressIndicatorListener;
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -50,6 +49,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ConnectionSettings2 extends DialogWrapper implements ActionListener {
     private JPanel rootComponent;
@@ -57,27 +58,56 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
     private JButton testConnectionButton;
     private JComboBox host;
     private JTextField serviceName;
+    private JTextField sid;
     private JTextField port;
     private JTextField userName;
     //    private JTextField password;
     private JCheckBox reconnectIfConnectionDroppedCheckBox;
     private JTextField refreshPeriod;
     private JPasswordField passwordField;
+    private JRadioButton SIDRadio;
+    private JRadioButton serviceNameRadio;
 
     final String TEST_CONNECTION = "Test Connection1";
 
     Project project;
 
-    public ConnectionSettings2(Project project, @NotNull String[] hosts) {
+    protected ConnectionSettings2(Project project) {
         super(project, false);
         this.project = project;
         this.setTitle("Setup Connection");
+
+        SIDRadio.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // SID chosen
+                serviceName.setEnabled(false);
+                sid.setEnabled(true);
+            }
+        });
+        serviceNameRadio.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // SERVICE NAME chosen
+                sid.setEnabled(false);
+                serviceName.setEnabled(true);
+            }
+        });
+    }
+
+    public ConnectionSettings2(Project project, @NotNull String[] hosts) {
+        this(project);
         init();
 
+        Set<String> temp = new HashSet<String>();
         for (String host : hosts) {
+            temp.add(host.toLowerCase());
+        }
+        for (String host : temp) {
             this.host.addItem(host);
         }
-        this.host.addItem("localhost");
+        if (!temp.contains("localhost")) {
+            this.host.addItem("localhost");
+        }
+
         this.serviceName.setText("ORA");
         this.port.setText("1521");
 
@@ -87,74 +117,39 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
 
         testConnectionButton.setActionCommand(TEST_CONNECTION);
         testConnectionButton.addActionListener(this);
+
+        // Service Name by default
+        serviceNameRadio.setSelected(true);
+        serviceName.setEnabled(true);
+        sid.setEnabled(false);
     }
 
-/*
-    public ConnectionSettings2(
-            String host, String serviceName, String port, String userName, String password,
-            int refreshPeriod, boolean loginOnStartup, boolean reconnect) {
-        this(LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext()), host, serviceName, port, userName, password,
-                refreshPeriod, loginOnStartup, reconnect);
-    }
-*/
-
-//    public ConnectionSettings2(Project project, String host, String serviceName, String port, String userName, String password) {
-//        super(project, false);
-//        this.project = project;
-//        this.setTitle("Setup Connection");
-//        init();
-//
-//        this.host.addItem(host);
-//        this.serviceName.setText(serviceName);
-//        this.port.setText(port);
-//        this.userName.setText(userName);
-//        this.passwordField.setText(password);
-//
-//        testConnectionButton.setActionCommand(TEST_CONNECTION);
-//        testConnectionButton.addActionListener(this);
-//    }
 
     public ConnectionSettings2(
             Project project,
-            String host, String serviceName, String port, String userName, String password,
+            DbUrl url,
             int refreshPeriod, boolean loginOnStartup, boolean reconnect) {
-        super(project, false);
-        this.project = project;
-        this.setTitle("Setup Connection");
+        this(project);
         init();
 
-        this.host.addItem(host);
-        this.serviceName.setText(serviceName);
-        this.port.setText(port);
-        this.userName.setText(userName);
-        this.passwordField.setText(password);
-        this.refreshPeriod.setText(Integer.toString(refreshPeriod));
-        this.loginOnStartupCheckBox.setSelected(loginOnStartup);
-        this.reconnectIfConnectionDroppedCheckBox.setSelected(reconnect);
-
-        testConnectionButton.setActionCommand(TEST_CONNECTION);
-        testConnectionButton.addActionListener(this);
-    }
-
-    public ConnectionSettings2(
-            Project project,
-            @NotNull String[] hosts,
-            String serviceName,
-            String port, String userName, String password,
-            int refreshPeriod, boolean loginOnStartup, boolean reconnect) {
-        super(project, false);
-        this.project = project;
-        this.setTitle("Setup Connection");
-        init();
-
-        for (String host : hosts) {
-            this.host.addItem(host);
+        this.host.addItem(url.getHost());
+        this.port.setText(url.getPort());
+        this.userName.setText(url.getUser());
+        this.passwordField.setText(url.getPwd());
+        if (url.isOldSyntax()) {
+            // set SID
+            SIDRadio.setSelected(true);
+            sid.setEnabled(true);
+            sid.setText(url.getSID_ServiceName());
+            serviceName.setEnabled(false);
+        } else {
+            // set Service Name
+            serviceNameRadio.setSelected(true);
+            serviceName.setEnabled(true);
+            serviceName.setText(url.getSID_ServiceName());
+            sid.setEnabled(false);
         }
-        this.host.addItem("localhost");
-        this.serviceName.setText(serviceName);
-        this.port.setText(port);
-        this.userName.setText(userName);
-        this.passwordField.setText(password);
+
         this.refreshPeriod.setText(Integer.toString(refreshPeriod));
         this.loginOnStartupCheckBox.setSelected(loginOnStartup);
         this.reconnectIfConnectionDroppedCheckBox.setSelected(reconnect);
@@ -177,13 +172,7 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
             throw new ValidationException(host, "Host parameter contains not permissible characters");
         }
 
-        if (serviceName.getText().length() == 0) {
-            throw new ValidationException(serviceName, "Service Name parameter must be specified");
-        }
-
-        if (!serviceName.getText().matches("[a-zA-Z0-9\\.\\_\\-]+")) {
-            throw new ValidationException(serviceName, "Service Name parameter contains not permissible characters");
-        }
+        validateSID_ServiceName();
 
         if (port.getText().length() == 0) {
             throw new ValidationException(port, "Port parameter must be specified");
@@ -197,7 +186,7 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
             throw new ValidationException(userName, "User Name parameter must be specified");
         }
 
-        if (!userName.getText().matches("[a-zA-Z0-9\\.\\_]+")) {
+        if (!userName.getText().matches("[a-zA-Z0-9\\$\\.\\_]+")) {
             throw new ValidationException(userName, "User Name parameter contains not permissible characters");
         }
     }
@@ -220,9 +209,9 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
         return ((String) host.getSelectedItem()).trim();
     }
 
-    public String getServiceName() {
-        return serviceName.getText().trim();
-    }
+//    public String getServiceName() {
+//        return serviceName.getText().trim();
+//    }
 
     public String getPort() {
         return port.getText().trim();
@@ -258,21 +247,14 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
         if (e.getActionCommand().equals(TEST_CONNECTION)) {
             ProgressIndicatorHelper progress = new ProgressIndicatorHelper(project, "Test Connection");
             final String[] message = new String[1];
-            final String hostName = ((String) host.getSelectedItem()).trim();
+//            final String hostName = ((String) host.getSelectedItem()).trim();
             boolean res = progress.run(new ProgressIndicatorListener() {
                 boolean result;
-                DbUrl url = new DbUrl(
-                        userName.getText(),
-                        passwordField.getText(),
-                        hostName, //host.getText(),
-                        port.getText(),
-                        serviceName.getText()
-                );
+                DbUrl url = getDbUrl();
 
                 public boolean isComplete() {
                     try {
                         ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
-//                        ConnectionStatus st = ConnectionManagerImpl.getInstance().checkConnectionEx(url);
                         ConnectionStatus st = manager.checkConnectionEx(url);
                         result = st.isConnected();
                         message[0] = st.getErrorMessage();
@@ -304,48 +286,79 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
                 }
             }
 
-/*
-            try {
-                DbUrl url = new DbUrl(
-                        userName.getText(),
-                        password.getText(),
-                        host.getText(),
-                        port.getText(),
-                        serviceName.getText()
-                    );
-
-                if( ConnectionManagerImpl.getInstance().checkConnection(url)){
-                    Messages.showInfoMessage(project, "Connection established successfully", "Connection status");
-                    return;
-                }
-            } catch (ConfigurationException e1) {
-                // todo
-            }
-            Messages.showErrorDialog(project, "Could not establish connection, check parameters", "Connection status");
-*/
-//            boolean b = d(project);
         }
 
     }
 
+/*
     boolean d(Project project) {
         return ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-            public void run() {
-                final ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
-                if (progressIndicator != null) {
-                    progressIndicator.setText("prepare.for.deployment.common");
-                    progressIndicator.setIndeterminate(true);
-                }
-                try {
+                    public void run() {
+                        final ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
+                        if (progressIndicator != null) {
+                            progressIndicator.setText("prepare.for.deployment.common");
+                            progressIndicator.setIndeterminate(true);
+                        }
+                        try {
 
-                    Thread.currentThread().sleep(2000);
-                    progressIndicator.setText("Hello World!");
-                    Thread.currentThread().sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                            Thread.currentThread().sleep(2000);
+                            progressIndicator.setText("Hello World!");
+                            Thread.currentThread().sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, "prepare.for.deployment", true, project);
+    }
+*/
+
+
+    private void validateSID_ServiceName() throws ValidationException {
+        if (SIDRadio.isSelected()) {
+            String sid1 = sid.getText().trim();
+            if (sid1.length() == 0) {
+                throw new ValidationException(sid, "SID must be specified");
             }
-        }, "prepare.for.deployment", true, project);
+
+            if (!sid1.matches("[a-zA-Z0-9\\.\\_\\-]+")) {
+                throw new ValidationException(sid, "SID contains not permissible characters");
+            }
+        } else {
+            String serviceName1 = serviceName.getText().trim();
+            if (serviceName1.length() == 0) {
+                throw new ValidationException(serviceName, "Service Name must be specified");
+            }
+
+            if (!serviceName1.matches("[a-zA-Z0-9\\.\\_\\-]+")) {
+                throw new ValidationException(serviceName, "Service Name contains not permissible characters");
+            }
+        }
+    }
+
+    public DbUrl getDbUrl() {
+        if (SIDRadio.isSelected()) {
+            // old syntax
+            return new DbUrlSID(
+                    getUserName(),
+                    getPassword(),
+                    getHost(),
+                    getPort(),
+                    sid.getText().trim()
+            );
+        } else {
+            // new syntax
+            return new DbUrlServiceName(
+                    getUserName(),
+                    getPassword(),
+                    getHost(),
+                    getPort(),
+                    serviceName.getText().trim()
+            );
+        }
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 
     {
@@ -377,45 +390,58 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
         label1.setText("Host:");
         panel1.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label2 = new JLabel();
-        label2.setText("Service Name:");
+        label2.setText("Port:");
         panel1.add(label2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        serviceName = new JTextField();
-        panel1.add(serviceName, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label3 = new JLabel();
-        label3.setText("Port:");
+        label3.setText("User Name:");
         panel1.add(label3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label4 = new JLabel();
-        label4.setText("User Name:");
+        label4.setText("Password:");
         panel1.add(label4, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label5 = new JLabel();
-        label5.setText("Password:");
-        panel1.add(label5, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         port = new JTextField();
-        panel1.add(port, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel1.add(port, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         userName = new JTextField();
-        panel1.add(userName, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel1.add(userName, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         passwordField = new JPasswordField();
-        panel1.add(passwordField, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel1.add(passwordField, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         host = new JComboBox();
         host.setEditable(true);
         panel1.add(host, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel2, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "SID/Service Name"));
+        SIDRadio = new JRadioButton();
+        SIDRadio.setText("SID");
+        panel2.add(SIDRadio, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        serviceNameRadio = new JRadioButton();
+        serviceNameRadio.setText("Service Name");
+        panel2.add(serviceNameRadio, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        sid = new JTextField();
+        panel2.add(sid, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        serviceName = new JTextField();
+        panel2.add(serviceName, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         testConnectionButton = new JButton();
         testConnectionButton.setText("Test Connection");
         rootComponent.add(testConnectionButton, new GridConstraints(3, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         reconnectIfConnectionDroppedCheckBox = new JCheckBox();
-        reconnectIfConnectionDroppedCheckBox.setText("Reconnect, if connection dropped");
+        reconnectIfConnectionDroppedCheckBox.setText("Reconnect, if connection lost");
         rootComponent.add(reconnectIfConnectionDroppedCheckBox, new GridConstraints(2, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         loginOnStartupCheckBox = new JCheckBox();
         loginOnStartupCheckBox.setText("Login on Startup");
         rootComponent.add(loginOnStartupCheckBox, new GridConstraints(3, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        rootComponent.add(panel2, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        rootComponent.add(panel3, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         refreshPeriod = new JTextField();
-        panel2.add(refreshPeriod, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(30, -1), null, 0, false));
-        final JLabel label6 = new JLabel();
-        label6.setText("Refresh period:");
-        panel2.add(label6, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel3.add(refreshPeriod, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(30, -1), null, 0, false));
+        final JLabel label5 = new JLabel();
+        label5.setText("Refresh period:");
+        panel3.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        ButtonGroup buttonGroup;
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(SIDRadio);
+        buttonGroup.add(serviceNameRadio);
     }
 
     /**
@@ -426,7 +452,7 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
     }
 
 
-    class ValidationException extends Exception {
+    private class ValidationException extends Exception {
         JComponent cause;
 
         public ValidationException(JComponent cause, String message) {

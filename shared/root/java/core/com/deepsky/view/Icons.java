@@ -37,6 +37,7 @@ public class Icons {
 
     public static final Icon PACKAGE_BODY;
     public static final Icon PACKAGE_SPEC;
+    public static final Icon PKG_SPEC_BODY;
     public static final Icon REFRESH_SESSION;
 
     public static final Icon FUNCTION_BODY;
@@ -48,13 +49,18 @@ public class Icons {
     public static final Icon PKG_INIT_SECTION;
     public static final Icon PLSQL_BLOCK;
     public static final Icon SQL_FILE;
+    public static final Icon SQL_FILE_OUTSIDE;
 
     public static final Icon TABLE;
     public static final Icon PARTI_TABLE;
     public static final Icon TEMP_TABLE;
     public static final Icon EXT_TABLE;
+    public static final Icon HEAP_TABLE;
+    public static final Icon IOT_TABLE;
 
     public static final Icon VIEW;
+    public static final Icon SEQUENCE;
+    public static final Icon SYNONYM;
 
     public static final Icon TRIGGER;
     public static final Icon ENABLE_TRIGGER;
@@ -66,6 +72,7 @@ public class Icons {
     public static final Icon VARRAY_TYPE_DECL;
 
     public static final Icon EXEC_SQL_STMT;
+    public static final Icon EXEC_SQL_STMT_SMALL;
     public static final Icon SELECT_RESULTSET;
     public static final Icon DML_RESULT;
 
@@ -114,6 +121,15 @@ public class Icons {
     public static final Icon AUTOCOMMIT_IS_ON;
     public static final Icon AUTOCOMMIT_IS_OFF;
 
+    public static final Icon SORT_BY_NAME;
+    public static final Icon HIDE_PKG_BODY_OBJS;
+
+    public static final Icon INSERT_ROW;
+    public static final Icon DELETE_ROW;
+    public static final Icon SUBMIT_CHANGES;
+    public static final Icon ARROW_LEFT;
+    public static final Icon ARROW_RIHGT;
+
     static {
         AUTOCOMMIT_IS_ON = Helpers.getIcon("/icons/autocommitOn.png");
         AUTOCOMMIT_IS_OFF = Helpers.getIcon("/icons/autocommitOff.png");
@@ -127,8 +143,10 @@ public class Icons {
         DB_SCHEMA_DISABLED = Helpers.getIcon("/icons/db_schema_disabled.png");
         REFRESH_SESSION = Helpers.getIcon("/icons/sync.png"); 
 
-        PACKAGE_BODY = Helpers.getIcon("/icons/pkg_body.png");
-        PACKAGE_SPEC = Helpers.getIcon("/icons/pkg_spec.png");
+        PACKAGE_BODY = Helpers.getIcon("/icons/pkg_body_2.png");
+        PACKAGE_SPEC = Helpers.getIcon("/icons/pkg_spec_2.png");
+
+        PKG_SPEC_BODY = Helpers.getIcon("/icons/pkg_body.spec.png");
         FUNCTION_SPEC = Helpers.getIcon("/icons/func_spec.png");
         FUNCTION_BODY = Helpers.getIcon("/icons/func_body.png");
         PROCEDURE_SPEC = Helpers.getIcon("/icons/proc_spec.png");
@@ -138,11 +156,14 @@ public class Icons {
         PKG_INIT_SECTION = Helpers.getIcon("/icons/pkg_init_section.png");
         PLSQL_BLOCK = Helpers.getIcon("/icons/plsql_block.png");
         SQL_FILE = Helpers.getIcon("/icons/sql_file.png");
+        SQL_FILE_OUTSIDE = Helpers.getIcon("/icons/sql_file_outside.png");
 
         TABLE = Helpers.getIcon("/icons/table2.png");
         PARTI_TABLE = Helpers.getIcon("/icons/parti_table.png");
         TEMP_TABLE = Helpers.getIcon("/icons/temp_table.png");
         EXT_TABLE = Helpers.getIcon("/icons/ext_tab.png");
+        IOT_TABLE = Helpers.getIcon("/icons/table2.png");
+        HEAP_TABLE = Helpers.getIcon("/icons/table2.png");
 
         VIEW = Helpers.getIcon("/icons/view.png");
         HELP = Helpers.getIcon("/icons/help.png");
@@ -151,12 +172,16 @@ public class Icons {
         ENABLE_TRIGGER = Helpers.getIcon("/icons/enable_trigger.png");
         DISABLE_TRIGGER = Helpers.getIcon("/icons/disable_trigger.png");
 
+        SEQUENCE = Helpers.getIcon("/icons/sql_file.png");
+        SYNONYM = Helpers.getIcon("/icons/sql_file.png");
+
         TABLE_COLL_DECL = Helpers.getIcon("/icons/tabcoll_type.png");
         RECORD_TYPE_DECL = Helpers.getIcon("/icons/record_type.png");
         OBJECT_TYPE_DECL = Helpers.getIcon("/icons/tabcoll_type.png");
         VARRAY_TYPE_DECL = Helpers.getIcon("/icons/tabcoll_type.png"); 
 
         EXEC_SQL_STMT = Helpers.getIcon("/icons/exec_sql.png");
+        EXEC_SQL_STMT_SMALL = Helpers.getIcon("/icons/exec_sql_small.png");
         // todo
         ARROW_DOWN = Helpers.getIcon("/icons/arrowDown.png");
         ARROW_UP = Helpers.getIcon("/icons/arrowUp.png");
@@ -200,6 +225,15 @@ public class Icons {
         QUERY_DATA = Helpers.getIcon("/icons/query_data.png");
 
         PLUGIN_SETTINGS = Helpers.getIcon("/icons/properties.png"); 
+        SORT_BY_NAME = Helpers.getIcon("/icons/sortByName.png");
+        HIDE_PKG_BODY_OBJS = Helpers.getIcon("/icons/hide_pkgbody_objs.png");
+
+        INSERT_ROW = Helpers.getIcon("/icons/add_row.png");
+        DELETE_ROW = Helpers.getIcon("/icons/del_row.png");
+        SUBMIT_CHANGES = Helpers.getIcon("/icons/submit.png");
+
+        ARROW_LEFT = Helpers.getIcon("/icons/arrow_left.png");
+        ARROW_RIHGT = Helpers.getIcon("/icons/arrow_right.png");
     }
 
 }

@@ -25,10 +25,8 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
 import org.jetbrains.annotations.NotNull;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.psi.resolve.VariantsProcessor777;
 
 public interface CompositeName extends PlSqlElement {
 
@@ -36,19 +34,7 @@ public interface CompositeName extends PlSqlElement {
     NameFragmentRef[] getNamePieces();
 
     int getFragmentIndex(@NotNull NameFragmentRef fragment);
+    NameFragmentRef getFragmentByPos(int position);
 
-    @NotNull
-    ResolveContext777 getResolveContext() throws NameNotResolvedException;
-
-    /**
-     * If namePart is null, resolve the full name
-     * @param namePart - part of name
-     * @return
-     * @throws NameNotResolvedException
-     */
-    @NotNull
-    ResolveContext777 resolve(NameFragmentRef namePart) throws NameNotResolvedException;
-
-    @NotNull
-    VariantsProcessor777 createVariantsProcessor(PlSqlElement elem) throws NameNotResolvedException;
+    ResolveDescriptor resolveLight();
 }

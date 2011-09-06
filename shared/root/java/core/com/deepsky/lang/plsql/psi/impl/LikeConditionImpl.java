@@ -44,18 +44,18 @@ public class LikeConditionImpl extends ConditionBase implements LikeCondition {
     @NotNull
     public Type getExpressionType() {
         ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.EXPR_TYPES);
-        if (nodes == null || (!(nodes.length == 2 || nodes.length == 3)) ) {
+        if (nodes == null || (!(nodes.length == 2 || nodes.length == 3))) {
             // todo - handle of error!!!
             int hh = 9;
         } else {
             Type l = ((Expression) nodes[0].getPsi()).getExpressionType();
             Type r = ((Expression) nodes[1].getPsi()).getExpressionType();
 
-            if( !TypeValidationHelper.canBeAssigned(Type.CHAR, l.typeId())){
+            if (!TypeValidationHelper.canBeAssigned(Type.CHAR, l.typeId())) {
                 throw new ValidationException("Invalid expression type", nodes[0]);
             }
 
-            if(!TypeValidationHelper.canBeAssigned(Type.CHAR, r.typeId())){
+            if (!TypeValidationHelper.canBeAssigned(Type.CHAR, r.typeId())) {
                 throw new ValidationException("Invalid expression type", nodes[1]);
             }
             return TypeFactory.createTypeById(Type.BOOLEAN);

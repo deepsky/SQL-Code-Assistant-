@@ -25,11 +25,15 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.psi.ref.SequenceRef;
 import org.jetbrains.annotations.NotNull;
 
-public interface SequenceExpr extends Expression, CompositeName {
+public interface SequenceExpr extends Expression { //}, CompositeName {
 
+//    @NotNull
+//    PlSqlElement getSequenceName();
     @NotNull
-    PlSqlElement getSequenceName();
+    SequenceRef getSequence();
+
     String getMethod();
 }

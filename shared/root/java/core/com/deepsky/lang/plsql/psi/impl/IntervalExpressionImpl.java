@@ -25,10 +25,10 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.psi.IntervalExpression;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +40,7 @@ public class IntervalExpressionImpl extends PlSqlElementBase implements Interval
 
     @NotNull
     public Type getExpressionType() {
-        if( getNode().getElementType() == PLSqlTypesAdopted.INTERVAL_DAY_TO_SEC_EXPR){
+        if (getNode().getElementType() == PLSqlTypesAdopted.INTERVAL_DAY_TO_SEC_EXPR) {
             return TypeFactory.createTypeById(Type.INTERVAL_DAY_TO_SEC);
         }
         return null;

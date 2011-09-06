@@ -51,7 +51,7 @@ public class SqlPlusCommandImpl extends PlSqlElementBase implements SqlPlusComma
     @NotNull
     public PsiElement getCommand() {
         PsiElement first = getFirstChild();
-        if(first == null){
+        if (first == null) {
             throw new SyntaxTreeCorruptedException();
         }
         return first;

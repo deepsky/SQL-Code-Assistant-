@@ -25,17 +25,14 @@
 
 package com.deepsky.findUsages.actions;
 
-import com.deepsky.database.ConnectionManager;
 import com.deepsky.findUsages.SqlFindUsagesHelper;
 import com.deepsky.lang.common.PlSqlFile;
-import com.deepsky.lang.common.PluginKeys;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
@@ -46,16 +43,7 @@ public class SqlSpecificFindUsagesAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent action) {
-        //Editor e = action.getData(LangDataKeys.EDITOR);
-        //PsiElement _psi = action.getData(LangDataKeys.PSI_ELEMENT);
         Project project = action.getData(LangDataKeys.PROJECT);
-        ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
-        if (manager == null || !manager.isConnected()) {
-            Messages.showErrorDialog(
-                    "Connection is not established. Try to establish connection with a database and run Find Usages again.",
-                    "Find Usages not available");
-            return;
-        }
 
         int offset = action.getData(LangDataKeys.EDITOR).getCaretModel().getOffset();
         PsiElement _psi = action.getData(LangDataKeys.PSI_FILE).findElementAt(offset);
@@ -75,7 +63,7 @@ public class SqlSpecificFindUsagesAction extends AnAction {
             int offset = event.getData(LangDataKeys.EDITOR).getCaretModel().getOffset();
             PsiElement _psi = psi.findElementAt(offset);
 
-            if (SqlFindUsagesHelper.canApp3lyFindUsagesTo(_psi)) {
+            if (SqlFindUsagesHelper.canApplyFindUsagesTo(_psi)) {
                 presentation.setEnabled(true);
             } else {
                 presentation.setEnabled(false);

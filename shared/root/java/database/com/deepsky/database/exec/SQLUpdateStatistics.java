@@ -30,5 +30,6 @@ public interface SQLUpdateStatistics {
     int rowsAffected();
     long timeSpent();
 
+    String errorMessages();
     String resultMessage();
 }

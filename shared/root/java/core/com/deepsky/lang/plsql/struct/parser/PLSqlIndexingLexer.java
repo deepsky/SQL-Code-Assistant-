@@ -25,23 +25,24 @@
 
 package com.deepsky.lang.plsql.struct.parser;
 
-import antlr.CharBuffer;
-import antlr.LexerSharedInputState;
-import antlr.Token;
-import antlr.TokenStreamException;
+import antlr.*;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 import com.deepsky.integration.PLSqlLexerEx;
 
 import java.io.ByteArrayInputStream;
 import java.io.Reader;
 
-public class PLSqlIndexingLexer extends PLSqlLexerEx implements PLSqlFilteredLexer {
+public class PLSqlIndexingLexer extends PLSqlLexerEx implements PLSqlFilteringLexer {
 
     boolean keyword = false;
     WordProcessor processor = null;
 
     public PLSqlIndexingLexer(){
         super(new ByteArrayInputStream(new byte[0]));
+    }
+
+    public PLSqlIndexingLexer(InputBuffer ib) {
+        super(ib);
     }
 
     public PLSqlIndexingLexer(Reader in){
@@ -62,6 +63,19 @@ public class PLSqlIndexingLexer extends PLSqlLexerEx implements PLSqlFilteredLex
                 case PLSqlTokenTypes.ML_COMMENT:
                 case PLSqlTokenTypes.BAD_ML_COMMENT:
                     return nextToken();
+
+                case PLSqlTokenTypes.LITERAL_number:
+                case PLSqlTokenTypes.LITERAL_numeric:
+                case PLSqlTokenTypes.LITERAL_varchar:
+                case PLSqlTokenTypes.LITERAL_boolean:
+                case PLSqlTokenTypes.LITERAL_null:
+
+                case PLSqlTokenTypes.LITERAL_date: // todo -- is it possible ident DATE? need to check
+                case PLSqlTokenTypes.LITERAL_integer:
+                case PLSqlTokenTypes.LITERAL_pls_integer:
+                    keyword = false;
+                    return nextToken();
+
                 case PLSqlTokenTypes.IDENTIFIER:
                     if(processor != null){
                         processor.process(t.getText());

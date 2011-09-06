@@ -25,10 +25,16 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.NotSupportedException;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.types.TypeSpec;
+import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.navigation.PlSqlPackageUtil;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
@@ -36,19 +42,22 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class TableCollectionDeclImpl extends PlSqlElementBase implements TableCollectionDecl {
+public class TableCollectionDeclImpl extends PlSqlDeclarationBase implements TableCollectionDecl {
     public TableCollectionDeclImpl(ASTNode astNode) {
         super(astNode);
     }
 
     public Type getBaseType() {
-        return null;
+        ASTNode[] types = getNode().getChildren(PlSqlElementTypes.TYPES);
+        if(types.length == 0){
+            throw new SyntaxTreeCorruptedException("Cannot parser type declaration");
+        }
+        return ((TypeSpec) types[0].getPsi()).getType();
     }
 
     public String getDeclName() {
@@ -64,27 +73,32 @@ public class TableCollectionDeclImpl extends PlSqlElementBase implements TableCo
         }
     }
 
-    public String getPackageName() {
-        PlSqlElement context = getUsageContext(TokenSet.create(
-                PlSqlElementTypes.PACKAGE_BODY, PlSqlElementTypes.PACKAGE_SPEC)
-        );
+    @NotNull
+    public String getObjectType() {
+        return "TYPE";
+    }
 
-        if(context instanceof PackageBody){
-            return ((PackageBody)context).getPackageName();
-        } else if(context instanceof PackageSpec){
-            return ((PackageSpec)context).getPackageName();
+    @NotNull
+    public String getObjectName() {
+        ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.TYPE_NAME);
+        if(child == null){
+            throw new SyntaxTreeCorruptedException();
         }
-
-        return null;
+        return child.getText().toUpperCase();
     }
     
+    @NotNull
+    public String getCreateQuery() {
+        return PlSqlUtil.completeCreateScript(this);
+    }
+
     @Nullable
-    public String getQuickNavigateInfo(){
+    public String getQuickNavigateInfo() {
         return "[Collection Type] " + getDeclName();
     }
 
     // presentation stuff
-    public Icon getIcon(int flags){
+    public Icon getIcon(int flags) {
         return Icons.TABLE_COLL_DECL;
     }
 
@@ -103,18 +117,18 @@ public class TableCollectionDeclImpl extends PlSqlElementBase implements TableCo
 
 
     class TablePresentation implements ItemPresentation {
-        public String getPresentableText(){
+        public String getPresentableText() {
             return getDeclName().toLowerCase();
         }
 
         @Nullable
-        public String getLocationString(){
+        public String getLocationString() {
             PlSqlElement pkg = PlSqlPackageUtil.findPackageForElement(TableCollectionDeclImpl.this);
-            if(pkg instanceof PackageSpec){
-                String packageName = ((PackageSpec)pkg).getPackageName();
+            if (pkg instanceof PackageSpec) {
+                String packageName = ((PackageSpec) pkg).getPackageName();
                 return "in " + packageName + " (Collection Type)";
-            } else if(pkg instanceof PackageBody){
-                String packageName = ((PackageBody)pkg).getPackageName();
+            } else if (pkg instanceof PackageBody) {
+                String packageName = ((PackageBody) pkg).getPackageName();
                 return "in " + packageName + " (Collection Type)";
             } else {
                 return "(Collection Type)";
@@ -122,15 +136,14 @@ public class TableCollectionDeclImpl extends PlSqlElementBase implements TableCo
         }
 
         @Nullable
-        public Icon getIcon(boolean open){
+        public Icon getIcon(boolean open) {
             return Icons.TABLE_COLL_DECL;
         }
 
         @Nullable
-        public TextAttributesKey getTextAttributesKey(){
+        public TextAttributesKey getTextAttributesKey() {
             return null;
         }
     }
-
 
 }

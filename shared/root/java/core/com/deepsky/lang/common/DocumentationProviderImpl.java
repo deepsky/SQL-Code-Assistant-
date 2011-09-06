@@ -22,6 +22,10 @@ public class DocumentationProviderImpl implements DocumentationProvider {
         return out;
     }
 
+    public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     @Nullable
     public java.util.List<java.lang.String> getUrlFor(PsiElement psiElement, PsiElement psiElement1) {
         return null;

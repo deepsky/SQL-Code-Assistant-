@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 public interface InsertStatement extends Statement {
-    PlainTable getIntoTable();
+    TableAlias getIntoTable();
 
     @NotNull
     ColumnSpec[] getColumnList();

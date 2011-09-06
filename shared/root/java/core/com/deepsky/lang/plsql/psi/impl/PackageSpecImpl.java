@@ -25,27 +25,18 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.database.ora.desc.PackageSpecDescriptorImpl;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
-import com.deepsky.lang.plsql.struct.FileBasedContextUrl;
-import com.deepsky.lang.plsql.struct.PackageDescriptor;
-import com.deepsky.view.Icons;
+import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
 import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,15 +54,15 @@ public class PackageSpecImpl extends PlSqlElementBase implements PackageSpec {
     public PlSqlElement[] getObjects() {
         PsiElement[] elems = findChildrenByType(PlSqlElementTypes.OBJECT_SPEC, PlSqlElement.class);
         PlSqlElement[] out = new PlSqlElement[elems.length];
-        int i=0;
-        for(PsiElement e: elems){
+        int i = 0;
+        for (PsiElement e : elems) {
             out[i++] = (PlSqlElement) e;
         }
 
         return out;
     }
 
-    public PlSqlElement[] findObjectByName(String name){
+    public PlSqlElement[] findObjectByName(String name) {
 /*
         PsiElement[] elems = findChildrenByType(PlSqlElementTypes.OBJECT_SPEC, PlSqlElement.class);
         List<PlSqlElement> out = new ArrayList<PlSqlElement>();
@@ -100,38 +91,89 @@ public class PackageSpecImpl extends PlSqlElementBase implements PackageSpec {
         ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.OBJECT_SPEC);
 //        PsiElement[] elems = findChildrenByType(PlSqlElementTypes.OBJECT_SPEC, PlSqlElement.class);
         List<PlSqlElement> out = new ArrayList<PlSqlElement>();
-        for(ASTNode e: nodes){
+        for (ASTNode e : nodes) {
             PlSqlElement plsqle = (PlSqlElement) e.getPsi();
             String _name = "";
-            if(plsqle instanceof ExecutableSpec ){
-                _name = ((ExecutableSpec)plsqle).getEName();
-            } else if(plsqle instanceof VariableDecl){
-                _name = ((VariableDecl)plsqle).getDeclName();
-            } else if(plsqle instanceof TypeDeclaration){
-                _name = ((TypeDeclaration)plsqle).getDeclName();
+            if (plsqle instanceof ExecutableSpec) {
+                _name = ((ExecutableSpec) plsqle).getEName();
+            } else if (plsqle instanceof VariableDecl) {
+                _name = ((VariableDecl) plsqle).getDeclName();
+            } else if (plsqle instanceof TypeDeclaration) {
+                _name = ((TypeDeclaration) plsqle).getDeclName();
             } else {
                 continue;
             }
 
-            if(_name.equalsIgnoreCase(name)){
+            if (_name.equalsIgnoreCase(name)) {
                 out.add(plsqle);
             }
         }
 
         return out.toArray(new PlSqlElement[out.size()]);
-        
+
     }
 
-    public PackageDescriptor describe() {
+    @NotNull
+    public String getCreateQuery() {
+        return PlSqlUtil.completeCreateScript(this);
+    }
 
-        String url = getContainingFile().getVirtualFile().getUrl();
-        PackageDescriptor pdesc = new PackageSpecDescriptorImpl(
-                new FileBasedContextUrl(url), getPackageName()
+    public PlSqlElement[] getFunctionSpecList() {
+        ASTNode[] nodes = getNode().getChildren(TokenSet.create(PlSqlElementTypes.FUNCTION_SPEC));
+        PlSqlElement[] out = new PlSqlElement[nodes.length];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = (PlSqlElement) nodes[i].getPsi();
+        }
+
+        return out;
+    }
+
+    public PlSqlElement[] getProcedurSpecList() {
+        ASTNode[] nodes = getNode().getChildren(TokenSet.create(PlSqlElementTypes.PROCEDURE_SPEC));
+        PlSqlElement[] out = new PlSqlElement[nodes.length];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = (PlSqlElement) nodes[i].getPsi();
+        }
+
+        return out;
+    }
+
+    public PlSqlElement[] getVariableList() {
+        ASTNode[] nodes = getNode().getChildren(TokenSet.create(PlSqlElementTypes.VARIABLE_DECLARATION));
+        PlSqlElement[] out = new PlSqlElement[nodes.length];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = (PlSqlElement) nodes[i].getPsi();
+        }
+
+        return out;
+    }
+
+    public PlSqlElement[] getTypeList() {
+        ASTNode[] nodes = getNode().getChildren(TokenSet.create(
+                PlSqlElementTypes.OBJECT_TYPE_DEF,
+                PlSqlElementTypes.TABLE_COLLECTION,
+                PlSqlElementTypes.RECORD_TYPE_DECL,
+                PlSqlElementTypes.REF_CURSOR,
+                PlSqlElementTypes.VARRAY_COLLECTION)
         );
+        PlSqlElement[] out = new PlSqlElement[nodes.length];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = (PlSqlElement) nodes[i].getPsi();
+        }
 
-        // todo -- decsriptor is not populated with objects
-        return pdesc;
+        return out;
     }
+
+//    public PackageDescriptor describe() {
+//
+//        String url = getContainingFile().getVirtualFile().getUrl();
+//        PackageDescriptor pdesc = new PackageSpecDescriptorImpl(
+//                new FileBasedContextUrl(url), getPackageName()
+//        );
+//
+//        // todo -- decsriptor is not populated with objects
+//        return pdesc;
+//    }
 
     @NotNull
     public ExecutableSpec[] findExecutableByName(String name) {
@@ -141,10 +183,10 @@ public class PackageSpecImpl extends PlSqlElementBase implements PackageSpec {
                         PlSqlElementTypes.FUNCTION_SPEC,
                         PlSqlElementTypes.PROCEDURE_SPEC));
 
-        if(nodes != null && nodes.length > 0){
-            for(ASTNode n: nodes){
-                if(((ExecutableSpec)n.getPsi()).getEName().equalsIgnoreCase(name)){
-                    out.add((ExecutableSpec)n.getPsi());
+        if (nodes != null && nodes.length > 0) {
+            for (ASTNode n : nodes) {
+                if (((ExecutableSpec) n.getPsi()).getEName().equalsIgnoreCase(name)) {
+                    out.add((ExecutableSpec) n.getPsi());
                 }
             }
         }
@@ -152,6 +194,9 @@ public class PackageSpecImpl extends PlSqlElementBase implements PackageSpec {
     }
 
     public PackageBody getPackageBody() {
+        // todo -- resolve stuff refactoring
+        throw new NotSupportedException();
+/*
         VirtualFile f = getContainingFile().getVirtualFile();
         if(f != null){
             VirtualFileSystem vfs = f.getFileSystem();
@@ -160,11 +205,12 @@ public class PackageSpecImpl extends PlSqlElementBase implements PackageSpec {
         } else {
             return null;
         }
+*/
     }
 
     @Nullable
-    public String getQuickNavigateInfo(){
-        return "[Package] " + getPackageName();    
+    public String getQuickNavigateInfo() {
+        return "[Package] " + getPackageName().toLowerCase();
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
@@ -175,44 +221,14 @@ public class PackageSpecImpl extends PlSqlElementBase implements PackageSpec {
         }
     }
 
-
-    public Icon getIcon(int flags){
-        return Icons.PACKAGE_SPEC;
+    @NotNull
+    public String getObjectType() {
+        return "PACKAGE";
     }
 
-    @Nullable
-    public ItemPresentation getPresentation() {
-        return new TablePresentation();
-    }
-
-    public FileStatus getFileStatus() {
-        return null;
-    }
-
-    public String getName() {
+    @NotNull
+    public String getObjectName() {
         return getPackageName();
     }
 
-
-    class TablePresentation implements ItemPresentation {
-        public String getPresentableText(){
-            return getPackageName();
-        }
-
-        @Nullable
-        public String getLocationString(){
-            return "(package specification)";
-        }
-
-        @Nullable
-        public Icon getIcon(boolean open){
-            return Icons.PACKAGE_SPEC;
-        }
-
-        @Nullable
-        public TextAttributesKey getTextAttributesKey(){
-            return null;
-        }
-    }
-    
 }

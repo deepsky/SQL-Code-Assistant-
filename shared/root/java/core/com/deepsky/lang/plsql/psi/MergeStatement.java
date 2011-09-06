@@ -27,7 +27,10 @@ package com.deepsky.lang.plsql.psi;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface MergeStatement extends Statement{
+public interface MergeStatement extends Statement {
     @NotNull
-    PlainTable getIntoTable();
+    TableAlias getIntoTable();
+
+    @NotNull
+    GenericTable getUsingTable();
 }

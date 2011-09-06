@@ -26,20 +26,21 @@
 package com.deepsky.lang.plsql.struct;
 
 import com.deepsky.database.ora.desc.FunctionDescriptorImpl;
+import com.deepsky.lang.plsql.resolver.FunctionValidator;
 import org.jetbrains.annotations.NotNull;
 
 public class SystemFunctionDescriptor extends FunctionDescriptorImpl implements SystemFunction {
 
-    SystemFunctionValidator validator;
+    FunctionValidator validator;
     public SystemFunctionDescriptor(String name, Type returnType) {
         super(null, name, returnType);
     }
 
-    public SystemFunctionValidator getValidator() {
+    public FunctionValidator getValidator() {
         return validator;
     }
 
-    public void setValidator(SystemFunctionValidator validator){
+    public void setValidator(FunctionValidator validator){
         this.validator = validator;
     }
 

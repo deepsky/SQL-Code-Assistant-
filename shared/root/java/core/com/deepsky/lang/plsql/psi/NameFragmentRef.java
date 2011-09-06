@@ -25,15 +25,28 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.psi.ref.PlSqlReference;
 import com.intellij.psi.PsiReference;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
+//import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
+//import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
 import org.jetbrains.annotations.NotNull;
 
-public interface NameFragmentRef extends PlSqlElement, PsiReference  {
-
-    @NotNull
-    ResolveContext777 resolveContext() throws NameNotResolvedException;
-
+public interface NameFragmentRef extends PlSqlElement, PlSqlReference { //PsiReference  {
     String getFragmentText();
+
+    /**
+     * Returns name in scope of the parent (CompositeName), i.e:
+     * if CompositeName is 'abc.t290.delete' and the current name fragment is
+     * the intermidiate of the CompositeName ('t290')
+     * then the method returns 'abc.t290'.
+     *
+     * @return - name
+     */
+    String getNameInScope();
+
+    /**
+     * Get previous name fragment
+     * @return
+     */
+    NameFragmentRef getPrevFragment();
 }

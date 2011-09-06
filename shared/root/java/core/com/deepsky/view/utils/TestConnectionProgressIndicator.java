@@ -26,7 +26,6 @@
 package com.deepsky.view.utils;
 
 import com.deepsky.database.ConnectionManager;
-import com.deepsky.database.ConnectionManagerImpl;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.ConfigurationException;

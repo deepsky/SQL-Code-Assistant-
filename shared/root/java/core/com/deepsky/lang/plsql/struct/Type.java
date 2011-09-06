@@ -25,6 +25,9 @@
 
 package com.deepsky.lang.plsql.struct;
 
+import com.deepsky.lang.plsql.struct.types.IntegerType;
+import com.deepsky.lang.plsql.struct.types.NumberType;
+
 import java.io.Serializable;
 
 public interface Type extends Serializable {
@@ -81,7 +84,7 @@ public interface Type extends Serializable {
     public final int REF_CURSOR = 18;
     public final int NVARCHAR2 = 19;
     public final int BLOB = 20;
-    public final int LONGTYPE = 21;
+//    public final int LONGTYPE = 21;
     public final int NULL = 22;
     public final int TABLE_COLUMN_REF_TYPE = 23;  // v_EmpName emp.ename%TYPE
 
@@ -90,9 +93,9 @@ public interface Type extends Serializable {
      * (primarily for values returned by the ROWID pseudocolumn.)
      * Max size =  10 bytes
      */
-    public final int RAWID = 24;
+    public final int ROWID = 24;
 
-    final int ANY = 0;
+    final int ANYDATA = 0;
     final int UNKNOWN = -1;
 
     /**
@@ -107,6 +110,11 @@ public interface Type extends Serializable {
 
     public final int OBJECT_TYPE = 30;
     public final int VARRAY_TYPE = 31;
+    public final int NCLOB = 32;
+    public final int BFILE = 33;
+
+    public NumberType NUMBER_TYPE = new NumberType();
+    public IntegerType INTEGER_TYPE = new IntegerType();
 
     int typeId();
 
@@ -117,4 +125,6 @@ public interface Type extends Serializable {
     boolean isUserDefined();
 
     boolean isTypeReference();
+
+    boolean equals(Object o);
 }

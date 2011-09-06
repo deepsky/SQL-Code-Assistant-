@@ -25,9 +25,17 @@
 
 package com.deepsky.lang.plsql.psi;
 
-import java.util.List;
-
 public interface LogicalExpression extends Condition {
+
+    /**
+     * Type of logical condition
+     * @return - true if it is OR type, else AND type supposed
+     */
     boolean isOr();
-    List<Expression> getList();
+
+    /**
+     * List of expressions with particular type of condition
+     * @return - list of expressions
+     */
+    Expression[] getList();
 }

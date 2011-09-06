@@ -32,6 +32,9 @@ import com.deepsky.lang.plsql.NotSupportedException;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 
 public class QueryStatisticsPanel extends JPanel implements QueryResultPanel {
@@ -62,7 +65,19 @@ public class QueryStatisticsPanel extends JPanel implements QueryResultPanel {
         }
         central = new JPanel(new BorderLayout());
         central.setBackground(UIUtil.getTreeTextBackground());
+
+        PlainDocument doc = new PlainDocument();
+        try {
+            String errors = stats.errorMessages();
+            doc.insertString(0, errors==null? "No errors": errors, null);
+        } catch (BadLocationException e) {
+        }
+
+        JTextArea textArea = new JTextArea();
+        textArea.setDocument(doc);
+        central.add(new JScrollPane(textArea), BorderLayout.CENTER); 
         add(central, BorderLayout.CENTER);
+
 
         statusLine.setResponseMessage(stats.resultMessage());
         statusLine.setTimeSpent(stats.timeSpent());
@@ -71,23 +86,20 @@ public class QueryStatisticsPanel extends JPanel implements QueryResultPanel {
     }
 
 
-    public boolean isRefreshSupported() {
-        return false;
-    }
-
-    public boolean isExportSupported() {
-        return false;
-    }
-
-    public void refresh() throws DBException {
-        throw new NotSupportedException("Refresh operation on DML query not supported");
-    }
-
-    public String extractContent(String delimiter, boolean saveHeader, boolean ecloseWithDowbleQuotes) {
-        // todo -- 
-        return null;
-    }
-
-    public void close() {
-    }
+//    public boolean isRefreshSupported() {
+//        return false;
+//    }
+//
+//    public boolean isExportSupported() {
+//        return false;
+//    }
+//    public void refresh() throws DBException {
+//        throw new NotSupportedException("Refresh operation on DML query not supported");
+//    }
+//    public String extractContent(String delimiter, boolean saveHeader, boolean ecloseWithDowbleQuotes) {
+//        // todo --
+//        return null;
+//    }
+//    public void close() {
+//    }
 }

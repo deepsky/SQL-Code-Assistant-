@@ -25,12 +25,11 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.IsNullCondition;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.Expression;
+import com.deepsky.lang.plsql.psi.IsNullCondition;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
-import com.deepsky.lang.validation.ValidationException;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +46,7 @@ public class IsNullConditionImpl extends ConditionBase implements IsNullConditio
 
     public Expression getExpression() {
         ASTNode node = getNode().findChildByType(PlSqlElementTypes.EXPR_TYPES);
-        return (Expression) ((node != null)? node.getPsi(): null);
+        return (Expression) ((node != null) ? node.getPsi() : null);
     }
 
     public boolean isNotNull() {

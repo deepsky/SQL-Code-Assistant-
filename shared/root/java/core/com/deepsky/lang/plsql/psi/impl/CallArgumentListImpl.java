@@ -25,13 +25,13 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.CallArgumentList;
-import com.deepsky.lang.plsql.psi.CallArgument;
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.psi.CallArgument;
+import com.deepsky.lang.plsql.psi.CallArgumentList;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 public class CallArgumentListImpl extends PlSqlElementBase implements CallArgumentList {
@@ -43,7 +43,7 @@ public class CallArgumentListImpl extends PlSqlElementBase implements CallArgume
         ASTNode[] args = getNode().getChildren(TokenSet.create(PlSqlElementTypes.CALL_ARGUMENT));
         if (args != null && args.length > 0) {
             CallArgument[] out = new CallArgument[args.length];
-            for (int i=0; i<out.length; i++) {
+            for (int i = 0; i < out.length; i++) {
                 out[i] = (CallArgument) args[i].getPsi();
             }
 
@@ -54,12 +54,11 @@ public class CallArgumentListImpl extends PlSqlElementBase implements CallArgume
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitCallArgumentList(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitCallArgumentList(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
 }

@@ -29,5 +29,5 @@ import com.intellij.psi.PsiElement;
 
 public interface DataType extends TypeSpec {
 
-    PsiElement getTypeName();
+    PsiElement[] getTypeName();
 }

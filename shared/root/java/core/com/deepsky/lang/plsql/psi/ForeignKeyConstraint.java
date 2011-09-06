@@ -25,17 +25,22 @@
 
 package com.deepsky.lang.plsql.psi;
 
-import com.deepsky.lang.plsql.psi.ref.DDLTable;
+import com.deepsky.lang.plsql.psi.ref.TableRef;
 import org.jetbrains.annotations.NotNull;
 
 public interface ForeignKeyConstraint extends GenericConstraint {
     String getReferencedTable();
+
     String[] getReferencedColumns();
+
     String[] getOwnColumns();
 
     @NotNull
-    DDLTable getReferencedTable2();
+    TableRef getReferencedTable2();
 
     @NotNull
-    ColumnNameDDL[] getReferencedColumns2();
+    ColumnNameRef[] getReferencedColumns2();
+
+    @NotNull
+    ColumnNameRef[] getOwnColumns2();
 }

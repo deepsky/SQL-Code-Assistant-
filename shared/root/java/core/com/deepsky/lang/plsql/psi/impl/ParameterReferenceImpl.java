@@ -25,80 +25,17 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.database.SqlScriptManager;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.psi.Callable;
-import com.deepsky.lang.plsql.psi.Executable;
+import com.deepsky.lang.plsql.psi.CallArgument;
 import com.deepsky.lang.plsql.psi.ParameterReference;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.resolve.*;
-import com.deepsky.lang.plsql.struct.ExecutableDescriptor;
-import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 public class ParameterReferenceImpl extends PlSqlCompositeNameBase implements ParameterReference {
 
     public ParameterReferenceImpl(ASTNode astNode) {
         super(astNode);
-    }
-
-    @NotNull
-    public Type getExpressionType() {
-        try {
-            Callable callable = getCallable();
-            ExecutableDescriptor edesc = ResolveHelper3.resolveCallable(callable);
-            Type type = edesc.getArgumentType(getText());
-            if (type != null) {
-                return type;
-            } else {
-                throw new ValidationException("Cannot resolve type", this);
-            }
-        } catch (NameNotResolvedException e) {
-            throw new ValidationException("Cannot resolve type", e.getCauseElement());
-        }
-    }
-
-    @NotNull
-    public ResolveContext777 getResolveContext() throws NameNotResolvedException {
-        Callable callable = getCallable();
-        ExecutableDescriptor edesc = ResolveHelper3.resolveCallable(callable);
-        Type type = edesc.getArgumentType(getText());
-        if (type != null) {
-            return new ParameterResolveContext777(getText(), edesc, type);
-        } else {
-            throw new NameNotResolvedException("Cannot resolve parameter with name " + getText());
-        }
-    }
-
-
-    private Callable getCallable() throws NameNotResolvedException {
-        ASTTreeProcessor runner = new ASTTreeProcessor();
-        final Callable[] out = {null};
-        runner.add(new ASTNodeHandler() {
-            @NotNull
-            public TokenSet getTokenSet() {
-                return PlSqlElementTypes.CALLABLE_CONTEXT;
-            }
-
-            public boolean handleNode(@NotNull ASTNode node) {
-                if (node.getPsi() instanceof Callable) {
-                    out[0] = (Callable) node.getPsi();
-                }
-                return false;
-            }
-        });
-
-        runner.process(getNode().getTreeParent());
-        if(out[0] == null){
-            throw new NameNotResolvedException("Cannot resolve parameter " + getText());
-        }
-
-        return out[0];
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
@@ -110,41 +47,7 @@ public class ParameterReferenceImpl extends PlSqlCompositeNameBase implements Pa
     }
 
 
-    class ParameterResolveContext777 implements ResolveContext777 {
-
-        Type type;
-        ExecutableDescriptor edesc;
-        String parameterName;
-
-        public ParameterResolveContext777(String parameterName, ExecutableDescriptor edesc, Type type) {
-            this.parameterName = parameterName;
-            this.edesc = edesc;
-            this.type = type;
-        }
-
-        @NotNull
-        public VariantsProcessor777 create(int narrow_type) throws NameNotResolvedException {
-            // todo
-            throw new NameNotResolvedException("");
-        }
-
-        public PsiElement getDeclaration() {
-            PsiElement psi = SqlScriptManager.mapToPsiTree(getProject(), edesc);
-            if(psi instanceof Executable){
-                Executable exec = (Executable) psi;
-                return exec.getArgumentByName(parameterName);
-            }
-            return null;
-        }
-
-        public ResolveContext777 resolve(PsiElement elem) throws NameNotResolvedException {
-            throw new NameNotResolvedException("");
-        }
-
-        public Type getType() throws NameNotResolvedException {
-            return type;
-        }
+    public CallArgument getCallArgument() {
+        return (CallArgument) getParent();
     }
-
-    
 }

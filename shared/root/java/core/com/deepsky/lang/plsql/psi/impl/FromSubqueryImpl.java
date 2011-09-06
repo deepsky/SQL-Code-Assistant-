@@ -28,6 +28,8 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.struct.TableDescriptorForSubquery;
 import com.deepsky.lang.plsql.struct.TableDescriptorLegacy;
 import com.deepsky.lang.plsql.struct.Type;
@@ -35,14 +37,13 @@ import com.deepsky.lang.plsql.struct.TypeFactory;
 import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class FromSubqueryImpl extends GenericTableBase implements Subquery {
+public class FromSubqueryImpl extends GenericTableBase implements FromSubquery {
 
     static final Logger log = Logger.getInstance("#FromSubqueryImpl");
 
@@ -50,6 +51,7 @@ public class FromSubqueryImpl extends GenericTableBase implements Subquery {
         super(astNode);
     }
 
+/*
     @NotNull
     public SelectStatement getSelectStatement() {
         final ASTNode node = getNode().findChildByType(PlSqlElementTypes.SUBQUERY);
@@ -58,6 +60,16 @@ public class FromSubqueryImpl extends GenericTableBase implements Subquery {
             if (select != null) {
                 return (SelectStatement) select.getPsi();
             }
+        }
+        throw new SyntaxTreeCorruptedException();
+    }
+*/
+
+    @NotNull
+    public Subquery getSubquery() {
+        final ASTNode node = getNode().findChildByType(PlSqlElementTypes.SUBQUERY);
+        if (node != null) {
+            return (Subquery) node.getPsi();
         }
         throw new SyntaxTreeCorruptedException();
     }
@@ -86,7 +98,7 @@ public class FromSubqueryImpl extends GenericTableBase implements Subquery {
         List<String> columns = new ArrayList<String>();
         List<Type> types = new ArrayList<Type>();
 
-        SelectStatement stmt = getSelectStatement();
+        SelectStatement stmt = getSubquery().getSelectStatement();
         if (stmt != null) {
             for (SelectFieldCommon f : stmt.getSelectFieldList()) {
                 if (f instanceof SelectFieldExpr) {
@@ -119,7 +131,7 @@ public class FromSubqueryImpl extends GenericTableBase implements Subquery {
                     try {
                         t = expr.getExpressionType();
                     } catch (ValidationException e) {
-                        t = TypeFactory.createTypeById(Type.ANY);
+                        t = TypeFactory.createTypeById(Type.ANYDATA);
                     }
                     types.add(t);
 
@@ -158,6 +170,7 @@ public class FromSubqueryImpl extends GenericTableBase implements Subquery {
         }
     }
 
+/*
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
             ((PlSqlElementVisitor) visitor).visitSubquery(this);
@@ -165,5 +178,6 @@ public class FromSubqueryImpl extends GenericTableBase implements Subquery {
             super.accept(visitor);
         }
     }
+*/
 
 }

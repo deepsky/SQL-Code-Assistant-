@@ -68,6 +68,7 @@ public class SqlUsageTypeProvider implements UsageTypeProvider {
             }
 
             public boolean handleNode(@NotNull ASTNode node) {
+
                 if(node.getElementType() == PlSqlElementTypes.SELECT_EXPRESSION){
                     // todo -- handle possible cursor or View or Table declaration
                     if(node.getTreeParent().getElementType() == PlSqlElementTypes.TABLE_DEF){
@@ -102,6 +103,7 @@ public class SqlUsageTypeProvider implements UsageTypeProvider {
                 } else if(node.getElementType() == PlSqlElementTypes.TABLE_TYPE_REF){
                     ret[0] = SqlUsageType.USAGE_IN_RECORDTYPE_DEF;
                 }
+
                 return true;
             }
         });

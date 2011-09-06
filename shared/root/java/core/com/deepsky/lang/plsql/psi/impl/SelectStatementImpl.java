@@ -25,18 +25,27 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SelectStatementImpl extends PlSqlElementBase implements SelectStatement {
 
+    private final static TokenSet SELECT_OP = TokenSet.create(
+            PlSqlTokenTypes.KEYWORD_UNIQUE,
+            PlSqlTokenTypes.KEYWORD_DISTINCT
+    );
+    
     public SelectStatementImpl(ASTNode astNode) {
         super(astNode);
     }
@@ -51,6 +60,11 @@ public class SelectStatementImpl extends PlSqlElementBase implements SelectState
             columns[i] = (SelectFieldCommon) nodes[i].getPsi();
         }
         return columns;
+    }
+
+    public boolean isDistinctOrUniqueSpecified() {
+        final ASTNode[] nodes = getNode().getChildren(SELECT_OP);
+        return nodes != null && nodes.length != 0;
     }
 
     public SelectFieldExpr findSelectFieldByName(String alias) {
@@ -127,6 +141,12 @@ public class SelectStatementImpl extends PlSqlElementBase implements SelectState
     public GroupByClause getGroupByClause() {
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.GROUP_CLAUSE);
         return (node != null) ? (GroupByClause) node.getPsi() : null;
+    }
+
+    @Nullable
+    public ForUpdateClause getForUpdateClause(){
+        ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.FOR_UPDATE_CLAUSE);
+        return (node != null) ? (ForUpdateClause) node.getPsi() : null;
     }
 
     @Nullable

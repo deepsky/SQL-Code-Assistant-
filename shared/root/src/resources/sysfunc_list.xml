@@ -116,6 +116,28 @@
     <function name="CHR" return-type="CHAR">
         <arg name="POSITION" type="INTEGER"/>
     </function>
+    <function name="RPAD" return-type="CHAR">
+        <arg name="STRING1" type="CHAR"/>
+        <arg name="LEN" type="INTEGER"/>
+    </function>
+    <function name="RPAD" return-type="CHAR">
+        <arg name="STRING1" type="CHAR"/>
+        <arg name="LEN" type="INTEGER"/>
+        <arg name="PAD_STRING" type="CHAR"/>
+    </function>
+    <function name="LPAD" return-type="CHAR">
+        <arg name="STRING1" type="CHAR"/>
+        <arg name="LEN" type="INTEGER"/>
+    </function>
+    <function name="LPAD" return-type="CHAR">
+        <arg name="STRING1" type="CHAR"/>
+        <arg name="LEN" type="INTEGER"/>
+        <arg name="PAD_STRING" type="CHAR"/>
+    </function>
+
+    <function name="RAWTOHEX" return-type="CHAR">
+        <arg name="VALUE" type="CHAR"/>
+    </function>
 
     <!-- Date Functions -->
     <function name="SYS_EXTRACT_UTC" return-type="TIMESTAMP" desc="SYS_EXTRACT_UTC(TIMESTAMP '2000-03-28 11:30:00.00 -08:00')">
@@ -142,6 +164,9 @@
     <function name="trunc" return-type="DATE" desc="TRUNC(TO_DATE('27-OCT-92','DD-MON-YY'))">
         <arg name="value" type="DATE" />
     </function>
+    <function name="trunc" return-type="NUMBER" desc="TRUNC(a_number/102893)">
+        <arg name="value" type="NUMBER" />
+    </function>
     <function name="add_months" return-type="DATE" desc="ADD_MONTHS(hire_date,1)">
         <arg name="value" type="DATE" />
         <arg name="value_to_add" type="NUMBER"/>
@@ -163,29 +188,29 @@
     </function>
 
     <!-- Misc -->
-    <function name="decode" return-type="ANY"
-              validatorClass="com.deepsky.lang.plsql.struct.validators.DECODEValidator">
+    <function name="decode" return-type="ANYDATA"
+              validatorClass="com.deepsky.lang.plsql.resolver.validators.DECODEValidator">
     </function>
     <function name="userenv" return-type="VARCHAR">
         <arg name="PARAMETER" type="VARCHAR"/>
     </function>
 
-    <function name="nvl" return-type="ANY">
-        <arg name="EXPRESSION" type="ANY"/>
-        <arg name="DEFAULT_EXPR" type="ANY"/>
+    <function name="nvl" return-type="ANYDATA">
+        <arg name="EXPRESSION" type="ANYDATA"/>
+        <arg name="DEFAULT_EXPR" type="ANYDATA"/>
     </function>
-    <function name="nvl2" return-type="ANY">
-        <arg name="EXPRESSION" type="ANY"/>
-        <arg name="DEFAULT_EXPR" type="ANY"/>
-        <arg name="DEFAULT_EXPR" type="ANY"/>
+    <function name="nvl2" return-type="ANYDATA">
+        <arg name="EXPRESSION" type="ANYDATA"/>
+        <arg name="DEFAULT_EXPR" type="ANYDATA"/>
+        <arg name="DEFAULT_EXPR" type="ANYDATA"/>
     </function>
 
     <!-- Aggregate functions -->
-    <function name="min" return-type="ANY">
-        <arg name="EXPRESSION" type="ANY"/>
+    <function name="min" return-type="ANYDATA">
+        <arg name="EXPRESSION" type="ANYDATA"/>
     </function>
-    <function name="max" return-type="ANY">
-        <arg name="EXPRESSION" type="ANY"/>
+    <function name="max" return-type="ANYDATA">
+        <arg name="EXPRESSION" type="ANYDATA"/>
     </function>
     <function name="sum" return-type="NUMBER">
         <arg name="EXPRESSION" type="NUMBER"/>
@@ -202,5 +227,12 @@
     <function name="UPDATING" return-type="BOOLEAN">
     </function>
 
+    <!-- LOB/BFILE specific functions -->
+    <function name="empty_clob" return-type="CLOB"/>
+    <function name="empty_blob" return-type="BLOB"/>
+    <function name="BFILENAME" return-type="ANYDATA">
+        <arg name="DIRNAME" type="CHAR"/>
+        <arg name="FILENAME" type="CHAR"/>
+    </function>
 
 </function-list>

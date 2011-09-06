@@ -25,9 +25,11 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.Comment;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +41,15 @@ public class CommentImpl extends PlSqlElementBase implements Comment {
 
     public String getComment() {
         return getNode().findChildByType(PLSqlTypesAdopted.COMMENT_STR).getText();
+    }
+
+    @NotNull
+    public TableRef getTableRef() {
+        ASTNode tableRef = getNode().findChildByType(PLSqlTypesAdopted.TABLE_REF);
+        if(tableRef == null){
+            throw new SyntaxTreeCorruptedException();
+        }
+        return (TableRef) tableRef.getPsi();
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {

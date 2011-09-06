@@ -25,10 +25,11 @@
 
 package com.deepsky.lang.plsql.psi.impl.ddl;
 
-import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
-import com.deepsky.lang.plsql.psi.ddl.AlterTable;
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.ddl.AlterTable;
+import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
+import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +40,12 @@ public class AlterTableImpl extends PlSqlElementBase implements AlterTable {
     }
 
     public String getTableName() {
-        return getNode().findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL).getText();
+        return getNode().findChildByType(PLSqlTypesAdopted.TABLE_REF).getText();
+    }
+
+    @NotNull
+    public TableRef getTableRef() {
+        return (TableRef) getNode().findChildByType(PLSqlTypesAdopted.TABLE_REF).getPsi();
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {

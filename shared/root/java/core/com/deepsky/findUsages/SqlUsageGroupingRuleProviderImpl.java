@@ -25,6 +25,10 @@
 
 package com.deepsky.findUsages;
 
+import com.deepsky.findUsages.providers.PlSqlLevel0_FileStructureGroupRuleProvider;
+import com.deepsky.findUsages.providers.PlSqlLevel1_FileStructureGroupRuleProvider;
+import com.deepsky.findUsages.workarounds.RuleAction;
+import com.deepsky.findUsages.workarounds.UsageView2Impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
@@ -33,11 +37,11 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.UsageViewSettings;
-import com.intellij.usages.impl.RuleAction;
-import com.intellij.usages.impl.UsageViewImpl;
+import com.intellij.usages.impl.rules.FileGroupingRule;
+import com.intellij.usages.impl.rules.NonCodeUsageGroupingRule;
+import com.intellij.usages.impl.rules.UsageTypeGroupingRule;
 import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.usages.rules.UsageGroupingRuleProvider;
-import com.intellij.util.Icons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -46,76 +50,101 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SqlUsageGroupingRuleProviderImpl  implements UsageGroupingRuleProvider {
-  @NotNull
-  public UsageGroupingRule[] getActiveRules(Project project) {
-    List<UsageGroupingRule> rules = new ArrayList<UsageGroupingRule>();
-//    rules.add(new NonCodeUsageGroupingRule());
-//    if (UsageViewSettings.getInstance().GROUP_BY_USAGE_TYPE) {
-//      rules.add(new UsageTypeGroupingRule());
-//    }
+public class SqlUsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider {
+    @NotNull
+    public UsageGroupingRule[] getActiveRules(Project project) {
+        List<UsageGroupingRule> rules = new ArrayList<UsageGroupingRule>();
+        rules.add(new NonCodeUsageGroupingRule());
 
-//    if (UsageViewSettings.getInstance().GROUP_BY_MODULE) {
-//      rules.add(new ModuleGroupingRule());
-//    }
-//    if (UsageViewSettings.getInstance().GROUP_BY_PACKAGE) {
-//      rules.add(DirectoryGroupingRule.getInstance(project));
-//    }
-//    if (UsageViewSettings.getInstance().GROUP_BY_FILE_STRUCTURE) {
-//      FileStructureGroupRuleProvider[] providers = Extensions.getExtensions(FileStructureGroupRuleProvider.EP_NAME);
-//      for (FileStructureGroupRuleProvider ruleProvider : providers) {
-//        final UsageGroupingRule rule = ruleProvider.getUsageGroupingRule(project);
-//        if(rule != null) {
-//          rules.add(rule);
-//        }
-//      }
-//    }
-//    else {
-//      rules.add(new FileGroupingRule(project));
-//    }
+        if (UsageViewSettings.getInstance().GROUP_BY_USAGE_TYPE) {
+            rules.add(new UsageTypeGroupingRule());
+        }
 
-    return rules.toArray(new UsageGroupingRule[rules.size()]);
-  }
+/*
+        if (UsageViewSettings.getInstance().GROUP_BY_MODULE) {
+            rules.add(new FileUsageGroupingRule());
+        }
 
-  @NotNull
-  public AnAction[] createGroupingActions(UsageView view) {
-    final UsageViewImpl impl = (UsageViewImpl)view;
-    final JComponent component = impl.getComponent();
+        if (UsageViewSettings.getInstance().GROUP_BY_PACKAGE) {
+            rules.add(DirectoryGroupingRule.getInstance(project));
+        }
+*/
+        if (UsageViewSettings.getInstance().GROUP_BY_FILE_STRUCTURE) {
+            PlSqlLevel0_FileStructureGroupRuleProvider ruleProvider = new PlSqlLevel0_FileStructureGroupRuleProvider();
+            final UsageGroupingRule rule = ruleProvider.getUsageGroupingRule(project);
+            if (rule != null) {
+                rules.add(rule);
+            }
 
-//    final GroupByModuleTypeAction groupByModuleTypeAction = new GroupByModuleTypeAction(impl);
-//    groupByModuleTypeAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK)), component);
-//
-//    final GroupByFileStructureAction groupByFileStructureAction = new GroupByFileStructureAction(impl);
-//    groupByFileStructureAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_M,
-//                                                                                                      InputEvent.CTRL_DOWN_MASK)), component);
-//
-//    impl.scheduleDisposeOnClose(new Disposable() {
-//      public void dispose() {
-//        groupByModuleTypeAction.unregisterCustomShortcutSet(component);
-//        groupByFileStructureAction.unregisterCustomShortcutSet(component);
-//      }
-//    });
+            PlSqlLevel1_FileStructureGroupRuleProvider ruleProvider1 = new PlSqlLevel1_FileStructureGroupRuleProvider();
+            final UsageGroupingRule rule1 = ruleProvider1.getUsageGroupingRule(project);
+            if (rule1 != null) {
+                rules.add(rule1);
+            }
+
+
+/*
+            FileStructureGroupRuleProvider ruleProvider2 = new SqlStmtFileStructureGroupRuleProvider();
+            final UsageGroupingRule rule2 = ruleProvider2.getUsageGroupingRule(project);
+            if (rule2 != null) {
+                rules.add(rule2);
+            }
+
+      FileStructureGroupRuleProvider[] providers = Extensions.getExtensions(FileStructureGroupRuleProvider.EP_NAME);
+      for (FileStructureGroupRuleProvider ruleProvider : providers) {
+        final UsageGroupingRule rule = ruleProvider.getUsageGroupingRule(project);
+        if(rule != null) {
+          rules.add(rule);
+        }
+      }
+*/
+        } else {
+//            rules.add(new FileUsageGroupingRule());
+            rules.add(new FileGroupingRule(project));
+        }
+
+        return rules.toArray(new UsageGroupingRule[rules.size()]);
+    }
+
+    @NotNull
+    public AnAction[] createGroupingActions(UsageView view) {
+        final UsageView2Impl impl = (UsageView2Impl) view;
+        final JComponent component = impl.getComponent();
+
+//        final GroupByModuleTypeAction groupByModuleTypeAction = new GroupByModuleTypeAction(impl);
+//        groupByModuleTypeAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK)), component);
+
+        final GroupByFileStructureAction groupByFileStructureAction = new GroupByFileStructureAction(impl);
+        groupByFileStructureAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_M,
+                InputEvent.CTRL_DOWN_MASK)), component);
+
+        impl.scheduleDisposeOnClose(new Disposable() {
+            public void dispose() {
+//                groupByModuleTypeAction.unregisterCustomShortcutSet(component);
+                groupByFileStructureAction.unregisterCustomShortcutSet(component);
+            }
+        });
 
 //    if(view.getPresentation().isCodeUsages()) {
-      final GroupByUsageTypeAction groupByUsageTypeAction = new GroupByUsageTypeAction(impl);
-      groupByUsageTypeAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK)), component);
+        final GroupByUsageTypeAction groupByUsageTypeAction = new GroupByUsageTypeAction(impl);
+        groupByUsageTypeAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK)), component);
 
 //      final GroupByPackageAction groupByPackageAction = new GroupByPackageAction(impl);
 //      groupByPackageAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK)), component);
 
-      impl.scheduleDisposeOnClose(new Disposable() {
-        public void dispose() {
-          groupByUsageTypeAction.unregisterCustomShortcutSet(component);
+        impl.scheduleDisposeOnClose(new Disposable() {
+            public void dispose() {
+                groupByUsageTypeAction.unregisterCustomShortcutSet(component);
 //          groupByPackageAction.unregisterCustomShortcutSet(component);
-        }
-      });
+            }
+        });
 
-      return new AnAction[] {
-        groupByUsageTypeAction
-//        groupByModuleTypeAction,
-//        groupByPackageAction,
-//        groupByFileStructureAction
-      };
+        return new AnAction[]{
+                groupByUsageTypeAction,
+//                  groupByModuleTypeAction,
+//                  groupByPackageAction,
+                groupByFileStructureAction
+        };
 //    }
 //    else {
 //      return new AnAction[] {
@@ -123,34 +152,38 @@ public class SqlUsageGroupingRuleProviderImpl  implements UsageGroupingRuleProvi
 //        groupByFileStructureAction
 //      };
 //    }
-  }
-
-  private static class GroupByUsageTypeAction extends RuleAction {
-    private GroupByUsageTypeAction(UsageViewImpl view) {
-      super(view, UsageViewBundle.message("action.group.by.usage.type"), IconLoader.getIcon("/ant/filter.png")); //TODO: special icon
-    }
-    protected boolean getOptionValue() {
-      return UsageViewSettings.getInstance().GROUP_BY_USAGE_TYPE;
-    }
-    protected void setOptionValue(boolean value) {
-      UsageViewSettings.getInstance().GROUP_BY_USAGE_TYPE = value;
-    }
-  }
-
-  private static class GroupByModuleTypeAction extends RuleAction {
-    private GroupByModuleTypeAction(UsageViewImpl view) {
-      super(view, UsageViewBundle.message("action.group.by.module"), IconLoader.getIcon("/objectBrowser/showModules.png"));
     }
 
-    protected boolean getOptionValue() {
-      return UsageViewSettings.getInstance().GROUP_BY_MODULE;
+
+    private static class GroupByUsageTypeAction extends RuleAction {
+        private GroupByUsageTypeAction(UsageView2Impl view) {
+            super(view, UsageViewBundle.message("action.group.by.usage.type"), IconLoader.getIcon("/ant/filter.png")); //TODO: special icon
+        }
+
+        protected boolean getOptionValue() {
+            return UsageViewSettings.getInstance().GROUP_BY_USAGE_TYPE;
+        }
+
+        protected void setOptionValue(boolean value) {
+            UsageViewSettings.getInstance().GROUP_BY_USAGE_TYPE = value;
+        }
     }
 
-    protected void setOptionValue(boolean value) {
-      UsageViewSettings.getInstance().GROUP_BY_MODULE = value;
-    }
-  }
 
+    private static class GroupByModuleTypeAction extends RuleAction {
+        private GroupByModuleTypeAction(UsageView2Impl view) {
+            super(view, UsageViewBundle.message("action.group.by.module"), IconLoader.getIcon("/objectBrowser/showModules.png"));
+        }
+
+        protected boolean getOptionValue() {
+            return UsageViewSettings.getInstance().GROUP_BY_MODULE;
+        }
+
+        protected void setOptionValue(boolean value) {
+            UsageViewSettings.getInstance().GROUP_BY_MODULE = value;
+        }
+    }
+/*
   private static class GroupByPackageAction extends RuleAction {
     private GroupByPackageAction(UsageViewImpl view) {
       super(view, UsageViewBundle.message("action.group.by.package"), Icons.GROUP_BY_PACKAGES);
@@ -162,17 +195,20 @@ public class SqlUsageGroupingRuleProviderImpl  implements UsageGroupingRuleProvi
       UsageViewSettings.getInstance().GROUP_BY_PACKAGE = value;
     }
   }
+*/
 
-  private static class GroupByFileStructureAction extends RuleAction {
-    private GroupByFileStructureAction(UsageViewImpl view) {
-      super(view, UsageViewBundle.message("action.group.by.file.structure"), IconLoader.getIcon("/actions/groupByMethod.png"));
+    private static class GroupByFileStructureAction extends RuleAction {
+        private GroupByFileStructureAction(UsageView2Impl view) {
+            super(view, UsageViewBundle.message("action.group.by.file.structure"), IconLoader.getIcon("/actions/groupByMethod.png"));
+        }
+
+        protected boolean getOptionValue() {
+            return UsageViewSettings.getInstance().GROUP_BY_FILE_STRUCTURE;
+        }
+
+        protected void setOptionValue(boolean value) {
+            UsageViewSettings.getInstance().GROUP_BY_FILE_STRUCTURE = value;
+        }
     }
-    protected boolean getOptionValue() {
-      return UsageViewSettings.getInstance().GROUP_BY_FILE_STRUCTURE;
-    }
-    protected void setOptionValue(boolean value) {
-      UsageViewSettings.getInstance().GROUP_BY_FILE_STRUCTURE = value;
-    }
-  }
 
 }

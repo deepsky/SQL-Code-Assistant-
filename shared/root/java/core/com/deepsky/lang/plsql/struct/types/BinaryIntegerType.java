@@ -29,7 +29,20 @@ public class BinaryIntegerType extends TypeBase {
 
     static final long serialVersionUID = -1369442647425790151L;
 
+    public BinaryIntegerType(int size){
+        super(BINARY_INTEGER, "BINARY_INTEGER", size);
+    }
+
     public BinaryIntegerType(){
         super(BINARY_INTEGER, "BINARY_INTEGER");
     }
+
+    public String toString(){
+        if(dataLength() > 0){
+            return "BINARY_INTEGER(" + dataLength() + ")";
+        } else {
+            return "BINARY_INTEGER";
+        }
+    }
+
 }

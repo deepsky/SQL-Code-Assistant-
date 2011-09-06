@@ -59,7 +59,10 @@ public interface DbObject extends Serializable {
     final String VARIABLE     = "VARIABLE";
     final String SYNONYM      = "SYNONYM";
 
+    final String VIEW_INTERNAL_TYPE = "VIEW_INTERNAL";    
+
     final String PACKAGE_BODY      = "PACKAGE BODY";
+    
     // todo - not implemented yet
     final String FUNCTION_BODY     = "FUNCTION_BODY";
     final String PROCEDURE_BODY    = "PROCEDURE_BODY";

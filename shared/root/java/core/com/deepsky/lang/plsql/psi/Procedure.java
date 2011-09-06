@@ -25,5 +25,7 @@
 
 package com.deepsky.lang.plsql.psi;
 
-public interface Procedure extends Executable {
+import com.deepsky.lang.plsql.psi.spices.CompilableObject;
+
+public interface Procedure extends Executable, CompilableObject {
 }

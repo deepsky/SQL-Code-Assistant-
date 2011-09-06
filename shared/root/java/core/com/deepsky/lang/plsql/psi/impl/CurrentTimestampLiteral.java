@@ -31,7 +31,7 @@ import com.deepsky.lang.plsql.struct.TypeFactory;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
-public class CurrentTimestampLiteral  extends PlSqlElementBase implements Literal {
+public class CurrentTimestampLiteral extends PlSqlElementBase implements Literal {
     public CurrentTimestampLiteral(ASTNode astNode) {
         super(astNode);
     }

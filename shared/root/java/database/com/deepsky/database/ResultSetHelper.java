@@ -25,21 +25,18 @@
 
 package com.deepsky.database;
 
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import java.sql.Connection;
+import java.sql.*;
 
 public class ResultSetHelper {
 
     Connection conn;
     int fetchSize = 1000;
 
-    public ResultSetHelper(Connection conn){
+    public ResultSetHelper(Connection conn) {
         this.conn = conn;
     }
 
-    public void setFetchSize(int fetchSize){
+    public void setFetchSize(int fetchSize) {
         this.fetchSize = fetchSize;
     }
 
@@ -71,5 +68,67 @@ public class ResultSetHelper {
                 }
             }
         }
+    }
+
+    public PreparedStatementPopulator prepareStatementSingle(String sql) throws SQLException {
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setFetchSize(fetchSize);
+        } catch (SQLException e) {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e2) {
+                }
+            }
+            throw e;
+        }
+
+        return new PreparedStatementPopulatorImpl(stmt);
+    }
+
+    private class PreparedStatementPopulatorImpl implements PreparedStatementPopulator {
+        PreparedStatement stmt;
+
+        public PreparedStatementPopulatorImpl(PreparedStatement stmt) {
+            this.stmt = stmt;
+        }
+
+        public void populateFromResultSet(String[] values, MappingHelper helper) throws SQLException {
+            ResultSet rs = null;
+            try {
+                for (String v : values) {
+                    stmt.setString(1, v);
+                    rs = stmt.executeQuery();
+
+                    while (rs.next()) {
+                        helper.processRow(rs);
+                    }
+
+                    rs.close();
+                    rs = null;
+                }
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException e) {
+                    }
+                }
+                if (stmt != null) {
+                    try {
+                        stmt.close();
+                    } catch (SQLException e) {
+                    }
+                }
+            }
+        }
+    }
+
+
+    public interface PreparedStatementPopulator {
+        void populateFromResultSet(String[] values, MappingHelper helper) throws SQLException;
     }
 }

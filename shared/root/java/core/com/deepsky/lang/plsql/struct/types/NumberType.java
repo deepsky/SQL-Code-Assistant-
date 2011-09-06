@@ -45,6 +45,10 @@ public class NumberType extends TypeBase {
         super(Type.NUMBER, "NUMBER", 22);
     }
 
+    public int getPartSize(){
+        return part;
+    }
+    
     public String toString(){
         if(dataLength() > 0 && part > 0){
             return "NUMBER(" + dataLength() + "," + part + ")";

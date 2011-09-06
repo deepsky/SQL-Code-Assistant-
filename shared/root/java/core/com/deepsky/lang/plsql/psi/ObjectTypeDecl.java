@@ -25,6 +25,8 @@
 
 package com.deepsky.lang.plsql.psi;
 
-public interface ObjectTypeDecl extends TypeDeclaration {
+import com.deepsky.lang.plsql.psi.spices.CompilableObject;
+
+public interface ObjectTypeDecl extends TypeDeclaration, CompilableObject {
     RecordTypeItem[] getItems();
 }

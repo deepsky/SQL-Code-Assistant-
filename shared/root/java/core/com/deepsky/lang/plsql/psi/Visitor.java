@@ -25,8 +25,8 @@
 
 package com.deepsky.lang.plsql.psi;
 
-import com.deepsky.lang.plsql.struct.impl.*;
-import com.deepsky.lang.plsql.ReferencedName;
+//import com.deepsky.lang.plsql.struct.impl.*;
+//import com.deepsky.lang.plsql.ReferencedName;
 
 
 public interface Visitor {
@@ -41,7 +41,7 @@ public interface Visitor {
     void accept(FromClause fromClause);
     void accept(AnsiFromClause fromClause);
 
-    void accept(PlainTable table);
+    void accept(TableAlias table);
 
     void accept(Literal literal);
 
@@ -61,11 +61,11 @@ public interface Visitor {
     void accept(CallArgument argument);
     void accept(ExtractFuncCallArgument argument);
 
-    void accept(ReferencedName name);
+//    void accept(ReferencedName name);
 
     void accept(LikeCondition condition);
 
-    void accept(Subquery subquery);
+    void accept(FromSubquery subquery);
 
     void accept(BetweenCondition condition);
 

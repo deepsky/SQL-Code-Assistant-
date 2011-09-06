@@ -25,6 +25,8 @@
 
 package com.deepsky.lang.plsql.struct;
 
+import com.deepsky.lang.plsql.resolver.FunctionValidator;
+
 public interface SystemFunction extends FunctionDescriptor {
-    SystemFunctionValidator getValidator();
+    FunctionValidator getValidator();
 }

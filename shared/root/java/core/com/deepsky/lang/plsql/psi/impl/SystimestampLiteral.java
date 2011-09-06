@@ -44,5 +44,5 @@ public class SystimestampLiteral extends PlSqlElementBase implements Literal {
     public String valueToString() {
         return getText();
     }
-    
+
 }

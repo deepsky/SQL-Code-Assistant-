@@ -29,13 +29,15 @@ import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.DBException;
 import com.deepsky.gui.ExportSettings;
 import com.deepsky.lang.common.PluginKeys;
-import com.deepsky.lang.conf.PluginSettingsBean;
 import com.deepsky.lang.plsql.NotSupportedException;
+import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.utils.StringUtils;
 import com.deepsky.view.Icons;
 import com.deepsky.view.query_pane.markup.SqlStatementMarker;
+import com.intellij.ide.actions.ActivateToolWindowAction;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.help.HelpManager;
+import com.intellij.openapi.keymap.Keymap;
+import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Key;
@@ -54,7 +56,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-public class QueryResultWindow { //implements ConnectionManagerListener {
+public class QueryResultWindow {
 
     public static final String QUERY_RESULT_PANE = "Query Result";
     public static final String DATAGRID_PANE = "Data Grid";
@@ -66,11 +68,10 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
 
     private final static Key<String> CONTENT_PAGE_KEY = new Key<String>(CONTENT_PAGE_NAME);
 
-    final static int REFRESH_RESULTSET = 1;
-    final static int STICKY_OPTION = 3;
-    final static int EXPORT_DATA = 4;
+//    final static int REFRESH_RESULTSET = 1;
+//    final static int STICKY_OPTION = 3;
+//    final static int EXPORT_DATA = 4;
     final static int CLOSE_PANEL = 5;
-    final static int HELP = 6;
 
     Project project;
     ConnectionManager connectionManager;
@@ -78,10 +79,6 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
     //int maxTabs = 5;
     boolean isConnected = false;
 
-
-//    public static synchronized QueryResultWindow getInstance() {
-//        return PluginKeys.QR_WINDOW.getData(); //instance;
-//    }
 
     public QueryResultWindow(Project project, ConnectionManager connectionManager) {
         this.project = project; //DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
@@ -96,6 +93,13 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
         }
 
 //        connectionManager.addStateListener(this);
+
+        // assign ShortCut for the tool window
+        Keymap activeKeymap= KeymapManager.getInstance().getActiveKeymap();
+        activeKeymap.addShortcut(ActivateToolWindowAction.getActionIdForToolWindow(QUERY_RESULT_PANE),
+//            new KeyboardShortcut(KeyStroke.getKeyStroke("alt 0"), null)
+            new KeyboardShortcut(KeyStroke.getKeyStroke("alt 8"), null)
+        );
 
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow wm = ToolWindowManager.getInstance(project).getToolWindow(QUERY_RESULT_PANE);
@@ -115,13 +119,7 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
 
 
     private void assertTabCount(Content content) {
-//        PluginSettingsBean bean = (PluginSettingsBean) SharedObjectPool.getUserData(SharedConstants.PLUGIN_SETTINGS);
-        PluginSettingsBean bean = PluginKeys.PLUGIN_SETTINGS.getData(project);
-
-        if (bean == null) {
-            bean = new PluginSettingsBean();
-        }
-
+        SqlCodeAssistantSettings bean = PluginKeys.PLUGIN_SETTINGS.getData(project);
         int max = bean.getNumberOfTabs();
 
         if (max <= getTabComponent(content).getTabCount()) {
@@ -142,8 +140,6 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
         }
     }
 
-    //private void iterateThruTabs(Content)
-
     @NotNull
     public QueryResultPanel createResultPanel(int panelType, SqlStatementMarker sqlMarker, Icon icon, String toolTip) {
 
@@ -158,8 +154,6 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
             if (component == null) {
                 assertTabCount(content);
                 return addGridPanelTab(content, sqlMarker, icon, toolTip);
-//            } else if (component instanceof DataGridPanel) {
-//                return (QueryResultPanel) component;
             } else {
                 // component != null && !(component instanceof DataGridPanel)
                 // replace old panel with new one
@@ -171,8 +165,6 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
             if (component == null) {
                 assertTabCount(content);
                 return addDMLStatsTab(content, sqlMarker, icon, toolTip);
-//            } else if (component instanceof QueryResultPanel) {
-//                return (QueryResultPanel) component;
             } else {
                 // component != null && !(component instanceof DataGridPanel)
                 // replace old panel with new one
@@ -195,8 +187,6 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
             if (component == null) {
                 assertTabCount(content);
                 return addGridPanelTab(content, tabName, icon, toolTip);
-//            } else if (component instanceof DataGridPanel) {
-//                return (QueryResultPanel) component;
             } else {
                 // component != null && !(component instanceof DataGridPanel)
                 // replace old panel with new one
@@ -240,8 +230,6 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
 
 
     private QueryStatisticsPanel addDMLStatsTab(@NotNull Content content, SqlStatementMarker sqlMarker, Icon icon, String s) {
-//        Component[] comps = (content.getComponent()).getComponents();
-//        JTabbedPane tabbedPane = (JTabbedPane) comps[1];
         JTabbedPane tabbedPane = getTabComponent(content);
         QueryStatisticsPanel dmlStatsPanel = new QueryStatisticsPanel();
         dmlStatsPanel.putClientProperty(CREATE_TIME, new Date().getTime());
@@ -255,8 +243,6 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
     }
 
     private Component getTab(@NotNull Content content, String displayName) {
-//        Component[] comps = (content.getComponent()).getComponents();
-//        JTabbedPane tabbedPane = (JTabbedPane) comps[1];
         JTabbedPane tabbedPane = getTabComponent(content);
         int index = tabbedPane.indexOfTab(displayName);
         if (index == -1) {
@@ -340,16 +326,14 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
             JPanel jpanel = new JPanel(new BorderLayout());
 
             DefaultActionGroup actionGroup = new DefaultActionGroup("PsiActionGroup22", false);
-            actionGroup.add(new LocalToggleAction("Refresh Query Result", "Refresh Query Result", Icons.REFRESH_RESULTSET, REFRESH_RESULTSET));
-            actionGroup.add(new LocalToggleAction("Copy", "Copy", Icons.EXPORT_DATA, EXPORT_DATA));
+//            actionGroup.add(new LocalToggleAction("Refresh Query Result", "Refresh Query Result", Icons.REFRESH_RESULTSET, REFRESH_RESULTSET));
+//            actionGroup.add(new LocalToggleAction("Copy", "Copy", Icons.EXPORT_DATA, EXPORT_DATA));
             actionGroup.addSeparator();
             actionGroup.add(new ToggleAutocommitAction("Auto Commit", "Auto Commit", Icons.CURSOR_DECL, -100));
 
             actionGroup.addSeparator();
 // todo -- check problem with keeping sql markers and tabs in sync
             actionGroup.add(new LocalToggleAction("Close Result Pane", "Close", Icons.CLOSE_PANEL, CLOSE_PANEL));
-            actionGroup.addSeparator();
-            actionGroup.add(new LocalToggleAction("Help", "Help", Icons.HELP, HELP));
 
             ActionManager actionManager = ActionManager.getInstance();
             ActionToolbar toolBar = actionManager.createActionToolbar("DataGridActionToolbar", actionGroup, false);
@@ -358,6 +342,7 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
 
             ContentFactory contentFactory = ContentFactoryEx.getContentFactory();
             content = contentFactory.createContent(jpanel, contentName, false);
+            //content.setActions(actionGroup, "UKNOWN", null);
             content.setIcon(Icons.DISCONNECT);
             wm.getContentManager().addContent(content);
         }
@@ -366,18 +351,53 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
     }
 
 
-    public void showContent(SqlStatementMarker marker) {
+    public void showContent(SqlStatementMarker marker, boolean autoFocusContents, int wait) {
         String contentName = marker.getUserData(CONTENT_PAGE_KEY);
-        showContent(marker.getName(), contentName, 500);
+        showContent(marker.getName(), contentName, autoFocusContents, wait);
     }
 
+    public void showContent(SqlStatementMarker marker) {
+        String contentName = marker.getUserData(CONTENT_PAGE_KEY);
+        showContent(marker.getName(), contentName, true, 500);
+    }
     /**
      * Show content page for current connection
      *
      * @param displayName
      */
     public void showContent(String displayName) {
-        showContent(displayName, null, 500);
+        showContent(displayName, null, true, 500);
+    }
+
+    public void showContent() {
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindow wm = toolWindowManager.getToolWindow(QUERY_RESULT_PANE);
+        if (wm == null) {
+            // todo -- toolwindow not created! handle error
+            return;
+        }
+
+        if (!wm.isVisible()) {
+            // show panel
+            wm.activate(new Runnable() {
+                public void run() {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e1) {
+                    }
+                }
+            }, true, true);
+        } else {
+            // hide panel
+            wm.hide(new Runnable() {
+                public void run() {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e1) {
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -386,7 +406,7 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
      * @param displayName
      * @param wait
      */
-    private void showContent(String displayName, String contentName, final int wait) {
+    private void showContent(String displayName, String contentName, boolean autoFocusContents, final int wait) {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow wm = toolWindowManager.getToolWindow(QUERY_RESULT_PANE);
 
@@ -429,7 +449,7 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
                     } catch (InterruptedException e1) {
                     }
                 }
-            }, true);
+            }, autoFocusContents, true); //true);
         }
     }
 
@@ -445,8 +465,6 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
     }
 
     public void close() {
-//        connectionManager.removeStateListener(this);
-
         try {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             ToolWindow tw = toolWindowManager.getToolWindow(QUERY_RESULT_PANE);
@@ -495,46 +513,9 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
             } catch (DBException e1) {
                 Messages.showErrorDialog(project, e1.getMessage(), "Database Connection error");
             }
-/*
-
-            if(connectionManager.isConnected()){
-                int cmd = 0;
-                if(!cached && state){
-                    // check number of DML statements since last commit
-                    if( connectionManager.statementListSinceLastCommit().size() > 0){
-                        // set autocommit silently
-                    } else {
-                        // ask user for confirmation
-                        cmd = Messages.showChooseDialog("There are not commited changes, do you want commit changes first?",
-                                "Confirmation on changes committing",
-                                new String[]{"Commit", "Rollback", "Cancel"}, "Commit", Messages.getWarningIcon());
-                    }
-                }
-
-                switch(cmd){
-                    case 0: // commit
-                        setAutoCommit(state);
-                        cached = state;
-                        break;
-                    case 1: // rollback
-                        break;
-                    case 2: // cancel
-                        break;
-                }
-            }
-*/
         }
     }
 
-/*
-    private void setAutoCommit(boolean state){
-        try {
-            connectionManager.setAutoCommit(state);
-        } catch (DBException e1) {
-            Messages.showErrorDialog( project, e1.getMessage(), "Database Connection error");
-        }
-    }
-*/
 
     class LocalToggleAction extends ToggleAction {
 
@@ -553,26 +534,10 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
 
         public void setSelected(AnActionEvent event, boolean b) {
             switch (command) {
-                case REFRESH_RESULTSET: {
-                    QueryResultPanel resultPanel = getSelectedResultPanel();
-                    // todo -- if connection was reestablished REFRESH keeps failing ..
-                    if (resultPanel instanceof DataGridPanel && resultPanel.isRefreshSupported()) {
-                        try {
-                            resultPanel.refresh();
-                        } catch (DBException e) {
-                            String error = e.getMessage();
-                            error = error == null || error.length() == 0 ? "Check database connection" : error;
-                            Messages.showErrorDialog(project, error, "Query failed");
-                        }
-                    }
-                    break;
-                }
                 case CLOSE_PANEL:
                     close();
                     break;
-                case HELP:
-                    HelpManager.getInstance().invokeHelp("sqlassistant.queryResultPane");
-                    break;
+/*
                 case STICKY_OPTION:
                     selected ^= true;
                     break;
@@ -625,7 +590,7 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
                         }
 
                         String content = grid.extractContent(
-                                delimiter, settings.saveColumnHeaders(), settings.encloseFieldsInDowubleQuotes());
+                                delimiter, settings.saveColumnHeaders(), settings.encloseFieldsInDowubleQuotes(), settings.saveAllRows());
                         if (content != null) {
                             if (fileToSave != null) {
                                 // save in the file
@@ -644,6 +609,7 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
                     }
                     break;
                 }
+*/
             }
             //notifyListeners(command);
         }
@@ -657,9 +623,9 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
         }
 
         public void componentRemoved(ContainerEvent e) {
-            if (e.getChild() instanceof QueryResultPanel) {
-                // finalize QueryResultPanel
-                ((QueryResultPanel) e.getChild()).close();
+            if (e.getChild() instanceof DataGridPanel) {
+                // dispose DataGridPanel
+                ((DataGridPanel) e.getChild()).close();
             }
         }
     }
@@ -687,16 +653,5 @@ public class QueryResultWindow { //implements ConnectionManagerListener {
         public void selectionChanged(ContentManagerEvent event) {
         }
     }
-
-//    public void handleUpdate(StateEvent state) {
-//        switch (state.getStatus()) {
-//            case ConnectionManagerListener.CONNECTED:
-////                statusLine.setSchemaName(state.getUrl().getUserHostPortServiceName());
-//                break;
-//            case ConnectionManagerListener.DISCONNECTED:
-////                statusLine.setSchemaName("Not logged in");
-//                break;
-//        }
-//    }
 
 }

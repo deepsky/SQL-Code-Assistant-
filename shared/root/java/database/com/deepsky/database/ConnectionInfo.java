@@ -49,7 +49,7 @@ public interface ConnectionInfo {
     boolean isConnected();
     boolean disconnect();
     void refreshSession();
-    boolean testConnection();
+//    boolean testConnection();
 
 //    ObjectCache getObjectCache();
 
@@ -59,4 +59,5 @@ public interface ConnectionInfo {
     Date lastLoginTime();
 
     void addListener(SessionListener lstnr);
+    void removeListener(SessionListener lstnr);
 }

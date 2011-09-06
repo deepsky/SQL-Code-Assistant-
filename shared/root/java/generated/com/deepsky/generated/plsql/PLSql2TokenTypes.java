@@ -20,9 +20,9 @@ public interface PLSql2TokenTypes {
 	int COLON_NEW = 14;
 	int COLON_OLD = 15;
 	int TABLE_NAME_SPEC = 16;
-	int IDENTIFIER = 17;
-	int PLSQL_ENV_VAR = 18;
-	int ANY_CHARACTER = 19;
+	int PLSQL_ENV_VAR = 17;
+	int ANY_CHARACTER = 18;
+	int IDENTIFIER = 19;
 	int QUOTED_STR = 20;
 	int DOUBLE_QUOTED_STRING = 21;
 	int AT_PREFIXED = 22;

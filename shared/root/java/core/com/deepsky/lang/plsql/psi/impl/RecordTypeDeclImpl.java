@@ -25,24 +25,24 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.navigation.PlSqlPackageUtil;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class RecordTypeDeclImpl extends PlSqlElementBase implements RecordTypeDecl {
-    
+public class RecordTypeDeclImpl extends PlSqlDeclarationBase implements RecordTypeDecl {
+
     public RecordTypeDeclImpl(ASTNode astNode) {
         super(astNode);
     }
@@ -52,19 +52,6 @@ public class RecordTypeDeclImpl extends PlSqlElementBase implements RecordTypeDe
         return node.getText();
     }
 
-    public String getPackageName() {
-        PlSqlElement context = getUsageContext(TokenSet.create(
-                PlSqlElementTypes.PACKAGE_BODY, PlSqlElementTypes.PACKAGE_SPEC)
-        );
-
-        if(context instanceof PackageBody){
-            return ((PackageBody)context).getPackageName();
-        } else if(context instanceof PackageSpec){
-            return ((PackageSpec)context).getPackageName();
-        }
-
-        return null;
-    }
 
     public RecordTypeItem[] getItems() {
         return this.findChildrenByClass(RecordTypeItem.class);
@@ -81,12 +68,12 @@ public class RecordTypeDeclImpl extends PlSqlElementBase implements RecordTypeDe
 
 
     @Nullable
-    public String getQuickNavigateInfo(){
+    public String getQuickNavigateInfo() {
         return "[Record Type] " + getDeclName();
     }
 
 
-    public Icon getIcon(int flags){
+    public Icon getIcon(int flags) {
         return Icons.RECORD_TYPE_DECL;
     }
 
@@ -105,18 +92,18 @@ public class RecordTypeDeclImpl extends PlSqlElementBase implements RecordTypeDe
 
 
     class TablePresentation implements ItemPresentation {
-        public String getPresentableText(){
+        public String getPresentableText() {
             return getDeclName();
         }
 
         @Nullable
-        public String getLocationString(){
+        public String getLocationString() {
             PlSqlElement pkg = PlSqlPackageUtil.findPackageForElement(RecordTypeDeclImpl.this);
-            if(pkg instanceof PackageSpec){
-                String packageName = ((PackageSpec)pkg).getPackageName();
+            if (pkg instanceof PackageSpec) {
+                String packageName = ((PackageSpec) pkg).getPackageName();
                 return "in " + packageName + " (Record Type)";
-            } else if(pkg instanceof PackageBody){
-                String packageName = ((PackageBody)pkg).getPackageName();
+            } else if (pkg instanceof PackageBody) {
+                String packageName = ((PackageBody) pkg).getPackageName();
                 return "in " + packageName + " (Record Type)";
             } else {
                 return "(Record Type)";
@@ -124,16 +111,16 @@ public class RecordTypeDeclImpl extends PlSqlElementBase implements RecordTypeDe
         }
 
         @Nullable
-        public Icon getIcon(boolean open){
+        public Icon getIcon(boolean open) {
             return Icons.RECORD_TYPE_DECL;
         }
 
         @Nullable
-        public TextAttributesKey getTextAttributesKey(){
+        public TextAttributesKey getTextAttributesKey() {
             return null;
         }
     }
 
-    
+
 }
 

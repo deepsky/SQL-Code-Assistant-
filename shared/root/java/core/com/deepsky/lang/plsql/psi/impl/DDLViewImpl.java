@@ -25,16 +25,10 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.database.ObjectCache;
-import com.deepsky.database.ObjectCacheFactory;
-import com.deepsky.database.SqlScriptManager;
-import com.deepsky.lang.common.PluginKeys;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.ddl.CreateView;
 import com.deepsky.lang.plsql.psi.ref.DDLView;
-import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
-import com.deepsky.lang.plsql.struct.TableDescriptor;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
@@ -48,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DDLViewImpl extends PlSqlReferenceBase implements DDLView { //}, PsiNamedElement {
+public class DDLViewImpl extends PlSqlElementBase implements DDLView { //}, PsiNamedElement {
     private static final LoggerProxy log = LoggerProxy.getInstance("#DDLViewImpl");
 
     public DDLViewImpl(ASTNode node) {
@@ -61,27 +55,38 @@ public class DDLViewImpl extends PlSqlReferenceBase implements DDLView { //}, Ps
 
     public TextRange getTableNameRange() {
         String text = getText();
-        if(text.charAt(0) == '"' && text.charAt(text.length()-1) == '"'){
-            return new TextRange(getTextRange().getStartOffset()+1, getTextRange().getEndOffset()-1);
+        if (text.charAt(0) == '"' && text.charAt(text.length() - 1) == '"') {
+            return new TextRange(getTextRange().getStartOffset() + 1, getTextRange().getEndOffset() - 1);
         } else {
             return getTextRange();
         }
     }
 
+    public CreateView getView() {
+        PsiElement view = getParent();
+        if (view instanceof CreateView) {
+            return (CreateView) view;
+        }
+        throw new SyntaxTreeCorruptedException();
+    }
 
+
+/*
     public boolean isReferenceTo(PsiElement psiElement) {
-        if(psiElement instanceof TableDefinition) {
-            if(((TableDefinition)psiElement).getTableName().equalsIgnoreCase(getText())){
+        if (psiElement instanceof TableDefinition) {
+            if (((TableDefinition) psiElement).getTableName().equalsIgnoreCase(getText())) {
                 return psiElement == resolve();
             }
-        } else if(psiElement instanceof CreateView) {
-            if(((CreateView)psiElement).getViewName().equalsIgnoreCase(getText())){
+        } else if (psiElement instanceof CreateView) {
+            if (((CreateView) psiElement).getViewName().equalsIgnoreCase(getText())) {
                 return psiElement == resolve();
             }
         }
         return false;
     }
+*/
 
+/*
     @NotNull
     public Object[] getVariants(String text) {
 
@@ -101,13 +106,14 @@ public class DDLViewImpl extends PlSqlReferenceBase implements DDLView { //}, Ps
     String[] getTableNameVariantsForPrefix(String prefix) {
 
         ObjectCache cache = PluginKeys.OBJECT_CACHE.getData(getProject()); //ObjectCacheFactory.getObjectCache();
-        if(prefix.length() == 0){
+        if (prefix.length() == 0) {
             String user = cache.getCurrentUser();
             return cache.getNameListForType(user, ObjectCache.TABLE | ObjectCache.VIEW);
         } else {
-            return cache.findByNamePrefix2( ObjectCache.TABLE | ObjectCache.VIEW, prefix);
+            return cache.findByNamePrefix2(ObjectCache.TABLE | ObjectCache.VIEW, prefix);
         }
     }
+*/
 
 //    static String[] extractNames(DbObject[] objs){
 //        String[] out = new String[objs.length];
@@ -137,9 +143,9 @@ public class DDLViewImpl extends PlSqlReferenceBase implements DDLView { //}, Ps
                     _v.append(c);
                 }
 
-                if(v.length() > _v.length()){
+                if (v.length() > _v.length()) {
                     String s;
-                    if(toLower){
+                    if (toLower) {
                         s = v.toLowerCase();
                         _v.append(s.substring(_v.length(), v.length()));
                     } else {
@@ -155,6 +161,13 @@ public class DDLViewImpl extends PlSqlReferenceBase implements DDLView { //}, Ps
         }
     }
 
+
+    protected PsiElement resolveInternal() {
+        return getParent();
+    }
+
+/*
+        // todo -- resolve stuff refactoring
     public PsiElement resolve() {
         TableDescriptor tdesc = describeTable(getText());
         if (tdesc != null) {
@@ -162,14 +175,14 @@ public class DDLViewImpl extends PlSqlReferenceBase implements DDLView { //}, Ps
         }
         return null;
     }
+*/
 
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitDDLView(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitDDLView(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
     public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException {

@@ -30,5 +30,5 @@ import org.jetbrains.annotations.NotNull;
 public interface UpdateStatement extends Statement {
 
     @NotNull
-    PlainTable getTargetTable();
+    TableAlias getTargetTable();
 }

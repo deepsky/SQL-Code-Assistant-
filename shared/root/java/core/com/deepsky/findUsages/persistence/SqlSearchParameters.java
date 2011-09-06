@@ -59,6 +59,7 @@ public class SqlSearchParameters implements PersistentStateComponent<SqlSearchPa
     public boolean isUsagesOfFunctions = false;
     // package scope variables
     public boolean isUsagesOfVariables = false;
+    public boolean isUsagesOfTypes = false;
     public boolean isUsagesOfColumnTypeRef = false;
 
     // Column name specific usages options
@@ -72,8 +73,7 @@ public class SqlSearchParameters implements PersistentStateComponent<SqlSearchPa
 
     public SearchScope searchScope;
 
-    public static SqlSearchParameters getInstance(Project project) { //Project project) {
-//        final Project project = LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+    public static SqlSearchParameters getInstance(Project project) {
         return ServiceManager.getService(project, SqlSearchParameters.class);
     }
 
@@ -83,8 +83,6 @@ public class SqlSearchParameters implements PersistentStateComponent<SqlSearchPa
         XmlSerializerUtil.copyBean(this, out);
         out.searchScope = null;
         return out;
-
-//        return this;
     }
 
     public void loadState(SqlSearchParameters state) {

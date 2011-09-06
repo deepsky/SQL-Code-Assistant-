@@ -27,13 +27,15 @@ package com.deepsky.database;
 
 import com.deepsky.database.exec.SQLExecutor;
 import com.deepsky.database.ora.DbUrl;
-import com.intellij.psi.tree.IElementType;
+import com.deepsky.lang.plsql.tree.Node;
+import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public interface ConnectionManager {
 
+    // check connection status
     boolean isConnected();
 
     void setAutoCommit(boolean state) throws DBException;
@@ -50,6 +52,15 @@ public interface ConnectionManager {
 
     ConnectionInfo createSession(DbUrl url, boolean loginOnStartup, boolean repair, int period) throws DbConfigurationException;
     void updateSession(ConnectionInfo cinfo, DbUrl url, boolean loginOnStartup, boolean repair, int period);
+
+    /**
+     * Remove session from the registry,
+     * if the session was active at the moment of the request it requests to stop
+     * the updater thread and wait until it gets shutdown
+     *  
+     * @param cinfo
+     * @return
+     */
     boolean removeSession(ConnectionInfo cinfo);
 
     void addStateListener(ConnectionManagerListener listener);
@@ -67,5 +78,5 @@ public interface ConnectionManager {
      */
     void refreshSession();
 
-    void addProcessedStatement(String text, IElementType etype);
+    void addProcessedStatement(ASTNode node);
 }

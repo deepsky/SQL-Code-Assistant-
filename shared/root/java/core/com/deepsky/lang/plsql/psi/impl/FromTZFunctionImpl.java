@@ -25,21 +25,17 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.FunctionCall;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.CallArgument;
 import com.deepsky.lang.plsql.psi.CallableCompositeName;
-import com.deepsky.lang.plsql.psi.CallArgumentList;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
+import com.deepsky.lang.plsql.psi.FunctionCall;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class FromTZFunctionImpl extends PlSqlElementBase implements FunctionCall {
@@ -58,7 +54,7 @@ public class FromTZFunctionImpl extends PlSqlElementBase implements FunctionCall
     }
 
     @NotNull
-    public CallArgument[] getCallArgumentList() {
+    public CallArgument[] getCallArguments() {
         // todo - not supported at the moment
         return new CallArgument[0];
     }
@@ -69,61 +65,19 @@ public class FromTZFunctionImpl extends PlSqlElementBase implements FunctionCall
     }
 
     // todo -----------------------------------
+/*
     @NotNull
     public ResolveContext777 resolveContext() throws NameNotResolvedException {
         throw new NameNotResolvedException("Not supported");
     }
+*/
 
     public String getFragmentText() {
         return StringUtils.discloseDoubleQuotes(getText());
     }
 
-    // todo -- [start] PsiReference specific
-    public PsiElement getElement() {
-        // todo --
-        return null;
-    }
 
-    public TextRange getRangeInElement() {
-        // todo --
-        return null;
-    }
-
-    public PsiElement resolve() {
-        // todo --
-        return null;
-    }
-
-    public String getCanonicalText() {
-        // todo --
-        return null;
-    }
-
-    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        // todo --
-        return null;
-    }
-
-    public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-        // todo --
-        return null;
-    }
-
-    public boolean isReferenceTo(PsiElement element) {
-        // todo --
+    public boolean isAggregate() {
         return false;
     }
-
-    @NotNull
-    public Object[] getVariants() {
-        // todo --
-        return new Object[0];
-    }
-
-    public boolean isSoft() {
-        // todo --
-        return false;
-    }
-    // todo -- [end] PsiReference specific
-
 }

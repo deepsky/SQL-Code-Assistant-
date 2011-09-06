@@ -29,12 +29,17 @@ import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
+import com.deepsky.lang.plsql.psi.ColumnFKSpec;
+import com.deepsky.lang.plsql.psi.ColumnPKSpec;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
+import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.plsql.struct.parser.ASTParseHelper;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
+import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
@@ -49,18 +54,17 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
         super(astNode);
     }
 
-    public String getName(){
-//        return super.getName();
-        String name =  this.findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL).getText();
-        log.info("getName() = " + name + " this: " + this);
-        return name;
-    }
-    
-    public String getColumnName() {
-        return this.findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL).getText();
+    public String getName() {
+        return getColumnName();
     }
 
-    public PsiElement getPsiColumnName(){
+    public String getColumnName() {
+        return StringUtils.discloseDoubleQuotes(
+                this.findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL).getText()
+                );
+    }
+
+    public PsiElement getPsiColumnName() {
         return this.findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL);
     }
 
@@ -69,58 +73,61 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
         return findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL).getTextOffset();
     }
 
+
     public Type getType() {
-        PsiElement s = findChildByType(PLSqlTypesAdopted.DATATYPE);
-        if (s == null) {
-            // todo
-            return null;
+        TypeSpec type = this.findChildByClass(TypeSpec.class);
+        if (type != null) {
+            return type.getType();
         }
-        return ASTParseHelper.parseDatatype(s.getText());
+        throw new SyntaxTreeCorruptedException();
     }
 
     @Nullable
     public String getQuickNavigateInfo() {
         TableDefinition t = findParent(TableDefinition.class);
         if (t != null) {
-            String tableName = t.getTableName();
-//            TableDescriptor desc = t.describe();
-//            if(desc != null){
-//                desc.
-//            }
-            return "[Table] " + tableName.toLowerCase()
-                    + "\n [Column] " + getColumnName().toLowerCase() + " "
+            String completeName = t.getTableName() + "." + getColumnName();
+            return  "[Column] " + completeName.toLowerCase() + " "
                     + getType().toString().toUpperCase();
         }
         return null;
     }
 
-
     public boolean isNotNull() {
-        ASTNode not_null = getNode().findChildByType(PlSqlTokenTypes.KEYWORD_NOT);
-        return not_null != null;
+        ASTNode not_null = getNode().findChildByType(PLSqlTypesAdopted.NOT_NULL_STMT);
+        return not_null != null && not_null.findChildByType(PlSqlTokenTypes.KEYWORD_NOT) != null;
     }
 
     public boolean isPrimaryKey() {
-        ASTNode[] pk = getNode().getChildren(TokenSet.create(
-                PlSqlTokenTypes.KEYWORD_PRIMARY, PlSqlTokenTypes.KEYWORD_KEY
-                )
-        );
-
-        if(pk != null && pk.length == 2){
-            return true;
-        } else {
-            // todo -- request table for PK
-            return false;
-        }
+        ASTNode pkSpec = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_PK_SPEC);
+        return pkSpec != null;
     }
 
-    public ForeignKeySpec getForeignKeySpec() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public boolean hasCheckConstraint() {
+        return getNode().findChildByType(PLSqlTypesAdopted.COLUMN_CHECK_CONSTRAINT) != null;
+    }
+
+    public ColumnPKSpec getPrimaryKeySpec() {
+        ASTNode pkSpec = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_PK_SPEC);
+        if (pkSpec != null) {
+            // ("constraint" constraint_name)?  "primary" "key" ("disable"|"enable")?
+            return (ColumnPKSpec) pkSpec.getPsi();
+        }
+        return null;
+    }
+
+    public ColumnFKSpec getForeignKeySpec() {
+        ASTNode fkSpec = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_FK_SPEC);
+        if (fkSpec != null) {
+            // ("constraint" constraint_name)? "references"! (schema_name DOT)? table_name_ddl OPEN_PAREN! column_name_ddl CLOSE_PAREN! ("rely")? ("disable"|"enable")?
+            return (ColumnFKSpec) fkSpec.getPsi();
+        }
+        return null;
     }
 
     public TableDefinition getTableDefinition() {
         ASTNode parent = getNode().getTreeParent();
-        if(parent != null && parent.getElementType() == PLSqlTypesAdopted.TABLE_DEF){
+        if (parent != null && parent.getElementType() == PLSqlTypesAdopted.TABLE_DEF) {
             return (TableDefinition) parent.getPsi();
         }
         throw new SyntaxTreeCorruptedException();
@@ -130,4 +137,13 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
     public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException {
         return null;
     }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitColumnDefinition(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
 }

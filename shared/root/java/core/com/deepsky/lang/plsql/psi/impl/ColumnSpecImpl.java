@@ -25,28 +25,15 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.resolve.*;
-import com.deepsky.lang.plsql.psi.resolve.psibased.PsiTableContext;
-import com.deepsky.lang.plsql.psi.resolve.impl.TableColumnContext;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.NotSupportedException;
-import com.deepsky.lang.plsql.struct.TableDescriptorLegacy;
+import com.deepsky.lang.plsql.psi.ColumnSpec;
+import com.deepsky.lang.plsql.psi.NameFragmentRef;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.openapi.progress.ProcessCanceledException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ColumnSpecImpl extends PlSqlCompositeNameBase implements ColumnSpec {
     public ColumnSpecImpl(ASTNode astNode) {
@@ -61,11 +48,13 @@ public class ColumnSpecImpl extends PlSqlCompositeNameBase implements ColumnSpec
         }
     }
 
+/*
     @NotNull
     protected VariantsProcessor777 createVariantsProcessorFront() throws NameNotResolvedException {
         //  PLSQL:COLUMN_SPEC [parent] PLSQL:COLUMN_SPEC_LIST
         return new VariantsProcessor777Front(this);
     }
+*/
 
     public String getColumnNameRef() {
         NameFragmentRef[] refs = getNamePieces();
@@ -75,8 +64,11 @@ public class ColumnSpecImpl extends PlSqlCompositeNameBase implements ColumnSpec
     public Type getColumnType() {
 
         NameFragmentRef[] fragments = getNamePieces();
-        NameFragmentRef last = fragments[fragments.length-1];
+        NameFragmentRef last = fragments[fragments.length - 1];
 
+        // todo -- resolve stuff refactoring
+        throw new NotSupportedException();
+/*
         try {
             ResolveContext777 ctx = last.resolveContext();
             return ctx.getType();
@@ -90,6 +82,7 @@ public class ColumnSpecImpl extends PlSqlCompositeNameBase implements ColumnSpec
         } catch (NameNotResolvedException e1) {
             throw new ValidationException("Name '" + getText() + "' not resolved", getNode());
         }
+*/
     }
 
     @Nullable
@@ -110,6 +103,7 @@ public class ColumnSpecImpl extends PlSqlCompositeNameBase implements ColumnSpec
     }
 
 
+/*
     @NotNull
     public ResolveContext777 getResolveContext() throws NameNotResolvedException {
         ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.NAME_FRAGMENT));
@@ -244,4 +238,5 @@ public class ColumnSpecImpl extends PlSqlCompositeNameBase implements ColumnSpec
             return out.toArray(new String[out.size()]);
         }
     }
+*/
 }

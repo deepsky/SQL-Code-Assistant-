@@ -37,12 +37,11 @@ public abstract class ConditionBase extends PlSqlElementBase implements Conditio
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitCondition(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitCondition(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
 }

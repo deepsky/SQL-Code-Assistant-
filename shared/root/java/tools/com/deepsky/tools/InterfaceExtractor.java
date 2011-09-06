@@ -232,6 +232,7 @@ public class InterfaceExtractor {
         b.append("\t\tif (getPredicting() == 0) {\n");
 //        b.append("\t\t\tint local = depth++;\n");
         b.append("\t\t\tPsiBuilder.Marker m = builder.mark();\n");
+        b.append("\t\t\ttry {\n");
 
         if (getReturnType(m).equals("void")) {
             b.append("\t\t\tsuper.").append(m.getName()).append("(");
@@ -251,15 +252,16 @@ public class InterfaceExtractor {
         b.append(");\n");
 
         b.append("\t\t\tif(returnType > 0 ){\n");
-//        b.append("\t\t\t\tm.done( findPlSqlElemType(returnType) );\n");
         b.append("\t\t\t\tm.done( ANTLRType2AdoptedType.type2etype[returnType] );\n");
-
-
-//        b.append("\exec\exec\treturnType = -1;\n");
         b.append("\t\t\t} else {\n");
         b.append("\t\t\t\tm.drop();\n");
         b.append("\t\t\t}\n");
-//        b.append("\t\t\tdepth = local;\n");
+
+        b.append("\t\t\t} catch(antlr.RecognitionException ex){\n");
+        b.append("\t\t\t\tm.drop();\n");
+        b.append("\t\t\t\tthrow ex;\n");
+        b.append("\t\t\t}\n");
+
         b.append("\t\t} else {\n");
         if (!getReturnType(m).equals("void")) {
 //            b.append("\exec\exec").append(getReturnType(m)).append(" ret = ");

@@ -25,23 +25,25 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.ObjectTypeDecl;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.RecordTypeItem;
+import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
 import com.deepsky.navigation.PlSqlPackageUtil;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class ObjectTypeDeclImpl extends PlSqlElementBase implements ObjectTypeDecl {
+public class ObjectTypeDeclImpl extends PlSqlDeclarationBase implements ObjectTypeDecl {
     public ObjectTypeDeclImpl(ASTNode astNode) {
         super(astNode);
     }
@@ -55,22 +57,9 @@ public class ObjectTypeDeclImpl extends PlSqlElementBase implements ObjectTypeDe
         return node.getText();
     }
 
-    public String getPackageName() {
-        PlSqlElement context = getUsageContext(TokenSet.create(
-                PlSqlElementTypes.PACKAGE_BODY, PlSqlElementTypes.PACKAGE_SPEC)
-        );
-
-        if(context instanceof PackageBody){
-            return ((PackageBody)context).getPackageName();
-        } else if(context instanceof PackageSpec){
-            return ((PackageSpec)context).getPackageName();
-        }
-
-        return null;
-    }
 
     @Nullable
-    public String getQuickNavigateInfo(){
+    public String getQuickNavigateInfo() {
         return "[Object Type] " + getDeclName();
     }
 
@@ -82,9 +71,28 @@ public class ObjectTypeDeclImpl extends PlSqlElementBase implements ObjectTypeDe
         }
     }
 
+    @NotNull
+    public String getObjectType() {
+        return "TYPE";
+    }
+
+    @NotNull
+    public String getObjectName() {
+        ASTNode child = getNode().findChildByType(PLSqlTypesAdopted.TYPE_NAME);
+        if(child == null){
+            throw new SyntaxTreeCorruptedException();
+        }
+        return child.getText().toUpperCase();
+    }
+
+    @NotNull
+    public String getCreateQuery() {
+        return PlSqlUtil.completeCreateScript(this);
+    }
+
 
     // presentation stuff
-    public Icon getIcon(int flags){
+    public Icon getIcon(int flags) {
         return Icons.OBJECT_TYPE_DECL;
     }
 
@@ -103,14 +111,14 @@ public class ObjectTypeDeclImpl extends PlSqlElementBase implements ObjectTypeDe
 
 
     class TablePresentation implements ItemPresentation {
-        public String getPresentableText(){
+        public String getPresentableText() {
             return getDeclName().toLowerCase();
         }
 
         @Nullable
-        public String getLocationString(){
+        public String getLocationString() {
             String pkgName = PlSqlPackageUtil.findPackageNameForElement(ObjectTypeDeclImpl.this);
-            if(pkgName != null){
+            if (pkgName != null) {
                 return "in " + pkgName + " (Object Type)";
             } else {
                 return "(Object Type)";
@@ -118,15 +126,14 @@ public class ObjectTypeDeclImpl extends PlSqlElementBase implements ObjectTypeDe
         }
 
         @Nullable
-        public Icon getIcon(boolean open){
+        public Icon getIcon(boolean open) {
             return Icons.OBJECT_TYPE_DECL;
         }
 
         @Nullable
-        public TextAttributesKey getTextAttributesKey(){
+        public TextAttributesKey getTextAttributesKey() {
             return null;
         }
     }
-
 
 }

@@ -25,9 +25,10 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.resolver.ContextPathProvider;
 import com.intellij.psi.PsiElement;
 
-public interface PlSqlElement extends PsiElement {
+public interface PlSqlElement extends PsiElement, ContextPathProvider {
     String getQuickNavigateInfo();
     String getStrippedText();
 

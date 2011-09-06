@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public interface CallableCompositeName extends CompositeName {
 
     String getCName();
-    CallableNameDesc describe();
+//    CallableNameDesc describe();
 
     @NotNull
     Callable getCallable();

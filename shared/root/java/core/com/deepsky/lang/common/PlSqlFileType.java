@@ -25,39 +25,37 @@
 
 package com.deepsky.lang.common;
 
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.lang.Language;
 import com.deepsky.view.Icons;
+import com.intellij.openapi.fileTypes.LanguageFileType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-import org.jetbrains.annotations.NotNull;
+public class PlSqlFileType extends LanguageFileType {
 
-public class PlSqlFileType  extends LanguageFileType {
+    public static final PlSqlFileType FILE_TYPE = new PlSqlFileType();
 
-  public PlSqlFileType() {
-    super(new PlSqlLanguage());
-  }
+    public PlSqlFileType() {
+        super(new PlSqlLanguage());
+    }
 
-  @NotNull
-  public String getName() {
-    return "PlSql";
-  }
+    @NotNull
+    public String getName() {
+        return "PlSql";
+    }
 
-  @NotNull
-  public String getDescription() {
-    return "SQL (PL/SQL) file type";
-  }
+    @NotNull
+    public String getDescription() {
+        return "SQL (PL/SQL) file type";
+    }
 
-  @NotNull
-  public String getDefaultExtension() {
-    return "sql";
-  }
+    @NotNull
+    public String getDefaultExtension() {
+        return "sql";
+    }
 
-  public Icon getIcon() {
-//    return IconLoader.getIcon("/fileTypes/javaScript.png");
-    return Icons.SQL_FILE;
-  }
+    public Icon getIcon() {
+        return Icons.SQL_FILE;
+    }
 
 }

@@ -28,9 +28,6 @@ package com.deepsky.lang.plsql.psi;
 import org.jetbrains.annotations.NotNull;
 
 public interface CursorDecl extends Declaration {
-//    @NotNull
-//    String getCursorName();
-
     @NotNull
     SelectStatement getSelect();
 }

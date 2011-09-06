@@ -9,7 +9,7 @@ options {
     importVocab = PLSql2;
     exportVocab = PLSql;
     k = 3;
-    buildAST = true;
+    buildAST = false;
 }
 
 tokens {
@@ -19,7 +19,6 @@ tokens {
     RECORD_TYPE_DECL;
     SELECT_EXPRESSION; SELECT_EXPRESSION_UNION;
     PLSQL_BLOCK;
-///    BEGIN_BLOCK;
     CURSOR_DECLARATION;
     VARIABLE_DECLARATION;
     PROCEDURE_BODY;
@@ -29,8 +28,6 @@ tokens {
     IF_STATEMENT;
     LOOP_STATEMENT;
     STATEMENT;
-//    SELECT_COMMAND;
-    SELECT_LIST;
     TABLE_REFERENCE_LIST;
     TABLE_REFERENCE_LIST_FROM;
     WHERE_CONDITION;
@@ -43,12 +40,12 @@ tokens {
     ARGUMENT;
     ARGUMENT_LIST;
     FIELD_NAME;
-    PLSQL_EXPR_LIST; EXPR_LIST;
+    PLSQL_EXPR_LIST_USING; EXPR_LIST;
     DECLARE_LIST;
     FUNCTION_CALL;
     PACKAGE_INIT_SECTION;
     CONCAT;
-    CALL_ARGUMENT_LIST;
+    CALL_ARGUMENT_LIST; SPEC_CALL_ARGUMENT_LIST;
     CALL_ARGUMENT;
     BASE_EXRESSION;
     COLUMN_SPEC;
@@ -58,7 +55,10 @@ tokens {
     CASE_EXPRESSION_SRCH;
     CASE_STATEMENT;
     COUNT_FUNC;
+
+    RANK_FUNCTION; LEAD_FUNCTION; LAG_FUNCTION;
     TRIM_FUNC;
+
     COLUMN_SPEC_LIST;
     INSERT_COMMAND; UPDATE_COMMAND; DELETE_COMMAND; MERGE_COMMAND; MERGE_WHEN_COMMAND;
     STRING_LITERAL; NUMERIC_LITERAL; BOOLEAN_LITERAL;
@@ -68,9 +68,10 @@ tokens {
     COLUMN_OUTER_JOIN;
     LOGICAL_FACTOR;
     TABLE_ALIAS;
-    CAST_EXPR;
+    CAST_FUNC;
     VAR_REF; PLSQL_VAR_REF; PARAMETER_REF;
     EXCEPTION_SECTION;
+    FETCH_STATEMENT;
 
     SELECTED_TABLE;
     CREATE_PROCEDURE;
@@ -120,6 +121,7 @@ tokens {
     ANSI_JOIN_TAB_SPEC;
     // DAY_TO_EXPR;
     INTERVAL_DAY_TO_SEC_EXPR;
+    INTERVAL_YEAR_TO_MONTH_EXPR;
     INTERVAL_CONST;
     USER_CONST;
     SYSDATE_CONST;
@@ -145,11 +147,17 @@ tokens {
     ASTERISK_COLUMN;
     IDENT_ASTERISK_COLUMN;
     EXPR_COLUMN;
-    TABLE_NAME; TABLE_NAME_WITH_LINK;
+
+    // obsolted, subject to remove ---
+    ///TABLE_NAME; TABLE_NAME_WITH_LINK;
+    // -------------------------------
+
+    TABLE_REF;
+    TABLE_REF_WITH_LINK;
+
     FROM_SUBQUERY;
     FROM_PLAIN_TABLE;
     SCHEMA_NAME;
-    TABLE_REF;
     COLUMN_NAME_REF;
     ARITHMETIC_EXPR;
     ASSIGNMENT_OP;
@@ -174,7 +182,7 @@ tokens {
     SQLPLUS_EXIT; SQLPLUS_QUIT; SQLPLUS_RUNSCRIPT; SQLPLUS_SPOOL;
 
     OR_LOGICAL; AND_LOGICAL; NOT_LOGICAL; LOGICAL_EXPR; RELATION_OP;
-    SEQUENCE_EXPR;
+    SEQUENCE_EXPR; SEQUENCE_REF;
     ALIAS_IDENT;
     COLUMN_NAME_DDL; COLUMN_DEF; TABLE_DEF;
     TABLE_COLLECTION; VARRAY_COLLECTION;
@@ -184,7 +192,7 @@ tokens {
     AT_TIME_ZONE_EXPR;
     TIMEZONE_SPEC;
 
-    ALTER_TABLE;
+    ALTER_TABLE; ALTER_GENERIC;
     CREATE_TEMP_TABLE;
     COMMENT; COMMENT_STR;
     CREATE_INDEX;
@@ -195,11 +203,29 @@ tokens {
     COND_COMP_SEQ2;
     COND_COMP_ERROR;
     COLUMN_NAME_LIST;
+    OWNER_COLUMN_NAME_LIST;
 
     SERIALLY_REUSABLE_PRAGMA;
     CREATE_VIEW;
-    VIRTUAL_TABLE;
-    ROWNUM;
+    DATATYPE_PARAM_INFO;
+
+    CREATE_VIEW_COLUMN_DEF; // IMPORTANT! It is not an Oracle syntax construction! It is needed only for Resolver (internal)
+    /*  The column view definition generated automatically during VIEW discovering.
+        Main purpose is to complete describing VIEW with column types.
+
+        Example:
+        create view_column_def_$internal$ QE$_OTA_PARSE_QT_F
+        (Q_NAME VARCHAR2(30)
+        , ROW_ID ROWID
+        , MSGID RAW(16)
+        , CORRID VARCHAR2(128)
+        ....
+        );
+
+    */
+
+    TABLE_FUNCTION;
+    ROWNUM; ROWID;
     CUSTOM_AGGR_FUNCTION;
     LAST_STMT_RESULT_NUM;
     LAST_STMT_RESULT_BOOL;
@@ -207,15 +233,20 @@ tokens {
     CURSOR_STATE;
     SQLCODE_SYSVAR;
     SQLERRM_SYSVAR;
-    COLLECTION_METHOD_CALL; C_RECORD_ITEM_REF;
+    COLLECTION_METHOD_CALL; COLLECTION_METHOD_CALL2; C_RECORD_ITEM_REF;
     CALLABLE_NAME_REF;
     TRUNCATE_TABLE;
+
     DROP_VIEW; DROP_TABLE; DROP_FUNCTION; DROP_PROCEDURE; DROP_PACKAGE; DROP_INDEX; DROP_SEQUENCE; DROP_TYPE;
     DROP_OPERATOR; DROP_SYNONYM; DROP_USER; DROP_ROLE; DROP_LIBRARY; DROP_DB_LINK; DROP_DIRECTORY;
+    DROP_TRIGGER;
+
+    CREATE_SYNONYM; SYNONYM_NAME; SYNONYM_OBJ; SYNONYM_OBJ_WITH_LINK;
 
     COLUMN_PK_SPEC;
     COLUMN_FK_SPEC;
     NOT_NULL_STMT;
+    COLUMN_CHECK_CONSTRAINT;
     CONSTRAINT;
     PK_SPEC; FK_SPEC;
     UNIQUE_CONSTRAINT;
@@ -226,7 +257,7 @@ tokens {
     IOT_TYPE; HEAP_ORGINIZED; EXTERNAL_TYPE;
 
     //
-    NAME_FRAGMENT;
+    NAME_FRAGMENT; EXEC_NAME_REF;
     COLLECTION_METHOD_NAME;
     V_COLUMN_DEF;
     TABLE_NAME_DDL; VIEW_NAME; COMMENT_STR;
@@ -243,14 +274,27 @@ tokens {
     INSTEADOF_TRIGGER;
     TRIGGER_TARGET;
 
-    NUMERIC_LOOP_SPEC; FORALL_LOOP_SPEC; CURSOR_REF_LOOP_SPEC; CURSOR_IMPL_LOOP_SPEC;
-//    CURSOR_LOOP_SPEC;
-    LOOP_INDEX;
+    FORALL_LOOP_SPEC; CURSOR_REF_LOOP_SPEC;
+
+    CURSOR_LOOP_SPEC; CURSOR_LOOP_INDEX; NUM_LOOP_INDEX; NUMERIC_LOOP_SPEC;
+
     RECORD_ITEM_NAME;
 //    FORALL_STATEMENT;
     GOTO_STATEMENT;
     EXIT_STATEMENT;
     LABEL_NAME;
+    PARTITION_SPEC; RANGE_PARTITION; HASH_PARTITION;
+
+    CREATE_TYPE;
+    BIND_VAR;
+    RETURNING_CLAUSE;
+/*
+    CREATE_OBJECT_TYPE_DEF;
+    CREATE_TABLE_COLLECTION;
+    CREATE_RECORD_TYPE_DECL;
+    CREATE_REF_CURSOR;
+    CREATE_VARRAY_COLLECTION;
+*/
 }
 
 {
@@ -265,8 +309,8 @@ tokens {
     final int _SINGLE_WS_ = 2;
     final int _NEWLINE_WS_ = 3;
 
-    public void handle_ws( int action ){
-    }
+//    public void handle_ws( int action ){
+//    }
 
     protected void process_wrapped_package(String package_name){
         // default action if the package is wrapped
@@ -299,7 +343,7 @@ start_rule:
 
 // -------------------------------------------------
 
-// IMPORTANT: code generated by ANTLR for start_rule should be revised because it supposed a particual refereences being generated  
+// IMPORTANT: code generated by ANTLR for start_rule should be revised because it supposed a particual refereences being generated
 start_rule:
     (   start_rule_inner
         | {
@@ -317,12 +361,17 @@ start_rule:
 
 start_rule_inner:
         (create_or_replace (DIVIDE!)?)
-        | package_spec
+        | ("package" "body") => (package_body  (DIVIDE!)?)
+            {  __markRule(PACKAGE_BODY); }
+        | ("package") => (package_spec  (DIVIDE!)?)
             {  __markRule(PACKAGE_SPEC); }
         | (function_body (DIVIDE!)?)
         | (procedure_body (DIVIDE!)?)
+        | (create_trigger (SEMI!)? (DIVIDE!)?)
+            {  __markRule(CREATE_TRIGGER);}
         | (sql_statement (SEMI!)?)
         | ("alter") => (alter_command (SEMI!)?)
+        | (associate_statistics (SEMI!)?)
         | (comment (SEMI!)?)
         | (type_definition (SEMI!)?)
         | ( drop_command (SEMI!)?)
@@ -333,9 +382,9 @@ start_rule_inner:
 
 drop_command:
     "drop"! (
-        ("table"! table_name_ddl ("purge")?)
+        ("table"! table_ref ("purge")?)
             {  __markRule(DROP_TABLE);}
-        | ("view" table_name_ddl ("cascade" "constraints")?)
+        | ("view" table_ref ("cascade" "constraints")?)
             {  __markRule(DROP_VIEW);}
         | ("function" callable_name_ref)
             {  __markRule(DROP_FUNCTION);}
@@ -364,18 +413,68 @@ drop_command:
             {  __markRule(DROP_LIBRARY);}
         | ("database" "link" object_name)
             {  __markRule(DROP_DB_LINK);}
+        | ("trigger" object_name)
+            {  __markRule(DROP_TRIGGER);}
      )
     ;
 
+// ASSOCIATE STATISTICS -----------------------------------------------------------------------
+associate_statistics:
+    "associate" "statistics"  "with" (column_association|function_association) (storage_table_clause)?
+    ;
+
+column_association:
+    "column"  column_spec_ex (COMMA column_spec_ex)* using_statistics_type
+    ;
+
+column_spec_ex:
+    (name_fragment2 DOT!)+ column_name_ref
+    ;
+
+function_association:
+    (   ("functions"  ident_list (COMMA ident_list)* )
+        | ("packages" ident_list (COMMA ident_list)* )
+        | ("types"  ident_list (COMMA ident_list)* )
+        | ("indexes" ident_list (COMMA ident_list)* )
+        | ("indextypes" ident_list (COMMA ident_list)* )
+    )
+    (default_clause | using_statistics_type)
+    ;
+
+ident_list:
+    (schema_name DOT)? identifier
+    ;
+
+storage_table_clause:
+    "with" ("user"|"system") "managed" "storage" "table"
+    ;
+
+default_clause:
+    "default"
+    (   ("cost" OPEN_PAREN numeric_literal COMMA numeric_literal COMMA numeric_literal CLOSE_PAREN)
+        | ("selectivity" numeric_literal)
+    )
+    ;
+
+using_statistics_type:
+    "using" ("null"|((schema_name DOT)? statistics_type))
+    ;
+
+// todo -- should be revised
+statistics_type:
+    identifier
+    ;
+// --------------------------------------------------------------------------------------------
+
 truncate_command:
-    "truncate"! "table"! table_name_ddl
+    "truncate"! "table"! table_ref
     {  __markRule(TRUNCATE_TABLE);}
     ;
 
 comment:
     "comment"! "on"! (
-        ("table"! table_name_ddl "is"! comment_string)
-        | ("column"! table_name_ddl DOT column_name_ddl "is"! comment_string)
+        ("table"! table_ref "is"! comment_string)
+        | ("column"! table_ref DOT column_name_ref "is"! comment_string)
      )
     {  __markRule(COMMENT);}
     ;
@@ -386,14 +485,13 @@ comment_string:
     ;
 
 column_def:
-//    column_name_ddl datatype (not_null|("default" ("sysdate"|numeric_literal)))?
-    column_name_ddl type_spec ("default" ("sysdate"|numeric_literal|string_literal))? (not_null)?
-    (pk_spec|fk_spec|column_constraint)?
+    column_name_ddl type_spec ("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal))?  (not_null)? (column_constraint2)?
+    //(not_null ("enable")?)? (pk_spec|fk_spec|column_constraint)?
     {  __markRule(COLUMN_DEF);}
     ;
 
 not_null:
-     ("not")? "null"
+     ("not")? "null" ("disable"|"enable")?
     {  __markRule(NOT_NULL_STMT);}
     ;
 
@@ -401,16 +499,30 @@ row_movement_clause:
     ("disable"|"enable") "row" "movement"
     ;
 
+// todo -- subject to remove , not used any longer
 pk_spec:
     "primary" "key" ("disable"|"enable")?
     {  __markRule(COLUMN_PK_SPEC);}
     ;
 
+// todo -- subject to remove , not used any longer
 fk_spec:
-    "references"! table_name_ddl OPEN_PAREN! column_name_ddl CLOSE_PAREN!
+    "references"! (schema_name DOT)? table_ref OPEN_PAREN! column_name_ref CLOSE_PAREN! ("rely")? ("disable"|"enable")?
     {  __markRule(COLUMN_FK_SPEC);}
     ;
 
+column_constraint2:
+    ("constraint" constraint_name)? (
+        ("primary" "key"  ("disable"|"enable")? )
+            {  __markRule(COLUMN_PK_SPEC);}
+        | ("references"! (schema_name DOT)? table_ref OPEN_PAREN! column_name_ref CLOSE_PAREN! ("rely")? ("disable"|"enable")?)
+            {  __markRule(COLUMN_FK_SPEC);}
+        | ("check" condition)
+            {  __markRule(COLUMN_CHECK_CONSTRAINT);}
+    )
+    ;
+
+// todo -- subject to remove , not used any longer
 column_constraint:
     "constraint" identifier (
         not_null
@@ -444,6 +556,7 @@ sqlplus_command:
         {  __markRule(SQLPLUS_PROMPT);}
     | "rem" (~CUSTOM_TOKEN)* CUSTOM_TOKEN
         {  __markRule(SQLPLUS_PROMPT);}
+    | "host" (~CUSTOM_TOKEN)* CUSTOM_TOKEN
     | "exit"  (identifier2|numeric_literal)?
         {  __markRule(SQLPLUS_EXIT);}
     | ("quit" (SEMI!)?)
@@ -481,13 +594,17 @@ create_or_replace:
         package_spec
             {  __markRule(PACKAGE_SPEC); }
         | package_body
+            {  __markRule(PACKAGE_BODY);}
         | procedure_body
-            {  __markRule(CREATE_PROCEDURE);}
+//            { #.create_or_replace = #.([CREATE_PROCEDURE, "CREATE_PROCEDURE" ], #.create_or_replace);}
         | function_body
-            {  __markRule(CREATE_FUNCTION);}
+//            { #.create_or_replace = #.([CREATE_FUNCTION, "CREATE_FUNCTION" ], #.create_or_replace);}
         | create_view
             {  __markRule(CREATE_VIEW);}
+        | create_view_column_def
+            {  __markRule(CREATE_VIEW_COLUMN_DEF);}
         | (type_definition (SEMI!)?)
+//            { #.create_or_replace = #.([CREATE_TYPE, "CREATE_TYPE" ], #.create_or_replace);}
         | (create_table2 (SEMI!)?)
             {  __markRule(TABLE_DEF);}
         | (create_temp_table2 (SEMI!)?)
@@ -502,6 +619,8 @@ create_or_replace:
             {  __markRule(CREATE_DB_LINK);}
         | (create_sequence (SEMI!)?)
             {  __markRule(CREATE_SEQUENCE);}
+        | (("public")? create_synonym (SEMI!)?)
+            {  __markRule(CREATE_SYNONYM);}
     )
     ;
 
@@ -533,6 +652,14 @@ sequence_opt:
     | "noorder"
     ;
 
+create_synonym:
+    "synonym" (schema_name DOT!)? synonym_name "for" (schema_name DOT!)? synonym_obj
+    ;
+
+synonym_name:
+    identifier2
+    {  __markRule(SYNONYM_NAME);}
+    ;
 
 create_db_link:
     "database" "link" object_name
@@ -540,14 +667,22 @@ create_db_link:
     ("using" (identifier2|string_literal))?
     ;
 
+synonym_obj :
+    identifier2
+        { __markRule(SYNONYM_OBJ);}
+    | TABLE_NAME_SPEC
+        { __markRule(SYNONYM_OBJ_WITH_LINK);}
+    ;
+
+
 // -------------------------------------------------------------------
 // [TRIGGER START] ----------------------------------
 // -------------------------------------------------------------------
 
 create_trigger:
-    "trigger"! trigger_name
-    // BEFORE INSERT OR UPDATE ON xdv_dev_grp_mobile_station_it
-    // AFTER INSERT OR UPDATE OR DELETE ON xdv_dev_grp_mobile_station_it
+    "trigger"! (schema_name DOT!)? trigger_name
+    // BEFORE INSERT OR UPDATE ON ota_dev_grp_mobile_t
+    // AFTER INSERT OR UPDATE OR DELETE ON ota_dev_grp_mobile_t
     // FOR EACH ROW
     (   ( ("after"|"before")
             (
@@ -575,7 +710,7 @@ ddl_trigger:
     ;
 
 dml_trigger:
-    insert_update_delete ( "or"! insert_update_delete)* "on"! table_name_ddl
+    insert_update_delete ( "or"! insert_update_delete)* "on"! table_ref
     {  __markRule(DML_TRIGGER_CLAUSE);}
     ;
 
@@ -585,7 +720,7 @@ trigger_target:
     ;
 
 instead_of_trigger:
-    "instead"! "of"! ("delete"|"insert"|"update") "on"! view_name_ddl
+    "instead"! "of"! ("delete"|"insert"|"update") "on"! identifier  // todo -- view_name_ddl
     {  __markRule(INSTEADOF_TRIGGER);}
     ;
 
@@ -613,7 +748,7 @@ trigger_name:
     ;
 
 alter_trigger:
-    "alter"! "trigger"! trigger_name enable_disable_clause
+    "alter"! "trigger"! (schema_name DOT!)? trigger_name enable_disable_clause
     {  __markRule(ALTER_TRIGGER);}
     ;
 // -------------------------------------------------------------------
@@ -622,7 +757,7 @@ alter_trigger:
 
 
 create_index2:
-    ("unique"|"bitmap")? "index"! index_name "on"! table_name_ddl
+    ("unique"|"bitmap")? "index"! (schema_name DOT!)? index_name "on"! (schema_name DOT!)? table_ref
     OPEN_PAREN index_column_spec_list CLOSE_PAREN
     (physical_properties|table_properties)*
     ;
@@ -633,7 +768,7 @@ index_column_spec_list:
 
 
 create_directory:
-    "directory" object_name ("as" string_literal)?
+    "directory" (schema_name DOT!)? object_name ("as" string_literal)?
     ;
 // -------------------------------------------------------------------
 // [CREATE TABLE START] ----------------------------------
@@ -647,7 +782,7 @@ create_table2:
     ;
 
 create_temp_table2:
-    ("global")? "temporary"! "table"! table_name_ddl
+    ("global")? "temporary"! (schema_name DOT!)? "table"! table_name_ddl
     (OPEN_PAREN! column_def (COMMA! column_def)* (COMMA! constaraint)* CLOSE_PAREN!)?
     ("on" "commit" ("preserve" | "delete") "rows" )
     (cache_clause)?
@@ -657,7 +792,7 @@ create_temp_table2:
 physical_properties:
     segment_attributes_clause
 //    | organization_spec
-//    | cluster_clause 
+//    | cluster_clause
     ;
 
 segment_attributes_clause:
@@ -690,6 +825,7 @@ physical_attributes_clause:
 
 table_properties:
     table_partitioning_clause
+    { __markRule(PARTITION_SPEC);}
     | cache_clause
     | parallel_clause
     | alter_table_options
@@ -707,7 +843,9 @@ monitoring_clause:
 
 table_partitioning_clause:
     range_partitions
+        { __markRule(RANGE_PARTITION);}
     | hash_partitions
+        { __markRule(HASH_PARTITION);}
     | local_partitioned_index // -- "create index" specific
 // todo   | list_partitions
 // todo   | reference_partitions
@@ -717,7 +855,7 @@ table_partitioning_clause:
     ;
 
 range_partitions:
-    "partition" "by" "range" OPEN_PAREN! identifier2 (COMMA! identifier2)* CLOSE_PAREN!
+    "partition" "by" "range" OPEN_PAREN! column_name_ref (COMMA! column_name_ref)* CLOSE_PAREN!
     ("interval" plsql_expression ("store" "in" OPEN_PAREN identifier2 (COMMA! identifier2)* OPEN_PAREN)?)?
     OPEN_PAREN partition_item (COMMA! partition_item)* CLOSE_PAREN
     ;
@@ -738,12 +876,13 @@ table_partition_description:
     ;
 
 hash_partitions:
-    "partition" "by" "hash" OPEN_PAREN! identifier2 (COMMA! identifier2)* CLOSE_PAREN!
-    (individual_hash_partitions | hash_partitions_by_quantity)
+    "partition" "by" "hash" OPEN_PAREN! column_name_ref (COMMA! column_name_ref)* CLOSE_PAREN!
+    ((individual_hash_partitions)+ | hash_partitions_by_quantity)
     ;
 
 individual_hash_partitions:
-    OPEN_PAREN "partition" (identifier2)? (partition_storage_clause)* (COMMA! "partition" (identifier2)? (partition_storage_clause)* )* CLOSE_PAREN
+//    OPEN_PAREN "partition" (identifier2)? (partition_storage_clause)* (COMMA! "partition" (identifier2)? (partition_storage_clause)* )* CLOSE_PAREN
+    OPEN_PAREN "partition" (identifier2)? (partition_storage_clause)* CLOSE_PAREN
     ;
 
 partition_storage_clause:
@@ -817,55 +956,47 @@ storage_params:
     | "encrypt"
     ;
 
-/*
-partition_spec:
-    ( ("partition" "by" "range" OPEN_PAREN identifier2 CLOSE_PAREN)
-     /// | "local"
-    )
-    OPEN_PAREN partition_item (COMMA partition_item)* CLOSE_PAREN
-    ;
-
-tablespace_params:
-    ("tablespace" identifier)
-    | ("pctused" numeric_literal)
-    | ("pctfree" numeric_literal)
-    | ("initrans" numeric_literal)
-    | ("maxtrans" numeric_literal)
-    | storage_spec
-    ;
-
-*/
 
 constaraint:
     "constraint"! constraint_name (
         pk_spec_constr
         | fk_spec_constr
-        | ("check" condition)
+        | check_condition
         | unique_contsr
      )
     {  __markRule(CONSTRAINT);}
     ;
 
 pk_spec_constr:
-    "primary"! "key"! OPEN_PAREN! column_name_ddl_list CLOSE_PAREN!
+    "primary"! "key"! OPEN_PAREN! owner_column_name_ref_list CLOSE_PAREN!
     {  __markRule(PK_SPEC);}
     ;
 
 fk_spec_constr:
-    "foreign"! "key"! OPEN_PAREN! column_name_ddl_list CLOSE_PAREN!
-    "references"! table_name_ddl OPEN_PAREN! column_name_ddl_list CLOSE_PAREN!
-    ("disable")? ("on" "update" referential_actions)? ("on" "delete" referential_actions)?
+    "foreign"! "key"! OPEN_PAREN! owner_column_name_ref_list CLOSE_PAREN!
+    "references"! (schema_name DOT)? table_ref OPEN_PAREN! column_name_ref_list CLOSE_PAREN!
+    ("rely")? ("disable"|"enable")? ("on" "update" referential_actions)? ("on" "delete" referential_actions)?
     {  __markRule(FK_SPEC);}
     ;
 
 unique_contsr:
-    "unique" OPEN_PAREN column_name_ddl (COMMA! column_name_ddl)* CLOSE_PAREN
+    "unique" OPEN_PAREN column_name_ref (COMMA! column_name_ref)* CLOSE_PAREN
     {  __markRule(UNIQUE_CONSTRAINT);}
     ;
 
-column_name_ddl_list:
-    column_name_ddl (COMMA! column_name_ddl)*
+check_condition:
+    "check" condition
+    {  __markRule(COLUMN_CHECK_CONSTRAINT);}
+    ;
+
+column_name_ref_list:
+    column_name_ref (COMMA! column_name_ref)*
     {  __markRule(COLUMN_NAME_LIST);}
+    ;
+
+owner_column_name_ref_list:
+    column_name_ref (COMMA! column_name_ref)*
+    {  __markRule(OWNER_COLUMN_NAME_LIST);}
     ;
 
 referential_actions:
@@ -885,7 +1016,7 @@ constraint_name:
 // [ALTER TABLE START] ------------------------------------------------
 // -------------------------------------------------------------------
 alter_table:
-    "alter"! "table"! table_name_ddl (constraint_clause)? (alter_table_options)?
+    "alter"! "table"! table_ref (constraint_clause)? (alter_table_options)?
     {  __markRule(ALTER_TABLE);}
     ;
 
@@ -895,7 +1026,7 @@ constraint_clause:
     | ("rename"
             (   ("constraint" identifier2 "to" identifier2)
                 | ("to" identifier2)
-                | ("column" identifier2 "to" identifier2) )  
+                | ("column" identifier2 "to" identifier2) )
       )
     | "drop" ( ("column" identifier2) | drop_clause )
     ;
@@ -907,25 +1038,31 @@ modify_constraint_clause:
     ;
 
 add_syntax_1:
-    column_def_alter
+    column_add_name
     | inline_out_of_line_constraint
     ;
 
 add_syntax_2:
-    (column_def_alter) => (column_def_alter (COMMA! column_def_alter)*)
+    (column_add_name) => (column_add_name (COMMA! column_add_name)*)
     | inline_out_of_line_constraint
     ;
 
 modify_syntax_1:
-    column_def_alter
+    column_modi_name
     ;
 
 modify_syntax_2:
-    column_def_alter (COMMA! column_def_alter)*
+    column_modi_name (COMMA! column_modi_name)*
     ;
 
-column_def_alter:
-    column_name_ddl (datatype)? ( not_null|("default" ("sysdate"|numeric_literal)) )? (pk_spec|fk_spec|column_constraint)?
+column_add_name:
+//    column_name_ddl (datatype)? ( not_null|("default" ("sysdate"|numeric_literal)) )? (pk_spec|fk_spec|column_constraint)?
+    column_name_ddl (datatype)? ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )? (column_constraint2)?
+    ;
+
+column_modi_name:
+//    column_name_ref (datatype)? ( not_null|("default" ("sysdate"|numeric_literal)) )? (pk_spec|fk_spec|column_constraint)?
+    column_name_ref (datatype)? ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )? (column_constraint2)?
     ;
 
 constraint:
@@ -936,8 +1073,8 @@ constraint:
 // todo    | out_of_line_ref_constraint
     ;
 /*
-   ADD CONSTRAINT XDV_TAM_1HR_DDE_FK FOREIGN KEY (DDE_ID)
-      REFERENCES XDV_DTM_HRDATE_DT (ID)
+   ADD CONSTRAINT OTA_LL1_TUI_FK FOREIGN KEY (DDE_ID)
+      REFERENCES OTA_LL1_HRDATE_T (ID)
        RELY DISABLE NOVALIDATE;
 */
 
@@ -948,7 +1085,7 @@ inline_out_of_line_constraint:
         | ("primary" "key" (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)?) // ("rely" "using" "index" identifier2)? ("enable")? )
         | ("foreign" "key"
                 (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)
-                "references" identifier2 (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)
+                "references" (schema_name DOT)? table_ref (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)
                 ("rely")? ("disable"|"enable")? ("validate"|"novalidate")? ("on" "delete" ("cascade"|("set" "null")) )?
             )
         | ("check" condition)
@@ -1000,7 +1137,7 @@ global_partitioned_index:
 
 index_partitioning_clause:
     "partition" (identifier2)? "values" "less" "than"
-            OPEN_PAREN numeric_literal (COMMA! numeric_literal)* CLOSE_PAREN segment_attributes_clause 
+            OPEN_PAREN numeric_literal (COMMA! numeric_literal)* CLOSE_PAREN segment_attributes_clause
     ;
 
 local_partitioned_index:
@@ -1026,39 +1163,53 @@ local_partition_item:
 
 
 type_definition:
-    "type"! type_name ("as"!|"is"!)
+    "type"! (schema_name DOT!)? type_name
     (
-        ("object"! OPEN_PAREN! record_item (COMMA! record_item )* CLOSE_PAREN!)
-            {  __markRule(OBJECT_TYPE_DEF);}
-        | ("table"! "of"! type_spec ("index"! "by"! type_spec)? ("not" "null")? )
-            {  __markRule(TABLE_COLLECTION);}
-        | ("record" OPEN_PAREN! record_item ( COMMA! record_item )* CLOSE_PAREN!)
-            {  __markRule(RECORD_TYPE_DECL); }
-        | ( "ref" "cursor"! ( "return"! record_name (PERCENTAGE "rowtype")? )? )
-            {  __markRule(REF_CURSOR); }
-        | ( "varray"! OPEN_PAREN! plsql_expression CLOSE_PAREN! "of"! type_spec ("not" "null")?)
-            {  __markRule(VARRAY_COLLECTION); }
+      ("under" (schema_name DOT!)? type_name_ref
+        OPEN_PAREN! record_item (COMMA! record_item )* CLOSE_PAREN! ("not" "final")? )
+        {  __markRule(OBJECT_TYPE_DEF);}
+      | (
+          ("as"!|"is"!)  (
+            ("object"! OPEN_PAREN! record_item (COMMA! record_item )* CLOSE_PAREN! ("not" "final")?)
+                {  __markRule(OBJECT_TYPE_DEF);}
+            | ("table"! "of"! type_spec ("index"! "by"! type_spec)? ("not" "null")? )
+                {  __markRule(TABLE_COLLECTION);}
+            | ("record" OPEN_PAREN! record_item ( COMMA! record_item )* CLOSE_PAREN!)
+                {  __markRule(RECORD_TYPE_DECL); }
+            | ( "ref" "cursor"! ( "return"! record_name (PERCENTAGE "rowtype")? )? )
+                {  __markRule(REF_CURSOR); }
+            | ( "varray"! OPEN_PAREN! plsql_expression CLOSE_PAREN! "of"! type_spec ("not" "null")?)
+                {  __markRule(VARRAY_COLLECTION); }
+          )
+      )
     )
     ;
 
 
 create_view:
     "view"! view_name_ddl (OPEN_PAREN! v_column_def (COMMA! v_column_def)* CLOSE_PAREN!)?
-    "as"! select_expression  ("with" (("check" "option")|("read" "only")))? (SEMI!)?
+    "as"! select_expression
+    ("with" (("check" "option")|("read" "only")))? (SEMI!)?
+    ;
+
+create_view_column_def:
+    "view_column_def_$internal$"! view_name_ddl OPEN_PAREN! column_def (COMMA! column_def)* CLOSE_PAREN! (SEMI!)?
     ;
 
 v_column_def:
-    name_fragment
+    (identifier2 | "timestamp" | "partition")
     {  __markRule(V_COLUMN_DEF);}
     ;
 
 package_spec :
-    "package"! (schema_name DOT!)? o:package_name (a:"authid" {#a.setType(AUTHID);} identifier)?
+//    "package"! (schema_name DOT!)? o:package_name (a:"authid" {#a.setType(AUTHID);} identifier)?
+    "package"! (schema_name DOT!)? o:package_name ("authid"  identifier)?
     (   ("wrapped" {
+                throw new com.deepsky.lang.plsql.parser.WrappedPackageException();
 //                String package_name = #o.getFirstChild().getText();
-                String package_name = #o.getText();
+// todo                String package_name = #o.getText();
 //                throw new com.deepsky.lang.plsql.parser.WrappedPackageException(package_name);
-                process_wrapped_package(package_name);
+// todo                 process_wrapped_package(package_name);
              }
         )
         | (("is"! | "as"!) (serially_reusable_pragma SEMI!)?
@@ -1068,17 +1219,16 @@ package_spec :
 
 package_obj_spec_ex:
     package_obj_spec
+    | package_obj_spec_addon
     | (IF_COND_CMPL condition
             THEN_COND_CMPL cond_comp_seq (ELSE_COND_CMPL cond_comp_seq)? END_COND_CMPL
-//    | (if_cond_cmpl condition
-//            then_cond_cmpl cond_comp_seq (else_cond_cmpl cond_comp_seq)? end_cond_cmpl
       )
     { __markRule(CONDITIONAL_COMPILATION);}
     ;
 
 
 cond_comp_seq:
-    (error_cond_compliation)* (package_obj_spec)*
+    (error_cond_compliation)* (package_obj_spec|package_obj_spec_addon)*
     { __markRule(COND_COMP_SEQ);}
     ;
 
@@ -1093,7 +1243,7 @@ package_body :
     (serially_reusable_pragma SEMI!)?
     ( package_obj_body )*
     (package_init_section)? "end"! (package_name! )? SEMI!
-    {  __markRule(PACKAGE_BODY);}
+//    {  __markRule(PACKAGE_BODY);}
     ;
 
 package_init_section:
@@ -1102,21 +1252,45 @@ package_init_section:
     ;
 
 package_obj_spec:
-    variable_declaration
-    | subtype_declaration
+//    variable_declaration
+    subtype_declaration
     | cursor_declaration
     | cursor_spec
     | (type_definition SEMI!)
-//    | plsql_table_declaration
     | procedure_spec
     | function_spec
-    | exception_declaration
+//    | exception_declaration
+    | pragmas
+/*
     | exception_pragma
     | restrict_ref_pragma
     | interface_pragma
     | builtin_pragma
     | fipsflag_pragma
     | timestamp_pragma
+*/
+    ;
+
+package_obj_spec_addon:
+    variable_declaration
+    | exception_declaration
+    ;
+
+pragmas:
+    "pragma"! (
+        ("restrict_references"! OPEN_PAREN! identifier3 (COMMA! identifier3)+ CLOSE_PAREN! SEMI!)
+            { __markRule(RESTRICT_REF_PRAGMA);}
+        | ("interface"! OPEN_PAREN! identifier3 (COMMA! identifier3)+ CLOSE_PAREN! SEMI!)
+            { __markRule(INTERFACE_PRAGMA);}
+        | ("builtin"! OPEN_PAREN! string_literal (COMMA! plsql_expression)+ CLOSE_PAREN! SEMI!)
+            { __markRule(BUILTIN_PRAGMA);}
+        | ("fipsflag"! OPEN_PAREN! string_literal (COMMA! plsql_expression)+ CLOSE_PAREN! SEMI!)
+            { __markRule(FIPSFLAG_PRAGMA);}
+        | ("timestamp"! OPEN_PAREN! string_literal CLOSE_PAREN! SEMI!)
+            { __markRule(TIMESTAMPG_PRAGMA);}
+        | ("exception_init"! OPEN_PAREN! complex_name COMMA! plsql_expression CLOSE_PAREN! SEMI!)
+            { __markRule(EXCEPTION_PRAGMA);}
+    )
     ;
 
 /*
@@ -1151,20 +1325,27 @@ cond_comp_seq2:
     (error_cond_compliation)*
     ((function_declaration ("is"|"as")) => function_body
      | (procedure_declaration ("is"|"as")) => procedure_body
-     | package_obj_spec)*
+     | package_obj_spec
+     | package_obj_spec_addon)*
     { __markRule(COND_COMP_SEQ2);}
     ;
 
 variable_declaration :
-    variable_name ("constant")?  type_spec ("not" "null")? ((ASSIGNMENT_EQ|default1) plsql_expression)? SEMI!
+    variable_name ("constant")?  type_spec ("not" "null")? ((ASSIGNMENT_EQ|default1) plsql_expression)?
+        // todo -- workaround to enable completion for variable type 
+        (SEMI)?
     { __markRule(VARIABLE_DECLARATION);}
     ;
+	exception catch [RecognitionException ex] {
+	    throw ex;
+	}
 
 subtype_declaration :
     "subtype" (type_name|datatype) "is"
     (
         (type_spec) => type_spec
-        | (table_name PERCENTAGE! "type"! )
+//        | (table_name PERCENTAGE! "type"! )
+        | (table_ref PERCENTAGE! "type"! )
     )
     ("not" "null")? SEMI!
     {  __markRule(SUBTYPE_DECL); }
@@ -1180,6 +1361,7 @@ package_obj_body:
     (function_declaration ("is"|"as")) => function_body
     | (procedure_declaration ("is"|"as")) => procedure_body
     | package_obj_spec
+    | package_obj_spec_addon
     | condition_compilation
     ;
 
@@ -1199,8 +1381,10 @@ statement_tmpl:
     {  __markRule(CONDITIONAL_COMPILATION);}
     ;
 
-statement :
-        ("begin" | "declare") => begin_block   //// (("declare" declare_list)? plsql_block) /// begin_block   ///plsql_block
+statement
+{boolean tag1=false;}
+:
+        ("begin" | "declare") => begin_block
         | ( "loop" | "for" | "while" ) => loop_statement
           { __markRule(LOOP_STATEMENT);}
         | ( "forall" ) => forall_loop
@@ -1217,9 +1401,9 @@ statement :
           { __markRule(RETURN_STATEMENT);}
         | ( "case" ) => case_statement
           { __markRule(CASE_STATEMENT);}
-        | ( "select" | "update" | "insert" | "delete" |                 /// "with" | ("alter" ("system" | "session") ) |
-            "grant" | "commit" |                                // | "lock" | "execute" | "open" | "fetch" | "close" "set" |
-            "rollback" | "merge") => sql_statement
+        | ( "select" | "update" | "insert" | "delete" | "merge" |
+            "grant" | "revoke" |
+            "commit" | "rollback" ) => sql_statement
         | ("execute") => immediate_command
         | ("lock") => lock_table_statement
         | ("open") => open_statement
@@ -1229,7 +1413,23 @@ statement :
         | savepoint_statement
         | alter_command
         | ( plsql_lvalue ASSIGNMENT_EQ) => assignment_statement
-        | ( procedure_call ( DOT procedure_call )*)
+// todo -- subject to revise
+        | (( name_fragment_ex DOT )* exec_name_ref ~OPEN_PAREN ) => procedure_call_no_args
+        | ( procedure_call ( DOT {tag1=true;} procedure_call )*)
+            {
+                if(tag1){
+                     __markRule(COLLECTION_METHOD_CALL2);
+                }
+            }
+    ;
+
+//l_ret_val.EXTEND;
+//l_ret_val(1).amk_cols.EXTEND;
+//ota_logger_pkg.info(a_log_section => pc_pkg_log_section);
+
+procedure_call_no_args:
+    callable_name_ref
+    { __markRule(PROCEDURE_CALL);}
     ;
 
 
@@ -1264,44 +1464,41 @@ case_statement:
     { __markRule(CASE_STATEMENT);}
     ;
 
-
 declare_spec:
-        (variable_declaration
-        | subtype_declaration
+        (type_definition SEMI!)
         | cursor_declaration
-        | exception_declaration
+        | subtype_declaration
+        | ("pragma" "autonomous_transaction") => pragma_autonomous_transaction
         | exception_pragma
-        | (type_definition SEMI!)
-        | pragma
-//        | plsql_table_declaration
         |( (function_declaration) => function_body
            | function_spec )
         |( (procedure_declaration) => procedure_body
            | procedure_spec)
-        )
         ;
 
-pragma:
+pragma_autonomous_transaction:
     "pragma"! "autonomous_transaction" SEMI!
     { __markRule(PRAGMA);}
     ;
 
 assignment_statement :
-    plsql_lvalue p:ASSIGNMENT_EQ! {#p.setType(ASSIGNMENT_OP);} condition
+//    plsql_lvalue p:ASSIGNMENT_EQ! {#p.setType(ASSIGNMENT_OP);} condition
+    plsql_lvalue ASSIGNMENT_EQ  condition
     { __markRule(ASSIGNMENT_STATEMENT);}
     ;
 
-rvalue :
-    (("prior")? ( name_fragment DOT )* name_fragment ~OPEN_PAREN ) => (("prior"!)? ( name_fragment DOT! )* name_fragment)
+rvalue
+{boolean tag1=false;}
+:
+    (("prior")? ( name_fragment2 DOT )* name_fragment2 ~OPEN_PAREN ) => (("prior"!)? ( name_fragment2 DOT! )* name_fragment2)
         { __markRule(VAR_REF);} /// !!!!!! actual type needs to be resolved
 
-//    | (COLON_NEW|COLON_OLD) => (COLON_NEW|COLON_OLD) DOT! name_fragment
     | (COLON ("new"|"old") DOT) => (COLON ("new"|"old") DOT! name_fragment)
         { __markRule(TRIGGER_COLUMN_REF);}
 
-    | ( function_call ( d:DOT! ((function_call) => function_call | c_record_item_ref ) )* )
+    | ( function_call ( DOT! {tag1=true;}((function_call) => function_call | c_record_item_ref ) )* )
      {
-        if(#d != null){
+        if(tag1){
              __markRule(COLLECTION_METHOD_CALL);
         }
      }
@@ -1312,21 +1509,29 @@ c_record_item_ref:
     {  __markRule(C_RECORD_ITEM_REF); }
     ;
 
-plsql_lvalue :
-    (( name_fragment DOT )* name_fragment ~OPEN_PAREN ) => ( name_fragment DOT! )* name_fragment
+plsql_lvalue
+{boolean tag1=false;}
+:
+    (( name_fragment DOT )* name_fragment2 ~OPEN_PAREN ) => ( name_fragment DOT! )* name_fragment2
         { __markRule(PLSQL_VAR_REF);}
-//    | (COLON_NEW|COLON_OLD) => (COLON_NEW|COLON_OLD) DOT! name_fragment
+
     | (COLON ("new"|"old") DOT) => (COLON ("new"|"old") DOT! name_fragment)
         { __markRule(TRIGGER_COLUMN_REF);}
 
-    | ( function_call ( d:DOT! ((function_call) => function_call | c_record_item_ref ) )* )
+    | ( function_call ( DOT! {tag1=true;} ((function_call) => function_call | c_record_item_ref ) )* )
      {
-        if(#d != null){
+        if(tag1){
              __markRule(COLLECTION_METHOD_CALL);
         }
      }
-    | host_variable
+    | bind_variable
     ;
+
+name_fragment2 :
+     (identifier2 | "timestamp")
+    {  __markRule(NAME_FRAGMENT);}
+    ;
+
 
 collection_method:
     identifier2
@@ -1338,8 +1543,9 @@ field_name :
     {  __markRule(FIELD_NAME); }
     ;
 
-host_variable:
+bind_variable:
     COLON identifier2
+    {  __markRule(BIND_VAR); }
     ;
 
 goto_statement :
@@ -1355,13 +1561,21 @@ exit_statement:
     e:"exit" (label_name)? (w:"when" condition)?
     ;
 
+datatype_param_info:
+    "number" (COMMA "number")? EOF!
+    {  __markRule(DATATYPE_PARAM_INFO); }
+    ;
+
+
 datatype :
     (
         "binary_integer"
         | "natural"
         | "positive"
-        | ("number"(OPEN_PAREN! (NUMBER|ASTERISK) (COMMA! NUMBER)? CLOSE_PAREN! )? )
-        | ("char" (OPEN_PAREN! NUMBER ("byte")? CLOSE_PAREN! )? )
+
+        // note: NUMBER in parentesis is in OPTIONAL just to facilitate autocompletion
+        | ("number"(OPEN_PAREN! ((NUMBER|ASTERISK) (COMMA! (MINUS)? NUMBER)?)? CLOSE_PAREN! )? )
+        | ("char" (OPEN_PAREN! (NUMBER ("byte")?)? CLOSE_PAREN! )? )
         | ("long" ("raw")?)
         | "raw" (OPEN_PAREN! NUMBER CLOSE_PAREN! )?
         | "boolean"
@@ -1376,21 +1590,23 @@ datatype :
             )
         | "smallint"
         | "real"
-        | "numeric" (OPEN_PAREN! NUMBER (COMMA! NUMBER)? CLOSE_PAREN! )?
+        | "numeric" (OPEN_PAREN! (NUMBER (COMMA! NUMBER)?)? CLOSE_PAREPlSqlPlllN! )?
         | "int"
-        | "integer" (OPEN_PAREN! NUMBER CLOSE_PAREN! )?
+        | "integer" (OPEN_PAREN! (NUMBER)? CLOSE_PAREN! )?
         | "pls_integer"
         | "double" "precision"
-        | "float" ( OPEN_PAREN! NUMBER CLOSE_PAREN! )?
+        | "float" ( OPEN_PAREN! (NUMBER)? CLOSE_PAREN! )?
         | "decimal"
-        | "varchar" ( OPEN_PAREN! NUMBER ("byte" | "char")? CLOSE_PAREN! )?
-        | "varchar2" ( OPEN_PAREN! NUMBER ("byte" | "char")? CLOSE_PAREN! )?
-        | "nvarchar" ( OPEN_PAREN! NUMBER ("byte" | "char")? CLOSE_PAREN! )?
-        | "nvarchar2" ( OPEN_PAREN! NUMBER ("byte" | "char")? CLOSE_PAREN! )?
+        | "varchar" ( OPEN_PAREN! (NUMBER ("byte" | "char")?)? CLOSE_PAREN! )?
+        | "varchar2" ( OPEN_PAREN! (NUMBER ("byte" | "char")?)? CLOSE_PAREN! )?
+        | "nvarchar" ( OPEN_PAREN! (NUMBER ("byte" | "char")?)? CLOSE_PAREN! )?
+        | "nvarchar2" ( OPEN_PAREN! (NUMBER ("byte" | "char")?)? CLOSE_PAREN! )?
         | "character" ( OPEN_PAREN! NUMBER CLOSE_PAREN! )?
-        | "mlslabel"
+        | "rowid"
         | "blob"
         | "clob"
+        | "nclob"
+        | "bfile"
     )
     {  __markRule(DATATYPE);}
     ;
@@ -1400,7 +1616,10 @@ datatype :
 
 type_spec :
     ( datatype
-    | (percentage_type) => percentage_type
+    | ( table_ref ((DOT column_name_ref PERCENTAGE "type") | (PERCENTAGE! "rowtype"!)) )
+            => percentage_type
+    | ( schema_name DOT table_ref ((DOT column_name_ref PERCENTAGE "type") | (PERCENTAGE! "rowtype"!)) )
+            => percentage_type_w_schema
     | type_name_ref )
 //    {  __markRule(TYPE_SPEC);}
     ;
@@ -1439,19 +1658,36 @@ allows programs to adapt as the database changes to meet new business needs.
     END;
     /
  ---------- docs ----------- */
-
 percentage_type:
     // declaration of the variable that is based on table column with the %TYPE attribute.
-    table_name DOT! column_name_ref PERCENTAGE! "type"! /// => table_name DOT! column_name_ref PERCENTAGE! "type"!
-    {  __markRule(COLUMN_TYPE_REF);}
-
-    | table_name PERCENTAGE! "rowtype"!
-    {  __markRule(TABLE_TYPE_REF);}
+    table_ref (
+        (DOT column_name_ref PERCENTAGE "type")
+        {  __markRule(COLUMN_TYPE_REF);}
+        | (PERCENTAGE! "rowtype"!)
+        {  __markRule(TABLE_TYPE_REF);}
+    )
     ;
+
+percentage_type_w_schema:
+    // declaration of the variable that is based on table column with the %TYPE attribute.
+    schema_name DOT table_ref (
+        (DOT column_name_ref PERCENTAGE "type")
+        {  __markRule(COLUMN_TYPE_REF);}
+        | (PERCENTAGE! "rowtype"!)
+        {  __markRule(TABLE_TYPE_REF);}
+    )
+    ;
+
+
 
 type_name_ref :
      name_fragment (DOT! name_fragment )*
     {  __markRule(TYPE_NAME_REF);}
+    ;
+
+sequence_ref :
+    identifier2
+    {  __markRule(SEQUENCE_REF);}
     ;
 
 name_fragment :
@@ -1518,11 +1754,19 @@ procedure_spec :
     procedure_declaration SEMI!
     { __markRule(PROCEDURE_SPEC);}
     ;
+	exception catch [RecognitionException ex] {
+	    reportError(ex);
+	    throw new com.deepsky.integration.CustomRecognitionException(ex.getMessage());
+	}
 
 function_spec :
     function_declaration SEMI!
     { __markRule(FUNCTION_SPEC);}
     ;
+	exception catch [RecognitionException ex] {
+	    reportError(ex);
+	    throw new com.deepsky.integration.CustomRecognitionException(ex.getMessage());
+	}
 
 exception_declaration :
     exception_name "exception"! SEMI!
@@ -1582,7 +1826,8 @@ oracle_err_number:
         ;
 
 record_item:
-    record_item_name type_spec ("not" "null")? ((default1 |p:ASSIGNMENT_EQ {#p.setType(ASSIGNMENT_OP);}) plsql_expression)?
+//    record_item_name type_spec ("not" "null")? ((default1 |p:ASSIGNMENT_EQ {#p.setType(ASSIGNMENT_OP);}) plsql_expression)?
+    record_item_name type_spec ("not" "null")? ((default1 |ASSIGNMENT_EQ) plsql_expression)?
     {  __markRule(RECORD_ITEM); }
     ;
 
@@ -1594,9 +1839,12 @@ record_item_name:
 procedure_declaration :
     "procedure"! object_name
     (options { greedy = true; } :
-        ( OPEN_PAREN! argument_list CLOSE_PAREN! )?  ("as" "language" "java" "name" string_literal)?
+        ( OPEN_PAREN! argument_list CLOSE_PAREN! )?  (("as"|"is") "language" "java" "name" string_literal)?
     )
     ;
+	exception catch [RecognitionException ex] {
+	    throw ex;
+	}
 
 procedure_body  :
     procedure_declaration
@@ -1613,7 +1861,6 @@ func_proc_statements
 begin_block
     : ("declare" (declare_list)?)? plsql_block
     {  __markRule(PLSQL_BLOCK);}
-//    { #.begin_block = #.([BEGIN_BLOCK, "BEGIN_BLOCK" ], #.begin_block); }
     ;
 
 plsql_block :
@@ -1621,7 +1868,6 @@ plsql_block :
     (seq_of_statements )?
     ( exception_section )?
     "end"! ( identifier2 ) ?
-//    { #.plsql_block = #.([PLSQL_BLOCK, "PLSQL_BLOCK" ], #.plsql_block);}
     ;
 
 exception_section:
@@ -1630,7 +1876,7 @@ exception_section:
     ;
 
 declare_list:
-    (declare_spec)+
+    (declare_spec | variable_declaration | exception_declaration)+
     { __markRule(DECLARE_LIST);}
     ;
 
@@ -1647,15 +1893,16 @@ function_declaration :
         )?
     )
     "return"! return_type (character_set)? ("pipelined")? ("parallel_enable")? ("using" identifier2)? ("deterministic")?
-    ("as" "language" "java" "name" string_literal)?
+    //(("as"|"is") "language" "java" "name" string_literal)?
     ;
 
 function_body  :
     function_declaration
         ( (( "is"! | "as"! ) func_proc_statements)
             {  __markRule(FUNCTION_BODY); }
-          | ("aggregate" "using" identifier2)
-            {  __markRule(CUSTOM_AGGR_FUNCTION); }
+//          | ("aggregate" "using" identifier2)
+//            {  __markRule(CUSTOM_AGGR_FUNCTION); }
+          | ("language" "java" "name" string_literal)
         )
     ;
 
@@ -1681,24 +1928,27 @@ return_type :
     2. collection initialization
 */
 function_call:
-    callable_name_ref OPEN_PAREN! (call_argument_list )?  CLOSE_PAREN!
+    callable_name_ref call_argument_list
     {  __markRule(FUNCTION_CALL); }
     ;
 
 procedure_call:
-    callable_name_ref (OPEN_PAREN! (call_argument_list)? CLOSE_PAREN!)?
+    callable_name_ref call_argument_list
     { __markRule(PROCEDURE_CALL);}
     ;
 
 callable_name_ref:
-//    ( name_prefix DOT! )* exec_name_ref
-//    name_fragment ( DOT! name_fragment )*
-    name_fragment_ex ( DOT! name_fragment_ex )*
+    ( name_fragment_ex DOT!)* exec_name_ref
     { __markRule(CALLABLE_NAME_REF);}
     ;
 
+exec_name_ref :
+     identifier3
+    {  __markRule(EXEC_NAME_REF);}
+    ;
+
 variable_name :
-    identifier2
+    (identifier2 | "timestamp")
     {  __markRule(VARIABLE_NAME); }
     ;
 
@@ -1721,7 +1971,7 @@ forall_loop:
     ;
 
 forall_header:
-    "forall" loop_index "in" (
+    "forall" num_loop_index "in" (
         (forall_boundary DOUBLEDOT forall_boundary)
         | ("values" "of" plsql_lvalue )
         | ("indices" "of" plsql_lvalue )
@@ -1748,14 +1998,23 @@ loop_statement :
     ;
 
 numeric_loop_spec :
-    loop_index "in"! ("reverse"!)? plsql_expression DOUBLEDOT! plsql_expression
+    num_loop_index "in"! ("reverse"!)? numeric_loop_spec2
+/*
+    plsql_expression DOUBLEDOT! plsql_expression
+    { __markRule(NUMERIC_LOOP_SPEC);}
+*/
+    ;
+
+num_loop_index:
+    identifier2
+    { __markRule(NUM_LOOP_INDEX);}
+    ;
+
+numeric_loop_spec2:
+    plsql_expression DOUBLEDOT! plsql_expression
     { __markRule(NUMERIC_LOOP_SPEC);}
     ;
 
-
-//coll_for:
-//    loop_index "in"! ("reverse")? complex_name DOUBLEDOT! complex_name
-//    ;
 //
 // for cus in ( select ID, UPD_CNT from XSL_CUS_CUSTOMER_T where PARENT_ID = i_id and FREEZE_DATE is null for update )
 // loop
@@ -1763,22 +2022,31 @@ numeric_loop_spec :
 // end loop;
 
 cursor_loop_spec :
-    loop_index "in"! (
+    cursor_loop_index "in"! cursor_loop_spec2
+/*
+    (
         ( cursor_name (OPEN_PAREN! call_argument_list CLOSE_PAREN!)?)
-//        ( cursor_name (parentesized_plsql_exp_list )?)
             { __markRule(CURSOR_REF_LOOP_SPEC);}
         | (OPEN_PAREN! select_expression CLOSE_PAREN!)
-            { __markRule(CURSOR_IMPL_LOOP_SPEC);}
+            { __markRule(CURSOR_LOOP_SPEC);}
     )
+*/
     ;
 
-loop_index:
+cursor_loop_spec2:
+//    (cursor_name (OPEN_PAREN! call_argument_list CLOSE_PAREN!)?)
+    (cursor_name ( call_argument_list )?)
+        { __markRule(CURSOR_REF_LOOP_SPEC);}
+    | select_command
+        { __markRule(CURSOR_LOOP_SPEC);}
+    ;
+
+cursor_loop_index:
     identifier2
-    { __markRule(LOOP_INDEX);}
+    { __markRule(CURSOR_LOOP_INDEX);}
     ;
 
 complex_name:
-//    (identifier2 DOT!)* identifier2
     identifier (DOT! identifier2)*
     {  __markRule(COMPLEX_NAME); }
     ;
@@ -1807,96 +2075,118 @@ record_name:
     identifier
     ;
 
-num_expression:
-    num_term ((p:PLUS {#p.setType(PLUS_OP);} | m:MINUS {#m.setType(MINUS_OP);} ) num_term )*
+num_expression
+{
+boolean tag1=false;
+boolean tag2=false;
+}
+:
+//    num_term ((p:PLUS {#p.setType(PLUS_OP);} | m:MINUS {#m.setType(MINUS_OP);} ) num_term )*
+    num_term ((PLUS {tag1=true;} | MINUS {tag2=true;} ) num_term )*
     {
-        if(#p != null || #m != null){
+        if(tag1 || tag2){
              __markRule(ARITHMETIC_EXPR);
         }
     }
     ;
 
-num_term:
-    num_factor (( as:ASTERISK {#as.setType(MULTIPLICATION_OP);} | dv:DIVIDE {#dv.setType(DIVIDE_OP);} ) num_factor )*
+num_term
+{
+boolean tag1=false;
+boolean tag2=false;
+}
+:
+//    num_factor (( as:ASTERISK {#as.setType(MULTIPLICATION_OP);} | dv:DIVIDE {#dv.setType(DIVIDE_OP);} ) num_factor )*
+    num_factor (( as:ASTERISK {tag1=true;} | dv:DIVIDE {tag2=true;} ) num_factor )*
     {
-        if(#as != null || #dv != null){
+        if(tag1 || tag2){
              __markRule(ARITHMETIC_EXPR);
         }
     }
     ;
 
-num_factor:
-    may_be_negate_base_expr ("**" integer_expr)?
-        (d:"day" (OPEN_PAREN! NUMBER CLOSE_PAREN!)? "to" "second" (OPEN_PAREN! NUMBER CLOSE_PAREN!)?)?
+num_factor
+{ boolean tag1 = false; boolean tag2 = false;}
+:
+    may_be_negate_base_expr ("**" integer_expr)? (
+        ("day" {tag1 = true;} (OPEN_PAREN! NUMBER CLOSE_PAREN!)? "to" "second" (OPEN_PAREN! NUMBER CLOSE_PAREN!)?)
+        | ("year" {tag2 = true;} (OPEN_PAREN! NUMBER CLOSE_PAREN!)? "to" "month" (OPEN_PAREN! NUMBER CLOSE_PAREN!)?)
+    )?
     {
-
-        if(#d != null){
+        if(tag1){
              __markRule(INTERVAL_DAY_TO_SEC_EXPR);
+        } else if(tag2){
+             __markRule(INTERVAL_YEAR_TO_MONTH_EXPR);
         }
     }
     ;
 
-may_be_negate_base_expr:
-    (s1:sign!)? may_be_at_time_zone
+may_be_negate_base_expr
+{ boolean tag1 = false;}
+:
+    (sign! {tag1 = true;} )? may_be_at_time_zone
     {
-        if(#s1 != null){
+        if(tag1){
              __markRule(ARITHMETIC_EXPR);
         }
     }
     ;
 
-may_be_at_time_zone:
-    base_expression (at:"at"! "time"! "zone"! timezone_spec)?
+may_be_at_time_zone
+{ boolean tag1 = false;}
+:
+    base_expression ("at"! {tag1 = true;} (("time"! "zone"! timezone_spec) | ("local")))?
     {
-        if(#at != null){
+        if(tag1){
              __markRule(AT_TIME_ZONE_EXPR);
         }
     }
     ;
 
 sign:
-    p:PLUS {#p.setType(PLUS_OP);}
-    | m:MINUS {#m.setType(MINUS_OP);}
+    p:PLUS
+    | m:MINUS
+//    p:PLUS {#p.setType(PLUS_OP);}
+//    | m:MINUS {#m.setType(MINUS_OP);}
     ;
 
-plsql_expr_list:
-    plsql_expression (c:COMMA! plsql_expression )*
+expr_list:
+    plsql_expression (COMMA! plsql_expression )*
     { __markRule(EXPR_LIST);}
-/*
-    {
-        if(#c != null)
-            {#.plsql_expr_list = #.([PLSQL_EXPR_LIST, "PLSQL_EXPR_LIST" ], #.plsql_expr_list);}
-    }
-*/
     ;
 
-parentesized_plsql_exp_list:
-    OPEN_PAREN! plsql_expr_list cp:CLOSE_PAREN!
-//    { #.parentesized_plsql_exp_list = #.([PAREN_EXPR_LIST, "PAREN_EXPR_LIST" ], #.parentesized_plsql_exp_list); }
+parentesized_exp_list:
+    OPEN_PAREN! expr_list cp:CLOSE_PAREN!
     ;
 
-condition:
-    logical_term ( p:"or" {#p.setType(OR_LOGICAL);} logical_term )*
+condition
+{boolean tag1= false;}
+:
+    logical_term ( "or" {tag1=true;} logical_term )*
     {
-        if(#p != null){
+        if(tag1){
              __markRule(LOGICAL_EXPR);
         }
     }
     ;
 
-logical_term:
-    maybe_neg_factor  (p:"and" {#p.setType(AND_LOGICAL);} maybe_neg_factor )*
+logical_term
+{boolean tag1= false;}
+:
+    maybe_neg_factor  ("and" {tag1=true;}  maybe_neg_factor )*
     {
-        if(#p != null){
+        if(tag1){
              __markRule(LOGICAL_EXPR);
         }
     }
     ;
 
-maybe_neg_factor:
-    (p:"not"! {#p.setType(NOT_LOGICAL);})? plsql_expression33
+maybe_neg_factor
+{boolean tag1= false;}
+:
+    ("not"! {tag1=true;} )? plsql_expression33
     {
-        if(#p != null){
+        if(tag1){
              __markRule(LOGICAL_EXPR);
         }
     }
@@ -1924,11 +2214,22 @@ END;
 /
 */
 
-plsql_expression33:
+plsql_expression33
+{ boolean tag1 = false;}
+:
     ( "current" "of" ) => ( "current"! "of"! ) identifier
         {  __markRule(CURRENT_OF_CLAUSE); }
     | ( "exists" ) => "exists"! subquery
         {  __markRule(EXISTS_EXPR); }
+    | (OPEN_PAREN! expr_list CLOSE_PAREN! (EQ | NOT_EQ | (("not" )? "in" )) OPEN_PAREN "select")
+            => OPEN_PAREN! expr_list CLOSE_PAREN! (EQ | NOT_EQ | (("not" )? "in" {tag1=true;})) subquery
+        {
+            if(tag1){
+                 __markRule(IN_CONDITION);
+            } else {
+                 __markRule(SUBQUERY_CONDITION);
+            }
+        }
     | plsql_expression (
         (relational_op) => relational_op plsql_expression
         {  __markRule(RELATION_CONDITION); }
@@ -1943,36 +2244,40 @@ plsql_expression33:
         | ( ("not")? "member" "of") =>  (("not"!)? "member"! "of"! (name_fragment DOT!)? name_fragment )
         {  __markRule(MEMBER_OF); }
         )?
-    | (OPEN_PAREN! plsql_expr_list CLOSE_PAREN! (EQ | NOT_EQ) subquery) => OPEN_PAREN! plsql_expr_list CLOSE_PAREN! (EQ | NOT_EQ) subquery
-        {  __markRule(SUBQUERY_CONDITION); }
     ;
 
 
-plsql_expression:
-    num_expression (c:CONCAT {#c.setType(CONCAT_OP);} num_expression )*
+plsql_expression
+{ boolean tag1 = false;}
+:
+    num_expression (c:CONCAT {tag1=true;} num_expression )*
     {
-        if(#c != null ){
+        if(tag1){
              __markRule(ARITHMETIC_EXPR);
         }
     }
     ;
 
 base_expression:
-      ( "cast" ) => ( cast_proc )
-      | ("sqlcode") => "sqlcode"
+      ("sqlcode") => "sqlcode"
         {  __markRule(SQLCODE_SYSVAR);}
       | ("sqlerrm") => ("sqlerrm" (OPEN_PAREN! base_expression CLOSE_PAREN!)? )
         {  __markRule(SQLERRM_SYSVAR);}
+      | ( "cast" ) => ( cast_function )
       | ( "trim" ) => ( trim_function )
       | ( "count" ) => ( count_function )
       | ( "case" ) => ( case_expression )
+      | ( "multiset" ) => ( multiset_operator )
+      | ( "lag" ) => ( lag_function )
+      | ( "lead" ) => ( lead_function )
       | ( ("rank"|"dense_rank") OPEN_PAREN ) => dence_rank_analytics_func
-      | ("sql" PERCENTAGE ) => sql_percentage
-      | ( extract_date_function ) => extract_date_function
+      | ( "extract" ) => extract_date_function
+
         // interval examples: "INTERVAL '30' MINUTE", "INTERVAL '2-6' YEAR TO MONTH", "INTERVAL '3 12:30:06.7' DAY TO SECOND(1)"
       | ("interval"! string_literal ("second" | "minute" | "hour" | "day" | "month" | "year")
                     ("to" ("second"|"month") (OPEN_PAREN! NUMBER CLOSE_PAREN!)?)? )
         {  __markRule(INTERVAL_CONST);}
+      | ("sql" PERCENTAGE ) => sql_percentage
       | ("timestamp"! string_literal)
         {  __markRule(TIMESTAMP_CONST);}
       | (( "all" | "any" )) => ( a1:"all" | a2:"any" ) subquery
@@ -1986,10 +2291,10 @@ base_expression:
       | numeric_literal
       | boolean_literal
       | null_statement
-      | pseudo_column
+      | (pseudo_column) => pseudo_column
       | (column_spec OPEN_PAREN! PLUS! CLOSE_PAREN!) => ( column_spec OPEN_PAREN! PLUS! CLOSE_PAREN! )
         { __markRule(COLUMN_OUTER_JOIN);}
-      | ( identifier DOT ("nextval" | "currval")) => sequence_expr
+      | ( sequence_ref DOT ("nextval" | "currval")) => sequence_expr
 
       | rvalue
       ;
@@ -2010,10 +2315,30 @@ ident_percentage:
 dence_rank_analytics_func:
     // DENSE_RANK() OVER (ORDER BY MAX(SEVERITY * 1000000000 + FAULT_TS / 1000) DESC, XTL_PDC_REGISTRATION_T.MNO_NAME)
     // DENSE_RANK() OVER (PARTITION BY deptno ORDER BY sal) "rank"
-    ("rank"|"dense_rank") OPEN_PAREN CLOSE_PAREN "over" OPEN_PAREN (
-            order_clause
-            | ("partition" "by" plsql_expression)
-        ) CLOSE_PAREN
+    ("rank"|"dense_rank") OPEN_PAREN CLOSE_PAREN "over" OPEN_PAREN
+            (query_partition_clause)? order_clause
+         CLOSE_PAREN
+    {  __markRule(RANK_FUNCTION);}
+    ;
+
+lead_function:
+    "lead" lag_lead_func_arg_list
+    {  __markRule(LEAD_FUNCTION);}
+    ;
+
+lag_function:
+    "lag" lag_lead_func_arg_list
+    {  __markRule(LAG_FUNCTION);}
+    ;
+
+lag_lead_func_arg_list:
+    OPEN_PAREN plsql_expression (COMMA plsql_expression)* CLOSE_PAREN
+    "over" OPEN_PAREN (query_partition_clause)? order_clause CLOSE_PAREN
+    {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
+    ;
+
+query_partition_clause:
+    "partition" "by" plsql_expression
     ;
 
 timezone_spec:
@@ -2025,7 +2350,8 @@ timezone_spec:
     ;
 
 sequence_expr:
-    name_fragment DOT! name_fragment /// ("nextval" | "currval")
+//    name_fragment DOT! name_fragment /// ("nextval" | "currval")
+    sequence_ref DOT! ("nextval" | "currval")
     { __markRule(SEQUENCE_EXPR);}
     ;
 
@@ -2035,8 +2361,11 @@ count_function:
         | (ident_asterisk_column) =>  ident_asterisk_column
         | ( ("distinct")? plsql_expression )
     ) CLOSE_PAREN!
-//    ASTERISK | ( ("distinct")? plsql_expression )) CLOSE_PAREN!
     { __markRule(COUNT_FUNC);}
+    ;
+
+multiset_operator:
+    "multiset" subquery
     ;
 
 string_literal :
@@ -2045,18 +2374,17 @@ string_literal :
     ;
 
 extract_date_function:
-     "extract"! OPEN_PAREN! extract_consts "from"! plsql_expression CLOSE_PAREN!
+     "extract"! extract_date_func_arg_list
     { __markRule(EXTRACT_DATE_FUNC);}
     ;
 
-/*
-extract_date_function_name:
-    "extract"
-    {.#.extract_date_function_name = #.([FUNCTION,_NAME, "FUNCTION,_NAME" ], #.extract_date_function_name);}
+extract_date_func_arg_list:
+    OPEN_PAREN! extract_consts "from"! plsql_expression CLOSE_PAREN!
+    {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
     ;
-*/
+
 extract_consts:
-    "second" | "minute" | "hour" | "day" | "month" | "year" | "timezone_hour" | "timezone_minute"
+    "second" | "minute" | "hour" | "day" | "month" | "year" | "timezone_hour" | "timezone_minute" | "timezone_region" | "timezone_abbr"
     ;
 
 date_literal:
@@ -2068,17 +2396,19 @@ commit_statement:
     { __markRule(COMMIT_STATEMENT);}
     ;
 
-case_expression:
+case_expression
+{ boolean tag1 = false;}
+:
     ("case"! (
         // searched_case_expression
         ( "when" condition t:"then" plsql_expression )+
         // simple_case_expression
-        | smpl:plsql_expression ("when" plsql_expression "then" plsql_expression)+
+        | plsql_expression {tag1 = true;} ("when" plsql_expression "then" plsql_expression)+
      )
     ( "else" plsql_expression ) ?
     "end"!)
     {
-        if(#smpl != null){
+        if(tag1){
             { __markRule(CASE_EXPRESSION_SMPL);}
         } else {
             { __markRule(CASE_EXPRESSION_SRCH);}
@@ -2112,30 +2442,38 @@ sql_statement:
         | update_command
         | delete_command
         | merge_command
-
+        | grant_revoke_command
         | commit_statement
         | rollback_statement
     ;
 
+grant_revoke_command:
+    ("grant" | "revoke") privilege (COMMA privilege)* "on" identifier2 ("to" | "from") (identifier2 |"public")
+    ;
+
+privilege:
+    "select" | "insert" | "update" | "delete" | "references" | "alter" | "index" | "execute" |"all"
+    ;
 
 select_command:
     ( select_expression | subquery )
-//    { #.select_command = #.([SELECT_COMMAND, "SELECT_COMMAND" ], #.select_command); }
     ;
 
 subquery:
-    o:OPEN_PAREN! select_command cp:CLOSE_PAREN!
+    OPEN_PAREN! select_command CLOSE_PAREN!
     {  __markRule(SUBQUERY); }
     ;
 
-select_expression :
+select_expression
+{boolean tag1=false;}
+:
     select_first ( (
         ( "union" ("all")? )
         | "intersect"
         | "minus"
-      ) sub:select_first ) *
+      ) select_first {tag1=true;}) *
     {
-        if(#sub != null){
+        if(tag1){
             {  __markRule(SELECT_EXPRESSION_UNION); }
         }
     }
@@ -2158,8 +2496,10 @@ select_first:
         ( order_clause )?
         ( update_clause )?
      )
-     {  __markRule(SELECT_EXPRESSION); }
-    | o:OPEN_PAREN select_first c:CLOSE_PAREN
+        {  __markRule(SELECT_EXPRESSION); }
+    | OPEN_PAREN select_expression CLOSE_PAREN
+        {  __markRule(SUBQUERY); }
+//    | subquery
     ;
 
 
@@ -2184,7 +2524,7 @@ into_clause:
 
 
 into_clause:
-    ("bulk" "collect")? i:"into"! plsql_lvalue_list  ///plsql_exp_list
+    ("bulk" "collect")? "into"! plsql_lvalue_list  ///plsql_exp_list
     {  __markRule(INTO_CLAUSE);}
     ;
 
@@ -2193,23 +2533,9 @@ plsql_lvalue_list:
     ;
 
 select_up_to_list:
-//(options { greedy = true; } :
-/*
-    (w:"with" alias  a1:"as" subquery
-         (c:COMMA alias a2:"as" subquery )*
-    )?
-*/
-    "select"! ( "all" | "distinct" | "unique")?
-    select_list
-//)
+    "select"! ( "all" | "distinct" | "unique")? displayed_column ( COMMA! displayed_column )*
     ;
 
-
-select_list:
-(options { greedy = true; } :
-        displayed_column ( COMMA! displayed_column )*
-    )
-    ;
 
 displayed_column:
     asterisk_column
@@ -2224,7 +2550,7 @@ asterisk_column:
 
 ident_asterisk_column:
 //    table_ref DOT ASTERISK
-    name_fragment DOT ASTERISK 
+    name_fragment DOT ASTERISK
     {  __markRule(IDENT_ASTERISK_COLUMN); }
     ;
 
@@ -2240,17 +2566,23 @@ immediate_command:
                     |   plsql_expression
                 )
         ( ("bulk" "collect")? "into" plsql_lvalue_list ) ?
-//        ( ("bulk" "collect")? "into" plsql_expr_list ) ?
         ( "using" plsql_exp_list_using ) ?
     {  __markRule(IMMEDIATE_COMMAND);}
     ;
 
 
 plsql_exp_list_using:
+    ("in"|"out")? plsql_expression (COMMA! ("in"|"out")? plsql_expression )*
+    { __markRule(PLSQL_EXPR_LIST_USING);}
+    ;
+
+/*
+plsql_exp_list_using:
     ( ("in"|"out")? plsql_expression COMMA ) => ("in"|"out")? plsql_expression (COMMA! ("in"|"out")? plsql_expression )*
-    { __markRule(PLSQL_EXPR_LIST);}
+    { __markRule(PLSQL_EXPR_LIST_USING);}
     | ("in"|"out")? plsql_expression
     ;
+*/
 
 alter_command:
     alter_system_session
@@ -2258,25 +2590,26 @@ alter_command:
     | alter_trigger
     ;
 
+//   ALTER DATABASE SET time_zone = 'US/Eastern';
 alter_system_session:
-    "alter" ( "system" | "session" )
+    "alter" ( "system" | "session" | "database")
     (
         ( "flush" "shared_pool" )
         | (
             ( "set"  identifier EQ
-                ( string_literal | numeric_literal | identifier )
+                ( string_literal | numeric_literal | identifier | "local")
             )
             | ( "reset" identifier )
           )
          ( "sid" EQ ( string_literal | ASTERISK ) ) ?
     )
+    { __markRule(ALTER_GENERIC);}
     ;
 
-
 table_reference_list_from:
-        "from"! selected_table ("partition"! OPEN_PAREN! identifier2 CLOSE_PAREN!)?
+        "from"! selected_table // ("partition"! OPEN_PAREN! identifier2 CLOSE_PAREN!)?
         (
-         ( "left" | "right" | "inner" | "outer" | "join") => ansi_spec
+         ( "left" | "right" | "inner" | "outer" | "join" | "full") => ansi_spec
          | (COMMA! selected_table ("partition"! OPEN_PAREN! identifier2 CLOSE_PAREN!)?)
         )*
 {
@@ -2296,14 +2629,18 @@ where_condition:
 
 
 call_argument_list:
-    call_argument (COMMA! call_argument)*
+    OPEN_PAREN! ( call_argument (COMMA! call_argument)* )?  CLOSE_PAREN
     {  __markRule(CALL_ARGUMENT_LIST);}
     ;
 
 call_argument :
-    (parameter_name_ref PASS_BY_NAME!)? condition   ///plsql_expression
+    (parameter_name_ref PASS_BY_NAME!)? condition   
     {  __markRule(CALL_ARGUMENT);}
     ;
+	exception catch [RecognitionException ex] {
+	    throw ex;
+	}
+
 
 parameter_name_ref:
     name_fragment
@@ -2325,13 +2662,13 @@ table_name_ddl :
     { __markRule(TABLE_NAME_DDL);}
     ;
 
-table_name :
-    identifier2
-    { __markRule(TABLE_NAME);}
-    ;
+//table_name :
+//    identifier2
+//    {#.table_name = #.([TABLE_NAME, "TABLE_NAME" ], #.table_name);}
+//    ;
 
 table_ref :
-    identifier
+    identifier2
     { __markRule(TABLE_REF);}
     ;
 
@@ -2341,7 +2678,8 @@ alias :
     ;
 
 alias_ident:
-    identifier2
+//    identifier2
+    (identifier2 | "timestamp")
     { __markRule(ALIAS_IDENT);}
     ;
 
@@ -2351,27 +2689,31 @@ package_name:
     ;
 
 column_spec:
-    (name_fragment DOT!)? name_fragment
+    (name_fragment2 DOT!)? name_fragment2
     { __markRule(COLUMN_SPEC);}
     ;
 
 
 column_name_ref:
-    identifier2
+//    identifier2
+    (identifier2 | "timestamp")
     { __markRule(COLUMN_NAME_REF);}
     ;
 
 column_name_ddl:
-    identifier2
+    (identifier2 | "timestamp")
     { __markRule(COLUMN_NAME_DDL);}
     ;
 
 trim_function :
-    "trim"! OPEN_PAREN! ( "leading" | "trailing" | "both") ?
-    plsql_expression ( "from" plsql_expression )? CLOSE_PAREN!
+    "trim"! trim_func_arg_list
     { __markRule(TRIM_FUNC);}
     ;
 
+trim_func_arg_list:
+    OPEN_PAREN ("leading"|"trailing"|"both")? plsql_expression ( "from" plsql_expression )? CLOSE_PAREN
+    {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
+    ;
 
 pseudo_column :
         "user"
@@ -2386,15 +2728,18 @@ pseudo_column :
         {  __markRule(DBTIMEZONE); }
         | "rownum"
         {  __markRule(ROWNUM); }
+        | (name_fragment2 DOT)? "rowid"
+        {  __markRule(ROWID); }
         ;
 
 selected_table:
-    ("table")=> row_proc ( alias )?
-    {  __markRule(VIRTUAL_TABLE); }
+    ("table")=> table_func ( alias )?
+    {  __markRule(TABLE_FUNCTION); }
     | ("the") => the_proc ( alias )?
     | from_subquery   ///subquery ( alias )?
-    | table_alias
+    | (table_alias ("partition"! OPEN_PAREN! identifier2 CLOSE_PAREN!)?)
     ;
+
 
 from_subquery:
     subquery ( alias )?
@@ -2408,17 +2753,22 @@ from_plain_table:
 
 ansi_spec :
       ( "inner"
-        | (( "left" | "right") ("outer")? )
+        | (( "left" | "right"| "full") ("outer")? )
       )? "join"
       selected_table
-      "on"
-      condition
+      ("on" condition)?
       {  __markRule(ANSI_JOIN_TAB_SPEC); }
       ;
 
 
-row_proc:
-    "table"! OPEN_PAREN!  ( select_command | cast_proc | function_call | identifier ) CLOSE_PAREN!
+table_func:
+    "table"! OPEN_PAREN!
+        (
+            select_command
+            | cast_function
+            | (( name_fragment DOT )* name_fragment ~OPEN_PAREN ) => ( name_fragment DOT! )* name_fragment
+            | function_call
+         ) CLOSE_PAREN!
     ;
 
 
@@ -2426,21 +2776,25 @@ the_proc:
     "the" subquery
     ;
 
-cast_proc :
-    "cast"! OPEN_PAREN! plsql_expression "as"! (type_name_ref|datatype) CLOSE_PAREN!
-    {  __markRule(CAST_EXPR); }
+cast_function :
+    "cast" cast_func_arg_list
+    {  __markRule(CAST_FUNC); }
+    ;
+
+cast_func_arg_list:
+    OPEN_PAREN call_argument "as"! (type_name_ref|datatype) CLOSE_PAREN
+    {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
     ;
 
 table_spec:
 //    ( schema_name DOT )? table_name ( AT_SIGN link_name )?
-    ( schema_name DOT )? table_name2 //( AT_PREFIXED )?
+    ( schema_name DOT )? table_ref_ex //( AT_PREFIXED )?
     ;
 
-table_name2 :
-    identifier2
-        { __markRule(TABLE_NAME);}
+table_ref_ex :
+    table_ref
     | TABLE_NAME_SPEC
-        { __markRule(TABLE_NAME_WITH_LINK);}
+        { __markRule(TABLE_REF_WITH_LINK);}
     ;
 
 table_alias:
@@ -2465,7 +2819,8 @@ relational_op:
 
 exp_set:
     ( OPEN_PAREN "select" ) => subquery
-    | parentesized_plsql_exp_list
+    | parentesized_exp_list
+// todo -- is this correct?
     | plsql_expression
     ;
 /*
@@ -2488,7 +2843,7 @@ connect_clause_internal:
     ("start" "with" condition) // The start can precede the connect by
     | ("connect" "by" condition)
     ;
-
+/*
 group_clause:
     (
         ("group"! "by"! plsql_expression (c:COMMA! plsql_expression )*)
@@ -2496,15 +2851,11 @@ group_clause:
     )+
     {  __markRule(GROUP_CLAUSE); }
     ;
-/*
-groupby_expr_list:
-    plsql_expression (c:COMMA! plsql_expression )*
-    {
-        if(#c != null)
-            {#.groupby_expr_list = #.([GROUPBY_EXPR_LIST, "GROUPBY_EXPR_LIST" ], #.groupby_expr_list);}
-    }
-    ;
 */
+group_clause:
+    "group"! "by"! plsql_expression (COMMA plsql_expression )* ( "having" condition )?
+    {  __markRule(GROUP_CLAUSE); }
+    ;
 
 order_clause:
     "order"! "by"!
@@ -2528,11 +2879,11 @@ insert_command:
     "insert"! "into"!
         (
           (table_alias) => table_alias ( OPEN_PAREN! column_spec_list CLOSE_PAREN! )?
-                ( ( "values"! (parentesized_plsql_exp_list | variable_ref)) | select_expression ) (returning)?
+                ( ( "values"! (parentesized_exp_list | variable_ref)) | select_expression ) (returning)?
             {  __markRule(INSERT_COMMAND); }
 
          // To define the set of rows to be inserted into the target table of an INSERT statement
-         | subquery ( "values"! (parentesized_plsql_exp_list | function_call) )
+         | subquery ( "values"! (parentesized_exp_list | function_call) )
             {  __markRule(INSERT_INTO_SUBQUERY_COMMAND); }
          )
     ;
@@ -2550,7 +2901,7 @@ update_command:
 
 merge_command:
     "merge"! "into"! table_alias
-    "using"! ( table_alias| (subquery ( alias )?) ) "on" condition
+    "using"! ( table_alias | from_subquery ) "on" condition
     when_action (when_action)?
     ("delete" "where" condition)?
     {  __markRule(MERGE_COMMAND); }
@@ -2567,7 +2918,7 @@ when_action:
 
 insert_columns:
     "insert"! ( OPEN_PAREN! column_spec_list CLOSE_PAREN! )?
-    "values"! parentesized_plsql_exp_list
+    "values"! parentesized_exp_list
     ;
 
 
@@ -2583,7 +2934,8 @@ simple_update:
 returning:
 //      RETURNING id INTO l_fst_ids(indx);
 //      RETURNING id,upd_cnt INTO o_alertId,o_updateCtr;
-    ("returning"! | "return"!) identifier2 (COMMA identifier2)* "into"! plsql_expression (COMMA plsql_expression)*
+    ("returning"! | "return"!) column_spec_list "into"! expr_list
+    {  __markRule(RETURNING_CLAUSE); }
     ;
 
 
@@ -2609,7 +2961,8 @@ close_statement :
       ;
 
 fetch_statement:
-    "fetch" cursor_name ( "bulk" "collect" ) ? "into" variable_ref (COMMA! variable_ref )*
+    "fetch" cursor_name ( "bulk" "collect" ) ? "into" variable_ref (COMMA! variable_ref )* ("limit" (identifier2|numeric_literal))?
+    { __markRule(FETCH_STATEMENT);}
     ;
 
 variable_ref:
@@ -2632,10 +2985,9 @@ lock_mode:
         ;
 
 open_statement:
-        o:"open" cursor_name  (parentesized_plsql_exp_list)?
+        o:"open" cursor_name  (parentesized_exp_list)?
          ( f:"for" ( select_expression | plsql_expression ))?
-//         ( "using" plsql_expr_list ) ?
-         ( "using" "in" plsql_lvalue_list )?
+         ( "using" ("in")? plsql_lvalue_list )?
         ;
 
 rollback_statement:
@@ -2709,7 +3061,7 @@ identifier2:
     | "next"
     | "column"
     | "col"
-    | "timestamp"
+//    | "timestamp"
     | "found"
     | "notfound"
     | "rowcount"
@@ -2731,6 +3083,7 @@ identifier2:
     | "row"
     | "buffer_pool"
     | "system"
+    | "managed"
     | "error_code"
     | "error_index"
     | "temporary"
@@ -2801,7 +3154,9 @@ identifier2:
     | "unlimited"
     | "concat"
     | "clob"
+    | "nclob"
     | "blob"
+    | "bfile"
     | "lobfile"
     | "float"
     | "preprocessor"
@@ -2830,7 +3185,7 @@ identifier2:
     | "organization"
     | "rely"
     | "at"
-    | "on"
+//    | "on"
     | "off"
     | "enable"
     | "disable"
@@ -2904,6 +3259,33 @@ identifier2:
     | "groups"
     | "wait"
     | "indices"
+    | "subtype"
+    | "tablespace"
+//    | "partition"
+    | "optimal"
+    | "keep"
+    | "sequence"
+    | "under"
+    | "final"
+    | "timezone_hour"
+    | "timezone_minute"
+    | "timezone_region"
+    | "timezone_abbr"
+    | "hour"
+    | "minute"
+    | "second"
+    | "cost"
+    | "selectivity"
+    | "functions"
+    | "packages"
+    | "types"
+    | "indexes"
+    | "indextypes"
+    | "transforms"
+    | "host"
+    | "multiset"
+    | "lag"
+    | "lead"
     )
     ;
 
@@ -2911,7 +3293,7 @@ identifier2:
 /////////////////////////////////////////////////////////////////
 /////       EXTERNAL TABLE SPECIFICATION        /////////////////
 /////////////////////////////////////////////////////////////////
- 
+
 external_table_spec:
     "external"! OPEN_PAREN! "type" (oracle_loader_params|oracle_datapump_params)location CLOSE_PAREN!
 //    ("as" select_expression)? (reject_spec|parallel_clause)*
@@ -2943,14 +3325,14 @@ write_access_parameters:
 access_parameters:
     "access" "parameters"
         OPEN_PAREN!
-             (record_format_info)? (field_definitions)? (column_transforms)? 
+             (record_format_info)? (field_definitions)? (column_transforms)?
         CLOSE_PAREN!
     ;
 
 record_format_info:
     "records" rec_format (rec_format_tail)*
     ;
-    
+
 rec_format:
     ("fixed" numeric_literal)
     | ("variable" numeric_literal)
@@ -3015,7 +3397,7 @@ delim_spec:
 // The trim_spec clause is used to specify that spaces should be trimmed from the beginning
 // of a text field, the end of a text field, or both.
 trim_spec:
-    "lrtrim" | "notrim" | "ltrim" | "rtrim" | "ldrtrim" 
+    "lrtrim" | "notrim" | "ltrim" | "rtrim" | "ldrtrim"
     ;
 
 field_list:
@@ -3042,7 +3424,7 @@ datatype_spec:
     | "double"
     | ("raw" (OPEN_PAREN NUMBER CLOSE_PAREN)?)
     | ( "char" (OPEN_PAREN NUMBER CLOSE_PAREN)? (delim_spec)? (trim_spec)? (date_format_spec)? )
-    | (("varchar"| "varraw" | "varcharc" | "varrawc") (OPEN_PAREN NUMBER (COMMA NUMBER)? CLOSE_PAREN)?)  
+    | (("varchar"| "varraw" | "varcharc" | "varrawc") (OPEN_PAREN NUMBER (COMMA NUMBER)? CLOSE_PAREN)?)
     ;
 
 

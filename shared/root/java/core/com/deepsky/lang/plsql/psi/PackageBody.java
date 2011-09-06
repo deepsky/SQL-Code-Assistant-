@@ -25,11 +25,11 @@
 
 package com.deepsky.lang.plsql.psi;
 
-import com.deepsky.lang.plsql.struct.PackageBodyDescriptor;
+import com.deepsky.lang.plsql.psi.spices.CompilableObject;
 import com.intellij.navigation.NavigationItem;
 import org.jetbrains.annotations.NotNull;
 
-public interface PackageBody extends PlSqlElement, NavigationItem {
+public interface PackageBody extends PlSqlElement, NavigationItem, CompilableObject {
 
     String getPackageName();
 
@@ -37,15 +37,10 @@ public interface PackageBody extends PlSqlElement, NavigationItem {
     ExecutableSpec[] findExecutableSpecByName(String name);
 
     @NotNull
-    PackageBodyDescriptor describe();
-
-    @NotNull
     PlSqlElement[] findObjectByName(String name);
     @NotNull
     PlSqlElement[] getObjects();
 
-//    PackageDescriptor getPackageSpecification();
     PackageSpec getPackageSpecification();
-
     Executable findExecutableByDecl(ExecutableSpec spec);
 }

@@ -42,17 +42,12 @@ public class ColumnHelper implements Serializable {
     public String refColumn;
     public String constraintNameFK;
     public String constraintNamePK;
+    String defaultValue;
 
     public ColumnHelper(Type type, int columnId) {
         this.type = type;
         this.columnId = columnId;
     }
-
-//    public ColumnHelper(Type type, int columnId, boolean isNullable) {
-//        this.type = type;
-//        this.columnId = columnId;
-//        this.isNullable = isNullable;
-//    }
 
     public ColumnHelper(Type type, int columnId, boolean isNullable, boolean isPK) {
         this.type = type;
@@ -74,19 +69,12 @@ public class ColumnHelper implements Serializable {
     }
 
     
-//    public ColumnHelper(
-//            Type type, int columnId, boolean isNullable,
-//            boolean isPK, boolean isFK, String refTable, String refColumn,
-//            String constraintName) {
-//        this.type = type;
-//        this.columnId = columnId;
-//        this.isNullable = isNullable;
-//        this.isPK = isPK;
-//        this.isFK = isFK;
-//        this.refTable = refTable;
-//        this.refColumn = refColumn;
-//        this.constraintName = constraintName;
-//    }
-
+    public ColumnHelper(Type type, int columnId, boolean isNullable, boolean isPK, String defaultValue) {
+        this.type = type;
+        this.columnId = columnId;
+        this.isNullable = isNullable;
+        this.isPK = isPK;
+        this.defaultValue = defaultValue;
+    }
 }
 

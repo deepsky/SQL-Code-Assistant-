@@ -89,7 +89,7 @@ public abstract class SqlGenericUsageGroup<T extends NavigationItem & PsiElement
         return getMyName();
     }
 
-    private T getElement() {
+    protected T getElement() {
         return (T) myMethodPointer.getElement();
     }
 

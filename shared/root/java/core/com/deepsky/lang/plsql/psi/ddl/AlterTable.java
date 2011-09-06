@@ -25,6 +25,12 @@
 
 package com.deepsky.lang.plsql.psi.ddl;
 
+import com.deepsky.lang.plsql.psi.ref.TableRef;
+import org.jetbrains.annotations.NotNull;
+
 public interface AlterTable extends SqlDDLStatement {
     String getTableName();
+
+    @NotNull
+    TableRef getTableRef();
 }

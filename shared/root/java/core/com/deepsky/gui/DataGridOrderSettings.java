@@ -25,13 +25,11 @@
 
 package com.deepsky.gui;
 
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
-import com.intellij.ide.DataManager;
+import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import com.intellij.uiDesigner.core.GridConstraints;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -53,7 +51,7 @@ public class DataGridOrderSettings extends DialogWrapper {
     int initialOrder;
 
     public DataGridOrderSettings(Project project, String columnName, int order) {
-        this(project); //LangDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext()));
+        this(project);
 
         this.setTitle("Sort options");
         this.columnName.setText(columnName);

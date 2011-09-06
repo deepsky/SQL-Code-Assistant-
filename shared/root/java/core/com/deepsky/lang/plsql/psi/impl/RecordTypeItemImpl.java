@@ -25,16 +25,18 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.RecordTypeItem;
-import com.deepsky.lang.plsql.psi.Expression;
-import com.deepsky.lang.plsql.psi.types.TypeSpec;
-import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
-import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.types.TypeSpec;
+import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
+import com.deepsky.lang.plsql.resolver.ContextPath;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 public class RecordTypeItemImpl extends PlSqlElementBase implements RecordTypeItem {
 
@@ -44,7 +46,7 @@ public class RecordTypeItemImpl extends PlSqlElementBase implements RecordTypeIt
 
     public String getRecordItemName() {
         ASTNode name = getNode().findChildByType(PLSqlTypesAdopted.RECORD_ITEM_NAME);
-        if(name != null){
+        if (name != null) {
             return name.getText();
         } else {
             // todo
@@ -52,12 +54,12 @@ public class RecordTypeItemImpl extends PlSqlElementBase implements RecordTypeIt
         }
     }
 
-    public String getQuickNavigateInfo(){
+    public String getQuickNavigateInfo() {
         StringBuilder out = new StringBuilder();
         ASTNode child = getNode().getFirstChildNode();
         ASTNodeIterator iterator = new ASTNodeIterator(child);
-        while(iterator.hasNext() && !iterator.peek().getText().equals(";")){
-            if(out.length() > 0){
+        while (iterator.hasNext() && !iterator.peek().getText().equals(";")) {
+            if (out.length() > 0) {
                 out.append(" ");
             }
             out.append(iterator.next().getText());
@@ -68,8 +70,8 @@ public class RecordTypeItemImpl extends PlSqlElementBase implements RecordTypeIt
 
     public Type getType() {
         ASTNode type = getNode().findChildByType(PlSqlElementTypes.TYPES);
-        if(type != null){
-            return ((TypeSpec)type.getPsi()).getType();
+        if (type != null) {
+            return ((TypeSpec) type.getPsi()).getType();
         } else {
             throw new SyntaxTreeCorruptedException();
         }
@@ -78,4 +80,17 @@ public class RecordTypeItemImpl extends PlSqlElementBase implements RecordTypeIt
     public Expression getDefaultExpr() {
         return null;
     }
+
+    public TypeDeclaration getRecordType() {
+        return (TypeDeclaration) getParent();
+    }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitRecordTypeItem(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
 }

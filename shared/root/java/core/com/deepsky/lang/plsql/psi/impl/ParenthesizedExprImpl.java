@@ -25,11 +25,10 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.ParenthesizedExpr;
-import com.deepsky.lang.plsql.psi.Expression;
-import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.psi.Expression;
+import com.deepsky.lang.plsql.psi.ParenthesizedExpr;
+import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +45,7 @@ public class ParenthesizedExprImpl extends PlSqlElementBase implements Parenthes
         return expr.getExpressionType();
     }
 
-    public Expression getNestedExpr(){
+    public Expression getNestedExpr() {
         ASTNode node = getNode().findChildByType(PlSqlElementTypes.EXPR_TYPES);
         return (Expression) node.getPsi();
     }

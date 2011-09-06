@@ -25,5 +25,11 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.intellij.psi.PsiElement;
+
 public interface InCondition extends Condition {
+    PsiElement getLeftPart();
+    PsiElement getRightPart();
+
+    boolean notIn();
 }

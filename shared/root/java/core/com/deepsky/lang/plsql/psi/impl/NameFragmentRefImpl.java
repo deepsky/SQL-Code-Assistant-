@@ -25,12 +25,8 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.ddl.VColumnDefinition;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.VariantsProcessor777;
+import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
@@ -41,16 +37,11 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class NameFragmentRefImpl extends PlSqlReferenceBase implements NameFragmentRef { //}, PsiNamedElement {
 
     static final LoggerProxy log = LoggerProxy.getInstance("#NameFragmentRefImpl");
-
-    // todo - dirty hack which should be fixed asap
-    static public Map<String, RefElement> resolveCache = new HashMap<String, RefElement>();
 
     public NameFragmentRefImpl(ASTNode astNode) {
         super(astNode);
@@ -66,91 +57,17 @@ public class NameFragmentRefImpl extends PlSqlReferenceBase implements NameFragm
         return this;
     }
 
-    static class RefElement {
-        public PsiElement elem;
-
-        public RefElement(PsiElement psi) {
-            this.elem = psi;
-        }
-    }
-
-    public PsiElement resolve() {
-
-        RefElement elem = resolveCache.get(this.toString());
-        if (elem != null) {
-//            log.info("resolve() = " + elem.elem + " this: " + this);
-            return elem.elem;
-        }
-//        log.info("resolve() [" + this + "]");
-
-        PsiElement psi = null;
-        try {
-            ResolveContext777 ctx = resolveInner(this);
-            psi = ctx.getDeclaration();
-        } catch (NameNotResolvedException e1) {
-        } catch (SyntaxTreeCorruptedException e1) {
-        }
-
-        resolveCache.put(this.toString(), new RefElement(psi));
-//        log.info("resolve() = " + psi + " this: " + this);
-        return psi;
-    }
-
-
-    private ResolveContext777 resolveInner(PlSqlElement leafElem) throws NameNotResolvedException {
-
-        PsiElement parent = leafElem.getParent();
-
-        if (parent instanceof CompositeName) {
-            // ObjectReference
-            // TypeNameReference
-            // CallableCompositeName
-            // SequenceExpr
-            // ColumnSpec
-            // VColumnDefinition
-            // TriggerColumnNameRef
-            // ParameterReference
-
-            CompositeName _parent = (CompositeName) parent;
-            return _parent.resolve((NameFragmentRef) leafElem);
-/*
-            NameFragmentRef[] pieces = _parent.getNamePieces();
-            int pos = _parent.getFragmentIndex((NameFragmentRef) leafElem);
-
-            if (pos == -1) {
-                throw new NameNotResolvedException("[2] Could not resolve name: " + leafElem.getText());
-            }
-
-            ResolveContext777 ctx = _parent.getResolveContext();
-            for (int i = 1; --pos >= 0; i++) {
-                ctx = ctx.resolve(pieces[i]);
-            }
-            return ctx;
-*/
-
-        } else {
-            throw new NameNotResolvedException("[3] Could not resolve name: " + leafElem.getText());
-        }
-    }
-
-    @NotNull
-    private VariantsProcessor777 createVariantsProcessor(PlSqlElement leafElem) throws NameNotResolvedException {
-
-        PsiElement parent = leafElem.getParent();
-
-        if (parent instanceof CompositeName) {
-            // ...
-            CompositeName _parent = (CompositeName) parent;
-            return _parent.createVariantsProcessor(leafElem);
-        } else {
-            throw new NameNotResolvedException("[3] Could not resolve name: " + leafElem.getText());
-        }
+    protected PsiElement resolveInternal() {
+        return facade.resolveFragment(this);
     }
 
 
     @NotNull
     public Object[] getVariants(String text) {
 
+        return new Object[0];
+/*
+todo -- resolve stuff refactoring
         try {
             VariantsProcessor777 proc = createVariantsProcessor(this);
             return adopt(text, proc.getVariants(text));
@@ -158,8 +75,23 @@ public class NameFragmentRefImpl extends PlSqlReferenceBase implements NameFragm
             // todo --
             return new Object[0];
         }
+*/
     }
 
+
+    public NameFragmentRef getPrevFragment() {
+        NameFragmentRef[] pieces = ((CompositeName) getParent()).getNamePieces();
+        NameFragmentRef prev = null;
+        for(NameFragmentRef r: pieces){
+            if( r == this){
+                return prev;
+            }
+            prev = r;
+        }
+
+        return null;
+    }
+    
 
     String[] adopt(String template, String[] variants) {
         List<String> cc = new ArrayList<String>();
@@ -198,9 +130,21 @@ public class NameFragmentRefImpl extends PlSqlReferenceBase implements NameFragm
         }
     }
 
-    @NotNull
-    public ResolveContext777 resolveContext() throws NameNotResolvedException {
-        return resolveInner(this);
+    public String getNameInScope(){
+        CompositeName cname = (CompositeName) getParent();
+        NameFragmentRef[] pieces = cname.getNamePieces();
+        StringBuilder b = new StringBuilder();
+        for(NameFragmentRef r: pieces){
+            if(b.length() > 0){
+                b.append(".");
+            }
+            b.append(r.getFragmentText());
+            if(r == this){
+                break;
+            }
+        }
+
+        return b.toString();
     }
 
     public String getFragmentText() {
@@ -215,33 +159,10 @@ public class NameFragmentRefImpl extends PlSqlReferenceBase implements NameFragm
         }
     }
 
-    public boolean isReferenceTo(PsiElement psiElement) {
+    public ResolveDescriptor resolveLight() {
 
-        if (psiElement instanceof ColumnDefinition) {
-            return ((ColumnDefinition) psiElement).getColumnName().equalsIgnoreCase(getText()) && psiElement == resolve();
-        } else if (psiElement instanceof VColumnDefinition) {
-            return ((VColumnDefinition) psiElement).getColumnName().equalsIgnoreCase(getText()) && psiElement == resolve();
-        } else if (psiElement instanceof VariableDecl) {
-            VariableDecl var = (VariableDecl) psiElement;
-            if(var.getDeclName().equalsIgnoreCase(getText())){
-                PsiElement psi = resolve();
-                return var == psi;
-            } else {
-                return false;
-            }
-        } else if (psiElement instanceof Argument) {
-            Argument arg = (Argument) psiElement;
-            if(arg.getArgumentName().equalsIgnoreCase(getText())){
-                PsiElement psi = resolve();
-                return arg == psi;
-            } else {
-                return false;
-            }
-        } else {
-            // todo -- default comparison needs in optimization
-            PsiElement psi = resolve();
-            return psi == psiElement;
-        }
+        return getResolveFacade().getLLResolver().resolveGenericReference(
+                getNameInScope(), getCtxPath1().getPath()
+        );
     }
-
 }

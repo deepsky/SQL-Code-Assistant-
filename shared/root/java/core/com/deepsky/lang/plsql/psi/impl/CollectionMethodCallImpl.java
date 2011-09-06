@@ -25,22 +25,14 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.plsql.psi.Callable;
+import com.deepsky.lang.common.ResolveProvider;
+import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.psi.CollectionMethodCall;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.ResolveHelper3;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class CollectionMethodCallImpl extends PlSqlCompositeNameBase implements CollectionMethodCall {
@@ -50,8 +42,8 @@ public class CollectionMethodCallImpl extends PlSqlCompositeNameBase implements 
     }
 
     // todo - dirty hack which should be fixed asap
+/*
     static public Map<String, RefElement> resolveCache = new HashMap<String, RefElement>();
-
     static class RefElement {
         public ResolveContext777 ctx;
 
@@ -84,6 +76,16 @@ public class CollectionMethodCallImpl extends PlSqlCompositeNameBase implements 
         }
 
         return ctx[0];
+    }
+
+*/
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitCollectionMethodCall(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
 /*
@@ -148,6 +150,11 @@ public class CollectionMethodCallImpl extends PlSqlCompositeNameBase implements 
 
     @NotNull
     public Type getExpressionType() {
+        return ((ResolveProvider) getContainingFile()).getResolver().resolveType(this);
+//        // todo -- resolve stuff refactoring
+//        throw new NotSupportedException();
+
+/*
         try {
             PsiElement psi = this.findChildByType(PLSqlTypesAdopted.C_RECORD_ITEM_REF);
             ResolveContext777 ctx = getResolveContext();
@@ -158,5 +165,6 @@ public class CollectionMethodCallImpl extends PlSqlCompositeNameBase implements 
         } catch (Throwable e) {
             throw new ValidationException(e.getMessage());
         }
+*/
     }
 }

@@ -26,7 +26,6 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.plsql.psi.SelectFieldAsterisk;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.intellij.lang.ASTNode;
 
 public class SelectFieldAsteriskImpl extends PlSqlElementBase implements SelectFieldAsterisk {

@@ -25,27 +25,20 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.SequenceExpr;
-import com.deepsky.lang.plsql.psi.NameFragmentRef;
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
-import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
-import com.deepsky.lang.plsql.psi.resolve.VariantsProcessor777;
-import com.deepsky.lang.plsql.psi.resolve.impl.SequenceContext;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.SequenceExpr;
+import com.deepsky.lang.plsql.psi.ref.SequenceRef;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
-import com.deepsky.lang.plsql.struct.DbObject;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
-public class SequenceExprImpl extends PlSqlCompositeNameBase implements SequenceExpr {
+public class SequenceExprImpl extends PlSqlElementBase implements SequenceExpr {
 
     public SequenceExprImpl(ASTNode astNode) {
         super(astNode);
@@ -56,20 +49,31 @@ public class SequenceExprImpl extends PlSqlCompositeNameBase implements Sequence
         return TypeFactory.createTypeById(Type.INTEGER);
     }
 
+//    @NotNull
+//    public PlSqlElement getSequenceName() {
+//        ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.SEQUENCE_REF));
+//        if (nodes.length != 2) {
+//            throw new SyntaxTreeCorruptedException();
+//        }
+//
+//        return (PlSqlElement) nodes[0].getPsi();
+//    }
+
     @NotNull
-    public PlSqlElement getSequenceName() {
-        ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.NAME_FRAGMENT));
-        if(nodes.length != 2){
+    public SequenceRef getSequence() {
+        ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.SEQUENCE_REF);
+        if (node == null) {
             throw new SyntaxTreeCorruptedException();
         }
 
-        return (PlSqlElement) nodes[0].getPsi();
+        return (SequenceRef) node.getPsi();
     }
 
     public String getMethod() {
         return null;
     }
 
+/*
     @NotNull
     public ResolveContext777 getResolveContext() throws NameNotResolvedException {
         ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.NAME_FRAGMENT));
@@ -85,14 +89,14 @@ public class SequenceExprImpl extends PlSqlCompositeNameBase implements Sequence
             throw new NameNotResolvedException("Sequence not found: " + nodes[0].getText());
         }
     }
+*/
 
     public void accept(@NotNull PsiElementVisitor visitor) {
-      if (visitor instanceof PlSqlElementVisitor) {
-        ((PlSqlElementVisitor)visitor).visitSequenceExpr(this);
-      }
-      else {
-        super.accept(visitor);
-      }
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitSequenceExpr(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
 }

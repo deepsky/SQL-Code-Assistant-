@@ -30,5 +30,5 @@ public interface SessionListener {
     final int DISCONNECTED = 1;
     final int OBJECT_CACHE_UPDATED = 2;
 
-    void updated(int state);
+    void updated(ConnectionInfo source, int state);
 }

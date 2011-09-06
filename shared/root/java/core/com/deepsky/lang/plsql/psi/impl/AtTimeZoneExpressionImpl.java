@@ -25,11 +25,11 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.AtTimeZoneExpression;
 import com.deepsky.lang.plsql.psi.Expression;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 

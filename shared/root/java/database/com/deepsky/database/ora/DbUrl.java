@@ -27,235 +27,91 @@ package com.deepsky.database.ora;
 
 import com.deepsky.lang.plsql.ConfigurationException;
 
-import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+public abstract class DbUrl {
 
-public class DbUrl implements Serializable {
+    final static public String jdbc = "jdbc";
+    final static public String company = "oracle";
+    final static public String driverType = "thin";
+    final static public String driverPrefix = "jdbc:oracle:thin:";
 
-    static final long serialVersionUID = 4430663516973571090L;
+    private String alias;
 
-    String user;
-    String pwd;
-    String port;
-    String host;
-    String serviceName;
-    String jdbc = "jdbc";
-    String company = "oracle";
-    String driverType = "thin";
+    public abstract String getUser();
 
-    public DbUrl(String user, String pwd, String host, String port, String serviceName) {
-        this.user = user;
-        this.pwd = pwd;
-        this.port = port;
-        this.host = host;
-        this.serviceName = serviceName;
-    }
+    public abstract String getPwd();
 
-    public DbUrl(String user, String pwd, String url) {
-        this.user = user == null ? "" : user;
-        this.pwd = pwd == null ? "" : pwd;
+    public abstract String getPort();
 
-        // parse url: jdbc:oracle:thin:test22@192.168.3.1:1521:localdomain.test1
-        String[] parts = url.split(":");
-        if (parts.length != 6) {
-            throw new ConfigurationException("URL specification error: malformed.");
-        }
-        int i = 0;
-        for (String p : parts) {
-            switch (i++) {
-                case 0: // jdbc
-                    if (!p.equals("jdbc")) {
-                        throw new ConfigurationException("URL specification error: driver is not jdbc compatible.");
-                    }
-                    this.jdbc = "jdbc";
-                    break;
-                case 1: // company
-                    if (!p.equals("oracle")) {
-                        throw new ConfigurationException("URL specification error: company name is not 'oracle'.");
-                    }
-                    this.company = p;
-                    break;
-                case 2: // driverType
-                    this.driverType = p;
-                    break;
-                case 3: // user+password+host
-                    String[] parts2 = p.split("@");
-                    switch (parts2.length) {
-                        case 1: // without name and pwd
-                            this.host = parts2[0];
-                            break;
-                        case 2: // with name (and pwd)
-                            // parse the first part to expract name/password
-                            String[] name_pwd = parts2[0].split("/");
-                            switch (name_pwd.length) {
-                                case 1: // name without passowrd
-                                    break;
-                                case 2: // name with passowrd
-                                    break;
-                            }
+    public abstract String getHost();
 
-                            this.host = parts2[1];
-                            break;
-                    }
-                    break;
-                case 4: // port
-                    this.port = p;
-                    break;
-                case 5: // service name
-                    this.serviceName = p;
-                    break;
-            }
-        }
-    }
+    public abstract String getSID_ServiceName();
 
-    public DbUrl(String url) {
-        this.user = "";
-        this.pwd = "";
-
-        // parse url: jdbc:oracle:thin:test22@192.168.3.1:1521:localdomain.test1
-        String[] parts = url.split(":");
-        if (parts.length != 6) {
-            throw new ConfigurationException("URL specification error: malformed.");
-        }
-        int i = 0;
-        for (String p : parts) {
-            switch (i++) {
-                case 0: // jdbc
-                    if (!p.equals("jdbc")) {
-                        throw new ConfigurationException("URL specification error: driver is not jdbc compatible.");
-                    }
-                    this.jdbc = "jdbc";
-                    break;
-                case 1: // company
-                    if (!p.equals("oracle")) {
-                        throw new ConfigurationException("URL specification error: company name is not 'oracle'.");
-                    }
-                    this.company = p;
-                    break;
-                case 2: // driverType
-                    this.driverType = p;
-                    break;
-                case 3: // user+password+host
-                    String[] parts2 = p.split("@");
-                    switch (parts2.length) {
-                        case 1: // without name and pwd
-                            this.host = parts2[0];
-                            break;
-                        case 2: // with name (and pwd)
-                            // parse the first part to expract name/password
-                            String[] name_pwd = parts2[0].split("/");
-                            switch (name_pwd.length) {
-                                case 1: // name without passowrd
-                                    this.user = name_pwd[0];
-                                    break;
-                                case 2: // name with passowrd
-                                    this.user = name_pwd[0];
-                                    this.pwd = name_pwd[1];
-                                    break;
-                            }
-
-                            this.host = parts2[1];
-                            break;
-                    }
-                    break;
-                case 4: // port
-                    this.port = p;
-                    break;
-                case 5: // service name
-                    this.serviceName = p;
-                    break;
-            }
-        }
-    }
-
-
-    public boolean equals(Object obj) {
-        if (obj instanceof DbUrl) {
-            DbUrl dburl = (DbUrl) obj;
-            if (user != null && user.equalsIgnoreCase(dburl.getUser())
-                    && pwd != null && pwd.equalsIgnoreCase(dburl.getPwd())
-                    && port != null && port.equalsIgnoreCase(dburl.getPort())
-                    && host != null && host.equalsIgnoreCase(dburl.getHost())
-                    && serviceName != null && serviceName.equalsIgnoreCase(dburl.getServiceName())
-                    && jdbc != null && jdbc.equalsIgnoreCase(dburl.jdbc)
-                    && company != null && company.equalsIgnoreCase(dburl.company)
-                    && driverType != null && driverType.equalsIgnoreCase(dburl.driverType)
-                    ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    public int hashCode(){
-        return getFullUrl().hashCode();    
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public String getServiceName() {
-        return serviceName;
-    }
+    /**
+     * Old syntax means this:
+     *      jdbc:oracle:thin:@[HOST][:PORT]:SID
+     * new syntax:
+     *      jdbc:oracle:thin:@//[HOST][:PORT]/SERVICE
+     * @return
+     */
+    public abstract boolean isOldSyntax();
 
     /**
      * @return - jdbc:oracle:thin:test22@192.168.3.1:1521:localdomain.test1
      */
-    public String getFullUrl() {
-        String up = "";
-        if (user.length() != 0 && pwd.length() != 0) {
-            up = user + "/" + pwd;
-        } else if (user.length() != 0) {
-            up = user;
-        }
-
-        return jdbc + ":" + company + ":" + driverType + ":" + up + "@" + host + ":" + port + ":" + serviceName;
-    }
+    public abstract String getFullUrl();
 
     /**
      * @return - test22@192.168.3.1:1521:localdomain.test1
      */
-    public String getUserHostPortServiceName() {
-        String up = "";
-        if (user.length() != 0) {
-            up = user;
-        }
-
-        return up + "@" + host + ":" + port + ":" + serviceName;
-    }
-
-    /**
-     * @return - test22@192.168.3.1
-     */
-    public String getUserHost() {
-        String up = "";
-        if (user.length() != 0) {
-            up = user;
-        }
-
-        return up + "@" + host;
-    }
+    public abstract String getUserHostPortServiceName();
 
 
     /**
-     * @return - 192.168.1.23:1521:ORA1
+     * @return - 192.168.1.23:1521:ORA1 or //192.168.1.23:1521/ORA1
      */
-    public String getHostPortServiceName() {
-        return host + ":" + port + ":" + serviceName;
+    public abstract String getHostPortServiceName();
+
+
+    public String getAlias() {
+        return alias;
     }
 
+    public void setAlias(String alias){
+        this.alias = alias;
+    }
+
+    public String toString(){
+        return getUserHostPortServiceName();
+    }
+
+
+    final private static Pattern DB_URL = Pattern.compile(
+            "jdbc:oracle:thin:(?:[A-Za-z0-9\\_\\$]+(?:/[A-Za-z0-9\\_\\.\\-\\$]+)?)?\\@((?://)?[A-Za-z0-9\\_\\.]+):(?:[0-9]+)(/|:)([A-Za-z0-9\\_\\.]+)"
+    );
+
+    public static DbUrl parse(String dbUrl) throws ConfigurationException {
+        if(dbUrl == null){
+            throw new ConfigurationException("Database URL not specified");
+        }
+
+        Matcher m = DB_URL.matcher(dbUrl);
+        if(!m.find()){
+            throw new ConfigurationException("Database URL is malformed");
+        }
+        String host = m.group(1);
+        String determinator = m.group(2);
+
+        if(host != null && host.startsWith("//") && "/".equals(determinator)){
+            // new syntax URL
+            return new DbUrlServiceName(dbUrl);
+        } else if(host != null && !host.startsWith("//") && ":".equals(determinator)){
+            // old syntax URL
+            return new DbUrlSID(dbUrl);
+        } else {
+            throw new ConfigurationException("Cannot parse database URL");
+        }
+    }
 }
