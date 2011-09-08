@@ -1,5 +1,6 @@
 package com.deepsky.lang.integration;
 
+import com.deepsky.findUsages.wordProc.FileProcessor;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.plsql.indexMan.DbTypeChangeListener;
 import com.deepsky.lang.plsql.indexMan.FSIndexer;
@@ -8,6 +9,7 @@ import com.deepsky.lang.plsql.psi.PlSqlElement;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
 import com.deepsky.lang.plsql.sqlIndex.WordIndexChangeListener;
 import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
+import com.deepsky.utils.FileUtils;
 import com.deepsky.utils.StringUtils;
 import com.intellij.ProjectTopics;
 import com.intellij.lang.ASTNode;
@@ -125,9 +127,9 @@ public class LocalFSChangeTracker {
             if (root == null) {
                 log.info("ERROR [File] " + filePath + " Could not parse");
             } else {
-                int cacheSizeBefore = 0; //itree.getEntriesCount();
+                int cacheSizeBefore = 0;
                 fsIndexer.indexPlSqlFile((PlSqlElement) root.getPsi(), listener);
-                int sizeAfter = 0; //itree.getEntriesCount();
+                int sizeAfter = 0;
                 int added = sizeAfter - cacheSizeBefore;
 
                 long ms2 = System.currentTimeMillis();
@@ -142,14 +144,27 @@ public class LocalFSChangeTracker {
     }
 
 
-    private void indexFileWithNotification(VirtualFile virtualFile) {
+    private Set<String> indexFileWithNotification(VirtualFile virtualFile, boolean notifyIndexManager) {
         Set<String> typesBeingAdded = indexFile(virtualFile);
         String[] ttypes = typesBeingAdded.toArray(new String[typesBeingAdded.size()]);
         MessageBus bus1 = project.getMessageBus();
-        if (typesBeingAdded.size() > 0) {
+        if (notifyIndexManager && typesBeingAdded.size() > 0) {
             bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, ttypes);
         }
         bus1.syncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, virtualFile.getPath());
+        return typesBeingAdded;
+    }
+
+    private Set<String> deleteIndex(VirtualFile file, boolean notifyIndexManager){
+        Set<String> typesBeenDeleted = fsIndexer.deleteFile(file.getPath());
+        String[] ttypes = typesBeenDeleted.toArray(new String[typesBeenDeleted.size()]);
+        log.info("fileDeleted: " + file.getPath() + " types: " + Arrays.toString(ttypes));
+        MessageBus bus1 = project.getMessageBus();
+        if (notifyIndexManager && ttypes.length > 0) {
+            bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, ttypes);
+        }
+        bus1.syncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, file.getPath());
+        return typesBeenDeleted;
     }
 
     private class ModuleRootListenerImpl implements ModuleRootListener {
@@ -207,6 +222,8 @@ public class LocalFSChangeTracker {
         }
     }
 
+
+
     private class VirtualFileListenerImpl implements VirtualFileListener {
         public void propertyChanged(VirtualFilePropertyEvent event) {
             log.info("propertyChanged: " + event.getFileName());
@@ -221,66 +238,85 @@ public class LocalFSChangeTracker {
                     fsIndexer.setFileTimestamp(vf.getPath(), vf.getTimeStamp(), vf.getModificationStamp());
                 } else {
                     log.info("#REINDEX FILE: " + vf.getPath());
-                    indexFileWithNotification(vf);
+                    indexFileWithNotification(vf, true);
                 }
             }
         }
 
         public void fileCreated(VirtualFileEvent event) {
-            if (helper.isFileValid(event.getFile())) {
+            if(event.getFile().isDirectory()){
+                // scan directory recursively and add SQL files to index
+                final Set<String> updatedTypes = new HashSet<String>();
+                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
+                    public void handleEntry(VirtualFile parent, VirtualFile file) {
+                        if (helper.isFileValid(file)){
+                            log.info("fileCreated: " + file.getPath() + " timestamp: " + file.getModificationStamp());
+                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
+                            updatedTypes.addAll(indexFileWithNotification(file, false));
+                        }
+                    }
+                });
+                if (updatedTypes.size() > 0) {
+                    MessageBus bus1 = project.getMessageBus();
+                    String[] _updatedTypes = updatedTypes.toArray(new String[updatedTypes.size()]);
+                    bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, _updatedTypes);
+                }
+
+            } else if (helper.isFileValid(event.getFile())) {
                 log.info("fileCreated: " + event.getFileName() + " timestamp: " + event.getFile().getTimeStamp() + " count: " + event.getFile().getModificationStamp());
                 log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
-                indexFileWithNotification(event.getFile());
+                indexFileWithNotification(event.getFile(), true);
             }
         }
 
         public void fileDeleted(VirtualFileEvent event) {
-            if (helper.isFileValid(event.getFile())) {
-                Set<String> typesBeenDeleted = fsIndexer.deleteFile(event.getFile().getPath());
-                String[] ttypes = typesBeenDeleted.toArray(new String[typesBeenDeleted.size()]);
-                log.info("fileDeleted: " + event.getFileName() + " count: " + event.getFile().getModificationStamp() + " types: " + Arrays.toString(ttypes));
-                MessageBus bus1 = project.getMessageBus();
-                if (ttypes.length > 0) {
-                    bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, ttypes);
+            // Referenced file does not exist any longer
+            // fortunately to handle file deletion we need file path only
+            if(event.getFile().isDirectory()){
+                // scan directory recursively and delete relevant files from index
+                final Set<String> updatedTypes = new HashSet<String>();
+                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
+                    public void handleEntry(VirtualFile parent, VirtualFile file) {
+                        if (helper.isFileValid(file)){
+                            updatedTypes.addAll(deleteIndex(file, false));
+                        }
+                    }
+                });
+                if (updatedTypes.size() > 0) {
+                    MessageBus bus1 = project.getMessageBus();
+                    String[] _updatedTypes = updatedTypes.toArray(new String[updatedTypes.size()]);
+                    bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, _updatedTypes);
                 }
-                bus1.syncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, event.getFile().getPath());
+            } else if (helper.isFileValid(event.getFile())) {
+                deleteIndex(event.getFile(), true);
             }
         }
 
-        public void fileMoved(VirtualFileMoveEvent event) {
-            String fileName = event.getFileName();
-            String oldParentPath = event.getOldParent().getPath();
-            String newParentPath = event.getNewParent().getPath();
-            File oldF = new File(new File(oldParentPath), fileName);
-            File newF = new File(new File(newParentPath), fileName);
 
-            boolean originValid = helper.isFileValid(oldF);
-            boolean targetValid = helper.isFileValid(newF);
-            String[] ttypes = new String[0];
-            if (!originValid && !targetValid) {
-                //
-                return;
-            } else if (originValid && !targetValid) {
-                //  delete origin file
-                Set<String> typesBeenDeleted = fsIndexer.deleteFile(oldF.getPath());
-                ttypes = typesBeenDeleted.toArray(new String[typesBeenDeleted.size()]);
-            } else if (!originValid && targetValid) {
-                // add target file
-                VirtualFile target = event.getNewParent().findChild(event.getFileName());
-                Set<String> typesBeenAdded = indexFile(target);
-                ttypes = typesBeenAdded.toArray(new String[typesBeenAdded.size()]);
-            } else {
-                // rename file
-                Set<String> typesInFile = fsIndexer.moveFile(oldF, newF, event.getNewModificationStamp());
-                ttypes = typesInFile.toArray(new String[typesInFile.size()]);
-                resetCache(newF);
-            }
+        public void fileMoved(final VirtualFileMoveEvent event) {
+            if(event.getFile().isDirectory()){
+                // scan directory recursively and add SQL files to index
+                final Set<String> updatedTypes = new HashSet<String>();
+                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
+                    public void handleEntry(VirtualFile parent, VirtualFile file) {
+                        if (helper.isFileValid(file)){
+                            log.info("fileCreated: " + file.getPath() + " timestamp: " + file.getModificationStamp());
+                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
+                            updatedTypes.addAll(indexFileWithNotification(file, false));
+                        }
+                    }
+                });
+                if (updatedTypes.size() > 0) {
+                    MessageBus bus1 = project.getMessageBus();
+                    String[] _updatedTypes = updatedTypes.toArray(new String[updatedTypes.size()]);
+                    bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, _updatedTypes);
+                }
 
-            MessageBus bus1 = project.getMessageBus();
-            if (ttypes.length > 0) {
-                bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, ttypes);
+            } else if (helper.isFileValid(event.getFile())) {
+                log.info("fileCreated: " + event.getFileName() + " timestamp: " + event.getFile().getTimeStamp() + " count: " + event.getFile().getModificationStamp());
+                log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
+                indexFileWithNotification(event.getFile(), true);
             }
-            bus1.syncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, event.getFile().getPath());
         }
 
         public void fileCopied(VirtualFileCopyEvent event) {
@@ -300,9 +336,27 @@ public class LocalFSChangeTracker {
         }
 
         public void beforeFileMovement(VirtualFileMoveEvent event) {
-//            log.info("beforeFileMovement: " + event.getFileName());
+            if(event.getFile().isDirectory()){
+                // scan directory recursively and delete relevant files from index
+                final Set<String> updatedTypes = new HashSet<String>();
+                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
+                    public void handleEntry(VirtualFile parent, VirtualFile file) {
+                        if (helper.isFileValid(file)){
+                            updatedTypes.addAll(deleteIndex(file, false));
+                        }
+                    }
+                });
+                if (updatedTypes.size() > 0) {
+                    MessageBus bus1 = project.getMessageBus();
+                    String[] _updatedTypes = updatedTypes.toArray(new String[updatedTypes.size()]);
+                    bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, _updatedTypes);
+                }
+            } else if (helper.isFileValid(event.getFile())) {
+                deleteIndex(event.getFile(), true);
+            }
         }
     }
+
 
     private void resetCache(File file) {
         URI uri = file.toURI();
