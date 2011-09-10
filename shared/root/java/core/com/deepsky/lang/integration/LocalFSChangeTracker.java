@@ -300,7 +300,7 @@ public class LocalFSChangeTracker {
                 FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
                     public void handleEntry(VirtualFile parent, VirtualFile file) {
                         if (helper.isFileValid(file)){
-                            log.info("fileCreated: " + file.getPath() + " timestamp: " + file.getModificationStamp());
+                            log.info("fileMoved: " + file.getPath() + " timestamp: " + file.getModificationStamp());
                             log.info("#BUILD INDEX FOR FILE: " + file.getPath());
                             updatedTypes.addAll(indexFileWithNotification(file, false));
                         }
@@ -313,14 +313,36 @@ public class LocalFSChangeTracker {
                 }
 
             } else if (helper.isFileValid(event.getFile())) {
-                log.info("fileCreated: " + event.getFileName() + " timestamp: " + event.getFile().getTimeStamp() + " count: " + event.getFile().getModificationStamp());
+                log.info("fileMoved: " + event.getFileName() + " timestamp: " + event.getFile().getTimeStamp() + " count: " + event.getFile().getModificationStamp());
                 log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
                 indexFileWithNotification(event.getFile(), true);
             }
         }
 
         public void fileCopied(VirtualFileCopyEvent event) {
-//            log.info("fileCopied: " + event.getFileName());
+            if(event.getFile().isDirectory()){
+                // scan directory recursively and add SQL files to index
+                final Set<String> updatedTypes = new HashSet<String>();
+                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
+                    public void handleEntry(VirtualFile parent, VirtualFile file) {
+                        if (helper.isFileValid(file)){
+                            log.info("fileCopied: " + file.getPath() + " timestamp: " + file.getModificationStamp());
+                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
+                            updatedTypes.addAll(indexFileWithNotification(file, false));
+                        }
+                    }
+                });
+                if (updatedTypes.size() > 0) {
+                    MessageBus bus1 = project.getMessageBus();
+                    String[] _updatedTypes = updatedTypes.toArray(new String[updatedTypes.size()]);
+                    bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, _updatedTypes);
+                }
+
+            } else if (helper.isFileValid(event.getFile())) {
+                log.info("fileCopied: " + event.getFileName() + " timestamp: " + event.getFile().getTimeStamp() + " count: " + event.getFile().getModificationStamp());
+                log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
+                indexFileWithNotification(event.getFile(), true);
+            }
         }
 
         public void beforePropertyChange(VirtualFilePropertyEvent event) {
@@ -342,6 +364,7 @@ public class LocalFSChangeTracker {
                 FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
                     public void handleEntry(VirtualFile parent, VirtualFile file) {
                         if (helper.isFileValid(file)){
+                            log.info("beforeFileMovement: " + file + ", delete from index");
                             updatedTypes.addAll(deleteIndex(file, false));
                         }
                     }
@@ -352,6 +375,7 @@ public class LocalFSChangeTracker {
                     bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, _updatedTypes);
                 }
             } else if (helper.isFileValid(event.getFile())) {
+                log.info("beforeFileMovement: " + event.getFile() + ", delete from index");
                 deleteIndex(event.getFile(), true);
             }
         }
