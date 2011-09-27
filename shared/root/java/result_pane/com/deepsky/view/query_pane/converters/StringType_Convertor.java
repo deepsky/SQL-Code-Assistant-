@@ -25,9 +25,13 @@
 
 package com.deepsky.view.query_pane.converters;
 
+import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.ValueConvertor;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class StringType_Convertor implements ValueConvertor<String> {
@@ -41,6 +45,10 @@ public class StringType_Convertor implements ValueConvertor<String> {
 
     public String stringToValue(String stringPresentation) throws ConversionException {
         return stringPresentation;
+    }
+
+    public void saveValueTo(String value, @NotNull File file) throws IOException {
+        StringUtils.string2file(value!=null? value:"", file);
     }
 
 }

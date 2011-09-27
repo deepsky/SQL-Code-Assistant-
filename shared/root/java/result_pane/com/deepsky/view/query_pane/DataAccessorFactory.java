@@ -35,27 +35,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class DataAccessorFactory {
 
-/*
-    public static DataAccessor create(final Project project, Object value) {
-        if (value instanceof RAWType) {
-            return new DataAccessor<RAWType>((RAWType) value, new RAWType_Convertor());
-        } else if (value instanceof LONGRAWType) {
-            return new DataAccessor<LONGRAWType>((LONGRAWType) value, new LONGRAWType_Convertor());
-        } else if (value instanceof String) {
-            return new DataAccessor<String>((String) value, new StringType_Convertor());
-        } else if(value instanceof TIMESTAMP){
-            return new DataAccessor<TIMESTAMP>((TIMESTAMP) value, PluginKeys.TS_CONVERTOR.getData(project));
-        } else if(value instanceof TIMESTAMPTZ){
-            return new DataAccessor<TIMESTAMPTZ>((TIMESTAMPTZ) value, PluginKeys.TSTZ_CONVERTOR.getData(project));
-        } else if(value instanceof TIMESTAMPLTZ){
-            return new DataAccessor<TIMESTAMPLTZ>((TIMESTAMPLTZ) value, PluginKeys.TSLTZ_CONVERTOR.getData(project));
-        } else {
-            return null;
-        }
-    }
-*/
-
-
     public static DataAccessor createReadOnly(final Project project, @NotNull Class columnClazz, Object value) {
         if(columnClazz.isAssignableFrom(RAWType.class)){
             return new DataAccessor<RAWType>((RAWType) value, new RAWType_Convertor());
@@ -73,6 +52,8 @@ public class DataAccessorFactory {
             return new DataAccessor<BLOB>((BLOB) value, new BLOB_Convertor());
         } else if(columnClazz.isAssignableFrom(CLOB.class)){
             return new DataAccessor<CLOB>((CLOB) value, new CLOB_Convertor());
+        } else if(columnClazz.isAssignableFrom(BFILE.class)){
+            return new DataAccessor<BFILE>((BFILE) value, new BFILE_Convertor());
         } else {
             return null;
         }

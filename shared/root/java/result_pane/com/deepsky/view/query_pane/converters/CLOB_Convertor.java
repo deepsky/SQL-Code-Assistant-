@@ -25,12 +25,15 @@
 
 package com.deepsky.view.query_pane.converters;
 
+import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.ValueConvertor;
 import oracle.sql.BLOB;
 import oracle.sql.CLOB;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -41,7 +44,7 @@ public class CLOB_Convertor  implements ValueConvertor<CLOB> {
     }
 
     public String valueToString(CLOB blob) throws SQLException {
-        if(blob == null || blob.length() == 0){
+        if(blob == null || blob.isEmptyLob() || blob.length() == 0){
             return "";
         } else {
             InputStream r = blob.getAsciiStream();
@@ -57,7 +60,6 @@ public class CLOB_Convertor  implements ValueConvertor<CLOB> {
                 // Converts the buffer's contents into a string decoding bytes using the
                 // platform's default character set.
                 return writer.toString();
-//                return writer.toString(null);
             } catch (IOException e) {
                 throw new SQLException(e.getMessage());
             }
@@ -65,20 +67,30 @@ public class CLOB_Convertor  implements ValueConvertor<CLOB> {
     }
 
     public CLOB stringToValue(String stringPresentation) throws ConversionException {
-/*
-        try {
-            // todo -- implement me
-            byte[] array = ConversionUtil.convertHEXString2ByteArray(stringPresentation);
-            BLOB blob = BLOB.getEmptyBLOB();
-            OutputStream out = blob.setBinaryStream(1);
-            out.write(array);
-            return blob;
-        } catch (SQLException e) {
-            throw new ConversionException(e.getMessage());
-        } catch (IOException e) {
-            throw new ConversionException(e.getMessage());
-        }
-*/
-        throw new ConversionException();
+        throw new ConversionException("Not supported");
     }
+
+
+    public void saveValueTo(CLOB clob, @NotNull File file) throws IOException {
+        try {
+            if (clob != null && !clob.isEmptyLob() && clob.length() > 0) {
+                InputStream r = null;
+                try {
+                    r = clob.asciiStreamValue();
+                    StringUtils.stream2file(r, file);
+                } finally {
+                    if (r != null)
+                        try {
+                            r.close();
+                        } catch (IOException ignored) {
+                        }
+                }
+            } else {
+                StringUtils.string2file("", file);
+            }
+        } catch (SQLException e) {
+            throw new IOException("Could not save CLOB in the file", e);
+        }
+    }
+
 }

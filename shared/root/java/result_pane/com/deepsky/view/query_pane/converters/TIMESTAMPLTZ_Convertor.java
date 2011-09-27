@@ -26,11 +26,15 @@
 package com.deepsky.view.query_pane.converters;
 
 import com.deepsky.settings.SqlCodeAssistantSettings;
+import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.ValueConvertor;
 import oracle.sql.TIMESTAMP;
 import oracle.sql.TIMESTAMPLTZ;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -81,20 +85,13 @@ public class TIMESTAMPLTZ_Convertor  implements ValueConvertor<TIMESTAMPLTZ> {
         return null;
     }
 
-/*
-    public void saveValueTo(TIMESTAMP value, File file) throws IOException {
+    public void saveValueTo(TIMESTAMPLTZ value, @NotNull File file) throws IOException {
         try {
-            if(value == null){
-                StringUtils.string2file("", file);
-            } else {
-                Timestamp timestamp = convertOracleTS(value);
-                StringUtils.string2file(new SimpleDateFormat(settings.getDateFormat() + " " + settings.getTimeFormat()).format(timestamp), file);
-            }
+            StringUtils.string2file(valueToString(value), file);
         } catch (SQLException e) {
-            throw new IOException(e.getMessage());
+            throw new IOException("Could not save TIMESTAMPLTZ in the file", e);
         }
     }
-*/
 
     private static Timestamp convertOracleTS(TIMESTAMPLTZ value) throws SQLException {
         return value.timestampValue();

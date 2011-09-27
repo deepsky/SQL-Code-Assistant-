@@ -173,9 +173,7 @@
 
         <definitionsSearch implementation="com.deepsky.navigation.ImplementationsSearcher"/>
         <targetElementEvaluator language="PlSql" implementationClass="com.deepsky.navigation.PlSqlTargetElementEvaluator"/>
-
         <fileIconProvider implementation="com.deepsky.lang.common.FileIconProviderImpl"/>
-
         <completion.contributor language="PlSql" implementationClass="com.deepsky.lang.plsql.completion.ComplContributor"/>
 
         <codeInsight.parameterInfo language="PlSql"

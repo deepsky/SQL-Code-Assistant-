@@ -25,14 +25,16 @@
 
 package com.deepsky.view.query_pane.grid.editors;
 
+import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.DataAccessor;
 import com.deepsky.view.query_pane.ValueConvertor;
+import com.deepsky.view.query_pane.converters.TIMESTAMP_Convertor;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 
-public class TimestampCellEditor extends AbstractCellEditor1 { //DefaultCellEditor { //implements DateTimeFormatProvider {
+public class TimestampCellEditor extends AbstractCellEditor1 {
 
     Object value;
     ValueConvertor convertor;
@@ -87,8 +89,17 @@ public class TimestampCellEditor extends AbstractCellEditor1 { //DefaultCellEdit
 
     @Override
     protected DataAccessor getDataAccessor() {
-        //todo -- implement me
-        return null;
+        String value = super.getTextValue();
+        return new DataAccessor(value, convertor) {
+            public void loadFromString(String text) throws ConversionException {
+                super.loadFromString(text);
+                TimestampCellEditor.this.setValue(text);
+            }
+
+            public boolean isReadOnly() {
+                return false;
+            }
+        };
     }
 
     public Object getCellEditorValue() {

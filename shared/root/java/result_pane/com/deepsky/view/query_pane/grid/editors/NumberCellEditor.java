@@ -77,10 +77,8 @@ public class NumberCellEditor extends AbstractCellEditor1 {
         } catch (Exception e) {
             setInputErrored();
             setToolTip("Entered number is not valid");
-
             return false;
         }
-
 
         return super.stopCellEditing();
     }

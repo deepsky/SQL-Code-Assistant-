@@ -29,7 +29,9 @@ import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.ValueConvertor;
+import com.joestelmach.natty.Parser;
 import oracle.sql.TIMESTAMP;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +39,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 public class TIMESTAMP_Convertor implements ValueConvertor<TIMESTAMP> {
     SqlCodeAssistantSettings settings;
@@ -59,23 +64,43 @@ public class TIMESTAMP_Convertor implements ValueConvertor<TIMESTAMP> {
         }
     }
 
+    static Parser _parser = new Parser(TimeZone.getTimeZone("GMT"));
+
     public TIMESTAMP stringToValue(String stringPresentation) throws ConversionException {
 //            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
 //            java.sql.Timestamp sqlDate = new java.sql.Timestamp(date.getTime());
 //            value = new TIMESTAMP(sqlDate);
         if(stringPresentation != null && stringPresentation.length() > 0){
+            TimeZone oldTZ = TimeZone.getDefault();
             try {
-                Date date = new SimpleDateFormat(settings.getDateFormat() + " " + settings.getTimeFormat()).parse(stringPresentation);
-                java.sql.Timestamp sqlDate = new java.sql.Timestamp(date.getTime());
+                List<Calendar> dates = _parser.parse(stringPresentation).get(0).getCalendars();
+                //Date date = new SimpleDateFormat(settings.getDateFormat() + " " + settings.getTimeFormat()).parse(stringPresentation);
+                //java.sql.Timestamp sqlDate = new java.sql.Timestamp(date.getTime());
+                if(dates.size() == 0){
+                    return null;
+                }
+
+                TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+                java.sql.Timestamp sqlDate = new java.sql.Timestamp(dates.get(0).getTimeInMillis()); //getTime());
                 return new TIMESTAMP(sqlDate);
-            } catch (ParseException e) {
-                throw new ConversionException();
+//            } catch (ParseException e) {
+//                throw new ConversionException();
             } catch (Throwable e) {
                 throw new ConversionException();
+            } finally {
+                TimeZone.setDefault(oldTZ);
             }
         }
 
         return null;
+    }
+
+    public void saveValueTo(TIMESTAMP value, @NotNull File file) throws IOException {
+        try {
+            StringUtils.string2file(valueToString(value), file);
+        } catch (SQLException e) {
+            throw new IOException("Could not save TIMESTAMP in the file", e);
+        }
     }
 
     private static Timestamp convertOracleTS(TIMESTAMP value) throws SQLException {

@@ -28,7 +28,12 @@ package com.deepsky.view.query_pane.converters;
 import com.deepsky.database.ora.types.RAWType;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.ValueConvertor;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 
 public class RAWType_Convertor implements ValueConvertor<RAWType> {
@@ -52,67 +57,10 @@ public class RAWType_Convertor implements ValueConvertor<RAWType> {
         return new RAWType(ConversionUtil.convertHEXString2ByteArray(value));
     }
 
-/*
-    public void saveValueTo(RAWType value, File file) throws IOException {
-        if(value != null && value.getValue().length > 0){
-            String content = convertByteArray2HEXString(value.getValue());
-            StringUtils.string2file(content, file);
-        } else {
-            StringUtils.string2file("", file);
-        }
+    public void saveValueTo(RAWType value, @NotNull File file) throws IOException {
+        OutputStream out = new FileOutputStream(file);
+        out.write(value != null ? value.getValue() : new byte[0]);
+        out.close();
     }
-*/
-
-/*
-    private static String convertByteArray2HEXString(byte[] value) {
-        if (value != null) {
-            char[] out = new char[value.length * 2];
-            for (int i = 0; i < value.length; i++) {
-                String hex = String.format("%1$08x", (int) value[i]);
-                out[i * 2] = hex.charAt(6);
-                if(Character.isLetter(out[i * 2])){
-                    out[i * 2] = Character.toUpperCase(out[i * 2]);
-                }
-                out[i * 2 + 1] = hex.charAt(7);
-                if(Character.isLetter(out[i * 2 +1])){
-                    out[i * 2 + 1] = Character.toUpperCase(out[i * 2 + 1]);
-                }
-            }
-            return new String(out);
-        }
-        return "";
-    }
-
-
-    private static byte[] convertHEXString2ByteArray(String value) {
-        if (value == null || value.length() == 0) {
-            return null;
-        } else {
-            char[] array = value.toCharArray();
-            int ext = array.length%2; // can be 0 or 1 only!
-            byte[] out = new byte[array.length / 2 + ext];
-            for (int i = 0; i < array.length-ext; i += 2) {
-                String part = new String(array, i, 2);
-                try {
-                    out[i/2] = (byte) Integer.parseInt(part, 16);
-                }catch(NumberFormatException e){
-                    // ignore conversion error
-                    out[i/2] = 0;
-                }
-            }
-
-            if(ext != 0){
-                String part = String.valueOf(array[array.length-1]);
-                try {
-                    out[out.length-1] = (byte) Integer.parseInt(part, 16);
-                }catch(NumberFormatException e){
-                    // ignore conversion error
-                    out[out.length-1] = 0;
-                }
-            }
-            return out;
-        }
-    }
-*/
 
 }

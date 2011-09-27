@@ -25,6 +25,10 @@
 
 package com.deepsky.view.query_pane;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public interface ValueConvertor<E> {
@@ -33,5 +37,6 @@ public interface ValueConvertor<E> {
     String valueToString(E value) throws SQLException;
 
     E stringToValue(String stringPresentation) throws ConversionException;
-//    void saveValueTo(E value, File file) throws IOException;
+
+    void saveValueTo(E value, @NotNull File file) throws IOException;
 }

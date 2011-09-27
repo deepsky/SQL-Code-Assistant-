@@ -32,6 +32,7 @@ import com.deepsky.database.ora.types.RAWType;
 import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.*;
+import com.deepsky.view.query_pane.converters.ConversionUtil;
 import com.deepsky.view.query_pane.converters.RAWType_Convertor;
 import com.deepsky.view.query_pane.grid.editors.*;
 import com.deepsky.view.query_pane.grid.renders.*;
@@ -117,7 +118,6 @@ public class EditableGrid extends AbstractDataGrid {
         setDefaultRenderer(Color.class, new ColumnNumberRenderer(true));
         setDefaultRenderer(BigDecimal.class, new NumberRenderer(font));
         setDefaultRenderer(String.class, new TextRenderer(font));
-
         setDefaultRenderer(ROWID.class, new ROWIDRenderer(font));
 
 //        _table.setDefaultRenderer(java.sql.Time.class, new DateRenderer());
@@ -158,35 +158,36 @@ public class EditableGrid extends AbstractDataGrid {
         setDefaultEditor(BigDecimal.class, new NumberCellEditor(font));
         setDefaultEditor(String.class, textEditor);
         setDefaultEditor(RAWType.class, rawEditor);
-        setDefaultEditor(LONGRAWType.class, rawEditor); //new LongRawCellEditor(font));
+        setDefaultEditor(LONGRAWType.class, rawEditor);
+        setDefaultEditor(java.sql.Timestamp.class, null);
         setDefaultEditor(TIMESTAMP.class, new TimestampCellEditor(font, PluginKeys.TS_CONVERTOR.getData(project)));
         setDefaultEditor(TIMESTAMPTZ.class, new TimestampCellEditor(font, PluginKeys.TSTZ_CONVERTOR.getData(project)));
 
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         setRowSelectionAllowed(true);
         setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+        setSurrendersFocusOnKeystroke(true);
     }
 
 
     public void mousePressed(MouseEvent e) {
         if (e.getClickCount() == 2) {
             // double click, open Editor dialog if column is BLOB/CLOB/BFILE
-
             int columnIndex = getSelectedColumn();
             int rowIndex = getSelectedRow();
-            DataAccessor accessor = createAccessor(columnIndex, rowIndex);
 
             Class columnClazz = getModel().getColumnClass(columnIndex);
             if(columnClazz.isAssignableFrom(BLOB.class)){
-                openColumnValueViewer(columnClazz, columnIndex);
-            } else if(columnClazz.isAssignableFrom(CLOB.class)){
+                DataAccessor accessor = createAccessor(columnIndex, rowIndex);
                 openColumnValueEditor(accessor);
-                //openColumnValueViewer(columnClazz, columnIndex);
+            } else if(columnClazz.isAssignableFrom(CLOB.class)){
+                DataAccessor accessor = createAccessor(columnIndex, rowIndex);
+                openColumnValueEditor(accessor);
             } else if(columnClazz.isAssignableFrom(BFILE.class)){
                 openColumnValueViewer(columnClazz, columnIndex);
             } else {
                 // open for other cases if the cell is readOnly
-                //int rowIndex = getSelectedRow();
                 if(!getModel().isCellEditable(rowIndex, columnIndex)){
                     openColumnValueViewer(columnClazz, columnIndex);
                 }
@@ -205,28 +206,19 @@ public class EditableGrid extends AbstractDataGrid {
             // editable column value
             DataAccessor accessor = DataAccessorFactory.createReadOnly(project, columnClazz, value);
             if(columnClazz.isAssignableFrom(BLOB.class)){
-                return new DataAccessorWrapper(accessor){
+                return new DataAccessorWrapper<BLOB>(accessor){
                     public void loadFromString(String text) throws ConversionException {
-                        // todo - load blob from string
-                    }
-                    public boolean isReadOnly(){
-                        return false;
-                    }
-                };
-            } else if(columnClazz.isAssignableFrom(CLOB.class)){
-                return new DataAccessorWrapper(accessor){
-                    public void loadFromString(String text) throws ConversionException {
-                        CLOB clob = (CLOB)getValue();
+                        BLOB blob = getValue();
                         try {
-                            if(clob == null){
-                                clob = new CLOB((OracleConnection) rowset.getConnection());
+                            if(blob == null || !blob.isTemporary()){
+                                blob = BLOB.createTemporary(rowset.getConnection(), true,  BLOB.DURATION_SESSION);
                             }
 
-                            //OutputStream out = clob.setAsciiStream(1);
-                            Writer w = new OracleClobWriter(clob);
-                            w.write(text);
-                            setValueAt(clob, rowIndex, columnIndex);
-                            //w.close();
+                            OutputStream out = blob.setBinaryStream(1);
+                            byte[] array = ConversionUtil.convertHEXString2ByteArray(text);
+                            out.write(array);
+                            out.close();
+                            setValueAt(blob, rowIndex, columnIndex);
                         } catch (SQLException e) {
                             // todo -- do appropriate handling
                             e.printStackTrace();
@@ -234,8 +226,31 @@ public class EditableGrid extends AbstractDataGrid {
                             // todo -- do appropriate handling
                             e.printStackTrace();
                         }
+                    }
+                    public boolean isReadOnly(){
+                        return false;
+                    }
+                };
+            } else if(columnClazz.isAssignableFrom(CLOB.class)){
+                return new DataAccessorWrapper<CLOB>(accessor){
+                    public void loadFromString(String text) throws ConversionException {
+                        CLOB clob = getValue();
+                        try {
+                            if(clob == null || !clob.isTemporary()){
+                                clob = CLOB.createTemporary(rowset.getConnection(), true,  CLOB.DURATION_SESSION);
+                            }
 
-                        int hh =0;
+                            OutputStream out = clob.setAsciiStream(1);
+                            out.write(text.getBytes());
+                            out.close();
+                            setValueAt(clob, rowIndex, columnIndex);
+                        } catch (SQLException e) {
+                            // todo -- do appropriate handling
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            // todo -- do appropriate handling
+                            e.printStackTrace();
+                        }
                     }
                     public boolean isReadOnly(){
                         return false;
@@ -251,9 +266,9 @@ public class EditableGrid extends AbstractDataGrid {
         }
     }
 
-    private class DataAccessorWrapper extends DataAccessor {
-        DataAccessor delegate;
-        public DataAccessorWrapper(DataAccessor delegate){
+    private class DataAccessorWrapper<E> extends DataAccessor<E> {
+        protected DataAccessor<E> delegate;
+        public DataAccessorWrapper(DataAccessor<E> delegate){
             this.delegate = delegate;
         }
         public long size() throws SQLException{
@@ -274,6 +289,10 @@ public class EditableGrid extends AbstractDataGrid {
 
         public boolean isReadOnly(){
             return delegate.isReadOnly();
+        }
+
+        public E getValue(){
+            return delegate.getValue();
         }
     }
 
@@ -301,7 +320,13 @@ public class EditableGrid extends AbstractDataGrid {
             if(dialog.isOK()){
                 //
             }
-            getDefaultEditor(columnClazz).stopCellEditing();
+            Component eComponent = getEditorComponent();
+            if(eComponent != null){
+                TableCellEditor editor = getDefaultEditor(columnClazz);
+                if(editor != null){
+                    editor.stopCellEditing();
+                }
+            }
         }
     }
 

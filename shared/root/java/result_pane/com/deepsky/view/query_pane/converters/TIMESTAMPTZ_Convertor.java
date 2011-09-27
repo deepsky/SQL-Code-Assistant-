@@ -29,22 +29,20 @@ import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.ValueConvertor;
-import com.intellij.codeInsight.intention.impl.config.IntentionManagerImpl;
+import com.joestelmach.natty.Parser;
 import oracle.sql.TIMESTAMP;
 import oracle.sql.TIMESTAMPTZ;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,21 +88,32 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
         return result;
     }
 
+    static Parser _parser = new Parser(TimeZone.getTimeZone("GMT"));
+
     public TIMESTAMPTZ stringToValue(String stringPresentation) throws ConversionException {
         // timestamp '2003-02-17 09:00:00 -8:00'
         // timestamp '2003-02-17 09:00:00 +13:45'
         // timestamp '2003-02-17 09:00:00 +1'
         if (stringPresentation != null && stringPresentation.length() > 0) {
             try {
+                List<Calendar> dates = _parser.parse(stringPresentation).get(0).getCalendars();
+                if(dates.size() == 0){
+                    return null;
+                }
+
+                Calendar c = dates.get(0);
+                String rest = c.getTimeZone().getID();
+/*
                 ParsePosition pos = new ParsePosition(0);
                 Date date = new SimpleDateFormat(dateTimeFormat()).parse(stringPresentation, pos);
                 if (pos.getIndex() == 0) {
                     throw new ParseException("Unparseable date: \"" + stringPresentation + "\"", pos.getErrorIndex());
                 }
                 String rest = stringPresentation.substring(pos.getIndex());
-                byte[] tzRaw = parserTimeZone(rest);
+*/
+                byte[] tzRaw = parseTimeZone(rest);
 
-                java.sql.Timestamp sqlDate = new java.sql.Timestamp(date.getTime());
+                java.sql.Timestamp sqlDate = new java.sql.Timestamp(c.getTimeInMillis()); //date.getTime());
                 TIMESTAMP temp = new TIMESTAMP(sqlDate);
                 byte[] tsBytes = temp.getBytes();
                 byte[] tstzBytes = new byte[13];
@@ -112,8 +121,8 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
                 tstzBytes[11] = tzRaw[0];
                 tstzBytes[12] = tzRaw[1];
                 return new TIMESTAMPTZ(tstzBytes);
-            } catch (ParseException e) {
-                throw new ConversionException();
+//            } catch (ParseException e) {
+//                throw new ConversionException();
             } catch (Throwable e) {
                 throw new ConversionException();
             }
@@ -135,6 +144,14 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
         }
     }
 
+    public void saveValueTo(TIMESTAMPTZ value, @NotNull File file) throws IOException {
+        try {
+            StringUtils.string2file(valueToString(value), file);
+        } catch (SQLException e) {
+            throw new IOException("Could not save TIMESTAMPTZ in the file", e);
+        }
+    }
+
 
     private static final Pattern TZ_TIMED = Pattern.compile("([\\-0-9a-z]+) *(\\: *([0-9a-z]+))?.*");
     private static final Pattern TZ_TIMED_VERIFIER = Pattern.compile("([\\-0-9\\ ]+)(\\:([0-9\\ ]+))?.*");
@@ -146,7 +163,7 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
      * @return
      * @throws ConversionException
      */
-    public byte[] parserTimeZone(String _tz) throws ConversionException {
+    public byte[] parseTimeZone(String _tz) throws ConversionException {
         String tz = _tz.trim();
         short tzShort = -1;
         if (tz.length() == 0) {

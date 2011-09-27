@@ -25,9 +25,11 @@
 
 package com.deepsky.view.query_pane.ui;
 
+import com.deepsky.utils.FileUtils;
 import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.DataAccessor;
+import com.deepsky.view.query_pane.converters.ConversionUtil;
 import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -36,6 +38,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWrapper;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,8 +46,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLException;
 
 public class BinaryEditorDialog extends DialogWrapper {
@@ -58,9 +60,9 @@ public class BinaryEditorDialog extends DialogWrapper {
     private DataAccessor accessor;
 
 
-    public BinaryEditorDialog(final Project project, String columnName, DataAccessor accessor) {
+    public BinaryEditorDialog(final Project project, String columnName, DataAccessor _accessor) {
         super(project);
-        this.accessor = accessor;
+        this.accessor = _accessor;
 
         $$$setupUI$$$();
         this.setTitle("Column " + columnName.toUpperCase());
@@ -89,11 +91,16 @@ public class BinaryEditorDialog extends DialogWrapper {
                         "Save Column Value in the file", "", new String[0]
                 );
                 FileSaverDialog dialog = FileChooserFactory.getInstance().createSaveFileDialog(fileSaverDescriptor, project);
+                // todo -- use selected directory previously as a start directory
                 VirtualFileWrapper f = dialog.save(null, null);
                 if (f != null) {
                     File saveTo = f.getFile();
                     try {
-                        BinaryEditorDialog.this.accessor.saveValueTo(saveTo);
+                        String text = ((HexTextArea) textArea1).getMergedText();
+                        byte[] temp = ConversionUtil.convertHEXString2ByteArray(text);
+                        OutputStream out = new FileOutputStream(saveTo);
+                        out.write(temp);
+                        out.close();
                     } catch (IOException e1) {
                         Messages.showErrorDialog(project,
                                 "Could not save the column value in the file: " + saveTo
@@ -106,12 +113,14 @@ public class BinaryEditorDialog extends DialogWrapper {
             public void actionPerformed(ActionEvent e) {
                 FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, false, false, false, false);
                 FileChooserDialog dialog = FileChooserFactory.getInstance().createFileChooser(descriptor, project);
+                // todo -- use selected directory previously as a start directory
                 VirtualFile[] chosen = dialog.choose(null, project);
                 if (chosen.length == 1) {
                     try {
                         File f = new File(chosen[0].getPath());
-                        textArea1.setText(StringUtils.file2string(f));
-
+                        InputStream in = new FileInputStream(f);
+                        String encodedBytes = ConversionUtil.convertBinaryStream2HEXString(in);
+                        textArea1.setText(encodedBytes);
                     } catch (IOException e1) {
                         Messages.showErrorDialog(project,
                                 "Could not open file for reading : " + chosen[0].getPath()
@@ -144,14 +153,14 @@ public class BinaryEditorDialog extends DialogWrapper {
         super.doOKAction();
     }
 
-/*
-    public void show() {
-        AsyncResult<Boolean> result = showAndGetOk();
-        boolean r = result.isDone();
-        int hh = 0;
+    @Nullable
+    public JComponent getPreferredFocusedComponent() {
+        if (!accessor.isReadOnly()) {
+            return textArea1;
+        } else {
+            return null;
+        }
     }
-*/
-
 
     @Override
     protected JComponent createCenterPanel() {

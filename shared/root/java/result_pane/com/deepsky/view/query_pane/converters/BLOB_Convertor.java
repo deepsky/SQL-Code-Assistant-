@@ -25,13 +25,13 @@
 
 package com.deepsky.view.query_pane.converters;
 
+import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.ValueConvertor;
 import oracle.sql.BLOB;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.*;
 import java.sql.SQLException;
 
 public class BLOB_Convertor implements ValueConvertor<BLOB> {
@@ -40,7 +40,7 @@ public class BLOB_Convertor implements ValueConvertor<BLOB> {
     }
 
     public String valueToString(BLOB blob) throws SQLException {
-        if(blob == null || blob.length() == 0){
+        if (blob == null || blob.length() == 0) {
             return "";
         } else {
             InputStream r = blob.binaryStreamValue();
@@ -48,30 +48,42 @@ public class BLOB_Convertor implements ValueConvertor<BLOB> {
             byte[] buff = new byte[1000];
             int size = 0;
             try {
-                while((size =r.read(buff)) > 0){
+                while ((size = r.read(buff)) > 0) {
                     writer.write(buff, 0, size);
                 }
                 r.close();
 
-                return com.deepsky.view.query_pane.converters.ConversionUtil.convertByteArray2HEXString(writer.toByteArray());
+                return ConversionUtil.convertByteArray2HEXString(writer.toByteArray());
             } catch (IOException e) {
                 throw new SQLException(e.getMessage());
             }
         }
     }
 
-    public BLOB stringToValue(String stringPresentation) throws ConversionException {
+    public void saveValueTo(BLOB blob, @NotNull File file) throws IOException {
         try {
-            // todo -- implement me
-            byte[] array = ConversionUtil.convertHEXString2ByteArray(stringPresentation);
-            BLOB blob = BLOB.getEmptyBLOB();
-            OutputStream out = blob.setBinaryStream(1);
-            out.write(array);
-            return blob;
+            if (blob != null && !blob.isEmptyLob() && blob.length() > 0) {
+                InputStream r = null;
+                try {
+                    r = blob.binaryStreamValue();
+                    StringUtils.stream2file(r, file);
+                } finally {
+                    if (r != null)
+                        try {
+                            r.close();
+                        } catch (IOException ignored) {
+                        }
+                }
+            } else {
+                StringUtils.string2file("", file);
+            }
         } catch (SQLException e) {
-            throw new ConversionException(e.getMessage());
-        } catch (IOException e) {
-            throw new ConversionException(e.getMessage());
+            throw new IOException("Could not save BLOB in the file", e);
         }
+    }
+
+
+    public BLOB stringToValue(String stringPresentation) throws ConversionException {
+        throw new ConversionException("Not supported");
     }
 }

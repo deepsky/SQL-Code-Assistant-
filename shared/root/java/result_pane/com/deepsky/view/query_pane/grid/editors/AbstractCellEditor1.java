@@ -101,10 +101,22 @@ todo -- fix lost typed key
                     return super.processKeyBinding(ks, e, condition, pressed);
                 }
             };
-            panel.setRequestFocusEnabled(true);
+//            panel.setRequestFocusEnabled(true);
             panel.setFocusable(true);
+            panel.setEnabled(true);
             panel.setVisible(true);
             panel.setOpaque(true);
+
+            // Forward focus to textField component
+            panel.addFocusListener(new FocusAdapter() {
+                public void focusGained(FocusEvent e) {
+                    textField.requestFocusInWindow();
+                }
+
+                public void focusLost(FocusEvent e) {
+                }
+            });
+
 
 //        panel.setOpaque(true);
             JButton button = new JButton("..");
@@ -120,12 +132,6 @@ todo -- fix lost typed key
             panel.add(textField, BorderLayout.CENTER);
 
             editorComponent = panel;
-/*
-            InputMap mp = panel.getInputMap(JComponent.WHEN_FOCUSED);
-            mp.setParent(textField.getInputMap(JComponent.WHEN_FOCUSED));
-            ActionMap am = panel.getActionMap();
-            am.setParent(textField.getActionMap());
-*/
 
             button.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
@@ -138,18 +144,6 @@ todo -- fix lost typed key
         } else {
             editorComponent = textField;
         }
-
-/*
-        textField.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent e) {
-                int h=0;
-            }
-
-            public void focusLost(FocusEvent e) {
-                int h=0;
-            }
-        });
-*/
 
         this.clickCountToStart = 2;
         delegate = new EditorDelegate() {
@@ -250,8 +244,7 @@ todo -- fix lost typed key
      * @see EditorDelegate#isCellEditable(java.util.EventObject)
      */
     public boolean isCellEditable(EventObject anEvent) {
-        boolean isEditable1 =  delegate.isCellEditable(anEvent);
-        return isEditable1;
+        return  delegate.isCellEditable(anEvent);
     }
 
     /**
@@ -271,6 +264,10 @@ todo -- fix lost typed key
      * @see EditorDelegate#stopCellEditing
      */
     public boolean stopCellEditing() {
+
+        textField.getInputMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+        textField.getActionMap().remove("doCancel");
+
         return delegate.stopCellEditing();
     }
 
@@ -281,6 +278,9 @@ todo -- fix lost typed key
      * @see EditorDelegate#cancelCellEditing
      */
     public void cancelCellEditing() {
+        textField.getInputMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+        textField.getActionMap().remove("doCancel");
+
         delegate.cancelCellEditing();
     }
 
@@ -308,21 +308,20 @@ todo -- fix lost typed key
         Border border = new LineBorder(Color.blue);
         textField.setBorder(border);
 
-/**
- * Request focus on the text field
- * TODO - This code impacts Column Value External Editor - sometimes cursor gets lost
- */
-        SwingUtilities.invokeLater(new Runnable(){
-            public void run() {
-                textField.requestFocusInWindow();
-            }
-        });
+        // Initialize KeyStroke
+        Action doCancel = new CancelEditAction();
+        textField.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "doCancel");
+        textField.getActionMap().put("doCancel", doCancel);
 
         delegate.setValue(value);
         return editorComponent;
     }
 
-
+    private class CancelEditAction extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            cancelCellEditing();
+        }
+    }
 //
 //  Protected EditorDelegate class
 //

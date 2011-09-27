@@ -25,13 +25,10 @@
 
 package com.deepsky.view.query_pane;
 
-import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.deepsky.view.Icons;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
-import java.awt.event.*;
 
 public class StatusLinePanel extends JPanel {
 
@@ -40,23 +37,6 @@ public class StatusLinePanel extends JPanel {
 
     public StatusLinePanel() {
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-//        FlowLayout lman = new FlowLayout(FlowLayout.LEFT, 0, 0);
-//        setLayout(lman);
-//        lman.setAlignment(FlowLayout.LEFT);
-        
-//        lman.setVgap(2);
-//        lman.setHgap(2);
-/////        this.setLayout(lman);
-//        this.setBorder(new EtchedBorder());
-
-        // time spent
-//        JPanel timeSpent = new JPanel();
-//        FlowLayout lman2 = new FlowLayout();
-//        timeSpent.setLayout(lman2);
-//        lman2.setVgap(2);
-        //JComponent t = new JLabel("Time spent, ms: ");
-
-//        timeSpent.add(new JLabel("Time spent, ms: "));
 
         JLabel lab1 = new JLabel("Time spent, ms: ");
         lab1.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
@@ -79,47 +59,6 @@ public class StatusLinePanel extends JPanel {
 
         separator = new JLabel(Icons.SEPARATOR);
         separator.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
-/*
-        add(separator);
-        autocommitMode = new JLabel("Autocommit On");
-        add(autocommitMode);
-
-        this.addComponentListener(new ComponentListener(){
-            public void componentResized(ComponentEvent e) {
-            }
-
-            public void componentMoved(ComponentEvent e) {
-            }
-
-            public void componentShown(ComponentEvent e) {
-                logger.info("StatusLine shown");
-            }
-
-            public void componentHidden(ComponentEvent e) {
-                logger.info("StatusLine hidden");
-            }
-        });
-
-        this.addContainerListener(new ContainerListener(){
-            public void componentAdded(ContainerEvent e) {
-                logger.info("StatusLine comp added");
-            }
-
-            public void componentRemoved(ContainerEvent e) {
-                logger.info("StatusLine comp removed");
-            }
-        });
-
-        this.addFocusListener(new FocusListener(){
-            public void focusGained(FocusEvent e) {
-                logger.info("StatusLine focus gained");
-            }
-
-            public void focusLost(FocusEvent e) {
-                logger.info("StatusLine focus lost");
-            }
-        });
-*/  
     }
 
     public void setTimeSpent(long ms) {

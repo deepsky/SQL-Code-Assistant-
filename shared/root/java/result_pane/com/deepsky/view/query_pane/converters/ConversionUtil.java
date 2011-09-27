@@ -25,7 +25,36 @@
 
 package com.deepsky.view.query_pane.converters;
 
+import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 public class ConversionUtil {
+
+    public static String convertBinaryStream2HEXString(@Nullable InputStream stream) throws IOException {
+        if (stream != null) {
+            StringBuilder builder = new StringBuilder();
+            byte[] temp = new byte[1000];
+            int bt;
+            while((bt=stream.read()) != -1){
+                String hex = String.format("%1$08x", bt);
+                char c1 = hex.charAt(6);
+                if(Character.isLetter(c1)){
+                    c1 = Character.toUpperCase(c1);
+                }
+                builder.append(c1);
+                char c2 = hex.charAt(7);
+                if(Character.isLetter(c2)){
+                    c2 = Character.toUpperCase(c2);
+                }
+                builder.append(c2);
+            }
+            stream.close();
+            return builder.toString();
+        }
+        return "";
+    }
 
     public static String convertByteArray2HEXString(byte[] value) {
         if (value != null) {

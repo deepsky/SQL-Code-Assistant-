@@ -23,50 +23,50 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.view.query_pane;
+package com.deepsky.view.query_pane.converters;
 
+import com.deepsky.view.query_pane.ConversionException;
+import com.deepsky.view.query_pane.ValueConvertor;
+import oracle.sql.BFILE;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 
-public class DataAccessor<E> {
-
-    private E data;
-    private ValueConvertor<E> convertor;
-
-    public DataAccessor(@Nullable E data, @NotNull ValueConvertor<E> convertor) {
-        this.data = data;
-        this.convertor = convertor;
+public class BFILE_Convertor implements ValueConvertor<BFILE> {
+    public long size(BFILE value) throws SQLException {
+        return value != null? value.length(): 0;
     }
 
-    protected DataAccessor() {
+    public String valueToString(BFILE value) throws SQLException {
+        if(value == null){
+            return "";
+        } else {
+            int c;
+            try {
+                if(!value.isOpen())
+                    value.open();
+                InputStream in = value.getBinaryStream();
+                StringBuilder builder = new StringBuilder();
+                while((c=in.read()) != -1 ){
+                    builder.append((char)c);
+                }
+
+                in.close();
+                return builder.toString();
+            } catch (IOException e) {
+                throw new SQLException("Could load from BFILE", e);
+            }
+        }
     }
 
-    public long size() throws SQLException {
-        return convertor.size(data);
+    public BFILE stringToValue(String stringPresentation) throws ConversionException {
+        throw new ConversionException("Not supported");
     }
 
-    public String convertToString() throws SQLException {
-        return convertor.valueToString(data);
+    public void saveValueTo(BFILE value, @NotNull File file) throws IOException {
+        throw new IOException("Not supported");
     }
-
-    public void loadFromString(String text) throws ConversionException {
-        data = convertor.stringToValue(text);
-    }
-
-    public void saveValueTo(File file) throws IOException {
-        convertor.saveValueTo(data, file);
-    }
-
-    public E getValue() {
-        return data;
-    }
-
-    public boolean isReadOnly() {
-        return true;
-    }
-
 }
