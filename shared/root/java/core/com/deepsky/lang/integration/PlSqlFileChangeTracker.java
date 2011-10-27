@@ -27,9 +27,10 @@ package com.deepsky.lang.integration;
 
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PlSqlFile;
+import com.deepsky.lang.plsql.completion.Constants;
 import com.deepsky.lang.plsql.indexMan.IndexBulkChangeListener;
 import com.deepsky.lang.plsql.resolver.index.IndexTree;
-import com.deepsky.lang.plsql.resolver.psibased.NamesIndexerExists;
+import com.deepsky.lang.plsql.resolver.psibased.NamesIndexerSpecific;
 import com.deepsky.lang.plsql.resolver.psibased.NamesIndexerWithChangesCollecting;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.resolver.utils.IndexTreeUtil;
@@ -41,7 +42,6 @@ import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 
-import javax.annotation.processing.Completion;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -49,6 +49,7 @@ public class PlSqlFileChangeTracker {
 
     private static final LoggerProxy log = LoggerProxy.getInstance("#PlSqlFileChangeTracker");
 
+    long lastModCounter = -1;
     public void indexPlSqlFile(PlSqlFile plSqlFile) {
 
         PlSqlFile actualPlSqFile = (PlSqlFile) plSqlFile.getOriginalFile();
@@ -69,40 +70,41 @@ public class PlSqlFileChangeTracker {
             long ms = System.currentTimeMillis();
             // check whether parsing called on non-physical copy of a file
             VirtualFile vf = actualPlSqFile.getVirtualFile();
-//                    (plSqlFile.getOriginalFile() != null) ?
-//                    plSqlFile.getOriginalFile().getVirtualFile() :
-//                    plSqlFile.getVirtualFile(); //getFilePath(plSqlFile);
 
-            long h;
-//            indexer.parse(actualPlSqFile.getNode(), itree);
+            long h =0;
             if(actualPlSqFile == plSqlFile){
-                String filePath = getFilePath(vf);
-                Set<String> types = IndexTreeUtil.getTypesInFile(itree, filePath);
+                if(true){ //vf == null || lastModCounter != vf.getModificationCount()){
+                    lastModCounter = vf!=null? vf.getModificationCount(): lastModCounter;
+                    String filePath = getFilePath(vf);
+                    Set<String> types = IndexTreeUtil.getTypesInFile(itree, filePath);
 
-                itree.remove(actualPlSqFile.getCtxPath1().getPath());
-                NamesIndexerWithChangesCollecting indexer = new NamesIndexerWithChangesCollecting();
+                    itree.remove(actualPlSqFile.getCtxPath1().getPath());
+                    NamesIndexerWithChangesCollecting indexer = new NamesIndexerWithChangesCollecting();
 
-                indexer.parse(plSqlFile.getNode(), itree);
+                    indexer.parse(plSqlFile.getNode(), itree);
 
-//                int sizeAfter = itree.getEntriesCount();
+                    // todo -- not correct for non FS files
+                    itree.setFileAttribute(filePath, "timestamp", Long.toString(vf.getModificationCount()));
+                    itree.setFileAttribute(filePath, "mod_cnt", Long.toString(vf.getModificationStamp()));
 
-                // todo -- not correct for non FS files
-                itree.setFileAttribute(filePath, "timestamp", Long.toString(vf.getModificationCount()));
-                itree.setFileAttribute(filePath, "mod_cnt", Long.toString(vf.getModificationStamp()));
+                    ms = System.currentTimeMillis() - ms;
 
-                ms = System.currentTimeMillis() - ms;
+                    h = System.currentTimeMillis();
+                    types.addAll(Arrays.asList(indexer.getUpdatedTypes()));
+                    MessageBus bus1 = actualPlSqFile.getProject().getMessageBus();
+                    if (types.size() > 0) {
+                        bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(dbUrl, types.toArray(new String[types.size()]));
+                    }
 
-                h = System.currentTimeMillis();
-                types.addAll(Arrays.asList(indexer.getUpdatedTypes()));
-                MessageBus bus1 = actualPlSqFile.getProject().getMessageBus();
-                if (types.size() > 0) {
-                    bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(dbUrl, types.toArray(new String[types.size()]));
+                    bus1.asyncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(dbUrl, filePath);
                 }
-
-                bus1.asyncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(dbUrl, filePath);
             } else {
-                // Completion request
-                new NamesIndexerExists().parse(plSqlFile.getNode(), itree);
+                // make sure completion patch was applied
+                if(Constants.IDENT_PATCHER.wasPatched()){
+                    // Completion request
+                    new NamesIndexerSpecific().parse(plSqlFile.getNode(), itree);
+                    Constants.IDENT_PATCHER.cleanSignal();
+                }
                 h = System.currentTimeMillis();
             }
             h = System.currentTimeMillis() - h;

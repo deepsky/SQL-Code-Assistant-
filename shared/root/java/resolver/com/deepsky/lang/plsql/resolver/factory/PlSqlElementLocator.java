@@ -80,6 +80,27 @@ public class PlSqlElementLocator {
     }
 
 
+    /**
+     * Return PsiFile if virtual file is opened in the editor
+     * @param project
+     * @param virtualFile
+     * @return
+     */
+    public static PsiFile locatePsiFile(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+        String filePath = virtualFile.getPath();
+
+        if (filePath != null) {
+            final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+            for (VirtualFile v : fileEditorManager.getOpenFiles()) {
+                if (v.getPath().equals(filePath)) {
+                    return PsiManager.getInstance(project).findFile(v);
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static boolean openFileInEditor(Project project, @NotNull DbUrl dbUrl, @NotNull String ctxPath) {
 
         AbstractSchema sindex = PluginKeys.SQL_INDEX_MAN.getData(project).findOrCreateIndex(dbUrl, 0);

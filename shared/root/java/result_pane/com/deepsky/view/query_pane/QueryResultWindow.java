@@ -27,11 +27,9 @@ package com.deepsky.view.query_pane;
 
 import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.DBException;
-import com.deepsky.gui.ExportSettings;
 import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.settings.SqlCodeAssistantSettings;
-import com.deepsky.utils.StringUtils;
 import com.deepsky.view.Icons;
 import com.deepsky.view.query_pane.markup.SqlStatementMarker;
 import com.intellij.ide.actions.ActivateToolWindowAction;
@@ -49,11 +47,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 
 public class QueryResultWindow {

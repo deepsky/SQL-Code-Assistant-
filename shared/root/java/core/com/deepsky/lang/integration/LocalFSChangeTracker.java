@@ -6,6 +6,7 @@ import com.deepsky.lang.plsql.indexMan.DbTypeChangeListener;
 import com.deepsky.lang.plsql.indexMan.FSIndexer;
 import com.deepsky.lang.plsql.indexMan.IndexBulkChangeListener;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.deepsky.lang.plsql.resolver.factory.PlSqlElementLocator;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
 import com.deepsky.lang.plsql.sqlIndex.WordIndexChangeListener;
 import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
@@ -118,7 +119,10 @@ public class LocalFSChangeTracker {
         try {
             long ms0 = System.currentTimeMillis();
 
-            String content = StringUtils.file2string(new File(filePath));
+            // Use content of PsiFile if it is found (it can be found if file is opened in the editor)
+            PsiFile psi = PlSqlElementLocator.locatePsiFile(project, virtualFile);
+            String content = (psi != null)? psi.getText(): StringUtils.file2string(new File(filePath));
+
             MarkupGeneratorEx2 generator = new MarkupGeneratorEx2(virtualFile);
             ASTNode root = generator.parse(content);
 
@@ -251,7 +255,7 @@ public class LocalFSChangeTracker {
                     public void handleEntry(VirtualFile parent, VirtualFile file) {
                         if (helper.isFileValid(file)){
                             log.info("fileCreated: " + file.getPath() + " timestamp: " + file.getModificationStamp());
-                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
+//                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
                             updatedTypes.addAll(indexFileWithNotification(file, false));
                         }
                     }
@@ -264,7 +268,7 @@ public class LocalFSChangeTracker {
 
             } else if (helper.isFileValid(event.getFile())) {
                 log.info("fileCreated: " + event.getFileName() + " timestamp: " + event.getFile().getTimeStamp() + " count: " + event.getFile().getModificationStamp());
-                log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
+//                log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
                 indexFileWithNotification(event.getFile(), true);
             }
         }
@@ -301,7 +305,7 @@ public class LocalFSChangeTracker {
                     public void handleEntry(VirtualFile parent, VirtualFile file) {
                         if (helper.isFileValid(file)){
                             log.info("fileMoved: " + file.getPath() + " timestamp: " + file.getModificationStamp());
-                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
+//                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
                             updatedTypes.addAll(indexFileWithNotification(file, false));
                         }
                     }
@@ -314,7 +318,7 @@ public class LocalFSChangeTracker {
 
             } else if (helper.isFileValid(event.getFile())) {
                 log.info("fileMoved: " + event.getFileName() + " timestamp: " + event.getFile().getTimeStamp() + " count: " + event.getFile().getModificationStamp());
-                log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
+//                log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
                 indexFileWithNotification(event.getFile(), true);
             }
         }
@@ -327,7 +331,7 @@ public class LocalFSChangeTracker {
                     public void handleEntry(VirtualFile parent, VirtualFile file) {
                         if (helper.isFileValid(file)){
                             log.info("fileCopied: " + file.getPath() + " timestamp: " + file.getModificationStamp());
-                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
+//                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
                             updatedTypes.addAll(indexFileWithNotification(file, false));
                         }
                     }
@@ -340,7 +344,7 @@ public class LocalFSChangeTracker {
 
             } else if (helper.isFileValid(event.getFile())) {
                 log.info("fileCopied: " + event.getFileName() + " timestamp: " + event.getFile().getTimeStamp() + " count: " + event.getFile().getModificationStamp());
-                log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
+//                log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
                 indexFileWithNotification(event.getFile(), true);
             }
         }
@@ -376,7 +380,9 @@ public class LocalFSChangeTracker {
                 }
             } else if (helper.isFileValid(event.getFile())) {
                 log.info("beforeFileMovement: " + event.getFile() + ", delete from index");
-                deleteIndex(event.getFile(), true);
+                Set<String> typesBeenDeleted = fsIndexer.deleteFile(event.getFile().getPath());
+                int h = 0;
+//                deleteIndex(event.getFile(), true);
             }
         }
     }

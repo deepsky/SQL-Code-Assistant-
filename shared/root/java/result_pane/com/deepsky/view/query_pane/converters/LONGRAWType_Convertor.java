@@ -28,7 +28,6 @@ package com.deepsky.view.query_pane.converters;
 import com.deepsky.database.ora.types.LONGRAWType;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.ValueConvertor;
-import com.sun.tools.doclets.internal.toolkit.util.DocFinder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

@@ -128,6 +128,11 @@ public class DummyFileViewProvider implements FileViewProvider {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @NotNull
+    public FileViewProvider createCopy(VirtualFile copy) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public boolean isLockedByPsiOperations() {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }

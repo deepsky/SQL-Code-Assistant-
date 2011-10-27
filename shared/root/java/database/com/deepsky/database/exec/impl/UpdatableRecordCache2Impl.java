@@ -34,22 +34,13 @@ import oracle.jdbc.OracleTypes;
 import oracle.sql.ROWID;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 class UpdatableRecordCache2Impl extends RecordCacheImpl implements UpdatableRecordCache {
 
     private RSUpdateSupport rsUpdateSupport;
     private Map<Row, Map<Integer, Object>> rowsBeingUpdated = new HashMap<Row, Map<Integer, Object>>();
-/*
-    private boolean updateInProgress = false;
-    private boolean insertStarted = false;
-    private int updateRowIndex = -1;
-    private Map<Integer, Object> colIdx2value = new HashMap<Integer, Object>();
-*/
-
 
     public UpdatableRecordCache2Impl(Connection conn, RSUpdateSupport rsUpdateSupport, int chunk_size) throws DBException, NotUpdatableResultSetException {
         this.conn = conn;
@@ -78,13 +69,19 @@ class UpdatableRecordCache2Impl extends RecordCacheImpl implements UpdatableReco
                     // could not recognize column class, possible case: ROWID column for an external table
                     throw new NotUpdatableResultSetException();
                 }
+                // FIX some collisions related to Oracle impl
                 switch (columnType) {
-                    case -2:
-                    case -3:
+                    case OracleTypes.BINARY:    //-2:
+                    case OracleTypes.VARBINARY: //-3:
                         clazz = RAWType.class.getName();
                         break;
-                    case -4:
+                    case OracleTypes.LONGVARBINARY: //-4:
                         clazz = LONGRAWType.class.getName();
+                        break;
+                    case OracleTypes.DATE: //91:
+                        // Looks like an Oracle bug:
+                        //      ResultSetMetaData reports column type as Timestamp but returns Date
+                        clazz = java.sql.Timestamp.class.getName();
                         break;
                 }
 
@@ -206,12 +203,6 @@ class UpdatableRecordCache2Impl extends RecordCacheImpl implements UpdatableReco
         Row row = createRow();
         rowCache.add(rowIndex, row);
         rowsBeingUpdated.put(row, new HashMap<Integer, Object>());
-
-/*
-        insertStarted = true;
-        updateInProgress = true;
-        updateRowIndex = rowIndex;
-*/
     }
 
     public void setValueAt(int rowIndex, int columnIndex, Object value) throws DBException {
@@ -266,6 +257,7 @@ class UpdatableRecordCache2Impl extends RecordCacheImpl implements UpdatableReco
 
     /**
      * Call SELECT to refresh fields of the specified rows
+     *
      * @param rowsBeingUpdated
      * @throws DBException
      */
@@ -283,7 +275,7 @@ class UpdatableRecordCache2Impl extends RecordCacheImpl implements UpdatableReco
 
                 ResultSet rs = pstmt.executeQuery();
                 if (rs.next()) {
-                    loadRow(rs, row);
+                    updateRow(rs, row);
                     // replace existing row with returned from the db
 //                    rowCache.set(updateRowIndex, row1);
                 } else {
@@ -301,13 +293,13 @@ class UpdatableRecordCache2Impl extends RecordCacheImpl implements UpdatableReco
     }
 
     public void discardChanges() throws DBException {
-        if(rowsBeingUpdated.size() > 0){
+        if (rowsBeingUpdated.size() > 0) {
             reloadRows(rowsBeingUpdated);
             rowsBeingUpdated.clear();
         }
     }
 
-    public boolean changesNotPosted(){
+    public boolean changesNotPosted() {
         return rowsBeingUpdated.size() != 0;
     }
 
@@ -375,11 +367,11 @@ class UpdatableRecordCache2Impl extends RecordCacheImpl implements UpdatableReco
                     if (isROWID) {
                         finalPstmt.setObject(position, rowId);
                     } else {
-                        if(value instanceof RAWType){
-                            byte[] _value = ((RAWType)value).getValue();
+                        if (value instanceof RAWType) {
+                            byte[] _value = ((RAWType) value).getValue();
                             finalPstmt.setObject(position, _value);
-                        } else if(value instanceof LONGRAWType){
-                            byte[] _value = ((LONGRAWType)value).getValue();
+                        } else if (value instanceof LONGRAWType) {
+                            byte[] _value = ((LONGRAWType) value).getValue();
                             finalPstmt.setObject(position, _value);
                         } else {
                             finalPstmt.setObject(position, value);
@@ -441,81 +433,4 @@ if (rset.next())
 ...
 
 */
-
-/*
-    public void setValueAt(int rowIndex, int columnIndex, Object value) throws DBException {
-        if (!updateInProgress) {
-            // UPDATE of an existing ROW
-            // check the new value against existing one
-            Object o = rowCache.get(rowIndex).get(columnIndex-1);
-            if (o == null && value == null) {
-                // skip saving value
-                return;
-            } else if (o != null && o.equals(value)) {
-                // skip saving value
-                return;
-            }
-            insertStarted = false;
-            updateInProgress = true;
-            updateRowIndex = rowIndex;
-        }
-        Object _value = (value instanceof String && ((String)value).length() == 0)? null: value;
-        colIdx2value.put(columnIndex, _value);
-        rowCache.get(rowIndex).set(columnIndex-1, _value);
-    }
-*/
-
-/*
-    public void completeUpdate() throws DBException {
-        ROWID rowid;
-        if (insertStarted) {
-            if (colIdx2value.size() == 0) {
-                // todo - FIX ME
-                throw new Error("Cannot save empty data");
-            }
-
-            rowid = completeRowInsert();
-        } else {
-            if (colIdx2value.size() > 0) {
-                rowid = completeRowUpdate(updateRowIndex);
-            } else {
-                insertStarted = false;
-                updateInProgress = false;
-                updateRowIndex = -1;
-                return;
-            }
-        }
-
-        // call SELECT to refresh fields of the updated/inserted row
-        RSUpdateSupport.SelectStmtBuilder rowSelector = rsUpdateSupport.getSelector();
-        String selectStmt = rowSelector.getStmt();
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = conn.prepareStatement(selectStmt);
-            pstmt.setObject(1, rowid);
-
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                Row row = loadRow(rs);
-                rowCache.set(updateRowIndex, row);
-            } else {
-                // todo -- handle case
-            }
-        } catch (SQLException e) {
-            throw new DBException(e.getMessage());
-        } finally {
-            try {
-                if (pstmt != null) pstmt.close();
-            } catch (SQLException ignored) {
-            }
-        }
-
-        colIdx2value.clear();
-        insertStarted = false;
-        updateInProgress = false;
-        updateRowIndex = -1;
-    }
-*/
-
-
 }

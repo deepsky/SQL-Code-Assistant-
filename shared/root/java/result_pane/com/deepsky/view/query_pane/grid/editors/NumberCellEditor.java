@@ -106,7 +106,7 @@ public class NumberCellEditor extends AbstractCellEditor1 {
 
     @Override
     protected DataAccessor getDataAccessor() {
-        //todo -- do number need in External Editor?
+        //number does not need External Editor
         return null;
     }
 

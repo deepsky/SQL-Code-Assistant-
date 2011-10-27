@@ -30,7 +30,7 @@ import com.deepsky.database.exec.UpdatableRecordCache;
 import com.deepsky.database.ora.types.LONGRAWType;
 import com.deepsky.database.ora.types.RAWType;
 import com.deepsky.lang.common.PluginKeys;
-import com.deepsky.utils.StringUtils;
+import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.view.query_pane.*;
 import com.deepsky.view.query_pane.converters.ConversionUtil;
 import com.deepsky.view.query_pane.converters.RAWType_Convertor;
@@ -41,11 +41,8 @@ import com.deepsky.view.query_pane.ui.TextEditorDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import oracle.jdbc.OracleConnection;
-import oracle.jdbc.driver.OracleClobWriter;
 import oracle.sql.*;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -58,7 +55,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -112,7 +108,8 @@ public class EditableGrid extends AbstractDataGrid {
             }
         });
 
-        Font font = PluginKeys.PLUGIN_SETTINGS.getData(project).getGridFont();
+        SqlCodeAssistantSettings settings = PluginKeys.PLUGIN_SETTINGS.getData(project);
+        Font font = settings.getGridFont();
 
         // create column renderers
         setDefaultRenderer(Color.class, new ColumnNumberRenderer(true));
@@ -159,9 +156,10 @@ public class EditableGrid extends AbstractDataGrid {
         setDefaultEditor(String.class, textEditor);
         setDefaultEditor(RAWType.class, rawEditor);
         setDefaultEditor(LONGRAWType.class, rawEditor);
-        setDefaultEditor(java.sql.Timestamp.class, null);
-        setDefaultEditor(TIMESTAMP.class, new TimestampCellEditor(font, PluginKeys.TS_CONVERTOR.getData(project)));
-        setDefaultEditor(TIMESTAMPTZ.class, new TimestampCellEditor(font, PluginKeys.TSTZ_CONVERTOR.getData(project)));
+        setDefaultEditor(java.sql.Timestamp.class, new TimestampCellEditor(settings));
+        setDefaultEditor(java.sql.Date.class, new DateCellEditor(settings));
+        setDefaultEditor(TIMESTAMP.class, new OracleTimestampCellEditor(font, PluginKeys.TS_CONVERTOR.getData(project)));
+        setDefaultEditor(TIMESTAMPTZ.class, new OracleTimestampCellEditor(font, PluginKeys.TSTZ_CONVERTOR.getData(project)));
 
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         setRowSelectionAllowed(true);
@@ -302,9 +300,11 @@ public class EditableGrid extends AbstractDataGrid {
         DataAccessor accessor = DataAccessorFactory.createReadOnly(project, columnClazz, value);
         if(accessor != null){
             String columnName = getColumnName(columnIndex);
-            DialogWrapper dialog = buildDialog(project, columnClazz, columnName, accessor);
-            if(dialog != null){
+            try {
+                DialogWrapper dialog = buildDialog(project, columnClazz, columnName, accessor);
                 dialog.show();
+            } catch (ColumnReadException e) {
+                // todo - log exception
             }
         }
     }
@@ -314,12 +314,12 @@ public class EditableGrid extends AbstractDataGrid {
         String columnName = getColumnName(columnIndex);
         Class columnClazz = getModel().getColumnClass(columnIndex);
 
-        DialogWrapper dialog = buildDialog(project, columnClazz, columnName, accessor);
-        if(dialog != null){
+        try {
+            DialogWrapper dialog = buildDialog(project, columnClazz, columnName, accessor);
             dialog.show();
-            if(dialog.isOK()){
-                //
-            }
+        } catch (ColumnReadException e) {
+            // todo - log exception
+        } finally {
             Component eComponent = getEditorComponent();
             if(eComponent != null){
                 TableCellEditor editor = getDefaultEditor(columnClazz);
@@ -507,7 +507,7 @@ public class EditableGrid extends AbstractDataGrid {
 
 
     public static DialogWrapper buildDialog(
-            @NotNull Project project, @NotNull Class columnClazz, String columnName, DataAccessor accessor){
+            @NotNull Project project, @NotNull Class columnClazz, String columnName, DataAccessor accessor) throws ColumnReadException {
 
         try {
             if(columnClazz.isAssignableFrom(RAWType.class)){
@@ -524,7 +524,7 @@ public class EditableGrid extends AbstractDataGrid {
             e.printStackTrace();
         }
 
-        return null;
+        throw new ColumnReadException("Editor for class " + columnClazz + " not found");
     }
 
 }

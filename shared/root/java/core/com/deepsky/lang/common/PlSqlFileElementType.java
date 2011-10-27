@@ -33,7 +33,6 @@ import com.intellij.lang.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.text.BlockSupport;
 import com.intellij.psi.tree.IFileElementType;
-import org.jetbrains.annotations.NonNls;
 
 public class PlSqlFileElementType extends IFileElementType {
 

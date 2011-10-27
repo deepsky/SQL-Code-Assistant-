@@ -31,8 +31,6 @@ import com.deepsky.view.query_pane.markup.SqlStatementMarkupModelListener;
 import com.deepsky.view.query_pane.markup.SqlStatementMarkupModel;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.plsql.psi.*;
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;

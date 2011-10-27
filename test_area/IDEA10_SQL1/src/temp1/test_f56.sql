@@ -8,11 +8,15 @@ name CHAR(34)
 )
 */
 
-select id
+
+
+select text, id
 from f56
 
 create table f56 (
-name VARCHAR2(23)
+id number,
+name VARCHAR2(23),
+text NVARCHAR2(33)
 )
 
 select department_id, e.*

@@ -103,14 +103,6 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
 
                 Calendar c = dates.get(0);
                 String rest = c.getTimeZone().getID();
-/*
-                ParsePosition pos = new ParsePosition(0);
-                Date date = new SimpleDateFormat(dateTimeFormat()).parse(stringPresentation, pos);
-                if (pos.getIndex() == 0) {
-                    throw new ParseException("Unparseable date: \"" + stringPresentation + "\"", pos.getErrorIndex());
-                }
-                String rest = stringPresentation.substring(pos.getIndex());
-*/
                 byte[] tzRaw = parseTimeZone(rest);
 
                 java.sql.Timestamp sqlDate = new java.sql.Timestamp(c.getTimeInMillis()); //date.getTime());
@@ -121,8 +113,6 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
                 tstzBytes[11] = tzRaw[0];
                 tstzBytes[12] = tzRaw[1];
                 return new TIMESTAMPTZ(tstzBytes);
-//            } catch (ParseException e) {
-//                throw new ConversionException();
             } catch (Throwable e) {
                 throw new ConversionException();
             }
@@ -155,9 +145,10 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
 
     private static final Pattern TZ_TIMED = Pattern.compile("([\\-0-9a-z]+) *(\\: *([0-9a-z]+))?.*");
     private static final Pattern TZ_TIMED_VERIFIER = Pattern.compile("([\\-0-9\\ ]+)(\\:([0-9\\ ]+))?.*");
+    private static final Pattern GMT_TZ = Pattern.compile("gmt(\\+|-)([0-9]{1,2})(\\:[0-9]{1,})?");
 
     /**
-     * Parser timezone string: GMT, Pacific/Majuro, +1, 1:00, -9, -0, 0
+     * Parser timezone string: GMT, Pacific/Majuro, +1, 1:00, -9, -0, 0, GMT+01:00
      *
      * @param _tz
      * @return
@@ -174,11 +165,25 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
         } else {
             // try to parse timezone
             String restLow = tz.toLowerCase();
+            // Do some adaptation for GMT time zone like: GMT+01:00
+            Matcher gmt = GMT_TZ.matcher(restLow);
+            if(gmt.find()){
+                String g1 = gmt.group(1);
+                String g2 = gmt.group(2);
+                String g3 = gmt.group(3);
+                restLow = "gmt" + g1 + Integer.parseInt(g2);
+            }
             for (int idx = 0; idx < keyValuePairs.length; idx += 2) {
+                if(restLow.equalsIgnoreCase(keyValuePairs[idx].key())){
+                    tzShort = keyValuePairs[idx + 1].value();
+                    break;
+                }
+/*
                 if (restLow.startsWith(keyValuePairs[idx].key().toLowerCase())) {
                     tzShort = keyValuePairs[idx + 1].value();
                     break;
                 }
+*/
             }
             if (tzShort == -1) {
                 // time zone is not named, try it out as timed
@@ -314,15 +319,15 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
             new KeyValuePair("-113:12", -28916),
             new KeyValuePair("Eire", 0),
             new KeyValuePair("-115:-52", -29236),
-            new KeyValuePair("Etc/GMT", 0),
+            new KeyValuePair("GMT", 0),
             new KeyValuePair("-128:4", -32764),
-            new KeyValuePair("Etc/GMT+3", -3),
+            new KeyValuePair("GMT+3", -3),
             new KeyValuePair("-128:72", -32696),
-            new KeyValuePair("Etc/GMT+7", -7),
+            new KeyValuePair("GMT+7", -7),
             new KeyValuePair("-128:88", -32680),
-            new KeyValuePair("Etc/GMT-11", 11),
+            new KeyValuePair("GMT-11", 11),
             new KeyValuePair("-128:20", -32748),
-            new KeyValuePair("Etc/GMT-3", 3),
+            new KeyValuePair("GMT-3", 3),
             new KeyValuePair("-128:52", -32716),
             new KeyValuePair("Europe/Andorra", 1),
             new KeyValuePair("-123:-44", -31276),
@@ -444,11 +449,11 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
             new KeyValuePair("-123:-124", -31356),
             new KeyValuePair("Chile/Continental", -3),
             new KeyValuePair("-117:8", -29944),
-            new KeyValuePair("Etc/GMT+10", -10),
+            new KeyValuePair("GMT+10", -10),
             new KeyValuePair("-128:100", -32668),
-            new KeyValuePair("Etc/GMT+9", -9),
+            new KeyValuePair("GMT+9", -9),
             new KeyValuePair("-128:96", -32672),
-            new KeyValuePair("Etc/GMT-2", 2),
+            new KeyValuePair("GMT-2", 2),
             new KeyValuePair("-128:56", -32712),
             new KeyValuePair("Europe/Athens", 2),
             new KeyValuePair("-122:4", -31228),
@@ -556,11 +561,11 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
             new KeyValuePair("-118:40", -30168),
             new KeyValuePair("EST5EDT", -5),
             new KeyValuePair("-125:88", -31912),
-            new KeyValuePair("Etc/GMT+8", -8),
+            new KeyValuePair("GMT+8", -8),
             new KeyValuePair("-128:92", -32676),
-            new KeyValuePair("Etc/GMT-10", 10),
+            new KeyValuePair("GMT-10", 10),
             new KeyValuePair("-128:24", -32744),
-            new KeyValuePair("Etc/GMT-5", 5),
+            new KeyValuePair("GMT-5", 5),
             new KeyValuePair("-128:44", -32724),
             new KeyValuePair("Etc/Greenwich", 0),
             new KeyValuePair("-64:4", -16380),
@@ -708,13 +713,13 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
             new KeyValuePair("-123:-128", -31360),
             new KeyValuePair("Canada/Central", -6),
             new KeyValuePair("-119:-8", -30216),
-            new KeyValuePair("Etc/GMT+0", 0),
+            new KeyValuePair("GMT+0", 0),
             new KeyValuePair("-112:4", -28668),
-            new KeyValuePair("Etc/GMT+5", -5),
+            new KeyValuePair("GMT+5", -5),
             new KeyValuePair("-128:80", -32688),
-            new KeyValuePair("Etc/GMT-8", 8),
+            new KeyValuePair("GMT-8", 8),
             new KeyValuePair("-128:32", -32736),
-            new KeyValuePair("Etc/GMT-9", 9),
+            new KeyValuePair("GMT-9", 9),
             new KeyValuePair("-128:28", -32740),
             new KeyValuePair("Europe/Belgrade", 1),
             new KeyValuePair("-122:112", -31120),
@@ -874,13 +879,13 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
             new KeyValuePair("-118:100", -30108),
             new KeyValuePair("Egypt", 2),
             new KeyValuePair("-120:-80", -30544),
-            new KeyValuePair("Etc/GMT+2", -2),
+            new KeyValuePair("GMT+2", -2),
             new KeyValuePair("-128:68", -32700),
-            new KeyValuePair("Etc/GMT+4", -4),
+            new KeyValuePair("GMT+4", -4),
             new KeyValuePair("-128:76", -32692),
-            new KeyValuePair("Etc/GMT0", 0),
+            new KeyValuePair("GMT0", 0),
             new KeyValuePair("-80:4", -20476),
-            new KeyValuePair("Etc/GMT-14", 14),
+            new KeyValuePair("GMT-14", 14),
             new KeyValuePair("-128:8", -32760),
             new KeyValuePair("Europe/Amsterdam", 1),
             new KeyValuePair("-122:48", -31184),
@@ -1010,11 +1015,11 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
             new KeyValuePair("-123:-72", -31304),
             new KeyValuePair("CST", -6),
             new KeyValuePair("-103:-108", -26220),
-            new KeyValuePair("Etc/GMT+1", -1),
+            new KeyValuePair("GMT+1", -1),
             new KeyValuePair("-128:64", -32704),
-            new KeyValuePair("Etc/GMT-1", 1),
+            new KeyValuePair("GMT-1", 1),
             new KeyValuePair("-128:60", -32708),
-            new KeyValuePair("Etc/GMT-12", 12),
+            new KeyValuePair("GMT-12", 12),
             new KeyValuePair("-128:16", -32752),
             new KeyValuePair("Europe/Belfast", 0),
             new KeyValuePair("-123:-56", -31288),
@@ -1158,17 +1163,17 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
             new KeyValuePair("-111:-4", -28164),
             new KeyValuePair("EET", 2),
             new KeyValuePair("-123:-64", -31296),
-            new KeyValuePair("Etc/GMT+11", -11),
+            new KeyValuePair("GMT+11", -11),
             new KeyValuePair("-128:104", -32664),
-            new KeyValuePair("Etc/GMT+12", -12),
+            new KeyValuePair("GMT+12", -12),
             new KeyValuePair("-128:108", -32660),
-            new KeyValuePair("Etc/GMT+6", -6),
+            new KeyValuePair("GMT+6", -6),
             new KeyValuePair("-128:84", -32684),
-            new KeyValuePair("Etc/GMT-0", 0),
+            new KeyValuePair("GMT-0", 0),
             new KeyValuePair("-96:4", -24572),
-            new KeyValuePair("Etc/GMT-13", 13),
+            new KeyValuePair("GMT-13", 13),
             new KeyValuePair("-128:12", -32756),
-            new KeyValuePair("Etc/GMT-4", 4),
+            new KeyValuePair("GMT-4", 4),
             new KeyValuePair("-128:48", -32720),
             new KeyValuePair("Europe/Madrid", 1),
             new KeyValuePair("-122:80", -31152),
@@ -1306,9 +1311,9 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
             new KeyValuePair("-119:-24", -30232),
             new KeyValuePair("EST", -5),
             new KeyValuePair("-125:76", -31924),
-            new KeyValuePair("Etc/GMT-6", 6),
+            new KeyValuePair("GMT-6", 6),
             new KeyValuePair("-128:40", -32728),
-            new KeyValuePair("Etc/GMT-7", 7),
+            new KeyValuePair("GMT-7", 7),
             new KeyValuePair("-128:36", -32732),
             new KeyValuePair("Europe/Riga", 2),
             new KeyValuePair("-122:16", -31216),

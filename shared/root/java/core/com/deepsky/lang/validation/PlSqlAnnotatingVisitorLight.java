@@ -436,20 +436,22 @@ public class PlSqlAnnotatingVisitorLight extends PlSqlElementVisitor implements 
     public void visitPlSqlFile(PlSqlFile node) {
         settings = null;
         
+/*
         log.info("#visitPlSqlFile, file: " + node.getName());
 
         for (Map.Entry<String, ProfileData> e : metrics.entrySet()) {
             log.info(" -- profiler: " + e.getKey() + " counter: " + e.getValue().counter + " timespent: " + e.getValue().timespent);
         }
+*/
 
         // clean up metrics
         metrics.clear();
     }
 
 
-    Map<String, ProfileData> metrics = new HashMap<String, ProfileData>();
+    private Map<String, ProfileData> metrics = new HashMap<String, ProfileData>();
 
-    static class ProfileObject {
+    private static class ProfileObject {
         String name;
         long start;
         long end;
@@ -464,7 +466,7 @@ public class PlSqlAnnotatingVisitorLight extends PlSqlElementVisitor implements 
         }
     }
 
-    static class ProfileData {
+    private static class ProfileData {
         int counter = 0;
         long timespent = 0;
     }

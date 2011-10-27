@@ -32,8 +32,8 @@ import com.deepsky.lang.validation.ValidationException;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 
-public class NamesIndexerExists extends NamesIndexer {
-    final String COMPL_IDENTIFIER_ADOPTED = Constants.COMPL_IDENTIFIER.toLowerCase();
+public class NamesIndexerSpecific extends NamesIndexer {
+    final private String COMPL_IDENTIFIER_ADOPTED = Constants.COMPL_IDENTIFIER.toLowerCase();
 
     public void visitElement(PsiElement element) {
         PsiElement child = element.getFirstChild();
@@ -58,16 +58,14 @@ public class NamesIndexerExists extends NamesIndexer {
         }
     }
 
+    // small trick, do not index entities which contains completion identifier
     protected void saveCtxValue(String ctxPath, String value){
-        if(ctxPath.endsWith(COMPL_IDENTIFIER_ADOPTED)){
+        if(ctxPath.contains(COMPL_IDENTIFIER_ADOPTED)){
             throw new CompletionDummyIdent();
         }
         itree.addContextPath(ctxPath, value);
-//
-//        boolean res = itree.updateCtxPathValue(ctxPath, value);
     }
 
     private class CompletionDummyIdent extends Error {
-
     }
 }

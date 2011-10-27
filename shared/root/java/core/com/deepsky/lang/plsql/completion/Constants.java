@@ -32,6 +32,6 @@ public interface Constants {
 
     // CompletionInitializationContext.DUMMY_IDENTIFIER = "IntellijIdeaRulezzz ";
     public static final String COMPL_IDENTIFIER = CompletionInitializationContext.DUMMY_IDENTIFIER.trim();
-    public static final DummyIdentifierPatcher IDENT_PATCHER
-            = new DummyIdentifierPatcher(CompletionInitializationContext.DUMMY_IDENTIFIER.trim());
+    public static final DummyIdentifierPatcherExt IDENT_PATCHER
+            = new DummyIdentifierPatcherExt(CompletionInitializationContext.DUMMY_IDENTIFIER.trim());
 }

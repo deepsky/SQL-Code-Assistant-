@@ -27,6 +27,7 @@ package com.deepsky.view.query_pane.ui;
 
 import com.deepsky.utils.FileUtils;
 import com.deepsky.utils.StringUtils;
+import com.deepsky.view.query_pane.ColumnReadException;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.DataAccessor;
 import com.deepsky.view.query_pane.converters.ConversionUtil;
@@ -60,7 +61,7 @@ public class BinaryEditorDialog extends DialogWrapper {
     private DataAccessor accessor;
 
 
-    public BinaryEditorDialog(final Project project, String columnName, DataAccessor _accessor) {
+    public BinaryEditorDialog(final Project project, String columnName, DataAccessor _accessor) throws ColumnReadException {
         super(project);
         this.accessor = _accessor;
 
@@ -70,10 +71,18 @@ public class BinaryEditorDialog extends DialogWrapper {
 
         //setOKButtonText("Close");
         try {
+            // Check value size if it exceeds 100K Notice and fail opening
+            if (accessor.size() > 100000) {
+                Messages.showErrorDialog(project,
+                        "Loading of the values with size more then 100K is not supported at the moment",
+                        "Reading column value failed"
+                );
+                throw new ColumnReadException();
+            }
             textArea1.setText(accessor.convertToString());
         } catch (SQLException e) {
-            // todo -- handle error
-            e.printStackTrace();
+            Messages.showErrorDialog(project, "Cannot open column value in the editor.", "Reading column value failed");
+            throw new ColumnReadException();
         }
 
         init();

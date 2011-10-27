@@ -45,7 +45,9 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class TIMESTAMP_Convertor implements ValueConvertor<TIMESTAMP> {
-    SqlCodeAssistantSettings settings;
+
+    static private Parser _parser = new Parser(TimeZone.getTimeZone("GMT"));
+    private SqlCodeAssistantSettings settings;
 
     public TIMESTAMP_Convertor(SqlCodeAssistantSettings settings){
         this.settings = settings;
@@ -63,8 +65,6 @@ public class TIMESTAMP_Convertor implements ValueConvertor<TIMESTAMP> {
             return new SimpleDateFormat(settings.getDateFormat() + " " + settings.getTimeFormat()).format(timestamp);
         }
     }
-
-    static Parser _parser = new Parser(TimeZone.getTimeZone("GMT"));
 
     public TIMESTAMP stringToValue(String stringPresentation) throws ConversionException {
 //            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);

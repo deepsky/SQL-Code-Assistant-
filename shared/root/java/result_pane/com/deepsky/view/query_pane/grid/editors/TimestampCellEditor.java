@@ -25,25 +25,29 @@
 
 package com.deepsky.view.query_pane.grid.editors;
 
-import com.deepsky.view.query_pane.ConversionException;
+import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.view.query_pane.DataAccessor;
-import com.deepsky.view.query_pane.ValueConvertor;
-import com.deepsky.view.query_pane.converters.TIMESTAMP_Convertor;
+import com.joestelmach.natty.Parser;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class TimestampCellEditor extends AbstractCellEditor1 {
 
+    static private Parser _parser = new Parser(TimeZone.getTimeZone("GMT"));
+    SqlCodeAssistantSettings settings;
     Object value;
-    ValueConvertor convertor;
 
-    public TimestampCellEditor(Font font, ValueConvertor convertor) {
-        super(font, false);
-        this.convertor = convertor;
-        setHorizontalAlignment(JLabel.LEFT);
- //       setHorizontalAlignment(JTextField.RIGHT);
+    public TimestampCellEditor(SqlCodeAssistantSettings settings) {
+        super(settings.getGridFont(), false);
+        this.settings = settings;
+
+        setHorizontalAlignment(JLabel.RIGHT);
     }
 
     public boolean stopCellEditing() {
@@ -60,10 +64,11 @@ public class TimestampCellEditor extends AbstractCellEditor1 {
         }
 
         try {
-//            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
-//            java.sql.Timestamp sqlDate = new java.sql.Timestamp(date.getTime());
-//            value = new TIMESTAMP(sqlDate);
-            value = convertor.stringToValue(s);
+            java.util.List<Calendar> dates = _parser.parse(s).get(0).getCalendars();
+            if (dates.size() == 0) {
+                return super.stopCellEditing();
+            }
+            value = new Timestamp(dates.get(0).getTimeInMillis());
         } catch (Throwable e) {
             setInputErrored();
             setToolTip("Entered timestamp value is not valid");
@@ -79,31 +84,20 @@ public class TimestampCellEditor extends AbstractCellEditor1 {
 
         this.value = null;
         String value1 = null;
-        try {
-            value1 = convertor.valueToString(value);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (value != null) {
+            Date d = new Date(((Timestamp) value).getTime());
+            value1 = new SimpleDateFormat(settings.getDateFormat() + " " + settings.getTimeFormat()).format(d);
         }
         return super.getTableCellEditorComponent(table, value1, isSelected, row, column);
     }
 
     @Override
     protected DataAccessor getDataAccessor() {
-        String value = super.getTextValue();
-        return new DataAccessor(value, convertor) {
-            public void loadFromString(String text) throws ConversionException {
-                super.loadFromString(text);
-                TimestampCellEditor.this.setValue(text);
-            }
-
-            public boolean isReadOnly() {
-                return false;
-            }
-        };
+        // Timestamp does not need External Editor
+        return null;
     }
 
     public Object getCellEditorValue() {
         return value;
     }
-
 }

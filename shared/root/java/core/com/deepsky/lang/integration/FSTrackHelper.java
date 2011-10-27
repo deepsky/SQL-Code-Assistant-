@@ -125,14 +125,20 @@ public class FSTrackHelper {
         if(virtualFile == null || !isSqlFile(virtualFile)){
             return false;
         }
+        boolean underContentRoot = false;
         for(TrivialContentEntry entry: contentEntries){
-            for(VirtualFile dir: entry.getExcludeFolders()){
-                if(virtualFile.getUrl().startsWith(dir.getUrl())){
-                    return false;
+            // Check against the content root first
+            if(virtualFile.getUrl().startsWith(entry.getRoot().getUrl())){
+                // Check against excluded directories
+                for(VirtualFile dir: entry.getExcludeFolders()){
+                    if(virtualFile.getUrl().startsWith(dir.getUrl())){
+                        return false;
+                    }
                 }
+                underContentRoot = true;
             }
         }
-        return true;
+        return underContentRoot;
     }
 
 

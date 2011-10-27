@@ -92,6 +92,7 @@ public class RecordCacheImpl implements RecordCache {
                 int precision = meta.getColumnDisplaySize(i + 1); //meta.getPrecision(i+1);
 
                 String columnClassName = meta.getColumnClassName(i + 1);
+                // FIX some collisions related to Oracle impl
                 switch (columnType) {
                     case OracleTypes.BINARY:    //-2:
                     case OracleTypes.VARBINARY: //-3:
@@ -99,6 +100,11 @@ public class RecordCacheImpl implements RecordCache {
                         break;
                     case OracleTypes.LONGVARBINARY: //-4:
                         columnClassName = LONGRAWType.class.getName();
+                        break;
+                    case OracleTypes.DATE: //91:
+                        // Looks like an Oracle bug:
+                        //      ResultSetMetaData reports column type as Timestamp but returns Date
+                        columnClassName = java.sql.Date.class.getName();
                         break;
                 }
                 cinfos[i + 1] = new ColumnInfo(
@@ -208,21 +214,25 @@ public class RecordCacheImpl implements RecordCache {
         for (int i = 1; i <= colnum; i++) {
 
             switch (cinfos[i].type) {
-                case -2: { // RAW (Types.BINARY)
+                case OracleTypes.BINARY: { // RAW (Types.BINARY)
                     byte[] value = (byte[]) rs.getObject(i);
                     row.add(rs.wasNull() ? null : new RAWType(value));
                     break;
                 }
-                case -3: { // RAW (Types.VARBINARY)
+                case OracleTypes.VARBINARY: { // RAW (Types.VARBINARY)
                     byte[] value = (byte[]) rs.getObject(i);
                     row.add(rs.wasNull() ? null : new RAWType(value));
                     break;
                 }
-                case -4: { // LONGRAW (Types.LONGVARBINARY)
+                case OracleTypes.LONGVARBINARY: { // LONGRAW (Types.LONGVARBINARY)
                     byte[] value = (byte[]) rs.getObject(i);
                     row.add(rs.wasNull() ? null : new LONGRAWType(value));
                     break;
                 }
+                case OracleTypes.DATE:
+                    // in order do not loss time part of the date use getTimestamp
+                    row.add(rs.getTimestamp(i));
+                    break;
                 default:
                     row.add(rs.getObject(i));
                     break;
@@ -232,26 +242,30 @@ public class RecordCacheImpl implements RecordCache {
         return row;
     }
 
-    protected void loadRow(@NotNull ResultSet rs, @NotNull Row row) throws SQLException {
+    protected void updateRow(@NotNull ResultSet rs, @NotNull Row row) throws SQLException {
         row.clear();
         int colnum = cinfos.length - 1;
         for (int i = 1; i <= colnum; i++) {
             switch (cinfos[i].type) {
-                case -2: { // RAW (Types.BINARY)
+                case OracleTypes.BINARY: { // RAW (Types.BINARY)
                     byte[] value = (byte[]) rs.getObject(i);
                     row.add(rs.wasNull() ? null : new RAWType(value));
                     break;
                 }
-                case -3: { // RAW (Types.VARBINARY)
+                case OracleTypes.VARBINARY: { // RAW (Types.VARBINARY)
                     byte[] value = (byte[]) rs.getObject(i);
                     row.add(rs.wasNull() ? null : new RAWType(value));
                     break;
                 }
-                case -4: { // LONGRAW (Types.LONGVARBINARY)
+                case OracleTypes.LONGVARBINARY: { // LONGRAW (Types.LONGVARBINARY)
                     byte[] value = (byte[]) rs.getObject(i);
                     row.add(rs.wasNull() ? null : new LONGRAWType(value));
                     break;
                 }
+                case OracleTypes.DATE:
+                    // in order do not loss time part of the date use getTimestamp
+                    row.add(rs.getTimestamp(i));
+                    break;
                 default:
                     row.add(rs.getObject(i));
                     break;
