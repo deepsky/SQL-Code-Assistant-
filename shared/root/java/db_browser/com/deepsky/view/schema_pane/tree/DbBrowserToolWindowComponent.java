@@ -42,9 +42,8 @@ import java.util.*;
 
 public class DbBrowserToolWindowComponent implements ProjectComponent {
 
-    static private final String componentName = "DbBrowserToolWindowComponent";
-
-    public static final String DB_BROWSER_PANE = "DatabaseBrowser";
+    static private final String COMPONENT_NAME = "DbBrowserToolWindowComponent";
+    static public final String DB_BROWSER_PANE = "DatabaseBrowser";
 
     private Project project;
     private int splitDividerLocation;
@@ -161,7 +160,7 @@ public class DbBrowserToolWindowComponent implements ProjectComponent {
 
     @NotNull
     public String getComponentName() {
-        return componentName;
+        return COMPONENT_NAME;
     }
 
     private class DbObjectTreeManager implements Runnable {

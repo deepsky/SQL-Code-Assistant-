@@ -92,7 +92,7 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement, ResolveProvi
     }
 */
 
-    ResolveFacade domainResolver;
+    private ResolveFacade domainResolver;
     public ResolveFacade getResolver(){
         if(domainResolver == null){
             VirtualFile file = getVirtualFile();
@@ -185,5 +185,8 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement, ResolveProvi
 
     public void resetCaches() {
         cachedCtxPath = null;
+        if(getOriginalFile() != this){
+            ((PlSqlFile) getOriginalFile()).resetCaches();
+        }
     }
 }

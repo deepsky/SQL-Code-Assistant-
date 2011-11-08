@@ -689,16 +689,16 @@
     <option name="projectName" value="sqlassistant-0.9.1" />
   </component>
   <component name="ProjectDictionaryState">
+    <dictionary name="serhiy.kulyk">
+      <words>
+        <w>quering</w>
+      </words>
+    </dictionary>
     <dictionary name="sky">
       <words>
         <w>accessor</w>
         <w>convertor</w>
         <w>jdbc</w>
-      </words>
-    </dictionary>
-    <dictionary name="serhiy.kulyk">
-      <words>
-        <w>quering</w>
       </words>
     </dictionary>
   </component>
@@ -713,7 +713,7 @@
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA IC-107.587" project-jdk-type="IDEA JDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA IC-110.291" project-jdk-type="IDEA JDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ResourceManagerContainer">

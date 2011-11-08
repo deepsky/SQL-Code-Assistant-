@@ -1231,7 +1231,7 @@ todo - should be implemented along with fixing of the addContextPath
                     FileEntitiesHolder fileHolder = files.remove(fileName);
                     if (fileHolder != null) {
                         fileHolder.removeChildren();
-                        result = true; //root.removeNodeByEncodedName(fileHolder.node.getName());
+                        result = true;
                     }
                     break;
                 default:
@@ -1558,6 +1558,10 @@ todo - should be implemented along with fixing of the addContextPath
                         n.dispose();
                         iterator.remove();
                     }
+                }
+                // todo -- do we need "remove" above and "put" below if lst.size()> 0
+                if(lst.size()==0){
+                    root.childs.remove(name);
                 }
             }
         }

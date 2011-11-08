@@ -27,12 +27,13 @@ package com.deepsky.lang.plsql.resolver.psibased;
 
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.completion.Constants;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.resolver.utils.PsiElementUtil;
 import com.deepsky.lang.validation.ValidationException;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 
-public class NamesIndexerSpecific extends NamesIndexer {
+public class NamesIndexerSpecific extends NamesIndexerWithChangesCollecting {
     final private String COMPL_IDENTIFIER_ADOPTED = Constants.COMPL_IDENTIFIER.toLowerCase();
 
     public void visitElement(PsiElement element) {
@@ -60,8 +61,21 @@ public class NamesIndexerSpecific extends NamesIndexer {
 
     // small trick, do not index entities which contains completion identifier
     protected void saveCtxValue(String ctxPath, String value){
-        if(ctxPath.contains(COMPL_IDENTIFIER_ADOPTED)){
-            throw new CompletionDummyIdent();
+        int start = ctxPath.indexOf(COMPL_IDENTIFIER_ADOPTED);
+        if(start != -1){
+            ContextPathUtil.CtxPathIterator ite = new ContextPathUtil.CtxPathIterator(ctxPath);
+            // if the name of the path is COMPL_IDENTIFIER_ADOPTED (i.e. completion started on ws),
+            // then exclude this element from indexing, otherwise find actual name of the path
+            while(ite.next()){
+                String name = ite.getName();
+                if(name.contains(COMPL_IDENTIFIER_ADOPTED))
+                    if(name.length() == COMPL_IDENTIFIER_ADOPTED.length()){
+                        throw new CompletionDummyIdent();
+                    } else {
+                        break;
+                    }
+            }
+            ctxPath = ctxPath.substring(0, start) + ctxPath.substring(start+COMPL_IDENTIFIER_ADOPTED.length());
         }
         itree.addContextPath(ctxPath, value);
     }

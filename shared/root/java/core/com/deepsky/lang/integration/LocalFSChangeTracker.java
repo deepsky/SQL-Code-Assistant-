@@ -1,6 +1,5 @@
 package com.deepsky.lang.integration;
 
-import com.deepsky.findUsages.wordProc.FileProcessor;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.plsql.indexMan.DbTypeChangeListener;
 import com.deepsky.lang.plsql.indexMan.FSIndexer;
@@ -117,27 +116,33 @@ public class LocalFSChangeTracker {
 
         String filePath = virtualFile.getPath();
         try {
-            long ms0 = System.currentTimeMillis();
-
+            long parsingTime = 0;
             // Use content of PsiFile if it is found (it can be found if file is opened in the editor)
             PsiFile psi = PlSqlElementLocator.locatePsiFile(project, virtualFile);
-            String content = (psi != null)? psi.getText(): StringUtils.file2string(new File(filePath));
+            if (psi != null) {
+                if (psi instanceof PlSqlFile) {
+                    ((PlSqlFile) psi).resetCaches();
+                }
+            } else {
+                long ms0 = System.currentTimeMillis();
+                String content = StringUtils.file2string(new File(filePath));
+                MarkupGeneratorEx2 generator = new MarkupGeneratorEx2(virtualFile);
+                ASTNode root = generator.parse(content);
+                psi = (PsiFile) root.getPsi();
+                parsingTime = System.currentTimeMillis() - ms0;
+            }
 
-            MarkupGeneratorEx2 generator = new MarkupGeneratorEx2(virtualFile);
-            ASTNode root = generator.parse(content);
-
-            long ms1 = System.currentTimeMillis();
-
-            if (root == null) {
+            if (psi == null) {
                 log.info("ERROR [File] " + filePath + " Could not parse");
             } else {
                 int cacheSizeBefore = 0;
-                fsIndexer.indexPlSqlFile((PlSqlElement) root.getPsi(), listener);
+                long ms = System.currentTimeMillis();
+                fsIndexer.indexPlSqlFile((PlSqlElement) psi, listener);
                 int sizeAfter = 0;
                 int added = sizeAfter - cacheSizeBefore;
 
                 long ms2 = System.currentTimeMillis();
-                log.debug("[Indexing] time (ms): " + (ms2 - ms1) + " \t[Parsing] time (ms): " + (ms1 - ms0) + " \t[Indexes] " + added + "(" + sizeAfter + ")" + "\t[File] " + filePath);
+                log.debug("[Indexing] time (ms): " + (ms2 - ms) + " \t[Parsing] time (ms): " + parsingTime + " \t[Indexes] " + added + "(" + sizeAfter + ")" + "\t[File] " + filePath);
             }
         } catch (Throwable e) {
             fsIndexer.setFileTimestamp(filePath, virtualFile.getTimeStamp(), virtualFile.getModificationStamp());
@@ -159,7 +164,7 @@ public class LocalFSChangeTracker {
         return typesBeingAdded;
     }
 
-    private Set<String> deleteIndex(VirtualFile file, boolean notifyIndexManager){
+    private Set<String> deleteIndex(VirtualFile file, boolean notifyIndexManager) {
         Set<String> typesBeenDeleted = fsIndexer.deleteFile(file.getPath());
         String[] ttypes = typesBeenDeleted.toArray(new String[typesBeenDeleted.size()]);
         log.info("fileDeleted: " + file.getPath() + " types: " + Arrays.toString(ttypes));
@@ -227,7 +232,6 @@ public class LocalFSChangeTracker {
     }
 
 
-
     private class VirtualFileListenerImpl implements VirtualFileListener {
         public void propertyChanged(VirtualFilePropertyEvent event) {
             log.info("propertyChanged: " + event.getFileName());
@@ -248,14 +252,13 @@ public class LocalFSChangeTracker {
         }
 
         public void fileCreated(VirtualFileEvent event) {
-            if(event.getFile().isDirectory()){
+            if (event.getFile().isDirectory()) {
                 // scan directory recursively and add SQL files to index
                 final Set<String> updatedTypes = new HashSet<String>();
-                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
+                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor() {
                     public void handleEntry(VirtualFile parent, VirtualFile file) {
-                        if (helper.isFileValid(file)){
+                        if (helper.isFileValid(file)) {
                             log.info("fileCreated: " + file.getPath() + " timestamp: " + file.getModificationStamp());
-//                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
                             updatedTypes.addAll(indexFileWithNotification(file, false));
                         }
                     }
@@ -268,7 +271,6 @@ public class LocalFSChangeTracker {
 
             } else if (helper.isFileValid(event.getFile())) {
                 log.info("fileCreated: " + event.getFileName() + " timestamp: " + event.getFile().getTimeStamp() + " count: " + event.getFile().getModificationStamp());
-//                log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
                 indexFileWithNotification(event.getFile(), true);
             }
         }
@@ -276,12 +278,12 @@ public class LocalFSChangeTracker {
         public void fileDeleted(VirtualFileEvent event) {
             // Referenced file does not exist any longer
             // fortunately to handle file deletion we need file path only
-            if(event.getFile().isDirectory()){
+            if (event.getFile().isDirectory()) {
                 // scan directory recursively and delete relevant files from index
                 final Set<String> updatedTypes = new HashSet<String>();
-                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
+                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor() {
                     public void handleEntry(VirtualFile parent, VirtualFile file) {
-                        if (helper.isFileValid(file)){
+                        if (helper.isFileValid(file)) {
                             updatedTypes.addAll(deleteIndex(file, false));
                         }
                     }
@@ -298,14 +300,13 @@ public class LocalFSChangeTracker {
 
 
         public void fileMoved(final VirtualFileMoveEvent event) {
-            if(event.getFile().isDirectory()){
+            if (event.getFile().isDirectory()) {
                 // scan directory recursively and add SQL files to index
                 final Set<String> updatedTypes = new HashSet<String>();
-                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
+                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor() {
                     public void handleEntry(VirtualFile parent, VirtualFile file) {
-                        if (helper.isFileValid(file)){
+                        if (helper.isFileValid(file)) {
                             log.info("fileMoved: " + file.getPath() + " timestamp: " + file.getModificationStamp());
-//                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
                             updatedTypes.addAll(indexFileWithNotification(file, false));
                         }
                     }
@@ -318,18 +319,17 @@ public class LocalFSChangeTracker {
 
             } else if (helper.isFileValid(event.getFile())) {
                 log.info("fileMoved: " + event.getFileName() + " timestamp: " + event.getFile().getTimeStamp() + " count: " + event.getFile().getModificationStamp());
-//                log.info("#BUILD INDEX FOR FILE: " + event.getFile().getPath());
                 indexFileWithNotification(event.getFile(), true);
             }
         }
 
         public void fileCopied(VirtualFileCopyEvent event) {
-            if(event.getFile().isDirectory()){
+            if (event.getFile().isDirectory()) {
                 // scan directory recursively and add SQL files to index
                 final Set<String> updatedTypes = new HashSet<String>();
-                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
+                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor() {
                     public void handleEntry(VirtualFile parent, VirtualFile file) {
-                        if (helper.isFileValid(file)){
+                        if (helper.isFileValid(file)) {
                             log.info("fileCopied: " + file.getPath() + " timestamp: " + file.getModificationStamp());
 //                            log.info("#BUILD INDEX FOR FILE: " + file.getPath());
                             updatedTypes.addAll(indexFileWithNotification(file, false));
@@ -362,12 +362,12 @@ public class LocalFSChangeTracker {
         }
 
         public void beforeFileMovement(VirtualFileMoveEvent event) {
-            if(event.getFile().isDirectory()){
+            if (event.getFile().isDirectory()) {
                 // scan directory recursively and delete relevant files from index
                 final Set<String> updatedTypes = new HashSet<String>();
-                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor(){
+                FileUtils.processDirectoryTree(event.getFile(), new FileUtils.VirtualFileProcessor() {
                     public void handleEntry(VirtualFile parent, VirtualFile file) {
-                        if (helper.isFileValid(file)){
+                        if (helper.isFileValid(file)) {
                             log.info("beforeFileMovement: " + file + ", delete from index");
                             updatedTypes.addAll(deleteIndex(file, false));
                         }
@@ -380,9 +380,7 @@ public class LocalFSChangeTracker {
                 }
             } else if (helper.isFileValid(event.getFile())) {
                 log.info("beforeFileMovement: " + event.getFile() + ", delete from index");
-                Set<String> typesBeenDeleted = fsIndexer.deleteFile(event.getFile().getPath());
-                int h = 0;
-//                deleteIndex(event.getFile(), true);
+                deleteIndex(event.getFile(), true);
             }
         }
     }

@@ -74,7 +74,6 @@ public class IndexManagerImpl implements IndexManager {
         WordIndexChangeListener ll = new WordIndexChangeListener() {
             public void handleUpdate(DbUrl source, String path) {
                 addItem(source, path);
-                //System.out.println("Request to index: " + path);
             }
         };
 
@@ -475,15 +474,11 @@ NOTE: do not delete index directory for now
                             continue;
                         }
 
-                        SqlDomainIndex index = uid2index.get(DbUID.getDbUID(item.dbUrl).key()); //item.dbUrl.getUserHostPortServiceName().toLowerCase());
-//                        SqlDomainIndex index = uid2index.get(item.dbUrl.getUserHostPortServiceName().toLowerCase());
+                        SqlDomainIndex index = uid2index.get(DbUID.getDbUID(item.dbUrl).key());
                         AbstractSchema sindex = index.getSimpleIndex(item.dbUrl.getUser().toLowerCase());
                         sindex.getWordIndexManager().updateIndexForFile(item.filePath);
                     }
 
-                    if(set.size() > 0){
-                        System.out.println("Indexed files:: " + set.size());
-                    }
                     try {
                         synch.wait(timeout);
                     } catch (InterruptedException e) {

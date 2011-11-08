@@ -190,6 +190,8 @@
         <projectService serviceInterface="com.deepsky.settings.SqlCodeAssistantSettings"
                         serviceImplementation="com.deepsky.settings.SqlCodeAssistantSettings"/>
 
+        <projectService serviceInterface="com.deepsky.lang.integration.CodeChangeEventAggregator"
+                        serviceImplementation="com.deepsky.lang.integration.CodeChangeEventAggregator"/>
     </extensions>
 
     <project-components>

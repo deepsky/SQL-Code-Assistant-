@@ -58,9 +58,9 @@ public class FSIndexer implements Indexer {
     }
 
 
-    public IndexUpdater getUpdater() {
-        return new IndexUpdaterImpl();
-    }
+//    public IndexUpdater getUpdater() {
+//        return new IndexUpdaterImpl();
+//    }
 
     public void indexPlSqlFile(PlSqlElement file, DbTypeChangeListener listener) {
         NamesIndexerWithChangesCollecting indexer = new NamesIndexerWithChangesCollecting();
@@ -75,7 +75,7 @@ public class FSIndexer implements Indexer {
         }
 
         Set<String> types = IndexTreeUtil.getTypesInFile(itree, vf.getPath());
-        itree.remove(file.getCtxPath1().getPath());
+//        itree.remove(file.getCtxPath1().getPath());
         indexer.parse(file.getNode(), itree);
 
         setFileTimestamp(vf.getPath(), vf.getModificationCount(), vf.getModificationStamp());
@@ -85,9 +85,6 @@ public class FSIndexer implements Indexer {
         types.addAll(Arrays.asList(indexer.getUpdatedTypes()));
         // notify about types have been updated
         listener.handleUpdatedTypes(types.toArray(new String[types.size()]));
-
-//        MessageBus bus1 = project.getMessageBus();
-//        bus1.asyncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, filePath);
 
         log.info("INDEXING entries: " + sizeAfter + " time spent: " + ms);
     }
@@ -172,6 +169,7 @@ public class FSIndexer implements Indexer {
      * @param newModificationStamp
      * @return
      */
+/*
     public Set<String> moveFile(File oldF, File newF, long newModificationStamp) {
         Set<String> types = IndexTreeUtil.getTypesInFile(itree, oldF.getPath());
 //        String oldCtxPath = ContextPathUtil.encodeFilePathCtx(oldF.getPath());
@@ -181,8 +179,10 @@ public class FSIndexer implements Indexer {
 
         return types;
     }
+*/
 
 
+/*
     private class IndexUpdaterImpl implements IndexUpdater {
 
         public long getFileTimestamp(String path) {
@@ -201,5 +201,6 @@ public class FSIndexer implements Indexer {
             //To change body of implemented methods use File | Settings | File Templates.
         }
     }
+*/
 
 }

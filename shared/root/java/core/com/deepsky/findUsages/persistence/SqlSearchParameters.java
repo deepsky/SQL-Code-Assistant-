@@ -25,8 +25,6 @@
 
 package com.deepsky.findUsages.persistence;
 
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;

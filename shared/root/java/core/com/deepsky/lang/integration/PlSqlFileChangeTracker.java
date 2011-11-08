@@ -28,7 +28,6 @@ package com.deepsky.lang.integration;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.plsql.completion.Constants;
-import com.deepsky.lang.plsql.indexMan.IndexBulkChangeListener;
 import com.deepsky.lang.plsql.resolver.index.IndexTree;
 import com.deepsky.lang.plsql.resolver.psibased.NamesIndexerSpecific;
 import com.deepsky.lang.plsql.resolver.psibased.NamesIndexerWithChangesCollecting;
@@ -37,10 +36,10 @@ import com.deepsky.lang.plsql.resolver.utils.IndexTreeUtil;
 import com.deepsky.lang.plsql.sqlIndex.AbstractSchema;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
 import com.deepsky.lang.plsql.sqlIndex.SqlFile;
-import com.deepsky.lang.plsql.sqlIndex.WordIndexChangeListener;
+import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.messages.MessageBus;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -50,6 +49,7 @@ public class PlSqlFileChangeTracker {
     private static final LoggerProxy log = LoggerProxy.getInstance("#PlSqlFileChangeTracker");
 
     long lastModCounter = -1;
+
     public void indexPlSqlFile(PlSqlFile plSqlFile) {
 
         PlSqlFile actualPlSqFile = (PlSqlFile) plSqlFile.getOriginalFile();
@@ -59,50 +59,60 @@ public class PlSqlFileChangeTracker {
         // 1. pooling changes from DB
         // 2. updating db cache
         // 3. updating index
-// todo -- make changes in the DB schema also -
+        // todo -- make changes in the DB schema also -
         if (IndexManager.FS_URL.equals(actualPlSqFile.getDbUrl())) {
 
             // todo -- is there direct call to FSIndexer.indexPlSqlFIle(...) needed?
             AbstractSchema sindex = actualPlSqFile.getResolver().getSimpleIndex();
             DbUrl dbUrl = sindex.getDbUrl();
             IndexTree itree = sindex.getIndexTree();
-
+            final Project project = actualPlSqFile.getProject();
             long ms = System.currentTimeMillis();
+
             // check whether parsing called on non-physical copy of a file
-            VirtualFile vf = actualPlSqFile.getVirtualFile();
 
-            long h =0;
-            if(actualPlSqFile == plSqlFile){
-                if(true){ //vf == null || lastModCounter != vf.getModificationCount()){
-                    lastModCounter = vf!=null? vf.getModificationCount(): lastModCounter;
-                    String filePath = getFilePath(vf);
-                    Set<String> types = IndexTreeUtil.getTypesInFile(itree, filePath);
+            long h = 0;
+            if (actualPlSqFile == plSqlFile) {
+                final VirtualFile vf = actualPlSqFile.getVirtualFile();
+                lastModCounter = vf != null ? vf.getModificationCount() : lastModCounter;
+                String filePath = getFilePath(vf);
+                Set<String> types = IndexTreeUtil.getTypesInFile(itree, filePath);
+                // todo FUNCTION vs FUNCTION BODY, see below
+                boolean res = itree.remove(actualPlSqFile.getCtxPath1().getPath());
+                NamesIndexerWithChangesCollecting indexer = new NamesIndexerWithChangesCollecting();
 
-                    itree.remove(actualPlSqFile.getCtxPath1().getPath());
-                    NamesIndexerWithChangesCollecting indexer = new NamesIndexerWithChangesCollecting();
+                indexer.parse(plSqlFile.getNode(), itree);
 
-                    indexer.parse(plSqlFile.getNode(), itree);
+                // todo -- not correct for non FS files
+                itree.setFileAttribute(filePath, "timestamp", Long.toString(vf.getModificationCount()));
+                itree.setFileAttribute(filePath, "mod_cnt", Long.toString(vf.getModificationStamp()));
 
-                    // todo -- not correct for non FS files
-                    itree.setFileAttribute(filePath, "timestamp", Long.toString(vf.getModificationCount()));
-                    itree.setFileAttribute(filePath, "mod_cnt", Long.toString(vf.getModificationStamp()));
+                ms = System.currentTimeMillis() - ms;
 
-                    ms = System.currentTimeMillis() - ms;
+                h = System.currentTimeMillis();
+                types.addAll(Arrays.asList(indexer.getUpdatedTypes()));
 
-                    h = System.currentTimeMillis();
-                    types.addAll(Arrays.asList(indexer.getUpdatedTypes()));
-                    MessageBus bus1 = actualPlSqFile.getProject().getMessageBus();
-                    if (types.size() > 0) {
-                        bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(dbUrl, types.toArray(new String[types.size()]));
-                    }
-
-                    bus1.asyncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(dbUrl, filePath);
-                }
+                CodeChangeEventAggregator.getInstance(project).updateIndex(dbUrl, types);
+                CodeChangeEventAggregator.getInstance(project).updateWordIndex(dbUrl, filePath);
             } else {
                 // make sure completion patch was applied
-                if(Constants.IDENT_PATCHER.wasPatched()){
+                if (Constants.IDENT_PATCHER.wasPatched()) {
                     // Completion request
-                    new NamesIndexerSpecific().parse(plSqlFile.getNode(), itree);
+                    // NOTE: there is a need to reset caches because of IDEA's caching mechanism for PsiFile
+                    plSqlFile.resetCaches();
+                    final VirtualFile vf = plSqlFile.getVirtualFile();
+                    final String filePath = getFilePath(vf);
+                    Set<String> types = IndexTreeUtil.getTypesInFile(itree, filePath);
+
+                    // todo FUNCTION vs FUNCTION BODY, see below
+                    boolean res = itree.remove(plSqlFile.getCtxPath1().getPath());
+
+                    NamesIndexerWithChangesCollecting indexer = new NamesIndexerSpecific();
+                    indexer.parse(plSqlFile.getNode(), itree);
+                    types.addAll(Arrays.asList(indexer.getUpdatedTypes()));
+
+                    CodeChangeEventAggregator.getInstance(project).updateIndex(dbUrl, types);
+                    CodeChangeEventAggregator.getInstance(project).updateWordIndex(dbUrl, filePath);
                     Constants.IDENT_PATCHER.cleanSignal();
                 }
                 h = System.currentTimeMillis();
@@ -123,5 +133,29 @@ public class PlSqlFileChangeTracker {
             return vf.getPath();
         }
     }
+
+    /**
+     * Delete file from the index and return types in the file
+     *
+     * @param path
+     * @param itree
+     * @return
+     */
+    public Set<String> deleteFile(String path, IndexTree itree) {
+        Set<String> types = IndexTreeUtil.getTypesInFile(itree, path);
+        String ctxPath = ContextPathUtil.encodeFilePathCtx(path);
+        itree.remove(ctxPath);
+
+        // replace FUNCTION_BODY with FUNCTION, PROCEDURE_BODY with PROCEDURE (if that is a case)
+        if (types.remove(DbObject.FUNCTION_BODY)) {
+            types.add(DbObject.FUNCTION);
+        }
+        if (types.remove(DbObject.PROCEDURE_BODY)) {
+            types.add(DbObject.PROCEDURE);
+        }
+
+        return types;
+    }
+
 
 }

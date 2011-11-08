@@ -49,14 +49,11 @@ import java.util.List;
 
 public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlElement {
 
-    //    private final Logger log = Logger.getInstance("#PlSqlElementBase");
     protected ResolveFacade facade;
-
 
     public PlSqlElementBase(ASTNode astNode) {
         super(astNode);
     }
-
 
     final protected void __ensure_resolver_available__() {
         if (facade == null) {
@@ -108,37 +105,11 @@ public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlEleme
     public String getStrippedText() {
         // todo -- resolve stuff refactoring
         throw new NotSupportedException();
-//        return PsiTreeHelpers.stripText(this.getText()).trim();
     }
 
     public void process(Visitor proc) {
         // todo -
     }
-
-
-/*
-    protected PlSqlElement getUsageContext(final TokenSet set) {
-        // [start] search definition context --------------------
-        final PlSqlElement[] elem = new PlSqlElement[1];
-        ASTTreeProcessor runner = new ASTTreeProcessor();
-        runner.add(new ASTNodeHandler() {
-            @NotNull
-            public TokenSet getTokenSet() {
-                return set;
-            }
-
-            public boolean handleNode(@NotNull ASTNode node) {
-                elem[0] = (PlSqlElement) node.getPsi();
-                return false;
-            }
-        });
-        runner.process(getNode());
-        // [end] search definition context ------------------------
-
-        return elem[0];
-    }
-*/
-
 
     public <T> T findParent(Class clazz) {
         ASTNode n = getNode();
@@ -169,56 +140,6 @@ public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlEleme
             throw new SyntaxTreeCorruptedException();
         }
     }
-
-//    public void accept(@NotNull PsiElementVisitor visitor) {
-//        if (visitor instanceof PlSqlElementVisitor) {
-//            ((PlSqlElementVisitor) visitor).visitPlSqlElement(this);
-//        } else {
-//            super.accept(visitor);
-//        }
-//    }
-
-/*
-    static private TokenSet CONTEXT = TokenSet.create(
-            PlSqlElementTypes.PACKAGE_BODY,
-            PlSqlElementTypes.PACKAGE_SPEC,
-            PlSqlElementTypes.CREATE_TRIGGER,
-            PlSqlElementTypes.FUNCTION_BODY,
-            PlSqlElementTypes.PROCEDURE_BODY
-    );
-
-
-    @NotNull
-    public UsageContext getUsageContext() {
-
-        final UsageContextImpl usage = new UsageContextImpl();
-        ASTTreeProcessor runner = new ASTTreeProcessor();
-        runner.add(new ASTNodeHandler() {
-            @NotNull
-            public TokenSet getTokenSet() {
-                return CONTEXT;
-            }
-
-            public boolean handleNode(@NotNull ASTNode node) {
-                if (node.getElementType() == PlSqlElementTypes.PACKAGE_BODY) {
-                    usage.setPackageBody((PackageBody) node.getPsi());
-                } else if (node.getElementType() == PlSqlElementTypes.PACKAGE_SPEC) {
-                    usage.setPackageSpec((PackageSpec) node.getPsi());
-                } else if (node.getElementType() == PlSqlElementTypes.CREATE_TRIGGER) {
-                    usage.setTrigger((CreateTrigger) node.getPsi());
-                } else if (node.getElementType() == PlSqlElementTypes.FUNCTION_BODY) {
-                    usage.setFunctionBody((Function) node.getPsi());
-                } else if (node.getElementType() == PlSqlElementTypes.PROCEDURE_BODY) {
-                    usage.setProcedureBody((Procedure) node.getPsi());
-                }
-                return false;
-            }
-        });
-
-        runner.process(getNode());
-        return usage;
-    }
-*/
 
     final public CtxPath getCtxPath1() {
         //return ((CompositeElementExt) getNode()).getCtxPath1();

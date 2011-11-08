@@ -51,17 +51,11 @@ public class WordIndexManagerImpl implements WordIndexManager {
     final private static int WIDX_MASK = 0xF;
 
     File indexHomeDir;
-    //SqlDomainIndex sqlIndex;
     AbstractSchema sindex;
 
-//    public WordIndexManagerImpl(File indexHomeDir) {
-//        this.indexHomeDir = indexHomeDir;
-//    }
-
-    public WordIndexManagerImpl(AbstractSchema sindex){ //SqlDomainIndex sqlIndex) {
-//        this.sqlIndex = sqlIndex;
+    public WordIndexManagerImpl(AbstractSchema sindex){
         this.sindex = sindex;
-        this.indexHomeDir = new File(sindex.getIndexPath()); //sqlIndex.getIndexHomeDir();
+        this.indexHomeDir = new File(sindex.getIndexPath());
     }
 
     public void updateIndexForFile(String filePath) {

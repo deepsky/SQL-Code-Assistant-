@@ -550,7 +550,7 @@ public class NamesIndexer extends PlSqlElementVisitor {
 
 
     public void visitCreateViewColumnDefInternal(CreateViewColumnDefInternal node) {
-        // todo -- subject to revise - it is expected view will be indexed befor indexing of the view_internal
+        // todo -- subject to revise - it is expected view will be indexed before indexing of the view_internal
         String name = ContextPathUtil.extractLastCtxName(node.getCtxPath1().getPath());
         ContextItem[] items = itree.findCtxItems(new int[]{ContextPath.VIEW_DEF}, name); //[0].getCtxPath()
         if(items.length == 1){
@@ -600,7 +600,6 @@ public class NamesIndexer extends PlSqlElementVisitor {
 
         return b.toString();
     }
-//    }
 
     private class ArgumentSpecImpl implements ArgumentSpec {
 

@@ -190,6 +190,8 @@
         <projectService serviceInterface="com.deepsky.settings.SqlCodeAssistantSettings"
                         serviceImplementation="com.deepsky.settings.SqlCodeAssistantSettings"/>
 
+        <projectService serviceInterface="com.deepsky.lang.integration.CodeChangeEventAggregator"
+                        serviceImplementation="com.deepsky.lang.integration.CodeChangeEventAggregator"/>
     </extensions>
 
     <project-components>
@@ -214,13 +216,6 @@
         <component>
             <implementation-class>com.deepsky.findUsages.converter.UsageConverter</implementation-class>
         </component>
-
-        <!--
-        <component>
-          <interface-class>com.intellij.openapi.fileEditor.impl.text.TextEditorProvider</interface-class>
-          <implementation-class>com.intellij.lang.impl.PsiAwareTextEditorProvider777</implementation-class>
-        </component>
--->
     </application-components>
 
     <!-- Component's actions -->
