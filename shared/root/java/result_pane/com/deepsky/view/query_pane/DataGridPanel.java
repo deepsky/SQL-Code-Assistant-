@@ -269,7 +269,7 @@ todo - implement me
             }
 
             // put content
-            for (int i = 0; i < numrows || !isLast(i); i++) {
+            for (int i = 0; i < numrows || !isLast(i+1); i++) {
                 if (i > 0) sbf.append(lineSeparator);
 
                 for (int j = 0; j < numcols; j++) {
@@ -305,7 +305,7 @@ todo - implement me
     }
 
     private boolean isLast(int rownum){
-        if(rownum == rsModel.getModel().getFetchedRowCount()-1 ){
+        if(rownum >= rsModel.getModel().getFetchedRowCount()-1 ){
             if(rsModel.getModel().allRowsFetched()){
                 return true;
             }
