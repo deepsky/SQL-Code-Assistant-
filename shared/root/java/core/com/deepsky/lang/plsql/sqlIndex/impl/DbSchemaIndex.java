@@ -383,7 +383,7 @@ public class DbSchemaIndex extends SqlIndexBase {
         public SqlFile getSourceFile(String ctxPath) {
             String fileName = ContextPathUtil.extractFilePath(ctxPath);
             File f = new File(indexDirPath, fileName);
-            String objName = decodeObjectName(fileName); //ContextPathUtil.extractTopObjectName(ctxPath);
+            String objName = decodeObjectName(fileName);
             String path = "[" + dbUrl.getAlias() + "] " + objName; //fileName; //objName;
             String _timestamp = itree.getFileAttribute(fileName, IndexTree.TIMESTAMP_ATTR);
             long timestamp = 0L;

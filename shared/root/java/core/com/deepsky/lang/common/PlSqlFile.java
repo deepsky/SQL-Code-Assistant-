@@ -45,11 +45,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class PlSqlFile extends PsiFileBase implements PlSqlElement, ResolveProvider {
 
-    static final LoggerProxy log = LoggerProxy.getInstance("#PlSqlFile");
+    static private final LoggerProxy log = LoggerProxy.getInstance("#PlSqlFile");
 
-    SqlStatementMarkupModel sqlStmtModel;
-    CtxPath cachedCtxPath = null;
-
+    private SqlStatementMarkupModel sqlStmtModel;
+    private CtxPath cachedCtxPath = null;
 
     public PlSqlFile(FileViewProvider fileViewProvider) {
         super(fileViewProvider, PlSqlFileType.FILE_TYPE.getLanguage());

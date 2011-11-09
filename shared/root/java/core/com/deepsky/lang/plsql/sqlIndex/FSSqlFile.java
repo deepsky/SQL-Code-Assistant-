@@ -40,18 +40,12 @@ public abstract class FSSqlFile extends SqlFile {
     protected CharSequence content;
 
     public FSSqlFile(DbUrl dbUrl, final String fullPath, final Language language, final CharSequence text){
-        super(dbUrl, fullPath, language, null);//text);
+        super(dbUrl, fullPath, language, null);
         this.fullPath = fullPath;
     }
 
-//    @Override
-//    public String getDomainSpecificFilePath() {
-//        return null;
-//    }
-
     public String getEncodedFilePathCtx(){
-        String ctxPath = ContextPathUtil.encodeFilePathCtx(getPath());
-        return ctxPath;
+        return ContextPathUtil.encodeFilePathCtx(getPath());
     }
 
     public String getPath() {

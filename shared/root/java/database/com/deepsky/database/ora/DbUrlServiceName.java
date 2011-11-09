@@ -48,6 +48,7 @@ public class DbUrlServiceName extends DbUrl {
         this.host = host;
         this.port = port;
         this.service = service;
+        setAlias(getUserHostPortServiceName());
     }
 
     // jdbc:oracle:thin:[USER/PASSWORD]@//[HOST][:PORT]/SERVICE
@@ -75,13 +76,17 @@ public class DbUrlServiceName extends DbUrl {
         host = m.group(3);
         port = m.group(4);
         service = m.group(5);
+
+        setAlias(getUserHostPortServiceName());
     }
 
+/*
     public DbUrlServiceName(String userName, String pwd, String url) {
         this(url);
         this.user = userName;
         this.pwd = pwd;
     }
+*/
 
     @Override
     public String getUser() {

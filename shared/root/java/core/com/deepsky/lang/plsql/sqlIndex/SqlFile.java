@@ -28,17 +28,13 @@ package com.deepsky.lang.plsql.sqlIndex;
 import com.deepsky.database.ora.DbUrl;
 import com.intellij.lang.Language;
 import com.intellij.testFramework.LightVirtualFile;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-import java.io.OutputStream;
 
 
 public abstract class SqlFile extends LightVirtualFile {
 
     protected DbUrl dbUrl;
 
-    public SqlFile(DbUrl dbUrl, final String name, final Language language, final CharSequence text){
+    public SqlFile(DbUrl dbUrl, final String name, final Language language, final CharSequence text) {
         super(name, language, text);
         this.dbUrl = dbUrl;
     }
@@ -50,14 +46,4 @@ public abstract class SqlFile extends LightVirtualFile {
     }
 
     public abstract String getEncodedFilePathCtx();
-
-//    public abstract CharSequence getContent();
-
-/*
-    @NotNull
-    public OutputStream getOutputStream(final Object requestor, final long modStamp, final long timeStamp) throws IOException {
-      return super.getOutputStream(requestor, modStamp, timeStamp);
-    }
-*/
-
 }
