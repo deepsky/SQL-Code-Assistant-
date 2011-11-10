@@ -47,18 +47,12 @@ public abstract class SysSqlFile  extends SqlFile {
     }
 
     public String getPresentableName() {
-        return objectName; //getName();
+        return objectName;
     }
-
-//    @Override
-//    public String getDomainSpecificFilePath() {
-//        return null;  //To change body of implemented methods use File | Settings | File Templates.
-//    }
 
     @Override
     public String getEncodedFilePathCtx() {
-        String ctxPath = ContextPathUtil.encodeFilePathCtx(filePath); //truncatedName);
-        return ctxPath;
+        return ContextPathUtil.encodeFilePathCtx(filePath);
     }
 
     public boolean isWritable() {
