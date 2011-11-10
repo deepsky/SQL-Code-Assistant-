@@ -36,7 +36,7 @@ import java.sql.SQLException;
 
 public class BLOB_Convertor implements ValueConvertor<BLOB> {
     public long size(BLOB blob) throws SQLException {
-        return blob.length();
+        return blob==null? 0: blob.length();
     }
 
     public String valueToString(BLOB blob) throws SQLException {

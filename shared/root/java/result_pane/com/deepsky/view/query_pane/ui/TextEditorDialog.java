@@ -61,10 +61,7 @@ public class TextEditorDialog extends DialogWrapper {
     private JScrollPane scrollPane;
     private JButton loadFromFileBttn;
 
-
-    //Project project;
-    DataAccessor accessor;
-//    private boolean isReadOnly;
+    private DataAccessor accessor;
 
     public TextEditorDialog(final Project project, String columnName, DataAccessor accessor) throws SQLException {
         super(project);

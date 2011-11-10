@@ -25,8 +25,6 @@
 
 package com.deepsky.view.query_pane.ui;
 
-import com.deepsky.utils.FileUtils;
-import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.ColumnReadException;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.DataAccessor;
