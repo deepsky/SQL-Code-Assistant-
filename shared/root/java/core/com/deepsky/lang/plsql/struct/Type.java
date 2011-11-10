@@ -113,6 +113,9 @@ public interface Type extends Serializable {
     public final int NCLOB = 32;
     public final int BFILE = 33;
 
+    public final int TIMESTAMP_TZ = 34;
+    public final int TIMESTAMP_LTZ = 35;
+
     public NumberType NUMBER_TYPE = new NumberType();
     public IntegerType INTEGER_TYPE = new IntegerType();
 

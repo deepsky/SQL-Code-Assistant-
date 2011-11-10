@@ -51,6 +51,8 @@ public class TypeFactory {
         name2type.put("DATE", new DateType());
         name2type.put("INTERVAL", new IntervalDayToSecType());
         name2type.put("TIMESTAMP", new TimestampType());
+        name2type.put("TIMESTAMP WITH TIME ZONE", new TimestampTZType());
+        name2type.put("TIMESTAMP WITH LOCAL TIME ZONE", new TimestampLocalTZType());
         name2type.put("NULL", new NULLType());
         name2type.put("ANYDATA", new AnydataType());
         name2type.put("ROWID", new RowidType());
@@ -61,6 +63,8 @@ public class TypeFactory {
         name2type.put("BFILE", new BFileType());
     }
 
+
+    // TODO -- the method should be replaced with referencing the constant type like: Type.INTEGER_TYPE
     public static Type createTypeByName(String typeName){
         if(typeName == null){
             return null;
@@ -91,6 +95,9 @@ public class TypeFactory {
         return new UserDefinedType(null, typeName);
     }
 
+
+    final private static Pattern TIMESTAMP_LTZ_MATCHER = Pattern.compile("TIMESTAMP.*WITH +LOCAL +TIME +ZONE");
+    final private static Pattern TIMESTAMP_TZ_MATCHER = Pattern.compile("TIMESTAMP.*WITH +TIME +ZONE");
 
     // todo - subject to optimize
     public static Type createTypeByName(String typeName, int data_length){
@@ -123,7 +130,17 @@ public class TypeFactory {
         } else if(typeName.toUpperCase().startsWith("INTERVAL")){
             return new IntervalDayToSecType();
         } else if(typeName.toUpperCase().startsWith("TIMESTAMP")){
-            return new TimestampType();
+            if(TIMESTAMP_LTZ_MATCHER.matcher(typeName).find()){
+                return new TimestampLocalTZType();
+            } else if(TIMESTAMP_TZ_MATCHER.matcher(typeName).find()){
+                return new TimestampTZType();
+            } else {
+                return new TimestampType();
+            }
+/*
+            "TIMESTAMP(6) WITH TIME ZONE"
+            "TIMESTAMP(6) WITH LOCAL TIME ZONE"
+*/
         } else if(typeName.toUpperCase().startsWith("NULL")){
             return new NULLType();
         } else if(typeName.toUpperCase().startsWith("ANYDATA")){
@@ -168,6 +185,10 @@ public class TypeFactory {
                 return new NumericType();
             case Type.TIMESTAMP:
                 return new TimestampType();
+            case Type.TIMESTAMP_LTZ:
+                return new TimestampLocalTZType();
+            case Type.TIMESTAMP_TZ:
+                return new TimestampTZType();
             case Type.VARCHAR:
                 return new Varchar2Type();
             case Type.VARCHAR2:
@@ -222,6 +243,10 @@ public class TypeFactory {
             }
             case Type.TIMESTAMP:
                 return base;
+            case Type.TIMESTAMP_LTZ:
+                return type.typeId() + "|" + "TIMESTAMP_LTZ";
+            case Type.TIMESTAMP_TZ:
+                return type.typeId() + "|" + "TIMESTAMP_TZ";
             case Type.VARCHAR:
                 return base + "." + type.dataLength();
             case Type.VARCHAR2:
@@ -293,6 +318,10 @@ public class TypeFactory {
             }
             case Type.TIMESTAMP:
                 return new TimestampType();
+            case Type.TIMESTAMP_LTZ:
+                return new TimestampLocalTZType();
+            case Type.TIMESTAMP_TZ:
+                return new TimestampTZType();
             case Type.VARCHAR:
                 return new Varchar2Type(parserTypeLen(parts[1]));
             case Type.VARCHAR2:
@@ -371,5 +400,7 @@ public class TypeFactory {
         }
        return 0;
     }
+
+
 
 }
