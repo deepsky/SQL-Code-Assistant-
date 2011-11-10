@@ -125,7 +125,7 @@ public class EditableGrid extends AbstractDataGrid {
         setDefaultRenderer(BFILE.class, new BFILETypeRenderer());
 
         setDefaultRenderer(TIMESTAMP.class, new TimestampRenderer(font, PluginKeys.TS_CONVERTOR.getData(project)));
-        setDefaultRenderer(TIMESTAMPLTZ.class, new TimestampRenderer(font, PluginKeys.TS_CONVERTOR.getData(project)));
+        setDefaultRenderer(TIMESTAMPLTZ.class, new TimestampRenderer(font, PluginKeys.TSLTZ_CONVERTOR.getData(project)));
         setDefaultRenderer(TIMESTAMPTZ.class, new TimestampRenderer(font, PluginKeys.TSTZ_CONVERTOR.getData(project)));
 
         DateRenderer dateRenderer = new DateRenderer(font) {
@@ -159,6 +159,7 @@ public class EditableGrid extends AbstractDataGrid {
         setDefaultEditor(java.sql.Timestamp.class, new TimestampCellEditor(settings));
         setDefaultEditor(java.sql.Date.class, new DateCellEditor(settings));
         setDefaultEditor(TIMESTAMP.class, new OracleTimestampCellEditor(font, PluginKeys.TS_CONVERTOR.getData(project)));
+        setDefaultEditor(TIMESTAMPLTZ.class, new OracleTimestampCellEditor(font, PluginKeys.TSLTZ_CONVERTOR.getData(project)));
         setDefaultEditor(TIMESTAMPTZ.class, new OracleTimestampCellEditor(font, PluginKeys.TSTZ_CONVERTOR.getData(project)));
 
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
