@@ -364,7 +364,7 @@ public class EditableGrid extends AbstractDataGrid {
                         }
                     });
                 } catch (DBException e1) {
-                    e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e1.printStackTrace();
                 }
                 break;
             }
@@ -385,7 +385,11 @@ public class EditableGrid extends AbstractDataGrid {
         final int lastEditRow1 = EditableGrid.this.getSelectedRow();
         TableCellEditor cellEditor = EditableGrid.this.getCellEditor();
         if(cellEditor != null){
-            cellEditor.stopCellEditing();
+            if(cellEditor.stopCellEditing()!=true){
+                // cell editor failed, abort submitting changes
+                Messages.showWarningDialog("   Entered value is not valid   ", "Cannot save changes");
+                return;
+            }
         }
         // check cells on NOT NULL constraints
         int cnt = rowset.getColumnCount();
