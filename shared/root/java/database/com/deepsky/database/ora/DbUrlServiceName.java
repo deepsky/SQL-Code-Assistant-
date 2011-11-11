@@ -80,13 +80,13 @@ public class DbUrlServiceName extends DbUrl {
         setAlias(getUserHostPortServiceName());
     }
 
-/*
     public DbUrlServiceName(String userName, String pwd, String url) {
         this(url);
         this.user = userName;
         this.pwd = pwd;
+
+        setAlias(getUserHostPortServiceName());
     }
-*/
 
     @Override
     public String getUser() {
