@@ -29,7 +29,7 @@ import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.ValueConvertor;
-import com.joestelmach.natty.Parser;
+import com.deepsky.view.query_pane.util.DateTimeParser;
 import oracle.sql.TIMESTAMP;
 import oracle.sql.TIMESTAMPTZ;
 import org.jetbrains.annotations.NotNull;
@@ -39,18 +39,20 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
-    SqlCodeAssistantSettings settings;
+    private SqlCodeAssistantSettings settings;
+    private DateTimeParser parser;
 
-    public TIMESTAMPTZ_Convertor(SqlCodeAssistantSettings settings) {
+    public TIMESTAMPTZ_Convertor(DateTimeParser parser, SqlCodeAssistantSettings settings) {
         this.settings = settings;
+        this.parser = parser;
     }
 
     public long size(TIMESTAMPTZ value) throws SQLException {
@@ -64,7 +66,7 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
             Timestamp timestamp = extractDatetime(value);
             String result = dateTimeFormat();
 
-            if(result != null){
+            if (result != null) {
                 result = new SimpleDateFormat(result).format(timestamp);
             }
             String tz = extractTZ(value);
@@ -88,7 +90,7 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
         return result;
     }
 
-    static Parser _parser = new Parser(TimeZone.getTimeZone("GMT"));
+    //static Parser _parser = new Parser(TimeZone.getTimeZone("GMT"));
 
     public TIMESTAMPTZ stringToValue(String stringPresentation) throws ConversionException {
         // timestamp '2003-02-17 09:00:00 -8:00'
@@ -96,12 +98,11 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
         // timestamp '2003-02-17 09:00:00 +1'
         if (stringPresentation != null && stringPresentation.length() > 0) {
             try {
-                List<Calendar> dates = _parser.parse(stringPresentation).get(0).getCalendars();
-                if(dates.size() == 0){
+                Calendar c = parser.parse(stringPresentation);
+                if (c == null) {
                     return null;
                 }
 
-                Calendar c = dates.get(0);
                 String rest = c.getTimeZone().getID();
                 byte[] tzRaw = parseTimeZone(rest);
 
@@ -167,14 +168,14 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
             String restLow = tz.toLowerCase();
             // Do some adaptation for GMT time zone like: GMT+01:00
             Matcher gmt = GMT_TZ.matcher(restLow);
-            if(gmt.find()){
+            if (gmt.find()) {
                 String g1 = gmt.group(1);
                 String g2 = gmt.group(2);
                 String g3 = gmt.group(3);
                 restLow = "gmt" + g1 + Integer.parseInt(g2);
             }
             for (int idx = 0; idx < keyValuePairs.length; idx += 2) {
-                if(restLow.equalsIgnoreCase(keyValuePairs[idx].key())){
+                if (restLow.equalsIgnoreCase(keyValuePairs[idx].key())) {
                     tzShort = keyValuePairs[idx + 1].value();
                     break;
                 }
@@ -199,7 +200,7 @@ public class TIMESTAMPTZ_Convertor implements ValueConvertor<TIMESTAMPTZ> {
                         // ORA-01875: time zone minute must be between -59 and 59
 
                         // 08.60 < x < 34.60
-                        int result = (hours * 60 + (hours<0?-minutes:minutes));
+                        int result = (hours * 60 + (hours < 0 ? -minutes : minutes));
                         // round up result
                         if (result < 0) {
                             result %= 12 * 60 + 60;

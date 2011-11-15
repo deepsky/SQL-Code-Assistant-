@@ -41,7 +41,6 @@ public class TimestampRenderer extends DefaultTableCellRenderer.UIResource {
         this.convertor = convertor;
         this.font = font;
         setHorizontalAlignment(JLabel.LEFT);
-//        setHorizontalAlignment(JLabel.RIGHT);
     }
 
     public void setValue(Object _value) {

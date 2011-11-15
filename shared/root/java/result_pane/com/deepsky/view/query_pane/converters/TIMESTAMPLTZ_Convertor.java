@@ -29,6 +29,7 @@ import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.ValueConvertor;
+import com.deepsky.view.query_pane.util.DateTimeParser;
 import oracle.sql.TIMESTAMP;
 import oracle.sql.TIMESTAMPLTZ;
 import org.jetbrains.annotations.NotNull;
@@ -37,15 +38,18 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.List;
 
-public class TIMESTAMPLTZ_Convertor  implements ValueConvertor<TIMESTAMPLTZ> {
-    SqlCodeAssistantSettings settings;
+public class TIMESTAMPLTZ_Convertor implements ValueConvertor<TIMESTAMPLTZ> {
 
-    public TIMESTAMPLTZ_Convertor(SqlCodeAssistantSettings settings){
+    private SqlCodeAssistantSettings settings;
+    private DateTimeParser parser;
+
+    public TIMESTAMPLTZ_Convertor(DateTimeParser parser, SqlCodeAssistantSettings settings) {
         this.settings = settings;
+        this.parser = parser;
     }
 
     public long size(TIMESTAMPLTZ value) throws SQLException {
@@ -53,7 +57,7 @@ public class TIMESTAMPLTZ_Convertor  implements ValueConvertor<TIMESTAMPLTZ> {
     }
 
     public String valueToString(TIMESTAMPLTZ value) throws SQLException {
-        if(value == null){
+        if (value == null) {
             return "";
         } else {
             Timestamp timestamp = convertOracleTS(value);
@@ -65,18 +69,21 @@ public class TIMESTAMPLTZ_Convertor  implements ValueConvertor<TIMESTAMPLTZ> {
 //            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
 //            java.sql.Timestamp sqlDate = new java.sql.Timestamp(date.getTime());
 //            value = new TIMESTAMP(sqlDate);
-        if(stringPresentation != null && stringPresentation.length() > 0){
+        if (stringPresentation != null && stringPresentation.length() > 0) {
             try {
-                Date date = new SimpleDateFormat(settings.getDateFormat() + " " + settings.getTimeFormat()).parse(stringPresentation);
-                java.sql.Timestamp sqlDate = new java.sql.Timestamp(date.getTime());
+                Calendar c = parser.parse(stringPresentation);
+                if (c == null) {
+                    return null;
+                }
 
+                java.sql.Timestamp sqlDate = new java.sql.Timestamp(c.getTimeInMillis());
                 TIMESTAMP temp = new TIMESTAMP(sqlDate);
                 byte[] tsBytes = temp.getBytes();
 //                byte[] tstzBytes = new byte[11];
 //                System.arraycopy(tsBytes, 0, tstzBytes, 0, tsBytes.length); //11);
                 return new TIMESTAMPLTZ(tsBytes);
-            } catch (ParseException e) {
-                throw new ConversionException();
+//            } catch (ParseException e) {
+//                throw new ConversionException();
             } catch (Throwable e) {
                 throw new ConversionException();
             }
@@ -94,7 +101,8 @@ public class TIMESTAMPLTZ_Convertor  implements ValueConvertor<TIMESTAMPLTZ> {
     }
 
     private static Timestamp convertOracleTS(TIMESTAMPLTZ value) throws SQLException {
-        return value.timestampValue();
+        return new TIMESTAMP(value.getBytes()).timestampValue();
+//        return value.timestampValue();
     }
 
 }

@@ -27,6 +27,8 @@ package com.deepsky.view.query_pane.grid.editors;
 
 import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.view.query_pane.DataAccessor;
+import com.deepsky.view.query_pane.util.DateTimeParser;
+import com.intellij.openapi.project.Project;
 import com.joestelmach.natty.Parser;
 
 import javax.swing.*;
@@ -38,13 +40,14 @@ import java.util.TimeZone;
 
 public class DateCellEditor  extends AbstractCellEditor1 {
 
-    static private Parser _parser = new Parser(TimeZone.getTimeZone("GMT"));
-    SqlCodeAssistantSettings settings;
-    Object value;
+    private SqlCodeAssistantSettings settings;
+    private Object value;
+    private Project project;
 
-    public DateCellEditor(SqlCodeAssistantSettings settings) {
+    public DateCellEditor(Project project, SqlCodeAssistantSettings settings) {
         super(settings.getGridFont(), false);
         this.settings = settings;
+        this.project = project;
 
         setHorizontalAlignment(JLabel.RIGHT);
     }
@@ -63,11 +66,11 @@ public class DateCellEditor  extends AbstractCellEditor1 {
         }
 
         try {
-            java.util.List<Calendar> dates = _parser.parse(s).get(0).getCalendars();
-            if (dates.size() == 0) {
+            Calendar calendar = DateTimeParser.getInstance(project).parse(s);
+            if (calendar == null) {
                 return super.stopCellEditing();
             }
-            value = new Date(dates.get(0).getTimeInMillis());
+            value = new Date(calendar.getTimeInMillis());
         } catch (Throwable e) {
             setInputErrored();
             setToolTip("Entered timestamp value is not valid");

@@ -192,6 +192,9 @@
 
         <projectService serviceInterface="com.deepsky.lang.integration.CodeChangeEventAggregator"
                         serviceImplementation="com.deepsky.lang.integration.CodeChangeEventAggregator"/>
+
+        <projectService serviceInterface="com.deepsky.view.query_pane.util.DateTimeParser"
+                        serviceImplementation="com.deepsky.view.query_pane.util.DateTimeParser"/>
     </extensions>
 
     <project-components>

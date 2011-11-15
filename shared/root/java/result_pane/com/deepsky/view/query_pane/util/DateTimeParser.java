@@ -23,47 +23,39 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.view.query_pane.grid.renders;
+package com.deepsky.view.query_pane.util;
 
-import com.deepsky.view.query_pane.grid.DateTimeFormatProvider;
-import oracle.sql.TIMESTAMP;
-import oracle.sql.TIMESTAMPLTZ;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import com.joestelmach.natty.DateGroup;
+import com.joestelmach.natty.Parser;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
 
-public abstract class TimestampLTZRenderer extends DefaultTableCellRenderer.UIResource implements DateTimeFormatProvider {
-    DateFormat formatter;
+public class DateTimeParser {
 
-    public TimestampLTZRenderer() {
-        super();
-        setHorizontalAlignment(JLabel.RIGHT);
+    private Parser _parser = new Parser(TimeZone.getTimeZone("GMT"));
+
+    public DateTimeParser(){
     }
 
-    public void setValue(Object _value) {
-        Timestamp value = null;
-        try {
-            if (_value != null) {
-                byte[] bytes = ((TIMESTAMPLTZ) _value).getBytes();
-                value = TIMESTAMP.toTimestamp(bytes);
-            } else {
-                value = null;
-            }
-        } catch (SQLException e) {
-            // todo - handle
-        }
-        if (formatter == null) {
-            String pattern = getFormat();
-            if (pattern != null) {
-                formatter = new SimpleDateFormat(pattern);
-            } else {
-                formatter = DateFormat.getDateInstance();
+    public static DateTimeParser getInstance(Project project) {
+      return ServiceManager.getService(project, DateTimeParser.class);
+    }
+
+
+    public Calendar parse(String s){
+
+        List<DateGroup> groups = _parser.parse(s);
+        if(groups.size() > 0){
+            java.util.List<Calendar> dates = groups.get(0).getCalendars();
+            if (dates.size() > 0) {
+                return dates.get(0);
             }
         }
-        setText((value == null) ? "" : formatter.format(value));
+
+        return null;
     }
 }

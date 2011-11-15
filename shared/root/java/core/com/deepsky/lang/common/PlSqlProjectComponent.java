@@ -47,6 +47,7 @@ import com.deepsky.view.query_pane.QueryResultWindow;
 import com.deepsky.view.query_pane.converters.TIMESTAMPLTZ_Convertor;
 import com.deepsky.view.query_pane.converters.TIMESTAMPTZ_Convertor;
 import com.deepsky.view.query_pane.converters.TIMESTAMP_Convertor;
+import com.deepsky.view.query_pane.util.DateTimeParser;
 import com.deepsky.view.utils.ProgressIndicatorHelper;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.application.ApplicationManager;
@@ -92,9 +93,11 @@ public class PlSqlProjectComponent implements ProjectComponent {
         final SqlCodeAssistantSettings settings = SqlCodeAssistantSettings.getInstance(project);
         PluginKeys.PLUGIN_SETTINGS.putData(settings, project);
 
-        PluginKeys.TS_CONVERTOR.putData(new TIMESTAMP_Convertor(settings), project);
-        PluginKeys.TSTZ_CONVERTOR.putData(new TIMESTAMPTZ_Convertor(settings), project);
-        PluginKeys.TSLTZ_CONVERTOR.putData(new TIMESTAMPLTZ_Convertor(settings), project);
+        DateTimeParser parser = DateTimeParser.getInstance(project);
+
+        PluginKeys.TS_CONVERTOR.putData(new TIMESTAMP_Convertor(parser, settings), project);
+        PluginKeys.TSTZ_CONVERTOR.putData(new TIMESTAMPTZ_Convertor(parser, settings), project);
+        PluginKeys.TSLTZ_CONVERTOR.putData(new TIMESTAMPLTZ_Convertor(parser, settings), project);
 
         connectionListener = new StateListenerImpl();
         cacheListener = new CacheManagerListenerImpl();

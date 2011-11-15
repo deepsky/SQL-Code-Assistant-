@@ -156,8 +156,8 @@ public class EditableGrid extends AbstractDataGrid {
         setDefaultEditor(String.class, textEditor);
         setDefaultEditor(RAWType.class, rawEditor);
         setDefaultEditor(LONGRAWType.class, rawEditor);
-        setDefaultEditor(java.sql.Timestamp.class, new TimestampCellEditor(settings));
-        setDefaultEditor(java.sql.Date.class, new DateCellEditor(settings));
+        setDefaultEditor(java.sql.Timestamp.class, new TimestampCellEditor(project, settings));
+        setDefaultEditor(java.sql.Date.class, new DateCellEditor(project, settings));
         setDefaultEditor(TIMESTAMP.class, new OracleTimestampCellEditor(font, PluginKeys.TS_CONVERTOR.getData(project)));
         setDefaultEditor(TIMESTAMPLTZ.class, new OracleTimestampCellEditor(font, PluginKeys.TSLTZ_CONVERTOR.getData(project)));
         setDefaultEditor(TIMESTAMPTZ.class, new OracleTimestampCellEditor(font, PluginKeys.TSTZ_CONVERTOR.getData(project)));
