@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
+// todo - subject to remove
 public interface ValueConvertor4 {
     long size() throws SQLException;
     String convertToString() throws SQLException;

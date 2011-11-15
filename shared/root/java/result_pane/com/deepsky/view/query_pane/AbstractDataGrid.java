@@ -111,9 +111,6 @@ public abstract class AbstractDataGrid extends JTable {
                 return null;
             }
             columnIndex -= 1;
-//            return recordCache.getColumnSpecification(columnIndex + 2);
-        } else {
-//            return recordCache.getColumnSpecification(columnIndex + 1);
         }
         return recordCache.getColumnSpecification(columnIndex + 1);
     }
@@ -262,19 +259,6 @@ public abstract class AbstractDataGrid extends JTable {
         } catch (DBException ignored) {
         }
     }
-/*
-
-    public abstract int getRowCount();
-    public abstract int getColumnCount();
-    public abstract String getColumnName(int columnIndex);
-    public abstract Class getColumnClass(int columnIndex);
-    public abstract boolean isCellEditable(int row, int column);
-
-    public abstract Object getValueAt(int rowIndex, int columnIndex);
-    public abstract void setValueAt(Object aValue, int row, int column);
-*/
-
-
 
 //    public abstract boolean isEditable();
 

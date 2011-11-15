@@ -170,12 +170,6 @@ todo - implement me
             }
         };
         mm.addTableModelListener(this);
-/*
-        if (_grid != null) {
-            _grid.getModel().removeTableModelListener(this);
-//            _table.getInputMap().remove(copy);
-        }
-*/
 
         if (rsManager.getModel() instanceof UpdatableRecordCache) {
             _grid = new EditableGrid(project, mm, (UpdatableRecordCache) rsManager.getModel());
@@ -215,6 +209,8 @@ todo - implement me
                 popupMenu.show(e.getComponent(), e.getX(), e.getY());
             }
         });
+
+        // todo -- add code to toggle selection model
         //_table.getSeSelectionModel().
         //Cell selection is ok in this mode.
 //         cellCheck.setEnabled(true);
