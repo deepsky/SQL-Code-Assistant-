@@ -71,6 +71,7 @@
         <pathelement location="${shared.lib.dir}/log4j-1.2.9.jar"/>
         <pathelement location="${shared.lib.dir}/junit-3.8.1.jar"/>
         <pathelement location="${shared.lib.dir}/antlr-2.7.6.jar"/>
+        <pathelement location="${shared.lib.dir}/natty-0.4-SNAPSHOT.jar"/>
 
         <pathelement location="${shared.lib.dir}/ojdbc14.jar"/>
     </path>
@@ -408,6 +409,8 @@
                 <include name="const_jjar.zip"/>
                 <include name="commons-logging-1.1.jar"/>
                 <include name="ojdbc14.jar"/>
+                <include name="natty-0.4-SNAPSHOT.jar"/>
+                <include name="antlr-runtime-3.2.jar"/>
             </fileset>
         </copy>
 
@@ -416,6 +419,7 @@
                 <include name="castor_license.txt"/>
                 <include name="oracle_jdbc_driver_license.txt"/>
                 <include name="sql_code_assistant_plugin_license.txt"/>
+                <include name="natty_license.txt"/>
             </fileset>
         </copy>
 
