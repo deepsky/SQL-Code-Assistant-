@@ -192,6 +192,9 @@
 
         <projectService serviceInterface="com.deepsky.lang.integration.CodeChangeEventAggregator"
                         serviceImplementation="com.deepsky.lang.integration.CodeChangeEventAggregator"/>
+
+        <projectService serviceInterface="com.deepsky.view.query_pane.util.DateTimeParser"
+                        serviceImplementation="com.deepsky.view.query_pane.util.DateTimeParser"/>
     </extensions>
 
     <project-components>
@@ -205,6 +208,7 @@
         -->
 
         <component>
+            <interface-class>com.deepsky.view.schema_pane.DbBrowserToolWindow</interface-class>
             <implementation-class>com.deepsky.view.schema_pane.tree.DbBrowserToolWindowComponent</implementation-class>
         </component>
     </project-components>
