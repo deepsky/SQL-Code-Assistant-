@@ -407,9 +407,6 @@ public class QueryResultWindow {
         if (wm == null) {
             // todo -- toolwindow not created! handle error
             return;
-//            wm = toolWindowManager.registerToolWindow(QUERY_RESULT_PANE, true, ToolWindowAnchor.BOTTOM);
-//            wm.setIcon(Icons.QUERY_RESULT_PANE);
-//            wm.setToHideOnEmptyContent(true);
         }
 
         if (contentName == null) {

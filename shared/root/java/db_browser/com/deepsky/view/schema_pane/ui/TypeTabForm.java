@@ -33,7 +33,7 @@ import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
-public class TypeTabForm extends TabFormBase {
+public class TypeTabForm extends TabFormBaseWrapper {
     private JPanel rootPanel;
     private JTree centralTree;
     private JTabbedPane tabbedPane1;

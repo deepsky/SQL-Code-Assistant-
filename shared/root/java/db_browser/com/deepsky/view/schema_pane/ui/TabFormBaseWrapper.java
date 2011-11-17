@@ -44,7 +44,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public abstract class TabFormBase {
+public abstract class TabFormBaseWrapper {
     final static public String TEST501_COMPONENT = "TEST501_COMPONENT";
 
     protected Set<Test501Listener> listeners = new HashSet<Test501Listener>();
@@ -128,7 +128,7 @@ public abstract class TabFormBase {
                 if (evt.getPropertyName().equals(JSplitPane.DIVIDER_LOCATION_PROPERTY) && !locked) {
                     int location = (Integer) evt.getNewValue();
                     for (Test501Listener l : listeners) {
-                        l.dividerLoactionChanged(getRootPanel(), location);
+                        l.dividerLocationChanged(getRootPanel(), location);
                     }
                 }
             }

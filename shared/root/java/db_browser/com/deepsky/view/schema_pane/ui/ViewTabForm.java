@@ -32,7 +32,7 @@ import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
-public class ViewTabForm extends TabFormBase {
+public class ViewTabForm extends TabFormBaseWrapper {
     private JPanel rootPanel;
     private JTree centralTree;
     private JTabbedPane tabbedPane1;

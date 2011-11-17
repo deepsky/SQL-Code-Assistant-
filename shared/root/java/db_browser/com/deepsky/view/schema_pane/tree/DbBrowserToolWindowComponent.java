@@ -27,8 +27,12 @@ package com.deepsky.view.schema_pane.tree;
 
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.plsql.indexMan.IndexBulkChangeListener;
+import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.view.Icons;
+import com.deepsky.view.schema_pane.DbBrowserToolWindow;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -40,10 +44,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.*;
 
-public class DbBrowserToolWindowComponent implements ProjectComponent {
+public class DbBrowserToolWindowComponent implements ProjectComponent, DbBrowserToolWindow {
 
-    static private final String COMPONENT_NAME = "DbBrowserToolWindowComponent";
-    static public final String DB_BROWSER_PANE = "DatabaseBrowser";
+    private LoggerProxy log = LoggerProxy.getInstance("DbBrowserToolWindowComponent");
 
     private Project project;
     private int splitDividerLocation;
@@ -54,9 +57,10 @@ public class DbBrowserToolWindowComponent implements ProjectComponent {
     private long timeout = 5 * 1000;
     private int requestToUpdate = 0;
 
-    final Map<DbUrl, String[]> url2types = new HashMap<DbUrl, String[]>();
+    private final Map<DbUrl, String[]> url2types = new HashMap<DbUrl, String[]>();
 
-    TabbedPaneManager tabbedPaneManager;
+    private TabbedPaneManager tabbedPaneManager;
+
     public DbBrowserToolWindowComponent(Project project){
         this.project = project;
     }
@@ -161,6 +165,31 @@ public class DbBrowserToolWindowComponent implements ProjectComponent {
     @NotNull
     public String getComponentName() {
         return COMPONENT_NAME;
+    }
+
+    public void selectElementInBrowser(PlSqlElement elem) {
+        final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindow window = toolWindowManager.getToolWindow(DB_BROWSER_PANE);
+        final DbSchemaPane1001 pane = (DbSchemaPane1001) window.getContentManager().getContent(0).getComponent();
+        if(!window.isVisible()){
+            window.activate(new Runnable() {
+                public void run() {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e1) {
+                        log.error(e1.getMessage());
+                    }
+                }
+            }, true, true);
+        }
+
+        // Select the database object in the Browser Window
+        String selected = pane.getConnectionComboBox().getSelectedItem().toString();
+        DbUrl dbUrl = DbUrl.parse(selected);
+        TabbedPaneWrapper com = pane.selectTabbedPane(dbUrl);
+        if(com != null){
+            com.selectTreePath(elem.getCtxPath1().getPath());
+        }
     }
 
     private class DbObjectTreeManager implements Runnable {

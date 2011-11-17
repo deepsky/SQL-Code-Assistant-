@@ -25,6 +25,10 @@
 
 package com.deepsky.navigation;
 
+import com.deepsky.lang.common.PlSqlFile;
+import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.deepsky.lang.plsql.sqlIndex.IndexManager;
+import com.deepsky.view.schema_pane.DbBrowserToolWindow;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.actions.GotoActionBase;
 import com.intellij.ide.util.gotoByName.ChooseByNamePopup;
@@ -54,12 +58,10 @@ public class GotoDbObjectAction extends GotoActionBase implements DumbAware {
 
             public void elementChosen(Object element) {
                 if (element == null) return;
-                PsiElement psiElement = null;
-                if(element instanceof NavigationItemEx){
-                    psiElement = ((NavigationItemEx)element).loadPhisicalElement();
-                } else {
-                    psiElement = (PsiElement) element;
-                }
+                final PsiElement psiElement =
+                        (element instanceof NavigationItemEx)?
+                                ((NavigationItemEx)element).loadPhisicalElement():
+                                (PsiElement) element;
 
                 if(psiElement == null){
                     // todo -- FIX ME the case when the requested object is in excluded folder (?)
@@ -69,6 +71,15 @@ public class GotoDbObjectAction extends GotoActionBase implements DumbAware {
                 final int offset = psiElement.getTextOffset();
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     public void run() {
+                        // If object being searched for is hosted in the database,
+                        // open Database Browser and point it out
+                        if(file instanceof PlSqlFile && psiElement instanceof PlSqlElement){
+                            if(!((PlSqlFile)file).getDbUrl().equals(IndexManager.FS_URL)){
+                                DbBrowserToolWindow dbBrowser = project.getComponent(DbBrowserToolWindow.class);
+                                dbBrowser.selectElementInBrowser((PlSqlElement) psiElement);
+                                return;
+                            }
+                        }
                         final OpenFileDescriptor descriptor = new OpenFileDescriptor(project, file.getVirtualFile(), offset);
                         if (descriptor.canNavigate()) {
                             descriptor.navigate(true);

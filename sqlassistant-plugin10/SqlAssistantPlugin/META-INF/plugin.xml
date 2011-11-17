@@ -208,6 +208,7 @@
         -->
 
         <component>
+            <interface-class>com.deepsky.view.schema_pane.DbBrowserToolWindow</interface-class>
             <implementation-class>com.deepsky.view.schema_pane.tree.DbBrowserToolWindowComponent</implementation-class>
         </component>
     </project-components>

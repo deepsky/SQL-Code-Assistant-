@@ -29,10 +29,12 @@ import com.deepsky.lang.plsql.objTree.DbElementRoot;
 import com.deepsky.lang.plsql.objTree.DbTreeElement;
 import com.deepsky.lang.plsql.objTree.DbTypeElementAction;
 import com.deepsky.lang.plsql.objTree.guiSpec.MutableTreeNodeImpl;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -172,4 +174,24 @@ public abstract class DbElementRootAbstract extends MutableTreeNodeImpl implemen
             e.sort(DbTreeElement.SORT_NATIVE_ORDER);
         }
     }
+
+    public TreePath getTreePathFor(String ctxPath){
+        int objectType = ContextPathUtil.extractTopObjectType(ctxPath);
+        String rootName = ContextPathUtil.ctxType2dbType(objectType);
+
+        if(getName().equalsIgnoreCase(rootName)){
+            String objectName = ContextPathUtil.extractTopObjectName(ctxPath);
+            // todo -- make search in deep
+            for(DbTreeElement e: getChildren()){
+                if(e.getName().equalsIgnoreCase(objectName)){
+                    String elemCtxPath = e.getCtxPath();
+                    if(ctxPath.startsWith(elemCtxPath)){
+                        return new TreePath(new Object[]{this, e});
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 }

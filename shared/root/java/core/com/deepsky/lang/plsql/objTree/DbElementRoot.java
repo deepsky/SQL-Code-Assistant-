@@ -34,6 +34,7 @@ import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,4 +54,6 @@ public interface DbElementRoot extends MutableTreeNode {
     void add(DbTreeElement e);
     
     void completeBuild();
+
+    TreePath getTreePathFor(String ctxPath);
 }

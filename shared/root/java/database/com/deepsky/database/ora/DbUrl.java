@@ -99,7 +99,19 @@ public abstract class DbUrl {
 
         Matcher m = DB_URL.matcher(dbUrl);
         if(!m.find()){
-            throw new ConfigurationException("Database URL is malformed");
+            // TODO -- temp solution
+            if(!dbUrl.startsWith("jdbc:oracle:thin:")){
+                // try to prefix url with driver type and parse one more time
+                m = DB_URL.matcher("jdbc:oracle:thin:" + dbUrl);
+                if(m.find()){
+                    // we are lucky!
+                    dbUrl = "jdbc:oracle:thin:" + dbUrl;
+                } else {
+                    throw new ConfigurationException("Database URL is malformed");
+                }
+            } else {
+                throw new ConfigurationException("Database URL is malformed");
+            }
         }
         String host = m.group(1);
         String determinator = m.group(2);

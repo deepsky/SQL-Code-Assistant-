@@ -27,10 +27,10 @@ package com.deepsky.view.schema_pane.tree;
 
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PluginKeys;
-import com.deepsky.lang.plsql.indexMan.IndexBulkChangeListener;
 import com.deepsky.lang.plsql.objTree.*;
 import com.deepsky.lang.plsql.objTree.impl.PackageTreeElement;
 import com.deepsky.lang.plsql.objTree.ui.DbObjectTreeCellRenderer;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
 import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.settings.SqlCodeAssistantSettings;
@@ -38,7 +38,6 @@ import com.deepsky.view.Icons;
 import com.deepsky.view.schema_pane.ui.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -58,8 +57,6 @@ public class TabbedPaneManager implements Test501Listener {
         this.project = project;
         this.indexManager = PluginKeys.SQL_INDEX_MAN.getData(project);
 
-//        MessageBus bus1 = project.getMessageBus();
-//        SqlCodeAssistantSettings settings = PluginKeys.PLUGIN_SETTINGS.getData(project);
         final SqlCodeAssistantSettings settings = SqlCodeAssistantSettings.getInstance(project);
         splitDividerLocation = settings.getDbBrowserSplitDividerLocation();
 
@@ -67,70 +64,6 @@ public class TabbedPaneManager implements Test501Listener {
             // initial size
             splitDividerLocation = 40;
         }
-
-/*
-        IndexBulkChangeListener ll = new IndexBulkChangeListener() {
-            public void handleUpdate(final DbUrl source, final String[] types) {
-            }
-        };
-*/
-
-        // listen for index updates
-/*
-        IndexBulkChangeListener ll2 = new IndexBulkChangeListener() {
-            public void handleUpdate(final DbUrl source, final String[] types) {
-                TabbedPaneWrapper wrapper = url2Pane.get(source.getUserHostPortServiceName());
-                if (wrapper != null) {
-                    // if the panel is currently visible invoke refresh of it
-                    // otherwise save changes till having it visible
-//                    if(wrapper.pane.isVisible()) {
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        public void run() {
-                            TabbedPaneWrapper wrapper = url2Pane.get(source.getUserHostPortServiceName());
-
-                            DbElementRoot[] dbTypes = createDbSchemaTree(types, source);
-                            int selectedTab = -1;
-                            TreePath selectedPath = null;
-
-                            for (DbElementRoot elem : dbTypes) {
-                                for (int i = 0; i < wrapper.tabbed.getTabCount(); i++) {
-                                    String title = wrapper.tabbed.getTitleAt(i);
-                                    JComponent c = (JComponent) wrapper.tabbed.getComponentAt(i);
-                                    if (selectedTab == -1 && c.isVisible()) {
-// todo -- selection of the item in the tree
-//                                            JTree tree = test501.getMainTree();
-//                                            selectedPath = tree.getSelectionModel().getSelectionPath();
-                                        selectedTab = i;
-                                    }
-                                    if (elem.getName().equalsIgnoreCase(title)) {
-                                        // replace old tab with new one
-                                        TabFormBase test501 = (TabFormBase) c.getClientProperty(TabFormBase.TEST501_COMPONENT);
-                                        test501.removeListener(TabbedPaneManager.this);
-                                        wrapper.tabbed.remove(c);
-
-                                        JComponent panel = createTab(elem, splitDividerLocation);
-                                        wrapper.tabbed.insertTab(elem.getName(), null, panel, null, i);
-                                        break;
-                                    }
-                                }
-                            }
-
-                            wrapper.tabbed.setSelectedIndex(selectedTab);
-                            wrapper.tabbed.validate();
-                        }
-                    });
-//                    } else {
-//                        // just save changes
-//                        wrapper.addChanges(types);
-//                        updatePended = true;
-//                    }
-                }
-                System.out.println("Types updated: " + Arrays.toString(types) + " Source: " + source.getUserHostPortServiceName());
-            }
-        };
-*/
-
-//        bus1.connect().subscribe(IndexBulkChangeListener.TOPIC, ll);
     }
 
 
@@ -141,14 +74,17 @@ public class TabbedPaneManager implements Test501Listener {
             public void run() {
                 TabbedPaneWrapper wrapper = url2Pane.get(source.getUserHostPortServiceName());
                 if (wrapper != null) {
+                    JTabbedPane tabbedPane = wrapper.getTabbedPane();
                     DbElementRoot[] dbTypes = createDbSchemaTree(types, source);
-                    int selectedTab = -1;
+                    int selectedTab = wrapper.getSelectedTabIndex(); //-1;
                     TreePath selectedPath = null;
 
                     for (DbElementRoot elem : dbTypes) {
-                        for (int i = 0; i < wrapper.tabbed.getTabCount(); i++) {
-                            String title = wrapper.tabbed.getTitleAt(i);
-                            JComponent c = (JComponent) wrapper.tabbed.getComponentAt(i);
+                        wrapper.replaceTab(elem);
+/*
+                        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+                            String title = tabbedPane.getTitleAt(i);
+                            JComponent c = (JComponent) tabbedPane.getComponentAt(i);
                             if (selectedTab == -1 && c.isVisible()) {
 // todo -- selection of the item in the tree
 //                                            JTree tree = test501.getMainTree();
@@ -157,33 +93,45 @@ public class TabbedPaneManager implements Test501Listener {
                             }
                             if (elem.getName().equalsIgnoreCase(title)) {
                                 // replace old tab with new one
-                                TabFormBase test501 = (TabFormBase) c.getClientProperty(TabFormBase.TEST501_COMPONENT);
+                                TabFormBaseWrapper test501 = (TabFormBaseWrapper) c.getClientProperty(TabFormBaseWrapper.TEST501_COMPONENT);
                                 test501.removeListener(TabbedPaneManager.this);
-                                wrapper.tabbed.remove(c);
+                                tabbedPane.remove(c);
 
                                 JComponent panel = createTab(elem, splitDividerLocation);
-                                wrapper.tabbed.insertTab(elem.getName(), null, panel, null, i);
+                                tabbedPane.insertTab(elem.getName(), null, panel, null, i);
                                 break;
                             }
                         }
+*/
                     }
 
-                    wrapper.tabbed.setSelectedIndex(selectedTab);
-                    wrapper.tabbed.validate();
+                    wrapper.getTabbedPane().setSelectedIndex(selectedTab);
+                    wrapper.getTabbedPane().validate();
                 }
                 System.out.println("Types updated: " + Arrays.toString(types) + " Source: " + source.getUserHostPortServiceName());
             }
         });
     }
 
-    public JTabbedPane selectSheet(DbUrl dbUrl) {
+/*
+    public JTabbedPane selectSheet(DbUrl dbUrl, boolean doCreate) {
+        if(doCreate){
+            return selectSheet(dbUrl);
+        } else {
+            TabbedPaneWrapper wrapper = url2Pane.get(dbUrl.getUserHostPortServiceName());
+            return wrapper != null? wrapper.tabbed: null;
+        }
+    }
+*/
+
+    public TabbedPaneWrapper selectSheet(DbUrl dbUrl) {
 
         TabbedPaneWrapper wrapper = url2Pane.get(dbUrl.getUserHostPortServiceName());
         if (wrapper == null) {
             // create Tab and populate it with objects
             JTabbedPane tabbed = new JTabbedPane();
             tabbed.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-            wrapper = new TabbedPaneWrapper(tabbed);
+            wrapper = new TabbedPaneWrapperImpl(tabbed);
 
             // build database object hierarchy
             DbElementRoot[] dbTypes = createDbSchemaTree(null, dbUrl);
@@ -197,7 +145,7 @@ public class TabbedPaneManager implements Test501Listener {
             url2Pane.put(dbUrl.getUserHostPortServiceName(), wrapper);
         }
 
-        return wrapper.tabbed;
+        return wrapper; //wrapper.tabbed;
     }
 
 
@@ -205,52 +153,126 @@ public class TabbedPaneManager implements Test501Listener {
         // dispose listeners
         TabbedPaneWrapper wrapper = url2Pane.remove(dbUrl.getUserHostPortServiceName());
         if (wrapper != null) {
-            for (int i = 0; i < wrapper.tabbed.getTabCount(); i++) {
-                JComponent c = (JComponent) wrapper.tabbed.getComponentAt(i);
-                TabFormBase test501 = (TabFormBase) c.getClientProperty(TabFormBase.TEST501_COMPONENT);
+            wrapper.dispose();
+/*
+            for (int i = 0; i < wrapper.getTabbedPane().getTabCount(); i++) {
+                JComponent c = (JComponent) wrapper.getTabbedPane().getComponentAt(i);
+                TabFormBaseWrapper test501 = (TabFormBaseWrapper) c.getClientProperty(TabFormBaseWrapper.TEST501_COMPONENT);
                 test501.removeListener(this);
             }
+*/
         }
     }
 
 
-    private class TabbedPaneWrapper {
-        public JTabbedPane tabbed;
-        public boolean isUpdatePended = false;
-        Set<String> changes = new HashSet<String>();
+    private class TabbedPaneWrapperImpl implements TabbedPaneWrapper {
+        private JTabbedPane tabbed;
 
-        public TabbedPaneWrapper(JTabbedPane pane) {
+        public TabbedPaneWrapperImpl(JTabbedPane pane) {
             this.tabbed = pane;
         }
 
-        public synchronized String[] takeChanges() {
-            String[] out = changes.toArray(new String[changes.size()]);
-            changes.clear();
-            return out;
+        public void dispose(){
+            for (int i = 0; i < tabbed.getTabCount(); i++) {
+                JComponent c = (JComponent) tabbed.getComponentAt(i);
+                TabFormBaseWrapper test501 = (TabFormBaseWrapper) c.getClientProperty(TabFormBaseWrapper.TEST501_COMPONENT);
+                test501.removeListener(TabbedPaneManager.this);
+            }
         }
 
-        public synchronized void addChanges(String[] types) {
-            changes.addAll(Arrays.asList(types));
+        public void updateDividerLocation(JComponent rootPane, int newLocation){
+            int selectedIndex = tabbed.indexOfComponent(rootPane);
+            for (int i = 0; i < tabbed.getTabCount(); i++) {
+                if (i != selectedIndex) {
+                    JComponent c = (JComponent) tabbed.getComponentAt(i);
+                    ((TabFormBaseWrapper) c.getClientProperty(TabFormBaseWrapper.TEST501_COMPONENT))
+                            .setDividerLocation(newLocation);
+                }
+            }
+        }
+
+        public void replaceTab(DbElementRoot elem){
+            for (int i = 0; i < tabbed.getTabCount(); i++) {
+                String title = tabbed.getTitleAt(i);
+                JComponent c = (JComponent) tabbed.getComponentAt(i);
+                if (elem.getName().equalsIgnoreCase(title)) {
+                    // replace old tab with new one
+                    TabFormBaseWrapper test501 = (TabFormBaseWrapper) c.getClientProperty(TabFormBaseWrapper.TEST501_COMPONENT);
+                    test501.removeListener(TabbedPaneManager.this);
+                    tabbed.remove(c);
+
+                    JComponent panel = createTab(elem, splitDividerLocation);
+                    tabbed.insertTab(elem.getName(), null, panel, null, i);
+                    break;
+                }
+            }
+        }
+
+        public JComponent selectTabByName(String tabName) {
+            for (int i = 0; i < tabbed.getTabCount(); i++) {
+                String title = tabbed.getTitleAt(i);
+                if (tabName.equalsIgnoreCase(title)) {
+                    tabbed.setSelectedIndex(i);
+                    return (JComponent) tabbed.getComponentAt(i);
+                }
+            }
+            return null;
+        }
+
+        public JComponent selectTreePath(String ctxPath) {
+            int objectType = ContextPathUtil.extractTopObjectType(ctxPath);
+            String tabName = ContextPathUtil.ctxType2dbType(objectType);
+
+            JComponent c = selectTabByName(tabName);
+            if(c != null){
+                TabFormBaseWrapper test501 = (TabFormBaseWrapper)
+                        c.getClientProperty(TabFormBaseWrapper.TEST501_COMPONENT);
+                JTree tree = test501.getCentralTree();
+                DbElementRoot typeRoot = (DbElementRoot)tree.getModel().getRoot();
+                TreePath path = typeRoot.getTreePathFor(ctxPath);
+                if(path != null){
+                    tree.setSelectionPath(path);
+                    tree.scrollPathToVisible(path);
+                }
+            }
+
+            return c;
+        }
+
+        public int getSelectedTabIndex(){
+            for (int i = 0; i < tabbed.getTabCount(); i++) {
+                JComponent c = (JComponent) tabbed.getComponentAt(i);
+                if (c.isVisible()) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public JTabbedPane getTabbedPane() {
+            return tabbed;
         }
     }
 
 
-    public void dividerLoactionChanged(JComponent source, int newLocation) {
+    public void dividerLocationChanged(JComponent source, int newLocation) {
 
         for (TabbedPaneWrapper wrapper : url2Pane.values()) {
-            JTabbedPane tabbed = wrapper.tabbed;
+            wrapper.updateDividerLocation(source, newLocation);
+/*
+            JTabbedPane tabbed = wrapper.getTabbedPane();
             int selectedIndex = tabbed.indexOfComponent(source);
             for (int i = 0; i < tabbed.getTabCount(); i++) {
                 if (i != selectedIndex) {
                     JComponent c = (JComponent) tabbed.getComponentAt(i);
 
-                    ((TabFormBase) c.getClientProperty(TabFormBase.TEST501_COMPONENT)).setDividerLocation(newLocation);
+                    ((TabFormBaseWrapper) c.getClientProperty(TabFormBaseWrapper.TEST501_COMPONENT)).setDividerLocation(newLocation);
                 }
             }
+*/
         }
 
         splitDividerLocation = newLocation;
-//        SqlCodeAssistantSettings settings = PluginKeys.PLUGIN_SETTINGS.getData(project);
         final SqlCodeAssistantSettings settings = SqlCodeAssistantSettings.getInstance(project);
         settings.setDbBrowserSplitDividerLocation(newLocation);
     }

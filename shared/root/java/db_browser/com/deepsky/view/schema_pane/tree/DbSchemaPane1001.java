@@ -39,6 +39,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class DbSchemaPane1001 extends JPanel {
 
@@ -46,7 +47,8 @@ public class DbSchemaPane1001 extends JPanel {
     JComboBox connectionComboBox;
     Project project;
     TabbedPaneManager tabbedPane;
-    JTabbedPane lastCenterComp = null;
+//    JTabbedPane lastCenterComp = null;
+    TabbedPaneWrapper lastCenterPane = null;
 
     JLabel statusLabel;
 
@@ -104,16 +106,24 @@ public class DbSchemaPane1001 extends JPanel {
 
 
     private void createTabbedPane(final DbUrl dbUrl) {
-        if (lastCenterComp != null) {
-            remove(lastCenterComp);
+        if (lastCenterPane != null) {
+            remove(lastCenterPane.getTabbedPane());
         }
-        lastCenterComp = tabbedPane.selectSheet(dbUrl);
-        add(lastCenterComp, BorderLayout.CENTER);
+        lastCenterPane = tabbedPane.selectSheet(dbUrl);
+        add(lastCenterPane.getTabbedPane(), BorderLayout.CENTER);
         validate();
 
-        lastCenterComp.repaint();
-   }
+        lastCenterPane.getTabbedPane().repaint();
+    }
 
+    public JComboBox getConnectionComboBox() {
+        return connectionComboBox;
+    }
+
+    public TabbedPaneWrapper selectTabbedPane(DbUrl dbUrl){
+        connectionComboBox.setSelectedItem(dbUrl.getUserHostPortServiceName());
+        return lastCenterPane;
+    }
 
     private JPanel createConnectSelector() {
         JPanel main = new JPanel(new BorderLayout());
@@ -122,9 +132,6 @@ public class DbSchemaPane1001 extends JPanel {
         JPanel connectionPane = new JPanel(new BorderLayout());
         Border border = new EtchedBorder();
         connectionPane.setBorder(new TitledBorder(border, " Connection Status "));
-
-//        JLabel label1 = new JLabel("Connection: ");
-//        connectionPane.add(label1, BorderLayout.WEST);
 
         connectionComboBox = new JComboBox();
 //        connectionComboBox.setMinimumSize(new Dimension(35, -1));
@@ -160,13 +167,13 @@ public class DbSchemaPane1001 extends JPanel {
     }
 
     private void connectionStatusChanged(String source, int state) {
-        switch(state){
+        switch (state) {
             case ConnectionElementListener.CONNECTED:
-                if(connector.getSelectedItem().equals(source))
+                if (connector.getSelectedItem().equals(source))
                     setConnectionStatus(true);
                 break;
             case ConnectionElementListener.DISCONNECTED:
-                if(connector.getSelectedItem().equals(source))
+                if (connector.getSelectedItem().equals(source))
                     setConnectionStatus(false);
                 break;
         }
@@ -224,10 +231,10 @@ public class DbSchemaPane1001 extends JPanel {
         }
     }
 
-    private void setConnectionStatus(final boolean connected){
+    private void setConnectionStatus(final boolean connected) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
-                if(connected)
+                if (connected)
                     statusLabel.setText(" ONLINE ");
                 else
                     statusLabel.setText(" OFFLINE");
@@ -273,7 +280,7 @@ public class DbSchemaPane1001 extends JPanel {
             if (selected != null && connector.isConnected(selected)) {
                 event.getPresentation().setEnabled(!inverse);
             } else {
-                if(selected != null && selected.equals(connector.getLocalFS())){
+                if (selected != null && selected.equals(connector.getLocalFS())) {
                     // selected LOCAL FS
                     event.getPresentation().setEnabled(false);
                 } else {

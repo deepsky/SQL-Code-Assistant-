@@ -97,11 +97,18 @@ public class ContextPathUtil {
     }
 
     public static String ctxType2dbType(int type) {
-
-        for (Map.Entry<String, Integer> e : dbType2ctx.entrySet()) {
-            if (e.getValue() == type) {
-                return e.getKey();
-            }
+        // todo - Dirty hack, should be fixed ASAP
+        switch (type) {
+            case ContextPath.PROCEDURE_BODY:
+                return DbObject.PROCEDURE;
+            case ContextPath.FUNCTION_BODY:
+                return DbObject.FUNCTION;
+            default:
+                for (Map.Entry<String, Integer> e : dbType2ctx.entrySet()) {
+                    if (e.getValue() == type) {
+                        return e.getKey();
+                    }
+                }
         }
         return null;
     }

@@ -37,7 +37,7 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.Enumeration;
 
-public class PackageTabForm extends TabFormBase {
+public class PackageTabForm extends TabFormBaseWrapper {
     private JPanel rootPanel;
     private JTree centralTree;
     private JTabbedPane tabbedPane1;

@@ -28,5 +28,5 @@ package com.deepsky.view.schema_pane.ui;
 import javax.swing.*;
 
 public interface Test501Listener {
-    void dividerLoactionChanged(JComponent sources, int newLocation);
+    void dividerLocationChanged(JComponent sources, int newLocation);
 }

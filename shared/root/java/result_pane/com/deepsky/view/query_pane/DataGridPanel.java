@@ -228,7 +228,6 @@ todo - implement me
         }
 
         return new JBScrollPane(_grid);
-//        return new JScrollPane(_grid);
     }
 
     public JTable getTable() {
