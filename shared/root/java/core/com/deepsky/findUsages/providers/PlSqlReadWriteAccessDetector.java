@@ -38,11 +38,11 @@ import com.intellij.psi.tree.TokenSet;
 
 public class PlSqlReadWriteAccessDetector extends ReadWriteAccessDetector {
 
-    PsiElement element;
+//    PsiElement element;
 
     @Override
     public boolean isReadWriteAccessible(PsiElement element) {
-        this.element = element;
+//        this.element = element;
         return element instanceof VariableDecl
                 || element instanceof Argument
                 || element instanceof RecordTypeItem;

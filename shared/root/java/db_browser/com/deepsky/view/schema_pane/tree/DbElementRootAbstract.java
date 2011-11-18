@@ -181,7 +181,7 @@ public abstract class DbElementRootAbstract extends MutableTreeNodeImpl implemen
 
         if(getName().equalsIgnoreCase(rootName)){
             String objectName = ContextPathUtil.extractTopObjectName(ctxPath);
-            // todo -- make search in deep
+            // todo -- do search in deep
             for(DbTreeElement e: getChildren()){
                 if(e.getName().equalsIgnoreCase(objectName)){
                     String elemCtxPath = e.getCtxPath();

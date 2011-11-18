@@ -38,22 +38,24 @@ public class DateTimeParser {
 
     private Parser _parser = new Parser(TimeZone.getTimeZone("GMT"));
 
-    public DateTimeParser(){
+    public DateTimeParser() {
     }
 
     public static DateTimeParser getInstance(Project project) {
-      return ServiceManager.getService(project, DateTimeParser.class);
+        return ServiceManager.getService(project, DateTimeParser.class);
     }
 
 
-    public Calendar parse(String s){
-
-        List<DateGroup> groups = _parser.parse(s);
-        if(groups.size() > 0){
-            java.util.List<Calendar> dates = groups.get(0).getCalendars();
-            if (dates.size() > 0) {
-                return dates.get(0);
+    public Calendar parse(String s) {
+        try {
+            List<DateGroup> groups = _parser.parse(s);
+            if (groups.size() > 0) {
+                java.util.List<Calendar> dates = groups.get(0).getCalendars();
+                if (dates.size() > 0) {
+                    return dates.get(0);
+                }
             }
+        } catch (Throwable ignored) {
         }
 
         return null;

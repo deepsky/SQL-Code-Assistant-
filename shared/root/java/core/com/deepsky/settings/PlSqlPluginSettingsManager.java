@@ -35,7 +35,8 @@ import javax.swing.*;
 public class PlSqlPluginSettingsManager implements Configurable {
 
     private Project project;
-    SqlCodeAssistantSettings settings;
+    private SqlCodeAssistantSettings settings;
+    private PlSqlPluginSettingsForm settingsPane;
 
     public PlSqlPluginSettingsManager(Project project){
         this.project = project;
@@ -55,7 +56,6 @@ public class PlSqlPluginSettingsManager implements Configurable {
         return null;
     }
 
-    PlSqlPluginSettingsForm settingsPane;
     public JComponent createComponent() {
         if (settingsPane == null) {
           settingsPane = new PlSqlPluginSettingsForm(settings, project);

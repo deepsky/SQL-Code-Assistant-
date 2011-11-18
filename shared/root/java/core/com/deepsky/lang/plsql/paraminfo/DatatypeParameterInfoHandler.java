@@ -48,9 +48,7 @@ public class DatatypeParameterInfoHandler implements ParameterInfoHandler {
         return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
-//    PsiElement el;
     public Object findElementForParameterInfo(CreateParameterInfoContext context) {
-//        el = context.getHighlightedElement();
         PsiElement el = context.getFile().findElementAt(context.getOffset()).getParent();
         if(el instanceof DataType){
             datatype = (DataType) el;
@@ -65,10 +63,8 @@ public class DatatypeParameterInfoHandler implements ParameterInfoHandler {
     }
 
     DataType datatype;
-//    int parameterListStart;
 
     public Object findElementForUpdatingParameterInfo(UpdateParameterInfoContext context) {
-        //PsiElement el = context.getHighlightedElement();
         PsiElement candidate = findDatatype(
                 context.getFile(), context.getOffset(), context.getParameterListStart()
                 );
