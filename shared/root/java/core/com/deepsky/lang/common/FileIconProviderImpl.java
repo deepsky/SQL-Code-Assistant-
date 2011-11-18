@@ -44,19 +44,13 @@ import javax.swing.*;
 
 public class FileIconProviderImpl implements FileIconProvider {
 
-    final FileTypeManager ftManager = FileTypeManager.getInstance();
-
-    IndexManager indexManager;
-
     public Icon getIcon(VirtualFile file, int flags, @Nullable Project project) {
 
         if (!matchSqlFile(file)) {
             return null;
         }
 
-        if (indexManager == null) {
-            indexManager = PluginKeys.SQL_INDEX_MAN.getData(project);
-        }
+        IndexManager indexManager = PluginKeys.SQL_INDEX_MAN.getData(project);
 
         if (file instanceof DbDumpedSqlFile) {
             // SQL file from DbSchemaIndex
@@ -156,7 +150,7 @@ public class FileIconProviderImpl implements FileIconProvider {
 
 
     private boolean matchSqlFile(VirtualFile file) {
-        for (FileNameMatcher m : ftManager.getAssociations(PlSqlFileType.FILE_TYPE)) {
+        for (FileNameMatcher m : FileTypeManager.getInstance().getAssociations(PlSqlFileType.FILE_TYPE)) {
             if (m.accept(file.getName())) {
                 return true;
             }

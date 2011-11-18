@@ -63,6 +63,9 @@ public class IndexManagerImpl implements IndexManager {
 
     private FSIndex fsIndex;
 
+    boolean offlineCacheEnabled = false;
+    DbUrl connectedDbUrl = null;
+
     public IndexManagerImpl(@NotNull Project project) {
         this.project = project;
 
@@ -376,8 +379,6 @@ NOTE: do not delete index directory for now
         }
     }
 
-    boolean offlineCacheEnabled = false;
-    DbUrl connectedDbUrl = null;
 
     public void enableOfflineCache(DbUrl[] dbUrls, boolean flag) {
         offlineCacheEnabled = flag;
@@ -444,7 +445,10 @@ NOTE: do not delete index directory for now
             if(schema != null && !project.isDisposed()){
                 ApplicationManager.getApplication().invokeLater(new Runnable(){
                     public void run() {
-                         PlSqlUtil.closeEditorsForSchema(project, schema);
+                        // Do one more check because the project may be already disposed
+                        if(!project.isDisposed()){
+                            PlSqlUtil.closeEditorsForSchema(project, schema);
+                        }
                     }
                 });
 
@@ -499,7 +503,6 @@ NOTE: do not delete index directory for now
 
     // for test purposes only
     public void addIndex(@NotNull DbUrl dbUrl, @NotNull SqlDomainIndex index) {
-       //uid2index.put(dbUrl.getUserHostPortServiceName().toLowerCase(), index);
        uid2index.put(DbUID.getDbUID(dbUrl).key(), index);
     }
 
