@@ -479,8 +479,10 @@ NOTE: do not delete index directory for now
                         }
 
                         SqlDomainIndex index = uid2index.get(DbUID.getDbUID(item.dbUrl).key());
-                        AbstractSchema sindex = index.getSimpleIndex(item.dbUrl.getUser().toLowerCase());
-                        sindex.getWordIndexManager().updateIndexForFile(item.filePath);
+                        if(index != null){
+                            AbstractSchema sindex = index.getSimpleIndex(item.dbUrl.getUser().toLowerCase());
+                            sindex.getWordIndexManager().updateIndexForFile(item.filePath);
+                        }
                     }
 
                     try {
