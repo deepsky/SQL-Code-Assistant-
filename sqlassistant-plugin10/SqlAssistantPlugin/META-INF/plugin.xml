@@ -1,5 +1,5 @@
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
-<idea-plugin version="2">
+<idea-plugin version="2" url="https://github.com/deepsky/SQL-Code-Assistant-/wiki">
     <name>SQL Code Assistant</name>
     <id>SQL</id>
     <description><![CDATA[
@@ -34,14 +34,16 @@
     </html>
     ]]></description>
     <version>1.1.0.10</version>
-    <vendor email="plsql.assistant@gmail.com" logo="/general/ijLogo.png">Serhiy Kulyk</vendor>
+    <vendor email="plsql.assistant@gmail.com"
+            logo="/general/ijLogo.png"
+            url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
 
     <change-notes><![CDATA[<html>
        <ul>
             <li><b>1.1.0.10</b>
                 <ul>
                     - [NEW] Editable Result Set
-                    - [NEW] SID/SERVICE_NAME access support
+                    - [NEW] SID/SERVICE_NAME access
                     - [FIX] Indexing of Excluded folders
                 </ul>
             </li>
