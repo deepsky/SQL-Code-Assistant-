@@ -76,7 +76,7 @@ public class FileUtils {
 
     public static void processDirectoryTree(VirtualFile start, VirtualFileProcessor processor) {
         try {
-            if (start.isDirectory()) {
+            if (start.isValid() && start.isDirectory()) {
                 for (VirtualFile f : start.getChildren()) {
                     if (f.isDirectory()) {
                         processDirectoryTree(f, processor);
