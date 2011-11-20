@@ -33,18 +33,24 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.1.0.10</version>
+    <version>1.1.1.10</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.1.1.10</b>
+                <ul>
+                    - [FIX] Word Indexer did not work properly for files opened in the Editor<br>
+                    - [FIX] Validate of the VirtualFile before processing<br>
+                </ul>
+            </li>
             <li><b>1.1.0.10</b>
                 <ul>
-                    - [NEW] Editable Result Set
-                    - [NEW] SID/SERVICE_NAME access
-                    - [FIX] Indexing of Excluded folders
+                    - [NEW] Editable Result Set<br>
+                    - [NEW] SID/SERVICE_NAME access<br>
+                    - [FIX] Indexing of Excluded folders<br>
                 </ul>
             </li>
             <li><b>1.0.3.10</b>
