@@ -25,7 +25,7 @@
 
 package com.deepsky.utils;
 
-import antlr.TokenStreamException;
+import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.File;
@@ -57,11 +57,11 @@ public class FileUtils {
     }
 
 
-    public static void processDirectoryTree(String startPath, FileProcessor processor){
+    public static void processDirectoryTree(String startPath, FileProcessor processor) {
         File dir = new File(startPath);
-        if( dir.isDirectory() ){
-            for(File f: dir.listFiles()){
-                if(f.isDirectory()){
+        if (dir.isDirectory()) {
+            for (File f : dir.listFiles()) {
+                if (f.isDirectory()) {
                     processDirectoryTree(f.toString(), processor);
                 } else {
                     processor.handleEntry(dir, f);
@@ -74,15 +74,19 @@ public class FileUtils {
         void handleEntry(File parent, File child);
     }
 
-    public static void processDirectoryTree(VirtualFile start, VirtualFileProcessor processor){
-        if( start.isDirectory() ){
-            for(VirtualFile f: start.getChildren()){
-                if(f.isDirectory()){
-                    processDirectoryTree(f, processor);
-                } else {
-                    processor.handleEntry(start, f);
+    public static void processDirectoryTree(VirtualFile start, VirtualFileProcessor processor) {
+        try {
+            if (start.isDirectory()) {
+                for (VirtualFile f : start.getChildren()) {
+                    if (f.isDirectory()) {
+                        processDirectoryTree(f, processor);
+                    } else {
+                        processor.handleEntry(start, f);
+                    }
                 }
             }
+        } catch(InvalidVirtualFileAccessException ignored){
+            // File was changed outside
         }
     }
 
