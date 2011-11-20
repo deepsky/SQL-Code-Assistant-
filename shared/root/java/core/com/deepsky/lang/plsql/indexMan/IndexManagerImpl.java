@@ -29,17 +29,22 @@ import com.deepsky.conf.CacheLocator;
 import com.deepsky.database.ConnectionManagerListener;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.plsql.objTree.SchemaTreeBuilder;
+import com.deepsky.lang.plsql.psi.PlSqlElement;
 import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
 import com.deepsky.lang.plsql.resolver.index.IndexEntriesWalker;
 import com.deepsky.lang.plsql.resolver.index.IndexTree;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.sqlIndex.*;
 import com.deepsky.lang.plsql.sqlIndex.impl.DbSchemaIndex;
 import com.deepsky.lang.plsql.sqlIndex.impl.FSIndex;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.deepsky.utils.StringUtils;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -472,16 +477,43 @@ NOTE: do not delete index directory for now
                 while (!stop) {
                     Set<ItemToIndex> set = new HashSet<ItemToIndex>();
                     set.addAll(Arrays.asList(loadItems()));
-                    for(ItemToIndex item: set){
+                    for(final ItemToIndex item: set){
                         if(item.dbUrl.getUser().equalsIgnoreCase("sys")){
                             // do not index SYS schema
                             continue;
                         }
 
-                        SqlDomainIndex index = uid2index.get(DbUID.getDbUID(item.dbUrl).key());
+                        final SqlDomainIndex index = uid2index.get(DbUID.getDbUID(item.dbUrl).key());
+                        // index may be NULL on closing of the project, so check it before indexing
                         if(index != null){
-                            AbstractSchema sindex = index.getSimpleIndex(item.dbUrl.getUser().toLowerCase());
-                            sindex.getWordIndexManager().updateIndexForFile(item.filePath);
+//                            final AbstractSchema sindex = index.getSimpleIndex(item.dbUrl.getUser().toLowerCase());
+//                            sindex.getWordIndexManager().updateIndexForFile(item.filePath);
+
+                            // Use actual file content for word indexing ,
+                            // i.e. if file is opened in the Editor use PsiFile
+                            ApplicationManager.getApplication().runReadAction(new Runnable() {
+                                public void run() {
+                                    PsiFile file = null;
+                                    if (item.filePath != null) {
+                                        final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+                                        for (VirtualFile v : fileEditorManager.getOpenFiles()) {
+                                            if (v.getPath().equals(item.filePath)) {
+                                                // file found in the Editor
+                                                file = PsiManager.getInstance(project).findFile(v);
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    AbstractSchema sindex = index.getSimpleIndex(item.dbUrl.getUser().toLowerCase());
+                                    if (file == null) {
+                                        sindex.getWordIndexManager().updateIndexForFile(item.filePath);
+                                    } else {
+                                        sindex.getWordIndexManager().updateIndexForFile(item.filePath, file.getText());
+                                    }
+                                }
+                            });
+
                         }
                     }
 

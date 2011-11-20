@@ -53,7 +53,7 @@ public class FindUsagesProcessor implements QueryExecutor<PsiReference, Referenc
         final Project project = target.getProject();
 
         SqlSearchOptions searchOptions = _target.getUserData(SqlFindUsagesHelper.SQL_SEARCH_OPTIONS);
-        //PsiElement[] elemsToSearch = new PsiElement[]{target};
+
         if(searchOptions != null){
             PsiElement[] elemsToSearch = searchOptions.getElementsToSearch();
             DbUrl dbUrl = searchOptions.getTargetSchema();
@@ -64,40 +64,9 @@ public class FindUsagesProcessor implements QueryExecutor<PsiReference, Referenc
                 WordIndexManager wordIndexer = schema.getWordIndexManager();
                 new BulkReferenceSearcher(wordIndexer).doSearch(project, elemsToSearch, consumer);
             }
-/*
-            WordIndexManager wordIndexer = indexMan.findOrCreateIndex(dbUrl, 0).getWordIndexManager();
-
-            //WordIndexManager wordIndexer = ((PlSqlFile)target.getContainingFile()).getResolver().getSimpleIndex().getWordIndexManager();
-            new BulkReferenceSearcher(wordIndexer).doSearch(project, elemsToSearch, consumer); //target, consumer);
-*/
         }
 
-/*
-//        IndexManager indexMan = PluginKeys.SQL_INDEX_MAN.getData(project);
-//        WordIndexManager wordIndexer = indexMan.findOrCreateIndex(IndexManager.FS_URL).getSimpleIndex(IndexManager.FS_SCHEMA_NAME).getWordIndexManager(); //getWordIndexManager();
-        WordIndexManager wordIndexer = ((PlSqlFile)target.getContainingFile()).getResolver().getSimpleIndex().getWordIndexManager();
-        new BulkReferenceSearcher(wordIndexer).doSearch(project, elemsToSearch, consumer); //target, consumer);
-        return true;
-*/
-
+        // IMPORTANT! false should be returned regardless of search results
         return false;
-/*
-        SqlSearchParameters searchParams = SqlSearchParameters.getInstance(project);
-
-        // this is needed just for getting a real SearchScope
-        if(searchParams.searchScope instanceof DbScopeDescriptorProvider.DbSearchScope){
-//            DbScopeDescriptorProvider.DbSearchScope searchScope =
-//                    (DbScopeDescriptorProvider.DbSearchScope) searchParams.searchScope;
-
-            DbUrl dbUrl = ((PlSqlFile)target.getContainingFile()).getResolver().getDbUrl(); //searchScope.getDbUrl();
-
-            IndexManager indexMan = PluginKeys.SQL_INDEX_MAN.getData(project);
-            WordIndexManager wordIndexer = indexMan.findOrCreateIndex(dbUrl).getWordIndexManager();
-            new ReferenceSearcher(wordIndexer).doSearch(target, consumer);
-            return true;
-        }
-
-        return false;
-*/
     }
 }

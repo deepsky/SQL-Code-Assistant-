@@ -33,27 +33,25 @@ import java.io.File;
 
 public interface WordIndexManager {
 
+    /**
+     * Index file
+     * @param fullPath - path of the file being indexed
+     */
     void updateIndexForFile(String fullPath);
+
+    /**
+     * Index the file but use 'text' as a content of the file.
+     * Call of the method may mean that indexing was requested for an uncommitted document
+     * @param filePath - path of the file being indexed
+     * @param text - content being indexed
+     */
+    void updateIndexForFile(String filePath, String text);
 
     void updateIndexForFiles(File[] fullPaths);
 
     void deleteIndexForFile(String fullPath);
 
     boolean rebuildIndex(String widxName);
-
-    /**
-     * Search widx files in the specified directory for occurence of the 'text',
-     * call iterator.processFile for each file containing the 'text'.
-     *
-     * @param project - ancor
-     * @param text     - target word
-     * @param iterator - listener found files
-     * @return - and array of widx file names needed in rebuilding (more then 30% entries are duplicates )
-     */
-//    String[] scanDir(
-//            @NotNull Project project,
-//            @NotNull String text,
-//            @NotNull FileProcessor iterator);
 
 
     /**
@@ -69,4 +67,5 @@ public interface WordIndexManager {
             @NotNull Project project,
             @NotNull String[] text,
             @NotNull FileProcessor iterator);
+
 }

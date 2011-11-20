@@ -27,10 +27,10 @@ package com.deepsky.lang.plsql.sqlIndex.impl;
 
 import com.deepsky.findUsages.windex.SqlScriptIndexer;
 import com.deepsky.findUsages.wordProc.FileProcessor;
+import com.deepsky.lang.plsql.completion.Constants;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.sqlIndex.AbstractSchema;
-import com.deepsky.lang.plsql.sqlIndex.SqlFile;
 import com.deepsky.lang.plsql.sqlIndex.WordIndexManager;
 import com.deepsky.lang.plsql.struct.index.BuildIndexException;
 import com.deepsky.utils.StringUtils;
@@ -50,23 +50,23 @@ public class WordIndexManagerImpl implements WordIndexManager {
     final private static String WIDX_EXT = "widx";
     final private static int WIDX_MASK = 0xF;
 
-    File indexHomeDir;
-    AbstractSchema sindex;
+    private File indexHomeDir;
+    private AbstractSchema sindex;
 
-    public WordIndexManagerImpl(AbstractSchema sindex){
+    public WordIndexManagerImpl(AbstractSchema sindex) {
         this.sindex = sindex;
         this.indexHomeDir = new File(sindex.getIndexPath());
     }
 
-    public void updateIndexForFile(String filePath) {
+    public void updateIndexForFile(final String filePath) {
         File ff = new File(filePath);
-        if(!ff.isAbsolute()){
+        if (!ff.isAbsolute()) {
             ff = new File(indexHomeDir, filePath);
         }
         try {
-             // if file exists index it otherwise text with zero length means file was deleted
+            // if file exists index it, otherwise text with zero length means file was deleted
             String text = "";
-            if(ff.exists()){
+            if (ff.exists()) {
                 text = StringUtils.file2string(ff);
             }
             String index = SqlScriptIndexer.buildIndex(text);
@@ -74,6 +74,24 @@ public class WordIndexManagerImpl implements WordIndexManager {
         } catch (IOException e) {
             // todo -- report error
             e.printStackTrace();
+        } catch (BuildIndexException e) {
+            // todo -- report error
+            e.printStackTrace();
+        }
+    }
+
+    public void updateIndexForFile(String filePath, String text) {
+        File ff = new File(filePath);
+        if (!ff.isAbsolute()) {
+            ff = new File(indexHomeDir, filePath);
+        }
+        try {
+            // If file exists index it, otherwise text with zero length means file was deleted
+
+            text = (text==null)? "": text.replace(Constants.COMPL_IDENTIFIER, "");
+
+            String index = SqlScriptIndexer.buildIndex(text);
+            appendIndexEntry(filePath, index);
         } catch (BuildIndexException e) {
             // todo -- report error
             e.printStackTrace();
@@ -324,35 +342,35 @@ public class WordIndexManagerImpl implements WordIndexManager {
         for (final String fileName : hitTable2.keySet()) {
             final String encodedName = ContextPathUtil.encodeFilePathCtx(fileName);
             final VirtualFile vf1 = sindex.getSourceFile(encodedName);
-            if(vf1 == null){
+            if (vf1 == null) {
                 // file was deleted or moved?
                 continue;
             }
 
             ApplicationManager.getApplication().runReadAction(new Runnable() {
                 public void run() {
-                   String filePath = vf1.getPath();
-                   PsiFile file = null;
-                   if (filePath != null) {
-                       final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
-                       for (VirtualFile v : fileEditorManager.getOpenFiles()) {
-                           if (v.getPath().equals(filePath)) {
-                               //
-                               file = PsiManager.getInstance(project).findFile(v);
-                              break;
-                           }
-                       }
-                   }
+                    String filePath = vf1.getPath();
+                    PsiFile file = null;
+                    if (filePath != null) {
+                        final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+                        for (VirtualFile v : fileEditorManager.getOpenFiles()) {
+                            if (v.getPath().equals(filePath)) {
+                                //
+                                file = PsiManager.getInstance(project).findFile(v);
+                                break;
+                            }
+                        }
+                    }
 
-                   if(file == null){
-                      VirtualFile vf = sindex.getSourceFile(encodedName);
-                      file = PsiManager.getInstance(project).findFile(vf);
-                   }
+                    if (file == null) {
+                        VirtualFile vf = sindex.getSourceFile(encodedName);
+                        file = PsiManager.getInstance(project).findFile(vf);
+                    }
 
-                   if(file != null){
-                      Set<String> words = hitTable2.get(fileName);
-                      iterator.processFile((PlSqlElement) file, words.toArray(new String[0]));
-                   }
+                    if (file != null) {
+                        Set<String> words = hitTable2.get(fileName);
+                        iterator.processFile((PlSqlElement) file, words.toArray(new String[0]));
+                    }
                 }
             });
 
