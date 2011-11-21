@@ -880,11 +880,15 @@ table_partition_description:
 hash_partitions:
     "partition" "by" "hash" OPEN_PAREN! column_name_ref (COMMA! column_name_ref)* CLOSE_PAREN!
     ((individual_hash_partitions)+ | hash_partitions_by_quantity)
+    (("cache" ("parallel"|"noparallel")) | "nocache")?
     ;
 
 individual_hash_partitions:
-//    OPEN_PAREN "partition" (identifier2)? (partition_storage_clause)* (COMMA! "partition" (identifier2)? (partition_storage_clause)* )* CLOSE_PAREN
-    OPEN_PAREN "partition" (identifier2)? (partition_storage_clause)* CLOSE_PAREN
+    OPEN_PAREN hash_partition_spec (COMMA hash_partition_spec)* CLOSE_PAREN
+    ;
+
+hash_partition_spec:
+    "partition" (identifier2)? (partition_storage_clause)*
     ;
 
 partition_storage_clause:

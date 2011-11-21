@@ -118,19 +118,13 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
         return TableDefinition.REGULAR;
     }
 
-
-//    public TableDescriptor describe() {
-//        DbObject[] objs = ObjectCacheFactory.getObjectCache().findByNameForType(ObjectCache.TABLE, getTableName());
-//        return (TableDescriptor) (objs.length>0? objs[0]: null);
-//    }
-
     public int getPartitionType() {
         ASTNode partition = getNode().findChildByType(PLSqlTypesAdopted.PARTITION_SPEC);
         if (partition != null) {
             if (partition.findChildByType(PLSqlTypesAdopted.RANGE_PARTITION) != null) {
                 return TableDefinition.PARTITION_BY_RANGE;
             } else if (partition.findChildByType(PLSqlTypesAdopted.HASH_PARTITION) != null) {
-                return TableDefinition.PARTITION_BY_RANGE;
+                return TableDefinition.PARTITION_BY_HASH;
             }
         }
 

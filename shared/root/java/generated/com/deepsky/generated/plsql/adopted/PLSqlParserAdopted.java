@@ -2102,13 +2102,13 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			
 			}
 			{
-			_loop666:
+			_loop672:
 			do {
 				if ((_tokenSet_11.member(LA(1)))) {
 					package_obj_body();
 				}
 				else {
-					break _loop666;
+					break _loop672;
 				}
 				
 			} while (true);
@@ -2252,13 +2252,13 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				
 				}
 				{
-				_loop649:
+				_loop655:
 				do {
 					if ((_tokenSet_11.member(LA(1)))) {
 						package_obj_spec_ex();
 					}
 					else {
-						break _loop649;
+						break _loop655;
 					}
 					
 				} while (true);
@@ -2842,14 +2842,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				record_item();
 				{
-				_loop605:
+				_loop611:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						record_item();
 					}
 					else {
-						break _loop605;
+						break _loop611;
 					}
 					
 				} while (true);
@@ -2958,14 +2958,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					match(OPEN_PAREN);
 					record_item();
 					{
-					_loop612:
+					_loop618:
 					do {
 						if ((LA(1)==COMMA)) {
 							match(COMMA);
 							record_item();
 						}
 						else {
-							break _loop612;
+							break _loop618;
 						}
 						
 					} while (true);
@@ -3196,14 +3196,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					match(OPEN_PAREN);
 					record_item();
 					{
-					_loop619:
+					_loop625:
 					do {
 						if ((LA(1)==COMMA)) {
 							match(COMMA);
 							record_item();
 						}
 						else {
-							break _loop619;
+							break _loop625;
 						}
 						
 					} while (true);
@@ -4197,14 +4197,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			_loop1028:
+			_loop1034:
 			do {
 				if ((_tokenSet_20.member(LA(1))) && (LA(2)==DOT)) {
 					name_fragment_ex();
 					match(DOT);
 				}
 				else {
-					break _loop1028;
+					break _loop1034;
 				}
 				
 			} while (true);
@@ -4862,17 +4862,17 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			int _cnt1236=0;
-			_loop1236:
+			int _cnt1242=0;
+			_loop1242:
 			do {
 				if ((LA(1)==QUOTED_STR) && (_tokenSet_35.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 					match(QUOTED_STR);
 				}
 				else {
-					if ( _cnt1236>=1 ) { break _loop1236; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt1242>=1 ) { break _loop1242; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt1236++;
+				_cnt1242++;
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
@@ -5044,10 +5044,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				datatype();
 			}
 			else {
-				boolean synPredMatched909 = false;
+				boolean synPredMatched915 = false;
 				if (((_tokenSet_5.member(LA(1))) && (LA(2)==DOT||LA(2)==PERCENTAGE) && (_tokenSet_40.member(LA(3))))) {
-					int _m909 = mark();
-					synPredMatched909 = true;
+					int _m915 = mark();
+					synPredMatched915 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -5081,19 +5081,19 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched909 = false;
+						synPredMatched915 = false;
 					}
-					rewind(_m909);
+					rewind(_m915);
 					inputState.guessing--;
 				}
-				if ( synPredMatched909 ) {
+				if ( synPredMatched915 ) {
 					percentage_type();
 				}
 				else {
-					boolean synPredMatched914 = false;
+					boolean synPredMatched920 = false;
 					if (((_tokenSet_5.member(LA(1))) && (LA(2)==DOT) && (_tokenSet_5.member(LA(3))))) {
-						int _m914 = mark();
-						synPredMatched914 = true;
+						int _m920 = mark();
+						synPredMatched920 = true;
 						inputState.guessing++;
 						try {
 							{
@@ -5129,12 +5129,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 							}
 						}
 						catch (RecognitionException pe) {
-							synPredMatched914 = false;
+							synPredMatched920 = false;
 						}
-						rewind(_m914);
+						rewind(_m920);
 						inputState.guessing--;
 					}
-					if ( synPredMatched914 ) {
+					if ( synPredMatched920 ) {
 						percentage_type_w_schema();
 					}
 					else if ((_tokenSet_5.member(LA(1))) && (_tokenSet_41.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
@@ -5572,7 +5572,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			logical_term();
 			{
-			_loop1103:
+			_loop1109:
 			do {
 				if ((LA(1)==LITERAL_or)) {
 					match(LITERAL_or);
@@ -5582,7 +5582,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					logical_term();
 				}
 				else {
-					break _loop1103;
+					break _loop1109;
 				}
 				
 			} while (true);
@@ -8206,10 +8206,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				break;
 			}
 			default:
-				boolean synPredMatched1153 = false;
+				boolean synPredMatched1159 = false;
 				if (((LA(1)==LITERAL_sqlcode) && (_tokenSet_58.member(LA(2))) && (_tokenSet_3.member(LA(3))))) {
-					int _m1153 = mark();
-					synPredMatched1153 = true;
+					int _m1159 = mark();
+					synPredMatched1159 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -8217,22 +8217,22 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched1153 = false;
+						synPredMatched1159 = false;
 					}
-					rewind(_m1153);
+					rewind(_m1159);
 					inputState.guessing--;
 				}
-				if ( synPredMatched1153 ) {
+				if ( synPredMatched1159 ) {
 					match(LITERAL_sqlcode);
 					if ( inputState.guessing==0 ) {
 						__markRule(SQLCODE_SYSVAR);
 					}
 				}
 				else {
-					boolean synPredMatched1155 = false;
+					boolean synPredMatched1161 = false;
 					if (((LA(1)==LITERAL_sqlerrm) && (_tokenSet_58.member(LA(2))) && (_tokenSet_3.member(LA(3))))) {
-						int _m1155 = mark();
-						synPredMatched1155 = true;
+						int _m1161 = mark();
+						synPredMatched1161 = true;
 						inputState.guessing++;
 						try {
 							{
@@ -8240,12 +8240,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 							}
 						}
 						catch (RecognitionException pe) {
-							synPredMatched1155 = false;
+							synPredMatched1161 = false;
 						}
-						rewind(_m1155);
+						rewind(_m1161);
 						inputState.guessing--;
 					}
-					if ( synPredMatched1155 ) {
+					if ( synPredMatched1161 ) {
 						{
 						match(LITERAL_sqlerrm);
 						{
@@ -8267,10 +8267,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					else {
-						boolean synPredMatched1162 = false;
+						boolean synPredMatched1168 = false;
 						if (((LA(1)==LITERAL_trim) && (LA(2)==OPEN_PAREN) && (_tokenSet_60.member(LA(3))))) {
-							int _m1162 = mark();
-							synPredMatched1162 = true;
+							int _m1168 = mark();
+							synPredMatched1168 = true;
 							inputState.guessing++;
 							try {
 								{
@@ -8278,21 +8278,21 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 								}
 							}
 							catch (RecognitionException pe) {
-								synPredMatched1162 = false;
+								synPredMatched1168 = false;
 							}
-							rewind(_m1162);
+							rewind(_m1168);
 							inputState.guessing--;
 						}
-						if ( synPredMatched1162 ) {
+						if ( synPredMatched1168 ) {
 							{
 							trim_function();
 							}
 						}
 						else {
-							boolean synPredMatched1165 = false;
+							boolean synPredMatched1171 = false;
 							if (((LA(1)==LITERAL_count) && (LA(2)==OPEN_PAREN) && (_tokenSet_61.member(LA(3))))) {
-								int _m1165 = mark();
-								synPredMatched1165 = true;
+								int _m1171 = mark();
+								synPredMatched1171 = true;
 								inputState.guessing++;
 								try {
 									{
@@ -8300,21 +8300,21 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 									}
 								}
 								catch (RecognitionException pe) {
-									synPredMatched1165 = false;
+									synPredMatched1171 = false;
 								}
-								rewind(_m1165);
+								rewind(_m1171);
 								inputState.guessing--;
 							}
-							if ( synPredMatched1165 ) {
+							if ( synPredMatched1171 ) {
 								{
 								count_function();
 								}
 							}
 							else {
-								boolean synPredMatched1171 = false;
+								boolean synPredMatched1177 = false;
 								if (((LA(1)==LITERAL_multiset) && (LA(2)==OPEN_PAREN) && (LA(3)==OPEN_PAREN||LA(3)==LITERAL_select))) {
-									int _m1171 = mark();
-									synPredMatched1171 = true;
+									int _m1177 = mark();
+									synPredMatched1177 = true;
 									inputState.guessing++;
 									try {
 										{
@@ -8322,21 +8322,21 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 										}
 									}
 									catch (RecognitionException pe) {
-										synPredMatched1171 = false;
+										synPredMatched1177 = false;
 									}
-									rewind(_m1171);
+									rewind(_m1177);
 									inputState.guessing--;
 								}
-								if ( synPredMatched1171 ) {
+								if ( synPredMatched1177 ) {
 									{
 									multiset_operator();
 									}
 								}
 								else {
-									boolean synPredMatched1174 = false;
+									boolean synPredMatched1180 = false;
 									if (((LA(1)==LITERAL_lag) && (LA(2)==OPEN_PAREN) && (_tokenSet_53.member(LA(3))))) {
-										int _m1174 = mark();
-										synPredMatched1174 = true;
+										int _m1180 = mark();
+										synPredMatched1180 = true;
 										inputState.guessing++;
 										try {
 											{
@@ -8344,21 +8344,21 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 											}
 										}
 										catch (RecognitionException pe) {
-											synPredMatched1174 = false;
+											synPredMatched1180 = false;
 										}
-										rewind(_m1174);
+										rewind(_m1180);
 										inputState.guessing--;
 									}
-									if ( synPredMatched1174 ) {
+									if ( synPredMatched1180 ) {
 										{
 										lag_function();
 										}
 									}
 									else {
-										boolean synPredMatched1177 = false;
+										boolean synPredMatched1183 = false;
 										if (((LA(1)==LITERAL_lead) && (LA(2)==OPEN_PAREN) && (_tokenSet_53.member(LA(3))))) {
-											int _m1177 = mark();
-											synPredMatched1177 = true;
+											int _m1183 = mark();
+											synPredMatched1183 = true;
 											inputState.guessing++;
 											try {
 												{
@@ -8366,21 +8366,21 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 												}
 											}
 											catch (RecognitionException pe) {
-												synPredMatched1177 = false;
+												synPredMatched1183 = false;
 											}
-											rewind(_m1177);
+											rewind(_m1183);
 											inputState.guessing--;
 										}
-										if ( synPredMatched1177 ) {
+										if ( synPredMatched1183 ) {
 											{
 											lead_function();
 											}
 										}
 										else {
-											boolean synPredMatched1183 = false;
+											boolean synPredMatched1189 = false;
 											if (((LA(1)==LITERAL_extract) && (LA(2)==OPEN_PAREN) && (_tokenSet_62.member(LA(3))))) {
-												int _m1183 = mark();
-												synPredMatched1183 = true;
+												int _m1189 = mark();
+												synPredMatched1189 = true;
 												inputState.guessing++;
 												try {
 													{
@@ -8388,12 +8388,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 													}
 												}
 												catch (RecognitionException pe) {
-													synPredMatched1183 = false;
+													synPredMatched1189 = false;
 												}
-												rewind(_m1183);
+												rewind(_m1189);
 												inputState.guessing--;
 											}
-											if ( synPredMatched1183 ) {
+											if ( synPredMatched1189 ) {
 												extract_date_function();
 											}
 											else if ((LA(1)==LITERAL_interval) && (LA(2)==QUOTED_STR) && (_tokenSet_63.member(LA(3)))) {
@@ -8486,10 +8486,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 												}
 											}
 											else {
-												boolean synPredMatched1190 = false;
+												boolean synPredMatched1196 = false;
 												if (((LA(1)==LITERAL_sql) && (LA(2)==PERCENTAGE))) {
-													int _m1190 = mark();
-													synPredMatched1190 = true;
+													int _m1196 = mark();
+													synPredMatched1196 = true;
 													inputState.guessing++;
 													try {
 														{
@@ -8498,12 +8498,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 														}
 													}
 													catch (RecognitionException pe) {
-														synPredMatched1190 = false;
+														synPredMatched1196 = false;
 													}
-													rewind(_m1190);
+													rewind(_m1196);
 													inputState.guessing--;
 												}
-												if ( synPredMatched1190 ) {
+												if ( synPredMatched1196 ) {
 													sql_percentage();
 												}
 												else if ((LA(1)==LITERAL_timestamp) && (LA(2)==QUOTED_STR) && (_tokenSet_58.member(LA(3)))) {
@@ -8516,10 +8516,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 													}
 												}
 												else {
-													boolean synPredMatched1199 = false;
+													boolean synPredMatched1205 = false;
 													if (((LA(1)==IDENTIFIER||LA(1)==DOUBLE_QUOTED_STRING||LA(1)==OPEN_PAREN) && (LA(2)==OPEN_PAREN||LA(2)==PERCENTAGE||LA(2)==LITERAL_select) && (_tokenSet_64.member(LA(3))))) {
-														int _m1199 = mark();
-														synPredMatched1199 = true;
+														int _m1205 = mark();
+														synPredMatched1205 = true;
 														inputState.guessing++;
 														try {
 															{
@@ -8574,19 +8574,19 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 															}
 														}
 														catch (RecognitionException pe) {
-															synPredMatched1199 = false;
+															synPredMatched1205 = false;
 														}
-														rewind(_m1199);
+														rewind(_m1205);
 														inputState.guessing--;
 													}
-													if ( synPredMatched1199 ) {
+													if ( synPredMatched1205 ) {
 														ident_percentage();
 													}
 													else {
-														boolean synPredMatched1201 = false;
+														boolean synPredMatched1207 = false;
 														if (((LA(1)==OPEN_PAREN) && (LA(2)==OPEN_PAREN||LA(2)==LITERAL_select) && (_tokenSet_64.member(LA(3))))) {
-															int _m1201 = mark();
-															synPredMatched1201 = true;
+															int _m1207 = mark();
+															synPredMatched1207 = true;
 															inputState.guessing++;
 															try {
 																{
@@ -8595,12 +8595,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 																}
 															}
 															catch (RecognitionException pe) {
-																synPredMatched1201 = false;
+																synPredMatched1207 = false;
 															}
-															rewind(_m1201);
+															rewind(_m1207);
 															inputState.guessing--;
 														}
-														if ( synPredMatched1201 ) {
+														if ( synPredMatched1207 ) {
 															subquery();
 															if ( inputState.guessing==0 ) {
 																__markRule(SUBQUERY_EXPR);
@@ -8615,10 +8615,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 															}
 														}
 														else {
-															boolean synPredMatched1203 = false;
+															boolean synPredMatched1209 = false;
 															if (((_tokenSet_67.member(LA(1))) && (_tokenSet_68.member(LA(2))) && (_tokenSet_3.member(LA(3))))) {
-																int _m1203 = mark();
-																synPredMatched1203 = true;
+																int _m1209 = mark();
+																synPredMatched1209 = true;
 																inputState.guessing++;
 																try {
 																	{
@@ -8626,19 +8626,19 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 																	}
 																}
 																catch (RecognitionException pe) {
-																	synPredMatched1203 = false;
+																	synPredMatched1209 = false;
 																}
-																rewind(_m1203);
+																rewind(_m1209);
 																inputState.guessing--;
 															}
-															if ( synPredMatched1203 ) {
+															if ( synPredMatched1209 ) {
 																pseudo_column();
 															}
 															else {
-																boolean synPredMatched1205 = false;
+																boolean synPredMatched1211 = false;
 																if (((_tokenSet_29.member(LA(1))) && (LA(2)==DOT||LA(2)==OPEN_PAREN) && (_tokenSet_69.member(LA(3))))) {
-																	int _m1205 = mark();
-																	synPredMatched1205 = true;
+																	int _m1211 = mark();
+																	synPredMatched1211 = true;
 																	inputState.guessing++;
 																	try {
 																		{
@@ -8649,12 +8649,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 																		}
 																	}
 																	catch (RecognitionException pe) {
-																		synPredMatched1205 = false;
+																		synPredMatched1211 = false;
 																	}
-																	rewind(_m1205);
+																	rewind(_m1211);
 																	inputState.guessing--;
 																}
-																if ( synPredMatched1205 ) {
+																if ( synPredMatched1211 ) {
 																	{
 																	column_spec();
 																	match(OPEN_PAREN);
@@ -8666,10 +8666,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 																	}
 																}
 																else {
-																	boolean synPredMatched1209 = false;
+																	boolean synPredMatched1215 = false;
 																	if (((_tokenSet_5.member(LA(1))) && (LA(2)==DOT) && (LA(3)==LITERAL_nextval||LA(3)==LITERAL_currval))) {
-																		int _m1209 = mark();
-																		synPredMatched1209 = true;
+																		int _m1215 = mark();
+																		synPredMatched1215 = true;
 																		inputState.guessing++;
 																		try {
 																			{
@@ -8696,12 +8696,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 																			}
 																		}
 																		catch (RecognitionException pe) {
-																			synPredMatched1209 = false;
+																			synPredMatched1215 = false;
 																		}
-																		rewind(_m1209);
+																		rewind(_m1215);
 																		inputState.guessing--;
 																	}
-																	if ( synPredMatched1209 ) {
+																	if ( synPredMatched1215 ) {
 																		sequence_expr();
 																	}
 																	else if ((_tokenSet_70.member(LA(1))) && (_tokenSet_68.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
@@ -8948,10 +8948,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				
 				}
 				{
-				boolean synPredMatched874 = false;
+				boolean synPredMatched880 = false;
 				if (((LA(1)==LITERAL_with) && (LA(2)==LITERAL_local) && (LA(3)==LITERAL_time))) {
-					int _m874 = mark();
-					synPredMatched874 = true;
+					int _m880 = mark();
+					synPredMatched880 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -8962,12 +8962,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched874 = false;
+						synPredMatched880 = false;
 					}
-					rewind(_m874);
+					rewind(_m880);
 					inputState.guessing--;
 				}
-				if ( synPredMatched874 ) {
+				if ( synPredMatched880 ) {
 					{
 					match(LITERAL_with);
 					match(LITERAL_local);
@@ -9577,7 +9577,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			num_expression();
 			{
-			_loop1150:
+			_loop1156:
 			do {
 				if ((LA(1)==CONCAT) && (_tokenSet_53.member(LA(2))) && (_tokenSet_76.member(LA(3)))) {
 					c = LT(1);
@@ -9588,7 +9588,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					num_expression();
 				}
 				else {
-					break _loop1150;
+					break _loop1156;
 				}
 				
 			} while (true);
@@ -9788,22 +9788,22 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		boolean tag1=false;
 		
 		try {      // for error handling
-			boolean synPredMatched830 = false;
+			boolean synPredMatched836 = false;
 			if (((_tokenSet_29.member(LA(1))) && (_tokenSet_79.member(LA(2))) && (_tokenSet_80.member(LA(3))))) {
-				int _m830 = mark();
-				synPredMatched830 = true;
+				int _m836 = mark();
+				synPredMatched836 = true;
 				inputState.guessing++;
 				try {
 					{
 					{
-					_loop829:
+					_loop835:
 					do {
 						if ((_tokenSet_5.member(LA(1))) && (LA(2)==DOT) && (_tokenSet_29.member(LA(3)))) {
 							name_fragment();
 							match(DOT);
 						}
 						else {
-							break _loop829;
+							break _loop835;
 						}
 						
 					} while (true);
@@ -9813,21 +9813,21 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched830 = false;
+					synPredMatched836 = false;
 				}
-				rewind(_m830);
+				rewind(_m836);
 				inputState.guessing--;
 			}
-			if ( synPredMatched830 ) {
+			if ( synPredMatched836 ) {
 				{
-				_loop832:
+				_loop838:
 				do {
 					if ((_tokenSet_5.member(LA(1))) && (LA(2)==DOT)) {
 						name_fragment();
 						match(DOT);
 					}
 					else {
-						break _loop832;
+						break _loop838;
 					}
 					
 				} while (true);
@@ -9838,10 +9838,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				}
 			}
 			else {
-				boolean synPredMatched835 = false;
+				boolean synPredMatched841 = false;
 				if (((LA(1)==COLON) && (LA(2)==LITERAL_old||LA(2)==LITERAL_new) && (LA(3)==DOT))) {
-					int _m835 = mark();
-					synPredMatched835 = true;
+					int _m841 = mark();
+					synPredMatched841 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -9868,12 +9868,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched835 = false;
+						synPredMatched841 = false;
 					}
-					rewind(_m835);
+					rewind(_m841);
 					inputState.guessing--;
 				}
-				if ( synPredMatched835 ) {
+				if ( synPredMatched841 ) {
 					{
 					match(COLON);
 					{
@@ -9905,7 +9905,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					{
 					function_call();
 					{
-					_loop843:
+					_loop849:
 					do {
 						if ((LA(1)==DOT)) {
 							match(DOT);
@@ -9913,10 +9913,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 								tag1=true;
 							}
 							{
-							boolean synPredMatched842 = false;
+							boolean synPredMatched848 = false;
 							if (((_tokenSet_20.member(LA(1))) && (LA(2)==DOT||LA(2)==OPEN_PAREN) && (_tokenSet_75.member(LA(3))))) {
-								int _m842 = mark();
-								synPredMatched842 = true;
+								int _m848 = mark();
+								synPredMatched848 = true;
 								inputState.guessing++;
 								try {
 									{
@@ -9924,12 +9924,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 									}
 								}
 								catch (RecognitionException pe) {
-									synPredMatched842 = false;
+									synPredMatched848 = false;
 								}
-								rewind(_m842);
+								rewind(_m848);
 								inputState.guessing--;
 							}
-							if ( synPredMatched842 ) {
+							if ( synPredMatched848 ) {
 								function_call();
 							}
 							else if ((_tokenSet_5.member(LA(1))) && (_tokenSet_79.member(LA(2))) && (_tokenSet_80.member(LA(3)))) {
@@ -9942,7 +9942,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 							}
 						}
 						else {
-							break _loop843;
+							break _loop849;
 						}
 						
 					} while (true);
@@ -10062,14 +10062,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				v_column_def();
 				{
-				_loop628:
+				_loop634:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						v_column_def();
 					}
 					else {
-						break _loop628;
+						break _loop634;
 					}
 					
 				} while (true);
@@ -10262,14 +10262,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			column_def();
 			{
-			_loop636:
+			_loop642:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					column_def();
 				}
 				else {
-					break _loop636;
+					break _loop642;
 				}
 				
 			} while (true);
@@ -12336,7 +12336,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			select_first();
 			{
-			_loop1275:
+			_loop1281:
 			do {
 				if (((LA(1) >= LITERAL_union && LA(1) <= LITERAL_minus))) {
 					{
@@ -12388,7 +12388,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				else {
-					break _loop1275;
+					break _loop1281;
 				}
 				
 			} while (true);
@@ -12777,17 +12777,17 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_storage);
 			match(OPEN_PAREN);
 			{
-			int _cnt429=0;
-			_loop429:
+			int _cnt435=0;
+			_loop435:
 			do {
 				if ((_tokenSet_103.member(LA(1)))) {
 					storage_params();
 				}
 				else {
-					if ( _cnt429>=1 ) { break _loop429; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt435>=1 ) { break _loop435; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt429++;
+				_cnt435++;
 			} while (true);
 			}
 			match(CLOSE_PAREN);
@@ -13191,6 +13191,40 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			}
 			}
 			}
+			{
+			if ((LA(1)==LITERAL_cache) && (LA(2)==LITERAL_parallel||LA(2)==LITERAL_noparallel) && (_tokenSet_45.member(LA(3)))) {
+				{
+				match(LITERAL_cache);
+				{
+				switch ( LA(1)) {
+				case LITERAL_parallel:
+				{
+					match(LITERAL_parallel);
+					break;
+				}
+				case LITERAL_noparallel:
+				{
+					match(LITERAL_noparallel);
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+				}
+			}
+			else if ((LA(1)==LITERAL_nocache) && (_tokenSet_45.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+				match(LITERAL_nocache);
+			}
+			else if ((_tokenSet_45.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+			}
+			else {
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			
+			}
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
@@ -13372,26 +13406,16 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			match(OPEN_PAREN);
-			match(LITERAL_partition);
+			hash_partition_spec();
 			{
-			if ((_tokenSet_5.member(LA(1))) && (_tokenSet_115.member(LA(2))) && (_tokenSet_116.member(LA(3)))) {
-				identifier2();
-			}
-			else if ((_tokenSet_115.member(LA(1))) && (_tokenSet_116.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
-			}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			
-			}
-			{
-			_loop392:
+			_loop394:
 			do {
-				if ((_tokenSet_117.member(LA(1)))) {
-					partition_storage_clause();
+				if ((LA(1)==COMMA)) {
+					match(COMMA);
+					hash_partition_spec();
 				}
 				else {
-					break _loop392;
+					break _loop394;
 				}
 				
 			} while (true);
@@ -13423,14 +13447,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				identifier2();
 				{
-				_loop398:
+				_loop404:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						identifier2();
 					}
 					else {
-						break _loop398;
+						break _loop404;
 					}
 					
 				} while (true);
@@ -13525,10 +13549,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			}
 			}
 			{
-			if ((LA(1)==LITERAL_compress||LA(1)==LITERAL_nocompress) && (_tokenSet_118.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+			if ((LA(1)==LITERAL_compress||LA(1)==LITERAL_nocompress) && (_tokenSet_115.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 				table_compression();
 			}
-			else if ((_tokenSet_119.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+			else if ((_tokenSet_116.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -13545,14 +13569,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				identifier2();
 				{
-				_loop402:
+				_loop408:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						identifier2();
 					}
 					else {
-						break _loop402;
+						break _loop408;
 					}
 					
 				} while (true);
@@ -13650,6 +13674,45 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			if (inputState.guessing==0) {
 				reportError(ex);
 				recover(ex,_tokenSet_107);
+			} else {
+			  throw ex;
+			}
+		}
+	}
+	
+	public void hash_partition_spec() throws RecognitionException, TokenStreamException {
+		
+		
+		try {      // for error handling
+			match(LITERAL_partition);
+			{
+			if ((_tokenSet_5.member(LA(1))) && (_tokenSet_117.member(LA(2))) && (_tokenSet_118.member(LA(3)))) {
+				identifier2();
+			}
+			else if ((_tokenSet_117.member(LA(1))) && (_tokenSet_118.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+			}
+			else {
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			
+			}
+			{
+			_loop398:
+			do {
+				if ((_tokenSet_119.member(LA(1)))) {
+					partition_storage_clause();
+				}
+				else {
+					break _loop398;
+				}
+				
+			} while (true);
+			}
+		}
+		catch (RecognitionException ex) {
+			if (inputState.guessing==0) {
+				reportError(ex);
+				recover(ex,_tokenSet_36);
 			} else {
 			  throw ex;
 			}
@@ -13689,7 +13752,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_115);
+				recover(ex,_tokenSet_117);
 			} else {
 			  throw ex;
 			}
@@ -13724,7 +13787,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			location();
 			match(CLOSE_PAREN);
 			{
-			_loop1505:
+			_loop1511:
 			do {
 				if ((LA(1)==LITERAL_reject)) {
 					reject_spec();
@@ -13733,7 +13796,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					parallel_clause();
 				}
 				else {
-					break _loop1505;
+					break _loop1511;
 				}
 				
 			} while (true);
@@ -14156,14 +14219,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			column_name_ref();
 			{
-			_loop456:
+			_loop462:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					column_name_ref();
 				}
 				else {
-					break _loop456;
+					break _loop462;
 				}
 				
 			} while (true);
@@ -14189,14 +14252,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			column_name_ref();
 			{
-			_loop463:
+			_loop469:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					column_name_ref();
 				}
 				else {
-					break _loop463;
+					break _loop469;
 				}
 				
 			} while (true);
@@ -14221,14 +14284,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			column_name_ref();
 			{
-			_loop460:
+			_loop466:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					column_name_ref();
 				}
 				else {
-					break _loop460;
+					break _loop466;
 				}
 				
 			} while (true);
@@ -14565,10 +14628,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		
 		try {      // for error handling
-			boolean synPredMatched501 = false;
+			boolean synPredMatched507 = false;
 			if (((_tokenSet_29.member(LA(1))) && (_tokenSet_135.member(LA(2))) && (_tokenSet_136.member(LA(3))))) {
-				int _m501 = mark();
-				synPredMatched501 = true;
+				int _m507 = mark();
+				synPredMatched507 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -14576,23 +14639,23 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched501 = false;
+					synPredMatched507 = false;
 				}
-				rewind(_m501);
+				rewind(_m507);
 				inputState.guessing--;
 			}
-			if ( synPredMatched501 ) {
+			if ( synPredMatched507 ) {
 				{
 				column_add_name();
 				{
-				_loop504:
+				_loop510:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						column_add_name();
 					}
 					else {
-						break _loop504;
+						break _loop510;
 					}
 					
 				} while (true);
@@ -14793,14 +14856,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					match(OPEN_PAREN);
 					identifier2();
 					{
-					_loop494:
+					_loop500:
 					do {
 						if ((LA(1)==COMMA)) {
 							match(COMMA);
 							identifier2();
 						}
 						else {
-							break _loop494;
+							break _loop500;
 						}
 						
 					} while (true);
@@ -14824,14 +14887,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				identifier2();
 				{
-				_loop497:
+				_loop503:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						identifier2();
 					}
 					else {
-						break _loop497;
+						break _loop503;
 					}
 					
 				} while (true);
@@ -14862,14 +14925,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			column_modi_name();
 			{
-			_loop508:
+			_loop514:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					column_modi_name();
 				}
 				else {
-					break _loop508;
+					break _loop514;
 				}
 				
 			} while (true);
@@ -15017,14 +15080,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				identifier2();
 				{
-				_loop556:
+				_loop562:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						identifier2();
 					}
 					else {
-						break _loop556;
+						break _loop562;
 					}
 					
 				} while (true);
@@ -15562,14 +15625,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					match(OPEN_PAREN);
 					identifier2();
 					{
-					_loop528:
+					_loop534:
 					do {
 						if ((LA(1)==COMMA)) {
 							match(COMMA);
 							identifier2();
 						}
 						else {
-							break _loop528;
+							break _loop534;
 						}
 						
 					} while (true);
@@ -15596,14 +15659,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					match(OPEN_PAREN);
 					identifier2();
 					{
-					_loop532:
+					_loop538:
 					do {
 						if ((LA(1)==COMMA)) {
 							match(COMMA);
 							identifier2();
 						}
 						else {
-							break _loop532;
+							break _loop538;
 						}
 						
 					} while (true);
@@ -15629,14 +15692,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				identifier2();
 				{
-				_loop536:
+				_loop542:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						identifier2();
 					}
 					else {
-						break _loop536;
+						break _loop542;
 					}
 					
 				} while (true);
@@ -15661,14 +15724,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				identifier2();
 				{
-				_loop540:
+				_loop546:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						identifier2();
 					}
 					else {
-						break _loop540;
+						break _loop546;
 					}
 					
 				} while (true);
@@ -16444,17 +16507,17 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			{
 				{
 				{
-				int _cnt575=0;
-				_loop575:
+				int _cnt581=0;
+				_loop581:
 				do {
 					if ((_tokenSet_147.member(LA(1)))) {
 						index_attributes();
 					}
 					else {
-						if ( _cnt575>=1 ) { break _loop575; } else {throw new NoViableAltException(LT(1), getFilename());}
+						if ( _cnt581>=1 ) { break _loop581; } else {throw new NoViableAltException(LT(1), getFilename());}
 					}
 					
-					_cnt575++;
+					_cnt581++;
 				} while (true);
 				}
 				}
@@ -16693,14 +16756,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			numeric_literal();
 			{
-			_loop589:
+			_loop595:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					numeric_literal();
 				}
 				else {
-					break _loop589;
+					break _loop595;
 				}
 				
 			} while (true);
@@ -16725,14 +16788,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			local_partition_item();
 			{
-			_loop594:
+			_loop600:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					local_partition_item();
 				}
 				else {
-					break _loop594;
+					break _loop600;
 				}
 				
 			} while (true);
@@ -16766,7 +16829,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			
 			}
 			{
-			_loop598:
+			_loop604:
 			do {
 				if ((_tokenSet_109.member(LA(1))) && (_tokenSet_151.member(LA(2))) && (_tokenSet_152.member(LA(3)))) {
 					segment_attributes_clause();
@@ -16775,7 +16838,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					table_compression();
 				}
 				else {
-					break _loop598;
+					break _loop604;
 				}
 				
 			} while (true);
@@ -16816,14 +16879,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			name_fragment();
 			{
-			_loop925:
+			_loop931:
 			do {
 				if ((LA(1)==DOT)) {
 					match(DOT);
 					name_fragment();
 				}
 				else {
-					break _loop925;
+					break _loop931;
 				}
 				
 			} while (true);
@@ -17154,19 +17217,19 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			_loop656:
+			_loop662:
 			do {
 				if ((LA(1)==ERROR_COND_CMPL)) {
 					error_cond_compliation();
 				}
 				else {
-					break _loop656;
+					break _loop662;
 				}
 				
 			} while (true);
 			}
 			{
-			_loop658:
+			_loop664:
 			do {
 				if ((_tokenSet_159.member(LA(1))) && (_tokenSet_160.member(LA(2))) && (_tokenSet_161.member(LA(3)))) {
 					package_obj_spec();
@@ -17175,7 +17238,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					package_obj_spec_addon();
 				}
 				else {
-					break _loop658;
+					break _loop664;
 				}
 				
 			} while (true);
@@ -17219,10 +17282,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		
 		try {      // for error handling
-			boolean synPredMatched720 = false;
+			boolean synPredMatched726 = false;
 			if (((LA(1)==LITERAL_function) && (_tokenSet_20.member(LA(2))) && (LA(3)==DOT||LA(3)==OPEN_PAREN||LA(3)==LITERAL_return))) {
-				int _m720 = mark();
-				synPredMatched720 = true;
+				int _m726 = mark();
+				synPredMatched726 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -17248,19 +17311,19 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched720 = false;
+					synPredMatched726 = false;
 				}
-				rewind(_m720);
+				rewind(_m726);
 				inputState.guessing--;
 			}
-			if ( synPredMatched720 ) {
+			if ( synPredMatched726 ) {
 				function_body();
 			}
 			else {
-				boolean synPredMatched723 = false;
+				boolean synPredMatched729 = false;
 				if (((LA(1)==LITERAL_procedure) && (_tokenSet_20.member(LA(2))) && (_tokenSet_169.member(LA(3))))) {
-					int _m723 = mark();
-					synPredMatched723 = true;
+					int _m729 = mark();
+					synPredMatched729 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -17286,12 +17349,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched723 = false;
+						synPredMatched729 = false;
 					}
-					rewind(_m723);
+					rewind(_m729);
 					inputState.guessing--;
 				}
-				if ( synPredMatched723 ) {
+				if ( synPredMatched729 ) {
 					procedure_body();
 				}
 				else if ((_tokenSet_159.member(LA(1))) && (_tokenSet_160.member(LA(2))) && (_tokenSet_161.member(LA(3)))) {
@@ -17343,17 +17406,17 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			int _cnt726=0;
-			_loop726:
+			int _cnt732=0;
+			_loop732:
 			do {
 				if ((_tokenSet_172.member(LA(1)))) {
 					statement_tmpl();
 				}
 				else {
-					if ( _cnt726>=1 ) { break _loop726; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt732>=1 ) { break _loop732; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt726++;
+				_cnt732++;
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
@@ -17389,10 +17452,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			}
 			match(LITERAL_is);
 			{
-			boolean synPredMatched712 = false;
+			boolean synPredMatched718 = false;
 			if (((_tokenSet_84.member(LA(1))) && (_tokenSet_176.member(LA(2))) && (_tokenSet_177.member(LA(3))))) {
-				int _m712 = mark();
-				synPredMatched712 = true;
+				int _m718 = mark();
+				synPredMatched718 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -17400,12 +17463,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched712 = false;
+					synPredMatched718 = false;
 				}
-				rewind(_m712);
+				rewind(_m718);
 				inputState.guessing--;
 			}
-			if ( synPredMatched712 ) {
+			if ( synPredMatched718 ) {
 				type_spec();
 			}
 			else if ((_tokenSet_5.member(LA(1))) && (LA(2)==PERCENTAGE) && (LA(3)==LITERAL_type)) {
@@ -17513,14 +17576,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				{
 				parameter_spec();
 				{
-				_loop950:
+				_loop956:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						parameter_spec();
 					}
 					else {
-						break _loop950;
+						break _loop956;
 					}
 					
 				} while (true);
@@ -17611,18 +17674,18 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				identifier3();
 				{
-				int _cnt677=0;
-				_loop677:
+				int _cnt683=0;
+				_loop683:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						identifier3();
 					}
 					else {
-						if ( _cnt677>=1 ) { break _loop677; } else {throw new NoViableAltException(LT(1), getFilename());}
+						if ( _cnt683>=1 ) { break _loop683; } else {throw new NoViableAltException(LT(1), getFilename());}
 					}
 					
-					_cnt677++;
+					_cnt683++;
 				} while (true);
 				}
 				match(CLOSE_PAREN);
@@ -17640,18 +17703,18 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				identifier3();
 				{
-				int _cnt680=0;
-				_loop680:
+				int _cnt686=0;
+				_loop686:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						identifier3();
 					}
 					else {
-						if ( _cnt680>=1 ) { break _loop680; } else {throw new NoViableAltException(LT(1), getFilename());}
+						if ( _cnt686>=1 ) { break _loop686; } else {throw new NoViableAltException(LT(1), getFilename());}
 					}
 					
-					_cnt680++;
+					_cnt686++;
 				} while (true);
 				}
 				match(CLOSE_PAREN);
@@ -17669,18 +17732,18 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				string_literal();
 				{
-				int _cnt683=0;
-				_loop683:
+				int _cnt689=0;
+				_loop689:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						plsql_expression();
 					}
 					else {
-						if ( _cnt683>=1 ) { break _loop683; } else {throw new NoViableAltException(LT(1), getFilename());}
+						if ( _cnt689>=1 ) { break _loop689; } else {throw new NoViableAltException(LT(1), getFilename());}
 					}
 					
-					_cnt683++;
+					_cnt689++;
 				} while (true);
 				}
 				match(CLOSE_PAREN);
@@ -17698,18 +17761,18 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				string_literal();
 				{
-				int _cnt686=0;
-				_loop686:
+				int _cnt692=0;
+				_loop692:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						plsql_expression();
 					}
 					else {
-						if ( _cnt686>=1 ) { break _loop686; } else {throw new NoViableAltException(LT(1), getFilename());}
+						if ( _cnt692>=1 ) { break _loop692; } else {throw new NoViableAltException(LT(1), getFilename());}
 					}
 					
-					_cnt686++;
+					_cnt692++;
 				} while (true);
 				}
 				match(CLOSE_PAREN);
@@ -17878,14 +17941,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			identifier();
 			{
-			_loop1065:
+			_loop1071:
 			do {
 				if ((LA(1)==DOT)) {
 					match(DOT);
 					identifier2();
 				}
 				else {
-					break _loop1065;
+					break _loop1071;
 				}
 				
 			} while (true);
@@ -17950,24 +18013,24 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			_loop693:
+			_loop699:
 			do {
 				if ((LA(1)==ERROR_COND_CMPL)) {
 					error_cond_compliation();
 				}
 				else {
-					break _loop693;
+					break _loop699;
 				}
 				
 			} while (true);
 			}
 			{
-			_loop701:
+			_loop707:
 			do {
-				boolean synPredMatched697 = false;
+				boolean synPredMatched703 = false;
 				if (((LA(1)==LITERAL_function) && (_tokenSet_20.member(LA(2))) && (LA(3)==DOT||LA(3)==OPEN_PAREN||LA(3)==LITERAL_return))) {
-					int _m697 = mark();
-					synPredMatched697 = true;
+					int _m703 = mark();
+					synPredMatched703 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -17993,19 +18056,19 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched697 = false;
+						synPredMatched703 = false;
 					}
-					rewind(_m697);
+					rewind(_m703);
 					inputState.guessing--;
 				}
-				if ( synPredMatched697 ) {
+				if ( synPredMatched703 ) {
 					function_body();
 				}
 				else {
-					boolean synPredMatched700 = false;
+					boolean synPredMatched706 = false;
 					if (((LA(1)==LITERAL_procedure) && (_tokenSet_20.member(LA(2))) && (_tokenSet_169.member(LA(3))))) {
-						int _m700 = mark();
-						synPredMatched700 = true;
+						int _m706 = mark();
+						synPredMatched706 = true;
 						inputState.guessing++;
 						try {
 							{
@@ -18031,12 +18094,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 							}
 						}
 						catch (RecognitionException pe) {
-							synPredMatched700 = false;
+							synPredMatched706 = false;
 						}
-						rewind(_m700);
+						rewind(_m706);
 						inputState.guessing--;
 					}
-					if ( synPredMatched700 ) {
+					if ( synPredMatched706 ) {
 						procedure_body();
 					}
 					else if ((_tokenSet_159.member(LA(1))) && (_tokenSet_160.member(LA(2))) && (_tokenSet_161.member(LA(3)))) {
@@ -18046,7 +18109,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						package_obj_spec_addon();
 					}
 					else {
-						break _loop701;
+						break _loop707;
 					}
 					}
 				} while (true);
@@ -18363,14 +18426,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			parameter_spec();
 			{
-			_loop1020:
+			_loop1026:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					parameter_spec();
 				}
 				else {
-					break _loop1020;
+					break _loop1026;
 				}
 				
 			} while (true);
@@ -18575,10 +18638,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				break;
 			}
 			default:
-				boolean synPredMatched736 = false;
+				boolean synPredMatched742 = false;
 				if (((_tokenSet_191.member(LA(1))) && (_tokenSet_192.member(LA(2))) && (_tokenSet_193.member(LA(3))))) {
-					int _m736 = mark();
-					synPredMatched736 = true;
+					int _m742 = mark();
+					synPredMatched742 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -18606,22 +18669,22 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched736 = false;
+						synPredMatched742 = false;
 					}
-					rewind(_m736);
+					rewind(_m742);
 					inputState.guessing--;
 				}
-				if ( synPredMatched736 ) {
+				if ( synPredMatched742 ) {
 					loop_statement();
 					if ( inputState.guessing==0 ) {
 						__markRule(LOOP_STATEMENT);
 					}
 				}
 				else {
-					boolean synPredMatched752 = false;
+					boolean synPredMatched758 = false;
 					if (((_tokenSet_194.member(LA(1))) && (_tokenSet_195.member(LA(2))) && (_tokenSet_196.member(LA(3))))) {
-						int _m752 = mark();
-						synPredMatched752 = true;
+						int _m758 = mark();
+						synPredMatched758 = true;
 						inputState.guessing++;
 						try {
 							{
@@ -18679,19 +18742,19 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 							}
 						}
 						catch (RecognitionException pe) {
-							synPredMatched752 = false;
+							synPredMatched758 = false;
 						}
-						rewind(_m752);
+						rewind(_m758);
 						inputState.guessing--;
 					}
-					if ( synPredMatched752 ) {
+					if ( synPredMatched758 ) {
 						sql_statement();
 					}
 					else {
-						boolean synPredMatched754 = false;
+						boolean synPredMatched760 = false;
 						if (((LA(1)==LITERAL_execute) && (LA(2)==LITERAL_immediate) && (_tokenSet_53.member(LA(3))))) {
-							int _m754 = mark();
-							synPredMatched754 = true;
+							int _m760 = mark();
+							synPredMatched760 = true;
 							inputState.guessing++;
 							try {
 								{
@@ -18699,19 +18762,19 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 								}
 							}
 							catch (RecognitionException pe) {
-								synPredMatched754 = false;
+								synPredMatched760 = false;
 							}
-							rewind(_m754);
+							rewind(_m760);
 							inputState.guessing--;
 						}
-						if ( synPredMatched754 ) {
+						if ( synPredMatched760 ) {
 							immediate_command();
 						}
 						else {
-							boolean synPredMatched758 = false;
+							boolean synPredMatched764 = false;
 							if (((LA(1)==LITERAL_open) && (LA(2)==IDENTIFIER||LA(2)==DOUBLE_QUOTED_STRING) && (_tokenSet_197.member(LA(3))))) {
-								int _m758 = mark();
-								synPredMatched758 = true;
+								int _m764 = mark();
+								synPredMatched764 = true;
 								inputState.guessing++;
 								try {
 									{
@@ -18719,19 +18782,19 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 									}
 								}
 								catch (RecognitionException pe) {
-									synPredMatched758 = false;
+									synPredMatched764 = false;
 								}
-								rewind(_m758);
+								rewind(_m764);
 								inputState.guessing--;
 							}
-							if ( synPredMatched758 ) {
+							if ( synPredMatched764 ) {
 								open_statement();
 							}
 							else {
-								boolean synPredMatched760 = false;
+								boolean synPredMatched766 = false;
 								if (((LA(1)==LITERAL_close) && (LA(2)==IDENTIFIER||LA(2)==DOUBLE_QUOTED_STRING) && (LA(3)==SEMI))) {
-									int _m760 = mark();
-									synPredMatched760 = true;
+									int _m766 = mark();
+									synPredMatched766 = true;
 									inputState.guessing++;
 									try {
 										{
@@ -18739,22 +18802,22 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 										}
 									}
 									catch (RecognitionException pe) {
-										synPredMatched760 = false;
+										synPredMatched766 = false;
 									}
-									rewind(_m760);
+									rewind(_m766);
 									inputState.guessing--;
 								}
-								if ( synPredMatched760 ) {
+								if ( synPredMatched766 ) {
 									close_statement();
 								}
 								else if ((LA(1)==LITERAL_savepoint) && (LA(2)==IDENTIFIER||LA(2)==DOUBLE_QUOTED_STRING) && (LA(3)==SEMI)) {
 									savepoint_statement();
 								}
 								else {
-									boolean synPredMatched764 = false;
+									boolean synPredMatched770 = false;
 									if (((_tokenSet_70.member(LA(1))) && (_tokenSet_73.member(LA(2))) && (_tokenSet_74.member(LA(3))))) {
-										int _m764 = mark();
-										synPredMatched764 = true;
+										int _m770 = mark();
+										synPredMatched770 = true;
 										inputState.guessing++;
 										try {
 											{
@@ -18763,31 +18826,31 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 											}
 										}
 										catch (RecognitionException pe) {
-											synPredMatched764 = false;
+											synPredMatched770 = false;
 										}
-										rewind(_m764);
+										rewind(_m770);
 										inputState.guessing--;
 									}
-									if ( synPredMatched764 ) {
+									if ( synPredMatched770 ) {
 										assignment_statement();
 									}
 									else {
-										boolean synPredMatched768 = false;
+										boolean synPredMatched774 = false;
 										if (((_tokenSet_20.member(LA(1))) && (LA(2)==SEMI||LA(2)==DOT) && (_tokenSet_190.member(LA(3))))) {
-											int _m768 = mark();
-											synPredMatched768 = true;
+											int _m774 = mark();
+											synPredMatched774 = true;
 											inputState.guessing++;
 											try {
 												{
 												{
-												_loop767:
+												_loop773:
 												do {
 													if ((_tokenSet_20.member(LA(1))) && (LA(2)==DOT) && (_tokenSet_20.member(LA(3)))) {
 														name_fragment_ex();
 														match(DOT);
 													}
 													else {
-														break _loop767;
+														break _loop773;
 													}
 													
 												} while (true);
@@ -18797,19 +18860,19 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 												}
 											}
 											catch (RecognitionException pe) {
-												synPredMatched768 = false;
+												synPredMatched774 = false;
 											}
-											rewind(_m768);
+											rewind(_m774);
 											inputState.guessing--;
 										}
-										if ( synPredMatched768 ) {
+										if ( synPredMatched774 ) {
 											procedure_call_no_args();
 										}
 										else if ((_tokenSet_20.member(LA(1))) && (LA(2)==DOT||LA(2)==OPEN_PAREN) && (_tokenSet_75.member(LA(3)))) {
 											{
 											procedure_call();
 											{
-											_loop771:
+											_loop777:
 											do {
 												if ((LA(1)==DOT)) {
 													match(DOT);
@@ -18819,7 +18882,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 													procedure_call();
 												}
 												else {
-													break _loop771;
+													break _loop777;
 												}
 												
 											} while (true);
@@ -18906,10 +18969,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				{
 				match(LITERAL_for);
 				{
-				boolean synPredMatched1052 = false;
+				boolean synPredMatched1058 = false;
 				if (((_tokenSet_5.member(LA(1))) && (LA(2)==LITERAL_in) && (_tokenSet_53.member(LA(3))))) {
-					int _m1052 = mark();
-					synPredMatched1052 = true;
+					int _m1058 = mark();
+					synPredMatched1058 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -18917,12 +18980,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched1052 = false;
+						synPredMatched1058 = false;
 					}
-					rewind(_m1052);
+					rewind(_m1058);
 					inputState.guessing--;
 				}
-				if ( synPredMatched1052 ) {
+				if ( synPredMatched1058 ) {
 					numeric_loop_spec();
 				}
 				else if ((_tokenSet_5.member(LA(1))) && (LA(2)==LITERAL_in) && (_tokenSet_199.member(LA(3)))) {
@@ -19017,13 +19080,13 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_then);
 			seq_of_statements();
 			{
-			_loop1255:
+			_loop1261:
 			do {
 				if ((LA(1)==LITERAL_elsif)) {
 					elsif_statements();
 				}
 				else {
-					break _loop1255;
+					break _loop1261;
 				}
 				
 			} while (true);
@@ -19225,17 +19288,17 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			match(LITERAL_case);
 			{
-			boolean synPredMatched786 = false;
+			boolean synPredMatched792 = false;
 			if (((_tokenSet_53.member(LA(1))))) {
-				int _m786 = mark();
-				synPredMatched786 = true;
+				int _m792 = mark();
+				synPredMatched792 = true;
 				inputState.guessing++;
 				try {
 					{
 					plsql_expression();
 					{
-					int _cnt785=0;
-					_loop785:
+					int _cnt791=0;
+					_loop791:
 					do {
 						if ((LA(1)==LITERAL_when)) {
 							match(LITERAL_when);
@@ -19244,25 +19307,25 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 							seq_of_statements();
 						}
 						else {
-							if ( _cnt785>=1 ) { break _loop785; } else {throw new NoViableAltException(LT(1), getFilename());}
+							if ( _cnt791>=1 ) { break _loop791; } else {throw new NoViableAltException(LT(1), getFilename());}
 						}
 						
-						_cnt785++;
+						_cnt791++;
 					} while (true);
 					}
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched786 = false;
+					synPredMatched792 = false;
 				}
-				rewind(_m786);
+				rewind(_m792);
 				inputState.guessing--;
 			}
-			if ( synPredMatched786 ) {
+			if ( synPredMatched792 ) {
 				plsql_expression();
 				{
-				int _cnt788=0;
-				_loop788:
+				int _cnt794=0;
+				_loop794:
 				do {
 					if ((LA(1)==LITERAL_when)) {
 						match(LITERAL_when);
@@ -19271,17 +19334,17 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						seq_of_statements();
 					}
 					else {
-						if ( _cnt788>=1 ) { break _loop788; } else {throw new NoViableAltException(LT(1), getFilename());}
+						if ( _cnt794>=1 ) { break _loop794; } else {throw new NoViableAltException(LT(1), getFilename());}
 					}
 					
-					_cnt788++;
+					_cnt794++;
 				} while (true);
 				}
 			}
 			else if ((LA(1)==LITERAL_when)) {
 				{
-				int _cnt790=0;
-				_loop790:
+				int _cnt796=0;
+				_loop796:
 				do {
 					if ((LA(1)==LITERAL_when)) {
 						match(LITERAL_when);
@@ -19291,10 +19354,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						seq_of_statements();
 					}
 					else {
-						if ( _cnt790>=1 ) { break _loop790; } else {throw new NoViableAltException(LT(1), getFilename());}
+						if ( _cnt796>=1 ) { break _loop796; } else {throw new NoViableAltException(LT(1), getFilename());}
 					}
 					
-					_cnt790++;
+					_cnt796++;
 				} while (true);
 				}
 			}
@@ -19345,10 +19408,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_execute);
 			match(LITERAL_immediate);
 			{
-			boolean synPredMatched1303 = false;
+			boolean synPredMatched1309 = false;
 			if (((_tokenSet_70.member(LA(1))) && (_tokenSet_200.member(LA(2))) && (_tokenSet_201.member(LA(3))))) {
-				int _m1303 = mark();
-				synPredMatched1303 = true;
+				int _m1309 = mark();
+				synPredMatched1309 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -19356,12 +19419,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched1303 = false;
+					synPredMatched1309 = false;
 				}
-				rewind(_m1303);
+				rewind(_m1309);
 				inputState.guessing--;
 			}
-			if ( synPredMatched1303 ) {
+			if ( synPredMatched1309 ) {
 				plsql_lvalue();
 			}
 			else if ((_tokenSet_53.member(LA(1))) && (_tokenSet_202.member(LA(2))) && (_tokenSet_203.member(LA(3)))) {
@@ -19633,14 +19696,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_into);
 			variable_ref();
 			{
-			_loop1476:
+			_loop1482:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					variable_ref();
 				}
 				else {
-					break _loop1476;
+					break _loop1482;
 				}
 				
 			} while (true);
@@ -19933,10 +19996,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			case LITERAL_function:
 			{
 				{
-				boolean synPredMatched798 = false;
+				boolean synPredMatched804 = false;
 				if (((LA(1)==LITERAL_function) && (_tokenSet_20.member(LA(2))) && (LA(3)==DOT||LA(3)==OPEN_PAREN||LA(3)==LITERAL_return))) {
-					int _m798 = mark();
-					synPredMatched798 = true;
+					int _m804 = mark();
+					synPredMatched804 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -19944,12 +20007,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched798 = false;
+						synPredMatched804 = false;
 					}
-					rewind(_m798);
+					rewind(_m804);
 					inputState.guessing--;
 				}
-				if ( synPredMatched798 ) {
+				if ( synPredMatched804 ) {
 					function_body();
 				}
 				else if ((LA(1)==LITERAL_function) && (_tokenSet_20.member(LA(2))) && (LA(3)==DOT||LA(3)==OPEN_PAREN||LA(3)==LITERAL_return)) {
@@ -19965,10 +20028,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			case LITERAL_procedure:
 			{
 				{
-				boolean synPredMatched801 = false;
+				boolean synPredMatched807 = false;
 				if (((LA(1)==LITERAL_procedure) && (_tokenSet_20.member(LA(2))) && (_tokenSet_169.member(LA(3))))) {
-					int _m801 = mark();
-					synPredMatched801 = true;
+					int _m807 = mark();
+					synPredMatched807 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -19976,12 +20039,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched801 = false;
+						synPredMatched807 = false;
 					}
-					rewind(_m801);
+					rewind(_m807);
 					inputState.guessing--;
 				}
-				if ( synPredMatched801 ) {
+				if ( synPredMatched807 ) {
 					procedure_body();
 				}
 				else if ((LA(1)==LITERAL_procedure) && (_tokenSet_20.member(LA(2))) && (_tokenSet_206.member(LA(3)))) {
@@ -19995,10 +20058,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				break;
 			}
 			default:
-				boolean synPredMatched795 = false;
+				boolean synPredMatched801 = false;
 				if (((LA(1)==LITERAL_pragma) && (LA(2)==LITERAL_autonomous_transaction))) {
-					int _m795 = mark();
-					synPredMatched795 = true;
+					int _m801 = mark();
+					synPredMatched801 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -20007,12 +20070,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched795 = false;
+						synPredMatched801 = false;
 					}
-					rewind(_m795);
+					rewind(_m801);
 					inputState.guessing--;
 				}
-				if ( synPredMatched795 ) {
+				if ( synPredMatched801 ) {
 					pragma_autonomous_transaction();
 				}
 				else if ((LA(1)==LITERAL_pragma) && (LA(2)==LITERAL_exception_init)) {
@@ -20085,10 +20148,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		boolean tag1=false;
 		
 		try {      // for error handling
-			boolean synPredMatched809 = false;
+			boolean synPredMatched815 = false;
 			if (((_tokenSet_208.member(LA(1))) && (_tokenSet_68.member(LA(2))) && (_tokenSet_3.member(LA(3))))) {
-				int _m809 = mark();
-				synPredMatched809 = true;
+				int _m815 = mark();
+				synPredMatched815 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -20104,14 +20167,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					
 					}
 					{
-					_loop808:
+					_loop814:
 					do {
 						if ((_tokenSet_29.member(LA(1))) && (LA(2)==DOT) && (_tokenSet_29.member(LA(3)))) {
 							name_fragment2();
 							match(DOT);
 						}
 						else {
-							break _loop808;
+							break _loop814;
 						}
 						
 					} while (true);
@@ -20121,12 +20184,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched809 = false;
+					synPredMatched815 = false;
 				}
-				rewind(_m809);
+				rewind(_m815);
 				inputState.guessing--;
 			}
-			if ( synPredMatched809 ) {
+			if ( synPredMatched815 ) {
 				{
 				{
 				if ((LA(1)==LITERAL_prior)) {
@@ -20140,14 +20203,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				
 				}
 				{
-				_loop813:
+				_loop819:
 				do {
 					if ((_tokenSet_29.member(LA(1))) && (LA(2)==DOT)) {
 						name_fragment2();
 						match(DOT);
 					}
 					else {
-						break _loop813;
+						break _loop819;
 					}
 					
 				} while (true);
@@ -20159,10 +20222,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				}
 			}
 			else {
-				boolean synPredMatched816 = false;
+				boolean synPredMatched822 = false;
 				if (((LA(1)==COLON))) {
-					int _m816 = mark();
-					synPredMatched816 = true;
+					int _m822 = mark();
+					synPredMatched822 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -20189,12 +20252,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched816 = false;
+						synPredMatched822 = false;
 					}
-					rewind(_m816);
+					rewind(_m822);
 					inputState.guessing--;
 				}
-				if ( synPredMatched816 ) {
+				if ( synPredMatched822 ) {
 					{
 					match(COLON);
 					{
@@ -20226,7 +20289,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					{
 					function_call();
 					{
-					_loop824:
+					_loop830:
 					do {
 						if ((LA(1)==DOT)) {
 							match(DOT);
@@ -20234,10 +20297,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 								tag1=true;
 							}
 							{
-							boolean synPredMatched823 = false;
+							boolean synPredMatched829 = false;
 							if (((_tokenSet_20.member(LA(1))) && (LA(2)==DOT||LA(2)==OPEN_PAREN) && (_tokenSet_75.member(LA(3))))) {
-								int _m823 = mark();
-								synPredMatched823 = true;
+								int _m829 = mark();
+								synPredMatched829 = true;
 								inputState.guessing++;
 								try {
 									{
@@ -20245,12 +20308,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 									}
 								}
 								catch (RecognitionException pe) {
-									synPredMatched823 = false;
+									synPredMatched829 = false;
 								}
-								rewind(_m823);
+								rewind(_m829);
 								inputState.guessing--;
 							}
-							if ( synPredMatched823 ) {
+							if ( synPredMatched829 ) {
 								function_call();
 							}
 							else if ((_tokenSet_5.member(LA(1))) && (_tokenSet_68.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
@@ -20263,7 +20326,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 							}
 						}
 						else {
-							break _loop824;
+							break _loop830;
 						}
 						
 					} while (true);
@@ -20822,18 +20885,18 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			identifier3();
 			{
-			int _cnt961=0;
-			_loop961:
+			int _cnt967=0;
+			_loop967:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					identifier3();
 				}
 				else {
-					if ( _cnt961>=1 ) { break _loop961; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt967>=1 ) { break _loop967; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt961++;
+				_cnt967++;
 			} while (true);
 			}
 			match(CLOSE_PAREN);
@@ -20861,18 +20924,18 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			identifier3();
 			{
-			int _cnt964=0;
-			_loop964:
+			int _cnt970=0;
+			_loop970:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					identifier3();
 				}
 				else {
-					if ( _cnt964>=1 ) { break _loop964; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt970>=1 ) { break _loop970; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt964++;
+				_cnt970++;
 			} while (true);
 			}
 			match(CLOSE_PAREN);
@@ -20900,18 +20963,18 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			string_literal();
 			{
-			int _cnt967=0;
-			_loop967:
+			int _cnt973=0;
+			_loop973:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					plsql_expression();
 				}
 				else {
-					if ( _cnt967>=1 ) { break _loop967; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt973>=1 ) { break _loop973; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt967++;
+				_cnt973++;
 			} while (true);
 			}
 			match(CLOSE_PAREN);
@@ -20939,18 +21002,18 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			string_literal();
 			{
-			int _cnt970=0;
-			_loop970:
+			int _cnt976=0;
+			_loop976:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					plsql_expression();
 				}
 				else {
-					if ( _cnt970>=1 ) { break _loop970; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt976>=1 ) { break _loop976; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt970++;
+				_cnt976++;
 			} while (true);
 			}
 			match(CLOSE_PAREN);
@@ -21092,8 +21155,8 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			int _cnt1001=0;
-			_loop1001:
+			int _cnt1007=0;
+			_loop1007:
 			do {
 				if ((_tokenSet_159.member(LA(1))) && (_tokenSet_219.member(LA(2))) && (_tokenSet_161.member(LA(3)))) {
 					declare_spec();
@@ -21105,10 +21168,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					exception_declaration();
 				}
 				else {
-					if ( _cnt1001>=1 ) { break _loop1001; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt1007>=1 ) { break _loop1007; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt1001++;
+				_cnt1007++;
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
@@ -21187,17 +21250,17 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			match(LITERAL_exception);
 			{
-			int _cnt998=0;
-			_loop998:
+			int _cnt1004=0;
+			_loop1004:
 			do {
 				if ((LA(1)==LITERAL_when)) {
 					exception_handler();
 				}
 				else {
-					if ( _cnt998>=1 ) { break _loop998; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt1004>=1 ) { break _loop1004; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt998++;
+				_cnt1004++;
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
@@ -21225,7 +21288,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_when);
 			exception_name();
 			{
-			_loop1004:
+			_loop1010:
 			do {
 				if ((LA(1)==LITERAL_or)) {
 					o = LT(1);
@@ -21233,7 +21296,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					exception_name();
 				}
 				else {
-					break _loop1004;
+					break _loop1010;
 				}
 				
 			} while (true);
@@ -21261,14 +21324,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			if ((_tokenSet_65.member(LA(1)))) {
 				call_argument();
 				{
-				_loop1337:
+				_loop1343:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						call_argument();
 					}
 					else {
-						break _loop1337;
+						break _loop1343;
 					}
 					
 				} while (true);
@@ -21604,7 +21667,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			num_term();
 			{
-			_loop1075:
+			_loop1081:
 			do {
 				if ((LA(1)==PLUS||LA(1)==MINUS) && (_tokenSet_53.member(LA(2))) && (_tokenSet_76.member(LA(3)))) {
 					{
@@ -21634,7 +21697,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					num_term();
 				}
 				else {
-					break _loop1075;
+					break _loop1081;
 				}
 				
 			} while (true);
@@ -21669,7 +21732,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			num_factor();
 			{
-			_loop1079:
+			_loop1085:
 			do {
 				if ((LA(1)==ASTERISK||LA(1)==DIVIDE) && (_tokenSet_53.member(LA(2))) && (_tokenSet_76.member(LA(3)))) {
 					{
@@ -21701,7 +21764,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					num_factor();
 				}
 				else {
-					break _loop1079;
+					break _loop1085;
 				}
 				
 			} while (true);
@@ -22042,14 +22105,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			plsql_expression();
 			{
-			_loop1099:
+			_loop1105:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					plsql_expression();
 				}
 				else {
-					break _loop1099;
+					break _loop1105;
 				}
 				
 			} while (true);
@@ -22095,7 +22158,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			maybe_neg_factor();
 			{
-			_loop1106:
+			_loop1112:
 			do {
 				if ((LA(1)==LITERAL_and)) {
 					match(LITERAL_and);
@@ -22105,7 +22168,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					maybe_neg_factor();
 				}
 				else {
-					break _loop1106;
+					break _loop1112;
 				}
 				
 			} while (true);
@@ -22171,10 +22234,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		boolean tag1 = false;
 		
 		try {      // for error handling
-			boolean synPredMatched1111 = false;
+			boolean synPredMatched1117 = false;
 			if (((LA(1)==LITERAL_current) && (LA(2)==LITERAL_of))) {
-				int _m1111 = mark();
-				synPredMatched1111 = true;
+				int _m1117 = mark();
+				synPredMatched1117 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -22183,12 +22246,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched1111 = false;
+					synPredMatched1117 = false;
 				}
-				rewind(_m1111);
+				rewind(_m1117);
 				inputState.guessing--;
 			}
-			if ( synPredMatched1111 ) {
+			if ( synPredMatched1117 ) {
 				{
 				match(LITERAL_current);
 				match(LITERAL_of);
@@ -22199,10 +22262,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				}
 			}
 			else {
-				boolean synPredMatched1114 = false;
+				boolean synPredMatched1120 = false;
 				if (((LA(1)==LITERAL_exists) && (LA(2)==OPEN_PAREN) && (LA(3)==OPEN_PAREN||LA(3)==LITERAL_select))) {
-					int _m1114 = mark();
-					synPredMatched1114 = true;
+					int _m1120 = mark();
+					synPredMatched1120 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -22210,12 +22273,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched1114 = false;
+						synPredMatched1120 = false;
 					}
-					rewind(_m1114);
+					rewind(_m1120);
 					inputState.guessing--;
 				}
-				if ( synPredMatched1114 ) {
+				if ( synPredMatched1120 ) {
 					match(LITERAL_exists);
 					subquery();
 					if ( inputState.guessing==0 ) {
@@ -22223,10 +22286,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				else {
-					boolean synPredMatched1119 = false;
+					boolean synPredMatched1125 = false;
 					if (((LA(1)==OPEN_PAREN) && (_tokenSet_53.member(LA(2))) && (_tokenSet_236.member(LA(3))))) {
-						int _m1119 = mark();
-						synPredMatched1119 = true;
+						int _m1125 = mark();
+						synPredMatched1125 = true;
 						inputState.guessing++;
 						try {
 							{
@@ -22281,12 +22344,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 							}
 						}
 						catch (RecognitionException pe) {
-							synPredMatched1119 = false;
+							synPredMatched1125 = false;
 						}
-						rewind(_m1119);
+						rewind(_m1125);
 						inputState.guessing--;
 					}
-					if ( synPredMatched1119 ) {
+					if ( synPredMatched1125 ) {
 						match(OPEN_PAREN);
 						expr_list();
 						match(CLOSE_PAREN);
@@ -22491,10 +22554,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 							break;
 						}
 						default:
-							boolean synPredMatched1128 = false;
+							boolean synPredMatched1134 = false;
 							if (((LA(1)==LITERAL_not||LA(1)==LITERAL_in) && (_tokenSet_238.member(LA(2))) && (_tokenSet_239.member(LA(3))))) {
-								int _m1128 = mark();
-								synPredMatched1128 = true;
+								int _m1134 = mark();
+								synPredMatched1134 = true;
 								inputState.guessing++;
 								try {
 									{
@@ -22519,12 +22582,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 									}
 								}
 								catch (RecognitionException pe) {
-									synPredMatched1128 = false;
+									synPredMatched1134 = false;
 								}
-								rewind(_m1128);
+								rewind(_m1134);
 								inputState.guessing--;
 							}
-							if ( synPredMatched1128 ) {
+							if ( synPredMatched1134 ) {
 								{
 								switch ( LA(1)) {
 								case LITERAL_not:
@@ -22549,10 +22612,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 								}
 							}
 							else {
-								boolean synPredMatched1132 = false;
+								boolean synPredMatched1138 = false;
 								if (((LA(1)==LITERAL_not||LA(1)==LITERAL_like) && (_tokenSet_240.member(LA(2))) && (_tokenSet_239.member(LA(3))))) {
-									int _m1132 = mark();
-									synPredMatched1132 = true;
+									int _m1138 = mark();
+									synPredMatched1138 = true;
 									inputState.guessing++;
 									try {
 										{
@@ -22577,12 +22640,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 										}
 									}
 									catch (RecognitionException pe) {
-										synPredMatched1132 = false;
+										synPredMatched1138 = false;
 									}
-									rewind(_m1132);
+									rewind(_m1138);
 									inputState.guessing--;
 								}
-								if ( synPredMatched1132 ) {
+								if ( synPredMatched1138 ) {
 									{
 									switch ( LA(1)) {
 									case LITERAL_not:
@@ -22729,10 +22792,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 									}
 								}
 								else {
-									boolean synPredMatched1138 = false;
+									boolean synPredMatched1144 = false;
 									if (((LA(1)==LITERAL_not||LA(1)==LITERAL_between) && (_tokenSet_241.member(LA(2))) && (_tokenSet_242.member(LA(3))))) {
-										int _m1138 = mark();
-										synPredMatched1138 = true;
+										int _m1144 = mark();
+										synPredMatched1144 = true;
 										inputState.guessing++;
 										try {
 											{
@@ -22757,12 +22820,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 											}
 										}
 										catch (RecognitionException pe) {
-											synPredMatched1138 = false;
+											synPredMatched1144 = false;
 										}
-										rewind(_m1138);
+										rewind(_m1144);
 										inputState.guessing--;
 									}
-									if ( synPredMatched1138 ) {
+									if ( synPredMatched1144 ) {
 										{
 										switch ( LA(1)) {
 										case LITERAL_not:
@@ -22789,10 +22852,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 										}
 									}
 									else {
-										boolean synPredMatched1144 = false;
+										boolean synPredMatched1150 = false;
 										if (((LA(1)==LITERAL_not||LA(1)==LITERAL_member) && (LA(2)==LITERAL_of||LA(2)==LITERAL_member))) {
-											int _m1144 = mark();
-											synPredMatched1144 = true;
+											int _m1150 = mark();
+											synPredMatched1150 = true;
 											inputState.guessing++;
 											try {
 												{
@@ -22818,12 +22881,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 												}
 											}
 											catch (RecognitionException pe) {
-												synPredMatched1144 = false;
+												synPredMatched1150 = false;
 											}
-											rewind(_m1144);
+											rewind(_m1150);
 											inputState.guessing--;
 										}
-										if ( synPredMatched1144 ) {
+										if ( synPredMatched1150 ) {
 											{
 											{
 											switch ( LA(1)) {
@@ -22964,10 +23027,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		
 		try {      // for error handling
-			boolean synPredMatched1403 = false;
+			boolean synPredMatched1409 = false;
 			if (((LA(1)==OPEN_PAREN) && (LA(2)==OPEN_PAREN||LA(2)==LITERAL_select) && (_tokenSet_64.member(LA(3))))) {
-				int _m1403 = mark();
-				synPredMatched1403 = true;
+				int _m1409 = mark();
+				synPredMatched1409 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -22976,12 +23039,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched1403 = false;
+					synPredMatched1409 = false;
 				}
-				rewind(_m1403);
+				rewind(_m1409);
 				inputState.guessing--;
 			}
-			if ( synPredMatched1403 ) {
+			if ( synPredMatched1409 ) {
 				subquery();
 			}
 			else if ((LA(1)==OPEN_PAREN) && (_tokenSet_53.member(LA(2))) && (_tokenSet_236.member(LA(3)))) {
@@ -23056,10 +23119,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				asterisk_column();
 			}
 			else {
-				boolean synPredMatched1230 = false;
+				boolean synPredMatched1236 = false;
 				if (((_tokenSet_5.member(LA(1))) && (LA(2)==DOT) && (LA(3)==ASTERISK))) {
-					int _m1230 = mark();
-					synPredMatched1230 = true;
+					int _m1236 = mark();
+					synPredMatched1236 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -23067,12 +23130,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched1230 = false;
+						synPredMatched1236 = false;
 					}
-					rewind(_m1230);
+					rewind(_m1236);
 					inputState.guessing--;
 				}
-				if ( synPredMatched1230 ) {
+				if ( synPredMatched1236 ) {
 					ident_asterisk_column();
 				}
 				else if ((_tokenSet_244.member(LA(1))) && (_tokenSet_245.member(LA(2))) && (_tokenSet_246.member(LA(3)))) {
@@ -23122,8 +23185,8 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			{
 			if ((LA(1)==LITERAL_when)) {
 				{
-				int _cnt1249=0;
-				_loop1249:
+				int _cnt1255=0;
+				_loop1255:
 				do {
 					if ((LA(1)==LITERAL_when)) {
 						match(LITERAL_when);
@@ -23133,10 +23196,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						plsql_expression();
 					}
 					else {
-						if ( _cnt1249>=1 ) { break _loop1249; } else {throw new NoViableAltException(LT(1), getFilename());}
+						if ( _cnt1255>=1 ) { break _loop1255; } else {throw new NoViableAltException(LT(1), getFilename());}
 					}
 					
-					_cnt1249++;
+					_cnt1255++;
 				} while (true);
 				}
 			}
@@ -23146,8 +23209,8 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					tag1 = true;
 				}
 				{
-				int _cnt1251=0;
-				_loop1251:
+				int _cnt1257=0;
+				_loop1257:
 				do {
 					if ((LA(1)==LITERAL_when)) {
 						match(LITERAL_when);
@@ -23156,10 +23219,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						plsql_expression();
 					}
 					else {
-						if ( _cnt1251>=1 ) { break _loop1251; } else {throw new NoViableAltException(LT(1), getFilename());}
+						if ( _cnt1257>=1 ) { break _loop1257; } else {throw new NoViableAltException(LT(1), getFilename());}
 					}
 					
-					_cnt1251++;
+					_cnt1257++;
 				} while (true);
 				}
 			}
@@ -23597,14 +23660,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_by);
 			sorted_def();
 			{
-			_loop1415:
+			_loop1421:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					sorted_def();
 				}
 				else {
-					break _loop1415;
+					break _loop1421;
 				}
 				
 			} while (true);
@@ -23630,14 +23693,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			plsql_expression();
 			{
-			_loop1220:
+			_loop1226:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					plsql_expression();
 				}
 				else {
-					break _loop1220;
+					break _loop1226;
 				}
 				
 			} while (true);
@@ -23817,17 +23880,17 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			int _cnt1242=0;
-			_loop1242:
+			int _cnt1248=0;
+			_loop1248:
 			do {
 				if ((LA(1)==QUOTED_STR)) {
 					match(QUOTED_STR);
 				}
 				else {
-					if ( _cnt1242>=1 ) { break _loop1242; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt1248>=1 ) { break _loop1248; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt1242++;
+				_cnt1248++;
 			} while (true);
 			}
 		}
@@ -23973,10 +24036,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_insert);
 			match(LITERAL_into);
 			{
-			boolean synPredMatched1430 = false;
+			boolean synPredMatched1436 = false;
 			if (((_tokenSet_88.member(LA(1))))) {
-				int _m1430 = mark();
-				synPredMatched1430 = true;
+				int _m1436 = mark();
+				synPredMatched1436 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -23984,12 +24047,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched1430 = false;
+					synPredMatched1436 = false;
 				}
-				rewind(_m1430);
+				rewind(_m1436);
 				inputState.guessing--;
 			}
-			if ( synPredMatched1430 ) {
+			if ( synPredMatched1436 ) {
 				table_alias();
 				{
 				if ((LA(1)==OPEN_PAREN) && (_tokenSet_29.member(LA(2))) && (LA(3)==DOT||LA(3)==COMMA||LA(3)==CLOSE_PAREN)) {
@@ -24148,10 +24211,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			boolean synPredMatched1444 = false;
+			boolean synPredMatched1450 = false;
 			if (((LA(1)==LITERAL_update) && (_tokenSet_88.member(LA(2))) && (_tokenSet_255.member(LA(3))))) {
-				int _m1444 = mark();
-				synPredMatched1444 = true;
+				int _m1450 = mark();
+				synPredMatched1450 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -24159,12 +24222,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched1444 = false;
+					synPredMatched1450 = false;
 				}
-				rewind(_m1444);
+				rewind(_m1450);
 				inputState.guessing--;
 			}
-			if ( synPredMatched1444 ) {
+			if ( synPredMatched1450 ) {
 				subquery_update();
 			}
 			else if ((LA(1)==LITERAL_update) && (_tokenSet_88.member(LA(2))) && (_tokenSet_255.member(LA(3)))) {
@@ -24489,14 +24552,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			}
 			privilege();
 			{
-			_loop1263:
+			_loop1269:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					privilege();
 				}
 				else {
-					break _loop1263;
+					break _loop1269;
 				}
 				
 			} while (true);
@@ -25193,14 +25256,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			}
 			displayed_column();
 			{
-			_loop1292:
+			_loop1298:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					displayed_column();
 				}
 				else {
-					break _loop1292;
+					break _loop1298;
 				}
 				
 			} while (true);
@@ -25261,7 +25324,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_from);
 			selected_table();
 			{
-			_loop1329:
+			_loop1335:
 			do {
 				switch ( LA(1)) {
 				case LITERAL_left:
@@ -25371,7 +25434,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				}
 				default:
 				{
-					break _loop1329;
+					break _loop1335;
 				}
 				}
 			} while (true);
@@ -25450,14 +25513,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_by);
 			plsql_expression();
 			{
-			_loop1411:
+			_loop1417:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					plsql_expression();
 				}
 				else {
-					break _loop1411;
+					break _loop1417;
 				}
 				
 			} while (true);
@@ -25566,14 +25629,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(LITERAL_of);
 				column_name_ref();
 				{
-				_loop1424:
+				_loop1430:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						column_name_ref();
 					}
 					else {
-						break _loop1424;
+						break _loop1430;
 					}
 					
 				} while (true);
@@ -25751,14 +25814,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			plsql_lvalue();
 			{
-			_loop1288:
+			_loop1294:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					plsql_lvalue();
 				}
 				else {
-					break _loop1288;
+					break _loop1294;
 				}
 				
 			} while (true);
@@ -25782,10 +25845,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				asterisk_column();
 			}
 			else {
-				boolean synPredMatched1295 = false;
+				boolean synPredMatched1301 = false;
 				if (((_tokenSet_5.member(LA(1))) && (LA(2)==DOT) && (LA(3)==ASTERISK))) {
-					int _m1295 = mark();
-					synPredMatched1295 = true;
+					int _m1301 = mark();
+					synPredMatched1301 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -25793,12 +25856,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched1295 = false;
+						synPredMatched1301 = false;
 					}
-					rewind(_m1295);
+					rewind(_m1301);
 					inputState.guessing--;
 				}
-				if ( synPredMatched1295 ) {
+				if ( synPredMatched1301 ) {
 					ident_asterisk_column();
 				}
 				else if ((_tokenSet_53.member(LA(1))) && (_tokenSet_261.member(LA(2))) && (_tokenSet_262.member(LA(3)))) {
@@ -25905,7 +25968,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			}
 			plsql_expression();
 			{
-			_loop1311:
+			_loop1317:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
@@ -25932,7 +25995,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					plsql_expression();
 				}
 				else {
-					break _loop1311;
+					break _loop1317;
 				}
 				
 			} while (true);
@@ -26181,10 +26244,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				break;
 			}
 			default:
-				boolean synPredMatched1367 = false;
+				boolean synPredMatched1373 = false;
 				if (((LA(1)==LITERAL_the) && (LA(2)==OPEN_PAREN) && (LA(3)==OPEN_PAREN||LA(3)==LITERAL_select))) {
-					int _m1367 = mark();
-					synPredMatched1367 = true;
+					int _m1373 = mark();
+					synPredMatched1373 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -26192,12 +26255,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched1367 = false;
+						synPredMatched1373 = false;
 					}
-					rewind(_m1367);
+					rewind(_m1373);
 					inputState.guessing--;
 				}
-				if ( synPredMatched1367 ) {
+				if ( synPredMatched1373 ) {
 					the_proc();
 					{
 					if ((_tokenSet_269.member(LA(1))) && (_tokenSet_271.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
@@ -26422,14 +26485,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			selected_table();
 			{
-			_loop1332:
+			_loop1338:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					selected_table();
 				}
 				else {
-					break _loop1332;
+					break _loop1338;
 				}
 				
 			} while (true);
@@ -26613,22 +26676,22 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				break;
 			}
 			default:
-				boolean synPredMatched1386 = false;
+				boolean synPredMatched1392 = false;
 				if (((_tokenSet_5.member(LA(1))) && (LA(2)==DOT||LA(2)==CLOSE_PAREN) && (_tokenSet_277.member(LA(3))))) {
-					int _m1386 = mark();
-					synPredMatched1386 = true;
+					int _m1392 = mark();
+					synPredMatched1392 = true;
 					inputState.guessing++;
 					try {
 						{
 						{
-						_loop1385:
+						_loop1391:
 						do {
 							if ((_tokenSet_5.member(LA(1))) && (LA(2)==DOT) && (_tokenSet_5.member(LA(3)))) {
 								name_fragment();
 								match(DOT);
 							}
 							else {
-								break _loop1385;
+								break _loop1391;
 							}
 							
 						} while (true);
@@ -26638,21 +26701,21 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched1386 = false;
+						synPredMatched1392 = false;
 					}
-					rewind(_m1386);
+					rewind(_m1392);
 					inputState.guessing--;
 				}
-				if ( synPredMatched1386 ) {
+				if ( synPredMatched1392 ) {
 					{
-					_loop1388:
+					_loop1394:
 					do {
 						if ((_tokenSet_5.member(LA(1))) && (LA(2)==DOT)) {
 							name_fragment();
 							match(DOT);
 						}
 						else {
-							break _loop1388;
+							break _loop1394;
 						}
 						
 					} while (true);
@@ -27148,14 +27211,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			column_spec();
 			{
-			_loop1440:
+			_loop1446:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					column_spec();
 				}
 				else {
-					break _loop1440;
+					break _loop1446;
 				}
 				
 			} while (true);
@@ -27179,14 +27242,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			_loop1481:
+			_loop1487:
 			do {
 				if ((_tokenSet_5.member(LA(1))) && (LA(2)==DOT)) {
 					name_fragment();
 					match(DOT);
 				}
 				else {
-					break _loop1481;
+					break _loop1487;
 				}
 				
 			} while (true);
@@ -27346,7 +27409,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(EQ);
 			plsql_expression();
 			{
-			_loop1460:
+			_loop1466:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
@@ -27355,7 +27418,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					plsql_expression();
 				}
 				else {
-					break _loop1460;
+					break _loop1466;
 				}
 				
 			} while (true);
@@ -27540,7 +27603,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(EQ);
 				plsql_expression();
 				{
-				_loop1454:
+				_loop1460:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
@@ -27549,7 +27612,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						plsql_expression();
 					}
 					else {
-						break _loop1454;
+						break _loop1460;
 					}
 					
 				} while (true);
@@ -27851,7 +27914,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			
 			}
 			{
-			_loop1638:
+			_loop1644:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
@@ -27869,7 +27932,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				else {
-					break _loop1638;
+					break _loop1644;
 				}
 				
 			} while (true);
@@ -28195,13 +28258,13 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_records);
 			rec_format();
 			{
-			_loop1527:
+			_loop1533:
 			do {
 				if ((_tokenSet_295.member(LA(1)))) {
 					rec_format_tail();
 				}
 				else {
-					break _loop1527;
+					break _loop1533;
 				}
 				
 			} while (true);
@@ -28360,14 +28423,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			transform();
 			{
-			_loop1560:
+			_loop1566:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					transform();
 				}
 				else {
-					break _loop1560;
+					break _loop1566;
 				}
 				
 			} while (true);
@@ -28922,14 +28985,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			field_spec();
 			{
-			_loop1592:
+			_loop1598:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					field_spec();
 				}
 				else {
-					break _loop1592;
+					break _loop1598;
 				}
 				
 			} while (true);
@@ -28989,7 +29052,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				}
 				}
 				{
-				_loop1567:
+				_loop1573:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
@@ -29014,7 +29077,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					else {
-						break _loop1567;
+						break _loop1573;
 					}
 					
 				} while (true);
@@ -29051,7 +29114,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				}
 				}
 				{
-				_loop1574:
+				_loop1580:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
@@ -29079,7 +29142,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					else {
-						break _loop1574;
+						break _loop1580;
 					}
 					
 				} while (true);
@@ -29154,14 +29217,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				identifier2();
 				{
-				_loop1579:
+				_loop1585:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						identifier2();
 					}
 					else {
-						break _loop1579;
+						break _loop1585;
 					}
 					
 				} while (true);
@@ -31964,7 +32027,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 	public static final BitSet _tokenSet_104 = new BitSet(mk_tokenSet_104());
 	private static final long[] mk_tokenSet_105() {
 		long[] data = new long[26];
-		data[0]=539623424L;
+		data[0]=606732288L;
 		data[5]=-1457040820212334592L;
 		data[6]=1043141849920884479L;
 		data[7]=-3747836544656897026L;
@@ -32078,16 +32141,38 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_114 = new BitSet(mk_tokenSet_114());
 	private static final long[] mk_tokenSet_115() {
-		long[] data = new long[18];
-		data[0]=536870912L;
-		data[7]=-8644659484737667072L;
-		data[8]=16384L;
+		long[] data = new long[20];
+		data[0]=35189484945410L;
+		data[5]=3459385085055205376L;
+		data[6]=-4629782886745063167L;
+		data[7]=-8072701110948720448L;
+		data[8]=4503874505293951L;
+		data[9]=6291456L;
 		return data;
 	}
 	public static final BitSet _tokenSet_115 = new BitSet(mk_tokenSet_115());
 	private static final long[] mk_tokenSet_116() {
+		long[] data = new long[20];
+		data[0]=5112856578L;
+		data[5]=3459385085055205376L;
+		data[6]=-4629782886745063167L;
+		data[7]=-8072701110948724544L;
+		data[8]=4503874505293951L;
+		data[9]=6291456L;
+		return data;
+	}
+	public static final BitSet _tokenSet_116 = new BitSet(mk_tokenSet_116());
+	private static final long[] mk_tokenSet_117() {
+		long[] data = new long[18];
+		data[0]=603979776L;
+		data[7]=-8644659484737667072L;
+		data[8]=16384L;
+		return data;
+	}
+	public static final BitSet _tokenSet_117 = new BitSet(mk_tokenSet_117());
+	private static final long[] mk_tokenSet_118() {
 		long[] data = new long[26];
-		data[0]=35189487697922L;
+		data[0]=35189554806786L;
 		data[5]=-304066126730493952L;
 		data[6]=-4611686023412264961L;
 		data[7]=-3459604965914338306L;
@@ -32098,33 +32183,11 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[12]=274877906943L;
 		return data;
 	}
-	public static final BitSet _tokenSet_116 = new BitSet(mk_tokenSet_116());
-	private static final long[] mk_tokenSet_117() {
+	public static final BitSet _tokenSet_118 = new BitSet(mk_tokenSet_118());
+	private static final long[] mk_tokenSet_119() {
 		long[] data = new long[18];
 		data[7]=-8644659484737667072L;
 		data[8]=16384L;
-		return data;
-	}
-	public static final BitSet _tokenSet_117 = new BitSet(mk_tokenSet_117());
-	private static final long[] mk_tokenSet_118() {
-		long[] data = new long[20];
-		data[0]=35189484945410L;
-		data[5]=3459385085055205376L;
-		data[6]=-4629782886745063167L;
-		data[7]=-8072701110948720448L;
-		data[8]=4503874505293951L;
-		data[9]=6291456L;
-		return data;
-	}
-	public static final BitSet _tokenSet_118 = new BitSet(mk_tokenSet_118());
-	private static final long[] mk_tokenSet_119() {
-		long[] data = new long[20];
-		data[0]=5112856578L;
-		data[5]=3459385085055205376L;
-		data[6]=-4629782886745063167L;
-		data[7]=-8072701110948724544L;
-		data[8]=4503874505293951L;
-		data[9]=6291456L;
 		return data;
 	}
 	public static final BitSet _tokenSet_119 = new BitSet(mk_tokenSet_119());
