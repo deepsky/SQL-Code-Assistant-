@@ -459,6 +459,26 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void drop_tablespace() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.drop_tablespace();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.drop_tablespace();
+		}
+		returnType = -1;
+	}
+
 	public void column_association() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
@@ -1259,11 +1279,11 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void create_temp_table2() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void create_temp_table() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
 			try {
-			super.create_temp_table2();
+			super.create_temp_table();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
@@ -1274,7 +1294,7 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 				throw ex;
 			}
 		} else {
-			super.create_temp_table2();
+			super.create_temp_table();
 		}
 		returnType = -1;
 	}
@@ -1375,6 +1395,186 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 			}
 		} else {
 			super.create_synonym();
+		}
+		returnType = -1;
+	}
+
+	public void create_tablespace() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.create_tablespace();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.create_tablespace();
+		}
+		returnType = -1;
+	}
+
+	public void tablespace_name() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.tablespace_name();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.tablespace_name();
+		}
+		returnType = -1;
+	}
+
+	public void file_specification() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.file_specification();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.file_specification();
+		}
+		returnType = -1;
+	}
+
+	public void tablespace_group_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.tablespace_group_clause();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.tablespace_group_clause();
+		}
+		returnType = -1;
+	}
+
+	public void extent_management_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.extent_management_clause();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.extent_management_clause();
+		}
+		returnType = -1;
+	}
+
+	public void tablespace_retention_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.tablespace_retention_clause();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.tablespace_retention_clause();
+		}
+		returnType = -1;
+	}
+
+	public void create_tablespace_rest() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.create_tablespace_rest();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.create_tablespace_rest();
+		}
+		returnType = -1;
+	}
+
+	public void logging_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.logging_clause();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.logging_clause();
+		}
+		returnType = -1;
+	}
+
+	public void autoextend_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.autoextend_clause();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.autoextend_clause();
 		}
 		returnType = -1;
 	}
@@ -1875,26 +2075,6 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 			}
 		} else {
 			super.physical_attributes_clause();
-		}
-		returnType = -1;
-	}
-
-	public void logging_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			try {
-			super.logging_clause();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-			} catch(antlr.RecognitionException ex){
-				m.drop();
-				throw ex;
-			}
-		} else {
-			super.logging_clause();
 		}
 		returnType = -1;
 	}

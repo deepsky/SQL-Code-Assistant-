@@ -418,7 +418,7 @@ public class PlSqlTokenTypesMapping {
         String static_end = "\t}\n}\n";
 
         File path = new File(srcDir, SYMBOL_TABLE_PATH);
-        OutputStream out = new FileOutputStream(new File(path, "SymbolTable.java"));
+        OutputStream out = new FileOutputStream(new File(path.getAbsoluteFile(), "SymbolTable.java"));
 
         out.write(header.getBytes());
 
@@ -443,16 +443,16 @@ public class PlSqlTokenTypesMapping {
         }
 
         File lexer_tab = new File(args[0]);
-        System.out.println("1st argument: " + args[0]);
+        System.out.println("1st argument: " + lexer_tab.getAbsolutePath());
         if (!lexer_tab.exists()) {
-            System.out.println("Could not find Lexer Table: " + lexer_tab);
+            System.out.println("Could not find Lexer Table: " + lexer_tab.getAbsolutePath());
             System.exit(-1);
         }
 
         File parser_tab = new File(args[1]);
-        System.out.println("2nd argument: " + args[1]);
+        System.out.println("2nd argument: " + parser_tab.getAbsolutePath());
         if (!parser_tab.exists()) {
-            System.out.println("Could not find Parser Table: " + parser_tab);
+            System.out.println("Could not find Parser Table: " + parser_tab.getAbsolutePath());
             System.exit(-1);
         }
 

@@ -1,4 +1,4 @@
-// $ANTLR 2.7.5 (20050128): "../../shared/root/grammars/plsql_lexer.g" -> "PLSqlLexer.java"$
+// $ANTLR 2.7.5 (20050128): "/git_app/sqlassistant_super/github/shared/root/grammars/plsql_lexer.g" -> "PLSqlLexer.java"$
 
 package com.deepsky.generated.plsql;
 

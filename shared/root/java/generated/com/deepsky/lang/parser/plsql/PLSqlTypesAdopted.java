@@ -27,9 +27,9 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType SYSTIMESTAMP_CONST = new PlSqlElementType("SYSTIMESTAMP_CONST", PLSqlTokenTypes.SYSTIMESTAMP_CONST);
 	PlSqlElementType MEMBER_OF = new PlSqlElementType("MEMBER_OF", PLSqlTokenTypes.MEMBER_OF);
 	PlSqlElementType TABLE_NAME_DDL = new PlSqlElementType("TABLE_NAME_DDL", PLSqlTokenTypes.TABLE_NAME_DDL);
+	PlSqlElementType LAG_FUNCTION = new PlSqlElementType("LAG_FUNCTION", PLSqlTokenTypes.LAG_FUNCTION);
 	PlSqlElementType DROP_TRIGGER = new PlSqlElementType("DROP_TRIGGER", PLSqlTokenTypes.DROP_TRIGGER);
 	PlSqlElementType PLSQL_VAR_REF = new PlSqlElementType("PLSQL_VAR_REF", PLSqlTokenTypes.PLSQL_VAR_REF);
-	PlSqlElementType LAG_FUNCTION = new PlSqlElementType("LAG_FUNCTION", PLSqlTokenTypes.LAG_FUNCTION);
 	PlSqlElementType CREATE_TRIGGER = new PlSqlElementType("CREATE_TRIGGER", PLSqlTokenTypes.CREATE_TRIGGER);
 	PlSqlElementType PARTITION_SPEC = new PlSqlElementType("PARTITION_SPEC", PLSqlTokenTypes.PARTITION_SPEC);
 	PlSqlElementType SERIALLY_REUSABLE_PRAGMA = new PlSqlElementType("SERIALLY_REUSABLE_PRAGMA", PLSqlTokenTypes.SERIALLY_REUSABLE_PRAGMA);
@@ -62,8 +62,8 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType TABLE_FUNCTION = new PlSqlElementType("TABLE_FUNCTION", PLSqlTokenTypes.TABLE_FUNCTION);
 	PlSqlElementType PARENTHESIZED_EXPR = new PlSqlElementType("PARENTHESIZED_EXPR", PLSqlTokenTypes.PARENTHESIZED_EXPR);
 	PlSqlElementType ERROR_TOKEN_A = new PlSqlElementType("ERROR_TOKEN_A", PLSqlTokenTypes.ERROR_TOKEN_A);
-	PlSqlElementType EXCEPTION_PRAGMA = new PlSqlElementType("EXCEPTION_PRAGMA", PLSqlTokenTypes.EXCEPTION_PRAGMA);
 	PlSqlElementType COND_COMP_ERROR = new PlSqlElementType("COND_COMP_ERROR", PLSqlTokenTypes.COND_COMP_ERROR);
+	PlSqlElementType EXCEPTION_PRAGMA = new PlSqlElementType("EXCEPTION_PRAGMA", PLSqlTokenTypes.EXCEPTION_PRAGMA);
 	PlSqlElementType DROP_INDEX = new PlSqlElementType("DROP_INDEX", PLSqlTokenTypes.DROP_INDEX);
 	PlSqlElementType PARAMETER_SPEC = new PlSqlElementType("PARAMETER_SPEC", PLSqlTokenTypes.PARAMETER_SPEC);
 	PlSqlElementType EXTERNAL_TYPE = new PlSqlElementType("EXTERNAL_TYPE", PLSqlTokenTypes.EXTERNAL_TYPE);
@@ -77,6 +77,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType DATATYPE = new PlSqlElementType("DATATYPE", PLSqlTokenTypes.DATATYPE);
 	PlSqlElementType ELSE_STATEMENT = new PlSqlElementType("ELSE_STATEMENT", PLSqlTokenTypes.ELSE_STATEMENT);
 	PlSqlElementType NUMERIC_LOOP_SPEC = new PlSqlElementType("NUMERIC_LOOP_SPEC", PLSqlTokenTypes.NUMERIC_LOOP_SPEC);
+	PlSqlElementType CREATE_TABLESPACE = new PlSqlElementType("CREATE_TABLESPACE", PLSqlTokenTypes.CREATE_TABLESPACE);
 	PlSqlElementType PLSQL_EXPR_LIST_USING = new PlSqlElementType("PLSQL_EXPR_LIST_USING", PLSqlTokenTypes.PLSQL_EXPR_LIST_USING);
 	PlSqlElementType FUNCTION_CALL = new PlSqlElementType("FUNCTION_CALL", PLSqlTokenTypes.FUNCTION_CALL);
 	PlSqlElementType CONSTRAINT = new PlSqlElementType("CONSTRAINT", PLSqlTokenTypes.CONSTRAINT);
@@ -94,8 +95,8 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType C_RECORD_ITEM_REF = new PlSqlElementType("C_RECORD_ITEM_REF", PLSqlTokenTypes.C_RECORD_ITEM_REF);
 	PlSqlElementType DROP_DIRECTORY = new PlSqlElementType("DROP_DIRECTORY", PLSqlTokenTypes.DROP_DIRECTORY);
 	PlSqlElementType GOTO_STATEMENT = new PlSqlElementType("GOTO_STATEMENT", PLSqlTokenTypes.GOTO_STATEMENT);
-	PlSqlElementType FK_SPEC = new PlSqlElementType("FK_SPEC", PLSqlTokenTypes.FK_SPEC);
 	PlSqlElementType SPEC_CALL_ARGUMENT_LIST = new PlSqlElementType("SPEC_CALL_ARGUMENT_LIST", PLSqlTokenTypes.SPEC_CALL_ARGUMENT_LIST);
+	PlSqlElementType FK_SPEC = new PlSqlElementType("FK_SPEC", PLSqlTokenTypes.FK_SPEC);
 	PlSqlElementType BIND_VAR = new PlSqlElementType("BIND_VAR", PLSqlTokenTypes.BIND_VAR);
 	PlSqlElementType SUBQUERY_UPDATE_COMMAND = new PlSqlElementType("SUBQUERY_UPDATE_COMMAND", PLSqlTokenTypes.SUBQUERY_UPDATE_COMMAND);
 	PlSqlElementType INSERT_COMMAND = new PlSqlElementType("INSERT_COMMAND", PLSqlTokenTypes.INSERT_COMMAND);
@@ -227,6 +228,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType INSERT_INTO_SUBQUERY_COMMAND = new PlSqlElementType("INSERT_INTO_SUBQUERY_COMMAND", PLSqlTokenTypes.INSERT_INTO_SUBQUERY_COMMAND);
 	PlSqlElementType UNIQUE_CONSTRAINT = new PlSqlElementType("UNIQUE_CONSTRAINT", PLSqlTokenTypes.UNIQUE_CONSTRAINT);
 	PlSqlElementType EXPR_LIST = new PlSqlElementType("EXPR_LIST", PLSqlTokenTypes.EXPR_LIST);
+	PlSqlElementType DROP_TABLESPACE = new PlSqlElementType("DROP_TABLESPACE", PLSqlTokenTypes.DROP_TABLESPACE);
 	PlSqlElementType VARIABLE_NAME = new PlSqlElementType("VARIABLE_NAME", PLSqlTokenTypes.VARIABLE_NAME);
 	PlSqlElementType CREATE_SEQUENCE = new PlSqlElementType("CREATE_SEQUENCE", PLSqlTokenTypes.CREATE_SEQUENCE);
 	PlSqlElementType RETURN_STATEMENT = new PlSqlElementType("RETURN_STATEMENT", PLSqlTokenTypes.RETURN_STATEMENT);
@@ -264,6 +266,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType RECORD_ITEM_NAME = new PlSqlElementType("RECORD_ITEM_NAME", PLSqlTokenTypes.RECORD_ITEM_NAME);
 	PlSqlElementType IMMEDIATE_COMMAND = new PlSqlElementType("IMMEDIATE_COMMAND", PLSqlTokenTypes.IMMEDIATE_COMMAND);
 	PlSqlElementType CONNECT_CLAUSE = new PlSqlElementType("CONNECT_CLAUSE", PLSqlTokenTypes.CONNECT_CLAUSE);
+	PlSqlElementType TABLESPACE_NAME = new PlSqlElementType("TABLESPACE_NAME", PLSqlTokenTypes.TABLESPACE_NAME);
 	PlSqlElementType CREATE_DIRECTORY = new PlSqlElementType("CREATE_DIRECTORY", PLSqlTokenTypes.CREATE_DIRECTORY);
 	PlSqlElementType DROP_TABLE = new PlSqlElementType("DROP_TABLE", PLSqlTokenTypes.DROP_TABLE);
 	PlSqlElementType COMMENT_STR = new PlSqlElementType("COMMENT_STR", PLSqlTokenTypes.COMMENT_STR);

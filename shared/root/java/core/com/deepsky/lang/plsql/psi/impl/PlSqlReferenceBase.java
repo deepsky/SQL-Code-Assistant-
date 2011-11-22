@@ -28,7 +28,6 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
@@ -36,15 +35,8 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class PlSqlReferenceBase extends PlSqlElementBase implements PsiReference {
 
-    PsiElement cachedReference = null;
-    long modifStamp = -1;
-    PsiFile psiFile;
-
-
     public PlSqlReferenceBase(ASTNode astNode) {
         super(astNode);
-        psiFile = this.getContainingFile();
-        assert psiFile != null;
     }
 
     public PsiElement getElement() {
@@ -63,19 +55,6 @@ public abstract class PlSqlReferenceBase extends PlSqlElementBase implements Psi
         }catch(Throwable e){
             return null;
         }
-
-/*
-        if (modifStamp != psiFile.getModificationStamp()) {
-            __ensure_resolver_available__();
-            try {
-                cachedReference = resolveInternal();
-            }catch(Throwable e){
-                int hh = 0;
-            }
-            modifStamp = psiFile.getModificationStamp();
-        }
-        return cachedReference;
-*/
     }
 
     protected abstract PsiElement resolveInternal();
@@ -115,22 +94,5 @@ public abstract class PlSqlReferenceBase extends PlSqlElementBase implements Psi
     public PsiReference getReference() {
         return this;
     }
-
-
-//    static final String IntellijIdeaRulezzz = "IntellijIdeaRulezzz";
-//    public static String stripText(String text) {
-//        int idx = text.indexOf(Constants.COMPL_IDENTIFIER); //IntellijIdeaRulezzz);
-//        if (idx >= 0) {
-//            if (idx == 0) {
-//                return "";
-//            } else {
-//                return text.substring(0, idx);
-//            }
-//
-//        } else {
-//            return text;
-//        }
-//    }
-
 
 }

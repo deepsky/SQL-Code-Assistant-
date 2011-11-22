@@ -1,4 +1,4 @@
-// $ANTLR 2.7.5 (20050128): ../../shared/root/grammars/plsql_lexer.g -> PLSql2TokenTypes.txt$
+// $ANTLR 2.7.5 (20050128): /git_app/sqlassistant_super/github/shared/root/grammars/plsql_lexer.g -> PLSql2TokenTypes.txt$
 PLSql2    // output token vocab name
 BAD_ML_COMMENT=4
 BAD_CHARACTER=5

@@ -385,6 +385,10 @@ public class PlSqlParserDefinition implements ParserDefinition {
 //                return new CreateTypeImpl(node);
 
 // [ === DDL Statements ===]
+            case PLSqlTokenTypes.CREATE_TABLESPACE:
+                return new CreateTablespaceImpl(node);
+            case PLSqlTokenTypes.DROP_TABLESPACE:
+                return new DropTablespaceImpl(node);
             case PLSqlTokenTypes.TABLE_DEF:
                 return new TableDefinitionImpl(node);
             case PLSqlTokenTypes.CREATE_TEMP_TABLE:
@@ -773,6 +777,10 @@ public class PlSqlParserDefinition implements ParserDefinition {
             
 
 // [ === DDL Statements ===]
+            case PLSqlTokenTypes.CREATE_TABLESPACE:
+                return new CreateTablespaceImpl(node);
+            case PLSqlTokenTypes.DROP_TABLESPACE:
+                return new DropTablespaceImpl(node);
             case PLSqlTokenTypes.TABLE_DEF:
                 return new TableDefinitionImpl(node);
             case PLSqlTokenTypes.CREATE_TEMP_TABLE:

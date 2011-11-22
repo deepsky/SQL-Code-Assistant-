@@ -1,4 +1,4 @@
-// $ANTLR 2.7.5 (20050128): ../../shared/root/grammars/ast_string.g -> ASTStrTypesTokenTypes.txt$
+// $ANTLR 2.7.5 (20050128): /git_app/sqlassistant_super/github/shared/root/grammars/ast_string.g -> ASTStrTypesTokenTypes.txt$
 ASTStrTypes    // output token vocab name
 START_RULE=4
 CREATE_PACKAGE=5

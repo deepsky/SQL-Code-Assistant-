@@ -285,6 +285,7 @@ tokens {
     LABEL_NAME;
     PARTITION_SPEC; RANGE_PARTITION; HASH_PARTITION;
 
+    CREATE_TABLESPACE; DROP_TABLESPACE; TABLESPACE_NAME;
     CREATE_TYPE;
     BIND_VAR;
     RETURNING_CLAUSE;
@@ -417,6 +418,8 @@ drop_command:
             { #drop_command = #([DROP_DB_LINK, "DROP_DB_LINK" ], #drop_command);}
         | ("trigger" object_name)
             { #drop_command = #([DROP_TRIGGER, "DROP_TRIGGER" ], #drop_command);}
+        | drop_tablespace
+            { #drop_command = #([DROP_TABLESPACE, "DROP_TABLESPACE" ], #drop_command);}
      )
     ;
 
@@ -598,19 +601,18 @@ create_or_replace:
         | package_body
             { #create_or_replace = #([PACKAGE_BODY, "PACKAGE_BODY" ], #create_or_replace);}
         | procedure_body
-//            { #.create_or_replace = #.([CREATE_PROCEDURE, "CREATE_PROCEDURE" ], #.create_or_replace);}
         | function_body
-//            { #.create_or_replace = #.([CREATE_FUNCTION, "CREATE_FUNCTION" ], #.create_or_replace);}
         | create_view
             { #create_or_replace = #([CREATE_VIEW, "CREATE_VIEW" ], #create_or_replace);}
         | create_view_column_def
             { #create_or_replace = #([CREATE_VIEW_COLUMN_DEF, "CREATE_VIEW_COLUMN_DEF" ], #create_or_replace);}
         | (type_definition (SEMI!)?)
-//            { #.create_or_replace = #.([CREATE_TYPE, "CREATE_TYPE" ], #.create_or_replace);}
         | (create_table2 (SEMI!)?)
             { #create_or_replace = #([TABLE_DEF, "TABLE_DEF" ], #create_or_replace);}
-        | (create_temp_table2 (SEMI!)?)
+
+        | (("global")? "temporary" (schema_name DOT!)? "table") => (create_temp_table (SEMI!)?)
             { #create_or_replace = #([CREATE_TEMP_TABLE, "CREATE_TEMP_TABLE" ], #create_or_replace);}
+
         | (create_index2 (SEMI!)?)
             { #create_or_replace = #([CREATE_INDEX, "CREATE_INDEX" ], #create_or_replace);}
         | (create_trigger (SEMI!)?)
@@ -623,8 +625,62 @@ create_or_replace:
             { #create_or_replace = #([CREATE_SEQUENCE, "CREATE_SEQUENCE" ], #create_or_replace);}
         | (("public")? create_synonym (SEMI!)?)
             { #create_or_replace = #([CREATE_SYNONYM, "CREATE_SYNONYM" ], #create_or_replace);}
+        | (create_tablespace (SEMI!)?)
+            { #create_or_replace = #([CREATE_TABLESPACE, "CREATE_TABLESPACE" ], #create_or_replace);}
     )
     ;
+
+// TABLESPACE -----------------------------------------------------------------
+create_tablespace:
+    ("bigfile"|"smallfile")?
+    (
+        ("temporary" "tablespace" tablespace_name ("tempfile" file_specification)? (tablespace_group_clause)?)
+        | ("undo" "tablespace" tablespace_name (extent_management_clause)? (tablespace_retention_clause)?)
+        | ("tablespace" tablespace_name (create_tablespace_rest)+)
+    )
+    ;
+
+tablespace_name:
+    identifier2
+    { #tablespace_name = #([TABLESPACE_NAME, "TABLESPACE_NAME" ], #tablespace_name);}
+    ;
+
+create_tablespace_rest:
+    "datafile" file_specification (COMMA file_specification)* //(string_literal (COMMA string_literal)*)?
+    | logging_clause
+    | ("next" (STORAGE_SIZE|numeric_literal))
+    | ("maxsize" (STORAGE_SIZE|numeric_literal))
+    | extent_management_clause
+    | ("online"|"offline")
+    ;
+
+file_specification:
+    string_literal ("size" (STORAGE_SIZE|numeric_literal))? ("reuse")? (autoextend_clause)?
+    ;
+
+extent_management_clause:
+    "extent" "management" (("local" ("uniform" ("size" (STORAGE_SIZE|numeric_literal)?))?)|"dictionary")
+    ;
+
+tablespace_retention_clause:
+    "retention" ("guarantee"|"noguarantee")
+    ;
+
+autoextend_clause:
+    "autoextend" ("on"|"off")
+    ;
+
+tablespace_group_clause:
+    "tablespace" "group" identifier2
+    ;
+
+drop_tablespace:
+    "tablespace" tablespace_name
+        (
+            "including" "contents" ("and" "datafiles")? ("cascade" "constraints")?
+        )?
+    ;
+// ----------------------------------------------------------------------------
 
 /*
 CREATE SEQUENCE T1_SEQ
@@ -783,7 +839,7 @@ create_table2:
     ("as" select_expression)?
     ;
 
-create_temp_table2:
+create_temp_table:
     ("global")? "temporary"! (schema_name DOT!)? "table"! table_name_ddl
     (OPEN_PAREN! column_def (COMMA! column_def)* (COMMA! constaraint)* CLOSE_PAREN!)?
     ("on" "commit" ("preserve" | "delete") "rows" )
@@ -3238,6 +3294,7 @@ identifier2:
     | "library"
     | "role"
     | "online"
+    | "offline"
     | "compute"
     | "continue"
     | "var"
@@ -3292,6 +3349,22 @@ identifier2:
     | "multiset"
     | "lag"
     | "lead"
+    | "datafile"
+    | "reuse"
+    | "size"
+    | "maxsize"
+    | "bigfile"
+    | "smallfile"
+    | "extent"
+    | "management"
+    | "dictionary"
+    | "uniform"
+    | "retention"
+    | "guarantee"
+    | "noguarantee"
+    | "tempfile"
+    | "contents"
+    | "datafiles"
     )
     ;
 

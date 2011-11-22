@@ -1,4 +1,4 @@
-// $ANTLR 2.7.5 (20050128): "../../shared/root/grammars/ast_string.g" -> "ASTStringLexer.java"$
+// $ANTLR 2.7.5 (20050128): "/git_app/sqlassistant_super/github/shared/root/grammars/ast_string.g" -> "ASTStringLexer.java"$
 
 package com.deepsky.tools.generated;
 
