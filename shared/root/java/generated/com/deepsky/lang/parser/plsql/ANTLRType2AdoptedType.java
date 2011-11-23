@@ -4,7 +4,7 @@ import com.intellij.psi.tree.IElementType;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 
 public class ANTLRType2AdoptedType {
-	static public IElementType[] type2etype = new IElementType[358];
+	static public IElementType[] type2etype = new IElementType[359];
 	static {
 		type2etype[PLSqlTokenTypes.DROP_VIEW] = PLSqlTypesAdopted.DROP_VIEW;
 		type2etype[PLSqlTokenTypes.CREATE_VIEW_COLUMN_DEF] = PLSqlTypesAdopted.CREATE_VIEW_COLUMN_DEF;
@@ -27,9 +27,9 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.SYSTIMESTAMP_CONST] = PLSqlTypesAdopted.SYSTIMESTAMP_CONST;
 		type2etype[PLSqlTokenTypes.MEMBER_OF] = PLSqlTypesAdopted.MEMBER_OF;
 		type2etype[PLSqlTokenTypes.TABLE_NAME_DDL] = PLSqlTypesAdopted.TABLE_NAME_DDL;
-		type2etype[PLSqlTokenTypes.LAG_FUNCTION] = PLSqlTypesAdopted.LAG_FUNCTION;
 		type2etype[PLSqlTokenTypes.DROP_TRIGGER] = PLSqlTypesAdopted.DROP_TRIGGER;
 		type2etype[PLSqlTokenTypes.PLSQL_VAR_REF] = PLSqlTypesAdopted.PLSQL_VAR_REF;
+		type2etype[PLSqlTokenTypes.LAG_FUNCTION] = PLSqlTypesAdopted.LAG_FUNCTION;
 		type2etype[PLSqlTokenTypes.CREATE_TRIGGER] = PLSqlTypesAdopted.CREATE_TRIGGER;
 		type2etype[PLSqlTokenTypes.PARTITION_SPEC] = PLSqlTypesAdopted.PARTITION_SPEC;
 		type2etype[PLSqlTokenTypes.SERIALLY_REUSABLE_PRAGMA] = PLSqlTypesAdopted.SERIALLY_REUSABLE_PRAGMA;
@@ -62,8 +62,8 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.TABLE_FUNCTION] = PLSqlTypesAdopted.TABLE_FUNCTION;
 		type2etype[PLSqlTokenTypes.PARENTHESIZED_EXPR] = PLSqlTypesAdopted.PARENTHESIZED_EXPR;
 		type2etype[PLSqlTokenTypes.ERROR_TOKEN_A] = PLSqlTypesAdopted.ERROR_TOKEN_A;
-		type2etype[PLSqlTokenTypes.COND_COMP_ERROR] = PLSqlTypesAdopted.COND_COMP_ERROR;
 		type2etype[PLSqlTokenTypes.EXCEPTION_PRAGMA] = PLSqlTypesAdopted.EXCEPTION_PRAGMA;
+		type2etype[PLSqlTokenTypes.COND_COMP_ERROR] = PLSqlTypesAdopted.COND_COMP_ERROR;
 		type2etype[PLSqlTokenTypes.DROP_INDEX] = PLSqlTypesAdopted.DROP_INDEX;
 		type2etype[PLSqlTokenTypes.PARAMETER_SPEC] = PLSqlTypesAdopted.PARAMETER_SPEC;
 		type2etype[PLSqlTokenTypes.EXTERNAL_TYPE] = PLSqlTypesAdopted.EXTERNAL_TYPE;
@@ -170,6 +170,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.VARIABLE_DECLARATION] = PLSqlTypesAdopted.VARIABLE_DECLARATION;
 		type2etype[PLSqlTokenTypes.SQLPLUS_SHOW] = PLSqlTypesAdopted.SQLPLUS_SHOW;
 		type2etype[PLSqlTokenTypes.TYPE_NAME_REF] = PLSqlTypesAdopted.TYPE_NAME_REF;
+		type2etype[PLSqlTokenTypes.ALTER_TABLESPACE] = PLSqlTypesAdopted.ALTER_TABLESPACE;
 		type2etype[PLSqlTokenTypes.ROWID] = PLSqlTypesAdopted.ROWID;
 		type2etype[PLSqlTokenTypes.PROCEDURE_CALL] = PLSqlTypesAdopted.PROCEDURE_CALL;
 		type2etype[PLSqlTokenTypes.EXTRACT_DATE_FUNC] = PLSqlTypesAdopted.EXTRACT_DATE_FUNC;

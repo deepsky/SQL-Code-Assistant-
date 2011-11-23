@@ -285,7 +285,7 @@ tokens {
     LABEL_NAME;
     PARTITION_SPEC; RANGE_PARTITION; HASH_PARTITION;
 
-    CREATE_TABLESPACE; DROP_TABLESPACE; TABLESPACE_NAME;
+    CREATE_TABLESPACE; DROP_TABLESPACE; TABLESPACE_NAME; ALTER_TABLESPACE;
     CREATE_TYPE;
     BIND_VAR;
     RETURNING_CLAUSE;
@@ -646,12 +646,12 @@ tablespace_name:
     ;
 
 create_tablespace_rest:
-    "datafile" file_specification (COMMA file_specification)* //(string_literal (COMMA string_literal)*)?
-    | logging_clause
+    "datafile" file_specification (COMMA file_specification)*
+    | tablespace_logging_clauses
     | ("next" (STORAGE_SIZE|numeric_literal))
     | ("maxsize" (STORAGE_SIZE|numeric_literal))
     | extent_management_clause
-    | ("online"|"offline")
+    | tablespace_state_clause
     ;
 
 file_specification:
@@ -667,11 +667,28 @@ tablespace_retention_clause:
     ;
 
 autoextend_clause:
-    "autoextend" ("on"|"off")
+    "autoextend" (
+        ("on" ("next" STORAGE_SIZE)? ("maxsize" (STORAGE_SIZE|numeric_literal))?)
+        | "off"
+    )
     ;
 
 tablespace_group_clause:
     "tablespace" "group" identifier2
+    ;
+
+tablespace_logging_clauses:
+    "logging"
+    | "nologging"
+    | ("no")? "force" "logging"
+    ;
+
+tablespace_state_clause:
+    "online"
+    | "offline" ("normal"|"temporary"|"immediate")?
+    | "read" ("only"|"write")
+    | "permanent"
+    | "temporary"
     ;
 
 drop_tablespace:
@@ -679,6 +696,26 @@ drop_tablespace:
         (
             "including" "contents" ("and" "datafiles")? ("cascade" "constraints")?
         )?
+    ;
+
+datafile_tempfile_clauses:
+    "add" ("datafile"|"tempfile") (file_specification)?
+    | "rename" "datafile" string_literal (COMMA string_literal)* "to" string_literal (COMMA string_literal)*
+    | ("datafile"|"tempfile") ("online"|"offline")
+    ;
+
+alter_tablespace:
+    "tablespace" tablespace_name (
+        autoextend_clause
+        | ("begin"|"end") "backup"
+        | "coalesce"
+        | "rename" "to" tablespace_name
+        | tablespace_state_clause
+        | tablespace_retention_clause
+        | "minimum" "extent" STORAGE_SIZE
+        | tablespace_logging_clauses
+        | datafile_tempfile_clauses
+    )
     ;
 // ----------------------------------------------------------------------------
 
@@ -806,8 +843,7 @@ trigger_name:
     ;
 
 alter_trigger:
-    "alter"! "trigger"! (schema_name DOT!)? trigger_name enable_disable_clause
-    { #alter_trigger = #([ALTER_TRIGGER, "ALTER_TRIGGER" ], #alter_trigger);}
+    "trigger"! (schema_name DOT!)? trigger_name enable_disable_clause
     ;
 // -------------------------------------------------------------------
 // [TRIGGER END] ----------------------------------
@@ -1078,8 +1114,7 @@ constraint_name:
 // [ALTER TABLE START] ------------------------------------------------
 // -------------------------------------------------------------------
 alter_table:
-    "alter"! "table"! table_ref (constraint_clause)? (alter_table_options)?
-    { #alter_table = #([ALTER_TABLE, "ALTER_TABLE" ], #alter_table);}
+    "table"! table_ref (constraint_clause)? (alter_table_options)?
     ;
 
 constraint_clause:
@@ -2647,14 +2682,21 @@ plsql_exp_list_using:
 */
 
 alter_command:
-    alter_system_session
-    | alter_table
-    | alter_trigger
+    "alter" (
+        alter_system_session
+            {#alter_command = #([ALTER_GENERIC, "ALTER_GENERIC" ], #alter_command);}
+        | alter_table
+            { #alter_table = #([ALTER_TABLE, "ALTER_TABLE" ], #alter_table);}
+        | alter_trigger
+            { #alter_command = #([ALTER_TRIGGER, "ALTER_TRIGGER" ], #alter_command);}
+        | alter_tablespace
+            { #alter_command = #([ALTER_TABLESPACE, "ALTER_TABLESPACE" ], #alter_command);}
+    )
     ;
 
 //   ALTER DATABASE SET time_zone = 'US/Eastern';
 alter_system_session:
-    "alter" ( "system" | "session" | "database")
+    ( "system" | "session" | "database")
     (
         ( "flush" "shared_pool" )
         | (
@@ -2665,7 +2707,6 @@ alter_system_session:
           )
          ( "sid" EQ ( string_literal | ASTERISK ) ) ?
     )
-    {#alter_system_session = #([ALTER_GENERIC, "ALTER_GENERIC" ], #alter_system_session);}
     ;
 
 table_reference_list_from:
@@ -3104,6 +3145,9 @@ identifier2:
     | "session"
     | "close"
     | "read"
+    | "write"
+    | "only"
+    | "normal"
     | "immediate"
     | "replace"
     | "sid"
@@ -3350,6 +3394,7 @@ identifier2:
     | "lag"
     | "lead"
     | "datafile"
+    | "add"
     | "reuse"
     | "size"
     | "maxsize"
@@ -3365,6 +3410,9 @@ identifier2:
     | "tempfile"
     | "contents"
     | "datafiles"
+    | "backup"
+    | "coalesce"
+    | "permanent"
     )
     ;
 

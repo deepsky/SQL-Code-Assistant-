@@ -27,9 +27,9 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType SYSTIMESTAMP_CONST = new PlSqlElementType("SYSTIMESTAMP_CONST", PLSqlTokenTypes.SYSTIMESTAMP_CONST);
 	PlSqlElementType MEMBER_OF = new PlSqlElementType("MEMBER_OF", PLSqlTokenTypes.MEMBER_OF);
 	PlSqlElementType TABLE_NAME_DDL = new PlSqlElementType("TABLE_NAME_DDL", PLSqlTokenTypes.TABLE_NAME_DDL);
-	PlSqlElementType LAG_FUNCTION = new PlSqlElementType("LAG_FUNCTION", PLSqlTokenTypes.LAG_FUNCTION);
 	PlSqlElementType DROP_TRIGGER = new PlSqlElementType("DROP_TRIGGER", PLSqlTokenTypes.DROP_TRIGGER);
 	PlSqlElementType PLSQL_VAR_REF = new PlSqlElementType("PLSQL_VAR_REF", PLSqlTokenTypes.PLSQL_VAR_REF);
+	PlSqlElementType LAG_FUNCTION = new PlSqlElementType("LAG_FUNCTION", PLSqlTokenTypes.LAG_FUNCTION);
 	PlSqlElementType CREATE_TRIGGER = new PlSqlElementType("CREATE_TRIGGER", PLSqlTokenTypes.CREATE_TRIGGER);
 	PlSqlElementType PARTITION_SPEC = new PlSqlElementType("PARTITION_SPEC", PLSqlTokenTypes.PARTITION_SPEC);
 	PlSqlElementType SERIALLY_REUSABLE_PRAGMA = new PlSqlElementType("SERIALLY_REUSABLE_PRAGMA", PLSqlTokenTypes.SERIALLY_REUSABLE_PRAGMA);
@@ -62,8 +62,8 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType TABLE_FUNCTION = new PlSqlElementType("TABLE_FUNCTION", PLSqlTokenTypes.TABLE_FUNCTION);
 	PlSqlElementType PARENTHESIZED_EXPR = new PlSqlElementType("PARENTHESIZED_EXPR", PLSqlTokenTypes.PARENTHESIZED_EXPR);
 	PlSqlElementType ERROR_TOKEN_A = new PlSqlElementType("ERROR_TOKEN_A", PLSqlTokenTypes.ERROR_TOKEN_A);
-	PlSqlElementType COND_COMP_ERROR = new PlSqlElementType("COND_COMP_ERROR", PLSqlTokenTypes.COND_COMP_ERROR);
 	PlSqlElementType EXCEPTION_PRAGMA = new PlSqlElementType("EXCEPTION_PRAGMA", PLSqlTokenTypes.EXCEPTION_PRAGMA);
+	PlSqlElementType COND_COMP_ERROR = new PlSqlElementType("COND_COMP_ERROR", PLSqlTokenTypes.COND_COMP_ERROR);
 	PlSqlElementType DROP_INDEX = new PlSqlElementType("DROP_INDEX", PLSqlTokenTypes.DROP_INDEX);
 	PlSqlElementType PARAMETER_SPEC = new PlSqlElementType("PARAMETER_SPEC", PLSqlTokenTypes.PARAMETER_SPEC);
 	PlSqlElementType EXTERNAL_TYPE = new PlSqlElementType("EXTERNAL_TYPE", PLSqlTokenTypes.EXTERNAL_TYPE);
@@ -170,6 +170,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType VARIABLE_DECLARATION = new PlSqlElementType("VARIABLE_DECLARATION", PLSqlTokenTypes.VARIABLE_DECLARATION);
 	PlSqlElementType SQLPLUS_SHOW = new PlSqlElementType("SQLPLUS_SHOW", PLSqlTokenTypes.SQLPLUS_SHOW);
 	PlSqlElementType TYPE_NAME_REF = new PlSqlElementType("TYPE_NAME_REF", PLSqlTokenTypes.TYPE_NAME_REF);
+	PlSqlElementType ALTER_TABLESPACE = new PlSqlElementType("ALTER_TABLESPACE", PLSqlTokenTypes.ALTER_TABLESPACE);
 	PlSqlElementType ROWID = new PlSqlElementType("ROWID", PLSqlTokenTypes.ROWID);
 	PlSqlElementType PROCEDURE_CALL = new PlSqlElementType("PROCEDURE_CALL", PLSqlTokenTypes.PROCEDURE_CALL);
 	PlSqlElementType EXTRACT_DATE_FUNC = new PlSqlElementType("EXTRACT_DATE_FUNC", PLSqlTokenTypes.EXTRACT_DATE_FUNC);
