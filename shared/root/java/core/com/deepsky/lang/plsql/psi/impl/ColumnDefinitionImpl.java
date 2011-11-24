@@ -38,13 +38,16 @@ import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefinition {//}, PsiNamedElement {
 
@@ -82,6 +85,15 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
         throw new SyntaxTreeCorruptedException();
     }
 
+    public TypeSpec getTypeSpec() {
+        TypeSpec type = this.findChildByClass(TypeSpec.class);
+        if (type != null) {
+            return type;
+        }
+        throw new SyntaxTreeCorruptedException();
+    }
+
+/*
     @Nullable
     public String getQuickNavigateInfo() {
         TableDefinition t = findParent(TableDefinition.class);
@@ -92,6 +104,7 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
         }
         return null;
     }
+*/
 
     public boolean isNotNull() {
         ASTNode not_null = getNode().findChildByType(PLSqlTypesAdopted.NOT_NULL_STMT);
@@ -143,6 +156,42 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
             ((PlSqlElementVisitor) visitor).visitColumnDefinition(this);
         } else {
             super.accept(visitor);
+        }
+    }
+
+    @Nullable
+    public ItemPresentation getPresentation() {
+        try {
+            return new ColumnDefPresentation();
+        } catch(SyntaxTreeCorruptedException e){
+            return null;
+        }
+    }
+
+    private class ColumnDefPresentation implements ItemPresentation {
+        public String getPresentableText() {
+            TableDefinition t = getTableDefinition();
+            if (t != null) {
+                String completeName = t.getTableName() + "." + getColumnName();
+                return  "[Column] " + completeName.toLowerCase() + " "
+                        + getTypeSpec().getText();
+            }
+            return null;
+        }
+
+        @Nullable
+        public String getLocationString() {
+            return null;
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open) {
+            return null;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey() {
+            return null;
         }
     }
 

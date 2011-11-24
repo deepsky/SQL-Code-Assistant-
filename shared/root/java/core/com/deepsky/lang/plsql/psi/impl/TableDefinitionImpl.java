@@ -32,7 +32,6 @@ import com.deepsky.lang.plsql.psi.GenericConstraint;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.ddl.PartitionSpecification;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
-import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.utils.StringUtils;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
@@ -79,9 +78,11 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
         return null;
     }
 
+/*
     public String getQuickNavigateInfo() {
         return "[Table] " + getTableName().toLowerCase();
     }
+*/
 
 
     @NotNull
@@ -223,7 +224,7 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
 
 
     public Icon getIcon(int flags) {
-        return chooseIcon(); //Icons.TEMP_TABLE;
+        return chooseIcon();
     }
 
     // presentation stuff
@@ -241,9 +242,9 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
     }
 
 
-    class TablePresentation implements ItemPresentation {
+    private class TablePresentation implements ItemPresentation {
         public String getPresentableText() {
-            return getTableName().toLowerCase();
+            return "[Table] " + getTableName().toLowerCase();
         }
 
         @Nullable
@@ -253,7 +254,7 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
 
         @Nullable
         public Icon getIcon(boolean open) {
-            return chooseIcon();//Icons.TEMP_TABLE;
+            return chooseIcon();
         }
 
         @Nullable

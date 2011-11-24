@@ -34,11 +34,15 @@ import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.deepsky.lang.plsql.struct.TableDescriptorLegacy;
 import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 
 public class TableAliasImpl extends GenericTableBase implements TableAlias {
@@ -66,9 +70,11 @@ public class TableAliasImpl extends GenericTableBase implements TableAlias {
         }
     }
 
+/*
     public String getQuickNavigateInfo() {
         return "[Table] " + getTableName().toLowerCase();
     }
+*/
 
 
     public String getSchemaName() {

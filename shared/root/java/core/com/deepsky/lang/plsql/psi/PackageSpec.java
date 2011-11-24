@@ -42,6 +42,4 @@ public interface PackageSpec extends PlSqlElement, NavigationItem, CompilableObj
 
     @NotNull
     ExecutableSpec[] findExecutableByName(String name);
-
-    PackageBody getPackageBody();
 }

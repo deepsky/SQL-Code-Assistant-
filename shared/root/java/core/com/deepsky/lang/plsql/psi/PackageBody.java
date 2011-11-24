@@ -34,7 +34,7 @@ public interface PackageBody extends PlSqlElement, NavigationItem, CompilableObj
     String getPackageName();
 
     Executable[] findExecutableByName(String name);
-    ExecutableSpec[] findExecutableSpecByName(String name);
+//    ExecutableSpec[] findExecutableSpecByName(String name);
 
     @NotNull
     PlSqlElement[] findObjectByName(String name);
@@ -42,5 +42,4 @@ public interface PackageBody extends PlSqlElement, NavigationItem, CompilableObj
     PlSqlElement[] getObjects();
 
     PackageSpec getPackageSpecification();
-    Executable findExecutableByDecl(ExecutableSpec spec);
 }

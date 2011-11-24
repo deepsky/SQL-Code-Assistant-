@@ -31,12 +31,14 @@ import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.CursorDecl;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.SelectStatement;
-import com.deepsky.lang.plsql.resolver.ContextPath;
-import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class CursorDeclImpl extends PlSqlDeclarationBase implements CursorDecl {
 
@@ -62,14 +64,46 @@ public class CursorDeclImpl extends PlSqlDeclarationBase implements CursorDecl {
         return (SelectStatement) node.getPsi();
     }
 
+/*
     @Nullable
     public String getQuickNavigateInfo() {
         return "[Cursor] " + getDeclName(); //getCursorName();
     }
+*/
 
     public String getDeclName() {
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.CURSOR_NAME);
         return node != null ? node.getText() : "";
+    }
+
+    @Nullable
+    public ItemPresentation getPresentation() {
+        try {
+            return new CursorPresentation();
+        } catch(SyntaxTreeCorruptedException e){
+            return null;
+        }
+    }
+
+    private class CursorPresentation implements ItemPresentation {
+        public String getPresentableText() {
+            return "[Cursor] " + getDeclName();
+        }
+
+        @Nullable
+        public String getLocationString() {
+            return null;
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open) {
+            return null;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey() {
+            return null;
+        }
     }
 
 

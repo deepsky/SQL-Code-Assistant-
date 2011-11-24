@@ -27,8 +27,6 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.resolver.ContextPath;
-import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.navigation.PlSqlPackageUtil;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
@@ -67,11 +65,13 @@ public class RecordTypeDeclImpl extends PlSqlDeclarationBase implements RecordTy
     }
 
 
+/*
     @Nullable
     public String getQuickNavigateInfo() {
         return "[Record Type] " + getDeclName();
     }
 
+*/
 
     public Icon getIcon(int flags) {
         return Icons.RECORD_TYPE_DECL;
@@ -79,7 +79,7 @@ public class RecordTypeDeclImpl extends PlSqlDeclarationBase implements RecordTy
 
     @Nullable
     public ItemPresentation getPresentation() {
-        return new TablePresentation();
+        return new RecordTypePresentation();
     }
 
     public FileStatus getFileStatus() {
@@ -91,9 +91,9 @@ public class RecordTypeDeclImpl extends PlSqlDeclarationBase implements RecordTy
     }
 
 
-    class TablePresentation implements ItemPresentation {
+    class RecordTypePresentation implements ItemPresentation {
         public String getPresentableText() {
-            return getDeclName();
+            return "[Record Type] " + getDeclName();
         }
 
         @Nullable

@@ -58,10 +58,12 @@ public class ObjectTypeDeclImpl extends PlSqlDeclarationBase implements ObjectTy
     }
 
 
+/*
     @Nullable
     public String getQuickNavigateInfo() {
         return "[Object Type] " + getDeclName();
     }
+*/
 
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
@@ -98,7 +100,7 @@ public class ObjectTypeDeclImpl extends PlSqlDeclarationBase implements ObjectTy
 
     @Nullable
     public ItemPresentation getPresentation() {
-        return new TablePresentation();
+        return new ObjectTypePresentation();
     }
 
     public FileStatus getFileStatus() {
@@ -110,9 +112,9 @@ public class ObjectTypeDeclImpl extends PlSqlDeclarationBase implements ObjectTy
     }
 
 
-    class TablePresentation implements ItemPresentation {
+    class ObjectTypePresentation implements ItemPresentation {
         public String getPresentableText() {
-            return getDeclName().toLowerCase();
+            return "[Object Type] " + getDeclName().toLowerCase();
         }
 
         @Nullable

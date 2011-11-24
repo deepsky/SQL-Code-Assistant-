@@ -68,6 +68,7 @@ public class ObjectNameImpl extends PlSqlElementBase implements ObjectName {
         return getText();
     }
 
+/*
     @Nullable
     public String getQuickNavigateInfo() {
         PsiElement parent = getParent();
@@ -78,6 +79,7 @@ public class ObjectNameImpl extends PlSqlElementBase implements ObjectName {
         }
         return null;
     }
+*/
 
 
     // presentation stuff

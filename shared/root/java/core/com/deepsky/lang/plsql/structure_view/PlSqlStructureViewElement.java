@@ -213,6 +213,9 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
     }
 
     public ItemPresentation getPresentation() {
+        // TODO - subject to replace with ((NavigationItem) myElement).getPresentation();
+        // ...
+        // TODO - add CREATE/DROP/ALTER tablespace
         return new ItemPresentation() {
             String locationString = null;
             public String getPresentableText() {
@@ -458,9 +461,10 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
                    return (myElement).getIcon(0);                   
                 }
 
-                return null; //myElement.getIcon(Iconable.ICON_FLAG_OPEN);
+                return null;
             }
         };
+
     }
 
 }

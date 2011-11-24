@@ -4,7 +4,7 @@ import com.intellij.psi.tree.IElementType;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 
 public class ANTLRType2AdoptedType {
-	static public IElementType[] type2etype = new IElementType[359];
+	static public IElementType[] type2etype = new IElementType[360];
 	static {
 		type2etype[PLSqlTokenTypes.DROP_VIEW] = PLSqlTypesAdopted.DROP_VIEW;
 		type2etype[PLSqlTokenTypes.CREATE_VIEW_COLUMN_DEF] = PLSqlTypesAdopted.CREATE_VIEW_COLUMN_DEF;
@@ -27,9 +27,9 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.SYSTIMESTAMP_CONST] = PLSqlTypesAdopted.SYSTIMESTAMP_CONST;
 		type2etype[PLSqlTokenTypes.MEMBER_OF] = PLSqlTypesAdopted.MEMBER_OF;
 		type2etype[PLSqlTokenTypes.TABLE_NAME_DDL] = PLSqlTypesAdopted.TABLE_NAME_DDL;
+		type2etype[PLSqlTokenTypes.LAG_FUNCTION] = PLSqlTypesAdopted.LAG_FUNCTION;
 		type2etype[PLSqlTokenTypes.DROP_TRIGGER] = PLSqlTypesAdopted.DROP_TRIGGER;
 		type2etype[PLSqlTokenTypes.PLSQL_VAR_REF] = PLSqlTypesAdopted.PLSQL_VAR_REF;
-		type2etype[PLSqlTokenTypes.LAG_FUNCTION] = PLSqlTypesAdopted.LAG_FUNCTION;
 		type2etype[PLSqlTokenTypes.CREATE_TRIGGER] = PLSqlTypesAdopted.CREATE_TRIGGER;
 		type2etype[PLSqlTokenTypes.PARTITION_SPEC] = PLSqlTypesAdopted.PARTITION_SPEC;
 		type2etype[PLSqlTokenTypes.SERIALLY_REUSABLE_PRAGMA] = PLSqlTypesAdopted.SERIALLY_REUSABLE_PRAGMA;
@@ -268,6 +268,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.IMMEDIATE_COMMAND] = PLSqlTypesAdopted.IMMEDIATE_COMMAND;
 		type2etype[PLSqlTokenTypes.CONNECT_CLAUSE] = PLSqlTypesAdopted.CONNECT_CLAUSE;
 		type2etype[PLSqlTokenTypes.TABLESPACE_NAME] = PLSqlTypesAdopted.TABLESPACE_NAME;
+		type2etype[PLSqlTokenTypes.CURSOR_NAME_REF] = PLSqlTypesAdopted.CURSOR_NAME_REF;
 		type2etype[PLSqlTokenTypes.CREATE_DIRECTORY] = PLSqlTypesAdopted.CREATE_DIRECTORY;
 		type2etype[PLSqlTokenTypes.DROP_TABLE] = PLSqlTypesAdopted.DROP_TABLE;
 		type2etype[PLSqlTokenTypes.COMMENT_STR] = PLSqlTypesAdopted.COMMENT_STR;

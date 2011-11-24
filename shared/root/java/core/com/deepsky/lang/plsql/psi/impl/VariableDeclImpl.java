@@ -27,25 +27,23 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.Expression;
-import com.deepsky.lang.plsql.psi.PlSqlElement;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.VariableDecl;
-import com.deepsky.lang.plsql.psi.resolve.ASTNodeHandler;
-import com.deepsky.lang.plsql.psi.resolve.ASTTreeProcessor;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
-import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
 import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.plsql.struct.VariableDescriptor;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class VariableDeclImpl extends PlSqlDeclarationBase implements VariableDecl {
 
@@ -55,20 +53,6 @@ public class VariableDeclImpl extends PlSqlDeclarationBase implements VariableDe
 
     public PsiElement getVariableName() {
         return this.findChildByType(PLSqlTypesAdopted.VARIABLE_NAME);
-    }
-
-    public String getQuickNavigateInfo() {
-        StringBuilder out = new StringBuilder();
-        ASTNode child = getNode().getFirstChildNode();
-        ASTNodeIterator iterator = new ASTNodeIterator(child);
-        while (iterator.hasNext() && !iterator.peek().getText().equals(";")) {
-            if (out.length() > 0) {
-                out.append(" ");
-            }
-            out.append(iterator.next().getText());
-        }
-
-        return out.toString();
     }
 
     public Type getType() {
@@ -109,43 +93,6 @@ public class VariableDeclImpl extends PlSqlDeclarationBase implements VariableDe
         return null;
     }
 
-
-
-/*
-    @NotNull
-    public VariableDescriptor describe() {
-
-        // todo -- resolve stuff refactoring
-        throw new NotSupportedException();
-        final PackageDescriptor[] pdesc = new PackageDescriptor[]{null};
-        // [start] search definition context --------------------
-        ASTTreeProcessor runner = new ASTTreeProcessor();
-        runner.add(new PackageTriggerHandler() {
-            public void handleTriggerBody(CreateTrigger trigger) {
-                // todo --
-            }
-
-            public void handlePackageBody(PackageBody pkg) {
-                pdesc[0] = pkg.describe();
-            }
-
-            @Override
-            public void handlePackageSpec(PackageSpec pkg) {
-                pdesc[0] = pkg.describe();
-            }
-        });
-        runner.process(getNode());
-        // [end] search definition context ------------------------
-
-        if(pdesc[0] != null){
-//            return new VariableDescriptorImpl(pdesc[0], getVariableName(), getType(), false );
-            return new VariableDescriptorImpl(pdesc[0], getDeclName(), getType(), false );
-        } else {
-            throw new SyntaxTreeCorruptedException();
-        }
-    }
-*/
-
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
             ((PlSqlElementVisitor) visitor).visitVariableDecl(this);
@@ -163,4 +110,46 @@ public class VariableDeclImpl extends PlSqlDeclarationBase implements VariableDe
         }
     }
 
+    @Nullable
+    public ItemPresentation getPresentation() {
+        try {
+            return new VarPresentation();
+        } catch(SyntaxTreeCorruptedException e){
+            return null;
+        }
+    }
+
+    private class VarPresentation implements ItemPresentation {
+        public String getPresentableText() {
+            String ctxPath = VariableDeclImpl.this.getCtxPath1().getPath();
+            String varName = getDeclName();
+            ContextPathUtil.CtxPathParser ctxParser = new ContextPathUtil.CtxPathParser(ctxPath);
+            ContextPathUtil.CtxPathParser parentCtxParser = ctxParser.getParentCtxParser();
+            if(parentCtxParser != null){
+                switch(parentCtxParser.extractLastCtxType()){
+                    case ContextPath.PACKAGE_BODY:
+                    case ContextPath.PACKAGE_SPEC:
+                        varName = parentCtxParser.lastCtxName() + "." + varName;
+                        break;
+                }
+            }
+            String text = varName + " " + getTypeSpec().getText();
+            return "[Variable] " + text;
+        }
+
+        @Nullable
+        public String getLocationString() {
+            return null;
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open) {
+            return null;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey() {
+            return TextAttributesKey.find("PLSQL.VAR");
+        }
+    }
 }

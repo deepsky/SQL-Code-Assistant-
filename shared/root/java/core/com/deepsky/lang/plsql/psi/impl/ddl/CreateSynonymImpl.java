@@ -29,14 +29,17 @@ import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.ddl.CreateSynonym;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
-import com.deepsky.lang.plsql.resolver.ContextPath;
-import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class CreateSynonymImpl extends PlSqlElementBase implements CreateSynonym {
     public CreateSynonymImpl(ASTNode astNode) {
@@ -117,6 +120,7 @@ public class CreateSynonymImpl extends PlSqlElementBase implements CreateSynonym
         }
     }
 
+/*
     @Nullable
     public String getQuickNavigateInfo() {
         // build the string: "my_synonym for sys.just_synonym"
@@ -127,6 +131,7 @@ public class CreateSynonymImpl extends PlSqlElementBase implements CreateSynonym
 
         return null;
     }
+*/
 
 
     private String getCustomString() {

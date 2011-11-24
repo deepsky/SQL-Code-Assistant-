@@ -33,13 +33,16 @@ import com.deepsky.lang.plsql.psi.Expression;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
-import com.deepsky.lang.plsql.resolver.ContextPath;
-import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 
 public class ArgumentImpl extends PlSqlElementBase implements Argument {
@@ -53,7 +56,8 @@ public class ArgumentImpl extends PlSqlElementBase implements Argument {
         if (e != null) {
             return e.getText();
         } else {
-            return "";
+            throw new SyntaxTreeCorruptedException();
+//            return "";
         }
     }
 
@@ -76,9 +80,11 @@ public class ArgumentImpl extends PlSqlElementBase implements Argument {
         }
     }
 
+/*
     public String getQuickNavigateInfo() {
         return getPresentableForm();
     }
+*/
 
     public String getPresentableForm() {
         StringBuilder out = new StringBuilder();
@@ -99,14 +105,17 @@ public class ArgumentImpl extends PlSqlElementBase implements Argument {
     }
 
     public boolean isIn() {
+        // todo -- implement me
         return false;
     }
 
     public boolean isOut() {
+        // todo -- implement me
         return false;
     }
 
     public boolean isNocopy() {
+        // todo -- implement me
         return false;
     }
 
@@ -123,21 +132,35 @@ public class ArgumentImpl extends PlSqlElementBase implements Argument {
         }
     }
 
-/*
-    // [Contex Management Stuff] Start -------------------------------
-    CtxPath cachedCtxPath = null;
-
-    public CtxPath getCtxPath() {
-        if (cachedCtxPath != null) {
-            return cachedCtxPath;
-        } else {
-            CtxPath parent = super.getCtxPath();
-            cachedCtxPath = new ContextPathUtil.CtxPathImpl(
-                    parent.getPath() + ContextPathUtil.encodeCtx(ContextPath.ARGUMENT, "..$" + getArgumentName().toLowerCase()));
+    @Nullable
+    public ItemPresentation getPresentation() {
+        try {
+            return new ArgumentPresentation();
+        } catch(SyntaxTreeCorruptedException e){
+            return null;
         }
-        return cachedCtxPath;
     }
-    // [Contex Management Stuff] End ---------------------------------
-*/
+
+    private class ArgumentPresentation implements ItemPresentation {
+        public String getPresentableText() {
+            String text = getArgumentName() + " " + getTypeSpec().getText();
+            return "[Argument] " + text;
+        }
+
+        @Nullable
+        public String getLocationString() {
+            return null;
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open) {
+            return null;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey() {
+            return null;
+        }
+    }
 
 }

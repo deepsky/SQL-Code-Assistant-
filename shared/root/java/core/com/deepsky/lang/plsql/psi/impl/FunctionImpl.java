@@ -30,14 +30,20 @@ import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
+import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.ResolveFacade;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.struct.*;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class FunctionImpl extends PlSqlElementBase implements Function {
 
@@ -188,18 +194,61 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
     }
 
     @Nullable
-    public String getQuickNavigateInfo() {
-        StringBuilder out = new StringBuilder();
-        for (Argument a : getArguments()) {
-            if (out.length() > 0) {
-                out.append(", ");
-            }
-            out.append(a.getPresentableForm());
+    public ItemPresentation getPresentation() {
+        try {
+            return new FunctionSpecPresentation();
+        } catch(SyntaxTreeCorruptedException e){
+            return null;
         }
-        return "[Function] "
-                + getEName().toLowerCase()
-                + ((out.length() > 0) ? " (" + out.toString().toLowerCase() + ") " : " ")
-                + getReturnType().typeName();
     }
+
+    private class FunctionSpecPresentation implements ItemPresentation {
+        public String getPresentableText() {
+            String ctxPath = FunctionImpl.this.getCtxPath1().getPath();
+            ContextPathUtil.CtxPathParser ctxParser = new ContextPathUtil.CtxPathParser(ctxPath);
+            String funcName = ctxParser.lastCtxName();
+            ContextPathUtil.CtxPathParser parentCtxParser = ctxParser.getParentCtxParser();
+            if(parentCtxParser != null){
+                switch(parentCtxParser.extractLastCtxType()){
+                    case ContextPath.PACKAGE_BODY:
+                    case ContextPath.PACKAGE_SPEC:
+                        funcName = parentCtxParser.lastCtxName() + "." + funcName;
+                        break;
+                }
+            }
+
+            ArgumentList alist = getArgumentList();
+            StringBuilder out = new StringBuilder();
+            if (alist != null) {
+                for (Argument a : alist.getArguments()) {
+                    if (out.length() > 0) {
+                        out.append(", ");
+                    }
+                    out.append(a.getPresentableForm());
+                }
+            }
+            // todo -- truncate long string
+            return "[Function] "
+                    + funcName
+                    + ((out.length() > 0) ? " (" + out.toString().toLowerCase() + ") " : " ")
+                    + getReturnType().typeName();
+        }
+
+        @Nullable
+        public String getLocationString() {
+            return null;
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open) {
+            return null;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey() {
+            return null;
+        }
+    }
+
 
 }

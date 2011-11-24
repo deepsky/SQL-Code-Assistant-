@@ -27,9 +27,9 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType SYSTIMESTAMP_CONST = new PlSqlElementType("SYSTIMESTAMP_CONST", PLSqlTokenTypes.SYSTIMESTAMP_CONST);
 	PlSqlElementType MEMBER_OF = new PlSqlElementType("MEMBER_OF", PLSqlTokenTypes.MEMBER_OF);
 	PlSqlElementType TABLE_NAME_DDL = new PlSqlElementType("TABLE_NAME_DDL", PLSqlTokenTypes.TABLE_NAME_DDL);
+	PlSqlElementType LAG_FUNCTION = new PlSqlElementType("LAG_FUNCTION", PLSqlTokenTypes.LAG_FUNCTION);
 	PlSqlElementType DROP_TRIGGER = new PlSqlElementType("DROP_TRIGGER", PLSqlTokenTypes.DROP_TRIGGER);
 	PlSqlElementType PLSQL_VAR_REF = new PlSqlElementType("PLSQL_VAR_REF", PLSqlTokenTypes.PLSQL_VAR_REF);
-	PlSqlElementType LAG_FUNCTION = new PlSqlElementType("LAG_FUNCTION", PLSqlTokenTypes.LAG_FUNCTION);
 	PlSqlElementType CREATE_TRIGGER = new PlSqlElementType("CREATE_TRIGGER", PLSqlTokenTypes.CREATE_TRIGGER);
 	PlSqlElementType PARTITION_SPEC = new PlSqlElementType("PARTITION_SPEC", PLSqlTokenTypes.PARTITION_SPEC);
 	PlSqlElementType SERIALLY_REUSABLE_PRAGMA = new PlSqlElementType("SERIALLY_REUSABLE_PRAGMA", PLSqlTokenTypes.SERIALLY_REUSABLE_PRAGMA);
@@ -268,6 +268,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType IMMEDIATE_COMMAND = new PlSqlElementType("IMMEDIATE_COMMAND", PLSqlTokenTypes.IMMEDIATE_COMMAND);
 	PlSqlElementType CONNECT_CLAUSE = new PlSqlElementType("CONNECT_CLAUSE", PLSqlTokenTypes.CONNECT_CLAUSE);
 	PlSqlElementType TABLESPACE_NAME = new PlSqlElementType("TABLESPACE_NAME", PLSqlTokenTypes.TABLESPACE_NAME);
+	PlSqlElementType CURSOR_NAME_REF = new PlSqlElementType("CURSOR_NAME_REF", PLSqlTokenTypes.CURSOR_NAME_REF);
 	PlSqlElementType CREATE_DIRECTORY = new PlSqlElementType("CREATE_DIRECTORY", PLSqlTokenTypes.CREATE_DIRECTORY);
 	PlSqlElementType DROP_TABLE = new PlSqlElementType("DROP_TABLE", PLSqlTokenTypes.DROP_TABLE);
 	PlSqlElementType COMMENT_STR = new PlSqlElementType("COMMENT_STR", PLSqlTokenTypes.COMMENT_STR);

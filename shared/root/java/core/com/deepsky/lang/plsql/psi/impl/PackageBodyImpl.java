@@ -29,22 +29,26 @@ import com.deepsky.lang.common.ResolveProvider;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.NotSupportedException;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
 import com.deepsky.lang.plsql.resolver.ResolveFacade;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
 
-    static final LoggerProxy log = LoggerProxy.getInstance("#PackageBodyImpl");
+//    static private final LoggerProxy log = LoggerProxy.getInstance("#PackageBodyImpl");
 
     public PackageBodyImpl(ASTNode astNode) {
         super(astNode);
@@ -78,6 +82,7 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
     }
 
 
+/*
     public ExecutableSpec[] findExecutableSpecByName(String name) {
         List<ExecutableSpec> out = new ArrayList<ExecutableSpec>();
         ASTNode[] nodes = getNode().getChildren(
@@ -94,34 +99,8 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
         }
         return out.toArray(new ExecutableSpec[0]);
     }
-
-/*
-    @NotNull
-    public PackageBodyDescriptor describe() {
-        // todo -- resolve stuff refactoring
-        throw new NotSupportedException();
 */
-/*
-        if (getContainingFile().getVirtualFile() instanceof DbOriginatedSqlFile) {
-            PackageBodyDescriptor dbo = resolve_PackageBody(this.getPackageName());
-            if (dbo != null) {
-                return dbo;
-            }
-        } else {
-            String url = getContainingFile().getVirtualFile().getUrl();
-            PackageBodyDescriptor pdesc = new PackageBodyDescriptorImpl(
-                    new FileBasedContextUrl(url), getPackageName()
-            );
 
-            // todo
-            return pdesc;
-        }
-
-        throw new NotSupportedException();
-*//*
-
-    }
-*/
 
     @NotNull
     public PlSqlElement[] findObjectByName(String name) {
@@ -169,41 +148,6 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
         return facade.findPackageSpecification(this);
     }
 
-    public Executable findExecutableByDecl(ExecutableSpec spec) {
-        // todo -- resolve stuff refactoring
-        throw new NotSupportedException();
-
-/*
-        ASTNode[] nodes = getNode().getChildren(
-                TokenSet.create(
-                        PlSqlElementTypes.FUNCTION_BODY,
-                        PlSqlElementTypes.PROCEDURE_BODY));
-
-        if (nodes != null && nodes.length > 0) {
-            for (ASTNode node : nodes) {
-                if (spec instanceof FunctionSpec && node.getPsi() instanceof Function) {
-                    FunctionSpec fs = (FunctionSpec) spec;
-                    Function f = (Function) node.getPsi();
-                    if (f.getEName().equalsIgnoreCase(spec.getEName()) && f.getReturnType().equals(fs.getReturnType())) {
-                        if (ResolveHelper3.argumentsEquals(f.getArguments(), spec.getArguments())) {
-                            return f;
-                        }
-                    }
-                } else if (spec instanceof ProcedureSpec && node.getPsi() instanceof Procedure) {
-                    Procedure f = (Procedure) node.getPsi();
-                    if (f.getEName().equalsIgnoreCase(spec.getEName())) {
-                        if (ResolveHelper3.argumentsEquals(f.getArguments(), spec.getArguments())) {
-                            return f;
-                        }
-                    }
-                }
-            }
-        }
-
-        return null;
-*/
-    }
-
 
 //    public void subtreeChanged(){
 //        log.info("[subtreeChanged] PackageBody: " + getPackageName() );
@@ -218,12 +162,6 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
     }
 
 
-    @Nullable
-    public String getQuickNavigateInfo() {
-        return "[Package] " + getPackageName().toLowerCase();
-    }
-
-
     @NotNull
     public String getObjectType() {
         return "PACKAGE BODY";
@@ -232,5 +170,35 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
     @NotNull
     public String getObjectName() {
         return getPackageName();
+    }
+
+    @Nullable
+    public ItemPresentation getPresentation() {
+        try {
+            return new PackagePresentation();
+        } catch(SyntaxTreeCorruptedException e){
+            return null;
+        }
+    }
+
+    private class PackagePresentation implements ItemPresentation {
+        public String getPresentableText() {
+            return "[Package] " + getPackageName().toLowerCase();
+        }
+
+        @Nullable
+        public String getLocationString() {
+            return null;
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open) {
+            return null;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey() {
+            return null;
+        }
     }
 }

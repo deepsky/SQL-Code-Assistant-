@@ -33,8 +33,6 @@ import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.VarrayCollectionDecl;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
-import com.deepsky.lang.plsql.resolver.ContextPath;
-import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
@@ -88,12 +86,6 @@ public class VarrayCollectionDeclImpl extends PlSqlDeclarationBase implements Va
         return child.getText().toUpperCase();
     }
     
-
-    @Nullable
-    public String getQuickNavigateInfo() {
-        return "[Varray] " + getDeclName();
-    }
-
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
             ((PlSqlElementVisitor) visitor).visitVarrayCollectionDecl(this);
@@ -109,7 +101,7 @@ public class VarrayCollectionDeclImpl extends PlSqlDeclarationBase implements Va
 
     @Nullable
     public ItemPresentation getPresentation() {
-        return new TablePresentation();
+        return new VarrayPresentation();
     }
 
     public FileStatus getFileStatus() {
@@ -121,9 +113,9 @@ public class VarrayCollectionDeclImpl extends PlSqlDeclarationBase implements Va
     }
 
 
-    class TablePresentation implements ItemPresentation {
+    class VarrayPresentation implements ItemPresentation {
         public String getPresentableText() {
-            return getDeclName().toLowerCase();
+            return "[Varray] " + getDeclName().toLowerCase();
         }
 
         @Nullable

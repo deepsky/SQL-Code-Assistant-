@@ -29,6 +29,7 @@ import com.deepsky.lang.plsql.resolver.ContextPathProvider;
 import com.intellij.psi.PsiElement;
 
 public interface PlSqlElement extends PsiElement, ContextPathProvider {
+    // todo -- subject to delete
     String getQuickNavigateInfo();
     String getStrippedText();
 

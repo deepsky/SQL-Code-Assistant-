@@ -92,10 +92,12 @@ public class TableCollectionDeclImpl extends PlSqlDeclarationBase implements Tab
         return PlSqlUtil.completeCreateScript(this);
     }
 
+/*
     @Nullable
     public String getQuickNavigateInfo() {
         return "[Collection Type] " + getDeclName();
     }
+*/
 
     // presentation stuff
     public Icon getIcon(int flags) {
@@ -118,7 +120,7 @@ public class TableCollectionDeclImpl extends PlSqlDeclarationBase implements Tab
 
     class TablePresentation implements ItemPresentation {
         public String getPresentableText() {
-            return getDeclName().toLowerCase();
+            return "[Collection Type] " + getDeclName().toLowerCase();
         }
 
         @Nullable

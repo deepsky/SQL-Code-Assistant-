@@ -26,18 +26,19 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
-import com.deepsky.lang.plsql.struct.ExecutableDescriptor;
-import com.deepsky.lang.plsql.struct.ProcedureDescriptor;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec {
     public ProcedureSpecImpl(ASTNode astNode) {
@@ -68,80 +69,6 @@ public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec
         return (ObjectName) child.getPsi();
     }
 
-/*
-    public boolean equals2(ExecutableDescriptor edesc) {
-        if (!(edesc instanceof ProcedureDescriptor)) {
-            return false;
-        }
-
-        if (edesc.getName().equalsIgnoreCase(getEName())) {
-            String[] names = edesc.getArgumentNames();
-
-            // check out arguments
-            ArgumentList lst = getArgumentList();
-            Argument[] args = lst != null ? lst.getArguments() : new Argument[0]; //getArgumentList();
-            if (args.length == names.length) {
-                for (int i = 0; i < names.length; i++) {
-                    if (!args[i].getArgumentName().equalsIgnoreCase(names[i]) ||
-                            args[i].getType().typeId() != edesc.getArgumentType(names[i]).typeId()) {
-                        return false;
-                    }
-                }
-            } else {
-                return false;
-            }
-
-            return true;
-        }
-        return false;
-    }
-*/
-
-    public ExecutableDescriptor describe() {
-        // todo -- resolve stuff refactoring
-        throw new NotSupportedException();
-
-/*
-        PlSqlElement context = getUsageContext(TokenSet.create(
-                PlSqlElementTypes.PACKAGE_BODY, PlSqlElementTypes.PACKAGE_SPEC)
-        );
-
-        PackageDescriptor pdesc = null;
-        ProcedureDescriptorImpl fd;
-        if (context instanceof PackageBody) {
-            pdesc = ((PackageBody)context).describe();
-            fd = new ProcedureDescriptorImpl(pdesc, getEName().toUpperCase());
-        } else if (context instanceof PackageSpec) {
-            pdesc = ((PackageSpec)context).describe();
-            fd = new ProcedureDescriptorImpl(pdesc, getEName().toUpperCase());
-        } else {
-            String url = getContainingFile().getVirtualFile().getUrl();
-            fd = new ProcedureDescriptorImpl(
-                    new FileBasedContextUrl(url),
-                    getEName().toUpperCase());
-        }
-
-        for (Argument a : getArgumentList().getArguments()) {
-            Type t = a.getType();
-            if(t.typeId() == Type.USER_DEFINED){
-                UserDefinedType udt = (UserDefinedType) t;
-                if(udt.getDefinitionPackage() == null && pdesc != null){
-                    // complete the FQN of the UDT
-                    udt.setDefinitionPackage(pdesc.getName());
-                }
-            }
-            fd.addParameter(
-                    t,
-                    a.getArgumentName(),
-                    a.getDefaultExpr() != null
-            );
-        }
-
-        return fd;
-*/
-    }
-
-
     public String getPackageName() {
         PsiElement parent = this.getParent();
         if (parent instanceof PackageBody) {
@@ -152,6 +79,7 @@ public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec
         return null;
     }
 
+/*
     @Nullable
     public String getQuickNavigateInfo() {
         ArgumentList alist = getArgumentList();
@@ -168,12 +96,69 @@ public class ProcedureSpecImpl extends PlSqlElementBase implements ProcedureSpec
                 + getEName().toLowerCase()
                 + ((out.length() > 0) ? " (" + out.toString().toLowerCase() + ") " : " ");
     }
+*/
 
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
             ((PlSqlElementVisitor) visitor).visitProcedureSpec(this);
         } else {
             super.accept(visitor);
+        }
+    }
+
+    @Nullable
+    public ItemPresentation getPresentation() {
+        try {
+            return new ProcSpecPresentation();
+        } catch(SyntaxTreeCorruptedException e){
+            return null;
+        }
+    }
+
+    private class ProcSpecPresentation implements ItemPresentation {
+        public String getPresentableText() {
+            String ctxPath = ProcedureSpecImpl.this.getCtxPath1().getPath();
+            ContextPathUtil.CtxPathParser ctxParser = new ContextPathUtil.CtxPathParser(ctxPath);
+            String funcName = ctxParser.lastCtxName();
+            ContextPathUtil.CtxPathParser parentCtxParser = ctxParser.getParentCtxParser();
+            if(parentCtxParser != null){
+                switch(parentCtxParser.extractLastCtxType()){
+                    case ContextPath.PACKAGE_BODY:
+                    case ContextPath.PACKAGE_SPEC:
+                        funcName = parentCtxParser.lastCtxName() + "." + funcName;
+                        break;
+                }
+            }
+
+            ArgumentList alist = getArgumentList();
+            StringBuilder out = new StringBuilder();
+            if (alist != null) {
+                for (Argument a : alist.getArguments()) {
+                    if (out.length() > 0) {
+                        out.append(", ");
+                    }
+                    out.append(a.getPresentableForm());
+                }
+            }
+            // todo -- truncate long string
+            return "[Procedure] "
+                    + funcName
+                    + ((out.length() > 0) ? " (" + out.toString().toLowerCase() + ") " : " ");
+        }
+
+        @Nullable
+        public String getLocationString() {
+            return null;
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open) {
+            return null;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey() {
+            return null;
         }
     }
 

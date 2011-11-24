@@ -27,16 +27,19 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.NotSupportedException;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,17 +167,6 @@ public class PackageSpecImpl extends PlSqlElementBase implements PackageSpec {
         return out;
     }
 
-//    public PackageDescriptor describe() {
-//
-//        String url = getContainingFile().getVirtualFile().getUrl();
-//        PackageDescriptor pdesc = new PackageSpecDescriptorImpl(
-//                new FileBasedContextUrl(url), getPackageName()
-//        );
-//
-//        // todo -- decsriptor is not populated with objects
-//        return pdesc;
-//    }
-
     @NotNull
     public ExecutableSpec[] findExecutableByName(String name) {
         List<ExecutableSpec> out = new ArrayList<ExecutableSpec>();
@@ -193,26 +185,6 @@ public class PackageSpecImpl extends PlSqlElementBase implements PackageSpec {
         return out.toArray(new ExecutableSpec[0]);
     }
 
-    public PackageBody getPackageBody() {
-        // todo -- resolve stuff refactoring
-        throw new NotSupportedException();
-/*
-        VirtualFile f = getContainingFile().getVirtualFile();
-        if(f != null){
-            VirtualFileSystem vfs = f.getFileSystem();
-            PackageBody body = ResolveHelper.resolve_PackageBody(getProject(), vfs, getPackageName());
-            return body;
-        } else {
-            return null;
-        }
-*/
-    }
-
-    @Nullable
-    public String getQuickNavigateInfo() {
-        return "[Package] " + getPackageName().toLowerCase();
-    }
-
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
             ((PlSqlElementVisitor) visitor).visitPackageSpec(this);
@@ -229,6 +201,37 @@ public class PackageSpecImpl extends PlSqlElementBase implements PackageSpec {
     @NotNull
     public String getObjectName() {
         return getPackageName();
+    }
+
+
+    @Nullable
+    public ItemPresentation getPresentation() {
+        try {
+            return new PackagePresentation();
+        } catch (SyntaxTreeCorruptedException e) {
+            return null;
+        }
+    }
+
+    private class PackagePresentation implements ItemPresentation {
+        public String getPresentableText() {
+            return "[Package] " + getPackageName().toLowerCase();
+        }
+
+        @Nullable
+        public String getLocationString() {
+            return null;
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open) {
+            return null;
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey() {
+            return null;
+        }
     }
 
 }
