@@ -165,14 +165,18 @@ public class LocalFSChangeTracker {
     }
 
     private Set<String> deleteIndex(VirtualFile file, boolean notifyIndexManager) {
-        Set<String> typesBeenDeleted = fsIndexer.deleteFile(file.getPath());
+        return deleteIndex(file.getPath(), notifyIndexManager);
+    }
+
+    private Set<String> deleteIndex(String path, boolean notifyIndexManager) {
+        Set<String> typesBeenDeleted = fsIndexer.deleteFile(path);
         String[] ttypes = typesBeenDeleted.toArray(new String[typesBeenDeleted.size()]);
-        log.info("fileDeleted: " + file.getPath() + " types: " + Arrays.toString(ttypes));
+        log.info("fileDeleted: " + path + " types: " + Arrays.toString(ttypes));
         MessageBus bus1 = project.getMessageBus();
         if (notifyIndexManager && ttypes.length > 0) {
             bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, ttypes);
         }
-        bus1.syncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, file.getPath());
+        bus1.syncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, path);
         return typesBeenDeleted;
     }
 
@@ -234,8 +238,20 @@ public class LocalFSChangeTracker {
 
     private class VirtualFileListenerImpl implements VirtualFileListener {
         public void propertyChanged(VirtualFilePropertyEvent event) {
-            log.info("propertyChanged: " + event.getFileName());
-            log.info("oldModStamp: " + event.getOldModificationStamp() + " newModStamp: " + event.getNewModificationStamp());
+            log.info("propertyChanged: " + event.getPropertyName());
+            if(event.getPropertyName().equals(VirtualFile.PROP_NAME)){
+                // name was changed
+                File parent = new File(event.getParent().getPath());
+                String oldFileName = (String) event.getOldValue();
+                String newFileName = event.getFile().getPath();
+
+                if (helper.isFileValid(new File(parent, oldFileName))) {
+                    deleteIndex(new File(parent, oldFileName).toString(), true);
+                }
+                if (helper.isFileValid(new File(parent, newFileName))) {
+                    indexFileWithNotification(event.getFile(), true);
+                }
+            }
         }
 
         public void contentsChanged(VirtualFileEvent event) {
