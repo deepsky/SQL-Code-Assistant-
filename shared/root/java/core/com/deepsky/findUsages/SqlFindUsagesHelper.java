@@ -46,6 +46,7 @@ import com.intellij.find.findUsages.FindUsagesOptions;
 import com.intellij.ide.DataManager;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -298,9 +299,7 @@ public class SqlFindUsagesHelper {
             return createSearchOptionsFor(typeDecl);
 
         } else if (ietype == PlSqlElementTypes.TYPE_NAME_REF) {
-            // todo --
-            int h = 0;
-
+            // todo -- implement me
         } else if (ietype == PlSqlElementTypes.RECORD_ITEM) {
             RecordTypeItem ri = (RecordTypeItem) etype[0];
             return new RecordItemSearchOptions(ri);
@@ -316,23 +315,24 @@ public class SqlFindUsagesHelper {
 
         } else if (ietype == PlSqlElementTypes.COLUMN_SPEC) {
             // todo -- implement me
-            int h = 0;
+
         } else if (ietype == PlSqlElementTypes.PLSQL_VAR_REF) {
             ObjectReference varRef = (ObjectReference) etype[0];
             PsiElement target = ((ResolveProvider) varRef.getContainingFile()).getResolver().resolveObjectReference(varRef);
             return createSearchOptionsFor(target);
 
         } else if (ietype == PlSqlElementTypes.TABLE_DEF) {
-
             return new TableSearchOptions((TableDefinition) etype[0]);
+
         } else if (ietype == PlSqlElementTypes.COLUMN_DEF) {
             return new TableColumnSearchOptions((ColumnDefinition) etype[0]);
+
         } else if (ietype == PlSqlElementTypes.CREATE_VIEW) {
             return new ViewSearchOptions((CreateView) etype[0]);
 
-
         } else if (ietype == PlSqlElementTypes.FUNCTION_SPEC) {
             return createSearchOptionsFor(etype[0]);
+
         } else if (ietype == PlSqlElementTypes.FUNCTION_BODY) {
             PsiElement target = etype[0];
             PsiElement spec = ((Function) etype[0]).getSpecification();
@@ -343,8 +343,10 @@ public class SqlFindUsagesHelper {
                 target = spec;
             }
             return createSearchOptionsFor(target);
+
         } else if (ietype == PlSqlElementTypes.PROCEDURE_SPEC) {
             return createSearchOptionsFor(etype[0]);
+
         } else if (ietype == PlSqlElementTypes.PROCEDURE_BODY) {
             PsiElement target = etype[0];
             PsiElement spec = ((Procedure) etype[0]).getSpecification();
@@ -373,12 +375,13 @@ public class SqlFindUsagesHelper {
             return createSearchOptionsFor(etype[0]);
         }
 
+        Messages.showInfoMessage("Can not search for usages, a selected symbol should be a valid reference", "Find Usages");
         return null;
     }
 
     private static SqlSearchOptions createSearchOptionsFor(PsiElement element) {
         if (element == null) {
-            return null;
+            //
         } else if (element instanceof VColumnDefinition) {
             VColumnDefinition vcolumnDef = (VColumnDefinition) element;
             return new ViewColumnSearchOptions(vcolumnDef);
@@ -441,11 +444,9 @@ public class SqlFindUsagesHelper {
 
         } else if (element instanceof CreateView) {
             return new ViewSearchOptions((CreateView) element);
-        } else {
-            int hh = 0;
         }
 
-
+        Messages.showInfoMessage("Can not search for usages, a selected symbol should be a valid reference", "Find Usages");
         return null;
     }
 
