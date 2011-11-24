@@ -115,7 +115,7 @@ tokens {
     MINUS_OP;
     CONCAT_OP;
 
-    CURSOR_NAME;
+    CURSOR_NAME; CURSOR_NAME_REF;
     DATATYPE;
     EXTRACT_DATE_FUNC;
     ANSI_JOIN_TAB_SPEC;
@@ -2120,19 +2120,10 @@ numeric_loop_spec2:
 
 cursor_loop_spec :
     cursor_loop_index "in"! cursor_loop_spec2
-/*
-    (
-        ( cursor_name (OPEN_PAREN! call_argument_list CLOSE_PAREN!)?)
-            {#cursor_loop_spec = #([CURSOR_REF_LOOP_SPEC, "CURSOR_REF_LOOP_SPEC" ], #cursor_loop_spec);}
-        | (OPEN_PAREN! select_expression CLOSE_PAREN!)
-            {#cursor_loop_spec = #([CURSOR_LOOP_SPEC, "CURSOR_LOOP_SPEC" ], #cursor_loop_spec);}
-    )
-*/
     ;
 
 cursor_loop_spec2:
-//    (cursor_name (OPEN_PAREN! call_argument_list CLOSE_PAREN!)?)
-    (cursor_name ( call_argument_list )?)
+    (cursor_name_ref ( call_argument_list )?)
         {#cursor_loop_spec2 = #([CURSOR_REF_LOOP_SPEC, "CURSOR_REF_LOOP_SPEC" ], #cursor_loop_spec2);}
     | select_command
         {#cursor_loop_spec2 = #([CURSOR_LOOP_SPEC, "CURSOR_LOOP_SPEC" ], #cursor_loop_spec2);}
@@ -2166,6 +2157,11 @@ integer_expr :
 cursor_name :
     identifier
     { #cursor_name = #([CURSOR_NAME, "CURSOR_NAME"], #cursor_name); }
+    ;
+
+cursor_name_ref :
+    identifier
+    { #cursor_name_ref = #([CURSOR_NAME_REF, "CURSOR_NAME_REF"], #cursor_name_ref); }
     ;
 
 record_name:
@@ -2798,7 +2794,6 @@ column_spec:
 
 
 column_name_ref:
-//    identifier2
     (identifier2 | "timestamp")
     {#column_name_ref = #([COLUMN_NAME_REF,"COLUMN_NAME_REF" ], #column_name_ref);}
     ;
@@ -3060,11 +3055,11 @@ set_transaction_command:
         ;
 
 close_statement :
-      "close" cursor_name
+      "close" cursor_name_ref
       ;
 
 fetch_statement:
-    "fetch" cursor_name ( "bulk" "collect" ) ? "into" variable_ref (COMMA! variable_ref )* ("limit" (identifier2|numeric_literal))?
+    "fetch" cursor_name_ref ( "bulk" "collect" ) ? "into" variable_ref (COMMA! variable_ref )* ("limit" (identifier2|numeric_literal))?
     {#fetch_statement = #([FETCH_STATEMENT, "FETCH_STATEMENT" ], #fetch_statement);}
     ;
 
@@ -3088,7 +3083,7 @@ lock_mode:
         ;
 
 open_statement:
-        o:"open" cursor_name  (parentesized_exp_list)?
+        o:"open" cursor_name_ref  (parentesized_exp_list)?
          ( f:"for" ( select_expression | plsql_expression ))?
          ( "using" ("in")? plsql_lvalue_list )?
         ;
