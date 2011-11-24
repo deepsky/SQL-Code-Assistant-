@@ -530,6 +530,14 @@ public class ContextPathUtil {
             return ctxPath.substring(0, ctxPath.length() - (ctxName.length() + 4 + 3));
         }
 
+        public CtxPathParser getParentCtxParser() {
+            String p = ctxPath.substring(0, ctxPath.length() - (ctxName.length() + 4 + 3));
+            if(p != null){
+                return new CtxPathParser(p);
+            }
+            return null;
+        }
+
         public String lastCtx() {
             return ctxPath.substring(ctxPath.length() - (ctxName.length() + 4 + 3), ctxPath.length());
         }
