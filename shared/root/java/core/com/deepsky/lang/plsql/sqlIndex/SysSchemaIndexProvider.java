@@ -196,21 +196,11 @@ public class SysSchemaIndexProvider {
             this.owner = owner;
         }
 
-/*
-        public String getSourceFilePath(String ctxPath) {
-            String path = ContextPathUtil.extractFilePath(ctxPath);
-            if (path == null) {
-                throw new ConfigurationException("Context Path is not valid: " + ctxPath);
-            }
-            return new File(indexDirPath, path).getAbsolutePath();
-        }
-*/
 
         public SqlFile getSourceFile(String ctxPath) {
             String filePath = ContextPathUtil.extractFilePath(ctxPath);
-//            File f = new File(indexDirPath, path);
+            String objectName =decodeObjectName(filePath);
 
-            String objectName = ContextPathUtil.extractLastCtxName(ctxPath);
             // NOTE: have to do indirect call to the owner
             DbUrl dbUrl = owner.getSimpleIndex("sys").getDbUrl();
             String path = "[sys] " + objectName; 
@@ -251,11 +241,15 @@ public class SysSchemaIndexProvider {
             }
         }
 
-/*
-        public String getSourceText(String ctxPath) {
-            throw new ConfigurationException("Not supported");
+        private String decodeObjectName(String fileName) {
+            if (fileName.endsWith(".dump")) {
+                String[] parts = fileName.split("\\!");
+                if (parts.length == 2 && parts[1].length() > ".dump".length()) {
+                    return parts[1].substring(0, parts[1].length() - ".dump".length());
+                }
+            }
+            return null;
         }
-*/
 
         public VariantsProvider getVariantsProvider() {
             // no variants provider for SYS schema
