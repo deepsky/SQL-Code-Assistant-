@@ -27,7 +27,14 @@ package com.deepsky.lang.plsql.sqlIndex;
 
 import com.deepsky.database.ora.DbUrl;
 import com.intellij.lang.Language;
+import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
 
 
 public abstract class SqlFile extends LightVirtualFile {
@@ -46,4 +53,60 @@ public abstract class SqlFile extends LightVirtualFile {
     }
 
     public abstract String getEncodedFilePathCtx();
+
+
+    /**
+     * Redefine VirtualFileSystem to avoid undesired adopting of slash symbol
+     * according to current file system done by default implementation
+     */
+    protected static class VeryRestrictedVirtualFileSystem extends DeprecatedVirtualFileSystem {
+        @NonNls
+        private static final String PROTOCOL = "mock";
+
+        @NotNull
+        public String getProtocol() {
+            return PROTOCOL;
+        }
+
+        @Nullable
+        public VirtualFile findFileByPath(@NotNull String path) {
+            return null;
+        }
+
+        public void refresh(boolean asynchronous) {
+        }
+
+        @Nullable
+        public VirtualFile refreshAndFindFileByPath(@NotNull String path) {
+            return null;
+        }
+
+        public void deleteFile(Object requestor, @NotNull VirtualFile vFile) throws IOException {
+        }
+
+        public void moveFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent) throws IOException {
+        }
+
+        public VirtualFile copyFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent, @NotNull final String copyName) throws IOException {
+            throw new IOException("Cannot copy files");
+        }
+
+        public void renameFile(Object requestor, @NotNull VirtualFile vFile, @NotNull String newName) throws IOException {
+        }
+
+        public VirtualFile createChildFile(Object requestor, @NotNull VirtualFile vDir, @NotNull String fileName) throws IOException {
+            throw new IOException("Cannot create files");
+        }
+
+        @NotNull
+        public VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile vDir, @NotNull String dirName) throws IOException {
+            throw new IOException("Cannot create directories");
+        }
+
+        public String extractPresentableUrl(@NotNull String path) {
+            return path;
+        }
+
+    }
+
 }

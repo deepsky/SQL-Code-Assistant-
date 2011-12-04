@@ -28,6 +28,8 @@ package com.deepsky.lang.plsql.sqlIndex;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PlSqlFileType;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.intellij.openapi.vfs.VirtualFileSystem;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class SysSqlFile  extends SqlFile {
 
@@ -57,6 +59,13 @@ public abstract class SysSqlFile  extends SqlFile {
 
     public boolean isWritable() {
       return false;
+    }
+
+    private static final VeryRestrictedVirtualFileSystem ourFileSystem = new VeryRestrictedVirtualFileSystem();
+
+    @NotNull
+    public VirtualFileSystem getFileSystem() {
+        return ourFileSystem;
     }
 
 }

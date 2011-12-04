@@ -41,13 +41,13 @@ import java.io.IOException;
 
 public abstract class DbDumpedSqlFile extends SqlFile {
 
-    String objectName;
-    String fileName;
-    String path;
-    long timestamp;
+    private String objectName;
+    private String fileName;
+    private String path;
+    private long timestamp;
     protected CharSequence content;
 
-    File f;
+    private File f;
 
     public DbDumpedSqlFile(DbUrl dbUrl, String objectName, final String fileName,
                            String path, final CharSequence text, long timestamp, File f) {
@@ -104,67 +104,13 @@ public abstract class DbDumpedSqlFile extends SqlFile {
     }
 
 
-    private static final MyVirtualFileSystem ourFileSystem = new MyVirtualFileSystem();
+    private static final VeryRestrictedVirtualFileSystem ourFileSystem = new VeryRestrictedVirtualFileSystem();
 
-    /**
-     * Redefine VirtualFileSystem to avoid undesired adopting of slash symbol
-     * according to current file system done by default implementation
-     * @return
-     */
     @NotNull
     public VirtualFileSystem getFileSystem() {
         return ourFileSystem;
     }
 
 
-    private static class MyVirtualFileSystem extends DeprecatedVirtualFileSystem {
-        @NonNls
-        private static final String PROTOCOL = "mock";
-
-        @NotNull
-        public String getProtocol() {
-            return PROTOCOL;
-        }
-
-        @Nullable
-        public VirtualFile findFileByPath(@NotNull String path) {
-            return null;
-        }
-
-        public void refresh(boolean asynchronous) {
-        }
-
-        @Nullable
-        public VirtualFile refreshAndFindFileByPath(@NotNull String path) {
-            return null;
-        }
-
-        public void deleteFile(Object requestor, @NotNull VirtualFile vFile) throws IOException {
-        }
-
-        public void moveFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent) throws IOException {
-        }
-
-        public VirtualFile copyFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent, @NotNull final String copyName) throws IOException {
-            throw new IOException("Cannot copy files");
-        }
-
-        public void renameFile(Object requestor, @NotNull VirtualFile vFile, @NotNull String newName) throws IOException {
-        }
-
-        public VirtualFile createChildFile(Object requestor, @NotNull VirtualFile vDir, @NotNull String fileName) throws IOException {
-            throw new IOException("Cannot create files");
-        }
-
-        @NotNull
-        public VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile vDir, @NotNull String dirName) throws IOException {
-            throw new IOException("Cannot create directories");
-        }
-
-        public String extractPresentableUrl(@NotNull String path) {
-            return path;
-        }
-
-    }
 
 }
