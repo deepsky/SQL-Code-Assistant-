@@ -203,7 +203,7 @@ public class SysSchemaIndexProvider {
 
             // NOTE: have to do indirect call to the owner
             DbUrl dbUrl = owner.getSimpleIndex("sys").getDbUrl();
-            String path = "[sys] " + objectName; 
+            String path = "[" + dbUrl.getAlias() + "] " + objectName;
 
             String relativeDir = indexBaseDir.getName() + "/" + indexDirPath.getName() + "/" + filePath;
             InputStream in = getClass().getClassLoader().getResourceAsStream(relativeDir);
