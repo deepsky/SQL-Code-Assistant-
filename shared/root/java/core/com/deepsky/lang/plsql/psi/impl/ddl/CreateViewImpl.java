@@ -33,8 +33,6 @@ import com.deepsky.lang.plsql.psi.Subquery;
 import com.deepsky.lang.plsql.psi.ddl.CreateView;
 import com.deepsky.lang.plsql.psi.ddl.VColumnDefinition;
 import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
-import com.deepsky.lang.plsql.resolver.ContextPath;
-import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
@@ -144,7 +142,7 @@ public class CreateViewImpl extends PlSqlElementBase implements CreateView {
 
     @Nullable
     public ItemPresentation getPresentation() {
-        return new TablePresentation();
+        return new ViewPresentation();
     }
 
     public FileStatus getFileStatus() {
@@ -156,9 +154,9 @@ public class CreateViewImpl extends PlSqlElementBase implements CreateView {
     }
 
 
-    class TablePresentation implements ItemPresentation {
+    private class ViewPresentation implements ItemPresentation {
         public String getPresentableText() {
-            return getViewName();
+            return "[View] " + getViewName().toLowerCase();
         }
 
         @Nullable
