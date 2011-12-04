@@ -94,17 +94,9 @@ public class IndexManagerImpl implements IndexManager {
         SqlDomainIndex ix = uid2index.get(dbUid.key());
         if (ix == null) {
             // create index home directory
-//            File indexDir = getIndexHomeDir(project, dbUrl);
             File indexDir = getIndexHomeDir(project, dbUid);
 
-//            DbUrl LOCAL_FS_URL = PluginKeys.LOCAL_FS_URL.getData(project);
-//            if(dbUid.derivedFrom(LOCAL_FS_URL)){
-//                ix = new FSIndex(indexDir, DbUID.getDbUID(LOCAL_FS_URL));
-//            } else {
-//                ix = new DbSchemaIndex(project, indexDir, dbUid);
-//            }
             ix = (dbUid.derivedFrom(IndexManager.FS_URL))?
-//            ix = (dbUrl == IndexManager.FS_URL) ?
                     new FSIndex(this, indexDir, DbUID.getDbUID(IndexManager.FS_URL)) :
                     new DbSchemaIndex(project, this, indexDir, dbUid);
 
@@ -122,7 +114,6 @@ public class IndexManagerImpl implements IndexManager {
         SqlDomainIndex ix = uid2index.get(dbUid.key());
         if (ix == null) {
             // create index home directory
-//            File indexDir = getIndexHomeDir(project, dbUrl);
             File indexDir = getIndexHomeDir(project, dbUid);
             ix = (dbUid.derivedFrom(IndexManager.FS_URL))?
                     new FSIndex(this, indexDir, DbUID.getDbUID(IndexManager.FS_URL)) :
@@ -167,32 +158,6 @@ public class IndexManagerImpl implements IndexManager {
         }
     }
 
-
-/*
-OLD
-    public void removeIndex(DbUrl dbUrl) {
-        SqlDomainIndex ix = uid2index.remove(dbUrl.getUserHostPortServiceName().toLowerCase());
-        if (ix == null) {
-            return;
-        }
-        File indexHomeDir = getIndexHomeDir(project, dbUrl);
-        final File renamedTo = new File(indexHomeDir.getParentFile(), indexHomeDir.getName() + ".toremove");
-
-        if (indexHomeDir.renameTo(renamedTo)) {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                public void run() {
-                    // do real index deletion
-                    if (!renamedTo.delete()) {
-                        // could not delete
-                        log.warn("Could not delete index home dir: " + renamedTo);
-                    }
-                }
-            });
-        }
-
-        fireEvent(INDEX_REMOVED, dbUrl);
-    }
-*/
 
     public void removeIndex(DbUrl dbUrl) {
         SqlDomainIndex ix = uid2index.get(DbUID.getDbUID(dbUrl).key());
@@ -416,24 +381,16 @@ NOTE: do not delete index directory for now
                 if(!offlineCacheEnabled){
                     processOfflineCacheStatus(state.getUrl(), false);
                 }
-//                removeIndexFromRegistry(state.getUrl());
-//                MessageBus bus1 = project.getMessageBus();
-//                bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(state.getUrl(), null);
             }
 
         } else if (state.getStatus() == ConnectionManagerListener.CONNECTED) {
             // connected
             final DbUrl dbUrl = state.getUrl();
             SqlDomainIndex db = findOrCreateIndex(dbUrl);
-//            SqlDomainIndex db = uid2index.get(DbUID.getDbUID(dbUrl).key());
             fsIndex.attach(db.getSimpleIndex(dbUrl.getUser()));
 
             connectedDbUrl = dbUrl;
             processOfflineCacheStatus(state.getUrl(), true);
-
-            //
-//            MessageBus bus1 = project.getMessageBus();
-//            bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(dbUrl, null);
         }
     }
 
@@ -486,9 +443,6 @@ NOTE: do not delete index directory for now
                         final SqlDomainIndex index = uid2index.get(DbUID.getDbUID(item.dbUrl).key());
                         // index may be NULL on closing of the project, so check it before indexing
                         if(index != null){
-//                            final AbstractSchema sindex = index.getSimpleIndex(item.dbUrl.getUser().toLowerCase());
-//                            sindex.getWordIndexManager().updateIndexForFile(item.filePath);
-
                             // Use actual file content for word indexing ,
                             // i.e. if file is opened in the Editor use PsiFile
                             ApplicationManager.getApplication().runReadAction(new Runnable() {

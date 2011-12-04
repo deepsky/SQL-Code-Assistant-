@@ -53,8 +53,6 @@ public interface IndexManager extends ConnectionManagerListener {
     @NotNull
     AbstractSchema findOrCreateIndex(DbUrl dbUrl, int dummy);
 
-//    SqlDomainIndex findOrCreateIndex(DbUID dbUid);
-
     @Deprecated
     @Nullable
     SqlDomainIndex getIndex(DbUrl dbUrl);
@@ -71,7 +69,7 @@ public interface IndexManager extends ConnectionManagerListener {
 //    void removeIndex(DbUID dbUid);
 
     /**
-     * Change avalabilty offline cache
+     * Enable/disable offline cache
      *
      * @param dbUrl - cache url
      * @param flag - true- enable offline cache, false - desable

@@ -98,7 +98,7 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement, ResolveProvi
             IndexManager indexMan = PluginKeys.SQL_INDEX_MAN.getData(getProject());
             if(file instanceof DbDumpedSqlFile){
                 // SQL file from DbSchemaIndex
-                domainResolver = ((SqlFile)file).getSimpleIndex().getResolveFacade(); //indexMan.findOrCreateIndex(dbUrl).getDomainResolver(); //new DomainScopeResolverImpl(indexMan, dbUrl);
+                domainResolver = ((SqlFile)file).getSimpleIndex().getResolveFacade();
             } else if(file instanceof FSSqlFile){
                 // SQL file from FSIndex
                 domainResolver = ((SqlFile)file).getSimpleIndex().getResolveFacade();
@@ -135,20 +135,6 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement, ResolveProvi
     @Nullable
     public VirtualFile getVirtualFile(){
         return getOriginalFile().getViewProvider().getVirtualFile();
-/*
-        VirtualFile vf = super.getVirtualFile();
-        if(vf instanceof SqlFile){
-            //SqlFile sqlFile = (SqlFile) vf;
-            return vf;
-        } else {
-            // Intellij VirtualFile
-            if( vf == null){
-                // PsiFile Proxy
-                vf = getViewProvider().getVirtualFile();
-            }
-            return vf;
-        }
-*/
     }
 
     public CtxPath getCtxPath1() {

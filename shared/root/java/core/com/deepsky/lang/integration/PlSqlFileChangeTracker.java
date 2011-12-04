@@ -118,8 +118,6 @@ public class PlSqlFileChangeTracker {
                 h = System.currentTimeMillis();
             }
             h = System.currentTimeMillis() - h;
-
-            log.info("Index built: " + ms + " rest of things: " + h);
         }
 
     }

@@ -345,7 +345,7 @@ public class DbSchemaIndex extends SqlIndexBase {
         public VariantsProvider getVariantsProvider() {
             AbstractSchema proxy = DbSchemaIndex.this.getSimpleIndex(userName);
             ResolveHelper resolver = proxy.getResolveHelper();
-            return new VariantsProviderImpl(new NameProvider(){
+            return new VariantsProviderImpl(new NameProvider() {
 /*
                 @NotNull
                 public ContextItem[] findCtxItems(int[] ctxTypes, @Nullable String name) {
@@ -384,7 +384,7 @@ public class DbSchemaIndex extends SqlIndexBase {
             String fileName = ContextPathUtil.extractFilePath(ctxPath);
             File f = new File(indexDirPath, fileName);
             String objName = decodeObjectName(fileName);
-            String path = "[" + dbUrl.getAlias() + "] " + objName; //fileName; //objName;
+            String path = "[" + dbUrl.getAlias() + "] " + objName;
             String _timestamp = itree.getFileAttribute(fileName, IndexTree.TIMESTAMP_ATTR);
             long timestamp = 0L;
             if (_timestamp != null) {
@@ -406,6 +406,20 @@ public class DbSchemaIndex extends SqlIndexBase {
                                 objName, attr.synonymOwner, attr.targetSchema, attr.targetObj
                         ).toUpperCase();
                         break;
+                    case ContextPath.SYSTEM_FUNC:
+                        // TODO -- generate content on the fly
+                        return new SysFuncFile(
+                                dbUrl,
+                                path,
+                                objName,
+                                fileName,
+                                content) {
+
+                            @Override
+                            public AbstractSchema getSimpleIndex() {
+                                return DbSchemaIndex.this.getSimpleIndex(userName);
+                            }
+                        };
                 }
 
 
@@ -442,9 +456,7 @@ public class DbSchemaIndex extends SqlIndexBase {
 
                     }
                 };
-//                    content = StringUtils.file2string(f);
             }
-
         }
 
         public boolean isImmutable() {
@@ -455,13 +467,13 @@ public class DbSchemaIndex extends SqlIndexBase {
         public void flush() {
             try {
                 String idxFile = new File(indexDirPath, indexFileName).getAbsolutePath();
-                itree.dumpNames( idxFile, new IndexTree.IndexEntryFilter(){
-                            public boolean accept(String ctxPath, String value) {
-                                // save all entries except System ones
-                                return ctxPath != null &&
-                                        ContextPathUtil.extractLastCtxType(ctxPath) != ContextPath.SYSTEM_FUNC; 
-                            }
-                        }
+                itree.dumpNames(idxFile, new IndexTree.IndexEntryFilter() {
+                    public boolean accept(String ctxPath, String value) {
+                        // save all entries except System ones
+                        return ctxPath != null &&
+                                ContextPathUtil.extractLastCtxType(ctxPath) != ContextPath.SYSTEM_FUNC;
+                    }
+                }
                 );
             } catch (IOException e) {
                 // todo  -- handle failing of index creation

@@ -25,14 +25,11 @@
 
 package com.deepsky.lang.plsql.sqlIndex;
 
-import com.deepsky.database.ora.DbUrl;
 import com.deepsky.database.ora2.DbObjectCache;
 import com.deepsky.lang.plsql.resolver.index.IndexTree;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 public interface SqlDomainIndex {
@@ -45,11 +42,12 @@ public interface SqlDomainIndex {
     DbObjectCache getObjectCache(@NotNull String userName);
 
     boolean addIndex(@NotNull String userName);
+
     void loadPublicSynonyms(InputStream stream);
 
     /**
      * Add new schema index or replace existing one
-     * 
+     *
      * @param index
      * @return
      */
@@ -59,13 +57,15 @@ public interface SqlDomainIndex {
 
     /**
      * Remove index from list of available ones
+     *
      * @param userName
-     * @return - true if the specified index is the only user index 
+     * @return - true if the specified index is the only user index
      */
     boolean detachIndex(@NotNull String userName);
 
     /**
      * Get lowlevel index
+     *
      * @param userName - index name, if name is null then master index will be returned
      * @return - lowlevel index
      */
@@ -76,29 +76,7 @@ public interface SqlDomainIndex {
     void flush();
 
     AbstractSchema getSimpleIndex(@NotNull String user);
+
     AbstractSchema[] getIndexes();
 
-
-/*
-    SqlFile getSqlFile(@NotNull ResolveDescriptor rhlp);
-
-    SqlFile getSqlFile(@Nullable String user, @NotNull String ctxPath);
-*/
-//    WordIndexManager getWordIndexManager();
-
-    //ResolveFacade getDomainResolver();
-
-    /**
-     * Get absolute path to the source file
-     * @param rhlp - resolver
-     * @return  file path
-     */
-//    String getAbsoluteFilePath(@NotNull ResolveDescriptor rhlp);
-
-    /**
-     * Get absolute path to the source file
-     * @param userName - index name, if name is null then master index will be used
-     * @return file path
-     */
-//    String getAbsoluteFilePath(@Nullable String user, @NotNull String ctxPath);
 }
