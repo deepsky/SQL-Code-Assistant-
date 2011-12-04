@@ -973,7 +973,7 @@ public class RefRes implements RefResolver, NameResolver {
                         break;
                     }
                     case ContextPath.SYSTEM_FUNC: { // reference to a SYSTEM function
-                        out.add(new SysFuncResolveHelper(fullPath, name, value));
+                        out.add(new SysFuncResolveHelperImpl(fullPath, name, value));
                         break;
                     }
                     case ContextPath.OBJECT_TYPE: { // Object Type ctor
@@ -1868,10 +1868,10 @@ todo -- FIX ME!
     }
 
 
-    private class SysFuncResolveHelper extends ResolveHelperDefault implements ExecutableResolveHelper {
+    private class SysFuncResolveHelperImpl extends ResolveHelperDefault implements SysFuncResolveHelper {
         String name;
 
-        public SysFuncResolveHelper(String lpath, String name, String value) {
+        public SysFuncResolveHelperImpl(String lpath, String name, String value) {
             super(lpath, value);
             this.name = name;
         }
