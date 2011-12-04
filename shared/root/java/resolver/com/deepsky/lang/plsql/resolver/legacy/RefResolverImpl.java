@@ -48,6 +48,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// TODO -- subject to remove
+@Deprecated
 public class RefResolverImpl implements RefResolver {
 
     LoggerProxy log = LoggerProxy.getInstance("RefResolverImpl");
@@ -1027,7 +1029,7 @@ public class RefResolverImpl implements RefResolver {
                         break;
                     }
                     case ContextPath.SYSTEM_FUNC: { // reference to a SYSTEM function
-                        out.add(new SysFuncResolveHelper(fullPath, name, value));
+                        out.add(new SysFuncResolveHelperImpl(fullPath, name, value));
                         break;
                     }
                     case ContextPath.OBJECT_TYPE: { // Object Type ctor
@@ -1937,10 +1939,10 @@ public class RefResolverImpl implements RefResolver {
     }
 
 
-    private class SysFuncResolveHelper extends ResolveHelperDefault implements ExecutableResolveHelper {
+    private class SysFuncResolveHelperImpl extends ResolveHelperDefault implements SysFuncResolveHelper {
         String name;
 
-        public SysFuncResolveHelper(String lpath, String name, String value) {
+        public SysFuncResolveHelperImpl(String lpath, String name, String value) {
             super(lpath, value);
             this.name = name;
         }

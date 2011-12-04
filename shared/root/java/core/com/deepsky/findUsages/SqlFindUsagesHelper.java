@@ -31,6 +31,7 @@ import com.deepsky.findUsages.ui.SQLFindUsagesDialog;
 import com.deepsky.findUsages.workarounds.UsageViewManagerImpl;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.ResolveProvider;
+import com.deepsky.lang.common.SysFuncPsiFile;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.CreateSequence;
@@ -375,7 +376,7 @@ public class SqlFindUsagesHelper {
             return createSearchOptionsFor(etype[0]);
         }
 
-        Messages.showInfoMessage("Can not search for usages, a selected symbol should be a valid reference", "Find Usages");
+        Messages.showInfoMessage("Could not search for usages, selected symbol should be a valid reference", "Find Usages");
         return null;
     }
 
@@ -444,9 +445,13 @@ public class SqlFindUsagesHelper {
 
         } else if (element instanceof CreateView) {
             return new ViewSearchOptions((CreateView) element);
+        } else if (element instanceof SysFuncPsiFile) {
+            // todo -- implement me
+            Messages.showInfoMessage("Find Usages of system functions not implemented yet", "Find Usages");
+        } else {
+            Messages.showInfoMessage("Could not search for usages, selected symbol should be a valid reference", "Find Usages");
         }
 
-        Messages.showInfoMessage("Can not search for usages, a selected symbol should be a valid reference", "Find Usages");
         return null;
     }
 

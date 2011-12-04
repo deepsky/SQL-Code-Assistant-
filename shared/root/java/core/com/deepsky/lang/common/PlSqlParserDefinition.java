@@ -46,6 +46,7 @@ import com.deepsky.lang.plsql.psi.impl.types.RowtypeTypeImpl;
 import com.deepsky.lang.plsql.psi.impl.types.TypeNameReferenceImpl;
 import com.deepsky.lang.plsql.sqlIndex.DbDumpedSqlFile;
 import com.deepsky.lang.plsql.sqlIndex.FSSqlFile;
+import com.deepsky.lang.plsql.sqlIndex.SysFuncFile;
 import com.deepsky.lang.plsql.sqlIndex.SysSqlFile;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
@@ -125,8 +126,10 @@ public class PlSqlParserDefinition implements ParserDefinition {
                 path2file.put(file.getPath(), f);
             }
             return f;
+        } else if(file instanceof SysFuncFile){
+            return new SysFuncPsiFile(fileViewProvider);
         } else {
-            // SQL file from FSIndex or proxied file
+            // Do not cache SQL file from FSIndex or proxied file
             return new PlSqlFile(fileViewProvider);
         }
     }

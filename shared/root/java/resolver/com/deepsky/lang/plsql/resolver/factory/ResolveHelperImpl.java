@@ -344,6 +344,7 @@ public class ResolveHelperImpl implements ResolveHelper {
                 case ResolveDescriptor.FUNCTION_SPEC:
                 case ResolveDescriptor.PROCEDURE_BODY:
                 case ResolveDescriptor.PROCEDURE_SPEC:
+                case ResolveDescriptor.SYSTEM_FUNC:
                     // need resolving based on call arguments
                     break;
                 default:

@@ -353,17 +353,6 @@ public class ResolveFacadeImpl implements ResolveFacade {
                 CallArgument[] args = callable.getCallArguments();
                 ResolveDescriptor rhlp = resolver.resolveCallable(rholder, args, nameIndex);
                 return rhlp != null ? locatePsiElement(fragment, rhlp) : null;
-/*
-                switch(rhlp.length){
-                    case 0:
-                        System.out.println("Cannot resolve: " + rholder);
-                        return null;
-                    case 1:
-                        return locatePsiElement(fragment, rhlp[0]);
-                    default:
-                        return buildPolyReference(fragment.getProject(), rhlp);
-                }
-*/
 
             } catch (ValidationException e) {
                 //failed++;

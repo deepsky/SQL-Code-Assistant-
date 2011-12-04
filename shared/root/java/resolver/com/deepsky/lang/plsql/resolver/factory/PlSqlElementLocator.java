@@ -356,6 +356,11 @@ public class PlSqlElementLocator {
             checkPsiElement(node);
         }
 
+        public void visitSystemFunctionCall(FunctionCall function) {
+            checkPsiElement(function);
+            super.visitSystemFunctionCall(function);
+        }
+
 //        public void visitTable(Table node) {
 //            String ctxPath = node.getCtxPath1().getPath();
 //            if(ctxPath.equals(PlSqlElementLocator.this.ctxPath)){
