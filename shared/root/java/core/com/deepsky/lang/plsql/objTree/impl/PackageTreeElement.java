@@ -55,20 +55,19 @@ public class PackageTreeElement extends DbTreeElementAbstract {
     boolean isSpec = false;
 
     int currentSortOrder = DbTreeElement.SORT_NATIVE_ORDER;
-
-
     Map<String, ExecutableTreeElement> uid2execEl = new HashMap<String, ExecutableTreeElement>();
 
-/*
-    public PackageTreeElement(String name) {
-        super(name);
-    }
-*/
+    protected List<DbTreeElement> children2 = new ArrayList<DbTreeElement>();
+    boolean currentHide = false;
 
     public PackageTreeElement(String ctxPath) {
         super(ContextPathUtil.extractPackageName(ctxPath));
-        pkgSpecPath = ctxPath;
         isSpec = ContextPathUtil.extractLastCtxType(ctxPath) == ContextPath.PACKAGE_SPEC;
+        if(isSpec){
+            pkgSpecPath = ctxPath;
+        } else {
+            pkgBodyPath = ctxPath;
+        }
     }
 
     public String getCtxPath() {
@@ -95,26 +94,7 @@ public class PackageTreeElement extends DbTreeElementAbstract {
         } else {
             renderer.setIcon(Icons.PACKAGE_BODY);
         }
-/*
-        if(pkgSpecPath != null && pkgBodyPath != null){
-            renderer.setIcon(Icons.PKG_SPEC_BODY);
-        } else if(pkgSpecPath != null){
-            renderer.setIcon(Icons.PACKAGE_SPEC);
-        } else {
-            // pkgBodyPath != null
-            renderer.setIcon(Icons.PACKAGE_BODY);
-        }
-*/
         renderer.setIsValid(isValid);
-
-//        String ctxPath = getCtxPath();
-//        ContextPathUtil.CtxPathParser parser = new ContextPathUtil.CtxPathParser(ctxPath);
-//        int otype = parser.extractLastCtxType();
-//        if(otype == ContextPath.PACKAGE_SPEC){
-//            renderer.setIcon(Icons.PACKAGE_SPEC);
-//        } else {
-//            renderer.setIcon(Icons.PACKAGE_BODY);
-//        }
     }
 
     public void runDefaultAction() {
@@ -191,9 +171,6 @@ public class PackageTreeElement extends DbTreeElementAbstract {
 
         Collections.sort(children, comparator);
     }
-
-    protected List<DbTreeElement> children2 = new ArrayList<DbTreeElement>();
-    boolean currentHide = false;
 
     public void filterPackageScopeItems(boolean hide) {
 
