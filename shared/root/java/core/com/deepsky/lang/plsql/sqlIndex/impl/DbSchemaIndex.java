@@ -156,6 +156,11 @@ public class DbSchemaIndex extends SqlIndexBase {
                             Boolean.toString(false)
                     );
                 } else {
+                    // Remove top object being indexed from Index first
+                    String rootFilePath = ContextPathUtil.extractFilePath(rootObjectCtxPath);
+                    String fileCtx = ContextPathUtil.extractFileCtx(rootObjectCtxPath);
+                    itree.remove(fileCtx);
+
                     NamesIndexer indexer = new NamesIndexer();
                     indexer.parse(root, itree);
                     added = itree.getEntriesCount() - indexes;

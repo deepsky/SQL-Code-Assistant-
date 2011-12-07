@@ -165,6 +165,7 @@ public class ContextPathUtil {
     }
 
     public static ContextAttributes extractPackageCtx(String ctxPath) {
+        // TODO -- implement me
         return null;  //To change body of created methods use File | Settings | File Templates.
     }
 
@@ -201,6 +202,18 @@ public class ContextPathUtil {
                 rawFilePath = rawFilePath.substring(0, index);
             }
             return rawFilePath == null ? "" : rawFilePath.replace('?', ' ').replace('|', '/');
+        }
+        return null;
+    }
+
+    // For the path: /FL!..$synonym!dba_policy_groups.dump/Sy!..$dba_policy_groups
+    // FileContext is /FL!..$synonym!dba_policy_groups.dump
+    public static String extractFileCtx(String ctxPath) {
+        if (ctxPath.startsWith(fileCtxHeader)) {
+            String[] ctxPaths = ctxPath.split("/");
+            if(ctxPaths.length > 1){
+                return "/" + ctxPaths[1];
+            }
         }
         return null;
     }
