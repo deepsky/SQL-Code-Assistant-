@@ -326,6 +326,8 @@ public class TabbedPaneManager implements Test501Listener {
                     return new ViewTypeElementImpl(project, dbUrl, type);
                 } else if (type.equals(DbObject.PACKAGE)) {
                     return new PackageTypeElementImpl(project, dbUrl, type);
+                } else if (type.equals(DbObject.PACKAGE_BODY)) {
+                    return new PackageTypeElementImpl(project, dbUrl, DbObject.PACKAGE);
                 } else if (type.equals(DbObject.TYPE)) {
                     return new DbTypeElementImpl(project, dbUrl, type);
                 } else {
