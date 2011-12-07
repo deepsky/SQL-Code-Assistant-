@@ -58,18 +58,22 @@ public class PlSqlElementLocator {
             if (filePath != null) {
                 final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
                 for (VirtualFile v : fileEditorManager.getOpenFiles()) {
-                    if (v.getPath().equals(filePath)) {
-                        //
+                    if (v.getUrl().equals(vfile.getUrl())) {
                         PsiFile file = PsiManager.getInstance(project).findFile(v);
+                        if (file instanceof PlSqlFile) {
+                                return new PlSqlElementLocator().locate(file, ctxPath);
+                        }
+
+/*
                         if (file != null) {
                             return new PlSqlElementLocator().locate((PlSqlFile) file, ctxPath);
                         }
                         return file;
+*/
                     }
                 }
 
-                VirtualFile vf = sindex.getSourceFile(ctxPath);
-                PsiFile file = PsiManager.getInstance(project).findFile(vf);
+                PsiFile file = PsiManager.getInstance(project).findFile(vfile);
                 if (file != null) {
                     return new PlSqlElementLocator().locate((PlSqlFile) file, ctxPath);
                 }
@@ -80,8 +84,33 @@ public class PlSqlElementLocator {
     }
 
 
+    public static PsiElement locatePsiElement(@NotNull Project project, @NotNull AbstractSchema index, @NotNull String ctxPath) {
+        VirtualFile vfile = index.getSourceFile(ctxPath);
+        if (vfile != null) {
+            final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+            for (VirtualFile v : fileEditorManager.getOpenFiles()) {
+                if (v.getUrl().equals(vfile.getUrl())) {
+                    //
+                    PsiFile file = PsiManager.getInstance(project).findFile(v);
+                    if (file != null) {
+                        return new PlSqlElementLocator().locate(file, ctxPath);
+                    }
+                }
+            }
+
+            PsiFile file = PsiManager.getInstance(project).findFile(vfile);
+            if (file != null) {
+                return new PlSqlElementLocator().locate(file, ctxPath);
+            }
+        }
+
+        return null;
+    }
+
+
     /**
      * Return PsiFile if virtual file is opened in the editor
+     *
      * @param project
      * @param virtualFile
      * @return
@@ -92,7 +121,7 @@ public class PlSqlElementLocator {
         if (filePath != null) {
             final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
             for (VirtualFile v : fileEditorManager.getOpenFiles()) {
-                if (v.getPath().equals(filePath)) {
+                if (v.getUrl().equals(virtualFile.getUrl())) {
                     return PsiManager.getInstance(project).findFile(v);
                 }
             }
@@ -111,21 +140,18 @@ public class PlSqlElementLocator {
             if (filePath != null) {
                 final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
                 for (VirtualFile v : fileEditorManager.getOpenFiles()) {
-                    if (v.getPath().equals(filePath)) {
-                        //
+                    if (v.getUrl().equals(vfile.getUrl())) {
                         PsiFile file = PsiManager.getInstance(project).findFile(v);
-                        if (file != null) {
-                            PsiElement psiElem = new PlSqlElementLocator().locate((PlSqlFile) file, ctxPath);
+                        if (file instanceof PlSqlFile) {
+                            PsiElement psiElem = new PlSqlElementLocator().locate(file, ctxPath);
                             int offset = psiElem.getTextOffset();
                             moveToOffset((PlSqlFile) file, offset);
                             return true;
                         }
-                        return false;
                     }
                 }
 
-                VirtualFile vf = sindex.getSourceFile(ctxPath);
-                PsiFile file = PsiManager.getInstance(project).findFile(vf);
+                PsiFile file = PsiManager.getInstance(project).findFile(vfile);
                 if (file != null) {
                     PsiElement psiElem = new PlSqlElementLocator().locate((PlSqlFile) file, ctxPath);
                     int offset = psiElem.getTextOffset();

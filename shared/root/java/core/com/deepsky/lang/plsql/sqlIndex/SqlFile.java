@@ -29,6 +29,7 @@ import com.deepsky.database.ora.DbUrl;
 import com.intellij.lang.Language;
 import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.testFramework.LightVirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +55,10 @@ public abstract class SqlFile extends LightVirtualFile {
 
     public abstract String getEncodedFilePathCtx();
 
+    @NotNull
+    public String getUrl(){
+        return getFileSystem().getProtocol() + "://" + getDbUrl() + "#" + getEncodedFilePathCtx();
+    }
 
     /**
      * Redefine VirtualFileSystem to avoid undesired adopting of slash symbol

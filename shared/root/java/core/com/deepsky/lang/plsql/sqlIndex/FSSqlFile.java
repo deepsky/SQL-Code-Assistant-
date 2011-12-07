@@ -34,6 +34,8 @@ import com.intellij.lang.Language;
 import java.io.File;
 import java.io.IOException;
 
+// todo -- subject to remove
+@Deprecated
 public abstract class FSSqlFile extends SqlFile {
 
     String fullPath;

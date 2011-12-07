@@ -409,8 +409,11 @@ public class ResolveFacadeImpl implements ResolveFacade {
     public PackageSpec findPackageSpecification(PackageBody body) {
         IndexTree itree = index.getIndexTree();
         String ctxPath = findPackageSpecCtxPath(itree, body.getPackageName().toLowerCase());
-
-        return ctxPath != null ? (PackageSpec) locatePsiElement(body, ctxPath) : null;
+        PsiElement elem = locatePsiElement(body, ctxPath);
+        if( elem instanceof PackageSpec){
+            return (PackageSpec) elem;
+        }
+        return null;
     }
 
 
@@ -467,11 +470,13 @@ public class ResolveFacadeImpl implements ResolveFacade {
     }
 
     protected PsiElement locatePsiElement(final Project project, @NotNull ResolveDescriptor rhlp) {
-        String filePath = index.getSourceFile(rhlp).getPath();
-        if (filePath != null) {
+        //String filePath = index.getSourceFile(rhlp).getPath();
+        final VirtualFile vf = index.getSourceFile(rhlp);
+
+        if (vf != null) {
             final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
             for (VirtualFile v : fileEditorManager.getOpenFiles()) {
-                if (v.getPath().equals(filePath)) {
+                if (v.getUrl().equals(vf.getUrl())) {
                     //
                     PsiFile file = PsiManager.getInstance(project).findFile(v);
                     if (file != null) {
@@ -481,7 +486,7 @@ public class ResolveFacadeImpl implements ResolveFacade {
                 }
             }
 
-            final VirtualFile vf = index.getSourceFile(rhlp);
+//            final VirtualFile vf = index.getSourceFile(rhlp);
             if (vf != null) {
                 // todo -- the case for system functions, etc - is there a way to fix it?
                 PsiFile file = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>() {
@@ -500,12 +505,13 @@ public class ResolveFacadeImpl implements ResolveFacade {
     }
 
 
+/*
     protected PsiElement locatePsiElement(Project project, @NotNull String ctxPath) {
-        String filePath = index.getSourceFile(ctxPath).getPath();
-        if (filePath != null) {
+        VirtualFile vfile = index.getSourceFile(ctxPath);
+        if (vfile != null) {
             final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
             for (VirtualFile v : fileEditorManager.getOpenFiles()) {
-                if (v.getPath().equals(filePath)) {
+                if (v.getUrl().equals(vfile.getUrl())) {
                     //
                     PsiFile file = PsiManager.getInstance(project).findFile(v);
                     if (file != null) {
@@ -515,8 +521,7 @@ public class ResolveFacadeImpl implements ResolveFacade {
                 }
             }
 
-            VirtualFile vf = index.getSourceFile(ctxPath); //SqlFile(ctxPath);
-            PsiFile file = PsiManager.getInstance(project).findFile(vf);
+            PsiFile file = PsiManager.getInstance(project).findFile(vfile);
             if (file != null) {
                 return new PlSqlElementLocator().locate(file, ctxPath);
             }
@@ -524,13 +529,15 @@ public class ResolveFacadeImpl implements ResolveFacade {
 
         return null;
     }
+*/
 
     protected PsiElement locatePsiElement(@NotNull PlSqlElement target, @NotNull String ctxPath) {
         String fPath = ContextPathUtil.extractFilePath(target.getCtxPath1().getPath());
         if (fPath.equals(ContextPathUtil.extractFilePath(ctxPath))) {
             return new PlSqlElementLocator().locate(target.getContainingFile(), ctxPath);
         } else { //if (filePath != null) {
-            return locatePsiElement(target.getProject(), ctxPath);
+            return PlSqlElementLocator.locatePsiElement(target.getProject(), index, ctxPath);
+//            return locatePsiElement(target.getProject(), ctxPath);
         }
     }
 

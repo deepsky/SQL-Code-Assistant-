@@ -110,20 +110,22 @@ public class PlSqlParserDefinition implements ParserDefinition {
         VirtualFile file = fileViewProvider.getVirtualFile();
         if(file instanceof DbDumpedSqlFile){
             // SQL file from DbSchemaIndex
-            PlSqlFile f = (PlSqlFile) path2file.get(file.getPath());
+            String url = file.getUrl();
+            PlSqlFile f = (PlSqlFile) path2file.get(url);
             if(f == null){
                 f = new PlSqlFile(fileViewProvider);
-                path2file.put(file.getPath(), f);
+                path2file.put(url, f);
             }
             return f;
         } else if(file instanceof FSSqlFile){
             // SQL file from FSIndex
             return new PlSqlFile(fileViewProvider);
         } else if(file instanceof SysSqlFile){
-            PlSqlFile f = (PlSqlFile) path2file.get(file.getPath());
+            String url = file.getUrl();
+            PlSqlFile f = (PlSqlFile) path2file.get(url);
             if(f == null){
                 f = new PlSqlFile(fileViewProvider);
-                path2file.put(file.getPath(), f);
+                path2file.put(url, f);
             }
             return f;
         } else if(file instanceof SysFuncFile){
