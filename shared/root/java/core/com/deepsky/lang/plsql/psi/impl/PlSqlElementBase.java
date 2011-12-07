@@ -111,6 +111,7 @@ public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlEleme
         // todo -
     }
 
+/*
     public <T> T findParent(Class clazz) {
         ASTNode n = getNode();
         while (n != null) {
@@ -134,6 +135,7 @@ public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlEleme
 
         return null;
     }
+*/
 
     final protected void __ASSERT_NOT_NULL__(Object o) {
         if (o == null) {

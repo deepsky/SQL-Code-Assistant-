@@ -64,23 +64,22 @@ public class SqlFindUsagesHelper {
     }
 
     public static void runFindUsages(Project project, PsiElement _psi, boolean databaseDefaultScope) {
-        // todo -- FIX ME
         AbstractSqlSearchOptions searchOptions = (AbstractSqlSearchOptions) applyFindUsagesTo(_psi);
 
         if (searchOptions != null) {
             DbUrl searchScope = ((PlSqlFile)_psi.getContainingFile()).getDbUrl();
             searchOptions.setTargetSchema(searchScope);
             _psi = searchOptions.getTargetElement();
+            // TODO -- DataManager.getDataContext() is deprecated
             FindUsagesOptions options = new FindUsagesOptions(project, DataManager.getInstance().getDataContext());
 
             SqlFindUsagesDialog dialog = new SqlFindUsagesDialog(
                     project, options, true, false, false, searchOptions
-            );
-//            SQLFindUsagesDialog dialog = new SQLFindUsagesDialog(
-//                    project, searchOptions
-//            );
+                );
+
             dialog.show();
             if (dialog.isOK()) {
+                // TODO -- DataManager.getDataContext() is deprecated
                 options = new FindUsagesOptions(project, DataManager.getInstance().getDataContext());
                 SqlUsageTarget usageTarget = new SqlUsageTarget();
                 usageTarget.setPresentableText(searchOptions.getTargetPresentableText());
@@ -439,6 +438,8 @@ public class SqlFindUsagesHelper {
             PackageSpec spec = ((PackageBody) element).getPackageSpecification();
             if(spec != null){
                 return new PackageSearchOptions(spec);
+            } else {
+                Messages.showInfoMessage("Could not find Package Specification", "Find Usages");
             }
         } else if (element instanceof CreateSequence) {
             return new SequenceSearchOptions((CreateSequence) element);
