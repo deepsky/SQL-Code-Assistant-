@@ -95,15 +95,13 @@ public class SqlSpecificSearchRunner {
                         ApplicationManager.getApplication().runReadAction(new Runnable() {
                             public void run() {
                                 LOG.assertTrue(element.isValid());
+                                processElementUsages(element, usageInfoProcessorToUsageProcessorAdapter, options);
                             }
                         });
-
-                        processElementUsages(element, usageInfoProcessorToUsageProcessorAdapter, options);
                     }
                 }
             };
         }
-
     }
 
 
