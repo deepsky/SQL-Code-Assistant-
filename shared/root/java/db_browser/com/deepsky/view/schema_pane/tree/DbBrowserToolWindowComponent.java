@@ -26,6 +26,7 @@
 package com.deepsky.view.schema_pane.tree;
 
 import com.deepsky.database.ora.DbUrl;
+import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.plsql.indexMan.IndexBulkChangeListener;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
@@ -184,8 +185,7 @@ public class DbBrowserToolWindowComponent implements ProjectComponent, DbBrowser
         }
 
         // Select the database object in the Browser Window
-        String selected = pane.getConnectionComboBox().getSelectedItem().toString();
-        DbUrl dbUrl = DbUrl.parse(selected);
+        DbUrl dbUrl = ((PlSqlFile)elem.getContainingFile()).getDbUrl();
         TabbedPaneWrapper com = pane.selectTabbedPane(dbUrl);
         if(com != null){
             com.selectTreePath(elem.getCtxPath1().getPath());
