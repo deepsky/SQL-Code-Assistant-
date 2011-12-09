@@ -38,6 +38,7 @@ import javax.swing.*;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 public abstract class DbTreeElementAbstract extends MutableTreeNodeImpl implements DbTreeElement {
 
@@ -96,7 +97,14 @@ public abstract class DbTreeElementAbstract extends MutableTreeNodeImpl implemen
     public AnAction[] getActions() {
         return new AnAction[0];
     }
-      
+
+
+    public TreePath buildPath(TreePath parent, String ctxPath){
+        if(ctxPath != null && ctxPath.startsWith(getCtxPath())){
+            return parent.pathByAddingChild(this);
+        }
+        return parent;
+    }
 
     protected abstract class PopupAction extends ToggleAction {
 

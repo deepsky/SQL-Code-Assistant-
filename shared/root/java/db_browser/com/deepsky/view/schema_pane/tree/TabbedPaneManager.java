@@ -172,7 +172,7 @@ public class TabbedPaneManager implements Test501Listener {
             this.tabbed = pane;
         }
 
-        public void dispose(){
+        public void dispose() {
             for (int i = 0; i < tabbed.getTabCount(); i++) {
                 JComponent c = (JComponent) tabbed.getComponentAt(i);
                 TabFormBaseWrapper test501 = (TabFormBaseWrapper) c.getClientProperty(TabFormBaseWrapper.TEST501_COMPONENT);
@@ -180,7 +180,7 @@ public class TabbedPaneManager implements Test501Listener {
             }
         }
 
-        public void updateDividerLocation(JComponent rootPane, int newLocation){
+        public void updateDividerLocation(JComponent rootPane, int newLocation) {
             int selectedIndex = tabbed.indexOfComponent(rootPane);
             for (int i = 0; i < tabbed.getTabCount(); i++) {
                 if (i != selectedIndex) {
@@ -191,7 +191,7 @@ public class TabbedPaneManager implements Test501Listener {
             }
         }
 
-        public void replaceTab(DbElementRoot elem){
+        public void replaceTab(DbElementRoot elem) {
             for (int i = 0; i < tabbed.getTabCount(); i++) {
                 String title = tabbed.getTitleAt(i);
                 JComponent c = (JComponent) tabbed.getComponentAt(i);
@@ -223,14 +223,16 @@ public class TabbedPaneManager implements Test501Listener {
             int objectType = ContextPathUtil.extractTopObjectType(ctxPath);
             String tabName = ContextPathUtil.ctxType2dbType(objectType);
 
+            // Use PACKAGE instead of PACKAGE BODY if that is the case
+            tabName = DbObject.PACKAGE_BODY.equals(tabName) ? DbObject.PACKAGE : tabName;
             JComponent c = selectTabByName(tabName);
-            if(c != null){
+            if (c != null) {
                 TabFormBaseWrapper test501 = (TabFormBaseWrapper)
                         c.getClientProperty(TabFormBaseWrapper.TEST501_COMPONENT);
                 JTree tree = test501.getCentralTree();
-                DbElementRoot typeRoot = (DbElementRoot)tree.getModel().getRoot();
+                DbElementRoot typeRoot = (DbElementRoot) tree.getModel().getRoot();
                 TreePath path = typeRoot.getTreePathFor(ctxPath);
-                if(path != null){
+                if (path != null) {
                     tree.setSelectionPath(path);
                     tree.scrollPathToVisible(path);
                 }
@@ -239,7 +241,7 @@ public class TabbedPaneManager implements Test501Listener {
             return c;
         }
 
-        public int getSelectedTabIndex(){
+        public int getSelectedTabIndex() {
             for (int i = 0; i < tabbed.getTabCount(); i++) {
                 JComponent c = (JComponent) tabbed.getComponentAt(i);
                 if (c.isVisible()) {
@@ -321,15 +323,15 @@ public class TabbedPaneManager implements Test501Listener {
         DbTypeElementFactory factory = new DbTypeElementFactory() {
             public DbElementRoot create(String type) {
                 if (type.equals(DbObject.TABLE)) {
-                    return new TableTypeElementImpl(project, dbUrl, type);
+                    return new TableTypeElementImpl(project, dbUrl, DbObject.TABLE);
                 } else if (type.equals(DbObject.VIEW)) {
-                    return new ViewTypeElementImpl(project, dbUrl, type);
+                    return new ViewTypeElementImpl(project, dbUrl, DbObject.VIEW);
                 } else if (type.equals(DbObject.PACKAGE)) {
-                    return new PackageTypeElementImpl(project, dbUrl, type);
+                    return new PackageTypeElementImpl(project, dbUrl, DbObject.PACKAGE);
                 } else if (type.equals(DbObject.PACKAGE_BODY)) {
                     return new PackageTypeElementImpl(project, dbUrl, DbObject.PACKAGE);
                 } else if (type.equals(DbObject.TYPE)) {
-                    return new DbTypeElementImpl(project, dbUrl, type);
+                    return new DbTypeElementImpl(project, dbUrl, DbObject.TYPE);
                 } else {
                     return new DbTypeElementImpl(project, dbUrl, type);
                 }
@@ -413,7 +415,7 @@ public class TabbedPaneManager implements Test501Listener {
 */
     }
 
-    private class PackageTypeElementImpl extends DbTypeElementImpl implements PackageTypeRoot {
+    public class PackageTypeElementImpl extends DbTypeElementImpl implements PackageTypeRoot {
 
         public PackageTypeElementImpl(Project project, DbUrl dbUrl, String name) {
             super(project, dbUrl, name);
@@ -498,6 +500,7 @@ public class TabbedPaneManager implements Test501Listener {
             pGr.add(e);
         }
 
+
         public void completeBuild() {
             List<DbTreeElement> temp = new ArrayList<DbTreeElement>();
             temp.addAll(children);
@@ -517,12 +520,30 @@ public class TabbedPaneManager implements Test501Listener {
             for (DbTreeElement e : children) {
                 PackageGroupElement pGr = (PackageGroupElement) e;
                 pGr.sort(DbTreeElement.SORT_NATIVE_ORDER);
-//                e.sort(DbTreeElement.SORT_NATIVE_ORDER);
             }
 
         }
 
-        private class PackageGroupElement extends DbTreeElementAbstract {
+        public TreePath getTreePathFor(String ctxPath) {
+            int objectType = ContextPathUtil.extractTopObjectType(ctxPath);
+            String rootName = ContextPathUtil.ctxType2dbType(objectType);
+
+            // Use PACKAGE instead of PACKAGE BODY if that is the case
+            rootName = DbObject.PACKAGE_BODY.equals(rootName) ? DbObject.PACKAGE : rootName;
+            if (getName().equalsIgnoreCase(rootName)) {
+                String objectName = ContextPathUtil.extractTopObjectName(ctxPath);
+                for (DbTreeElement e0 : children) {
+                    PackageGroupElement pGr = (PackageGroupElement) e0;
+                    if (pGr.getName().equalsIgnoreCase(objectName)) {
+                        return pGr.buildPath(new TreePath(new Object[]{this}), ctxPath);
+                    }
+                }
+            }
+            return null;
+        }
+
+
+        public class PackageGroupElement extends DbTreeElementAbstract {
             public PackageGroupElement(String name) {
                 super(name);
             }
@@ -550,6 +571,20 @@ public class TabbedPaneManager implements Test501Listener {
                     pkg.filterPackageScopeItems(hide);
                 }
             }
+
+            public TreePath buildPath(TreePath parent, String ctxPath) {
+                // For each group we have Package Spec and Body elements (or one of them)
+                for (DbTreeElement e : children) {
+                    String eCtxPath = e.getCtxPath();
+                    if (ctxPath.startsWith(eCtxPath)) {
+                        TreePath path = parent.pathByAddingChild(this);
+                        // Try to find element inside package
+                        return e.buildPath(path, ctxPath);
+                    }
+                }
+                return parent;
+            }
+
         }
     }
 

@@ -30,6 +30,7 @@ import com.deepsky.lang.plsql.objTree.DbTreeElement;
 import com.deepsky.lang.plsql.objTree.DbTypeElementAction;
 import com.deepsky.lang.plsql.objTree.guiSpec.MutableTreeNodeImpl;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.deepsky.lang.plsql.struct.DbObject;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -185,7 +186,7 @@ public abstract class DbElementRootAbstract extends MutableTreeNodeImpl implemen
             for(DbTreeElement e: getChildren()){
                 if(e.getName().equalsIgnoreCase(objectName)){
                     String elemCtxPath = e.getCtxPath();
-                    if(ctxPath.startsWith(elemCtxPath)){
+                    if(elemCtxPath != null && ctxPath.startsWith(elemCtxPath)){
                         return new TreePath(new Object[]{this, e});
                     }
                 }

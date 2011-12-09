@@ -32,6 +32,7 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
 
 public interface DbTreeElement extends MutableTreeNode {
 
@@ -60,4 +61,6 @@ public interface DbTreeElement extends MutableTreeNode {
     void runDefaultAction();
 
     AnAction[] getActions();
+
+    TreePath buildPath(TreePath parent, String ctxPath);
 }

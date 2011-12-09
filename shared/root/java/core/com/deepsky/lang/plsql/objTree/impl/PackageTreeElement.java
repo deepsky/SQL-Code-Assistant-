@@ -44,6 +44,7 @@ import com.intellij.psi.PsiElement;
 
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
 import java.util.*;
 
 public class PackageTreeElement extends DbTreeElementAbstract {
@@ -249,6 +250,20 @@ public class PackageTreeElement extends DbTreeElementAbstract {
                     }
                 }
         };
+    }
+
+    public TreePath buildPath(TreePath parent, String ctxPath) {
+        TreePath path = parent.pathByAddingChild(this);
+        if(getCtxPath().equals(ctxPath)){
+            return path;
+        }
+        for (DbTreeElement e : children) {
+            String eCtxPath = e.getCtxPath();
+            if (ctxPath.startsWith(eCtxPath)) {
+                return e.buildPath(path, ctxPath);
+            }
+        }
+        return path;
     }
 
 
