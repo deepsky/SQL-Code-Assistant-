@@ -33,13 +33,23 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.1.1.10</version>
+    <version>1.1.2.10</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.1.2.10</b>
+                <ul>
+                    - [NEW] Performance improvements<br>
+                    - [NEW] Added Quick Navigation Info for table, view, table column, function, procedure, etc<br>
+                    - [NEW] JDBC driver was replaced with fresh one<br>
+                    - [NEW] Added support for tablespaces: create/alter/drop (parsing and execution)<br>
+                    - [FIX] QuickLookup: package scope objects were handled not correctly<br>
+                    - [FIX] Some minor issues in FindUsages<br>
+                </ul>
+            </li>
             <li><b>1.1.1.10</b>
                 <ul>
                     - [FIX] Word Indexer did not work properly for files opened in the Editor<br>
