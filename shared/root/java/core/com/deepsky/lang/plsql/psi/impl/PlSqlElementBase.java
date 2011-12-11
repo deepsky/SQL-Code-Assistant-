@@ -102,11 +102,6 @@ public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlEleme
         return null;
     }
 
-    public String getStrippedText() {
-        // todo -- resolve stuff refactoring
-        throw new NotSupportedException();
-    }
-
     public void process(Visitor proc) {
         // todo -
     }

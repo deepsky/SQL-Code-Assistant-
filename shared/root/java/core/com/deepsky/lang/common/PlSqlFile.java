@@ -68,10 +68,6 @@ public class PlSqlFile extends PsiFileBase implements PlSqlElement, ResolveProvi
         return null;
     }
 
-    public String getStrippedText() {
-        return null;
-    }
-
     public void process(Visitor proc) {
         // todo -
     }

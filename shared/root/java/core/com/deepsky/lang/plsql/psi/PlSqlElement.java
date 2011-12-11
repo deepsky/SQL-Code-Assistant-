@@ -31,7 +31,6 @@ import com.intellij.psi.PsiElement;
 public interface PlSqlElement extends PsiElement, ContextPathProvider {
     // todo -- subject to delete
     String getQuickNavigateInfo();
-    String getStrippedText();
 
     void process(Visitor proc);
 
