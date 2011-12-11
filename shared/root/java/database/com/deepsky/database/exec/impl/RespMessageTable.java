@@ -70,10 +70,12 @@ public abstract class RespMessageTable {
         createEntry(PLSqlTypesAdopted.CREATE_DB_LINK, "Database Link created", true);
         createEntry(PLSqlTypesAdopted.CREATE_TRIGGER, "Trigger created", true);
         createEntry(PLSqlTypesAdopted.CREATE_SYNONYM, "Synonym created", true);
+        createEntry(PLSqlTypesAdopted.CREATE_TABLESPACE, "Tablespace created", true);
 
         createEntry(PLSqlTypesAdopted.ALTER_TABLE, "Table altered", true);
         createEntry(PLSqlTypesAdopted.ALTER_TRIGGER, "Trigger altered", true);
         createEntry(PLSqlTypesAdopted.ALTER_GENERIC, "Altered", true);
+        createEntry(PLSqlTypesAdopted.ALTER_TABLESPACE, "Altered", true);
 
         createEntry(PLSqlTypesAdopted.PACKAGE_SPEC, "Package Specification created", true);
         createEntry(PLSqlTypesAdopted.PACKAGE_BODY, "Package Body created", true);
@@ -89,6 +91,7 @@ public abstract class RespMessageTable {
         createEntry(PLSqlTypesAdopted.DROP_DB_LINK, "Database Link dropped", true);
         createEntry(PLSqlTypesAdopted.DROP_TRIGGER, "Trigger dropped", true);
         createEntry(PLSqlTypesAdopted.DROP_SYNONYM, "Synonym dropped", true);
+        createEntry(PLSqlTypesAdopted.DROP_TABLESPACE, "Tablespace dropped", true);
 
         createEntry(PLSqlTypesAdopted.DROP_PACKAGE, "Package dropped", true);
 
