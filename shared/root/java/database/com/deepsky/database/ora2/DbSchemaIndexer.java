@@ -429,7 +429,7 @@ todo -- implement 9i index support
     }
 
 
-    List<CacheManagerListener> listeners = new ArrayList<CacheManagerListener>();
+    private List<CacheManagerListener> listeners = new ArrayList<CacheManagerListener>();
     public void addListener(CacheManagerListener cacheListener) {
         listeners.add(cacheListener);
     }

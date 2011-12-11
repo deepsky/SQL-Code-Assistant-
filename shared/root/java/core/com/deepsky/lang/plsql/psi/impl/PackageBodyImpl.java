@@ -28,12 +28,10 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.common.ResolveProvider;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
 import com.deepsky.lang.plsql.resolver.ResolveFacade;
-import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -80,26 +78,6 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
     public String getCreateQuery() {
         return PlSqlUtil.completeCreateScript(this);
     }
-
-
-/*
-    public ExecutableSpec[] findExecutableSpecByName(String name) {
-        List<ExecutableSpec> out = new ArrayList<ExecutableSpec>();
-        ASTNode[] nodes = getNode().getChildren(
-                TokenSet.create(
-                        PlSqlElementTypes.FUNCTION_SPEC,
-                        PlSqlElementTypes.PROCEDURE_SPEC));
-
-        if (nodes != null && nodes.length > 0) {
-            for (ASTNode n : nodes) {
-                if (((ExecutableSpec) n.getPsi()).getEName().equalsIgnoreCase(name)) {
-                    out.add((ExecutableSpec) n.getPsi());
-                }
-            }
-        }
-        return out.toArray(new ExecutableSpec[0]);
-    }
-*/
 
 
     @NotNull
@@ -176,7 +154,7 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
     public ItemPresentation getPresentation() {
         try {
             return new PackagePresentation();
-        } catch(SyntaxTreeCorruptedException e){
+        } catch (SyntaxTreeCorruptedException e) {
             return null;
         }
     }
