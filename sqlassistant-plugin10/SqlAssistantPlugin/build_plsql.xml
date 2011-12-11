@@ -68,6 +68,7 @@
         <pathelement location="${shared.lib.dir}/xmlrpc-1.1.jar"/>
         <pathelement location="${shared.lib.dir}/jdom.jar"/>
 
+        <pathelement location="${shared.lib.dir}/commons-collections.jar"/>
         <pathelement location="${shared.lib.dir}/log4j-1.2.9.jar"/>
         <pathelement location="${shared.lib.dir}/junit-3.8.1.jar"/>
         <pathelement location="${shared.lib.dir}/antlr-2.7.6.jar"/>
