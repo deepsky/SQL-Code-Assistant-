@@ -30,15 +30,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../shared/lib/ojdbc14.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/../../shared/lib/castor-1.2.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -49,15 +40,6 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../shared/lib/antlr-2.7.5-patched.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../shared/lib/commons-logging-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -85,6 +67,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../shared/lib/natty-0.4-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../shared/lib/ojdbc5.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

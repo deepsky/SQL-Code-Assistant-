@@ -19,6 +19,72 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ab8c8ee2-374f-4a70-801a-f2fd48cf10e4" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/antlr/CharQueue.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/antlr/CharScanner.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/antlr/JavaCodeGenerator.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/antlr/TokenBuffer.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/antlr/TokenBufferEx.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/antlr/ToolPatched.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/generated/plsql/PLSql2TokenTypes.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/generated/plsql/PLSqlLexer.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/generated/plsql/PLSqlTokenTypes.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/generated/plsql/SymbolTable.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/generated/plsql/adopted/PLSqlParserAdopted.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/generated/plsql/adopted/PLSqlTokenTypes.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/integration/CustomRecognitionException.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/lang/plsql/ConfigurationException.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/lang/plsql/NotSupportedException.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/lang/plsql/SyntaxTreeCorruptedException.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/lang/plsql/parser/ParserException.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/lang/plsql/parser/WrappedPackageException.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/lang/plsql/workarounds/LoggerProxy$IdleLogger.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/lang/plsql/workarounds/LoggerProxy$LoggerProxyIntellij.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/lang/plsql/workarounds/LoggerProxy$LoggerProxyLog4j.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/lang/plsql/workarounds/LoggerProxy.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/tools/GrammarConvertor$ASTStringParser2.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/tools/GrammarConvertor.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/tools/InterfaceExtractor.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/tools/SymbolTableGenerator.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/tools/generated/ASTStrTypesTokenTypes.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/tools/generated/ASTStringLexer.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/tools/generated/ASTStringParser.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/CustomClassLoader.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/FileUtils$FileProcessor.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/FileUtils$VirtualFileProcessor.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/FileUtils.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/PluginPathProcessor.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/PluginPathProcessorException.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/StringUtils.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/Persistable.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistableList$1.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistableList$Command.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistableList$PersistableHelper.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistableList.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistableMap2$Entry.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistableMap2$Item.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistableMap2$PersistableList2.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistableMap2$Value.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistableMap2.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistenceManager$1.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistenceManager$2.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistenceManager$EncapsulatedCommand.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistenceManager$Message.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build-classes/com/deepsky/utils/persistence/PersistenceManager.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/proguard.conf.pro" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/build_plsql2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/shrinked_code.log" />
+      <change type="DELETED" beforePath="C:\git_app\sqlassistant_super\github\shared\root\java\core\com\deepsky\actions\PropertyToggleAction.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\git_app\sqlassistant_super\github\shared\root\java\db_browser\com\deepsky\view\schema_pane\ui\samples\ManualMadePanel.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\git_app\sqlassistant_super\github\shared\root\java\db_browser\com\deepsky\view\schema_pane\ui\samples\ManualMadeRunner.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\git_app\sqlassistant_super\github\shared\root\java\db_browser\com\deepsky\view\schema_pane\ui\samples\Test113.form" afterPath="" />
+      <change type="DELETED" beforePath="C:\git_app\sqlassistant_super\github\shared\root\java\db_browser\com\deepsky\view\schema_pane\ui\samples\Test113.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\git_app\sqlassistant_super\github\shared\root\java\db_browser\com\deepsky\view\schema_pane\ui\samples\Test113Runner.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\git_app\sqlassistant_super\github\shared\root\java\db_browser\com\deepsky\view\schema_pane\ui\samples\Test114.form" afterPath="" />
+      <change type="DELETED" beforePath="C:\git_app\sqlassistant_super\github\shared\root\java\db_browser\com\deepsky\view\schema_pane\ui\samples\Test114.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\git_app\sqlassistant_super\github\shared\root\java\resolver\com\deepsky\lang\plsql\resolver\legacy\RefResolverExpandable.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\git_app\sqlassistant_super\github\shared\root\java\resolver\com\deepsky\lang\plsql\resolver\legacy\RefResolverImpl.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/navigation/impl/NameLookupServiceImpl.java" afterPath="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/navigation/impl/NameLookupServiceImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/SqlAssistantPlugin.iml" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/SqlAssistantPlugin/SqlAssistantPlugin.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../sqlassistant-plugin10/sqlassistant-10.ipr" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/sqlassistant-10.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../sqlassistant-plugin10/sqlassistant-10.iws" afterPath="$PROJECT_DIR$/../sqlassistant-plugin10/sqlassistant-10.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SqlAssistantPlugin/SqlAssistantPlugin.iml" afterPath="$PROJECT_DIR$/SqlAssistantPlugin/SqlAssistantPlugin.iml" />
@@ -125,31 +191,56 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="plugin.xml" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="plugin.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SqlAssistantPlugin/META-INF/plugin.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="194" column="0" selection-start="12364" selection-end="12364" vertical-scroll-proportion="0.0">
+            <state line="42" column="42" selection-start="2167" selection-end="2167" vertical-scroll-proportion="0.45506692">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TIMESTAMP_Convertor.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../shared/root/java/result_pane/com/deepsky/view/query_pane/converters/TIMESTAMP_Convertor.java">
+      <file leaf-file-name="BulkReferenceSearcher.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/wordProc/BulkReferenceSearcher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="13" selection-start="1957" selection-end="1957" vertical-scroll-proportion="0.0">
+            <state line="100" column="0" selection-start="4346" selection-end="4346" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DateTimeParser.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="FindUsagesProcessor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/FindUsagesProcessor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="64" column="0" selection-start="3126" selection-end="3126" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SqlSpecificSearchRunner.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/SqlSpecificSearchRunner.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="104" column="0" selection-start="5078" selection-end="5078" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UsageViewManagerImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/workarounds/UsageViewManagerImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="105" column="0" selection-start="4669" selection-end="4669" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DateTimeParser.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../shared/root/java/result_pane/com/deepsky/view/query_pane/util/DateTimeParser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="46" column="105" selection-start="1953" selection-end="1953" vertical-scroll-proportion="0.397482">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="46" column="105" selection-start="1953" selection-end="1953" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -168,7 +259,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/integration/FSTrackHelper.java" />
         <option value="$PROJECT_DIR$/../shared/root/java/parser/com/deepsky/integration/PlSqlElementType.java" />
         <option value="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/sqlIndex/DbDumpedSqlFile.java" />
         <option value="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/sqlIndex/SysSqlFile.java" />
@@ -183,6 +273,7 @@
         <option value="$PROJECT_DIR$/SqlAssistantPlugin/build_plsql.xml" />
         <option value="$PROJECT_DIR$/SqlAssistantPlugin/readme.txt" />
         <option value="$PROJECT_DIR$/../README" />
+        <option value="$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/SqlSpecificSearchRunner.java" />
         <option value="$PROJECT_DIR$/SqlAssistantPlugin/META-INF/plugin.xml" />
       </list>
     </option>
@@ -419,7 +510,7 @@
     <property name="FORWARD_ANALIZER" value="false" />
     <property name="JdbcConsole.EnableParameterPattern" value="false" />
     <property name="JdbcConsole.ParameterPattern" value="(\?\d*|\:\w+|\@\w+|\$\{[^$\{\}]*\}|\$\w+\$|\#\w+\#)" />
-    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="JdbcConsole.Extract.Separator" value=";" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
@@ -750,7 +841,7 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3105802" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.13800205" sideWeight="0.5965812" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36755648" sideWeight="0.6515913" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.62905985" sideWeight="0.7395278" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5538462" sideWeight="0.7395278" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.65753424" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -812,7 +903,7 @@
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
     <option name="CREATE_PATCH_EXPAND_DETAILS_DEFAULT" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="rolling back to previous version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update release notes for v11" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -828,6 +919,7 @@
     <MESSAGE value="some rearrangement of code" />
     <MESSAGE value="attempt to minimize number of requests to refresh DBBrowser Pane by merging several requests in single one" />
     <MESSAGE value="rolling back to previous version" />
+    <MESSAGE value="Update release notes for v11" />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -884,41 +976,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../shared/root/src/test/deepsky/integration/PlSqlLexerExTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0071813287" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../ideaIC-current/idea/platform/forms_rt/src/com/intellij/uiDesigner/core/GridConstraints.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="37" selection-start="719" selection-end="719" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/ui/SQLFindUsagesDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="46" selection-start="2183" selection-end="2183" vertical-scroll-proportion="0.10110294" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../ideaIC-current/idea/platform/platform-impl/src/com/intellij/openapi/components/impl/ComponentManagerImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="369" column="33" selection-start="12579" selection-end="12579" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../shared/root/java/parser/com/deepsky/tools/parser/BulkFileParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="134" column="64" selection-start="5123" selection-end="5123" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SqlAssistantPlugin/readme.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="76" selection-start="986" selection-end="986" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../README">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="33" selection-start="1362" selection-end="1362" vertical-scroll-proportion="0.68342644" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/indexMan/IndexManagerImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="440" column="67" selection-start="15380" selection-end="15380" vertical-scroll-proportion="0.03244275" />
@@ -939,36 +996,67 @@
         <state line="48" column="45" selection-start="2418" selection-end="2418" vertical-scroll-proportion="0.03125" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SqlAssistantPlugin/META-INF/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="194" column="0" selection-start="12364" selection-end="12364" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../shared/root/java/result_pane/com/deepsky/view/query_pane/converters/TIMESTAMP_Convertor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="13" selection-start="1957" selection-end="1957" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/psi/impl/DocumentCommitThread.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="92" column="0" selection-start="7722" selection-end="7722" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="92" column="0" selection-start="7722" selection-end="7722" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../../ideaIC-110.365/platform/lang-impl/src/com/intellij/psi/impl/DocumentCommitThread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.65745854">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.65745854" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../ideaIC-110.365/platform/platform-impl/src/com/intellij/openapi/application/impl/ApplicationImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="136" column="0" selection-start="5800" selection-end="5800" vertical-scroll-proportion="-0.43785852" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../shared/root/java/resolver/com/deepsky/lang/plsql/resolver/factory/ContextPathManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="334" column="0" selection-start="13430" selection-end="13430" vertical-scroll-proportion="0.40298507" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../shared/root/java/core/com/deepsky/lang/plsql/psi/impl/TableDefinitionImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="0" selection-start="2697" selection-end="2697" vertical-scroll-proportion="0.21268657" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../shared/root/java/result_pane/com/deepsky/view/query_pane/converters/TIMESTAMP_Convertor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="70" selection-start="1768" selection-end="1768" vertical-scroll-proportion="-0.9608209" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/wordProc/BulkReferenceSearcher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="100" column="0" selection-start="4346" selection-end="4346" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/FindUsagesProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="0" selection-start="3126" selection-end="3126" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/workarounds/UsageViewManagerImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="0" selection-start="4669" selection-end="4669" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../shared/root/java/result_pane/com/deepsky/view/query_pane/util/DateTimeParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="105" selection-start="1953" selection-end="1953" vertical-scroll-proportion="0.397482">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="46" column="105" selection-start="1953" selection-end="1953" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../shared/root/java/core/com/deepsky/findUsages/SqlSpecificSearchRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="104" column="0" selection-start="5078" selection-end="5078" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SqlAssistantPlugin/META-INF/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="42" selection-start="2167" selection-end="2167" vertical-scroll-proportion="0.45506692">
+          <folding />
         </state>
       </provider>
     </entry>
