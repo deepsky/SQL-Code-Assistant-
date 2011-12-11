@@ -176,6 +176,23 @@ public class CacheLocator {
     private static String tryIdeaPluginsPath() {
         log.info("Try the " + IDEA_PLUGINS_PATH + " property ...");
         String path = System.getProperty(IDEA_PLUGINS_PATH);
+        if(path == null){
+            log.info("... " + IDEA_PLUGINS_PATH + " not set up");
+            path = System.getProperty("user.home");
+            if(path != null){
+                log.info("Try to use user home directory to store plugin's data: " + path);
+                // Try to use user home directory to store plugin's data
+                File base = new File(path);
+                if(base.exists()){
+                    File pluginPath = new File(base, SQL_ASSISTANT_PLUGIN_BUNDLED_NAME);
+                    if(!pluginPath.exists()){
+                        if(pluginPath.mkdir()){
+                            log.error("Could not create plugin directory: " + pluginPath.getAbsolutePath());
+                        }
+                    }
+                }
+            }
+        }
         if (new File(path).exists()) {
             log.info("The path pointed by " + IDEA_PLUGINS_PATH + " property, exists, try to locate SQL Assistant plugin ...");
             File pluginPath = new File((path), SQL_ASSISTANT_PLUGIN_BUNDLED_NAME);
