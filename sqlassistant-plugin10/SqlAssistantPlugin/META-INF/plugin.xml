@@ -40,6 +40,11 @@
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.1.3.10</b>
+                 <ul>
+                    - [FIX] Minor issue in cache locator<br>
+                 </ul>
+            </li>
             <li><b>1.1.2.10</b>
                 <ul>
                     - [NEW] Performance improvements<br>

@@ -1,9 +1,7 @@
-create table test45 (
-id number
-);
+select object_type
+from user_objects
 
-select *
-l
+
 
 
 
