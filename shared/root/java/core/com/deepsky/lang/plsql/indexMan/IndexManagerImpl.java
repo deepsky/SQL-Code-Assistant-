@@ -447,10 +447,14 @@ NOTE: do not delete index directory for now
                             // i.e. if file is opened in the Editor use PsiFile
                             ApplicationManager.getApplication().runReadAction(new Runnable() {
                                 public void run() {
+                                    if(project.isDisposed()){
+                                        return;
+                                    }
                                     PsiFile file = null;
                                     if (item.filePath != null) {
                                         final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
                                         for (VirtualFile v : fileEditorManager.getOpenFiles()) {
+                                            // TODO -- use getURL() instead of filePath
                                             if (v.getPath().equals(item.filePath)) {
                                                 // file found in the Editor
                                                 file = PsiManager.getInstance(project).findFile(v);
