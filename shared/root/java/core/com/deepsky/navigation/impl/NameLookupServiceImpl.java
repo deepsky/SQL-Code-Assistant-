@@ -71,7 +71,6 @@ public class NameLookupServiceImpl implements NameLookupService {
     private Map<String, String> key2names = new HashMap<String, String>();
 
     private int updateFS_Counter = 0;
-    //private final Set<DbUrl> pendedRequest = new HashSet<DbUrl>();
     private IndexManagerListener listener = new IndexManagerListenerImpl();
 
     public NameLookupServiceImpl(Project project) {
@@ -83,7 +82,6 @@ public class NameLookupServiceImpl implements NameLookupService {
         // listen for index updates
         IndexBulkChangeListener ll = new IndexBulkChangeListener() {
             public void handleUpdate(final DbUrl source, final String[] types) {
-//                long ms = System.currentTimeMillis();
                 AbstractSchema schema = manager.getIndex(source, 0);
                 if (schema == null) {
                     deleteCache(source);
@@ -96,9 +94,6 @@ public class NameLookupServiceImpl implements NameLookupService {
                         updateFS_Counter++;
                     }
                 }
-
-//                ms = System.currentTimeMillis() - ms;
-//                log.info("Index built: " + ms);
             }
         };
 
@@ -111,10 +106,6 @@ public class NameLookupServiceImpl implements NameLookupService {
                 updateCache(schema, null);
             }
         }
-    }
-
-    private synchronized void updateCache(DbUrl dbUrl, String[] _types) {
-
     }
 
     private synchronized void deleteCache(DbUrl dbUrl) {
@@ -209,13 +200,14 @@ public class NameLookupServiceImpl implements NameLookupService {
             }
         }
 
+        // populate name cache with packages and thier childs
         DbUrl dbUrl = aschema.getDbUrl();
         String key1 = buildKey(dbUrl, DbObject.PACKAGE);
         key2names.put(key1, sbPkgSpec.toString());
         String key2 = buildKey(dbUrl, DbObject.PACKAGE_BODY);
         key2names.put(key2, sbPkgBody.toString());
 
-        // populate names cache
+        // populate names cache with top objects
         for (Map.Entry<String, StringBuilder> e : type2names.entrySet()) {
             String key = buildKey(dbUrl, e.getKey());
             key2names.put(key, e.getValue().toString());
@@ -317,7 +309,7 @@ public class NameLookupServiceImpl implements NameLookupService {
 
                     // having SET collection is supposed to remove duplicates effectively
                     final Set<ContextItem> out = new HashSet<ContextItem>();
-                    int start = index.indexOf('|', pos + offset + 1); //StringUtils.searchInReverse(index, idx-2, '.');
+                    int start = index.indexOf('|', pos + offset + 1);
                     if (start != -1) {
                         // package name found
                         int end = index.indexOf('.', start);
@@ -337,9 +329,7 @@ public class NameLookupServiceImpl implements NameLookupService {
                                     }
                                 });
                             }
-                        }
-
-                        if (indexType == ContextPath.PACKAGE_BODY) {
+                        } else if (indexType == ContextPath.PACKAGE_BODY) {
                             // collect names from the package body (names added on previose)
                             ContextItem[] pkgCtxItem = itree.findCtxItems(new int[]{ContextPath.PACKAGE_BODY}, pkgName);
                             if (pkgCtxItem.length > 0) {
