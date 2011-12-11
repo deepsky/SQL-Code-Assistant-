@@ -35,26 +35,8 @@ public class CompositeElementExt extends CompositeElement implements ContextPath
         super(type);
     }
 
-    //CtxPath cachedCtxPath = null;
-
     public CtxPath getCtxPath1() {
         return ContextPathManager.getCtxPath(this);
     }
-
-/*
-    todo -- does not clean cachedCtxPath properly 
-    public void clearCaches(){
-        super.clearCaches();
-        cachedCtxPath = null;
-    }
-*/
-
-/*
-    public void subtreeChanged() {
-        super.subtreeChanged();
-        cachedCtxPath = null;
-    }
-*/
-
 }
 
