@@ -60,19 +60,19 @@ public class NameLookupServiceImpl implements NameLookupService {
 
     private static final LoggerProxy log = LoggerProxy.getInstance("#NameLookupService");
 
-    final int SYNTETIC_TYPE = 12345;
+    final private int SYNTETIC_TYPE = 12345;
 
-    Project project;
-    IndexManager manager;
+    private Project project;
+    private IndexManager manager;
 
     // format key: <full_DbURL>|<DbObject.<TYPE_NAME>>
     // format value for all type except PACKAGE: <name0>.<name1>. ... <nameN>
     // format value for PACKAGE: <object_name0>..<object_name1>.. ... |<package_name0>. ...
-    Map<String, String> key2names = new HashMap<String, String>();
+    private Map<String, String> key2names = new HashMap<String, String>();
 
     private int updateFS_Counter = 0;
     //private final Set<DbUrl> pendedRequest = new HashSet<DbUrl>();
-    IndexManagerListener listener = new IndexManagerListenerImpl();
+    private IndexManagerListener listener = new IndexManagerListenerImpl();
 
     public NameLookupServiceImpl(Project project) {
         this.project = project;
@@ -126,11 +126,9 @@ public class NameLookupServiceImpl implements NameLookupService {
     }
 
     private synchronized void updateCache(@NotNull AbstractSchema aschema, String[] _types) {
-        //SqlDomainIndex sqlIndex = manager.getIndex(dbUrl);
-//        if (aschema != null) {
         final List types = _types == null ? null : Arrays.asList(_types);
         final Map<String, StringBuilder> type2names = new HashMap<String, StringBuilder>();
-        final Set<String> pkgCtxPaths = new HashSet<String>();
+        final Map<String, Set<String>> pkgCtxPaths = new HashMap<String, Set<String>>();
 
         // loop thru top nodes to collect top names
         IndexTree itree = aschema.getIndexTree();
@@ -148,15 +146,16 @@ public class NameLookupServiceImpl implements NameLookupService {
                         return true;
                     }
                 } else if (ctxType == ContextPath.PACKAGE_SPEC) {
-                    pkgCtxPaths.add(ctxPath);
+                    pkgCtxPaths.put(ctxPath, new HashSet<String>());
                     // package scope names will be collected later
                     return true;
                 } else if (ctxType == ContextPath.PACKAGE_BODY) {
-                    pkgCtxPaths.add(ctxPath);
+                    pkgCtxPaths.put(ctxPath, new HashSet<String>());
                     // package scope names will be collected later
                     return true;
                 }
 
+                // Collect names for the type
                 String type = IndexTreeUtil.ctxType2dbType(ctxType);
                 if (type != null && (types == null || types.contains(type))) {
                     StringBuilder sb = type2names.get(type);
@@ -172,10 +171,11 @@ public class NameLookupServiceImpl implements NameLookupService {
             }
         });
 
-        // loop over packages to collect package scope function/procedure names
-        final Map<String, Set<String>> pkgName2children = new HashMap<String, Set<String>>();
-        for (String pkgCtxPath : pkgCtxPaths) {
-            itree.iterateOverChildren(pkgCtxPath, new IndexEntriesWalkerInterruptable() {
+        StringBuilder sbPkgSpec = new StringBuilder();
+        StringBuilder sbPkgBody = new StringBuilder();
+        // loop over packages to collect package scope object names
+        for (final Map.Entry<String, Set<String>> e : pkgCtxPaths.entrySet()) {
+            itree.iterateOverChildren(e.getKey(), new IndexEntriesWalkerInterruptable() {
                 public boolean process(String ctxPath, String value) {
                     ContextPathUtil.CtxPathParser parser = new ContextPathUtil.CtxPathParser(ctxPath);
                     int ctxType = parser.extractLastCtxType();
@@ -184,49 +184,52 @@ public class NameLookupServiceImpl implements NameLookupService {
                         case ContextPath.FUNCTION_SPEC:
                         case ContextPath.PROCEDURE_BODY:
                         case ContextPath.PROCEDURE_SPEC:
-                            String pkgName = new ContextPathUtil.CtxPathParser(parser.getParentCtx()).lastCtxName();
-                            Set<String> children = pkgName2children.get(pkgName);
-                            if (children == null) {
-                                children = new HashSet<String>();
-                                pkgName2children.put(pkgName, children);
-                            }
-
-                            children.add(parser.lastCtxName());
+                        case ContextPath.COLLECTION_TYPE:
+                        case ContextPath.RECORD_TYPE:
+                        case ContextPath.VARRAY_TYPE:
+                        case ContextPath.OBJECT_TYPE:
+                            e.getValue().add(parser.lastCtxName());
                             break;
                     }
                     return true;
                 }
             });
-        }
 
-        // process package scope objects
-        StringBuilder sb1 = new StringBuilder();
-        for (Map.Entry<String, Set<String>> e : pkgName2children.entrySet()) {
-            for (String name : e.getValue()) {
-                sb1.append(name).append("..");
+            // Build index
+            ContextPathUtil.CtxPathParser parser = new ContextPathUtil.CtxPathParser(e.getKey());
+            int ctxType = parser.extractLastCtxType();
+            String packageName = parser.lastCtxName();
+            switch(ctxType){
+                case ContextPath.PACKAGE_SPEC:
+                    sbPkgSpec.append(buildPackageIndex(packageName, e.getValue()));
+                    break;
+                case ContextPath.PACKAGE_BODY:
+                    sbPkgBody.append(buildPackageIndex(packageName, e.getValue()));
+                    break;
             }
-            sb1.append("|").append(e.getKey()).append(".");
         }
 
         DbUrl dbUrl = aschema.getDbUrl();
         String key1 = buildKey(dbUrl, DbObject.PACKAGE);
-        key2names.put(key1, sb1.toString());
+        key2names.put(key1, sbPkgSpec.toString());
+        String key2 = buildKey(dbUrl, DbObject.PACKAGE_BODY);
+        key2names.put(key2, sbPkgBody.toString());
 
         // populate names cache
         for (Map.Entry<String, StringBuilder> e : type2names.entrySet()) {
             String key = buildKey(dbUrl, e.getKey());
             key2names.put(key, e.getValue().toString());
         }
+    }
 
-/*
-        } else {
-            // remove names for the index
-            String[] keysBeingRemoved = findKeysMatchTo(dbUrl);
-            for (String key : keysBeingRemoved) {
-                key2names.remove(key);
-            }
+    private String buildPackageIndex(String packageName, Set<String> packageScopeNames) {
+        // process package scope objects
+        StringBuilder sb1 = new StringBuilder();
+        for (String name : packageScopeNames) {
+            sb1.append(name).append("..");
         }
-*/
+        sb1.append("|").append(packageName).append(".");
+        return sb1.toString();
     }
 
     public String[] getNames() {
@@ -243,7 +246,6 @@ public class NameLookupServiceImpl implements NameLookupService {
             String[] pp = names.split("[\\.\\|]+");
             out.addAll(Arrays.asList(pp));
         }
-
 
         return out.toArray(new String[out.size()]);
     }
@@ -313,7 +315,7 @@ public class NameLookupServiceImpl implements NameLookupService {
                 if (index.length() > pos + offset && index.charAt(pos + offset) == '.') {
                     // package scope object, find package name
 
-                    // having SET collection is supposed to effectiflly remove duplicates
+                    // having SET collection is supposed to remove duplicates effectively
                     final Set<ContextItem> out = new HashSet<ContextItem>();
                     int start = index.indexOf('|', pos + offset + 1); //StringUtils.searchInReverse(index, idx-2, '.');
                     if (start != -1) {
@@ -324,32 +326,30 @@ public class NameLookupServiceImpl implements NameLookupService {
                         // todo -- it is not quite correct, func/proc can be duplicated
                         //          if it is defined with different argument names
 
-                        // collect names from the package specification
-                        ContextItem[] pkgCtxItem = itree.findCtxItems(new int[]{ContextPath.PACKAGE_SPEC}, pkgName);
-                        if (pkgCtxItem.length > 0) {
-                            itree.iterateOverChildren(pkgCtxItem[0].getCtxPath(), name, new IndexEntriesWalkerInterruptable() {
-                                public boolean process(final String ctxPath, final String value) {
-//                                    ContextPathUtil.CtxPathParser parser = new ContextPathUtil.CtxPathParser(ctxPath);
-//                                    if (parser.lastCtxName().equals(name)) {
-                                    out.add(new ContextItemImpl(name, ctxPath, value));
-//                                    }
-                                    return true;
-                                }
-                            });
+                        if (indexType == ContextPath.PACKAGE_SPEC) {
+                            // collect names from the package specification
+                            ContextItem[] pkgCtxItem = itree.findCtxItems(new int[]{ContextPath.PACKAGE_SPEC}, pkgName);
+                            if (pkgCtxItem.length > 0) {
+                                itree.iterateOverChildren(pkgCtxItem[0].getCtxPath(), name, new IndexEntriesWalkerInterruptable() {
+                                    public boolean process(final String ctxPath, final String value) {
+                                        out.add(new ContextItemImpl(name, ctxPath, value));
+                                        return true;
+                                    }
+                                });
+                            }
                         }
 
-                        // collect names from the package body (names added on previose)
-                        pkgCtxItem = itree.findCtxItems(new int[]{ContextPath.PACKAGE_BODY}, pkgName);
-                        if (pkgCtxItem.length > 0) {
-                            itree.iterateOverChildren(pkgCtxItem[0].getCtxPath(), name, new IndexEntriesWalkerInterruptable() {
-                                public boolean process(final String ctxPath, final String value) {
-//                                    ContextPathUtil.CtxPathParser parser = new ContextPathUtil.CtxPathParser(ctxPath);
-//                                    if (parser.lastCtxName().equals(name)) {
-                                    out.add(new ContextItemImpl(name, ctxPath, value));
-//                                    }
-                                    return true;
-                                }
-                            });
+                        if (indexType == ContextPath.PACKAGE_BODY) {
+                            // collect names from the package body (names added on previose)
+                            ContextItem[] pkgCtxItem = itree.findCtxItems(new int[]{ContextPath.PACKAGE_BODY}, pkgName);
+                            if (pkgCtxItem.length > 0) {
+                                itree.iterateOverChildren(pkgCtxItem[0].getCtxPath(), name, new IndexEntriesWalkerInterruptable() {
+                                    public boolean process(final String ctxPath, final String value) {
+                                        out.add(new ContextItemImpl(name, ctxPath, value));
+                                        return true;
+                                    }
+                                });
+                            }
                         }
                     }
 

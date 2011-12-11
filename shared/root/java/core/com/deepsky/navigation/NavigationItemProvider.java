@@ -73,7 +73,7 @@ public class NavigationItemProvider {
             case ContextPath.RECORD_TYPE:
             case ContextPath.OBJECT_TYPE:
             case ContextPath.VARRAY_TYPE:
-                return create(ctxName, null, Icons.RECORD_TYPE_DECL, null);
+                return create(ctxName, parentScope(ctxPath), Icons.RECORD_TYPE_DECL, null);
             case ContextPath.FUNCTION_BODY: {
                 String presentationName = decodeExecSignature(ContextPath.FUNCTION_BODY, ctxName, value);
                 return create(presentationName, parentScope(ctxPath), Icons.FUNCTION_BODY, null);
