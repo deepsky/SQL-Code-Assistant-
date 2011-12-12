@@ -31,18 +31,17 @@ import com.deepsky.gui.ConnectionSettings2;
 import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
 import com.deepsky.settings.SqlCodeAssistantSettings;
-import com.deepsky.view.schema_pane.tree.impl.ComboBoxModelImpl;
 import com.deepsky.view.utils.ProgressIndicatorHelper;
 import com.deepsky.view.utils.TestConnectionProgressIndicator;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
+import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ConnectionElementImpl extends ComboBoxModelImpl
+public class ConnectionElementImpl extends DefaultComboBoxModel
         implements ConnectionElement, SessionListener {
 
     Project project;
@@ -57,24 +56,24 @@ public class ConnectionElementImpl extends ComboBoxModelImpl
     }
 
 
-    public String getLocalFS(){
+    public String getLocalFS() {
         return localFS;
     }
 
-    public void init(){
+    public void init() {
         // Local FS schema exists always
-        children.add(localFS);
+        addElement(localFS);
 
         // scan saved connections
         for (ConnectionInfo cinfo : manager.getSessionList()) {
-            children.add(cinfo.getUrl().getUserHostPortServiceName());
+            addElement(cinfo.getUrl().getUserHostPortServiceName());
             cinfo.addListener(this);
         }
 
         SqlCodeAssistantSettings settings = PluginKeys.PLUGIN_SETTINGS.getData2(project);
         String selected = settings.getDbBrowserSelectedConnection();
 
-        if(children.indexOf(selected) != -1 ){
+        if (getIndexOf(selected) != -1) {
             setSelectedItem(selected);
         } else {
             // make Local FS selected initially
@@ -107,20 +106,15 @@ public class ConnectionElementImpl extends ComboBoxModelImpl
             int period = settings.getRefreshPeriod();
 
             try {
-                ConnectionInfo cinfo = manager.createSession(url, loginOnStartup, repair, period);
-                children.add(cinfo.getUrl().getUserHostPortServiceName());
+                final ConnectionInfo cinfo = manager.createSession(url, loginOnStartup, repair, period);
+                addElement(cinfo.getUrl().getUserHostPortServiceName());
                 cinfo.addListener(this);
 
-                for (ListDataListener l : listeners) {
-                    l.intervalAdded(
-                            new ListDataEvent(
-                                    this, ListDataEvent.INTERVAL_ADDED, children.size() - 1, children.size())
-                    );
-                }
-
-                if (children.size() == 1) {
-                    selectItem = children.get(0);
-                }
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    public void run() {
+                        setSelectedItem(cinfo.getUrl().getUserHostPortServiceName());
+                    }
+                });
             } catch (DbConfigurationException e) {
                 e.printStackTrace();
             }
@@ -128,22 +122,12 @@ public class ConnectionElementImpl extends ComboBoxModelImpl
     }
 
     public boolean removeConnection() {
-        if (findCInfo(selectItem) != null) {
-            ConnectionInfo ci = findCInfo(selectItem);
-            int index = children.indexOf(selectItem);
-            if(manager.removeSession(ci)){
+        if (findCInfo((String) getSelectedItem()) != null) {
+            ConnectionInfo ci = findCInfo((String) getSelectedItem());
+            int index = getIndexOf(getSelectedItem());
+            if (manager.removeSession(ci)) {
                 ci.removeListener(this);
-
-                children.remove(index);
-                for (ListDataListener l : listeners) {
-                    l.intervalRemoved(
-                            new ListDataEvent(
-                                    this, ListDataEvent.INTERVAL_REMOVED, index, index + 1)
-                    );
-                }
-
-                String selectItem = children.size() > 0 ? (index >= children.size() ? children.get(index - 1) : children.get(index)) : null;
-                setSelectedItem(selectItem);
+                removeElementAt(index);
                 return true;
             } else {
                 // todo -- not able to delete session??
@@ -153,9 +137,9 @@ public class ConnectionElementImpl extends ComboBoxModelImpl
     }
 
     @NotNull
-    public DbUrl getSelected(){
-        ConnectionInfo cinfo = findCInfo(selectItem);
-        if(cinfo!= null){
+    public DbUrl getSelected() {
+        ConnectionInfo cinfo = findCInfo((String) getSelectedItem());
+        if (cinfo != null) {
             return cinfo.getUrl();
         } else {
             // Virtual FS Schema?
@@ -164,14 +148,14 @@ public class ConnectionElementImpl extends ComboBoxModelImpl
     }
 
     public void disconnect() {
-        if (findCInfo(selectItem) != null) {
-            findCInfo(selectItem).disconnect();
+        if (findCInfo((String) getSelectedItem()) != null) {
+            findCInfo((String) getSelectedItem()).disconnect();
         }
     }
 
     public void connect() {
-        if (findCInfo(selectItem) != null) {
-            ConnectionInfo ci = findCInfo(selectItem);
+        if (findCInfo((String) getSelectedItem()) != null) {
+            ConnectionInfo ci = findCInfo((String) getSelectedItem());
             MyProgressIndicator indicator = ci.connectAsynchronously();
             String url = ci.getUrl().getUserHostPortServiceName();
             new ProgressIndicatorHelper(project, "Connecting to " + url).runBackgrounableWithProgressInd(indicator, false);
@@ -179,9 +163,9 @@ public class ConnectionElementImpl extends ComboBoxModelImpl
     }
 
     public void editConnectionSettings() {
-        ConnectionInfo ci = findCInfo(selectItem);
+        ConnectionInfo ci = findCInfo((String) getSelectedItem());
         if (ci != null) {
-            DbUrl url = ci.getUrl();
+            final DbUrl url = ci.getUrl();
             ConnectionSettings2 settings = new ConnectionSettings2(project,
                     url,
                     ci.refreshPeriod(), ci.loginOnStart(), ci.repaireFailedConnection());
@@ -189,20 +173,30 @@ public class ConnectionElementImpl extends ComboBoxModelImpl
             settings.show();
 
             if (settings.isOK()) {
-                url = settings.getDbUrl();
+                final DbUrl url2 = settings.getDbUrl();
 
                 boolean loginOnStartup = settings.getLoginOnStartup();
                 boolean repair = settings.getRepairIfDropped();
                 int period = settings.getRefreshPeriod();
 
                 ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
-                manager.updateSession(ci, url, loginOnStartup, repair, period);
+                manager.updateSession(ci, url2, loginOnStartup, repair, period);
+
+                // Update comboBox with the modified connection
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    public void run() {
+                        int index = getIndexOf(url.getUserHostPortServiceName());
+                        removeElementAt(index);
+                        insertElementAt(url2.getUserHostPortServiceName(), index);
+                        setSelectedItem(url2.getUserHostPortServiceName());
+                    }
+                });
             }
         }
     }
 
     public void testConnection() {
-        ConnectionInfo ci = findCInfo(selectItem);
+        ConnectionInfo ci = findCInfo((String) getSelectedItem());
         if (ci != null) {
             new TestConnectionProgressIndicator(project, ci.getUrl()).checkConnection();
         }
