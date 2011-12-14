@@ -70,6 +70,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType TABLE_REF = new PlSqlElementType("TABLE_REF", PLSqlTokenTypes.TABLE_REF);
 	PlSqlElementType CALLABLE_NAME_REF = new PlSqlElementType("CALLABLE_NAME_REF", PLSqlTokenTypes.CALLABLE_NAME_REF);
 	PlSqlElementType CURSOR_REF_LOOP_SPEC = new PlSqlElementType("CURSOR_REF_LOOP_SPEC", PLSqlTokenTypes.CURSOR_REF_LOOP_SPEC);
+	PlSqlElementType COLUMN_NOT_NULL_CONSTRAINT = new PlSqlElementType("COLUMN_NOT_NULL_CONSTRAINT", PLSqlTokenTypes.COLUMN_NOT_NULL_CONSTRAINT);
 	PlSqlElementType TIMEZONE_SPEC = new PlSqlElementType("TIMEZONE_SPEC", PLSqlTokenTypes.TIMEZONE_SPEC);
 	PlSqlElementType SQLPLUS_COLUMN = new PlSqlElementType("SQLPLUS_COLUMN", PLSqlTokenTypes.SQLPLUS_COLUMN);
 	PlSqlElementType RELATION_CONDITION = new PlSqlElementType("RELATION_CONDITION", PLSqlTokenTypes.RELATION_CONDITION);

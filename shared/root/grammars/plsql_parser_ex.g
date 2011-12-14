@@ -246,7 +246,7 @@ tokens {
     COLUMN_PK_SPEC;
     COLUMN_FK_SPEC;
     NOT_NULL_STMT;
-    COLUMN_CHECK_CONSTRAINT;
+    COLUMN_CHECK_CONSTRAINT; COLUMN_NOT_NULL_CONSTRAINT;
     CONSTRAINT;
     PK_SPEC; FK_SPEC;
     UNIQUE_CONSTRAINT;
@@ -522,6 +522,8 @@ column_constraint2:
             {  __markRule(COLUMN_FK_SPEC);}
         | ("check" condition)
             {  __markRule(COLUMN_CHECK_CONSTRAINT);}
+        | ("not" "null")
+            {  __markRule(COLUMN_NOT_NULL_CONSTRAINT);}
     )
     ;
 
@@ -869,7 +871,8 @@ create_directory:
 create_table2:
     "table"! (schema_name DOT!)? table_name_ddl
     (OPEN_PAREN! column_def (COMMA! column_def)* (COMMA! constaraint)* CLOSE_PAREN!)?
-    (organization_spec)? (physical_properties|table_properties)*
+//    (nested_tab_spec)? (lob_storage_clause)? (organization_spec)? (physical_properties|table_properties)*
+    (nested_tab_spec)? (lob_storage_clause)? (physical_properties|table_properties)*
     ("as" select_expression)?
     ;
 
@@ -881,17 +884,51 @@ create_temp_table:
     ("as" select_expression)?
     ;
 
+// NESTED TABLE ad_textdocs_ntab STORE AS textdocs_nestedtab
+nested_tab_spec:
+    "nested" "table" identifier "store" "as" identifier
+    ("return" "as" ("locator"|"value"))?
+    ;
+
+lob_storage_clause:
+    "lob" OPEN_PAREN identifier (COMMA identifier)* CLOSE_PAREN "store" "as"
+    OPEN_PAREN (lob_parameters)+ CLOSE_PAREN
+    ;
+
+lob_parameters:
+    ("tablespace" identifier2)
+    | storage_spec
+    | ("chunk" NUMBER)
+    | "cache"
+    | (("nocache" | ("cache" "reads")) (logging_clause)?)
+    | "retention"
+    | ("pctversion" NUMBER)
+    | ("freepools" NUMBER)
+    | (("enable" | "disable") "storage" "in" "row")
+    ;
+
 physical_properties:
-    segment_attributes_clause
-//    | organization_spec
-//    | cluster_clause
+    (
+        (deferred_segment_creation)?
+            (segment_attributes_clause
+            | organization_spec)
+    )
+    | cluster_clause
+    ;
+
+deferred_segment_creation:
+    "segment" "creation" ("immediate"|"deferred")
+    ;
+
+cluster_clause:
+    "cluster" identifier OPEN_PAREN column_name_ddl (COMMA column_name_ddl)* CLOSE_PAREN
     ;
 
 segment_attributes_clause:
     physical_attributes_clause
     | ("tablespace" identifier2)
     | "online"
-    | ("compute" "statistics" ("parallel"|"noparallel"|identifier2)? )
+//    | ("compute" "statistics" ("parallel"|"noparallel"|identifier2)? )
     | logging_clause
     | table_compression
     ;
@@ -912,6 +949,7 @@ physical_attributes_clause:
     | ("pctused" numeric_literal)
     | ("initrans" numeric_literal)
     | ("maxtrans" numeric_literal)
+    | ("compute" "statistics" ("parallel"|"noparallel"|identifier)? )
     | storage_spec
     ;
 
@@ -1049,6 +1087,8 @@ storage_params:
     | ("freelist" "groups" numeric_literal)
     | ("optimal" (STORAGE_SIZE|"null")?)
     | ("buffer_pool" ( "keep" | "recycle" | "default"))
+    | ("flash_cache" ( "keep" | "none" | "default"))
+    | ("cell_flash_cache" ( "keep" | "none" | "default"))
     | "encrypt"
     ;
 
@@ -1064,7 +1104,7 @@ constaraint:
     ;
 
 pk_spec_constr:
-    "primary"! "key"! OPEN_PAREN! owner_column_name_ref_list CLOSE_PAREN!
+    "primary"! "key"! OPEN_PAREN! owner_column_name_ref_list CLOSE_PAREN! (using_index_clause)?
     {  __markRule(PK_SPEC);}
     ;
 
@@ -1076,7 +1116,7 @@ fk_spec_constr:
     ;
 
 unique_contsr:
-    "unique" OPEN_PAREN column_name_ref (COMMA! column_name_ref)* CLOSE_PAREN
+    "unique" OPEN_PAREN column_name_ref (COMMA! column_name_ref)* CLOSE_PAREN (using_index_clause)?
     {  __markRule(UNIQUE_CONSTRAINT);}
     ;
 
@@ -1203,7 +1243,7 @@ using_index_clause:
         ((schema_name DOT)? identifier2)
 // todo        | (OPEN_PAREN create_index_statement CLOSE_PAREN)
         | index_properties
-    )  ("enable")?
+    )  (enable_disable_clause)?
     ;
 
 index_properties:
@@ -3328,6 +3368,7 @@ identifier2:
     | "language"
     | "java"
     | "store"
+    | "nested"
     | "library"
     | "role"
     | "online"
@@ -3406,6 +3447,19 @@ identifier2:
     | "backup"
     | "coalesce"
     | "permanent"
+    | "pctversion"
+    | "freepools"
+    | "chunk"
+    | "reads"
+    | "storage"
+    | "locator"
+    | "value"
+    | "cluster"
+    | "deferred"
+    | "creation"
+    | "segment"
+    | "flash_cache"
+    | "cell_flash_cache"
     )
     ;
 
