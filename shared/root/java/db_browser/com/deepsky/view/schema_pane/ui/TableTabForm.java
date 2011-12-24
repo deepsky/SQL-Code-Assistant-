@@ -87,7 +87,6 @@ public class TableTabForm extends TabFormBaseWrapper {
 
         detailsTable.setModel(detailsModel);
 
-
         // update Column Tab
         TabularTreeElement tableTreeElem = (TabularTreeElement) lastSelectedComponent;
         if (tableTreeElem != null) {

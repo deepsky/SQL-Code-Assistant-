@@ -27,10 +27,9 @@ package com.deepsky.lang.plsql.objTree;
 
 import com.deepsky.lang.plsql.objTree.ui.DbObjectTreeCellRenderer;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.ToggleAction;
 
+import javax.swing.*;
 import javax.swing.table.TableModel;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -60,7 +59,16 @@ public interface DbTreeElement extends MutableTreeNode {
      */
     void runDefaultAction();
 
-    AnAction[] getActions();
+    MenuItemAction[] getActions();
 
     TreePath buildPath(TreePath parent, String ctxPath);
+
+    public abstract class MenuItemAction extends AnAction {
+        public MenuItemAction(String text, String description, Icon icon) {
+            super(text, description, icon);
+        }
+
+        public abstract boolean isEnabled();
+    }
+
 }

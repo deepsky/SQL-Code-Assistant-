@@ -104,8 +104,8 @@ public class ProcedureTreeElement extends DbTreeElementAbstract implements Execu
     }
 
 
-    public AnAction[] getActions() {
-        return new AnAction[]{
+    public MenuItemAction[] getActions() {
+        return new MenuItemAction[]{
                 new PopupAction("Find Usages", Icons.FIND){
                     protected void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root) {
                         PsiElement _psi = PlSqlElementLocator.locatePsiElement(project,dbUrl, ctxPath);

@@ -25,6 +25,7 @@
 
 package com.deepsky.view.query_pane;
 
+import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
 import com.deepsky.database.exec.SQLUpdateStatistics;
 import com.deepsky.database.DBException;
@@ -35,12 +36,14 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
+import javax.swing.text.Position;
 import java.awt.*;
 
 public class QueryStatisticsPanel extends JPanel implements QueryResultPanel {
 
     private JComponent central;
     StatusLinePanel statusLine;
+    JTextArea textArea;
 
     public QueryStatisticsPanel() {
         super(new BorderLayout());
@@ -59,7 +62,6 @@ public class QueryStatisticsPanel extends JPanel implements QueryResultPanel {
 
         setVisible(false);
         
-
         if (central != null) {
             remove(central);
         }
@@ -67,39 +69,41 @@ public class QueryStatisticsPanel extends JPanel implements QueryResultPanel {
         central.setBackground(UIUtil.getTreeTextBackground());
 
         PlainDocument doc = new PlainDocument();
+        String errors = stats.errorMessages();
         try {
-            String errors = stats.errorMessages();
             doc.insertString(0, errors==null? "No errors": errors, null);
-        } catch (BadLocationException e) {
+        } catch (BadLocationException ignored) {
         }
 
-        JTextArea textArea = new JTextArea();
-        textArea.setDocument(doc);
-        central.add(new JScrollPane(textArea), BorderLayout.CENTER); 
+        textArea = new JTextArea(doc);
+        central.add(new JBScrollPane(textArea), BorderLayout.CENTER);
         add(central, BorderLayout.CENTER);
-
 
         statusLine.setResponseMessage(stats.resultMessage());
         statusLine.setTimeSpent(stats.timeSpent());
 
         setVisible(true);
+
+        if(errors != null && errors.length() > 0){
+            textArea.setCaretPosition(doc.getEndPosition().getOffset()-1);
+        }
     }
 
 
-//    public boolean isRefreshSupported() {
-//        return false;
-//    }
-//
-//    public boolean isExportSupported() {
-//        return false;
-//    }
-//    public void refresh() throws DBException {
-//        throw new NotSupportedException("Refresh operation on DML query not supported");
-//    }
-//    public String extractContent(String delimiter, boolean saveHeader, boolean ecloseWithDowbleQuotes) {
-//        // todo --
-//        return null;
-//    }
-//    public void close() {
-//    }
+    public void append(@NotNull SQLUpdateStatistics stats){
+        if(textArea == null){
+            init(stats);
+        } else {
+            Document doc = textArea.getDocument();
+            String errors = stats.errorMessages();
+            try {
+                Position endPos = doc.getEndPosition();
+                doc.insertString(endPos.getOffset(), errors==null? "No errors": errors, null);
+            } catch (BadLocationException ignored) {
+            }
+            if(errors != null && errors.length() > 0){
+                textArea.setCaretPosition(doc.getEndPosition().getOffset()-1);
+            }
+        }
+    }
 }

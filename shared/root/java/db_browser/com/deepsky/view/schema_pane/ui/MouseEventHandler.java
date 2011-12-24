@@ -81,23 +81,27 @@ public class MouseEventHandler extends MouseAdapter {
 
     private class DbBrowserPopup extends JPopupMenu {
 
-        final AnAction[] actions;
+        //final AnAction[] actions;
 
         public DbBrowserPopup(DbTreeElement item) {
 
-            actions = item.getActions();
+            DbTreeElement.MenuItemAction[] actions = item.getActions();
             for(int i =0; i<actions.length; i++){
                 final Presentation presentation = actions[i].getTemplatePresentation();
                 String label = presentation.getText();
                 JMenuItem menuItem = new JMenuItem(label);
                 menuItem.setIcon(presentation.getIcon());
-                menuItem.setEnabled(presentation.isEnabled());
-                menuItem.addActionListener(new ActionListenerImpl(actions[i]));
+//                menuItem.setEnabled(presentation.isEnabled());
+//                menuItem.addActionListener(new ActionListenerImpl(actions[i]));
+                ButtonModelImpl model = new ButtonModelImpl(actions[i]);
+                menuItem.setModel(model);
+                menuItem.addActionListener(model);
                 this.add(menuItem);
             }
         }
 
 
+/*
         class ActionListenerImpl implements ActionListener {
             AnAction action;
 
@@ -113,7 +117,43 @@ public class MouseEventHandler extends MouseAdapter {
                 );
             }
         }
-    }
+*/
 
+
+        private class ButtonModelImpl extends DefaultButtonModel implements ActionListener {
+
+            private DbTreeElement.MenuItemAction action;
+            private boolean isConstructed = false;
+            private long lastMs = 0;
+            private boolean isEnabledCached = true;
+
+            public ButtonModelImpl(DbTreeElement.MenuItemAction action){
+                this.action = action;
+                isConstructed = true;
+            }
+
+            public void actionPerformed(ActionEvent e) {
+                action.actionPerformed(
+                        new AnActionEvent(null, DataManager.getInstance().getDataContext(DbBrowserPopup.this),
+                                ActionPlaces.UNKNOWN, action.getTemplatePresentation(),
+                                ActionManager.getInstance(), 0)
+                );
+            }
+
+            public boolean isEnabled(){
+                if(!isConstructed){
+                    return super.isEnabled();
+                }
+
+                long currentMs = System.currentTimeMillis();
+                if(currentMs - lastMs >= 1000){
+                    lastMs = currentMs;
+                    isEnabledCached = action.isEnabled();
+
+                }
+                return isEnabledCached;
+            }
+        }
+    }
 
 }

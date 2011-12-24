@@ -325,6 +325,9 @@ public class PlSqlAnnotatingVisitorLight extends PlSqlElementVisitor implements 
                 customizeErrorAnn(node, message);
             }
         }
+        Annotation ann = myHolder.createInfoAnnotation(node, null);
+        TextAttributesKey attr = TextAttributesKey.find("SQL.COLUMN");
+        ann.setTextAttributes(attr);
     }
 
     private void customizeErrorAnn(PlSqlElement elem, String message) {
@@ -370,6 +373,13 @@ public class PlSqlAnnotatingVisitorLight extends PlSqlElementVisitor implements 
                 ann.setTextAttributes(attr);
             }
 //        saveProfile(profile);
+    }
+
+    public void visitColumnNameDDL(ColumnNameDDL columnNameDDL) {
+        Annotation ann = myHolder.createInfoAnnotation(columnNameDDL, null);
+        TextAttributesKey attr = TextAttributesKey.find("SQL.COLUMN");
+        //TextAttributesKey attr = TextAttributesKey.find("PLSQL.VAR");
+        ann.setTextAttributes(attr);
     }
 
     private static final Key<ConnectionManager> CONN_MANAGER_KEY = Key.create("ConnectionManagerAnnot");

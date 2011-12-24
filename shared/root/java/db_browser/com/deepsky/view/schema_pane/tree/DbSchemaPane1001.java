@@ -47,7 +47,6 @@ public class DbSchemaPane1001 extends JPanel {
     JComboBox connectionComboBox;
     Project project;
     TabbedPaneManager tabbedPane;
-//    JTabbedPane lastCenterComp = null;
     TabbedPaneWrapper lastCenterPane = null;
 
     JLabel statusLabel;

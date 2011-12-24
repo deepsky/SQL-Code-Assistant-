@@ -142,7 +142,6 @@ public class QueryResultWindow {
 
         // save content name
         sqlMarker.putUserData(CONTENT_PAGE_KEY, contentName);
-
         Component component = getTab(content, sqlMarker.getName());
         if (panelType == QueryResultPanel.SELECT_RESULT) {
             if (component == null) {
@@ -187,8 +186,36 @@ public class QueryResultWindow {
                 removeTab(content, tabName);
                 return addGridPanelTab(content, tabName, icon, toolTip);
             }
+        } else if (panelType == QueryResultPanel.DML_QUERY_RESULT) {
+            if (component == null) {
+                assertTabCount(content);
+                return addDMLStatsTab(content, tabName, icon, toolTip);
+            } else {
+                // component != null && !(component instanceof DataGridPanel)
+                // replace old panel with new one
+                removeTab(content, tabName);
+                return addDMLStatsTab(content, tabName, icon, toolTip);
+            }
         } else {
             throw new NotSupportedException();
+        }
+    }
+
+
+    @NotNull
+    public QueryStatisticsPanel findOrCreateDMLResultPanel(String tabName, Icon icon, String toolTip) {
+
+        String contentName = connectionManager.getDbUrl().getUserHostPortServiceName().toLowerCase();
+        Content content = createContent(contentName);
+
+        Component component = getTab(content, tabName);
+        if (component == null) {
+            assertTabCount(content);
+            return addDMLStatsTab(content, tabName, icon, toolTip);
+        } else {
+            // component != null && !(component instanceof DataGridPanel)
+            // return found panel
+            return (QueryStatisticsPanel) component;
         }
     }
 
@@ -222,6 +249,19 @@ public class QueryResultWindow {
         return dataGridPanel;
     }
 
+
+    private QueryStatisticsPanel addDMLStatsTab(@NotNull Content content, String tabName, Icon icon, String s) {
+        JTabbedPane tabbedPane = getTabComponent(content);
+        QueryStatisticsPanel dmlStatsPanel = new QueryStatisticsPanel();
+        dmlStatsPanel.putClientProperty(CREATE_TIME, new Date().getTime());
+
+        tabbedPane.addTab(tabName, dmlStatsPanel);
+        int index = tabbedPane.indexOfTab(tabName);
+        tabbedPane.setTabComponentAt(index,
+                new ButtonTabComponent(tabbedPane, icon));
+
+        return dmlStatsPanel;
+    }
 
     private QueryStatisticsPanel addDMLStatsTab(@NotNull Content content, SqlStatementMarker sqlMarker, Icon icon, String s) {
         JTabbedPane tabbedPane = getTabComponent(content);

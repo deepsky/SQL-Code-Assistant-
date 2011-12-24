@@ -229,27 +229,29 @@ public class PackageTreeElement extends DbTreeElementAbstract {
     }
 
 
-    public AnAction[] getActions() {
-        return new AnAction[]{
-                new PopupAction("Find Usages", Icons.FIND){
+    public MenuItemAction[] getActions() {
+        MenuItemAction[] out = new MenuItemAction[2];
+        out[0] = new PopupAction("Find Usages", Icons.FIND){
                     protected void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root) {
                         PsiElement _psi = PlSqlElementLocator.locatePsiElement(project,dbUrl, getCtxPath());
                         if(_psi != null){
                             SqlFindUsagesHelper.runFindUsages(project, _psi);
                         }
                     }
-                },
-                new PopupAction("Open Specification", Icons.VIEW_PKG_SPEC, pkgSpecPath != null){
+                };
+
+        out[1] = (pkgSpecPath != null)?
+                 new PopupAction("Open Specification", Icons.VIEW_PKG_SPEC){
                     protected void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root) {
                         boolean result = PlSqlElementLocator.openFileInEditor(project, dbUrl, pkgSpecPath);
                     }
-                },
-                new PopupAction("Open Package Body", Icons.VIEW_PKG_BODY, pkgBodyPath != null){
+                }: new PopupAction("Open Package Body", Icons.VIEW_PKG_BODY){
                     protected void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root) {
                         boolean result = PlSqlElementLocator.openFileInEditor(project, dbUrl, pkgBodyPath);
                     }
-                }
-        };
+                };
+
+        return out;
     }
 
     public TreePath buildPath(TreePath parent, String ctxPath) {

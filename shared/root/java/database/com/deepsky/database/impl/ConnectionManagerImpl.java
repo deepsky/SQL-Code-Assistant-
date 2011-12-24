@@ -43,6 +43,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.sql.Connection;
@@ -52,18 +53,18 @@ public class ConnectionManagerImpl implements ConnectionManager { //}, CacheMana
 
     static LoggerProxy log = LoggerProxy.getInstance("#ConnectionManagerImpl");
 
-    File cacheDir = null;
+    private File cacheDir = null;
 
-    ConnectionHelper connHelper = new ConnectionHelper();
-    ConnectionInfoHelper ciHelper;
-    DbSchemaIndexer dbIndexer;
+    private ConnectionHelper connHelper = new ConnectionHelper();
+    private ConnectionInfoHelper ciHelper;
+    private DbSchemaIndexer dbIndexer;
 
-    List<ConnectionManagerListener> lnrs = new ArrayList<ConnectionManagerListener>();
+    private List<ConnectionManagerListener> lnrs = new ArrayList<ConnectionManagerListener>();
 
-    List<String> dmlStatementList = new ArrayList<String>();
-    SQLExecutor sqlExecutor = null;
+    private List<String> dmlStatementList = new ArrayList<String>();
+    private SQLExecutor sqlExecutor = null;
 
-    Project project;
+    private Project project;
 
     @NotNull
     public String[] getHostList() {
@@ -128,6 +129,7 @@ public class ConnectionManagerImpl implements ConnectionManager { //}, CacheMana
         return connHelper.getDbMetaInfo();
     }
 
+    @Nullable
     public DbUrl getDbUrl() {
         return connHelper.getDbUrl();
     }
@@ -763,6 +765,7 @@ public class ConnectionManagerImpl implements ConnectionManager { //}, CacheMana
             return null;
         }
 
+        @Nullable
         public DbUrl getDbUrl() {
             if (holder != null) {
                 return holder.getDbUrl();

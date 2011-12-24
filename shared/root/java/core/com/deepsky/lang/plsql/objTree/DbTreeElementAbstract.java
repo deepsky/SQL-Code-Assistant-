@@ -25,22 +25,23 @@
 
 package com.deepsky.lang.plsql.objTree;
 
+import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.ora.DbUrl;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.objTree.guiSpec.MutableTreeNodeImpl;
 import com.deepsky.lang.plsql.objTree.ui.DbObjectTreeCellRenderer;
 import com.deepsky.lang.plsql.resolver.factory.PlSqlElementLocator;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 public abstract class DbTreeElementAbstract extends MutableTreeNodeImpl implements DbTreeElement {
+
+    final public static String DDL_TAB_NAME = "DDL SCRIPT";
 
     protected String ctxPath;
     protected String name;
@@ -94,37 +95,31 @@ public abstract class DbTreeElementAbstract extends MutableTreeNodeImpl implemen
         boolean result = PlSqlElementLocator.openFileInEditor(project, dbUrl, ctxPath);
     }
 
-    public AnAction[] getActions() {
-        return new AnAction[0];
+    public MenuItemAction[] getActions() {
+        return new MenuItemAction[0];
     }
 
 
-    public TreePath buildPath(TreePath parent, String ctxPath){
-        if(ctxPath != null && ctxPath.startsWith(getCtxPath())){
+    public TreePath buildPath(TreePath parent, String ctxPath) {
+        if (ctxPath != null && ctxPath.startsWith(getCtxPath())) {
             return parent.pathByAddingChild(this);
         }
         return parent;
     }
 
-    protected abstract class PopupAction extends ToggleAction {
-
+    protected abstract class PopupAction extends MenuItemAction { //ToggleAction {
+        private boolean enabled = true;
         public PopupAction(String name, Icon icon) {
             super(name, name, icon);
         }
 
         public PopupAction(String name, Icon icon, boolean enabled) {
             super(name, name, icon);
-            getTemplatePresentation().setEnabled(enabled);
+            this.enabled = enabled;
         }
 
         @Override
-        public boolean isSelected(AnActionEvent e) {
-
-            return false;
-        }
-
-        @Override
-        public void setSelected(AnActionEvent e, boolean state) {
+        public void actionPerformed(AnActionEvent e) {
             DbElementRoot rootElem = getTypeElement();
             Project project = rootElem.getProject();
             DbUrl dbUrl = rootElem.getDbUrl();
@@ -132,7 +127,40 @@ public abstract class DbTreeElementAbstract extends MutableTreeNodeImpl implemen
             handleSelected(project, dbUrl, rootElem);
         }
 
+        /**
+         * Action is enabled by default
+         *
+         * @return - true or false
+         */
+        public boolean isEnabled() {
+            return enabled;
+        }
+
         protected abstract void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root);
     }
+
+
+    protected abstract class PopupActionConnectionSensitive extends PopupAction {
+
+        public PopupActionConnectionSensitive(String name, Icon icon) {
+            super(name, icon);
+        }
+
+        @Override
+        public boolean isEnabled() {
+            DbElementRoot rootElem = getTypeElement();
+            Project project = rootElem.getProject();
+            DbUrl dbUrl = rootElem.getDbUrl();
+            ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
+            if (manager != null) {
+                if (manager.getDbUrl() != null && dbUrl.equals(manager.getDbUrl())) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
 
 }

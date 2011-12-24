@@ -113,17 +113,6 @@ public class TabbedPaneManager implements Test501Listener {
         });
     }
 
-/*
-    public JTabbedPane selectSheet(DbUrl dbUrl, boolean doCreate) {
-        if(doCreate){
-            return selectSheet(dbUrl);
-        } else {
-            TabbedPaneWrapper wrapper = url2Pane.get(dbUrl.getUserHostPortServiceName());
-            return wrapper != null? wrapper.tabbed: null;
-        }
-    }
-*/
-
     public TabbedPaneWrapper selectSheet(DbUrl dbUrl) {
 
         TabbedPaneWrapper wrapper = url2Pane.get(dbUrl.getUserHostPortServiceName());
@@ -374,10 +363,13 @@ public class TabbedPaneManager implements Test501Listener {
 
         @NotNull
         public DbTypeElementAction[] getActions() {
+            return new DbTypeElementAction[0];
+/*
             DbTypeElementAction open = createAction("Create Script", "Create Script", Icons.VIEW_DEF, CREATE_SCRIPT);
             DbTypeElementAction queryData = createAction("Query Data", "Query Data", Icons.QUERY_DATA, QUERY_TABLE);
 
             return new DbTypeElementAction[]{open, queryData};
+*/
         }
 /*
         @NotNull

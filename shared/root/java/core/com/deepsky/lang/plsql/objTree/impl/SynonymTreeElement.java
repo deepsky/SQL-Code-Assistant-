@@ -25,16 +25,25 @@
 
 package com.deepsky.lang.plsql.objTree.impl;
 
+import com.deepsky.actions.SqlScriptRunService;
+import com.deepsky.actions.SqlScriptRunner;
+import com.deepsky.database.DBException;
+import com.deepsky.database.exec.SQLUpdateStatistics;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.findUsages.SqlFindUsagesHelper;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.objTree.DbElementRoot;
 import com.deepsky.lang.plsql.objTree.DbTreeElementAbstract;
 import com.deepsky.lang.plsql.objTree.DetailsTableModel;
 import com.deepsky.lang.plsql.objTree.ui.DbObjectTreeCellRenderer;
 import com.deepsky.lang.plsql.resolver.factory.PlSqlElementLocator;
+import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.view.Icons;
+import com.deepsky.view.query_pane.QueryResultWindow;
+import com.deepsky.view.query_pane.QueryStatisticsPanel;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -77,13 +86,40 @@ public class SynonymTreeElement extends DbTreeElementAbstract {
         return false;
     }
 
-    public AnAction[] getActions() {
-        return new AnAction[]{
+    public MenuItemAction[] getActions() {
+        return new MenuItemAction[]{
                 new PopupAction("Find Usages", Icons.FIND){
                     protected void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root) {
                         PsiElement _psi = PlSqlElementLocator.locatePsiElement(project,dbUrl, ctxPath);
                         if(_psi != null){
                             SqlFindUsagesHelper.runFindUsages(project, _psi);
+                        }
+                    }
+                },
+                new PopupActionConnectionSensitive("Create DDL script", Icons.QUERY_DATA) {
+                    @Override
+                    protected void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root) {
+                        try {
+                            final QueryResultWindow qrwn = PluginKeys.QR_WINDOW.getData(project);
+                            SqlScriptRunService.getInstance(project).generateDDLScript(
+                                    DbObject.SYNONYM, getName(),
+                                    new SqlScriptRunner.DMLResultListener() {
+                                        public void handleDMLResult(SQLUpdateStatistics result) {
+                                            QueryStatisticsPanel resultPane = qrwn.findOrCreateDMLResultPanel(
+                                                    DDL_TAB_NAME, Icons.TABLE, null /* ToolTip text */
+                                            );
+                                            resultPane.append(result);
+                                            // show content pane
+                                            qrwn.showContent(DDL_TAB_NAME);
+                                        }
+                                    });
+                        } catch (SqlScriptRunner.AlreadyStartedException e) {
+                            Messages.showErrorDialog(
+                                    project,
+                                    "Cannot run SQL until the SQL statement running at the moment will be finished",
+                                    "Data load failed");
+                        } catch (DBException e) {
+                            Messages.showErrorDialog(project, e.getMessage(), "Data load failed");
                         }
                     }
                 }

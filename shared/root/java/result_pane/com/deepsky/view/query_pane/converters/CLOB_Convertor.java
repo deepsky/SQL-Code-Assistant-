@@ -28,7 +28,6 @@ package com.deepsky.view.query_pane.converters;
 import com.deepsky.utils.StringUtils;
 import com.deepsky.view.query_pane.ConversionException;
 import com.deepsky.view.query_pane.ValueConvertor;
-import oracle.sql.BLOB;
 import oracle.sql.CLOB;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,13 +37,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 
-public class CLOB_Convertor  implements ValueConvertor<CLOB> {
+public class CLOB_Convertor implements ValueConvertor<CLOB> {
     public long size(CLOB blob) throws SQLException {
         return blob.length();
     }
 
     public String valueToString(CLOB blob) throws SQLException {
-        if(blob == null || blob.isEmptyLob() || blob.length() == 0){
+        if (blob == null || blob.isEmptyLob() || blob.length() == 0) {
             return "";
         } else {
             InputStream r = blob.getAsciiStream();
@@ -52,7 +51,7 @@ public class CLOB_Convertor  implements ValueConvertor<CLOB> {
             byte[] buff = new byte[1000];
             int size = 0;
             try {
-                while((size =r.read(buff)) > 0){
+                while ((size = r.read(buff)) > 0) {
                     writer.write(buff, 0, size);
                 }
                 r.close();

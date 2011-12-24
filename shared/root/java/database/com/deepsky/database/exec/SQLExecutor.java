@@ -36,20 +36,29 @@ public interface SQLExecutor {
 
     // synchronous statement running
     RowSetManager executeQuery(String stmt) throws DBException;
+
     RowSetManager executeQuery(SelectStatement select) throws DBException;
+
     RowSetManager executeQuery(Subquery subquery) throws DBException;
 
     // todo -- should be narrowed
     SQLUpdateStatistics execute(ASTNode node) throws DBException;
 
-    // Object specific management -- todo -- should be revised
+//    SQLUpdateStatistics generateDDLScript(String objectType, String objectName) throws DBException;
 
+    // Object specific management -- todo -- should be revised
     boolean dropTable(String name) throws DBException;
+
     boolean dropPackage(String name) throws DBException;
+
     boolean compilePackage(String name) throws DBException;
+
     boolean dropView(String name) throws DBException;
+
     boolean dropTrigger(String name) throws DBException;
+
     boolean enableTrigger(String name) throws DBException;
+
     boolean disableTrigger(String name) throws DBException;
     //
 

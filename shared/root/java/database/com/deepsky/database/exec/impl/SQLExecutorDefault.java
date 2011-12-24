@@ -28,15 +28,21 @@ package com.deepsky.database.exec.impl;
 import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.DBException;
 import com.deepsky.database.exec.RowSetManager;
+import com.deepsky.database.exec.SQLUpdateStatistics;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PluginKeys;
-import com.deepsky.lang.plsql.psi.Subquery;
 import com.deepsky.lang.plsql.resolver.ResolveFacade;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
 import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.intellij.openapi.project.Project;
+import oracle.sql.CLOB;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 public class SQLExecutorDefault extends SQLExecutorSimple {
@@ -67,9 +73,96 @@ public class SQLExecutorDefault extends SQLExecutorSimple {
     public ResolveFacade getDefaultResolver() {
         IndexManager indexMan = PluginKeys.SQL_INDEX_MAN.getData(project);
         ResolveFacade domainResolver = indexMan
-                            .findOrCreateIndex(dbUrl, 0)
-                            .getResolveFacade();
+                .findOrCreateIndex(dbUrl, 0)
+                .getResolveFacade();
         return domainResolver;
     }
+
+/*
+    public SQLUpdateStatistics generateDDLScript(@NotNull String objectType, @NotNull String objectName) throws DBException {
+
+        String select = "select dbms_metadata.get_ddl( '<OBJECT_TYPE>', '<OBJECT_NAME>' ) from dual";
+        select = select.replace("<OBJECT_TYPE>", objectType.toUpperCase());
+        select = select.replace("<OBJECT_NAME>", objectName.toUpperCase());
+
+        RowSetManager rsManager = executeQuery(select);
+        try {
+            if (rsManager.getModel().getFetchedRowCount() == 1) {
+                Object o = rsManager.getModel().getValueAt(0, 1);
+                if (o instanceof CLOB) {
+                    return new DDLScript(1, 0, "DDL script", clob2string((CLOB) o));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DBException("Could not create DDL script for " + objectName.toUpperCase() + ". " + e.getMessage());
+        } finally {
+            rsManager.getModel().close();
+        }
+
+        throw new DBException("Could not create DDL script for " + objectName.toUpperCase() + ".");
+    }
+
+
+    private class DDLScript implements SQLUpdateStatistics {
+
+        int rowsAffected;
+        long timeSpent;
+        String message;
+        String errors;
+
+        public DDLScript(int rowsAffected, long timeSpent, String message, String errors) {
+            this.rowsAffected = rowsAffected;
+            this.timeSpent = timeSpent;
+            this.message = message;
+            this.errors = errors;
+        }
+
+        public int rowsAffected() {
+            return rowsAffected;
+        }
+
+        public long timeSpent() {
+            return timeSpent;
+        }
+
+        public String errorMessages() {
+            return errors;
+        }
+
+        public String resultMessage() {
+            return message;
+        }
+    }
+
+
+    private String clob2string(CLOB blob) throws SQLException {
+        if (blob == null || blob.isEmptyLob() || blob.length() == 0) {
+            return "";
+        } else {
+            InputStream r = blob.getAsciiStream();
+            ByteArrayOutputStream writer = new ByteArrayOutputStream();
+            byte[] buff = new byte[1000];
+            int size = 0;
+            try {
+                while ((size = r.read(buff)) > 0) {
+                    writer.write(buff, 0, size);
+                }
+
+                // Converts the buffer's contents into a string decoding bytes using the
+                // platform's default character set.
+                return writer.toString();
+            } catch (IOException e) {
+                throw new SQLException(e.getMessage());
+            } finally {
+                if(r != null){
+                    try {
+                        r.close();
+                    } catch (IOException ignored) {
+                    }
+                }
+            }
+        }
+    }
+*/
 
 }

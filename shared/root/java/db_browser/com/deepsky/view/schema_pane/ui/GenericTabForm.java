@@ -30,6 +30,8 @@ import com.deepsky.lang.plsql.objTree.DbTreeElement;
 import com.deepsky.lang.plsql.objTree.DetailsTableModel;
 
 import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
@@ -79,8 +81,51 @@ public class GenericTabForm extends TabFormBaseWrapper {
         }
 
         detailsTable.setModel(properties);
+/*
+        for (int i = 0; i < detailsTable.getColumnCount(); i++) {
+            packColumn(detailsTable, i, 1);
+        }
+*/
+
         bottomPanel.validate();
     }
+
+/*
+    final int ROWNUM_TO_MAKE_DECISION = 8;
+    final int MAX_WIDTH = 200;
+
+    private void packColumn(JTable table, int colIndex, int margin) {
+        int colHeaderWidth = getColumnHeaderWidth(table, colIndex);
+        int colCellWidth = getColumnCellWidth(table, colIndex);
+
+        int width = Math.max(colHeaderWidth, colCellWidth);
+        width += 2 * margin;
+        TableColumn column = table.getColumnModel().getColumn(colIndex);
+        column.setPreferredWidth((width > MAX_WIDTH) ? MAX_WIDTH : width);
+    }
+
+    private int getColumnCellWidth(JTable table, int colIndex) {
+        int width = 0;
+        for (int r = 0; r < table.getRowCount() && r < ROWNUM_TO_MAKE_DECISION; r++) {
+            TableCellRenderer renderer = table.getCellRenderer(r, colIndex);
+            Component comp = renderer.getTableCellRendererComponent(
+                    table, table.getValueAt(r, colIndex), false, false, r, colIndex);
+            width = Math.max(width, comp.getPreferredSize().width);
+        }
+
+        return width;
+    }
+
+    private int getColumnHeaderWidth(JTable table, int colIndex) {
+        TableColumn col = table.getColumnModel().getColumn(colIndex);
+        TableCellRenderer renderer = col.getHeaderRenderer();
+        if (renderer == null)
+            renderer = table.getTableHeader().getDefaultRenderer();
+        Component comp = renderer.getTableCellRendererComponent(table, col.getHeaderValue(), false, false, 0, 0);
+        return comp.getPreferredSize().width;
+    }
+*/
+
 
     private void createUIComponents() {
         // TODO: place custom component creation code here

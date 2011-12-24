@@ -40,6 +40,7 @@ import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.view.Icons;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 
@@ -110,8 +111,8 @@ public class FunctionTreeElement extends DbTreeElementAbstract implements Execut
     }
 
 
-    public AnAction[] getActions() {
-        return new AnAction[]{
+    public MenuItemAction[] getActions() {
+        return new MenuItemAction[]{
                 new PopupAction("Find Usages", Icons.FIND) {
                     protected void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root) {
                         PsiElement _psi = PlSqlElementLocator.locatePsiElement(project, dbUrl, ctxPath);

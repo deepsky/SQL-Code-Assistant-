@@ -30,6 +30,7 @@ import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.plsql.tree.Node;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -45,7 +46,13 @@ public interface ConnectionManager {
     boolean checkConnection(DbUrl url);
     ConnectionStatus checkConnectionEx(DbUrl url);
 
+    /**
+     * Get Database Url for established connection
+     * @return - url or null if not connected to database
+     */
+    @Nullable
     DbUrl getDbUrl();
+
     DbMetaInfo getDbMetaInfo();
 
     ConnectionInfo[] getSessionList();

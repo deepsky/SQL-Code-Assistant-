@@ -25,23 +25,29 @@
 
 package com.deepsky.lang.plsql.objTree.impl;
 
-import com.deepsky.database.ConnectionManager;
+import com.deepsky.actions.SqlScriptRunService;
+import com.deepsky.actions.SqlScriptRunner;
 import com.deepsky.database.DBException;
 import com.deepsky.database.exec.RowSetManager;
+import com.deepsky.database.exec.SQLUpdateStatistics;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.findUsages.SqlFindUsagesHelper;
 import com.deepsky.lang.common.PluginKeys;
-import com.deepsky.lang.plsql.objTree.*;
+import com.deepsky.lang.plsql.objTree.DbElementRoot;
+import com.deepsky.lang.plsql.objTree.DbTreeElementAbstract;
+import com.deepsky.lang.plsql.objTree.DetailsTableModel;
+import com.deepsky.lang.plsql.objTree.TabularTreeElement;
 import com.deepsky.lang.plsql.objTree.ui.DbObjectTreeCellRenderer;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.resolver.factory.PlSqlElementLocator;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.deepsky.lang.plsql.struct.DbObject;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.utils.StringUtils;
 import com.deepsky.view.Icons;
 import com.deepsky.view.query_pane.QueryResultPanel;
 import com.deepsky.view.query_pane.QueryResultWindow;
-import com.intellij.openapi.actionSystem.AnAction;
+import com.deepsky.view.query_pane.QueryStatisticsPanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiElement;
@@ -79,7 +85,7 @@ public class TableTreeElement extends DbTreeElementAbstract implements TabularTr
         List<ContextPathUtil.FKConstraintSpec> spec = ContextPathUtil.extractFKConstraintsFromTableValue(value);
         if (spec != null && spec.size() > 0) {
             // FK found
-            for(ContextPathUtil.FKConstraintSpec fkSpec: spec){
+            for (ContextPathUtil.FKConstraintSpec fkSpec : spec) {
                 constraints.add(new ConstraintItem(
                         fkSpec.getName(),
                         FK_CONSTRAINT,
@@ -136,7 +142,7 @@ public class TableTreeElement extends DbTreeElementAbstract implements TabularTr
 
         // check column constraints
         boolean isPK = ContextPathUtil.extractIsPKFromColumnValue(value);
-        if(isPK){
+        if (isPK) {
             // PK found
             constraints.add(new ConstraintItem(
                     ContextPathUtil.extractConstraintNameFromColumnValue(value),
@@ -148,7 +154,7 @@ public class TableTreeElement extends DbTreeElementAbstract implements TabularTr
         }
 
         String refColumn = ContextPathUtil.extractRefColumnFromColumnValue(value);
-        if(refColumn != null){
+        if (refColumn != null) {
             // FK found
             String refTable = ContextPathUtil.extractRefTableFromColumnValue(value);
             constraints.add(new ConstraintItem(
@@ -195,7 +201,7 @@ public class TableTreeElement extends DbTreeElementAbstract implements TabularTr
         });
 
         // build model
-        DetailsTableModel model = new DetailsTableModel(new String[]{"Number", "Column Name", "Type", "NULL"});
+        DetailsTableModel model = new DetailsTableModel(new String[]{"No", "Column Name", "Type", "NULL"});
         int i = 1;
         for (ColumnSpecification c : columns) {
             List<String> out = new ArrayList<String>();
@@ -241,11 +247,11 @@ public class TableTreeElement extends DbTreeElementAbstract implements TabularTr
         int i = 1;
         for (ConstraintItem c : constraints) {
             List<String> out = new ArrayList<String>();
-            out.add(c.constraintName==null?"": c.constraintName.toUpperCase());
+            out.add(c.constraintName == null ? "" : c.constraintName.toUpperCase());
             out.add(c.constraintType);
             out.add(StringUtils.convert2listStringsWoQuotes(c.ownColumns).toUpperCase());
-            out.add(c.refColumns == null? "": StringUtils.convert2listStringsWoQuotes(c.refColumns).toUpperCase());
-            out.add(c.refTable==null?"": c.refTable.toUpperCase());
+            out.add(c.refColumns == null ? "" : StringUtils.convert2listStringsWoQuotes(c.refColumns).toUpperCase());
+            out.add(c.refTable == null ? "" : c.refTable.toUpperCase());
 
             model.addRow(out);
             i++;
@@ -256,7 +262,7 @@ public class TableTreeElement extends DbTreeElementAbstract implements TabularTr
 
 
     @NotNull
-    public TableModel getProperties(){
+    public TableModel getProperties() {
         DetailsTableModel model = new DetailsTableModel(new String[]{"Property", "Value"});
 
         int tableType = ContextPathUtil.extractTableTypeFromTableValue(value);
@@ -312,14 +318,14 @@ public class TableTreeElement extends DbTreeElementAbstract implements TabularTr
         public String refTable;
 
         public ConstraintItem(
-            String constraintName,
-            int constraintType,
-            String[] ownColumns,
-            String[] refColumns,
-            String refTable){
+                String constraintName,
+                int constraintType,
+                String[] ownColumns,
+                String[] refColumns,
+                String refTable) {
 
             this.constraintName = constraintName;
-            this.constraintType = constraintType == PK_CONSTRAINT? "Primary Key": "Foreign Key";
+            this.constraintType = constraintType == PK_CONSTRAINT ? "Primary Key" : "Foreign Key";
             this.ownColumns = ownColumns;
             this.refColumns = refColumns;
             this.refTable = refTable;
@@ -334,55 +340,88 @@ public class TableTreeElement extends DbTreeElementAbstract implements TabularTr
         // AFTER INSERT OR UPDATE OR DELETE ON ota_dev_grp_mobile_it
         public String type;
 
-        public TriggerSpec(String ctxPath, String name, String type){
+        public TriggerSpec(String ctxPath, String name, String type) {
             this.name = name;
             this.ctxPath = ctxPath;
             this.type = type;
         }
 
-        public int hashCode(){
+        public int hashCode() {
             return name.hashCode();
         }
 
-        public boolean equals(Object o){
-            return o instanceof TriggerSpec && ((TriggerSpec)o).name.equals(name);
+        public boolean equals(Object o) {
+            return o instanceof TriggerSpec && ((TriggerSpec) o).name.equals(name);
         }
     }
 
 
-    public AnAction[] getActions() {
-        return new AnAction[]{
-                new PopupAction("Find Usages", Icons.FIND){
+    public MenuItemAction[] getActions() {
+        return new MenuItemAction[]{
+                new PopupAction("Find Usages", Icons.FIND) {
                     @Override
                     protected void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root) {
-                        PsiElement _psi = PlSqlElementLocator.locatePsiElement(project,dbUrl, ctxPath);
-                        if(_psi != null){
+                        PsiElement _psi = PlSqlElementLocator.locatePsiElement(project, dbUrl, ctxPath);
+                        if (_psi != null) {
                             SqlFindUsagesHelper.runFindUsages(project, _psi);
                         }
                     }
                 },
-                new PopupAction("Query Data", Icons.QUERY_DATA) {
+                new PopupActionConnectionSensitive("Query Data", Icons.QUERY_DATA) {
                     @Override
-                    protected void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root) {
+                    protected void handleSelected(final Project project, DbUrl dbUrl, DbElementRoot root) {
                         try {
-                            ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
-                            QueryResultWindow qrwn = PluginKeys.QR_WINDOW.getData(project);
-
-                            RowSetManager t = manager.getSQLExecutor().executeQuery("SELECT * FROM " + name);
-                            QueryResultPanel resultPanel = qrwn.createResultPanel(
-                                    QueryResultPanel.SELECT_RESULT, getName(), Icons.TABLE, null /* ToolTip text */
-                            );
-                            resultPanel.init(t);
-
-                            // show content pane
-                            qrwn.showContent(getName());
-
+                            final QueryResultWindow qrwn = PluginKeys.QR_WINDOW.getData(project);
+                            SqlScriptRunService.getInstance(project).runQuery(
+                                    "SELECT * FROM " + getName(),
+                                    new SqlScriptRunner.QueryResultListener() {
+                                        public void handleQueryResult(RowSetManager result) {
+                                            QueryResultPanel resultPane = qrwn.createResultPanel(
+                                                    QueryResultPanel.SELECT_RESULT, getName(), Icons.TABLE, null /* ToolTip text */
+                                            );
+                                            resultPane.init(result);
+                                            // show content pane
+                                            qrwn.showContent(getName());
+                                        }
+                                    });
+                        } catch (SqlScriptRunner.AlreadyStartedException e) {
+                            Messages.showErrorDialog(
+                                    project,
+                                    "Cannot run SQL until the SQL statement running at the moment will be finished",
+                                    "Data load failed");
                         } catch (DBException e) {
                             Messages.showErrorDialog(project, e.getMessage(), "Data load failed");
                         }
                     }
                 },
-                new PopupAction("Open Script", null) {
+                new PopupActionConnectionSensitive("Create DDL script", Icons.QUERY_DATA) {
+                    @Override
+                    protected void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root) {
+                        try {
+                            final QueryResultWindow qrwn = PluginKeys.QR_WINDOW.getData(project);
+                            SqlScriptRunService.getInstance(project).generateDDLScript(
+                                    DbObject.TABLE, getName(),
+                                    new SqlScriptRunner.DMLResultListener() {
+                                        public void handleDMLResult(SQLUpdateStatistics result) {
+                                            QueryStatisticsPanel resultPane = qrwn.findOrCreateDMLResultPanel(
+                                                    DDL_TAB_NAME, Icons.TABLE, null /* ToolTip text */
+                                            );
+                                            resultPane.append(result);
+                                            // show content pane
+                                            qrwn.showContent(DDL_TAB_NAME);
+                                        }
+                                    });
+                        } catch (SqlScriptRunner.AlreadyStartedException e) {
+                            Messages.showErrorDialog(
+                                    project,
+                                    "Cannot run SQL until the SQL statement running at the moment will be finished",
+                                    "Data load failed");
+                        } catch (DBException e) {
+                            Messages.showErrorDialog(project, e.getMessage(), "Data load failed");
+                        }
+                    }
+                },
+                new PopupAction("Open autogenerated DDL script", null) {
                     @Override
                     protected void handleSelected(Project project, DbUrl dbUrl, DbElementRoot root) {
                         boolean result = PlSqlElementLocator.openFileInEditor(project, dbUrl, ctxPath);
