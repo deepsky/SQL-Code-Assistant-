@@ -45,7 +45,8 @@ tokens {
     FUNCTION_CALL;
     PACKAGE_INIT_SECTION;
     CONCAT;
-    CALL_ARGUMENT_LIST; SPEC_CALL_ARGUMENT_LIST;
+    CALL_ARGUMENT_LIST; SPEC_CALL_ARGUMENT_LIST; QUERY_PARTITION_CLAUSE;
+    EXTRACT_OPTIONS;
     CALL_ARGUMENT;
     BASE_EXRESSION;
     COLUMN_SPEC;
@@ -57,7 +58,7 @@ tokens {
     COUNT_FUNC;
 
     RANK_FUNCTION; LEAD_FUNCTION; LAG_FUNCTION;
-    TRIM_FUNC;
+    TRIM_FUNC; DECODE_FUNC;
 
     COLUMN_SPEC_LIST;
     INSERT_COMMAND; UPDATE_COMMAND; DELETE_COMMAND; MERGE_COMMAND; MERGE_WHEN_COMMAND;
@@ -489,7 +490,6 @@ comment_string:
 
 column_def:
     column_name_ddl type_spec ("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal))?  (not_null)? (column_constraint2)?
-    //(not_null ("enable")?)? (pk_spec|fk_spec|column_constraint)?
     {  __markRule(COLUMN_DEF);}
     ;
 
@@ -520,20 +520,10 @@ column_constraint2:
             {  __markRule(COLUMN_PK_SPEC);}
         | ("references"! (schema_name DOT)? table_ref OPEN_PAREN! column_name_ref CLOSE_PAREN! ("rely")? ("disable"|"enable")?)
             {  __markRule(COLUMN_FK_SPEC);}
-        | ("check" condition)
+        | ("check" condition ("disable"|"enable")? )
             {  __markRule(COLUMN_CHECK_CONSTRAINT);}
-        | ("not" "null")
+        | ("not" "null" ("disable"|"enable")? )
             {  __markRule(COLUMN_NOT_NULL_CONSTRAINT);}
-    )
-    ;
-
-// todo -- subject to remove , not used any longer
-column_constraint:
-    "constraint" identifier (
-        not_null
-// todo        | ("unique" (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)?)
-        | ("primary" "key" OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN ("disable"|"enable")? )
-// todo        | ("check" condition )
     )
     ;
 
@@ -1191,13 +1181,15 @@ modify_syntax_2:
     ;
 
 column_add_name:
-//    column_name_ddl (datatype)? ( not_null|("default" ("sysdate"|numeric_literal)) )? (pk_spec|fk_spec|column_constraint)?
-    column_name_ddl (datatype)? ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )? (column_constraint2)?
+    column_name_ddl (datatype)?
+    ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )?
+    (column_constraint2)?
     ;
 
 column_modi_name:
-//    column_name_ref (datatype)? ( not_null|("default" ("sysdate"|numeric_literal)) )? (pk_spec|fk_spec|column_constraint)?
-    column_name_ref (datatype)? ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )? (column_constraint2)?
+    column_name_ref (datatype)?
+    ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )?
+    (column_constraint2)?
     ;
 
 constraint:
@@ -2394,15 +2386,16 @@ base_expression:
         {  __markRule(SQLCODE_SYSVAR);}
       | ("sqlerrm") => ("sqlerrm" (OPEN_PAREN! base_expression CLOSE_PAREN!)? )
         {  __markRule(SQLERRM_SYSVAR);}
-      | ( "cast" ) => ( cast_function )
-      | ( "trim" ) => ( trim_function )
+      | ( "cast" OPEN_PAREN) => ( cast_function )
+      | ( "decode" OPEN_PAREN) => ( decode_function )
+      | ( "trim" OPEN_PAREN) => ( trim_function )
       | ( "count" ) => ( count_function )
       | ( "case" ) => ( case_expression )
       | ( "multiset" ) => ( multiset_operator )
-      | ( "lag" ) => ( lag_function )
-      | ( "lead" ) => ( lead_function )
+      | ( "lag"  OPEN_PAREN) => ( lag_function )
+      | ( "lead"  OPEN_PAREN) => ( lead_function )
       | ( ("rank"|"dense_rank") OPEN_PAREN ) => dence_rank_analytics_func
-      | ( "extract" ) => extract_date_function
+      | ( "extract" OPEN_PAREN ) => extract_date_function
 
         // interval examples: "INTERVAL '30' MINUTE", "INTERVAL '2-6' YEAR TO MONTH", "INTERVAL '3 12:30:06.7' DAY TO SECOND(1)"
       | ("interval"! string_literal ("second" | "minute" | "hour" | "day" | "month" | "year")
@@ -2418,7 +2411,6 @@ base_expression:
       | OPEN_PAREN! condition CLOSE_PAREN!
         {  __markRule(PARENTHESIZED_EXPR);}
       | string_literal
-//      | date_literal
       | numeric_literal
       | boolean_literal
       | null_statement
@@ -2443,33 +2435,52 @@ ident_percentage:
         )
     ;
 
+// DENSE_RANK() OVER (ORDER BY MAX(SEVERITY * 1000000000 + FAULT_TS / 1000) DESC, XTL_PDC_REGISTRATION_T.MNO_NAME)
+// DENSE_RANK() OVER (PARTITION BY deptno ORDER BY sal) "rank"
 dence_rank_analytics_func:
-    // DENSE_RANK() OVER (ORDER BY MAX(SEVERITY * 1000000000 + FAULT_TS / 1000) DESC, XTL_PDC_REGISTRATION_T.MNO_NAME)
-    // DENSE_RANK() OVER (PARTITION BY deptno ORDER BY sal) "rank"
-    ("rank"|"dense_rank") OPEN_PAREN CLOSE_PAREN "over" OPEN_PAREN
+/*
+    ("rank"|"dense_rank")
+    OPEN_PAREN CLOSE_PAREN
+        "over" OPEN_PAREN
             (query_partition_clause)? order_clause
          CLOSE_PAREN
+*/
+    callable_name_ref2 dence_rank__arg_list
     {  __markRule(RANK_FUNCTION);}
     ;
 
+dence_rank__arg_list:
+    OPEN_PAREN CLOSE_PAREN "over"
+        OPEN_PAREN (query_partition_clause)? order_clause CLOSE_PAREN
+    {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
+    ;
+
 lead_function:
-    "lead" lag_lead_func_arg_list
+//    "lead" lag_lead_func_arg_list
+    callable_name_ref2 lag_lead_func_arg_list
     {  __markRule(LEAD_FUNCTION);}
     ;
 
+// lag(freeze_date,1,NULL) over (PARTITION BY obj_id ORDER BY freeze_date ASC nulls last)
 lag_function:
-    "lag" lag_lead_func_arg_list
+    callable_name_ref2 lag_lead_func_arg_list
     {  __markRule(LAG_FUNCTION);}
     ;
 
+callable_name_ref2:
+    exec_name_ref
+    { __markRule(CALLABLE_NAME_REF);}
+    ;
+
 lag_lead_func_arg_list:
-    OPEN_PAREN plsql_expression (COMMA plsql_expression)* CLOSE_PAREN
+    OPEN_PAREN call_argument (COMMA call_argument)* CLOSE_PAREN
     "over" OPEN_PAREN (query_partition_clause)? order_clause CLOSE_PAREN
     {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
     ;
 
 query_partition_clause:
     "partition" "by" plsql_expression
+    {  __markRule(QUERY_PARTITION_CLAUSE); }
     ;
 
 timezone_spec:
@@ -2504,18 +2515,53 @@ string_literal :
     {  __markRule(STRING_LITERAL); }
     ;
 
+/*
+    EXTRACT(MINUTE FROM END_TIME_INTERVAL)
+    EXTRACT(DAY FROM END_TIME_INTERVAL)
+*/
 extract_date_function:
-     "extract"! extract_date_func_arg_list
+     callable_name_ref2 extract_date_func_arg_list
     { __markRule(EXTRACT_DATE_FUNC);}
     ;
 
 extract_date_func_arg_list:
-    OPEN_PAREN! extract_consts "from"! plsql_expression CLOSE_PAREN!
+    OPEN_PAREN! extract_consts "from"! call_argument CLOSE_PAREN!
     {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
     ;
 
 extract_consts:
-    "second" | "minute" | "hour" | "day" | "month" | "year" | "timezone_hour" | "timezone_minute" | "timezone_region" | "timezone_abbr"
+    ("second" | "minute" | "hour" | "day" | "month" | "year" | "timezone_hour" | "timezone_minute" | "timezone_region" | "timezone_abbr")
+    {  __markRule(EXTRACT_OPTIONS);}
+    ;
+
+trim_function :
+    callable_name_ref2 trim_func_arg_list
+    { __markRule(TRIM_FUNC);}
+    ;
+
+trim_func_arg_list:
+    OPEN_PAREN ("leading"|"trailing"|"both")? call_argument ( "from" call_argument )? CLOSE_PAREN
+    {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
+    ;
+
+decode_function:
+    callable_name_ref2 decode_function_arg_list
+    { __markRule(DECODE_FUNC);}
+    ;
+
+decode_function_arg_list:
+    OPEN_PAREN! ( call_argument (COMMA! call_argument)* )?  CLOSE_PAREN
+    {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
+    ;
+
+cast_function :
+    callable_name_ref2 cast_func_arg_list
+    {  __markRule(CAST_FUNC); }
+    ;
+
+cast_func_arg_list:
+    OPEN_PAREN call_argument "as"! (type_name_ref|datatype) CLOSE_PAREN
+    {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
     ;
 
 date_literal:
@@ -2841,16 +2887,6 @@ column_name_ddl:
     { __markRule(COLUMN_NAME_DDL);}
     ;
 
-trim_function :
-    "trim"! trim_func_arg_list
-    { __markRule(TRIM_FUNC);}
-    ;
-
-trim_func_arg_list:
-    OPEN_PAREN ("leading"|"trailing"|"both")? plsql_expression ( "from" plsql_expression )? CLOSE_PAREN
-    {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
-    ;
-
 pseudo_column :
         "user"
         {  __markRule(USER_CONST); }
@@ -2912,15 +2948,6 @@ the_proc:
     "the" subquery
     ;
 
-cast_function :
-    "cast" cast_func_arg_list
-    {  __markRule(CAST_FUNC); }
-    ;
-
-cast_func_arg_list:
-    OPEN_PAREN call_argument "as"! (type_name_ref|datatype) CLOSE_PAREN
-    {  __markRule(SPEC_CALL_ARGUMENT_LIST);}
-    ;
 
 table_spec:
 //    ( schema_name DOT )? table_name ( AT_SIGN link_name )?
@@ -3172,6 +3199,7 @@ identifier2:
     | "exists"
     | "delete"
     | "trim"
+    | "decode"
     | "flush"
     | "interval"
     | "transaction"
@@ -3460,6 +3488,11 @@ identifier2:
     | "segment"
     | "flash_cache"
     | "cell_flash_cache"
+    | "cast"
+    | "initial"
+    | "minextents"
+    | "maxextents"
+    | "pctincrease"
     )
     ;
 

@@ -26,10 +26,17 @@
 package com.deepsky.lang.plsql.psi.impl.spec_func_call;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.utils.Formatter;
+import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
+import com.deepsky.lang.plsql.resolver.helpers.SysFuncResolveHelper;
+import com.deepsky.lang.plsql.resolver.utils.ArgumentSpec;
 import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.plsql.struct.TypeFactory;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 public class LagFunction extends SpecFunctionCallBaseImpl {
@@ -48,9 +55,42 @@ public class LagFunction extends SpecFunctionCallBaseImpl {
         return "LAG";
     }
 
+
     @NotNull
     public PsiElement getPsiFunctionName() {
         return getNode().findChildByType(PlSqlTokenTypes.KEYWORD_LAG).getPsi();
     }
 
+    final static TokenSet tokenSet = TokenSet.create(
+            PlSqlElementTypes.QUERY_PARTITION_CLAUSE,
+            PlSqlElementTypes.ORDER_CLAUSE
+            ); 
+
+    @NotNull
+    public String formatFunctionSignature() {
+        NameFragmentRef[] ref = getCompositeName().getNamePieces();
+        ResolveDescriptor rDesc = ref[ref.length-1].resolveLight();
+        if(rDesc instanceof SysFuncResolveHelper){
+            final ArgumentSpec[] args = ((SysFuncResolveHelper) rDesc).getArgumentSpecification();
+            StringBuilder sb = new StringBuilder(rDesc.getName());
+            sb.append(Formatter.formatArgList(args));
+
+            final ASTNode callList = getNode().findChildByType(PlSqlElementTypes.SPEC_CALL_ARGUMENT_LIST);
+            if (callList != null) {
+                final ASTNode[] nodes = callList.getChildren(tokenSet);
+                switch (nodes.length) {
+                    case 1: // order_clause
+                        sb.append(" over (ORDER BY expression)");
+                        break;
+                    case 2: // query_partition_clause & order_clause
+                        sb.append(" over (PARTITION BY expression ORDER BY expression)");                        
+                        break;
+                }
+            }
+
+            return sb.append(": ").append(rDesc.getType().typeName()).toString();
+        }
+        // todo -- handle error case
+        return "";
+    }
 }

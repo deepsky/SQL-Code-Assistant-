@@ -45,7 +45,8 @@ tokens {
     FUNCTION_CALL;
     PACKAGE_INIT_SECTION;
     CONCAT;
-    CALL_ARGUMENT_LIST; SPEC_CALL_ARGUMENT_LIST;
+    CALL_ARGUMENT_LIST; SPEC_CALL_ARGUMENT_LIST; QUERY_PARTITION_CLAUSE;
+    EXTRACT_OPTIONS;
     CALL_ARGUMENT;
     BASE_EXRESSION;
     COLUMN_SPEC;
@@ -57,7 +58,7 @@ tokens {
     COUNT_FUNC;
 
     RANK_FUNCTION; LEAD_FUNCTION; LAG_FUNCTION;
-    TRIM_FUNC;
+    TRIM_FUNC; DECODE_FUNC;
 
     COLUMN_SPEC_LIST;
     INSERT_COMMAND; UPDATE_COMMAND; DELETE_COMMAND; MERGE_COMMAND; MERGE_WHEN_COMMAND;
@@ -491,7 +492,6 @@ comment_string:
 
 column_def:
     column_name_ddl type_spec ("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal))?  (not_null)? (column_constraint2)?
-    //(not_null ("enable")?)? (pk_spec|fk_spec|column_constraint)?
     { #column_def = #([COLUMN_DEF, "COLUMN_DEF" ], #column_def);}
     ;
 
@@ -522,20 +522,10 @@ column_constraint2:
             { #column_constraint2 = #([COLUMN_PK_SPEC, "COLUMN_PK_SPEC" ], #column_constraint2);}
         | ("references"! (schema_name DOT)? table_ref OPEN_PAREN! column_name_ref CLOSE_PAREN! ("rely")? ("disable"|"enable")?)
             { #column_constraint2 = #([COLUMN_FK_SPEC, "COLUMN_FK_SPEC" ], #column_constraint2);}
-        | ("check" condition)
+        | ("check" condition ("disable"|"enable")? )
             { #column_constraint2 = #([COLUMN_CHECK_CONSTRAINT, "COLUMN_CHECK_CONSTRAINT" ], #column_constraint2);}
-        | ("not" "null")
+        | ("not" "null" ("disable"|"enable")? )
             { #column_constraint2 = #([COLUMN_NOT_NULL_CONSTRAINT, "COLUMN_NOT_NULL_CONSTRAINT" ], #column_constraint2);}
-    )
-    ;
-
-// todo -- subject to remove , not used any longer
-column_constraint:
-    "constraint" identifier (
-        not_null
-// todo        | ("unique" (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)?)
-        | ("primary" "key" OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN ("disable"|"enable")? )
-// todo        | ("check" condition )
     )
     ;
 
@@ -1193,13 +1183,15 @@ modify_syntax_2:
     ;
 
 column_add_name:
-//    column_name_ddl (datatype)? ( not_null|("default" ("sysdate"|numeric_literal)) )? (pk_spec|fk_spec|column_constraint)?
-    column_name_ddl (datatype)? ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )? (column_constraint2)?
+    column_name_ddl (datatype)?
+    ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )?
+    (column_constraint2)?
     ;
 
 column_modi_name:
-//    column_name_ref (datatype)? ( not_null|("default" ("sysdate"|numeric_literal)) )? (pk_spec|fk_spec|column_constraint)?
-    column_name_ref (datatype)? ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )? (column_constraint2)?
+    column_name_ref (datatype)?
+    ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )?
+    (column_constraint2)?
     ;
 
 constraint:
@@ -2396,15 +2388,16 @@ base_expression:
         { #base_expression = #([SQLCODE_SYSVAR, "SQLCODE_SYSVAR" ], #base_expression);}
       | ("sqlerrm") => ("sqlerrm" (OPEN_PAREN! base_expression CLOSE_PAREN!)? )
         { #base_expression = #([SQLERRM_SYSVAR, "SQLERRM_SYSVAR" ], #base_expression);}
-      | ( "cast" ) => ( cast_function )
-      | ( "trim" ) => ( trim_function )
+      | ( "cast" OPEN_PAREN) => ( cast_function )
+      | ( "decode" OPEN_PAREN) => ( decode_function )
+      | ( "trim" OPEN_PAREN) => ( trim_function )
       | ( "count" ) => ( count_function )
       | ( "case" ) => ( case_expression )
       | ( "multiset" ) => ( multiset_operator )
-      | ( "lag" ) => ( lag_function )
-      | ( "lead" ) => ( lead_function )
+      | ( "lag"  OPEN_PAREN) => ( lag_function )
+      | ( "lead"  OPEN_PAREN) => ( lead_function )
       | ( ("rank"|"dense_rank") OPEN_PAREN ) => dence_rank_analytics_func
-      | ( "extract" ) => extract_date_function
+      | ( "extract" OPEN_PAREN ) => extract_date_function
 
         // interval examples: "INTERVAL '30' MINUTE", "INTERVAL '2-6' YEAR TO MONTH", "INTERVAL '3 12:30:06.7' DAY TO SECOND(1)"
       | ("interval"! string_literal ("second" | "minute" | "hour" | "day" | "month" | "year")
@@ -2420,7 +2413,6 @@ base_expression:
       | OPEN_PAREN! condition CLOSE_PAREN!
         { #base_expression = #([PARENTHESIZED_EXPR, "PARENTHESIZED_EXPR" ], #base_expression);}
       | string_literal
-//      | date_literal
       | numeric_literal
       | boolean_literal
       | null_statement
@@ -2445,33 +2437,52 @@ ident_percentage:
         )
     ;
 
+// DENSE_RANK() OVER (ORDER BY MAX(SEVERITY * 1000000000 + FAULT_TS / 1000) DESC, XTL_PDC_REGISTRATION_T.MNO_NAME)
+// DENSE_RANK() OVER (PARTITION BY deptno ORDER BY sal) "rank"
 dence_rank_analytics_func:
-    // DENSE_RANK() OVER (ORDER BY MAX(SEVERITY * 1000000000 + FAULT_TS / 1000) DESC, XTL_PDC_REGISTRATION_T.MNO_NAME)
-    // DENSE_RANK() OVER (PARTITION BY deptno ORDER BY sal) "rank"
-    ("rank"|"dense_rank") OPEN_PAREN CLOSE_PAREN "over" OPEN_PAREN
+/*
+    ("rank"|"dense_rank")
+    OPEN_PAREN CLOSE_PAREN
+        "over" OPEN_PAREN
             (query_partition_clause)? order_clause
          CLOSE_PAREN
+*/
+    callable_name_ref2 dence_rank__arg_list
     { #dence_rank_analytics_func = #([RANK_FUNCTION, "RANK_FUNCTION" ], #dence_rank_analytics_func);}
     ;
 
+dence_rank__arg_list:
+    OPEN_PAREN CLOSE_PAREN "over"
+        OPEN_PAREN (query_partition_clause)? order_clause CLOSE_PAREN
+    { #dence_rank__arg_list = #([SPEC_CALL_ARGUMENT_LIST, "SPEC_CALL_ARGUMENT_LIST" ], #dence_rank__arg_list);}
+    ;
+
 lead_function:
-    "lead" lag_lead_func_arg_list
+//    "lead" lag_lead_func_arg_list
+    callable_name_ref2 lag_lead_func_arg_list
     { #lead_function = #([LEAD_FUNCTION, "LEAD_FUNCTION" ], #lead_function);}
     ;
 
+// lag(freeze_date,1,NULL) over (PARTITION BY obj_id ORDER BY freeze_date ASC nulls last)
 lag_function:
-    "lag" lag_lead_func_arg_list
+    callable_name_ref2 lag_lead_func_arg_list
     { #lag_function = #([LAG_FUNCTION, "LAG_FUNCTION" ], #lag_function);}
     ;
 
+callable_name_ref2:
+    exec_name_ref
+    {#callable_name_ref2 = #([CALLABLE_NAME_REF,"CALLABLE_NAME_REF" ], #callable_name_ref2);}
+    ;
+
 lag_lead_func_arg_list:
-    OPEN_PAREN plsql_expression (COMMA plsql_expression)* CLOSE_PAREN
+    OPEN_PAREN call_argument (COMMA call_argument)* CLOSE_PAREN
     "over" OPEN_PAREN (query_partition_clause)? order_clause CLOSE_PAREN
     { #lag_lead_func_arg_list = #([SPEC_CALL_ARGUMENT_LIST, "SPEC_CALL_ARGUMENT_LIST" ], #lag_lead_func_arg_list);}
     ;
 
 query_partition_clause:
     "partition" "by" plsql_expression
+    { #query_partition_clause = #([QUERY_PARTITION_CLAUSE, "QUERY_PARTITION_CLAUSE"], #query_partition_clause); }
     ;
 
 timezone_spec:
@@ -2506,18 +2517,53 @@ string_literal :
     { #string_literal = #([STRING_LITERAL, "STRING_LITERAL"], #string_literal); }
     ;
 
+/*
+    EXTRACT(MINUTE FROM END_TIME_INTERVAL)
+    EXTRACT(DAY FROM END_TIME_INTERVAL)
+*/
 extract_date_function:
-     "extract"! extract_date_func_arg_list
+     callable_name_ref2 extract_date_func_arg_list
     {#extract_date_function = #([EXTRACT_DATE_FUNC, "EXTRACT_DATE_FUNC" ], #extract_date_function);}
     ;
 
 extract_date_func_arg_list:
-    OPEN_PAREN! extract_consts "from"! plsql_expression CLOSE_PAREN!
+    OPEN_PAREN! extract_consts "from"! call_argument CLOSE_PAREN!
     { #extract_date_func_arg_list = #([SPEC_CALL_ARGUMENT_LIST, "SPEC_CALL_ARGUMENT_LIST" ], #extract_date_func_arg_list);}
     ;
 
 extract_consts:
-    "second" | "minute" | "hour" | "day" | "month" | "year" | "timezone_hour" | "timezone_minute" | "timezone_region" | "timezone_abbr"
+    ("second" | "minute" | "hour" | "day" | "month" | "year" | "timezone_hour" | "timezone_minute" | "timezone_region" | "timezone_abbr")
+    { #extract_consts = #([EXTRACT_OPTIONS, "EXTRACT_OPTIONS" ], #extract_consts);}
+    ;
+
+trim_function :
+    callable_name_ref2 trim_func_arg_list
+    {#trim_function = #([TRIM_FUNC,"TRIM_FUNC" ], #trim_function);}
+    ;
+
+trim_func_arg_list:
+    OPEN_PAREN ("leading"|"trailing"|"both")? call_argument ( "from" call_argument )? CLOSE_PAREN
+    { #trim_func_arg_list = #([SPEC_CALL_ARGUMENT_LIST, "SPEC_CALL_ARGUMENT_LIST" ], #trim_func_arg_list);}
+    ;
+
+decode_function:
+    callable_name_ref2 decode_function_arg_list
+    {#decode_function = #([DECODE_FUNC,"DECODE_FUNC" ], #decode_function);}
+    ;
+
+decode_function_arg_list:
+    OPEN_PAREN! ( call_argument (COMMA! call_argument)* )?  CLOSE_PAREN
+    { #decode_function_arg_list = #([SPEC_CALL_ARGUMENT_LIST, "SPEC_CALL_ARGUMENT_LIST" ], #decode_function_arg_list);}
+    ;
+
+cast_function :
+    callable_name_ref2 cast_func_arg_list
+    { #cast_function = #([CAST_FUNC, "CAST_FUNC"], #cast_function); }
+    ;
+
+cast_func_arg_list:
+    OPEN_PAREN call_argument "as"! (type_name_ref|datatype) CLOSE_PAREN
+    { #cast_func_arg_list = #([SPEC_CALL_ARGUMENT_LIST, "SPEC_CALL_ARGUMENT_LIST" ], #cast_func_arg_list);}
     ;
 
 date_literal:
@@ -2843,16 +2889,6 @@ column_name_ddl:
     {#column_name_ddl = #([COLUMN_NAME_DDL,"COLUMN_NAME_DDL" ], #column_name_ddl);}
     ;
 
-trim_function :
-    "trim"! trim_func_arg_list
-    {#trim_function = #([TRIM_FUNC,"TRIM_FUNC" ], #trim_function);}
-    ;
-
-trim_func_arg_list:
-    OPEN_PAREN ("leading"|"trailing"|"both")? plsql_expression ( "from" plsql_expression )? CLOSE_PAREN
-    { #trim_func_arg_list = #([SPEC_CALL_ARGUMENT_LIST, "SPEC_CALL_ARGUMENT_LIST" ], #trim_func_arg_list);}
-    ;
-
 pseudo_column :
         "user"
         { #pseudo_column = #([USER_CONST, "USER_CONST"], #pseudo_column); }
@@ -2914,15 +2950,6 @@ the_proc:
     "the" subquery
     ;
 
-cast_function :
-    "cast" cast_func_arg_list
-    { #cast_function = #([CAST_FUNC, "CAST_FUNC"], #cast_function); }
-    ;
-
-cast_func_arg_list:
-    OPEN_PAREN call_argument "as"! (type_name_ref|datatype) CLOSE_PAREN
-    { #cast_func_arg_list = #([SPEC_CALL_ARGUMENT_LIST, "SPEC_CALL_ARGUMENT_LIST" ], #cast_func_arg_list);}
-    ;
 
 table_spec:
 //    ( schema_name DOT )? table_name ( AT_SIGN link_name )?
@@ -3174,6 +3201,7 @@ identifier2:
     | "exists"
     | "delete"
     | "trim"
+    | "decode"
     | "flush"
     | "interval"
     | "transaction"
@@ -3462,6 +3490,11 @@ identifier2:
     | "segment"
     | "flash_cache"
     | "cell_flash_cache"
+    | "cast"
+    | "initial"
+    | "minextents"
+    | "maxextents"
+    | "pctincrease"
     )
     ;
 

@@ -37,9 +37,11 @@ import com.deepsky.lang.plsql.psi.impl.ctrl.RollbackStatementImpl;
 import com.deepsky.lang.plsql.psi.impl.ddl.*;
 import com.deepsky.lang.plsql.psi.impl.internal.CreateViewColumnDefInternalImpl;
 import com.deepsky.lang.plsql.psi.impl.ref.SequenceRefImpl;
+import com.deepsky.lang.plsql.psi.impl.ref.SysFunctionReferenceImpl;
 import com.deepsky.lang.plsql.psi.impl.ref.TableRefImpl;
 import com.deepsky.lang.plsql.psi.impl.ref.TableRefWithLinkImpl;
 import com.deepsky.lang.plsql.psi.impl.spec_func_call.*;
+import com.deepsky.lang.plsql.psi.impl.spec_func_call.CastExpression;
 import com.deepsky.lang.plsql.psi.impl.types.ColumnTypeRefImpl;
 import com.deepsky.lang.plsql.psi.impl.types.DataTypeImpl;
 import com.deepsky.lang.plsql.psi.impl.types.RowtypeTypeImpl;
@@ -160,10 +162,10 @@ public class PlSqlParserDefinition implements ParserDefinition {
         int ttype = PlSqlElementType.mapTo_TokenType(type);
 
         switch (ttype) {
-            case PLSqlTokenTypes.LAG_FUNCTION:
-                return new LagFunction(node);
-            case PLSqlTokenTypes.LEAD_FUNCTION:
-                return new LeadFunction(node);
+/*
+            case PLSqlTokenTypes.SS_FUNC_NAME:
+                return new SysFunctionReferenceImpl(node);
+*/
             case PLSqlTokenTypes.RETURN_STATEMENT:
                 return new ReturnStatementImpl(node);
             case PLSqlTokenTypes.EXPR_LIST:
@@ -187,6 +189,10 @@ public class PlSqlParserDefinition implements ParserDefinition {
                     return new ForeignKeyConstraintImpl(node);
                 } else if (node.findChildByType(PlSqlElementTypes.PK_SPEC) != null) {
                     return new PrimaryKeyConstraintImpl(node);
+                } else if (node.findChildByType(PlSqlElementTypes.COLUMN_CHECK_CONSTRAINT) != null) {
+                    return new ColumnCheckConstraintImpl(node);
+                } else if (node.findChildByType(PlSqlElementTypes.UNIQUE_CONSTRAINT) != null) {
+                    return new ColumnUniqueConstraintImpl(node);
                 } else {
                     // todo - not implemented
                 }
@@ -305,6 +311,8 @@ public class PlSqlParserDefinition implements ParserDefinition {
                 return new ArgumentListImpl(node);
             case PLSqlTokenTypes.CALL_ARGUMENT_LIST:
                 return new CallArgumentListImpl(node);
+            case PLSqlTokenTypes.SPEC_CALL_ARGUMENT_LIST:
+                return new SpecCallArgumentListImpl(node);
             case PLSqlTokenTypes.PARAMETER_SPEC:
                 return new ArgumentImpl(node);
             case PLSqlTokenTypes.SYSTIMESTAMP_CONST:
@@ -339,14 +347,22 @@ public class PlSqlParserDefinition implements ParserDefinition {
                 return new SystemVariableImpl(node, TypeFactory.createTypeById(Type.CHAR));
             case PLSqlTokenTypes.USER_CONST:
                 return new UserConstImpl(node);
+
+            case PLSqlTokenTypes.LAG_FUNCTION:
+                return new LagFunction(node);
+            case PLSqlTokenTypes.LEAD_FUNCTION:
+                return new LeadFunction(node);
             case PLSqlTokenTypes.EXTRACT_DATE_FUNC:
-                return new ExtractFunctionImpl(node);
+                return new ExtractFunction(node);
             case PLSqlTokenTypes.TRIM_FUNC:
-                return new TrimFunctionImpl(node);
+                return new TrimFunction(node);
             case PLSqlTokenTypes.RANK_FUNCTION:
                 return new RankFunction(node);
             case PLSqlTokenTypes.CAST_FUNC:
-                return new CastExpressionImpl(node);
+                return new CastExpression(node);
+            case PLSqlTokenTypes.DECODE_FUNC:
+                return new DecodeFunction(node);
+
             case PLSqlTokenTypes.SEQUENCE_EXPR:
                 return new SequenceExprImpl(node);
             case PLSqlTokenTypes.CALL_ARGUMENT:

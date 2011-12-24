@@ -228,12 +228,18 @@ public class ResolveUtil {
 
             public void process(ForeignKeyConstraint fkConst) {
                 TableRef tref = fkConst.getReferencedTable2();
-                String text = tref.getText();
+                String text = tref.getTableName();
                 RefHolder holder = new RefHolder(ContextPath.TABLE_REF, "", text);
                 ResolveDescriptor tableRHelper = resolver.resolveReference(holder);
                 if (tableRHelper != null) {
+/*
                     RefHolder holder2 = new RefHolder(ContextPath.TABLE_COLUMN_REF, tableRHelper.getCtxPath(), columnText);
                     out[0] = resolver.resolveReference(holder2);
+*/
+                    ResolveDescriptor[] out1 = tableRHelper.resolve(columnText);
+                    if(out1.length == 1){
+                        out[0] = out1[0];
+                    }
                 }
             }
 

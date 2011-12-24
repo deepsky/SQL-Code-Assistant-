@@ -26,7 +26,6 @@
 package com.deepsky.lang.plsql.psi;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
 import org.jetbrains.annotations.NotNull;
 
 public interface CallableCompositeName extends CompositeName {
@@ -44,7 +43,9 @@ public interface CallableCompositeName extends CompositeName {
 
     interface CallableNameDesc {
         PsiElement getSchemaName();
+
         PsiElement getPackageName();
+
         PsiElement getExecName();
     }
 }

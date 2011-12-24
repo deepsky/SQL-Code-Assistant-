@@ -26,12 +26,9 @@
 package com.deepsky.lang.plsql.psi;
 
 import com.deepsky.lang.plsql.psi.ref.PlSqlReference;
-import com.intellij.psi.PsiReference;
-//import com.deepsky.lang.plsql.psi.resolve.ResolveContext777;
-//import com.deepsky.lang.plsql.psi.resolve.NameNotResolvedException;
-import org.jetbrains.annotations.NotNull;
 
-public interface NameFragmentRef extends PlSqlElement, PlSqlReference { //PsiReference  {
+
+public interface NameFragmentRef extends PlSqlElement, PlSqlReference {
     String getFragmentText();
 
     /**
@@ -46,6 +43,7 @@ public interface NameFragmentRef extends PlSqlElement, PlSqlReference { //PsiRef
 
     /**
      * Get previous name fragment
+     *
      * @return
      */
     NameFragmentRef getPrevFragment();

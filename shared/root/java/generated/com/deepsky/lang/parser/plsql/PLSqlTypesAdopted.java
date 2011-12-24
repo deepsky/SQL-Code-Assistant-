@@ -26,6 +26,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType FORALL_LOOP_SPEC = new PlSqlElementType("FORALL_LOOP_SPEC", PLSqlTokenTypes.FORALL_LOOP_SPEC);
 	PlSqlElementType SYSTIMESTAMP_CONST = new PlSqlElementType("SYSTIMESTAMP_CONST", PLSqlTokenTypes.SYSTIMESTAMP_CONST);
 	PlSqlElementType MEMBER_OF = new PlSqlElementType("MEMBER_OF", PLSqlTokenTypes.MEMBER_OF);
+	PlSqlElementType QUERY_PARTITION_CLAUSE = new PlSqlElementType("QUERY_PARTITION_CLAUSE", PLSqlTokenTypes.QUERY_PARTITION_CLAUSE);
 	PlSqlElementType TABLE_NAME_DDL = new PlSqlElementType("TABLE_NAME_DDL", PLSqlTokenTypes.TABLE_NAME_DDL);
 	PlSqlElementType LAG_FUNCTION = new PlSqlElementType("LAG_FUNCTION", PLSqlTokenTypes.LAG_FUNCTION);
 	PlSqlElementType DROP_TRIGGER = new PlSqlElementType("DROP_TRIGGER", PLSqlTokenTypes.DROP_TRIGGER);
@@ -215,6 +216,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType COLUMN_NAME_REF = new PlSqlElementType("COLUMN_NAME_REF", PLSqlTokenTypes.COLUMN_NAME_REF);
 	PlSqlElementType TRIGGER_NAME = new PlSqlElementType("TRIGGER_NAME", PLSqlTokenTypes.TRIGGER_NAME);
 	PlSqlElementType ALTER_GENERIC = new PlSqlElementType("ALTER_GENERIC", PLSqlTokenTypes.ALTER_GENERIC);
+	PlSqlElementType DECODE_FUNC = new PlSqlElementType("DECODE_FUNC", PLSqlTokenTypes.DECODE_FUNC);
 	PlSqlElementType EXIT_STATEMENT = new PlSqlElementType("EXIT_STATEMENT", PLSqlTokenTypes.EXIT_STATEMENT);
 	PlSqlElementType TYPE_SPEC = new PlSqlElementType("TYPE_SPEC", PLSqlTokenTypes.TYPE_SPEC);
 	PlSqlElementType DROP_OPERATOR = new PlSqlElementType("DROP_OPERATOR", PLSqlTokenTypes.DROP_OPERATOR);
@@ -224,6 +226,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType INTERVAL_CONST = new PlSqlElementType("INTERVAL_CONST", PLSqlTokenTypes.INTERVAL_CONST);
 	PlSqlElementType RELATION_OP = new PlSqlElementType("RELATION_OP", PLSqlTokenTypes.RELATION_OP);
 	PlSqlElementType CURSOR_NAME = new PlSqlElementType("CURSOR_NAME", PLSqlTokenTypes.CURSOR_NAME);
+	PlSqlElementType EXTRACT_OPTIONS = new PlSqlElementType("EXTRACT_OPTIONS", PLSqlTokenTypes.EXTRACT_OPTIONS);
 	PlSqlElementType CALL_ARGUMENT_LIST = new PlSqlElementType("CALL_ARGUMENT_LIST", PLSqlTokenTypes.CALL_ARGUMENT_LIST);
 	PlSqlElementType CHARACTER_SET = new PlSqlElementType("CHARACTER_SET", PLSqlTokenTypes.CHARACTER_SET);
 	PlSqlElementType RETURNING_CLAUSE = new PlSqlElementType("RETURNING_CLAUSE", PLSqlTokenTypes.RETURNING_CLAUSE);

@@ -77,6 +77,11 @@ public class PlSqlHighlighter extends SyntaxHighlighterBase {
             SyntaxHighlighterColors.JAVA_SEMICOLON.getDefaultAttributes()
     );
 
+    static final TextAttributesKey SQL_COLUMN = TextAttributesKey.createTextAttributesKey(
+            "SQL.COLUMN",
+            //SyntaxHighlighterColors.JAVA_SEMICOLON.getDefaultAttributes()
+            new TextAttributes(new Color(40, 40, 40), null, null, null, Font.PLAIN)
+    );
 
     static final TextAttributesKey PLSQL_VAR = TextAttributesKey.createTextAttributesKey(
             "PLSQL.VAR",

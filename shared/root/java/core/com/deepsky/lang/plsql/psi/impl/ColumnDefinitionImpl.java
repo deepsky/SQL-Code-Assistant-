@@ -108,7 +108,11 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
 
     public boolean isNotNull() {
         ASTNode not_null = getNode().findChildByType(PLSqlTypesAdopted.NOT_NULL_STMT);
-        return not_null != null && not_null.findChildByType(PlSqlTokenTypes.KEYWORD_NOT) != null;
+        if(not_null == null){
+            return getNode().findChildByType(PLSqlTypesAdopted.COLUMN_NOT_NULL_CONSTRAINT) != null;
+        } else {
+            return not_null.findChildByType(PlSqlTokenTypes.KEYWORD_NOT) != null;
+        }
     }
 
     public boolean isPrimaryKey() {

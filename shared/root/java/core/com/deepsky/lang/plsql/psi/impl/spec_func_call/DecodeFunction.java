@@ -27,70 +27,67 @@ package com.deepsky.lang.plsql.psi.impl.spec_func_call;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.CallArgument;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
-import com.deepsky.lang.plsql.psi.utils.Formatter;
+import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
 import com.deepsky.lang.plsql.resolver.helpers.SysFuncResolveHelper;
-import com.deepsky.lang.plsql.resolver.utils.ArgumentSpec;
 import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
-public class LeadFunction  extends SpecFunctionCallBaseImpl {
+public class DecodeFunction extends SpecFunctionCallBaseImpl {
 
-    public LeadFunction(ASTNode astNode) {
+    public DecodeFunction(ASTNode astNode) {
         super(astNode);
     }
 
     @NotNull
     public Type getExpressionType() {
-        return Type.NUMBER_TYPE;
+        // todo -- not correct
+        TypeSpec type = this.findChildByClass(TypeSpec.class);
+        if (type != null) {
+            return type.getType();
+        }
+
+        throw new SyntaxTreeCorruptedException();
     }
 
     @NotNull
     public String getFunctionName() {
-        return "LEAD";
+        return "DECODE";
     }
 
     @NotNull
     public PsiElement getPsiFunctionName() {
-        return getNode().findChildByType(PlSqlTokenTypes.KEYWORD_LEAD).getPsi();
+        return getNode().findChildByType(PlSqlTokenTypes.KEYWORD_DECODE).getPsi();
     }
-
-    final static TokenSet tokenSet = TokenSet.create(
-            PlSqlElementTypes.QUERY_PARTITION_CLAUSE,
-            PlSqlElementTypes.ORDER_CLAUSE
-    );
 
     @NotNull
     public String formatFunctionSignature() {
         NameFragmentRef[] ref = getCompositeName().getNamePieces();
         ResolveDescriptor rDesc = ref[ref.length-1].resolveLight();
         if(rDesc instanceof SysFuncResolveHelper){
-            final ArgumentSpec[] args = ((SysFuncResolveHelper) rDesc).getArgumentSpecification();
-            StringBuilder sb = new StringBuilder(rDesc.getName());
-            sb.append(Formatter.formatArgList(args));
-
-            final ASTNode callList = getNode().findChildByType(PlSqlElementTypes.SPEC_CALL_ARGUMENT_LIST);
+            StringBuilder sb = new StringBuilder("decode");
+            ASTNode callList = getNode().findChildByType(PlSqlElementTypes.SPEC_CALL_ARGUMENT_LIST);
             if (callList != null) {
-                final ASTNode[] nodes = callList.getChildren(tokenSet);
-                switch (nodes.length) {
-                    case 1: // order_clause
-                        sb.append(" over (ORDER BY expression)");
-                        break;
-                    case 2: // query_partition_clause & order_clause
-                        sb.append(" over (PARTITION BY expression ORDER BY expression)");
-                        break;
+                sb.append("(");
+                ASTNode[] args = callList.getChildren(TokenSet.create(PlSqlElementTypes.CALL_ARGUMENT));
+                for(int i =0; i<args.length; i++){
+                    if(i != 0){
+                        sb.append(",");
+                    }
+                    sb.append(" expression");
                 }
+                sb.append(")");
             }
-
-            return sb.append(": ").append(rDesc.getType().typeName()).toString();
+            return sb.append(": ANYDATA").toString();
         }
         // todo -- handle error case
         return "";
     }
-
 
 }

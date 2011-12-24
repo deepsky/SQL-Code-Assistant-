@@ -25,14 +25,20 @@
 
 package com.deepsky.lang.plsql.psi.impl.spec_func_call;
 
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.CallArgument;
+import com.deepsky.lang.plsql.psi.CallableCompositeName;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.SpecFunctionCall;
+import com.deepsky.lang.plsql.psi.SSystemFunctionCall;
 import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class SpecFunctionCallBaseImpl extends PlSqlElementBase implements SpecFunctionCall {
+public abstract class SpecFunctionCallBaseImpl extends PlSqlElementBase implements SSystemFunctionCall {
 
     public SpecFunctionCallBaseImpl(ASTNode astNode) {
         super(astNode);
@@ -40,14 +46,100 @@ public abstract class SpecFunctionCallBaseImpl extends PlSqlElementBase implemen
 
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
-            ((PlSqlElementVisitor) visitor).visitSpecFunctionCall(this);
+//            ((PlSqlElementVisitor) visitor).visitSpecFunctionCall(this);
+            ((PlSqlElementVisitor) visitor).visitFunctionCall(this);
         } else {
             super.accept(visitor);
         }
     }
 
-    public FunctionParamInfo[] getParamInfo() {
-        return new FunctionParamInfo[0];  //To change body of implemented methods use File | Settings | File Templates.
+    public boolean isAggregate() {
+        return false;
     }
+
+
+    @NotNull
+    public CallableCompositeName getCompositeName() {
+        final ASTNode node = getNode().findChildByType(PlSqlElementTypes.CALLABLE_NAME_REF);
+
+        if (node != null) {
+            final PsiElement psi = node.getPsi();
+            if (psi != null) {
+                return (CallableCompositeName) psi;
+            }
+        }
+
+        throw new SyntaxTreeCorruptedException();
+    }
+
+    @NotNull
+    public CallArgument[] getCallArguments() {
+        ASTNode callList = getNode().findChildByType(PlSqlElementTypes.SPEC_CALL_ARGUMENT_LIST);
+        if (callList != null) {
+            ASTNode[] args = callList.getChildren(TokenSet.create(PlSqlElementTypes.CALL_ARGUMENT));
+            if (args != null && args.length > 0) {
+                CallArgument[] out = new CallArgument[args.length];
+                for (int i = 0; i < out.length; i++) {
+                    out[i] = (CallArgument) args[i].getPsi();
+                }
+
+                return out;
+            }
+        }
+        return new CallArgument[0];
+    }
+
+
+    @NotNull
+    public String formatFunctionSignature() {
+        return "";
+    }
+/*
+    public FunctionParamInfo[] getParamInfo() {
+        return new FunctionParamInfo[0];
+    }
+*/
+
+    // presentation stuff
+/*
+    @Nullable
+    public ItemPresentation getPresentation() {
+        return new SysFunctionPresentation();
+    }
+
+    public FileStatus getFileStatus() {
+        return null;
+    }
+
+    public String getName() {
+        return getFunctionName();
+    }
+
+
+    private class SysFunctionPresentation implements ItemPresentation {
+        public String getPresentableText() {
+            FunctionParamInfo[] paramInfos = getParamInfo();
+            if(paramInfos.length > 0){
+                return paramInfos[0].formatArgumentList();
+            }
+            return null;
+        }
+
+        @Nullable
+        public String getLocationString() {
+            return null;///"(temporary table)";
+        }
+
+        @Nullable
+        public Icon getIcon(boolean open) {
+            return null;//chooseIcon();
+        }
+
+        @Nullable
+        public TextAttributesKey getTextAttributesKey() {
+            return TextAttributesKey.find("SQL.TABLE");
+        }
+    }
+*/
 
 }

@@ -1,7 +1,6 @@
 package com.deepsky.lang.common;
 
-import com.deepsky.lang.plsql.psi.ExecNameRef;
-import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.utils.Formatter;
 import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
 import com.deepsky.lang.plsql.resolver.helpers.SysFuncResolveHelper;
@@ -29,14 +28,20 @@ public class DocumentationProviderImpl implements DocumentationProvider {
     }
 
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
-        // Build QuickNavigationInfo for System Functions only
         if(originalElement instanceof ExecNameRef){
-            ResolveDescriptor rdesc = ((ExecNameRef) originalElement).resolveLight();
-            if(rdesc instanceof SysFuncResolveHelper){
-                ArgumentSpec[] args = ((SysFuncResolveHelper) rdesc).getArgumentSpecification();
-                String name = ((SysFuncResolveHelper) rdesc).getName();
-                Type t = ((SysFuncResolveHelper) rdesc).getType();
-                return Formatter.formatFunctionSignature(name, args, t, 100);
+            final PsiElement parent = originalElement.getParent();
+            // Build QuickNavigationInfo for System Functions only
+            if(parent instanceof CallableCompositeName){
+                final Callable callable = ((CallableCompositeName) parent).getCallable();
+                if(callable instanceof SSystemFunctionCall){
+                    return ((SSystemFunctionCall)callable).formatFunctionSignature();
+                } else {
+                    ResolveDescriptor rDesc = ((ExecNameRef) originalElement).resolveLight();
+                    if(rDesc instanceof SysFuncResolveHelper){
+                        final ArgumentSpec[] args = ((SysFuncResolveHelper) rDesc).getArgumentSpecification();
+                        return Formatter.formatFunctionSignature(rDesc.getName(), args, rDesc.getType(), 100, false);
+                    }
+                }
             }
         }
         return null;

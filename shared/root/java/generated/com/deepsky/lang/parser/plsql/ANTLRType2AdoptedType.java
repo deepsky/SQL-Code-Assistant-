@@ -4,7 +4,7 @@ import com.intellij.psi.tree.IElementType;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 
 public class ANTLRType2AdoptedType {
-	static public IElementType[] type2etype = new IElementType[361];
+	static public IElementType[] type2etype = new IElementType[364];
 	static {
 		type2etype[PLSqlTokenTypes.DROP_VIEW] = PLSqlTypesAdopted.DROP_VIEW;
 		type2etype[PLSqlTokenTypes.CREATE_VIEW_COLUMN_DEF] = PLSqlTypesAdopted.CREATE_VIEW_COLUMN_DEF;
@@ -26,6 +26,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.FORALL_LOOP_SPEC] = PLSqlTypesAdopted.FORALL_LOOP_SPEC;
 		type2etype[PLSqlTokenTypes.SYSTIMESTAMP_CONST] = PLSqlTypesAdopted.SYSTIMESTAMP_CONST;
 		type2etype[PLSqlTokenTypes.MEMBER_OF] = PLSqlTypesAdopted.MEMBER_OF;
+		type2etype[PLSqlTokenTypes.QUERY_PARTITION_CLAUSE] = PLSqlTypesAdopted.QUERY_PARTITION_CLAUSE;
 		type2etype[PLSqlTokenTypes.TABLE_NAME_DDL] = PLSqlTypesAdopted.TABLE_NAME_DDL;
 		type2etype[PLSqlTokenTypes.LAG_FUNCTION] = PLSqlTypesAdopted.LAG_FUNCTION;
 		type2etype[PLSqlTokenTypes.DROP_TRIGGER] = PLSqlTypesAdopted.DROP_TRIGGER;
@@ -215,6 +216,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.COLUMN_NAME_REF] = PLSqlTypesAdopted.COLUMN_NAME_REF;
 		type2etype[PLSqlTokenTypes.TRIGGER_NAME] = PLSqlTypesAdopted.TRIGGER_NAME;
 		type2etype[PLSqlTokenTypes.ALTER_GENERIC] = PLSqlTypesAdopted.ALTER_GENERIC;
+		type2etype[PLSqlTokenTypes.DECODE_FUNC] = PLSqlTypesAdopted.DECODE_FUNC;
 		type2etype[PLSqlTokenTypes.EXIT_STATEMENT] = PLSqlTypesAdopted.EXIT_STATEMENT;
 		type2etype[PLSqlTokenTypes.TYPE_SPEC] = PLSqlTypesAdopted.TYPE_SPEC;
 		type2etype[PLSqlTokenTypes.DROP_OPERATOR] = PLSqlTypesAdopted.DROP_OPERATOR;
@@ -224,6 +226,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.INTERVAL_CONST] = PLSqlTypesAdopted.INTERVAL_CONST;
 		type2etype[PLSqlTokenTypes.RELATION_OP] = PLSqlTypesAdopted.RELATION_OP;
 		type2etype[PLSqlTokenTypes.CURSOR_NAME] = PLSqlTypesAdopted.CURSOR_NAME;
+		type2etype[PLSqlTokenTypes.EXTRACT_OPTIONS] = PLSqlTypesAdopted.EXTRACT_OPTIONS;
 		type2etype[PLSqlTokenTypes.CALL_ARGUMENT_LIST] = PLSqlTypesAdopted.CALL_ARGUMENT_LIST;
 		type2etype[PLSqlTokenTypes.CHARACTER_SET] = PLSqlTypesAdopted.CHARACTER_SET;
 		type2etype[PLSqlTokenTypes.RETURNING_CLAUSE] = PLSqlTypesAdopted.RETURNING_CLAUSE;

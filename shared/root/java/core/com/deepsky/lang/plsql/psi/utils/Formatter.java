@@ -362,6 +362,29 @@ public class Formatter {
         }
     }
 
+    /**
+     * Format function signature
+     *
+     * @param name function name
+     * @param args function arguments
+     * @param type return type
+     * @param maxLength if resulting signature exceeds maxLength, truncate it to maxLength
+     * @param toLowerCase make resulting signature lower case string
+     * @return
+     */
+    public static String formatFunctionSignature(String name, ArgumentSpec[] args, Type type, int maxLength, boolean toLowerCase) {
+        String argString = formatArgList(args);
+        String typeName = type.typeName();
+        String out = name + argString + ":" + typeName;
+        if(maxLength > out.length()){
+            return toLowerCase? out.toLowerCase(): out;
+        } else {
+            int argLen = maxLength - name.length() - typeName.length();
+            String out2 = name.toLowerCase() + formatArgListTypeOnly(args, argLen) + ":" + typeName;
+            return toLowerCase? out2.toLowerCase(): out2;
+        }
+    }
+
     public static String formatFunctionSignatureHtmlBased(String name, ArgumentSpec[] args, Type type) {
         String argString = formatArgListHtmlBased(args);
         String out = "<html>" + name + argString + ":<b>" + type.typeName() + "</b>";
