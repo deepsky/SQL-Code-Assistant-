@@ -31,7 +31,6 @@ import com.deepsky.lang.plsql.psi.PlSqlElement;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.ResolveFacade;
-import com.deepsky.lang.plsql.resolver.factory.CompositeElementExt;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.intellij.lang.*;
 import com.intellij.lexer.Lexer;
@@ -42,7 +41,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
@@ -134,7 +132,7 @@ public class TreeNodeBuilderEx2 implements PsiBuilder {
     }
 
     public Project getProject() {
-            // todo -- idea10
+        // todo -- idea10
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -271,8 +269,8 @@ public class TreeNodeBuilderEx2 implements PsiBuilder {
             LightFileElement fileEl = new LightFileElement(start.type, null);
 
             int startPos = 1;
-            int stop = prod.size()-1;
-            while((startPos = buildASTTree(startPos, fileEl)+1) < stop){
+            int stop = prod.size() - 1;
+            while ((startPos = buildASTTree(startPos, fileEl) + 1) < stop) {
                 // loop over all top nodes
             }
 
@@ -350,9 +348,9 @@ public class TreeNodeBuilderEx2 implements PsiBuilder {
         return i;
     }
 
-    private void __assert__true__(boolean r){
-        if(!r)
-        // todo -- ERROR -not balanced tree?
+    private void __assert__true__(boolean r) {
+        if (!r)
+            // todo -- ERROR -not balanced tree?
             throw new Error();
     }
 
@@ -366,12 +364,12 @@ public class TreeNodeBuilderEx2 implements PsiBuilder {
     }
 
     public <T> T getUserDataUnprotected(@NotNull Key<T> key) {
-            // todo -- idea10
+        // todo -- idea10
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public <T> void putUserDataUnprotected(@NotNull Key<T> key, @Nullable T value) {
-            // todo -- idea10
+        // todo -- idea10
     }
 
 

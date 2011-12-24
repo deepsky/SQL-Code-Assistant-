@@ -84,9 +84,10 @@
         <arg name="value" type="CHAR"/>
         <arg name="set" type="CHAR"/>
     </function>
-    <function name="lpad" return-type="CHAR">
+    <function name="trim" return-type="CHAR"
+              validatorClass="com.deepsky.lang.plsql.resolver.validators.TrimFunctionValidator">
         <arg name="value" type="CHAR"/>
-        <arg name="set" type="NUMBER"/>
+        <arg name="fromArgument" type="CHAR"/>
     </function>
     <function name="translate" return-type="CHAR">
         <arg name="STRING" type="CHAR"/>
@@ -157,6 +158,10 @@
     <function name="to_date" return-type="DATE" desc="TO_DATE('YYYY/MM/DD', '2009/02/21')">
         <arg name="value" type="CHAR" decs="Input string"/>
     </function>
+    <function name="to_timestamp" return-type="DATE" desc="TO_DATE('YYYY/MM/DD', '2009/02/21')">
+        <arg name="value" type="CHAR" decs="Input string"/>
+        <arg name="format" type="CHAR" decs="Date format"/>
+    </function>
     <function name="trunc" return-type="DATE" desc="TRUNC(TO_DATE('27-OCT-92','DD-MON-YY'), 'YEAR')">
         <arg name="value" type="DATE" />
         <arg name="format" type="CHAR"/>
@@ -186,10 +191,14 @@
         <arg name="value" type="NUMBER" />
         <arg name="expression" type="CHAR"/>
     </function>
+    <function name="extract" return-type="NUMBER" desc="EXTRACT(DAY FROM END_TIME_INTERVAL)"
+              validatorClass="com.deepsky.lang.plsql.resolver.validators.ExtractFunctionValidator">
+        <arg name="expression" type="DATE"/>
+    </function>
 
     <!-- Misc -->
     <function name="decode" return-type="ANYDATA"
-              validatorClass="com.deepsky.lang.plsql.resolver.validators.DECODEValidator">
+              validatorClass="com.deepsky.lang.plsql.resolver.validators.DecodeFunctionValidator">
     </function>
     <function name="userenv" return-type="VARCHAR">
         <arg name="PARAMETER" type="VARCHAR"/>
@@ -219,6 +228,16 @@
         <arg name="EXPRESSION" type="NUMBER"/>
     </function>
 
+    <!-- Analytical functions -->
+    <function name="lag" return-type="NUMBER"
+              validatorClass="com.deepsky.lang.plsql.resolver.validators.LagFunctionValidator">
+        <arg name="EXPRESSION" type="NUMBER"/>
+    </function>
+    <function name="lead" return-type="NUMBER"
+              validatorClass="com.deepsky.lang.plsql.resolver.validators.LeadFunctionValidator">
+        <arg name="EXPRESSION" type="NUMBER"/>
+    </function>
+
     <!-- Trigger specific functions -->
     <function name="INSERTING" return-type="BOOLEAN">
     </function>
@@ -233,6 +252,12 @@
     <function name="BFILENAME" return-type="ANYDATA">
         <arg name="DIRNAME" type="CHAR"/>
         <arg name="FILENAME" type="CHAR"/>
+    </function>
+
+    <!-- Specific functions -->
+    <function name="cast" return-type="ANYDATA"
+              validatorClass="com.deepsky.lang.plsql.resolver.validators.CastExpressionValidator">
+        <arg name="EXPRESSION" type="ANYDATA"/>
     </function>
 
 </function-list>

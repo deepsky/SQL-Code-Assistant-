@@ -33,13 +33,18 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.1.2.10</version>
+    <version>1.1.4.10</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.1.4.10</b>
+                 <ul>
+                    - [FIX] Minor issue in cache locator<br>
+                 </ul>
+            </li>
             <li><b>1.1.3.10</b>
                  <ul>
                     - [FIX] Minor issue in cache locator<br>
@@ -218,6 +223,9 @@
 
         <projectService serviceInterface="com.deepsky.view.query_pane.util.DateTimeParser"
                         serviceImplementation="com.deepsky.view.query_pane.util.DateTimeParser"/>
+
+        <projectService serviceInterface="com.deepsky.actions.SqlScriptRunner"
+                        serviceImplementation="com.deepsky.actions.SqlScriptRunService"/>
     </extensions>
 
     <project-components>
