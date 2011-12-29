@@ -97,8 +97,8 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.C_RECORD_ITEM_REF] = PLSqlTypesAdopted.C_RECORD_ITEM_REF;
 		type2etype[PLSqlTokenTypes.DROP_DIRECTORY] = PLSqlTypesAdopted.DROP_DIRECTORY;
 		type2etype[PLSqlTokenTypes.GOTO_STATEMENT] = PLSqlTypesAdopted.GOTO_STATEMENT;
-		type2etype[PLSqlTokenTypes.SPEC_CALL_ARGUMENT_LIST] = PLSqlTypesAdopted.SPEC_CALL_ARGUMENT_LIST;
 		type2etype[PLSqlTokenTypes.FK_SPEC] = PLSqlTypesAdopted.FK_SPEC;
+		type2etype[PLSqlTokenTypes.SPEC_CALL_ARGUMENT_LIST] = PLSqlTypesAdopted.SPEC_CALL_ARGUMENT_LIST;
 		type2etype[PLSqlTokenTypes.BIND_VAR] = PLSqlTypesAdopted.BIND_VAR;
 		type2etype[PLSqlTokenTypes.SUBQUERY_UPDATE_COMMAND] = PLSqlTypesAdopted.SUBQUERY_UPDATE_COMMAND;
 		type2etype[PLSqlTokenTypes.INSERT_COMMAND] = PLSqlTypesAdopted.INSERT_COMMAND;
@@ -233,8 +233,8 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.INSERT_INTO_SUBQUERY_COMMAND] = PLSqlTypesAdopted.INSERT_INTO_SUBQUERY_COMMAND;
 		type2etype[PLSqlTokenTypes.UNIQUE_CONSTRAINT] = PLSqlTypesAdopted.UNIQUE_CONSTRAINT;
 		type2etype[PLSqlTokenTypes.EXPR_LIST] = PLSqlTypesAdopted.EXPR_LIST;
-		type2etype[PLSqlTokenTypes.DROP_TABLESPACE] = PLSqlTypesAdopted.DROP_TABLESPACE;
 		type2etype[PLSqlTokenTypes.VARIABLE_NAME] = PLSqlTypesAdopted.VARIABLE_NAME;
+		type2etype[PLSqlTokenTypes.DROP_TABLESPACE] = PLSqlTypesAdopted.DROP_TABLESPACE;
 		type2etype[PLSqlTokenTypes.CREATE_SEQUENCE] = PLSqlTypesAdopted.CREATE_SEQUENCE;
 		type2etype[PLSqlTokenTypes.RETURN_STATEMENT] = PLSqlTypesAdopted.RETURN_STATEMENT;
 		type2etype[PLSqlTokenTypes.DROP_TYPE] = PLSqlTypesAdopted.DROP_TYPE;

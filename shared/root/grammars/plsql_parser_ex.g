@@ -44,7 +44,7 @@ tokens {
     DECLARE_LIST;
     FUNCTION_CALL;
     PACKAGE_INIT_SECTION;
-    CONCAT;
+//    CONCAT;
     CALL_ARGUMENT_LIST; SPEC_CALL_ARGUMENT_LIST; QUERY_PARTITION_CLAUSE;
     EXTRACT_OPTIONS;
     CALL_ARGUMENT;
@@ -176,7 +176,7 @@ tokens {
     SUBTYPE_DECL;
     MEMBER_OF;
 
-    SQLPLUS_SET; SQLPLUS_COMMAND; SQLPLUS_RUNSCRIPT;
+    SQLPLUS_SET; SQLPLUS_COMMAND;
     SQLPLUS_SHOW; SQLPLUS_DEFINE; SQLPLUS_VARIABLE; SQLPLUS_EXEC; SQLPLUS_WHENEVER;
     SQLPLUS_PROMPT; SQLPLUS_COLUMN; SQLPLUS_START;
     SQLPLUS_SERVEROUTPUT;  SQLPLUS_REPFOOTER;  SQLPLUS_REPHEADER;
@@ -261,11 +261,10 @@ tokens {
     NAME_FRAGMENT; EXEC_NAME_REF;
     COLLECTION_METHOD_NAME;
     V_COLUMN_DEF;
-    TABLE_NAME_DDL; VIEW_NAME; COMMENT_STR;
+    TABLE_NAME_DDL; VIEW_NAME;
     INDEX_NAME; VIEW_NAME_DDL;
 //    SEQUENCE_NAME;
 
-    SQLPLUS_PROMPT;
     CREATE_TRIGGER; CREATE_DIRECTORY; CREATE_DB_LINK; CREATE_SEQUENCE;
     TRIGGER_FOR_EACH; TRIGGER_NAME; ALTER_TRIGGER;
     DB_EVNT_TRIGGER_CLAUSE;
@@ -489,7 +488,8 @@ comment_string:
     ;
 
 column_def:
-    column_name_ddl type_spec ("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal))?  (not_null)? (column_constraint2)?
+//    column_name_ddl type_spec ("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal))?  (not_null)? (column_constraint2)?
+    column_name_ddl type_spec ("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal))? (column_constraint2)?
     {  __markRule(COLUMN_DEF);}
     ;
 
@@ -515,7 +515,7 @@ fk_spec:
     ;
 
 column_constraint2:
-    ("constraint" constraint_name)? (
+    ("constraint" constraint_name (
         ("primary" "key"  ("disable"|"enable")? )
             {  __markRule(COLUMN_PK_SPEC);}
         | ("references"! (schema_name DOT)? table_ref OPEN_PAREN! column_name_ref CLOSE_PAREN! ("rely")? ("disable"|"enable")?)
@@ -524,7 +524,15 @@ column_constraint2:
             {  __markRule(COLUMN_CHECK_CONSTRAINT);}
         | ("not" "null" ("disable"|"enable")? )
             {  __markRule(COLUMN_NOT_NULL_CONSTRAINT);}
-    )
+    ) )
+    | ("primary" "key"  ("disable"|"enable")? )
+            {  __markRule(COLUMN_PK_SPEC);}
+    | ("references"! (schema_name DOT)? table_ref OPEN_PAREN! column_name_ref CLOSE_PAREN! ("rely")? ("disable"|"enable")?)
+            {  __markRule(COLUMN_FK_SPEC);}
+    | ("check" condition ("disable"|"enable")? )
+            {  __markRule(COLUMN_CHECK_CONSTRAINT);}
+    | ("not" "null" ("disable"|"enable")? )
+            {  __markRule(COLUMN_NOT_NULL_CONSTRAINT);}
     ;
 
 sqlplus_command_internal:
@@ -545,18 +553,20 @@ sqlplus_command:
         {  __markRule(SQLPLUS_EXEC);}
     | ("whenever" ("sqlerror"| "oserror") ("exit"|"continue"|"commit"|"rollback"|"none") (SEMI!)* )
         {  __markRule(SQLPLUS_WHENEVER);}
-    | (("def"|"define") identifier2 (EQ (plsql_expression | DOUBLE_QUOTED_STRING | STORAGE_SIZE))? )
+//    | (("def"|"define") identifier2 (EQ (plsql_expression | DOUBLE_QUOTED_STRING | STORAGE_SIZE))? )
+    | (("def"|"define") identifier2 (EQ (plsql_expression | STORAGE_SIZE))? )
         {  __markRule(SQLPLUS_DEFINE);}
     | ("prompt" (~CUSTOM_TOKEN)* CUSTOM_TOKEN)
         {  __markRule(SQLPLUS_PROMPT);}
     | "rem" (~CUSTOM_TOKEN)* CUSTOM_TOKEN
         {  __markRule(SQLPLUS_PROMPT);}
     | "host" (~CUSTOM_TOKEN)* CUSTOM_TOKEN
-    | "exit"  (identifier2|numeric_literal)?
+    | ("exit"  (identifier2|numeric_literal)? ( SEMI! )*)
         {  __markRule(SQLPLUS_EXIT);}
     | ("quit" (SEMI!)?)
         {  __markRule(SQLPLUS_QUIT);}
-    | "spool" ( "off"|(identifier4 (DOT! identifier4)*) )
+//    | "spool" ( "off"|(identifier4 (DOT! identifier4)*) )
+    | ( "spool" identifier4 (DOT! identifier4)*)
         {  __markRule(SQLPLUS_SPOOL);}
     | ( ("sta"|"start") sqlplus_path )    // identifier4 (DOT! identifier4)* )
         {  __markRule(SQLPLUS_START);}
@@ -889,8 +899,7 @@ lob_parameters:
     ("tablespace" identifier2)
     | storage_spec
     | ("chunk" NUMBER)
-    | "cache"
-    | (("nocache" | ("cache" "reads")) (logging_clause)?)
+    | (("nocache" | ("cache" ("reads")?)) (logging_clause)?)
     | "retention"
     | ("pctversion" NUMBER)
     | ("freepools" NUMBER)
@@ -990,7 +999,7 @@ range_values_clause:
 
 table_partition_description:
     segment_attributes_clause
-    | table_compression
+//    | table_compression
     | "overflow"
 // todo  | lob_storage_clause
     ;
@@ -1006,7 +1015,7 @@ individual_hash_partitions:
     ;
 
 hash_partition_spec:
-    "partition" (identifier2)? (partition_storage_clause)*
+    "partition" (identifier)? (partition_storage_clause)*
     ;
 
 partition_storage_clause:
@@ -1142,12 +1151,15 @@ constraint_name:
 // [ALTER TABLE START] ------------------------------------------------
 // -------------------------------------------------------------------
 alter_table:
-    "table"! table_ref (constraint_clause)? (alter_table_options)?
+    "table"! table_ref (constraint_clause)? ///(alter_table_options)?
     ;
 
 constraint_clause:
     ("add" (add_syntax_1 | (OPEN_PAREN! add_syntax_2 CLOSE_PAREN!) ) )
-    | ("modify" (modify_constraint_clause | (OPEN_PAREN! modify_syntax_2 CLOSE_PAREN!) | modify_syntax_1) )
+    | ("modify" (modify_constraint_clause
+                    | (OPEN_PAREN! column_modi_name (COMMA! column_modi_name)* CLOSE_PAREN!)
+                    | column_modi_name)
+       )
     | ("rename"
             (   ("constraint" identifier2 "to" identifier2)
                 | ("to" identifier2)
@@ -1172,6 +1184,7 @@ add_syntax_2:
     | inline_out_of_line_constraint
     ;
 
+/*
 modify_syntax_1:
     column_modi_name
     ;
@@ -1179,6 +1192,7 @@ modify_syntax_1:
 modify_syntax_2:
     column_modi_name (COMMA! column_modi_name)*
     ;
+*/
 
 column_add_name:
     column_name_ddl (datatype)?
@@ -1292,7 +1306,7 @@ local_partition_item:
 type_definition:
     "type"! (schema_name DOT!)? type_name
     (
-      ("under" (schema_name DOT!)? type_name_ref
+      ("under" (schema_name DOT!)?  type_name_ref // type_name_ref_single - using instead of type_name_ref affects parsing time
         OPEN_PAREN! record_item (COMMA! record_item )* CLOSE_PAREN! ("not" "final")? )
         {  __markRule(OBJECT_TYPE_DEF);}
       | (
@@ -1346,7 +1360,7 @@ package_spec :
 
 package_obj_spec_ex:
     package_obj_spec
-    | package_obj_spec_addon
+//    | package_obj_spec_addon
     | (IF_COND_CMPL condition
             THEN_COND_CMPL cond_comp_seq (ELSE_COND_CMPL cond_comp_seq)? END_COND_CMPL
       )
@@ -1355,7 +1369,8 @@ package_obj_spec_ex:
 
 
 cond_comp_seq:
-    (error_cond_compliation)* (package_obj_spec|package_obj_spec_addon)*
+//    (error_cond_compliation)* (package_obj_spec|package_obj_spec_addon)*
+    (error_cond_compliation)* (package_obj_spec)*
     { __markRule(COND_COMP_SEQ);}
     ;
 
@@ -1379,15 +1394,17 @@ package_init_section:
     ;
 
 package_obj_spec:
-//    variable_declaration
     subtype_declaration
-    | cursor_declaration
+//    | cursor_declaration
     | cursor_spec
     | (type_definition SEMI!)
-    | procedure_spec
-    | function_spec
-//    | exception_declaration
+//    | procedure_spec
+//    | function_spec
+    | procedure_body
+    | function_body
     | pragmas
+    | variable_declaration
+    | exception_declaration
 /*
     | exception_pragma
     | restrict_ref_pragma
@@ -1398,10 +1415,12 @@ package_obj_spec:
 */
     ;
 
+/*
 package_obj_spec_addon:
     variable_declaration
     | exception_declaration
     ;
+*/
 
 pragmas:
     "pragma"! (
@@ -1450,10 +1469,10 @@ condition_compilation:
 
 cond_comp_seq2:
     (error_cond_compliation)*
-    ((function_declaration ("is"|"as")) => function_body
-     | (procedure_declaration ("is"|"as")) => procedure_body
-     | package_obj_spec
-     | package_obj_spec_addon)*
+    ( //(procedure_declaration ("is"|"as")) => procedure_body
+//      | (function_declaration ("is"|"as")) => function_body
+     package_obj_spec)*
+//     | package_obj_spec_addon)*
     { __markRule(COND_COMP_SEQ2);}
     ;
 
@@ -1478,17 +1497,28 @@ subtype_declaration :
     {  __markRule(SUBTYPE_DECL); }
     ;
 
+/*
 cursor_declaration :
     "cursor" cursor_name (OPEN_PAREN! argument_list CLOSE_PAREN!)?
      "is"! select_command SEMI!
     { __markRule(CURSOR_DECLARATION);}
     ;
+*/
+
+cursor_spec :
+    "cursor" cursor_name (OPEN_PAREN argument_list  CLOSE_PAREN)? (
+        ("is"! select_command)
+            { __markRule(CURSOR_DECLARATION);}
+        | ("return" return_type)
+    )  SEMI!
+    ;
+
 
 package_obj_body:
-    (function_declaration ("is"|"as")) => function_body
-    | (procedure_declaration ("is"|"as")) => procedure_body
-    | package_obj_spec
-    | package_obj_spec_addon
+//    (procedure_declaration ("is"|"as")) => procedure_body
+//    | (function_declaration ("is"|"as")) => function_body
+    package_obj_spec
+//    | package_obj_spec_addon
     | condition_compilation
     ;
 
@@ -1591,17 +1621,23 @@ case_statement:
     { __markRule(CASE_STATEMENT);}
     ;
 
-declare_spec:
+/*
+declare_spec2:
         (type_definition SEMI!)
         | cursor_declaration
         | subtype_declaration
         | ("pragma" "autonomous_transaction") => pragma_autonomous_transaction
         | exception_pragma
+        | function_body
+        | procedure_body
+*//*
         |( (function_declaration) => function_body
            | function_spec )
         |( (procedure_declaration) => procedure_body
            | procedure_spec)
+*//*
         ;
+*/
 
 pragma_autonomous_transaction:
     "pragma"! "autonomous_transaction" SEMI!
@@ -1685,7 +1721,7 @@ label_name :
     ;
 
 exit_statement:
-    e:"exit" (label_name)? (w:"when" condition)?
+    "exit" (label_name)? ("when" condition)?
     ;
 
 datatype_param_info:
@@ -1806,9 +1842,13 @@ percentage_type_w_schema:
     ;
 
 
-
 type_name_ref :
      name_fragment (DOT! name_fragment )*
+    {  __markRule(TYPE_NAME_REF);}
+    ;
+
+type_name_ref_single :
+     name_fragment
     {  __markRule(TYPE_NAME_REF);}
     ;
 
@@ -1866,6 +1906,7 @@ parameter_name :
     {  __markRule(PARAMETER_NAME);}
     ;
 
+/*
 cursor_spec :
         c:"cursor" cursor_name
         (o:OPEN_PAREN!
@@ -1876,6 +1917,7 @@ cursor_spec :
         (COMMA parameter_spec)* ) CLOSE_PAREN!)?
         "return" return_type SEMI!
         ;
+*/
 
 procedure_spec :
     procedure_declaration SEMI!
@@ -1962,23 +2004,15 @@ record_item_name:
     identifier2
     {  __markRule(RECORD_ITEM_NAME); }
     ;
-
-procedure_declaration :
-    "procedure"! object_name
-    (options { greedy = true; } :
-        ( OPEN_PAREN! argument_list CLOSE_PAREN! )?  (("as"|"is") "language" "java" "name" string_literal)?
+/*
+procedure_body2  :
+    procedure_declaration ("is"|"as") (
+        (("language" "java" "name") => ("language" "java" "name" string_literal))
+        | func_proc_statements
+        {  __markRule(PROCEDURE_BODY); }
     )
     ;
-	exception catch [RecognitionException ex] {
-	    throw ex;
-	}
-
-procedure_body  :
-    procedure_declaration
-    ( i:"is"! | a:"as"! )
-    func_proc_statements
-    {  __markRule(PROCEDURE_BODY); }
-    ;
+*/
 
 func_proc_statements
     : (declare_list)? plsql_block SEMI!
@@ -1994,7 +2028,7 @@ plsql_block :
     "begin"!
     (seq_of_statements )?
     ( exception_section )?
-    "end"! ( identifier2 ) ?
+    "end"! ( identifier ) ?
     ;
 
 exception_section:
@@ -2003,35 +2037,105 @@ exception_section:
     ;
 
 declare_list:
-    (declare_spec | variable_declaration | exception_declaration)+
+    (declare_spec)+
+//    (declare_spec | variable_declaration | exception_declaration)+
     { __markRule(DECLARE_LIST);}
     ;
 
+
+declare_spec:
+        (type_definition SEMI!)
+        | variable_declaration
+//        | cursor_declaration
+        | cursor_spec
+        | subtype_declaration
+        | ("pragma" "autonomous_transaction") => pragma_autonomous_transaction
+        | exception_pragma
+        | function_body
+        | procedure_body
+        | exception_declaration
+    ;
+
 exception_handler :
-    w:"when" exception_name
-    (o:"or" exception_name )* t:"then"
+    "when" exception_name
+    ("or" exception_name )* "then"
     seq_of_statements
     ;
 
 function_declaration :
     "function"! object_name
      (options { greedy = true; } :
-        ( OPEN_PAREN! argument_list CLOSE_PAREN!
-        )?
+        ( OPEN_PAREN! argument_list CLOSE_PAREN! )?
     )
     "return"! return_type (character_set)? ("pipelined")? ("parallel_enable")? ("using" identifier2)? ("deterministic")?
-    //(("as"|"is") "language" "java" "name" string_literal)?
     ;
 
-function_body  :
-    function_declaration
-        ( (( "is"! | "as"! ) func_proc_statements)
+procedure_declaration :
+    "procedure"! object_name  /// object_name_func_proc //
+    (options { greedy = true; } :
+        ( OPEN_PAREN! argument_list CLOSE_PAREN! )?  //(("as"|"is") "language" "java" "name" string_literal)?
+    )
+    ;
+/*
+	exception catch [RecognitionException ex] {
+	    throw ex;
+	}
+*/
+/*
+function_body2  :
+    function_declaration ( "is"! | "as"! ) (
+        (("language" "java" "name") => ("language" "java" "name" string_literal))
+        | func_proc_statements
             {  __markRule(FUNCTION_BODY); }
 //          | ("aggregate" "using" identifier2)
 //            {  __markRule(CUSTOM_AGGR_FUNCTION); }
-          | ("language" "java" "name" string_literal)
         )
     ;
+*/
+
+function_body
+{ boolean tag1 = false;} :
+    function_declaration
+        (( "is"! | "as"! ) (
+//            (("language" "java" "name") => ("language" "java" "name" {tag1 = false;} string_literal ))
+            ("language" "java" "name" {tag1 = false;} string_literal )
+            | ( func_proc_statements {tag1 = true;})
+                {  __markRule(FUNCTION_BODY); }
+            )
+        )? (SEMI)?
+    {
+        if(!tag1){
+             __markRule(FUNCTION_SPEC);
+        }
+    }
+    ;
+	exception catch [RecognitionException ex] {
+	    reportError(ex);
+	    throw new com.deepsky.integration.CustomRecognitionException(ex.getMessage());
+	}
+
+
+procedure_body
+{ boolean tag1 = false;} :
+    procedure_declaration
+        (("is"|"as") (
+//            (("language" "java" "name") => ("language" "java" "name" {tag1 = false;} string_literal))
+            ("language" "java" "name" {tag1 = false;} string_literal)
+            | (func_proc_statements {tag1 = true;} )
+                {  __markRule(PROCEDURE_BODY); }
+            )
+        )? (SEMI)?
+    {
+        if(!tag1){
+             __markRule(PROCEDURE_SPEC);
+        }
+    }
+    ;
+	exception catch [RecognitionException ex] {
+	    reportError(ex);
+	    throw new com.deepsky.integration.CustomRecognitionException(ex.getMessage());
+	}
+
 
 argument_list:
     // argument ( COMMA! argument )*
@@ -2041,7 +2145,13 @@ argument_list:
 
 
 object_name :
-    identifier3 (DOT! identifier2 )?
+//    identifier3 (DOT! identifier2 )?
+    (identifier3 DOT)? identifier2
+    {  __markRule(OBJECT_NAME); }
+    ;
+
+object_name_func_proc :
+    (identifier2 DOT)? identifier
     {  __markRule(OBJECT_NAME); }
     ;
 
@@ -2072,11 +2182,6 @@ callable_name_ref:
 exec_name_ref :
      identifier3
     {  __markRule(EXEC_NAME_REF);}
-    ;
-
-variable_name :
-    (identifier2 | "timestamp")
-    {  __markRule(VARIABLE_NAME); }
     ;
 
 null_statement:
@@ -2384,7 +2489,8 @@ plsql_expression
 base_expression:
       ("sqlcode") => "sqlcode"
         {  __markRule(SQLCODE_SYSVAR);}
-      | ("sqlerrm") => ("sqlerrm" (OPEN_PAREN! base_expression CLOSE_PAREN!)? )
+//      | ("sqlerrm") => ("sqlerrm" (OPEN_PAREN! base_expression CLOSE_PAREN!)? )
+      | ("sqlerrm") => ("sqlerrm" (OPEN_PAREN! numeric_literal CLOSE_PAREN!)? )
         {  __markRule(SQLERRM_SYSVAR);}
       | ( "cast" OPEN_PAREN) => ( cast_function )
       | ( "decode" OPEN_PAREN) => ( decode_function )
@@ -2887,6 +2993,332 @@ column_name_ddl:
     { __markRule(COLUMN_NAME_DDL);}
     ;
 
+/*
+variable_name :
+    (identifier2 | "timestamp")
+    {  __markRule(VARIABLE_NAME); }
+    ;
+*/
+
+variable_name :
+    ( IDENTIFIER
+    | DOUBLE_QUOTED_STRING
+    | "left"
+    | "right"
+//    | "type"
+    | "count"
+    | "open"
+    | "exec"
+    | "dbtimezone"
+    | "execute"
+    | "commit"
+    | "rollback"
+    | "savepoint"
+    | "charset"
+    | "body"
+    | "escape"
+    | "reverse"
+    | "exists"
+    | "delete"
+    | "trim"
+    | "decode"
+    | "flush"
+    | "interval"
+    | "transaction"
+    | "session"
+    | "close"
+    | "read"
+    | "write"
+    | "only"
+    | "normal"
+    | "immediate"
+    | "replace"
+    | "sid"
+    | "local"
+    | "time"
+    | "name"
+//    | "true"
+//    | "false"
+//    | "default"
+    | "package"
+//    | "function"
+    | "ref"
+    | "byte"
+    | "interface"
+    | "extract"
+    | "next"
+    | "column"
+    | "col"
+    | "timestamp"
+    | "found"
+    | "notfound"
+    | "rowcount"
+    | "isopen"
+    | "bulk_rowcount"
+    | "bulk_exceptions"
+    | "nocache"
+    | "cache"
+//    | "compress"
+    | "deterministic"
+    | "degree"
+    | "instances"
+    | "range"
+    | "parallel"
+    | "noparallel"
+    | "year"
+    | "month"
+    | "day"
+    | "row"
+    | "buffer_pool"
+    | "system"
+    | "managed"
+    | "error_code"
+    | "error_index"
+    | "temporary"
+    | "aggregate"
+    | "current"
+    | "sqlcode"
+    | "sqlerrm"
+    | "force"
+    | "cascade"
+    | "constraints"
+    | "purge"
+    | "validate"
+    | "nextval"
+    | "currval"
+    | "rows"
+    | "foreign"
+    | "primary"
+    | "records"
+    | "parameters"
+    | "access"
+    | "newline"
+    | "delimited"
+    | "fixed"
+    | "characterset"
+    | "big"
+    | "little"
+    | "endian"
+    | "mark"
+//    | "check"
+    | "nocheck"
+    | "string"
+    | "sizes"
+    | "bytes"
+    | "load"
+    | "nobadfile"
+    | "badfile"
+    | "nodiscardfile"
+    | "discardfile"
+    | "nologfile"
+    | "logfile"
+    | "readsize"
+    | "skip"
+    | "data_cache"
+    | "fields"
+    | "missing"
+    | "field"
+    | "reject"
+//    | "with"
+    | "lrtrim"
+    | "notrim"
+    | "ltrim"
+    | "rtrim"
+    | "ldtrim"
+    | "position"
+    | "enclosed"
+    | "date_format"
+    | "varraw"
+    | "varcharc"
+    | "varrawc"
+    | "oracle_number"
+    | "oracle_date"
+    | "counted"
+    | "external"
+    | "zoned"
+    | "unsigned"
+    | "location"
+    | "limit"
+    | "unlimited"
+    | "concat"
+    | "clob"
+    | "nclob"
+    | "blob"
+    | "bfile"
+    | "lobfile"
+    | "float"
+    | "preprocessor"
+    | "compression"
+    | "enabled"
+    | "disabled"
+    | "encryption"
+    | "encrypt"
+    | "action"
+    | "version"
+    | "compatible"
+    | "data"
+    | "no"
+    | "initrans"
+    | "maxtrans"
+    | "logging"
+    | "nologging"
+    | "quit"
+    | "spool"
+    | "def"
+    | "define"
+    | "novalidate"
+    | "heap"
+    | "freelists"
+    | "freelist"
+    | "organization"
+    | "rely"
+//    | "at"
+//    | "on"
+    | "off"
+    | "enable"
+    | "disable"
+//    | "sql"
+    | "before"
+    | "after"
+    | "directory"
+    | "mask"
+    | "terminated"
+    | "whitespace"
+    | "optionally"
+//    | "option"
+    | "operations"
+    | "startup"
+    | "shutdown"
+    | "servererror"
+    | "logon"
+    | "logoff"
+    | "associate"
+    | "statistics"
+    | "audit"
+    | "noaudit"
+    | "ddl"
+    | "diassociate"
+//    | "grant"
+    | "rename"
+    | "truncate"
+//    | "revoke"
+    | "new"
+    | "old"
+    | "schema"
+    | "hash"
+    | "precision"
+    | "key"
+    | "monitoring"
+    | "collect"
+    | "nulls"
+    | "first"
+    | "last"
+    | "timezone"
+    | "language"
+    | "java"
+    | "store"
+    | "nested"
+    | "library"
+    | "role"
+    | "online"
+    | "offline"
+    | "compute"
+    | "continue"
+    | "var"
+    | "variable"
+    | "none"
+    | "oserror"
+    | "sqlerror"
+    | "whenever"
+    | "the"
+//    | "identified"
+    | "link"
+//    | "by"
+    | "noorder"
+    | "maxvalue"
+    | "minvalue"
+    | "increment"
+//    | "start" -- it is a keyword!!!
+    | "cycle"
+    | "nocycle"
+    | "pctthreshold"
+    | "including"
+    | "repheader"
+    | "repfooter"
+    | "serveroutput"
+    | "groups"
+    | "wait"
+    | "indices"
+//    | "subtype"
+    | "tablespace"
+//    | "partition"
+    | "optimal"
+    | "keep"
+    | "sequence"
+    | "under"
+    | "final"
+    | "timezone_hour"
+    | "timezone_minute"
+    | "timezone_region"
+    | "timezone_abbr"
+    | "hour"
+    | "minute"
+    | "second"
+    | "cost"
+    | "selectivity"
+    | "functions"
+    | "packages"
+    | "types"
+//    | "indexes"
+    | "indextypes"
+    | "transforms"
+    | "host"
+    | "multiset"
+    | "lag"
+    | "lead"
+    | "datafile"
+    | "add"
+    | "reuse"
+//    | "size"
+    | "maxsize"
+    | "bigfile"
+    | "smallfile"
+    | "extent"
+    | "management"
+    | "dictionary"
+    | "uniform"
+    | "retention"
+    | "guarantee"
+    | "noguarantee"
+    | "tempfile"
+    | "contents"
+    | "datafiles"
+    | "backup"
+    | "coalesce"
+    | "permanent"
+    | "pctversion"
+    | "freepools"
+    | "chunk"
+    | "reads"
+//    | "storage"
+    | "locator"
+    | "value"
+//    | "cluster"
+    | "deferred"
+    | "creation"
+    | "segment"
+    | "flash_cache"
+    | "cell_flash_cache"
+//    | "cast"
+    | "initial"
+    | "minextents"
+    | "maxextents"
+    | "pctincrease"
+    )
+    {  __markRule(VARIABLE_NAME); }
+    ;
+
+
 pseudo_column :
         "user"
         {  __markRule(USER_CONST); }
@@ -3187,7 +3619,6 @@ identifier2:
     | "user"
 //    | "date"  todo -- is it legal to have identifer DATE??
     | "dbtimezone"
-    | "execute"
     | "commit"
     | "rollback"
     | "savepoint"
@@ -3223,7 +3654,6 @@ identifier2:
     | "ref"
     | "byte"
     | "interface"
-//    | "from_tz"
     | "extract"
     | "next"
     | "column"

@@ -74,7 +74,7 @@ public class PlSqlFileElementType extends IFileElementType {
 
             return root.getFirstChildNode();
         } catch (WrappedPackageException e) {
-            log.warn("Wrapped package occured");
+            log.warn("Wrapped package occurred");
             // todo -- makes a sense to assign ISLOCKED for VirtualFile and change ICON?
             return null;
         } finally {

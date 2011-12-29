@@ -39,6 +39,7 @@ public abstract class AbstractReferenceExtractor extends ReferenceProcessor {
 
     protected long parsingTime = 0;
     protected long treeProcessTime = 0;
+    private ASTNode root;
 
     public AbstractReferenceExtractor(AbstractSchema sindex) {
         this.sindex = sindex;
@@ -57,7 +58,7 @@ public abstract class AbstractReferenceExtractor extends ReferenceProcessor {
         long ms0 = System.currentTimeMillis();
 
         MarkupGeneratorEx2 generator = new MarkupGeneratorEx2(fileName);
-        ASTNode root = generator.parse(content);
+        root = generator.parse(content);
 
         PsiElement element = root.getPsi();
         ((ResolveProvider)element).setResolver(new ResolveFacadeImpl(sindex));
@@ -69,6 +70,10 @@ public abstract class AbstractReferenceExtractor extends ReferenceProcessor {
 
         long ms2 = System.currentTimeMillis();
         treeProcessTime = ms2 - ms1;
+    }
+
+    public ASTNode getRoot(){
+        return root;
     }
 
 }

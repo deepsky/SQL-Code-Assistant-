@@ -83,9 +83,10 @@ public class PlSqlParserDefinition implements ParserDefinition {
         return PlSqlTokenTypes.FILE;
     }
 
+    private static TokenSet ws = TokenSet.create(PlSqlTokenTypes.WS, PlSqlTokenTypes.LF, TokenType.WHITE_SPACE);
     @NotNull
     public TokenSet getWhitespaceTokens() {
-        return TokenSet.create(PlSqlTokenTypes.WS, PlSqlTokenTypes.LF, TokenType.WHITE_SPACE);
+        return ws;
     }
 
     @NotNull

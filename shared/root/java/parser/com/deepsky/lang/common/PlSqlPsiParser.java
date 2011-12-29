@@ -262,7 +262,7 @@ public class PlSqlPsiParser implements PsiParser {
             returnAST = null;
         }
 
-/*
+
         public void function_body() throws RecognitionException, TokenStreamException {
             try {
                 super.function_body();
@@ -282,7 +282,7 @@ public class PlSqlPsiParser implements PsiParser {
             }
             returnAST = null;
         }
-*/
+
     }
 
     public static final BitSet _tokenSet_10101 = new BitSet();

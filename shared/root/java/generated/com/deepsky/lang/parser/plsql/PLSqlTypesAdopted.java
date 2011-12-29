@@ -97,8 +97,8 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType C_RECORD_ITEM_REF = new PlSqlElementType("C_RECORD_ITEM_REF", PLSqlTokenTypes.C_RECORD_ITEM_REF);
 	PlSqlElementType DROP_DIRECTORY = new PlSqlElementType("DROP_DIRECTORY", PLSqlTokenTypes.DROP_DIRECTORY);
 	PlSqlElementType GOTO_STATEMENT = new PlSqlElementType("GOTO_STATEMENT", PLSqlTokenTypes.GOTO_STATEMENT);
-	PlSqlElementType SPEC_CALL_ARGUMENT_LIST = new PlSqlElementType("SPEC_CALL_ARGUMENT_LIST", PLSqlTokenTypes.SPEC_CALL_ARGUMENT_LIST);
 	PlSqlElementType FK_SPEC = new PlSqlElementType("FK_SPEC", PLSqlTokenTypes.FK_SPEC);
+	PlSqlElementType SPEC_CALL_ARGUMENT_LIST = new PlSqlElementType("SPEC_CALL_ARGUMENT_LIST", PLSqlTokenTypes.SPEC_CALL_ARGUMENT_LIST);
 	PlSqlElementType BIND_VAR = new PlSqlElementType("BIND_VAR", PLSqlTokenTypes.BIND_VAR);
 	PlSqlElementType SUBQUERY_UPDATE_COMMAND = new PlSqlElementType("SUBQUERY_UPDATE_COMMAND", PLSqlTokenTypes.SUBQUERY_UPDATE_COMMAND);
 	PlSqlElementType INSERT_COMMAND = new PlSqlElementType("INSERT_COMMAND", PLSqlTokenTypes.INSERT_COMMAND);
@@ -233,8 +233,8 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType INSERT_INTO_SUBQUERY_COMMAND = new PlSqlElementType("INSERT_INTO_SUBQUERY_COMMAND", PLSqlTokenTypes.INSERT_INTO_SUBQUERY_COMMAND);
 	PlSqlElementType UNIQUE_CONSTRAINT = new PlSqlElementType("UNIQUE_CONSTRAINT", PLSqlTokenTypes.UNIQUE_CONSTRAINT);
 	PlSqlElementType EXPR_LIST = new PlSqlElementType("EXPR_LIST", PLSqlTokenTypes.EXPR_LIST);
-	PlSqlElementType DROP_TABLESPACE = new PlSqlElementType("DROP_TABLESPACE", PLSqlTokenTypes.DROP_TABLESPACE);
 	PlSqlElementType VARIABLE_NAME = new PlSqlElementType("VARIABLE_NAME", PLSqlTokenTypes.VARIABLE_NAME);
+	PlSqlElementType DROP_TABLESPACE = new PlSqlElementType("DROP_TABLESPACE", PLSqlTokenTypes.DROP_TABLESPACE);
 	PlSqlElementType CREATE_SEQUENCE = new PlSqlElementType("CREATE_SEQUENCE", PLSqlTokenTypes.CREATE_SEQUENCE);
 	PlSqlElementType RETURN_STATEMENT = new PlSqlElementType("RETURN_STATEMENT", PLSqlTokenTypes.RETURN_STATEMENT);
 	PlSqlElementType DROP_TYPE = new PlSqlElementType("DROP_TYPE", PLSqlTokenTypes.DROP_TYPE);
