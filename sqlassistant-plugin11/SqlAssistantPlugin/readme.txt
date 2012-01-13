@@ -1,16 +1,25 @@
-ANT task summary:
+Plugin build procedure:
 
-1. To build the plugin there are need some jars from the Intellij IDEA lib area.
-Copy the following jars to the SQL-Code-Assistant-/sqlassistant-plugin10/idea-10-lib directory:
+1. To build the plugin some jars aer needed from the Intellij IDEA lib area.
+Copy the following jars to the SQL-Code-Assistant-/sqlassistant-plugin11/idea-11-lib directory (create the dir if it does not exist):
 
  annotations.jar
  extensions.jar
  idea.jar
  javac2.jar
- jdom.jar
  openapi.jar
+ picocontainer.jar
  trove4j.jar
  util.jar
+
+(Build #IC-111.69 was used for the building of the plugin)
+
+Also, Oracle JDBC driver (ojdbc5.jar) is needed to build the plugin.
+The driver can be downloaded free of charge from Oracle Technet. 
+	
+	http://www.oracle.com/technetwork/database/enterprise-edition/jdbc-111060-084321.html
+
+Save downloaded ojdbc5.jar file in the SQL-Code-Assistant-/shared/lib/ folder.
 
 2. Run "generate_plsql_parser" ANT task to generate plsql parser using antlr grammar from grammars directory.
 

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Sql Asisstant Plugin builder" default="">
+<project name="Sql Asisstant Plugin builder for IDEA11">
 
     <!-- Global build parameters -->
     <property file="build.properties"/>
@@ -53,20 +53,12 @@
     <path id="module.classpath">
         <pathelement location="${idea.lib.dir}/annotations.jar"/>
         <pathelement location="${idea.lib.dir}/picocontainer.jar"/>
-        <pathelement location="${idea.lib.dir}/bcel.jar"/>
         <pathelement location="${idea.lib.dir}/openapi.jar"/>
         <pathelement location="${idea.lib.dir}/idea.jar"/>
         <pathelement location="${idea.lib.dir}/util.jar"/>
         <pathelement location="${idea.lib.dir}/extensions.jar"/>
         <pathelement location="${idea.lib.dir}/trove4j.jar"/>
         <pathelement location="${idea.lib.dir}/javac2.jar"/>
-
-        <pathelement location="${shared.lib.dir}/cglib-nodep-2.1_3.jar"/>
-
-        <pathelement location="${shared.lib.dir}/forms_rt.jar"/>
-        <pathelement location="${shared.lib.dir}/javac2.jar"/>
-        <pathelement location="${shared.lib.dir}/xmlrpc-1.1.jar"/>
-        <pathelement location="${shared.lib.dir}/jdom.jar"/>
 
         <pathelement location="${shared.lib.dir}/commons-collections.jar"/>
         <pathelement location="${shared.lib.dir}/log4j-1.2.9.jar"/>
@@ -335,13 +327,6 @@
         <delete dir="${build.dir}/lib"/>
         <delete dir="${build.dir}/META-INF"/>
         <delete file="*.zip"/>
-
-        <!-- Trick! -->
-        <copy todir="${build.dir}/classes">
-            <fileset dir="${classes.dir}">
-                <include name="com/intellij/uiDesigner/core/*.class"/>
-            </fileset>
-        </copy>
 
         <!-- Compile -->
         <javac destdir="${build.dir}/classes" debug="on" target="1.5">

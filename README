@@ -30,7 +30,12 @@ Supported version IntelliJ IDEA 10.5
 
 BUILD AND RUN
 
-Instructions can be found in the sqlassistant-plugin10/SqlAssistantPlugin/readme.txt file.
+Instructions can be found in the SqlAssistantPlugin folder according to the version IDEA 
+(10 and 11 versions only are suported at the moment) 
+
+	sqlassistant-plugin10/SqlAssistantPlugin/readme.txt
+	sqlassistant-plugin11/SqlAssistantPlugin/readme.txt
+
 
 AUTHOR
 
