@@ -17,14 +17,6 @@
       <maximumStackSize value="32" />
       <properties />
     </buildFile>
-    <buildFile url="file://$PROJECT_DIR$/SqlAssistantPlugin/build_plsql2.xml">
-      <additionalClassPath />
-      <antReference projectDefault="true" />
-      <customJdkName value="" />
-      <maximumHeapSize value="128" />
-      <maximumStackSize value="2" />
-      <properties />
-    </buildFile>
   </component>
   <component name="BuildJarProjectSettings">
     <option name="BUILD_JARS_ON_MAKE" value="false" />
@@ -697,16 +689,16 @@
     <option name="projectName" value="sqlassistant-0.9.1" />
   </component>
   <component name="ProjectDictionaryState">
+    <dictionary name="serhiy.kulyk">
+      <words>
+        <w>quering</w>
+      </words>
+    </dictionary>
     <dictionary name="sky">
       <words>
         <w>accessor</w>
         <w>convertor</w>
         <w>jdbc</w>
-      </words>
-    </dictionary>
-    <dictionary name="serhiy.kulyk">
-      <words>
-        <w>quering</w>
       </words>
     </dictionary>
   </component>
@@ -721,7 +713,7 @@
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA IC-110.291" project-jdk-type="IDEA JDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA IC-111.69" project-jdk-type="IDEA JDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ResourceManagerContainer">
