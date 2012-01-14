@@ -189,7 +189,6 @@
         <annotator language="PlSql" implementationClass="com.deepsky.lang.validation.PlSqlAnnotatingVisitorLight"/>
         <lang.ast.factory language="PlSql" implementationClass="com.deepsky.lang.plsql.resolver.factory.SqlASTFactory"/>
 
-        <!--<referencesSearch implementation="com.deepsky.findUsages.legacy.ColumnSearcher"/>-->
         <referencesSearch implementation="com.deepsky.findUsages.FindUsagesProcessor"/>
         <usageTypeProvider implementation="com.deepsky.findUsages.SqlUsageTypeProvider"/>
         <!--<fileStructureGroupRuleProvider implementation="com.deepsky.findUsages.providers.PlSqlLevel0_FileStructureGroupRuleProvider"/>-->
@@ -208,6 +207,11 @@
                                    implementationClass="com.deepsky.lang.plsql.paraminfo.DatatypeParameterInfoHandler"/>
         <codeInsight.parameterInfo language="PlSql"
                                    implementationClass="com.deepsky.lang.plsql.paraminfo.FunctionParameterInfoHandler"/>
+
+        <lang.fileViewProviderFactory language="PlSql"
+                                      implementationClass="com.deepsky.lang.plsql.providers.PlSqlFileViewProviderFactory"/>
+
+
         <projectConfigurable implementation="com.deepsky.settings.PlSqlPluginSettingsManager"/>
 
         <fileTypeFactory implementation="com.deepsky.lang.common.PlSqlFileTypeLoader"/>
@@ -223,6 +227,9 @@
 
         <projectService serviceInterface="com.deepsky.view.query_pane.util.DateTimeParser"
                         serviceImplementation="com.deepsky.view.query_pane.util.DateTimeParser"/>
+
+        <projectService serviceInterface="com.deepsky.actions.SqlScriptRunner"
+                        serviceImplementation="com.deepsky.actions.SqlScriptRunService"/>
     </extensions>
 
     <project-components>

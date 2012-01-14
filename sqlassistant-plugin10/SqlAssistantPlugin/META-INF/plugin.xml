@@ -42,7 +42,7 @@
        <ul>
             <li><b>1.1.4.10</b>
                  <ul>
-                    - [FIX] Minor issue in cache locator<br>
+                    - [FIX] Misbehavior after editing of connection settings in the DBBrowser<br>
                  </ul>
             </li>
             <li><b>1.1.3.10</b>
@@ -189,7 +189,6 @@
         <annotator language="PlSql" implementationClass="com.deepsky.lang.validation.PlSqlAnnotatingVisitorLight"/>
         <lang.ast.factory language="PlSql" implementationClass="com.deepsky.lang.plsql.resolver.factory.SqlASTFactory"/>
 
-        <!--<referencesSearch implementation="com.deepsky.findUsages.legacy.ColumnSearcher"/>-->
         <referencesSearch implementation="com.deepsky.findUsages.FindUsagesProcessor"/>
         <usageTypeProvider implementation="com.deepsky.findUsages.SqlUsageTypeProvider"/>
         <!--<fileStructureGroupRuleProvider implementation="com.deepsky.findUsages.providers.PlSqlLevel0_FileStructureGroupRuleProvider"/>-->
@@ -208,6 +207,10 @@
                                    implementationClass="com.deepsky.lang.plsql.paraminfo.DatatypeParameterInfoHandler"/>
         <codeInsight.parameterInfo language="PlSql"
                                    implementationClass="com.deepsky.lang.plsql.paraminfo.FunctionParameterInfoHandler"/>
+
+        <lang.fileViewProviderFactory language="PlSql"
+                                      implementationClass="com.deepsky.lang.plsql.providers.PlSqlFileViewProviderFactory"/>
+
         <projectConfigurable implementation="com.deepsky.settings.PlSqlPluginSettingsManager"/>
 
         <fileTypeFactory implementation="com.deepsky.lang.common.PlSqlFileTypeLoader"/>

@@ -25,21 +25,15 @@
 
 package com.deepsky.lang.common;
 
-import com.deepsky.lang.integration.PlSqlFileChangeTracker;
 import com.deepsky.lang.plsql.parser.WrappedPackageException;
-import com.deepsky.lang.plsql.resolver.factory.SqlASTFactory;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.lang.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.text.BlockSupport;
 import com.intellij.psi.tree.IFileElementType;
 
 public class PlSqlFileElementType extends IFileElementType {
 
     static final LoggerProxy log = LoggerProxy.getInstance("#PlSqlFileElementType");
-
-    SqlASTFactory astFactory;
-    PlSqlFileChangeTracker tracker;
 
     public PlSqlFileElementType() {
         super("FILE", Language.findInstance(PlSqlLanguage.class));
@@ -47,26 +41,15 @@ public class PlSqlFileElementType extends IFileElementType {
 
     public ASTNode parseContents(ASTNode chameleon) {
         final Project project = chameleon.getPsi().getProject();
-        if(astFactory == null){
-             astFactory = (SqlASTFactory) LanguageASTFactory.INSTANCE.forLanguage(getLanguage());
-        }
-
-        if(tracker == null){
-             tracker = PluginKeys.PLSQLFILE_CHANGE_TRACKER.getData(project);
-        }
-
         long start = System.currentTimeMillis();
-        ASTNode reparsed = chameleon.getUserData(BlockSupport.TREE_TO_BE_REPARSED);
         try {
-            astFactory.clearUpdateCounter();
-
             final PsiBuilderFactory factory = PsiBuilderFactory.getInstance();
             final PsiBuilder builder = factory.createBuilder(
-                project,
-                chameleon,
-                null,
-                getLanguage(),
-                chameleon.getChars()
+                    project,
+                    chameleon,
+                    null,
+                    getLanguage(),
+                    chameleon.getChars()
             );
 
             final PsiParser parser = LanguageParserDefinitions.INSTANCE.forLanguage(getLanguage()).createParser(project);
@@ -78,12 +61,7 @@ public class PlSqlFileElementType extends IFileElementType {
             // todo -- makes a sense to assign ISLOCKED for VirtualFile and change ICON?
             return null;
         } finally {
-            if(reparsed != null && astFactory.getUpdateCounter() > 0){
-                // code was modified
-                astFactory.clearUpdateCounter();
-                tracker.indexPlSqlFile((PlSqlFile) reparsed.getPsi());
-            }
-            log.info("#parseContent: END [time: " + (System.currentTimeMillis()-start) + "]");
+            log.info("#parseContent: END [time: " + (System.currentTimeMillis() - start) + "]");
         }
     }
 
