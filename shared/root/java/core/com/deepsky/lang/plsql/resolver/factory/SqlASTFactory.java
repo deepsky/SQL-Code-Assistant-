@@ -25,24 +25,15 @@
 
 package com.deepsky.lang.plsql.resolver.factory;
 
-import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.intellij.lang.ASTFactory;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
-import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.source.tree.*;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.TokenSet;
 
 public class SqlASTFactory extends ASTFactory {
-    private int updateCounter = 0;
-
-    final static TokenSet ws_comments = TokenSet.create(
-            PlSqlTokenTypes.WS, PlSqlTokenTypes.LF, TokenType.WHITE_SPACE,
-            PlSqlTokenTypes.SL_COMMENT, PlSqlTokenTypes.ML_COMMENT, PlSqlTokenTypes.BAD_ML_COMMENT
-    );
 
     @Override
     public CompositeElement createComposite(IElementType type) {
@@ -50,22 +41,7 @@ public class SqlASTFactory extends ASTFactory {
             return new FileElement(type, null);
         }
 
-        return new CompositeElementExt(type) {
-            public void rawAddChildrenWithoutNotifications(TreeElement first) {
-                super.rawAddChildrenWithoutNotifications(first);
-                if (!ws_comments.contains(getElementType())) {
-                    updateCounter++;
-                }
-            }
-
-            public void rawRemove() {
-                super.rawRemove();
-
-                if (!ws_comments.contains(getElementType())) {
-                    updateCounter++;
-                }
-            }
-        };
+        return new CompositeElementExt(type);
     }
 
 
@@ -78,23 +54,7 @@ public class SqlASTFactory extends ASTFactory {
                 return new PsiCommentImpl(type, text);
             }
         }
-        return new LeafPsiElement(type, text) {
-            public void rawRemove() {
-                super.rawRemove();
-
-                if (!ws_comments.contains(getElementType())) {
-                    updateCounter++;
-                }
-            }
-        };
+        return new LeafPsiElement(type, text);
     }
 
-
-    public void clearUpdateCounter() {
-        updateCounter = 0;
-    }
-
-    public int getUpdateCounter() {
-        return updateCounter;
-    }
 }
