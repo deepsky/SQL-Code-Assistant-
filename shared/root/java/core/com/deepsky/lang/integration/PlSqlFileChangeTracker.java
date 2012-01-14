@@ -81,7 +81,7 @@ public class PlSqlFileChangeTracker {
                 boolean res = itree.remove(actualPlSqFile.getCtxPath1().getPath());
                 NamesIndexerWithChangesCollecting indexer = new NamesIndexerWithChangesCollecting();
 
-                indexer.parse(plSqlFile.getNode(), itree);
+                indexer.index(plSqlFile.getNode(), itree);
 
                 // todo -- not correct for non FS files
                 itree.setFileAttribute(filePath, "timestamp", Long.toString(vf.getModificationCount()));
@@ -108,7 +108,7 @@ public class PlSqlFileChangeTracker {
                     boolean res = itree.remove(plSqlFile.getCtxPath1().getPath());
 
                     NamesIndexerWithChangesCollecting indexer = new NamesIndexerSpecific();
-                    indexer.parse(plSqlFile.getNode(), itree);
+                    indexer.index(plSqlFile.getNode(), itree);
                     types.addAll(Arrays.asList(indexer.getUpdatedTypes()));
 
                     CodeChangeEventAggregator.getInstance(project).updateIndex(dbUrl, types);
