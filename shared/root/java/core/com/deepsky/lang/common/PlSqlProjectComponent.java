@@ -43,7 +43,6 @@ import com.deepsky.navigation.DbObjectContributor;
 import com.deepsky.navigation.impl.DbObjectContribNewImpl;
 import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.view.query_pane.QueryResultWindow;
-//import com.deepsky.view.schema_pane.DBBrowserWindow;
 import com.deepsky.view.query_pane.converters.TIMESTAMPLTZ_Convertor;
 import com.deepsky.view.query_pane.converters.TIMESTAMPTZ_Convertor;
 import com.deepsky.view.query_pane.converters.TIMESTAMP_Convertor;
