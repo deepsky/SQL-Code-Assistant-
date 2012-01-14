@@ -768,6 +768,25 @@ public class VariantsProviderImpl implements VariantsProvider {
         return out;
     }
 
+    public Collection<LookupElement> collectColumnNames(TableAlias tab, String lookUpStr) {
+        final List<ColumnElement> columns = new ArrayList<ColumnElement>();
+        ResolveDescriptor rhlp = resolver.resolveTableRef(tab.getTableName());
+
+        if (rhlp != null) {
+            List<ColumnElement> list = collectColumnsForTable(rhlp, tab.getTableName(), tab.getAlias(), tab.getAlias() != null);
+            addWithMarking(columns, list);
+            List<LookupElement> out = new ArrayList<LookupElement>(columns.size());
+            for (int i = 0; i < columns.size(); i++) {
+                ColumnElement it = columns.get(i);
+                out.add(SelectFieldLookupElement.create(tab.getAlias(), it));
+            }
+            return out;
+        }
+
+
+        return new ArrayList<LookupElement>();
+    }
+
 
     private Set<String> getParametersNames(CallArgumentList argList){
         Set<String> out = new HashSet<String>();
@@ -919,7 +938,7 @@ public class VariantsProviderImpl implements VariantsProvider {
     }
 
 
-    private List<ColumnElement> collectColumnsForTable(@NotNull ResolveDescriptor rhlp, String table_name, String table_alias, boolean t12) {
+    private List<ColumnElement> collectColumnsForTable(@NotNull ResolveDescriptor rhlp, String table_name, String table_alias, boolean isColumnPrefixedWithTAlias) {
 
         //String tableAliasFull = (table_alias!=null)? table_name + " " + table_alias: table_name;
         List<ColumnElement> out = new ArrayList<ColumnElement>();
@@ -929,7 +948,7 @@ public class VariantsProviderImpl implements VariantsProvider {
                 ArgumentSpec[] args = ContextPathUtil.extractArguments(value);
                 for (ArgumentSpec a : args) {
                     Type t = a.getType();
-                    out.add(new ColumnElement(a.getName(), table_name, table_alias, t12, t != null ? t.toString() : null, null));
+                    out.add(new ColumnElement(a.getName(), table_name, table_alias, isColumnPrefixedWithTAlias, t != null ? t.toString() : null, null));
                 }
 
                 break;
@@ -941,14 +960,14 @@ public class VariantsProviderImpl implements VariantsProvider {
                     int type = ContextPathUtil.extractLastCtxType(columnCtx);
                     if (type == ContextPath.COLUMN_DEF) {
                         String columnName = ContextPathUtil.extractLastCtxName(columnCtx);
-                        String _type = item.getValue(); //nameProvider.getContextPathValue(columnCtx);
+                        String _type = item.getValue();
                         String t = null;
                         try {
-                            t = TypeFactory.decodeType(_type).toString();
+                            t = ContextPathUtil.decodeColumnTypeFromValue(_type).toString();
                         } catch (Throwable e) {
                             // ignore
                         }
-                        out.add(new ColumnElement(columnName, table_name, table_alias, t12, t, null));
+                        out.add(new ColumnElement(columnName, table_name, table_alias, isColumnPrefixedWithTAlias, t, null));
                     }
                 }
                 break;

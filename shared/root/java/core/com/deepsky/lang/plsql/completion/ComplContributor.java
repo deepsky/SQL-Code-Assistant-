@@ -27,6 +27,7 @@ package com.deepsky.lang.plsql.completion;
 
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
+import com.deepsky.integration.PlSqlElementType;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.common.PluginKeys;
@@ -38,13 +39,17 @@ import com.deepsky.lang.plsql.psi.resolve.ASTNodeHandlerAdapter;
 import com.deepsky.lang.plsql.psi.resolve.ASTTreeProcessor;
 import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
 import com.deepsky.lang.plsql.resolver.factory.CompositeElementExt;
+import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
 import com.deepsky.lang.plsql.sqlIndex.AbstractSchema;
 import com.deepsky.utils.StringUtils;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,7 +72,11 @@ public class ComplContributor extends CompletionContributor {
             PlSqlElementTypes.INSERT_COMMAND,
             PlSqlElementTypes.DELETE_COMMAND,
             PlSqlElementTypes.UPDATE_COMMAND,
+            PlSqlElementTypes.SUBQUERY_UPDATE_COMMAND,
             PlSqlElementTypes.MERGE_COMMAND,
+
+            PlSqlElementTypes.ALIAS_IDENT,
+
             PlSqlElementTypes.FUNCTION_BODY,
             PlSqlElementTypes.PROCEDURE_BODY,
             PlSqlElementTypes.PLSQL_BLOCK
@@ -96,7 +105,7 @@ public class ComplContributor extends CompletionContributor {
         sqlStmt[0] = null;
         execB[0] = null;
 
-
+        // Try to identify a target node and parent context
         ASTTreeProcessor runner = new ASTTreeProcessor();
         runner.add(new ASTNodeHandler() {
             @NotNull
@@ -125,10 +134,14 @@ public class ComplContributor extends CompletionContributor {
                     sqlStmt[0] = node;
                 } else if (node.getElementType() == PlSqlElementTypes.UPDATE_COMMAND) {
                     sqlStmt[0] = node;
+                } else if (node.getElementType() == PlSqlElementTypes.SUBQUERY_UPDATE_COMMAND) {
+                    sqlStmt[0] = node;
                 } else if (node.getElementType() == PlSqlElementTypes.MERGE_COMMAND) {
                     sqlStmt[0] = node;
+                } else if (node.getElementType() == PlSqlElementTypes.ALIAS_IDENT) {
+                    targetNode[0] = node;
 
-                    // check exeutable context
+                    // check executable context
                 } else if (node.getElementType() == PlSqlElementTypes.FUNCTION_BODY) {
                     execB[0] = node;
                 } else if (node.getElementType() == PlSqlElementTypes.PROCEDURE_BODY) {
@@ -147,6 +160,7 @@ public class ComplContributor extends CompletionContributor {
         for (LookupElement elem : variants) {
             result.addElement(elem);
         }
+
 
 /*
         VariantsProvider.NamedItem[] variants = calculate(targetNode[0]);
@@ -195,7 +209,7 @@ public class ComplContributor extends CompletionContributor {
 //            ResolveFacade r = ((PlSqlFile) target.getPsi().getContainingFile()).getResolver();
 //            VariantsProvider provider = r.getNameProvider();
             VariantsProvider provider = chooseSearchDomain((PlSqlFile) target.getPsi().getContainingFile());
-            if(provider == null){
+            if (provider == null) {
                 return new LookupElement[0];
             }
 
@@ -209,6 +223,21 @@ public class ComplContributor extends CompletionContributor {
                 NameFragmentRef nameFragment = (NameFragmentRef) target.getPsi();
                 return processNameFragment2(provider, nameFragment);
 
+            } else if (target.getElementType() == PlSqlElementTypes.ALIAS_IDENT) {
+                if(sqlStmt[0] != null && sqlStmt[0].getElementType() == PlSqlElementTypes.UPDATE_COMMAND ){
+                    if(lookUpStr.length() == 0 || "set".startsWith(lookUpStr) ){
+                         out.add(LookupElementBuilder.create("set"));
+/*
+                            .setInsertHandler(new InsertHandler<LookupElement>() {
+                                public void handleInsert(InsertionContext context, LookupElement item) {
+                                    // todo --
+                                    int hh = 0;
+                                }
+                            })
+                         );
+*/
+                    }
+                }
             } else if (target.getElementType() == PlSqlElementTypes.ERROR_TOKEN_A) { //&& lookUpStr.length() > 0) {
                 ASTNode parent = target.getTreeParent();
                 if (parent.getElementType() == PlSqlElementTypes.STATEMENT_LIST) {
@@ -216,13 +245,13 @@ public class ComplContributor extends CompletionContributor {
                     // 1. variable assignment
                     // 2. procedure call
                     // 3. procedure call prefixed by package name, i.e. <package_name>.<proc_call>
-                    out.addAll( provider.collectProcCall(
+                    out.addAll(provider.collectProcCall(
                             ctxPath,
                             null,
                             lookUpStr)
                     );
 
-                    out.addAll( provider.collectVarVariants(
+                    out.addAll(provider.collectVarVariants(
                             ctxPath,
                             lookUpStr)
                     );
@@ -239,7 +268,7 @@ public class ComplContributor extends CompletionContributor {
                         // 1. return variable
                         // 2. function call result
                         // 3. a complex name - <package_name>.<object_name>
-                        out.addAll( provider.collectVarVariants(
+                        out.addAll(provider.collectVarVariants(
                                 ctxPath,
                                 lookUpStr)
                         );
@@ -257,6 +286,12 @@ public class ComplContributor extends CompletionContributor {
                         return out.toArray(new LookupElement[out.size()]);
                     }
                 } else if (parent.getElementType() == PlSqlElementTypes.PLSQL_BLOCK) {
+                    // todo -- generate lookup variants
+                    int h = 0;
+                } else if (parent.getElementType() == PlSqlElementTypes.UPDATE_COMMAND) {
+                    // todo -- generate lookup variants
+                    int h = 0;
+                } else if (parent.getElementType() == PlSqlTokenTypes.FILE) {
                     // todo -- generate lookup variants
                     int h = 0;
                 }
@@ -301,11 +336,11 @@ public class ComplContributor extends CompletionContributor {
     }
 
 
-    private VariantsProvider chooseSearchDomain(PlSqlFile plsqlFile){
+    private VariantsProvider chooseSearchDomain(PlSqlFile plsqlFile) {
         DbUrl dbUrl = plsqlFile.getDbUrl();
         AbstractSchema i = PluginKeys.SQL_INDEX_MAN.getData(plsqlFile.getProject()).getIndex(dbUrl, 0);
 
-        return (i!= null)? i.getVariantsProvider(): null;
+        return (i != null) ? i.getVariantsProvider() : null;
     }
 
     private final static int COLLECT_SYSTEM_FUNC_CALLS = 1;
@@ -317,8 +352,9 @@ public class ComplContributor extends CompletionContributor {
     private final static int COLLECT_USER_PROC_CALLS = 7;  // calls to the user defined procedures
     private final static int COLLECT_DATA_TYPE_VARS = 8;   // data type variants
     private final static int COLLECT_TYPE_NAME_VARS = 9;   // type name (UDT) variants
-//        final int COLLECT_NAMES_IN_CTX_VARS = 10;
+    //        final int COLLECT_NAMES_IN_CTX_VARS = 10;
     private final static int COLLECT_PARAM_NAME_VARS = 10; // names of proc/func parameters
+//    private final static int COLLECT_COLUMN_SPEC_VARS = 11; // columns in insert/update/merge/delete/select stmts
 
 
     private LookupElement[] processNameFragment2(
@@ -342,10 +378,10 @@ public class ComplContributor extends CompletionContributor {
         final NameFragmentRef prev = nameFragment.getPrevFragment();
         final String prevText = prev != null ? prev.getText() : null;
 
-        ObjectReferenceDispatcher.process(nameFragment, new ObjectReferenceDispatcher.ParentNodeHandler(){
+        ObjectReferenceDispatcher.process(nameFragment, new ObjectReferenceDispatcher.ParentNodeHandler() {
 
             private void __collect__(int cmd) {
-                switch(cmd){
+                switch (cmd) {
                     case COLLECT_SYSTEM_FUNC_CALLS:
                         out.addAll(provider.collectSystemFuncCall(lookUpStr));
                         break;
@@ -353,7 +389,7 @@ public class ComplContributor extends CompletionContributor {
                         out.addAll(provider.collectColumnExprVariants(usageCtxPath, prevText, lookUpStr));
                         break;
                     case COLLECT_VAR_VARS:
-                        out.addAll(provider.collectVarVariants(usageCtxPath, lookUpStr ));
+                        out.addAll(provider.collectVarVariants(usageCtxPath, lookUpStr));
                         break;
                     case COLLECT_PACKAGE_VARS:
                         out.addAll(provider.collectPackageVariants(lookUpStr));
@@ -362,7 +398,7 @@ public class ComplContributor extends CompletionContributor {
                         out.addAll(provider.collectVarVariantsInPackage(prevText, lookUpStr));
                         break;
                     case COLLECT_USER_FUNC_CALLS:
-                        out.addAll(provider.collectFuncCall(usageCtxPath,prevText,lookUpStr));
+                        out.addAll(provider.collectFuncCall(usageCtxPath, prevText, lookUpStr));
                         break;
                     case COLLECT_DATA_TYPE_VARS:
                         out.addAll(provider.collectDataTypeVariants(usageCtxPath, lookUpStr));
@@ -371,7 +407,7 @@ public class ComplContributor extends CompletionContributor {
                         provider.collectTypeNameVariants(usageCtxPath, lookUpStr);
                         break;
                     case COLLECT_USER_PROC_CALLS:
-                        out.addAll(provider.collectProcCall(usageCtxPath,prevText,lookUpStr));
+                        out.addAll(provider.collectProcCall(usageCtxPath, prevText, lookUpStr));
                         break;
 //                    case COLLECT_NAMES_IN_CTX_VARS:
 //                        if(prev != null){
@@ -380,7 +416,7 @@ public class ComplContributor extends CompletionContributor {
 //                        break;
                     case COLLECT_PARAM_NAME_VARS:
                         out.addAll(provider.collectParametersNames(
-                                (ParameterReference) nameFragment.getParent(),lookUpStr)
+                                (ParameterReference) nameFragment.getParent(), lookUpStr)
                         );
                         break;
                 }
@@ -395,9 +431,9 @@ public class ComplContributor extends CompletionContributor {
             }
 
             public void visitRelationCondition(RelationCondition l) {
-                if(getExecCtx() != null && getSqlStmtCtx() == null){
+                if (getExecCtx() != null && getSqlStmtCtx() == null) {
                     __collect__(COLLECT_VAR_VARS);
-                } else if(getSqlStmtCtx() != null){
+                } else if (getSqlStmtCtx() != null) {
                     // sql statement expression
                     __collect__(COLLECT_COLUMN_EXPR_VARS);
                 }
@@ -422,14 +458,14 @@ public class ComplContributor extends CompletionContributor {
             }
 
             public void visitDefaultExprForVariable(VariableDecl l) {
-                if(prev == null){
+                if (prev == null) {
                     __collect__(COLLECT_SYSTEM_FUNC_CALLS);
                     __collect__(COLLECT_VAR_VARS);
                 } else {
-                    out.addAll(provider.collectNamesInContext(prev,lookUpStr, VariantsProvider.FILTER_EXPR));
+                    out.addAll(provider.collectNamesInContext(prev, lookUpStr, VariantsProvider.FILTER_EXPR));
 //                    __collect__(COLLECT_NAMES_IN_CTX_VARS);
                 }
-                int h =0;
+                int h = 0;
             }
 
             public void visitArithmeticExpression(ArithmeticExpression l) {
@@ -444,7 +480,7 @@ public class ComplContributor extends CompletionContributor {
 
             public void visitCallArgument(CallArgument l) {
                 if (getExecCtx() != null && getSqlStmtCtx() == null) {
-                    if(prev == null){
+                    if (prev == null) {
                         // 1. might be a package name
                         __collect__(COLLECT_PACKAGE_VARS);
                         // 2. system functions
@@ -466,7 +502,7 @@ public class ComplContributor extends CompletionContributor {
 
             public void visitAssignmentStatement(AssignmentStatement l) {
                 // todo -- pay attention on the side
-                if(prev == null){
+                if (prev == null) {
                     // 1. might be a package name
                     __collect__(COLLECT_PACKAGE_VARS);
                     // 2. system functions
@@ -499,7 +535,29 @@ public class ComplContributor extends CompletionContributor {
             }
 
             public void visitColumnSpec(ColumnSpec l) {
-                __collect__(COLLECT_COLUMN_EXPR_VARS);
+                final ColumnSpecList list = l.getColumnSpecList();
+                if (list != null) {
+                    // returning clause (PL/SQL)
+                    // insert/insert-merge
+                    // subquery update
+                    if (list.getParent() instanceof PsiFile) {
+                        TableAlias tab = identifyTableAlias(list);
+                        if(tab != null)
+                            out.addAll(provider.collectColumnNames(tab, lookUpStr));
+                    } else {
+                        __collect__(COLLECT_COLUMN_EXPR_VARS);
+                    }
+                } else {
+                    // select -> column_spec(+)
+                    // update/update-merge
+                    if (l.getParent() instanceof PsiFile) {
+                        TableAlias tab = identifyTableAlias(l);
+                        if(tab != null)
+                            out.addAll(provider.collectColumnNames(tab, lookUpStr));
+                    } else {
+                        __collect__(COLLECT_COLUMN_EXPR_VARS);
+                    }
+                }
             }
 
             public void visitExpressionList(ExpressionList l) {
@@ -558,7 +616,7 @@ public class ComplContributor extends CompletionContributor {
                         // function call inside sql statement
                         __collect__(COLLECT_USER_FUNC_CALLS);
                     } else if (callable instanceof ProcedureCall) {
-                        if(prev == null){
+                        if (prev == null) {
                             __collect__(COLLECT_PACKAGE_VARS);
                         }
                         __collect__(COLLECT_USER_PROC_CALLS);
@@ -572,7 +630,7 @@ public class ComplContributor extends CompletionContributor {
             }
 
             public void visitReturnStatement(ReturnStatement l) {
-                if(prev == null){
+                if (prev == null) {
                     // 1. return variable
                     __collect__(COLLECT_VAR_VARS);
                     // 2. function call result
@@ -583,7 +641,7 @@ public class ComplContributor extends CompletionContributor {
                     __collect__(COLLECT_PACKAGE_VARS);
                 } else {
                     // collect names in context
-                    out.addAll(provider.collectNamesInContext(prev,lookUpStr, VariantsProvider.FILTER_EXPR));
+                    out.addAll(provider.collectNamesInContext(prev, lookUpStr, VariantsProvider.FILTER_EXPR));
                 }
             }
 
@@ -604,4 +662,34 @@ public class ComplContributor extends CompletionContributor {
 
         return out.toArray(new LookupElement[out.size()]);
     }
+
+    private TableAlias identifyTableAlias(PsiElement e) {
+        final TableAlias[] alias = new TableAlias[1];
+        final int[] index = {insertStmt.length-1};
+        PsiUtil.iterateOverSiblings(e, new PsiUtil.SiblingVisitor() {
+            public boolean visit(PsiElement e) {
+                if(index[0] < 0){
+                    return false;
+                }
+                ASTNode n = e.getNode();
+                if( n.getElementType() != insertStmt[index[0]]){
+                    return false;
+                }
+
+                if( n.getElementType() == PlSqlElementTypes.TABLE_ALIAS){
+                    alias[0]= (TableAlias) e;
+                }
+                index[0]--;
+                return true;
+            }
+        });
+        return alias[0];
+    }
+
+    private static IElementType[] insertStmt = new IElementType[]{
+            PlSqlTokenTypes.KEYWORD_INSERT,
+            PlSqlTokenTypes.KEYWORD_INTO,
+            PlSqlElementTypes.TABLE_ALIAS,
+            PlSqlTokenTypes.OPEN_PAREN
+    };
 }

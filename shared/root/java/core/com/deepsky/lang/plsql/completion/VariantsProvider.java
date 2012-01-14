@@ -28,6 +28,7 @@ package com.deepsky.lang.plsql.completion;
 import com.deepsky.lang.plsql.psi.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.ParameterReference;
+import com.deepsky.lang.plsql.psi.TableAlias;
 import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.project.Project;
@@ -77,4 +78,6 @@ public interface VariantsProvider {
     List<LookupElement> collectVarVariantsInPackage(String pkgName, String lookUpStr);
 
     Collection<LookupElement> collectParametersNames(ParameterReference parent, String lookUpStr);
+
+    Collection<LookupElement> collectColumnNames(TableAlias tableName, String lookUpStr);
 }
