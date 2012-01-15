@@ -29,6 +29,7 @@ import com.deepsky.database.DBException;
 import com.deepsky.database.exec.UpdatableRecordCache;
 import com.deepsky.database.ora.types.LONGRAWType;
 import com.deepsky.database.ora.types.RAWType;
+import com.intellij.openapi.diagnostic.Logger;
 import oracle.jdbc.OraclePreparedStatement;
 import oracle.jdbc.OracleTypes;
 import oracle.sql.ROWID;
@@ -39,6 +40,7 @@ import java.util.Map;
 
 class UpdatableRecordCache2Impl extends RecordCacheImpl implements UpdatableRecordCache {
 
+    private final Logger log = Logger.getInstance("#UpdatableRecordCache2Impl");
     private RSUpdateSupport rsUpdateSupport;
     private Map<Row, Map<Integer, Object>> rowsBeingUpdated = new HashMap<Row, Map<Integer, Object>>();
 
@@ -53,6 +55,7 @@ class UpdatableRecordCache2Impl extends RecordCacheImpl implements UpdatableReco
 
 
     protected void reloadRS(Connection conn, String sql) throws DBException {
+        log.info("SQL being executed: [" + sql + "]");
         long ms = System.currentTimeMillis();
         try {
             stmt = conn.createStatement();
@@ -108,7 +111,6 @@ class UpdatableRecordCache2Impl extends RecordCacheImpl implements UpdatableReco
             }
             // Check error message on ORA-00937
             // todo --
-
             throw new DBException("Could not execute query. " + e.getMessage());
         } catch (ClassNotFoundException e) {
             closeInternal();
