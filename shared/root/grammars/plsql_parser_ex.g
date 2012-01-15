@@ -149,10 +149,6 @@ tokens {
     IDENT_ASTERISK_COLUMN;
     EXPR_COLUMN;
 
-    // obsolted, subject to remove ---
-    ///TABLE_NAME; TABLE_NAME_WITH_LINK;
-    // -------------------------------
-
     TABLE_REF;
     TABLE_REF_WITH_LINK;
 
@@ -488,8 +484,7 @@ comment_string:
     ;
 
 column_def:
-//    column_name_ddl type_spec ("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal))?  (not_null)? (column_constraint2)?
-    column_name_ddl type_spec ("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal))? (column_constraint2)?
+    column_name_ddl type_spec (column_qualifier)*
     {  __markRule(COLUMN_DEF);}
     ;
 
@@ -502,19 +497,7 @@ row_movement_clause:
     ("disable"|"enable") "row" "movement"
     ;
 
-// todo -- subject to remove , not used any longer
-pk_spec:
-    "primary" "key" ("disable"|"enable")?
-    {  __markRule(COLUMN_PK_SPEC);}
-    ;
-
-// todo -- subject to remove , not used any longer
-fk_spec:
-    "references"! (schema_name DOT)? table_ref OPEN_PAREN! column_name_ref CLOSE_PAREN! ("rely")? ("disable"|"enable")?
-    {  __markRule(COLUMN_FK_SPEC);}
-    ;
-
-column_constraint2:
+column_qualifier:
     ("constraint" constraint_name (
         ("primary" "key"  ("disable"|"enable")? )
             {  __markRule(COLUMN_PK_SPEC);}
@@ -522,7 +505,7 @@ column_constraint2:
             {  __markRule(COLUMN_FK_SPEC);}
         | ("check" condition ("disable"|"enable")? )
             {  __markRule(COLUMN_CHECK_CONSTRAINT);}
-        | ("not" "null" ("disable"|"enable")? )
+        | (("not")? "null" ("disable"|"enable")? ("unique")?)
             {  __markRule(COLUMN_NOT_NULL_CONSTRAINT);}
     ) )
     | ("primary" "key"  ("disable"|"enable")? )
@@ -531,9 +514,11 @@ column_constraint2:
             {  __markRule(COLUMN_FK_SPEC);}
     | ("check" condition ("disable"|"enable")? )
             {  __markRule(COLUMN_CHECK_CONSTRAINT);}
-    | ("not" "null" ("disable"|"enable")? )
+    | (("not")? "null" ("disable"|"enable")? ("unique")?)
             {  __markRule(COLUMN_NOT_NULL_CONSTRAINT);}
+    | ("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal))
     ;
+
 
 sqlplus_command_internal:
     (sqlplus_command)+
@@ -870,7 +855,7 @@ create_directory:
 
 create_table2:
     "table"! (schema_name DOT!)? table_name_ddl
-    (OPEN_PAREN! column_def (COMMA! column_def)* (COMMA! constaraint)* CLOSE_PAREN!)?
+    (OPEN_PAREN! column_def (COMMA! (column_def|constaraint))* CLOSE_PAREN!)?
 //    (nested_tab_spec)? (lob_storage_clause)? (organization_spec)? (physical_properties|table_properties)*
     (nested_tab_spec)? (lob_storage_clause)? (physical_properties|table_properties)*
     ("as" select_expression)?
@@ -878,7 +863,7 @@ create_table2:
 
 create_temp_table:
     ("global")? "temporary"! (schema_name DOT!)? "table"! table_name_ddl
-    (OPEN_PAREN! column_def (COMMA! column_def)* (COMMA! constaraint)* CLOSE_PAREN!)?
+    (OPEN_PAREN! column_def (COMMA! (column_def|constaraint))* CLOSE_PAREN!)?
     ("on" "commit" ("preserve" | "delete") "rows" )
     (cache_clause)?
     ("as" select_expression)?
@@ -1184,26 +1169,12 @@ add_syntax_2:
     | inline_out_of_line_constraint
     ;
 
-/*
-modify_syntax_1:
-    column_modi_name
-    ;
-
-modify_syntax_2:
-    column_modi_name (COMMA! column_modi_name)*
-    ;
-*/
-
 column_add_name:
-    column_name_ddl (datatype)?
-    ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )?
-    (column_constraint2)?
+    column_name_ddl (datatype)? (column_qualifier)*
     ;
 
 column_modi_name:
-    column_name_ref (datatype)?
-    ( not_null|("default" ("sysdate"|"systimestamp"|numeric_literal|string_literal)) )?
-    (column_constraint2)?
+    column_name_ref (datatype)? (column_qualifier)*
     ;
 
 constraint:
@@ -1284,9 +1255,9 @@ index_partitioning_clause:
 local_partitioned_index:
     "local" (
         on_range_partitioned_table
-//        | on_list_partitioned_table
-//        | on_hash_partitioned_table
-//        | on_comp_partitioned_table
+// todo       | on_list_partitioned_table
+// todo       | on_hash_partitioned_table
+// todo       | on_comp_partitioned_table
     )?
     ;
 
@@ -1360,7 +1331,6 @@ package_spec :
 
 package_obj_spec_ex:
     package_obj_spec
-//    | package_obj_spec_addon
     | (IF_COND_CMPL condition
             THEN_COND_CMPL cond_comp_seq (ELSE_COND_CMPL cond_comp_seq)? END_COND_CMPL
       )
@@ -1369,7 +1339,6 @@ package_obj_spec_ex:
 
 
 cond_comp_seq:
-//    (error_cond_compliation)* (package_obj_spec|package_obj_spec_addon)*
     (error_cond_compliation)* (package_obj_spec)*
     { __markRule(COND_COMP_SEQ);}
     ;
@@ -1395,32 +1364,14 @@ package_init_section:
 
 package_obj_spec:
     subtype_declaration
-//    | cursor_declaration
     | cursor_spec
     | (type_definition SEMI!)
-//    | procedure_spec
-//    | function_spec
     | procedure_body
     | function_body
     | pragmas
     | variable_declaration
     | exception_declaration
-/*
-    | exception_pragma
-    | restrict_ref_pragma
-    | interface_pragma
-    | builtin_pragma
-    | fipsflag_pragma
-    | timestamp_pragma
-*/
     ;
-
-/*
-package_obj_spec_addon:
-    variable_declaration
-    | exception_declaration
-    ;
-*/
 
 pragmas:
     "pragma"! (
@@ -1469,10 +1420,7 @@ condition_compilation:
 
 cond_comp_seq2:
     (error_cond_compliation)*
-    ( //(procedure_declaration ("is"|"as")) => procedure_body
-//      | (function_declaration ("is"|"as")) => function_body
-     package_obj_spec)*
-//     | package_obj_spec_addon)*
+    ( package_obj_spec)*
     { __markRule(COND_COMP_SEQ2);}
     ;
 
@@ -1490,20 +1438,11 @@ subtype_declaration :
     "subtype" (type_name|datatype) "is"
     (
         (type_spec) => type_spec
-//        | (table_name PERCENTAGE! "type"! )
         | (table_ref PERCENTAGE! "type"! )
     )
     ("not" "null")? SEMI!
     {  __markRule(SUBTYPE_DECL); }
     ;
-
-/*
-cursor_declaration :
-    "cursor" cursor_name (OPEN_PAREN! argument_list CLOSE_PAREN!)?
-     "is"! select_command SEMI!
-    { __markRule(CURSOR_DECLARATION);}
-    ;
-*/
 
 cursor_spec :
     "cursor" cursor_name (OPEN_PAREN argument_list  CLOSE_PAREN)? (
@@ -1515,17 +1454,12 @@ cursor_spec :
 
 
 package_obj_body:
-//    (procedure_declaration ("is"|"as")) => procedure_body
-//    | (function_declaration ("is"|"as")) => function_body
     package_obj_spec
-//    | package_obj_spec_addon
     | condition_compilation
     ;
 
 seq_of_statements:
     (statement_tmpl)+
-//    ( (statement SEMI!) | (START_LABEL label_name END_LABEL) )
-//        ( (statement SEMI!) | (START_LABEL label_name END_LABEL))*
     { __markRule(STATEMENT_LIST);}
     ;
 
@@ -1844,6 +1778,7 @@ percentage_type_w_schema:
 
 type_name_ref :
      name_fragment (DOT! name_fragment )*
+//    ( name_fragment DOT)* name_fragment
     {  __markRule(TYPE_NAME_REF);}
     ;
 
@@ -2951,11 +2886,6 @@ table_name_ddl :
     { __markRule(TABLE_NAME_DDL);}
     ;
 
-//table_name :
-//    identifier2
-//    {#.table_name = #.([TABLE_NAME, "TABLE_NAME" ], #.table_name);}
-//    ;
-
 table_ref :
     identifier2
     { __markRule(TABLE_REF);}
@@ -2981,6 +2911,9 @@ column_spec:
     (name_fragment2 DOT!)? name_fragment2
     { __markRule(COLUMN_SPEC);}
     ;
+	exception catch [RecognitionException ex] {
+	    throw ex;
+	}
 
 
 column_name_ref:
@@ -3000,6 +2933,769 @@ variable_name :
     ;
 */
 
+pseudo_column :
+        "user"
+        {  __markRule(USER_CONST); }
+        | "sysdate"
+        {  __markRule(SYSDATE_CONST); }
+        | "systimestamp"
+        {  __markRule(SYSTIMESTAMP_CONST); }
+        | "current_timestamp"
+        {  __markRule(CURRENT_TIMESTAMP_CONST); }
+        | "dbtimezone"
+        {  __markRule(DBTIMEZONE); }
+        | "rownum"
+        {  __markRule(ROWNUM); }
+        | (name_fragment2 DOT)? "rowid"
+        {  __markRule(ROWID); }
+        ;
+
+selected_table:
+    ("table")=> table_func ( alias )?
+    {  __markRule(TABLE_FUNCTION); }
+    | ("the") => the_proc ( alias )?
+    | from_subquery   ///subquery ( alias )?
+    | (table_alias ("partition"! OPEN_PAREN! identifier2 CLOSE_PAREN!)?)
+    ;
+
+
+from_subquery:
+    subquery ( alias )?
+    {  __markRule(FROM_SUBQUERY); }
+    ;
+
+from_plain_table:
+    table_spec ( alias )?
+    {  __markRule(FROM_PLAIN_TABLE); }
+    ;
+
+ansi_spec :
+      ( "inner"
+        | (( "left" | "right"| "full") ("outer")? )
+      )? "join"
+      selected_table
+      ("on" condition)?
+      {  __markRule(ANSI_JOIN_TAB_SPEC); }
+      ;
+
+
+table_func:
+    "table"! OPEN_PAREN!
+        (
+            select_command
+            | cast_function
+            | (( name_fragment DOT )* name_fragment ~OPEN_PAREN ) => ( name_fragment DOT! )* name_fragment
+            | function_call
+         ) CLOSE_PAREN!
+    ;
+
+
+the_proc:
+    "the" subquery
+    ;
+
+
+table_spec:
+    ( schema_name DOT )? table_ref_ex //( AT_PREFIXED )?
+    ;
+
+table_ref_ex :
+    table_ref
+    | TABLE_NAME_SPEC
+        { __markRule(TABLE_REF_WITH_LINK);}
+    ;
+
+table_alias:
+    table_spec ( alias )?
+    {  __markRule(TABLE_ALIAS); }
+    ;
+
+link_name:
+    identifier
+    ;
+
+relational_op:
+    ( EQ
+    | LT
+    | GT
+    | NOT_EQ
+    | LE
+    | GE )
+    {  __markRule(RELATION_OP); }
+    ;
+
+
+exp_set:
+    ( OPEN_PAREN "select" ) => subquery
+    | parentesized_exp_list
+// todo -- is this correct?
+    | plsql_expression
+    ;
+/*
+connect_clause:
+    ( "start" "with" condition )? // The start can precede the connect by
+    "connect" "by"
+        condition
+        |  ( "connect" "by" condition ) ?
+     "start" w2:"with" condition
+    {  __markRule(CONNECT_CLAUSE); }
+    ;
+*/
+
+connect_clause:
+    connect_clause_internal (connect_clause_internal)?
+    {  __markRule(CONNECT_CLAUSE); }
+    ;
+
+connect_clause_internal:
+    ("start" "with" condition) // The start can precede the connect by
+    | ("connect" "by" condition)
+    ;
+/*
+group_clause:
+    (
+        ("group"! "by"! plsql_expression (c:COMMA! plsql_expression )*)
+        | ( "having" condition )
+    )+
+    {  __markRule(GROUP_CLAUSE); }
+    ;
+*/
+group_clause:
+    "group"! "by"! plsql_expression (COMMA plsql_expression )* ( "having" condition )?
+    {  __markRule(GROUP_CLAUSE); }
+    ;
+
+order_clause:
+    "order"! "by"!
+    sorted_def ( COMMA! sorted_def )*
+    {  __markRule(ORDER_CLAUSE); }
+    ;
+
+sorted_def:
+    plsql_expression (( a:"asc" | d:"desc" ) ("nulls" ("first" |"last"))? )?
+    {  __markRule(SORTED_DEF); }
+    ;
+
+update_clause:
+    "for" "update"
+    ( "of" column_name_ref ( COMMA column_name_ref )* )?
+    ( "nowait"|("wait" numeric_literal) )?
+    {  __markRule(FOR_UPDATE_CLAUSE); }
+    ;
+
+insert_command:
+    "insert"! "into"!
+        (
+          (table_alias) => table_alias ( OPEN_PAREN! column_spec_list CLOSE_PAREN! )?
+                ( ( "values"! (parentesized_exp_list | variable_ref)) | select_expression ) (returning)?
+            {  __markRule(INSERT_COMMAND); }
+
+         // To define the set of rows to be inserted into the target table of an INSERT statement
+         | subquery ( "values"! (parentesized_exp_list | function_call) )
+            {  __markRule(INSERT_INTO_SUBQUERY_COMMAND); }
+         )
+    ;
+
+column_spec_list:
+    column_spec ( COMMA! column_spec )*
+    {  __markRule(COLUMN_SPEC_LIST); }
+    ;
+
+update_command:
+    (   ( subquery_update ) => subquery_update
+        | simple_update )
+    {  __markRule(UPDATE_COMMAND); }
+    ;
+
+merge_command:
+    "merge"! "into"! table_alias
+    "using"! ( table_alias | from_subquery ) "on" condition
+    when_action (when_action)?
+    ("delete" "where" condition)?
+    {  __markRule(MERGE_COMMAND); }
+    ;
+
+when_action:
+    "when" ("not")? "matched"! "then"!
+    (
+        ("update" "set" column_spec EQ plsql_expression ( COMMA! column_spec EQ plsql_expression )*)
+        | insert_columns
+    ) (where_condition)?
+    {  __markRule(MERGE_WHEN_COMMAND); }
+    ;
+
+insert_columns:
+    "insert"! ( OPEN_PAREN! column_spec_list CLOSE_PAREN! )?
+    "values"! parentesized_exp_list
+    ;
+
+
+simple_update:
+    "update"! table_alias
+    "set" column_spec EQ plsql_expression ( COMMA! column_spec EQ plsql_expression )*
+    ( where_condition ) ?
+    ( returning )?
+    {  __markRule(SIMPLE_UPDATE_COMMAND); }
+    ;
+
+returning:
+//      RETURNING id INTO l_fst_ids(indx);
+//      RETURNING id,upd_cnt INTO o_alertId,o_updateCtr;
+    ("returning"! | "return"!) column_spec_list "into"! expr_list
+    {  __markRule(RETURNING_CLAUSE); }
+    ;
+
+
+subquery_update:
+    "update"! table_alias
+    "set"
+    OPEN_PAREN! column_spec_list CLOSE_PAREN! EQ subquery
+    ( where_condition )?
+    {  __markRule(SUBQUERY_UPDATE_COMMAND); }
+    ;
+
+delete_command:
+    "delete"! ( "from"! )? table_alias ( where_condition )? (returning)?
+    {  __markRule(DELETE_COMMAND); }
+    ;
+
+set_transaction_command:
+        "set" "transaction" r:"read" "only"
+        ;
+
+close_statement :
+      "close" cursor_name_ref
+      ;
+
+fetch_statement:
+    "fetch" cursor_name_ref ( "bulk" "collect" ) ? "into" variable_ref (COMMA! variable_ref )* ("limit" (identifier2|numeric_literal))?
+    { __markRule(FETCH_STATEMENT);}
+    ;
+
+variable_ref:
+    ( name_fragment DOT )* name_fragment
+    { __markRule(PLSQL_VAR_REF);}
+    ;
+
+lock_table_statement:
+        l:"lock" t:"table" table_reference_list
+        i:"in" lock_mode m:"mode" ( n:"nowait" )?
+        ;
+
+lock_mode:
+        r1:"row" s1:"share"
+        | r2:"row" e1:"exclusive"
+        |s2:"share" u:"update"
+        | s3:"share"
+        | s4:"share" r3:"row" e2:"exclusive"
+        | e3:"exclusive"
+        ;
+
+open_statement:
+        o:"open" cursor_name_ref  (parentesized_exp_list)?
+         ( f:"for" ( select_expression | plsql_expression ))?
+         ( "using" ("in")? plsql_lvalue_list )?
+        ;
+
+rollback_statement:
+        "rollback" ( "work" )?
+        ( "to"! ( "savepoint" )? savepoint_name )?
+        ( "comment"! string_literal! )?
+        {  __markRule(ROLLBACK_STATEMENT); }
+        ;
+
+savepoint_statement:
+        "savepoint" savepoint_name
+        ;
+
+savepoint_name:
+        identifier
+        ;
+
+// Direct mappings to lexer.
+identifier :
+    ( IDENTIFIER | DOUBLE_QUOTED_STRING )
+    ;
+
+
+/////////////////////////////////////////////////////////////////
+/////       EXTERNAL TABLE SPECIFICATION        /////////////////
+/////////////////////////////////////////////////////////////////
+
+external_table_spec:
+    "external"! OPEN_PAREN! "type" (oracle_loader_params|oracle_datapump_params)location CLOSE_PAREN!
+//    ("as" select_expression)? (reject_spec|parallel_clause)*
+    (reject_spec|parallel_clause)*
+    ;
+
+oracle_loader_params:
+    "oracle_loader" directory_spec (access_parameters)?
+    ;
+
+oracle_datapump_params:
+    "oracle_datapump" directory_spec (write_access_parameters)?
+    ;
+
+directory_spec:
+    ("default")? "directory" identifier
+    ;
+
+write_access_parameters:
+    "access" "parameters"
+        OPEN_PAREN!
+            ("nologfile"|("logfile" file_location_spec))?
+            ("version" ("compatible"|"latest"|string_literal))?
+            ("compression" ("enabled"|"disabled"))?
+            ("encryption" ("enabled"|"disabled"))?
+        CLOSE_PAREN!
+    ;
+
+access_parameters:
+    "access" "parameters"
+        OPEN_PAREN!
+             (record_format_info)? (field_definitions)? (column_transforms)?
+        CLOSE_PAREN!
+    ;
+
+record_format_info:
+    "records" rec_format (rec_format_tail)*
+    ;
+
+rec_format:
+    ("fixed" numeric_literal)
+    | ("variable" numeric_literal)
+    | ("delimited" "by" ("newline"|string_literal))
+    ;
+
+rec_format_tail:
+    ("characterset" (string_literal | identifier) )
+    | ("data" "is" ("big"|"little") "endian")
+    | ("byte" "order" "mark" ("check"|"nocheck"))
+    | ("string" "sizes" "in" ("bytes"|"characters"))
+    | ("load" "when" condition)
+    | ("nobadfile"|("badfile" file_location_spec) )
+    | ("nodiscardfile"|("discardfile" file_location_spec) )
+    | ("nologfile"|("logfile" file_location_spec) )
+    | ( ("readsize"|"data_cache"|"skip") NUMBER)
+    | ( "preprocessor" file_location_spec)
+    ;
+
+field_definitions:
+    "fields" (delim_spec)? (trim_spec)?
+        ("missing" "field" "values" "are" "null")?
+        ("reject" "rows" "with" "all" "null" "fields")?
+        (field_list)?
+    ;
+
+column_transforms:
+    "column" "transforms" OPEN_PAREN transform (COMMA transform)* CLOSE_PAREN
+    ;
+
+transform:
+    identifier2 "from" (
+        "null"
+        | const_str
+        | ("concat" OPEN_PAREN! (field_name|const_str) (COMMA! (field_name|const_str))* CLOSE_PAREN!)
+        | ("lobfile"
+                OPEN_PAREN! (field_name|(const_str COLON!)) (COMMA! (field_name|(const_str COLON!)))* CLOSE_PAREN!
+                (lobfile_attr_list)?
+          )
+    )
+    ;
+
+lobfile_attr_list:
+    ("from" OPEN_PAREN identifier2 (COMMA identifier2)* CLOSE_PAREN)
+    | "clob"
+    | "blob"
+// todo --    | "characterset" EQ charcater set name
+    ;
+
+const_str:
+    "constant" string_literal
+    ;
+
+// The delim_spec clause is used to find the end (and if ENCLOSED BY is specified, the start) of a field.
+delim_spec:
+    ("enclosed" "by" string_literal ( "and" string_literal )?)
+    | ("terminated" "by" ("whitespace"| string_literal| DOUBLE_QUOTED_STRING)
+        (("optionally")? "enclosed" "by" string_literal ( "and" string_literal )?)?
+      )
+    ;
+
+// The trim_spec clause is used to specify that spaces should be trimmed from the beginning
+// of a text field, the end of a text field, or both.
+trim_spec:
+    "lrtrim" | "notrim" | "ltrim" | "rtrim" | "ldrtrim"
+    ;
+
+field_list:
+    OPEN_PAREN! field_spec (COMMA! field_spec)* CLOSE_PAREN!
+    ;
+
+field_spec:
+    identifier2 (pos_spec)? (datatype_spec)?
+    ;
+
+pos_spec:
+    "position"! OPEN_PAREN! (ASTERISK)? (PLUS|MINUS)? numeric_literal COLON (PLUS)? numeric_literal CLOSE_PAREN!
+    ;
+
+datatype_spec:
+    (("unsigned")? "integer" ("external")? (OPEN_PAREN NUMBER CLOSE_PAREN)? (delim_spec)?)
+    | ( ("decimal"|"zoned")
+        ( ("external") (OPEN_PAREN NUMBER CLOSE_PAREN)? (delim_spec)?
+         | (OPEN_PAREN NUMBER CLOSE_PAREN) )?
+      )
+    | "oracle_date"
+    | ("oracle_number" ("counted")?)
+    | ("float" ("external")? (OPEN_PAREN NUMBER CLOSE_PAREN)? (delim_spec)?)
+    | "double"
+    | ("raw" (OPEN_PAREN NUMBER CLOSE_PAREN)?)
+    | ( "char" (OPEN_PAREN NUMBER CLOSE_PAREN)? (delim_spec)? (trim_spec)? (date_format_spec)? )
+    | (("varchar"| "varraw" | "varcharc" | "varrawc") (OPEN_PAREN NUMBER (COMMA NUMBER)? CLOSE_PAREN)?)
+    ;
+
+
+// DATE_FORMAT TIMESTAMP MASK  'YYYY-MM-DD HH24:MI:SS.FF9'
+date_format_spec:
+    "date_format" ("timestamp"|"date") ("with" "timezone")? "mask" (string_literal|DOUBLE_QUOTED_STRING)
+    ;
+
+location:
+    "location"
+        OPEN_PAREN
+            (file_location_spec| string_literal ) (COMMA! (file_location_spec|string_literal))*
+        CLOSE_PAREN
+    ;
+
+file_location_spec:
+    (identifier COLON)? string_literal
+    ;
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+identifier2:
+    ( IDENTIFIER
+    | DOUBLE_QUOTED_STRING
+    | PLSQL_ENV_VAR
+    | "left"
+    | "right"
+    | "type"
+    | "count"
+    | "open"
+    | "exec"
+    | "execute"
+    | "user"
+//    | "date"  todo -- is it legal to have identifer DATE??
+    | "dbtimezone"
+    | "commit"
+    | "rollback"
+    | "savepoint"
+    | "comment"
+    | "charset"
+    | "body"
+    | "escape"
+    | "reverse"
+    | "exists"
+    | "delete"
+    | "trim"
+    | "decode"
+    | "flush"
+    | "interval"
+    | "transaction"
+    | "session"
+    | "close"
+    | "read"
+    | "write"
+    | "only"
+    | "normal"
+    | "immediate"
+    | "replace"
+    | "sid"
+    | "local"
+    | "time"
+    | "name"
+//    | "true"
+//    | "false"
+//    | "default"
+    | "package"
+    | "ref"
+    | "byte"
+    | "interface"
+    | "extract"
+    | "next"
+    | "column"
+    | "col"
+//    | "timestamp"
+    | "found"
+    | "notfound"
+    | "rowcount"
+    | "isopen"
+    | "bulk_rowcount"
+    | "bulk_exceptions"
+    | "nocache"
+    | "cache"
+    | "compress"
+    | "deterministic"
+    | "degree"
+    | "instances"
+    | "range"
+    | "parallel"
+    | "noparallel"
+    | "year"
+    | "month"
+    | "day"
+    | "row"
+    | "buffer_pool"
+    | "system"
+    | "managed"
+    | "error_code"
+    | "error_index"
+    | "temporary"
+    | "aggregate"
+    | "current"
+    | "sqlcode"
+    | "sqlerrm"
+    | "force"
+    | "cascade"
+    | "constraints"
+    | "purge"
+    | "validate"
+    | "nextval"
+    | "currval"
+    | "rows"
+    | "foreign"
+    | "primary"
+    | "records"
+    | "parameters"
+    | "access"
+    | "newline"
+    | "delimited"
+    | "fixed"
+    | "characterset"
+    | "big"
+    | "little"
+    | "endian"
+    | "mark"
+    | "check"
+    | "nocheck"
+    | "string"
+    | "sizes"
+    | "bytes"
+    | "load"
+    | "nobadfile"
+    | "badfile"
+    | "nodiscardfile"
+    | "discardfile"
+    | "nologfile"
+    | "logfile"
+    | "readsize"
+    | "skip"
+    | "data_cache"
+    | "fields"
+    | "missing"
+    | "field"
+    | "reject"
+    | "with"
+    | "lrtrim"
+    | "notrim"
+    | "ltrim"
+    | "rtrim"
+    | "ldtrim"
+    | "position"
+    | "enclosed"
+    | "date_format"
+    | "varraw"
+    | "varcharc"
+    | "varrawc"
+    | "oracle_number"
+    | "oracle_date"
+    | "counted"
+    | "external"
+    | "zoned"
+    | "unsigned"
+    | "location"
+    | "limit"
+    | "unlimited"
+    | "concat"
+    | "clob"
+    | "nclob"
+    | "blob"
+    | "bfile"
+    | "lobfile"
+    | "float"
+    | "preprocessor"
+    | "compression"
+    | "enabled"
+    | "disabled"
+    | "encryption"
+    | "encrypt"
+    | "action"
+    | "version"
+    | "compatible"
+    | "data"
+    | "no"
+    | "initrans"
+    | "maxtrans"
+    | "logging"
+    | "nologging"
+    | "quit"
+    | "spool"
+    | "def"
+    | "define"
+    | "novalidate"
+    | "heap"
+    | "freelists"
+    | "freelist"
+    | "organization"
+    | "rely"
+    | "at"
+//    | "on"
+    | "off"
+    | "enable"
+    | "disable"
+    | "sql"
+    | "before"
+    | "after"
+    | "directory"
+    | "mask"
+    | "terminated"
+    | "whitespace"
+    | "optionally"
+    | "option"
+    | "operations"
+    | "startup"
+    | "shutdown"
+    | "servererror"
+    | "logon"
+    | "logoff"
+    | "associate"
+    | "statistics"
+    | "audit"
+    | "noaudit"
+    | "ddl"
+    | "diassociate"
+    | "grant"
+    | "rename"
+    | "truncate"
+    | "revoke"
+    | "new"
+    | "old"
+    | "schema"
+    | "hash"
+    | "precision"
+    | "key"
+    | "monitoring"
+    | "collect"
+    | "nulls"
+    | "first"
+    | "last"
+    | "timezone"
+    | "language"
+    | "java"
+    | "store"
+    | "nested"
+    | "library"
+    | "role"
+    | "online"
+    | "offline"
+    | "compute"
+    | "continue"
+    | "var"
+    | "variable"
+    | "none"
+    | "oserror"
+    | "sqlerror"
+    | "whenever"
+    | "the"
+    | "identified"
+    | "link"
+    | "by"
+    | "noorder"
+    | "maxvalue"
+    | "minvalue"
+    | "increment"
+//    | "start" -- it is a keyword!!!
+    | "cycle"
+    | "nocycle"
+    | "pctthreshold"
+    | "including"
+    | "repheader"
+    | "repfooter"
+    | "serveroutput"
+    | "groups"
+    | "wait"
+    | "indices"
+    | "subtype"
+    | "tablespace"
+//    | "partition"
+    | "optimal"
+    | "keep"
+    | "sequence"
+    | "under"
+    | "final"
+    | "timezone_hour"
+    | "timezone_minute"
+    | "timezone_region"
+    | "timezone_abbr"
+    | "hour"
+    | "minute"
+    | "second"
+    | "cost"
+    | "selectivity"
+    | "functions"
+    | "packages"
+    | "types"
+    | "indexes"
+    | "indextypes"
+    | "transforms"
+    | "host"
+    | "multiset"
+    | "lag"
+    | "lead"
+    | "datafile"
+    | "add"
+    | "reuse"
+    | "size"
+    | "maxsize"
+    | "bigfile"
+    | "smallfile"
+    | "extent"
+    | "management"
+    | "dictionary"
+    | "uniform"
+    | "retention"
+    | "guarantee"
+    | "noguarantee"
+    | "tempfile"
+    | "contents"
+    | "datafiles"
+    | "backup"
+    | "coalesce"
+    | "permanent"
+    | "pctversion"
+    | "freepools"
+    | "chunk"
+    | "reads"
+    | "storage"
+    | "locator"
+    | "value"
+    | "cluster"
+    | "deferred"
+    | "creation"
+    | "segment"
+    | "flash_cache"
+    | "cell_flash_cache"
+    | "cast"
+    | "initial"
+    | "minextents"
+    | "maxextents"
+    | "pctincrease"
+    )
+    ;
+
+
 variable_name :
     ( IDENTIFIER
     | DOUBLE_QUOTED_STRING
@@ -3009,6 +3705,7 @@ variable_name :
     | "count"
     | "open"
     | "exec"
+    | "user"
     | "dbtimezone"
     | "execute"
     | "commit"
@@ -3314,770 +4011,12 @@ variable_name :
     | "minextents"
     | "maxextents"
     | "pctincrease"
+
+    | "sysdate"
+    | "systimestamp"
+    | "rownum"
+    | "rowid"
     )
     {  __markRule(VARIABLE_NAME); }
-    ;
-
-
-pseudo_column :
-        "user"
-        {  __markRule(USER_CONST); }
-        | "sysdate"
-        {  __markRule(SYSDATE_CONST); }
-        | "systimestamp"
-        {  __markRule(SYSTIMESTAMP_CONST); }
-        | "current_timestamp"
-        {  __markRule(CURRENT_TIMESTAMP_CONST); }
-        | "dbtimezone"
-        {  __markRule(DBTIMEZONE); }
-        | "rownum"
-        {  __markRule(ROWNUM); }
-        | (name_fragment2 DOT)? "rowid"
-        {  __markRule(ROWID); }
-        ;
-
-selected_table:
-    ("table")=> table_func ( alias )?
-    {  __markRule(TABLE_FUNCTION); }
-    | ("the") => the_proc ( alias )?
-    | from_subquery   ///subquery ( alias )?
-    | (table_alias ("partition"! OPEN_PAREN! identifier2 CLOSE_PAREN!)?)
-    ;
-
-
-from_subquery:
-    subquery ( alias )?
-    {  __markRule(FROM_SUBQUERY); }
-    ;
-
-from_plain_table:
-    table_spec ( alias )?
-    {  __markRule(FROM_PLAIN_TABLE); }
-    ;
-
-ansi_spec :
-      ( "inner"
-        | (( "left" | "right"| "full") ("outer")? )
-      )? "join"
-      selected_table
-      ("on" condition)?
-      {  __markRule(ANSI_JOIN_TAB_SPEC); }
-      ;
-
-
-table_func:
-    "table"! OPEN_PAREN!
-        (
-            select_command
-            | cast_function
-            | (( name_fragment DOT )* name_fragment ~OPEN_PAREN ) => ( name_fragment DOT! )* name_fragment
-            | function_call
-         ) CLOSE_PAREN!
-    ;
-
-
-the_proc:
-    "the" subquery
-    ;
-
-
-table_spec:
-//    ( schema_name DOT )? table_name ( AT_SIGN link_name )?
-    ( schema_name DOT )? table_ref_ex //( AT_PREFIXED )?
-    ;
-
-table_ref_ex :
-    table_ref
-    | TABLE_NAME_SPEC
-        { __markRule(TABLE_REF_WITH_LINK);}
-    ;
-
-table_alias:
-    table_spec ( alias )?
-    {  __markRule(TABLE_ALIAS); }
-    ;
-
-link_name:
-    identifier
-    ;
-
-relational_op:
-    ( EQ
-    | LT
-    | GT
-    | NOT_EQ
-    | LE
-    | GE )
-    {  __markRule(RELATION_OP); }
-    ;
-
-
-exp_set:
-    ( OPEN_PAREN "select" ) => subquery
-    | parentesized_exp_list
-// todo -- is this correct?
-    | plsql_expression
-    ;
-/*
-connect_clause:
-    ( "start" "with" condition )? // The start can precede the connect by
-    "connect" "by"
-        condition
-        |  ( "connect" "by" condition ) ?
-     "start" w2:"with" condition
-    {  __markRule(CONNECT_CLAUSE); }
-    ;
-*/
-
-connect_clause:
-    connect_clause_internal (connect_clause_internal)?
-    {  __markRule(CONNECT_CLAUSE); }
-    ;
-
-connect_clause_internal:
-    ("start" "with" condition) // The start can precede the connect by
-    | ("connect" "by" condition)
-    ;
-/*
-group_clause:
-    (
-        ("group"! "by"! plsql_expression (c:COMMA! plsql_expression )*)
-        | ( "having" condition )
-    )+
-    {  __markRule(GROUP_CLAUSE); }
-    ;
-*/
-group_clause:
-    "group"! "by"! plsql_expression (COMMA plsql_expression )* ( "having" condition )?
-    {  __markRule(GROUP_CLAUSE); }
-    ;
-
-order_clause:
-    "order"! "by"!
-    sorted_def ( COMMA! sorted_def )*
-    {  __markRule(ORDER_CLAUSE); }
-    ;
-
-sorted_def:
-    plsql_expression (( a:"asc" | d:"desc" ) ("nulls" ("first" |"last"))? )?
-    {  __markRule(SORTED_DEF); }
-    ;
-
-update_clause:
-    "for" "update"
-    ( "of" column_name_ref ( COMMA column_name_ref )* )?
-    ( "nowait"|("wait" numeric_literal) )?
-    {  __markRule(FOR_UPDATE_CLAUSE); }
-    ;
-
-insert_command:
-    "insert"! "into"!
-        (
-          (table_alias) => table_alias ( OPEN_PAREN! column_spec_list CLOSE_PAREN! )?
-                ( ( "values"! (parentesized_exp_list | variable_ref)) | select_expression ) (returning)?
-            {  __markRule(INSERT_COMMAND); }
-
-         // To define the set of rows to be inserted into the target table of an INSERT statement
-         | subquery ( "values"! (parentesized_exp_list | function_call) )
-            {  __markRule(INSERT_INTO_SUBQUERY_COMMAND); }
-         )
-    ;
-
-column_spec_list:
-    column_spec ( COMMA! column_spec )*
-    {  __markRule(COLUMN_SPEC_LIST); }
-    ;
-
-update_command:
-    (   ( subquery_update ) => subquery_update
-        | simple_update )
-    {  __markRule(UPDATE_COMMAND); }
-    ;
-
-merge_command:
-    "merge"! "into"! table_alias
-    "using"! ( table_alias | from_subquery ) "on" condition
-    when_action (when_action)?
-    ("delete" "where" condition)?
-    {  __markRule(MERGE_COMMAND); }
-    ;
-
-when_action:
-    "when" ("not")? "matched"! "then"!
-    (
-        ("update" "set" column_spec EQ plsql_expression ( COMMA! column_spec EQ plsql_expression )*)
-        | insert_columns
-    ) (where_condition)?
-    {  __markRule(MERGE_WHEN_COMMAND); }
-    ;
-
-insert_columns:
-    "insert"! ( OPEN_PAREN! column_spec_list CLOSE_PAREN! )?
-    "values"! parentesized_exp_list
-    ;
-
-
-simple_update:
-    "update"! table_alias
-    "set" column_spec EQ plsql_expression ( COMMA! column_spec EQ plsql_expression )*
-    ( where_condition ) ?
-    ( returning )?
-    {  __markRule(SIMPLE_UPDATE_COMMAND); }
-    ;
-
-
-returning:
-//      RETURNING id INTO l_fst_ids(indx);
-//      RETURNING id,upd_cnt INTO o_alertId,o_updateCtr;
-    ("returning"! | "return"!) column_spec_list "into"! expr_list
-    {  __markRule(RETURNING_CLAUSE); }
-    ;
-
-
-subquery_update:
-    "update"! table_alias
-    "set"
-    OPEN_PAREN! column_spec_list CLOSE_PAREN! EQ subquery
-    ( where_condition )?
-    {  __markRule(SUBQUERY_UPDATE_COMMAND); }
-    ;
-
-delete_command:
-    "delete"! ( "from"! )? table_alias ( where_condition )? (returning)?
-    {  __markRule(DELETE_COMMAND); }
-    ;
-
-set_transaction_command:
-        "set" "transaction" r:"read" "only"
-        ;
-
-close_statement :
-      "close" cursor_name_ref
-      ;
-
-fetch_statement:
-    "fetch" cursor_name_ref ( "bulk" "collect" ) ? "into" variable_ref (COMMA! variable_ref )* ("limit" (identifier2|numeric_literal))?
-    { __markRule(FETCH_STATEMENT);}
-    ;
-
-variable_ref:
-    ( name_fragment DOT )* name_fragment
-    { __markRule(PLSQL_VAR_REF);}
-    ;
-
-lock_table_statement:
-        l:"lock" t:"table" table_reference_list
-        i:"in" lock_mode m:"mode" ( n:"nowait" )?
-        ;
-
-lock_mode:
-        r1:"row" s1:"share"
-        | r2:"row" e1:"exclusive"
-        |s2:"share" u:"update"
-        | s3:"share"
-        | s4:"share" r3:"row" e2:"exclusive"
-        | e3:"exclusive"
-        ;
-
-open_statement:
-        o:"open" cursor_name_ref  (parentesized_exp_list)?
-         ( f:"for" ( select_expression | plsql_expression ))?
-         ( "using" ("in")? plsql_lvalue_list )?
-        ;
-
-rollback_statement:
-        "rollback" ( "work" )?
-        ( "to"! ( "savepoint" )? savepoint_name )?
-        ( "comment"! string_literal! )?
-        {  __markRule(ROLLBACK_STATEMENT); }
-        ;
-
-savepoint_statement:
-        "savepoint" savepoint_name
-        ;
-
-savepoint_name:
-        identifier
-        ;
-
-// Direct mappings to lexer.
-identifier :
-    ( IDENTIFIER | DOUBLE_QUOTED_STRING )
-    ;
-
-identifier2:
-    ( IDENTIFIER
-    | DOUBLE_QUOTED_STRING
-    | PLSQL_ENV_VAR
-    | "left"
-    | "right"
-    | "type"
-    | "count"
-    | "open"
-    | "exec"
-    | "execute"
-    | "user"
-//    | "date"  todo -- is it legal to have identifer DATE??
-    | "dbtimezone"
-    | "commit"
-    | "rollback"
-    | "savepoint"
-    | "comment"
-    | "charset"
-    | "body"
-    | "escape"
-    | "reverse"
-    | "exists"
-    | "delete"
-    | "trim"
-    | "decode"
-    | "flush"
-    | "interval"
-    | "transaction"
-    | "session"
-    | "close"
-    | "read"
-    | "write"
-    | "only"
-    | "normal"
-    | "immediate"
-    | "replace"
-    | "sid"
-    | "local"
-    | "time"
-    | "name"
-//    | "true"
-//    | "false"
-    | "default"
-    | "package"
-//    | "function"
-    | "ref"
-    | "byte"
-    | "interface"
-    | "extract"
-    | "next"
-    | "column"
-    | "col"
-//    | "timestamp"
-    | "found"
-    | "notfound"
-    | "rowcount"
-    | "isopen"
-    | "bulk_rowcount"
-    | "bulk_exceptions"
-    | "nocache"
-    | "cache"
-    | "compress"
-    | "deterministic"
-    | "degree"
-    | "instances"
-    | "range"
-    | "parallel"
-    | "noparallel"
-    | "year"
-    | "month"
-    | "day"
-    | "row"
-    | "buffer_pool"
-    | "system"
-    | "managed"
-    | "error_code"
-    | "error_index"
-    | "temporary"
-    | "aggregate"
-    | "current"
-    | "sqlcode"
-    | "sqlerrm"
-    | "force"
-    | "cascade"
-    | "constraints"
-    | "purge"
-    | "validate"
-    | "nextval"
-    | "currval"
-    | "rows"
-    | "foreign"
-    | "primary"
-    | "records"
-    | "parameters"
-    | "access"
-    | "newline"
-    | "delimited"
-    | "fixed"
-    | "characterset"
-    | "big"
-    | "little"
-    | "endian"
-    | "mark"
-    | "check"
-    | "nocheck"
-    | "string"
-    | "sizes"
-    | "bytes"
-    | "load"
-    | "nobadfile"
-    | "badfile"
-    | "nodiscardfile"
-    | "discardfile"
-    | "nologfile"
-    | "logfile"
-    | "readsize"
-    | "skip"
-    | "data_cache"
-    | "fields"
-    | "missing"
-    | "field"
-    | "reject"
-    | "with"
-    | "lrtrim"
-    | "notrim"
-    | "ltrim"
-    | "rtrim"
-    | "ldtrim"
-    | "position"
-    | "enclosed"
-    | "date_format"
-    | "varraw"
-    | "varcharc"
-    | "varrawc"
-    | "oracle_number"
-    | "oracle_date"
-    | "counted"
-    | "external"
-    | "zoned"
-    | "unsigned"
-    | "location"
-    | "limit"
-    | "unlimited"
-    | "concat"
-    | "clob"
-    | "nclob"
-    | "blob"
-    | "bfile"
-    | "lobfile"
-    | "float"
-    | "preprocessor"
-    | "compression"
-    | "enabled"
-    | "disabled"
-    | "encryption"
-    | "encrypt"
-    | "action"
-    | "version"
-    | "compatible"
-    | "data"
-    | "no"
-    | "initrans"
-    | "maxtrans"
-    | "logging"
-    | "nologging"
-    | "quit"
-    | "spool"
-    | "def"
-    | "define"
-    | "novalidate"
-    | "heap"
-    | "freelists"
-    | "freelist"
-    | "organization"
-    | "rely"
-    | "at"
-//    | "on"
-    | "off"
-    | "enable"
-    | "disable"
-    | "sql"
-    | "before"
-    | "after"
-    | "directory"
-    | "mask"
-    | "terminated"
-    | "whitespace"
-    | "optionally"
-    | "option"
-    | "operations"
-    | "startup"
-    | "shutdown"
-    | "servererror"
-    | "logon"
-    | "logoff"
-    | "associate"
-    | "statistics"
-    | "audit"
-    | "noaudit"
-    | "ddl"
-    | "diassociate"
-    | "grant"
-    | "rename"
-    | "truncate"
-    | "revoke"
-    | "new"
-    | "old"
-    | "schema"
-    | "hash"
-    | "precision"
-    | "key"
-    | "monitoring"
-    | "collect"
-    | "nulls"
-    | "first"
-    | "last"
-    | "timezone"
-    | "language"
-    | "java"
-    | "store"
-    | "nested"
-    | "library"
-    | "role"
-    | "online"
-    | "offline"
-    | "compute"
-    | "continue"
-    | "var"
-    | "variable"
-    | "none"
-    | "oserror"
-    | "sqlerror"
-    | "whenever"
-    | "the"
-    | "identified"
-    | "link"
-    | "by"
-    | "noorder"
-    | "maxvalue"
-    | "minvalue"
-    | "increment"
-//    | "start" -- it is a keyword!!!
-    | "cycle"
-    | "nocycle"
-    | "pctthreshold"
-    | "including"
-    | "repheader"
-    | "repfooter"
-    | "serveroutput"
-    | "groups"
-    | "wait"
-    | "indices"
-    | "subtype"
-    | "tablespace"
-//    | "partition"
-    | "optimal"
-    | "keep"
-    | "sequence"
-    | "under"
-    | "final"
-    | "timezone_hour"
-    | "timezone_minute"
-    | "timezone_region"
-    | "timezone_abbr"
-    | "hour"
-    | "minute"
-    | "second"
-    | "cost"
-    | "selectivity"
-    | "functions"
-    | "packages"
-    | "types"
-    | "indexes"
-    | "indextypes"
-    | "transforms"
-    | "host"
-    | "multiset"
-    | "lag"
-    | "lead"
-    | "datafile"
-    | "add"
-    | "reuse"
-    | "size"
-    | "maxsize"
-    | "bigfile"
-    | "smallfile"
-    | "extent"
-    | "management"
-    | "dictionary"
-    | "uniform"
-    | "retention"
-    | "guarantee"
-    | "noguarantee"
-    | "tempfile"
-    | "contents"
-    | "datafiles"
-    | "backup"
-    | "coalesce"
-    | "permanent"
-    | "pctversion"
-    | "freepools"
-    | "chunk"
-    | "reads"
-    | "storage"
-    | "locator"
-    | "value"
-    | "cluster"
-    | "deferred"
-    | "creation"
-    | "segment"
-    | "flash_cache"
-    | "cell_flash_cache"
-    | "cast"
-    | "initial"
-    | "minextents"
-    | "maxextents"
-    | "pctincrease"
-    )
-    ;
-
-
-/////////////////////////////////////////////////////////////////
-/////       EXTERNAL TABLE SPECIFICATION        /////////////////
-/////////////////////////////////////////////////////////////////
-
-external_table_spec:
-    "external"! OPEN_PAREN! "type" (oracle_loader_params|oracle_datapump_params)location CLOSE_PAREN!
-//    ("as" select_expression)? (reject_spec|parallel_clause)*
-    (reject_spec|parallel_clause)*
-    ;
-
-oracle_loader_params:
-    "oracle_loader" directory_spec (access_parameters)?
-    ;
-
-oracle_datapump_params:
-    "oracle_datapump" directory_spec (write_access_parameters)?
-    ;
-
-directory_spec:
-    ("default")? "directory" identifier
-    ;
-
-write_access_parameters:
-    "access" "parameters"
-        OPEN_PAREN!
-            ("nologfile"|("logfile" file_location_spec))?
-            ("version" ("compatible"|"latest"|string_literal))?
-            ("compression" ("enabled"|"disabled"))?
-            ("encryption" ("enabled"|"disabled"))?
-        CLOSE_PAREN!
-    ;
-
-access_parameters:
-    "access" "parameters"
-        OPEN_PAREN!
-             (record_format_info)? (field_definitions)? (column_transforms)?
-        CLOSE_PAREN!
-    ;
-
-record_format_info:
-    "records" rec_format (rec_format_tail)*
-    ;
-
-rec_format:
-    ("fixed" numeric_literal)
-    | ("variable" numeric_literal)
-    | ("delimited" "by" ("newline"|string_literal))
-    ;
-
-rec_format_tail:
-    ("characterset" (string_literal | identifier) )
-    | ("data" "is" ("big"|"little") "endian")
-    | ("byte" "order" "mark" ("check"|"nocheck"))
-    | ("string" "sizes" "in" ("bytes"|"characters"))
-    | ("load" "when" condition)
-    | ("nobadfile"|("badfile" file_location_spec) )
-    | ("nodiscardfile"|("discardfile" file_location_spec) )
-    | ("nologfile"|("logfile" file_location_spec) )
-    | ( ("readsize"|"data_cache"|"skip") NUMBER)
-    | ( "preprocessor" file_location_spec)
-    ;
-
-field_definitions:
-    "fields" (delim_spec)? (trim_spec)?
-        ("missing" "field" "values" "are" "null")?
-        ("reject" "rows" "with" "all" "null" "fields")?
-        (field_list)?
-    ;
-
-column_transforms:
-    "column" "transforms" OPEN_PAREN transform (COMMA transform)* CLOSE_PAREN
-    ;
-
-transform:
-    identifier2 "from" (
-        "null"
-        | const_str
-        | ("concat" OPEN_PAREN! (field_name|const_str) (COMMA! (field_name|const_str))* CLOSE_PAREN!)
-        | ("lobfile"
-                OPEN_PAREN! (field_name|(const_str COLON!)) (COMMA! (field_name|(const_str COLON!)))* CLOSE_PAREN!
-                (lobfile_attr_list)?
-          )
-    )
-    ;
-
-lobfile_attr_list:
-    ("from" OPEN_PAREN identifier2 (COMMA identifier2)* CLOSE_PAREN)
-    | "clob"
-    | "blob"
-// todo --    | "characterset" EQ charcater set name
-    ;
-
-const_str:
-    "constant" string_literal
-    ;
-
-// The delim_spec clause is used to find the end (and if ENCLOSED BY is specified, the start) of a field.
-delim_spec:
-    ("enclosed" "by" string_literal ( "and" string_literal )?)
-    | ("terminated" "by" ("whitespace"| string_literal| DOUBLE_QUOTED_STRING)
-        (("optionally")? "enclosed" "by" string_literal ( "and" string_literal )?)?
-      )
-    ;
-
-// The trim_spec clause is used to specify that spaces should be trimmed from the beginning
-// of a text field, the end of a text field, or both.
-trim_spec:
-    "lrtrim" | "notrim" | "ltrim" | "rtrim" | "ldrtrim"
-    ;
-
-field_list:
-    OPEN_PAREN! field_spec (COMMA! field_spec)* CLOSE_PAREN!
-    ;
-
-field_spec:
-    identifier2 (pos_spec)? (datatype_spec)?
-    ;
-
-pos_spec:
-    "position"! OPEN_PAREN! (ASTERISK)? (PLUS|MINUS)? numeric_literal COLON (PLUS)? numeric_literal CLOSE_PAREN!
-    ;
-
-datatype_spec:
-    (("unsigned")? "integer" ("external")? (OPEN_PAREN NUMBER CLOSE_PAREN)? (delim_spec)?)
-    | ( ("decimal"|"zoned")
-        ( ("external") (OPEN_PAREN NUMBER CLOSE_PAREN)? (delim_spec)?
-         | (OPEN_PAREN NUMBER CLOSE_PAREN) )?
-      )
-    | "oracle_date"
-    | ("oracle_number" ("counted")?)
-    | ("float" ("external")? (OPEN_PAREN NUMBER CLOSE_PAREN)? (delim_spec)?)
-    | "double"
-    | ("raw" (OPEN_PAREN NUMBER CLOSE_PAREN)?)
-    | ( "char" (OPEN_PAREN NUMBER CLOSE_PAREN)? (delim_spec)? (trim_spec)? (date_format_spec)? )
-    | (("varchar"| "varraw" | "varcharc" | "varrawc") (OPEN_PAREN NUMBER (COMMA NUMBER)? CLOSE_PAREN)?)
-    ;
-
-
-// DATE_FORMAT TIMESTAMP MASK  'YYYY-MM-DD HH24:MI:SS.FF9'
-date_format_spec:
-    "date_format" ("timestamp"|"date") ("with" "timezone")? "mask" (string_literal|DOUBLE_QUOTED_STRING)
-    ;
-
-location:
-    "location"
-        OPEN_PAREN
-            (file_location_spec| string_literal ) (COMMA! (file_location_spec|string_literal))*
-        CLOSE_PAREN
-    ;
-
-file_location_spec:
-    (identifier COLON)? string_literal
     ;
 
