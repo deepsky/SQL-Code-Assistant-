@@ -26,8 +26,12 @@
 package com.deepsky.lang.plsql.psi;
 
 import com.deepsky.lang.plsql.struct.Type;
+import org.jetbrains.annotations.Nullable;
 
 public interface ColumnSpec extends CompositeName {
     String getColumnNameRef();
     Type getColumnType();
+
+    @Nullable
+    ColumnSpecList getColumnSpecList();
 }

@@ -25,15 +25,11 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
 import com.deepsky.lang.plsql.psi.ColumnNameDDL;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.ddl.VColumnDefinition;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 public class ColumnNameDDLImpl extends PlSqlElementBase implements ColumnNameDDL {
@@ -42,7 +38,6 @@ public class ColumnNameDDLImpl extends PlSqlElementBase implements ColumnNameDDL
         super(astNode);
     }
 
-
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
             ((PlSqlElementVisitor) visitor).visitColumnNameDDL(this);
@@ -50,85 +45,6 @@ public class ColumnNameDDLImpl extends PlSqlElementBase implements ColumnNameDDL
             super.accept(visitor);
         }
     }
-
-
-
-/*
-    static final private TokenSet set1 = TokenSet.create(
-            PLSqlTypesAdopted.FK_SPEC, PLSqlTypesAdopted.PK_SPEC, PLSqlTypesAdopted.COLUMN_FK_SPEC,
-            PLSqlTypesAdopted.CONSTRAINT, PLSqlTypesAdopted.COLUMN_DEF, PLSqlTypesAdopted.UNIQUE_CONSTRAINT,
-            PLSqlTypesAdopted.COMMENT, PLSqlTypesAdopted.COLUMN_DEF
-    );
-
-    private TableDescriptor identifyTable(){
-
-        final String[] tableName = {null};
-
-        ASTTreeProcessor processor = new ASTTreeProcessor();
-        processor.add(new ASTNodeHandler(){
-            @NotNull
-            public TokenSet getTokenSet() {
-                return set1;
-            }
-
-            public boolean handleNode(@NotNull ASTNode node) {
-                if(node.getElementType() == PLSqlTypesAdopted.FK_SPEC){
-                    ASTNode[] list = node.getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_LIST));
-                    // search for the column among referenced columns
-                    ASTNode[] columns = list[1].getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_DDL));
-                    for(ASTNode n: columns){
-                        if(n.getPsi() == ColumnNameDDLImpl.this){
-                            // found!
-                            tableName[0] = node.findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL).getText();
-                            break;
-                        }
-                    }
-
-                    if(tableName[0] == null){
-                        // search for column among own columns
-                        columns = list[0].getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_DDL));
-                        for(ASTNode n: columns){
-                            if(n.getPsi() == ColumnNameDDLImpl.this){
-                                // found!
-                                ASTNode tableDef = node.getTreeParent().getTreeParent();
-                                if(tableDef != null){
-                                    tableName[0] = ((TableDefinition)tableDef.getPsi()).getTableName();
-                                }
-                                break;
-                            }
-                        }
-                    }
-
-
-                } else if(node.getElementType() == PLSqlTypesAdopted.COLUMN_DEF){
-                    ASTNode parent = node.getTreeParent();
-                    if(parent.getElementType() == PLSqlTypesAdopted.TABLE_DEF){
-                        tableName[0] = ((TableDefinition)parent.getPsi()).getTableName();
-                    } else if(parent.getElementType() == PLSqlTypesAdopted.CREATE_TEMP_TABLE){
-                        tableName[0] = ((TableDefinition)parent.getPsi()).getTableName();
-                    } 
-
-                } else if(node.getElementType() == PLSqlTypesAdopted.COLUMN_FK_SPEC){
-                    tableName[0] = node.findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL).getText();
-                } else if(node.getElementType() == PLSqlTypesAdopted.COMMENT){
-                    tableName[0] = node.findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL).getText();
-                } else {
-                    // todo --
-                }
-
-                return false;
-            }
-        });
-
-        processor.process(this.getNode());
-
-        if(tableName[0] != null){
-            return describeTable(tableName[0]);
-        }
-
-        return null;
-    }
-*/
 
     public ColumnDefinition getColumnDefinition() {
         return (ColumnDefinition) getParent();

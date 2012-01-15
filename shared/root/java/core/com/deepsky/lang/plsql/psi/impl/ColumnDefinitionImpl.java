@@ -42,14 +42,12 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefinition {//}, PsiNamedElement {
+public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefinition {
 
     static final LoggerProxy log = LoggerProxy.getInstance("#ColumnDefinitionImpl");
 
@@ -64,7 +62,7 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
     public String getColumnName() {
         return StringUtils.discloseDoubleQuotes(
                 this.findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL).getText()
-                );
+        );
     }
 
     public PsiElement getPsiColumnName() {
@@ -93,31 +91,18 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
         throw new SyntaxTreeCorruptedException();
     }
 
-/*
-    @Nullable
-    public String getQuickNavigateInfo() {
-        TableDefinition t = findParent(TableDefinition.class);
-        if (t != null) {
-            String completeName = t.getTableName() + "." + getColumnName();
-            return  "[Column] " + completeName.toLowerCase() + " "
-                    + getType().toString().toUpperCase();
-        }
-        return null;
-    }
-*/
-
     public boolean isNotNull() {
-        ASTNode not_null = getNode().findChildByType(PLSqlTypesAdopted.NOT_NULL_STMT);
-        if(not_null == null){
-            return getNode().findChildByType(PLSqlTypesAdopted.COLUMN_NOT_NULL_CONSTRAINT) != null;
+        ASTNode not_null = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_NOT_NULL_CONSTRAINT);
+        if (not_null == null) {
+            // Check whether the Primary Key qualifier exists, if true it means column NOT NULL
+            return isPrimaryKey();
         } else {
             return not_null.findChildByType(PlSqlTokenTypes.KEYWORD_NOT) != null;
         }
     }
 
     public boolean isPrimaryKey() {
-        ASTNode pkSpec = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_PK_SPEC);
-        return pkSpec != null;
+        return getNode().findChildByType(PLSqlTypesAdopted.COLUMN_PK_SPEC) != null;
     }
 
     public boolean hasCheckConstraint() {
@@ -151,9 +136,50 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
     }
 
 
-    public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException {
-        return null;
+/*
+todo -- Name refactorying experiments
+
+    <renamePsiElementProcessor
+            implementation="com.deepsky.lang.plsql.refactoring.rename.RenameTableColumnProcessor"
+            order="first"/>
+
+    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+        ASTFactory astFactory = LanguageASTFactory.INSTANCE.forLanguage(getLanguage());
+        CompositeElement nameNode = astFactory.createComposite(PLSqlTypesAdopted.COLUMN_NAME_DDL);
+        CodeEditUtil.setNodeGenerated(nameNode, true);
+        LeafElement leaf = astFactory.createLeaf(PlSqlTokenTypes.IDENTIFIER, name.subSequence(0, name.length()));
+        CodeEditUtil.setNodeGenerated(leaf, true);
+        nameNode.rawAddChildren(leaf);
+
+        PsiElement e = getPsiColumnName();
+        PsiElement newE = new ColumnNameDDLImpl(nameNode){
+            public PsiManagerEx getManager(){
+                return ColumnDefinitionImpl.this.getManager();
+            }
+            public PsiFile getContainingFile() throws PsiInvalidElementAccessException {
+                return ColumnDefinitionImpl.this.getContainingFile();
+            }
+
+        };
+        return replace2(e, newE);
     }
+
+
+    public PsiElement replace2(PsiElement e1, PsiElement newElement) throws IncorrectOperationException {
+      CheckUtil.checkWritable(this);
+      TreeElement elementCopy = (TreeElement) newElement.getNode(); //ChangeUtil.copyToElement(newElement);
+      if (e1.getParent() instanceof ASTDelegatePsiElement) {
+        final ASTDelegatePsiElement parentElement = (ASTDelegatePsiElement)e1.getParent();
+        parentElement.replaceChildInternal(e1, elementCopy);
+      }
+      else {
+        CodeEditUtil.replaceChild(e1.getParent().getNode(), e1.getNode(), elementCopy);
+      }
+      elementCopy = ChangeUtil.decodeInformation(elementCopy);
+      return SourceTreeToPsiMap.treeElementToPsi(elementCopy);
+    }
+*/
+
 
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
@@ -167,7 +193,7 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
     public ItemPresentation getPresentation() {
         try {
             return new ColumnDefPresentation();
-        } catch(SyntaxTreeCorruptedException e){
+        } catch (SyntaxTreeCorruptedException e) {
             return null;
         }
     }
@@ -177,7 +203,7 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
             TableDefinition t = getTableDefinition();
             if (t != null) {
                 String completeName = t.getTableName() + "." + getColumnName();
-                return  "[Column] " + completeName.toLowerCase() + " "
+                return "[Column] " + completeName.toLowerCase() + " "
                         + getTypeSpec().getText();
             }
             return null;

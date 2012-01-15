@@ -70,7 +70,6 @@ public class DataTypeLookupElement<T extends LookupElement> extends LookupElemen
 
         context.setAddCompletionChar(false);
 
-        final LookupElement[] allItems = context.getElements();
         final boolean overloadsMatter = false;//allItems.length == 1 && item.getUserData(LookupItem.FORCE_SHOW_SIGNATURE_ATTR) == null;
 
         final boolean hasParams = datatype.isSizeable(); //DataTypeParenthesesHandler.hasParams(item, allItems, overloadsMatter); //, myMethod);

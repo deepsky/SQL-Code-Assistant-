@@ -219,7 +219,7 @@ public class PlSqlPsiParser implements PsiParser {
         }
 
         public void reportError(RecognitionException ex) {
-//            log.warn("[PARSER] Syntax Error: " + ex); // + ", RulezzCameUp: " + RulezzCameUp);
+            // Do not report syntax errors
         }
 
         /**
@@ -230,12 +230,9 @@ public class PlSqlPsiParser implements PsiParser {
         }
 
         public void recover(RecognitionException ex, BitSet tokenSet) throws TokenStreamException {
-//            log.warn("[PARSER] Recover start ------------");
             PsiBuilder.Marker m = builder.mark();
             super.recover(ex, tokenSet);
             m.done(ANTLRType2AdoptedType.type2etype[ERROR_TOKEN_A]);
-
-//            log.warn("[PARSER] Recover end --------------");
         }
 
         protected void process_wrapped_package(String package_name) {

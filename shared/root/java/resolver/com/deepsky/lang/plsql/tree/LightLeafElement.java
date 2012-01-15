@@ -25,12 +25,8 @@
 
 package com.deepsky.lang.plsql.tree;
 
-import com.intellij.lang.ASTFactory;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.ChangeUtil;
-import com.intellij.psi.impl.source.tree.TreeElement;
-import com.intellij.psi.impl.source.tree.TreeElementVisitor;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
@@ -38,66 +34,66 @@ import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class LightLeafElement extends LightweightElement  {
+public class LightLeafElement extends LightweightElement {
 
     private final CharSequence myText;
 
     protected LightLeafElement(IElementType type, CharSequence text) {
-      super(type);
-      myText = text;
+        super(type);
+        myText = text;
     }
 
     public int getTextLength() {
-      return myText.length();
+        return myText.length();
     }
 
     public CharSequence getChars() {
-      return myText;
+        return myText;
     }
 
     public String getText() {
-      return myText.toString();
+        return myText.toString();
     }
 
     public char charAt(int position) {
-      return myText.charAt(position);
+        return myText.charAt(position);
     }
 
     public int copyTo(char[] buffer, int start) {
-      if (buffer != null) {
-        CharArrayUtil.getChars(myText, buffer, start);
-      }
-      return start + myText.length();
+        if (buffer != null) {
+            CharArrayUtil.getChars(myText, buffer, start);
+        }
+        return start + myText.length();
     }
 
     @NotNull
     public char[] textToCharArray() {
-      final char[] buffer = new char[myText.length()];
-      CharArrayUtil.getChars(myText, buffer, 0);
-      return buffer;
+        final char[] buffer = new char[myText.length()];
+        CharArrayUtil.getChars(myText, buffer, 0);
+        return buffer;
     }
 
     public boolean textContains(char c) {
-      CharSequence text = myText;
-      for (int i = 0; i < text.length(); i++) {
-        if (c == text.charAt(i)) return true;
-      }
+        CharSequence text = myText;
+        for (int i = 0; i < text.length(); i++) {
+            if (c == text.charAt(i)) return true;
+        }
 
-      return false;
+        return false;
     }
 
     protected int textMatches(CharSequence buffer, int start) {
-      final CharSequence text = myText;
-      return leafTextMatches(text, buffer, start);
+        final CharSequence text = myText;
+        return leafTextMatches(text, buffer, start);
     }
 
     public static int leafTextMatches(CharSequence text, CharSequence buffer, int start) {
-      final int length = text.length();
-      if(buffer.length() - start < length) return -1;
-      for(int i = 0; i < length; i++){
-        if(text.charAt(i) != buffer.charAt(i + start)) return -1;
-      }
-      return start + length;
+        final int length = text.length();
+        if (buffer.length() - start < length) return -1;
+        for (int i = 0; i < length; i++) {
+            if (text.charAt(i) != buffer.charAt(i + start)) return -1;
+        }
+        return start + length;
     }
 
 //    public LeafElement rawReplaceWithText(String newText) {
@@ -144,89 +140,89 @@ public class LightLeafElement extends LightweightElement  {
 */
 
     public ASTNode findChildByType(IElementType type) {
-      return null;
+        return null;
     }
 
     @Nullable
     public ASTNode findChildByType(@NotNull TokenSet typesSet) {
-      return null;
+        return null;
     }
 
     @Nullable
     public ASTNode findChildByType(@NotNull TokenSet typesSet, @Nullable ASTNode anchor) {
-      return null;
+        return null;
     }
 
     public int hc() {
-      return leafHC(getChars());
+        return leafHC(getChars());
     }
 
     public static int leafHC(CharSequence text) {
-      final int len = text.length();
-      int hc = 0;
+        final int len = text.length();
+        int hc = 0;
 
-      for (int i = 0; i < len; i++) {
-        hc += text.charAt(i);
-      }
+        for (int i = 0; i < len; i++) {
+            hc += text.charAt(i);
+        }
 
-      return hc;
+        return hc;
     }
 
     public LightweightElement getFirstChildNode() {
-      return null;
+        return null;
     }
 
     public LightweightElement getLastChildNode() {
-      return null;
+        return null;
     }
 
     @Override
     public int getNotCachedLength() {
-      return myText.length();
+        return myText.length();
     }
 
     public int getCachedLength() {
-      return getNotCachedLength();
+        return getNotCachedLength();
     }
 
     public ASTNode[] getChildren(TokenSet filter) {
-      return EMPTY_ARRAY;
+        return EMPTY_ARRAY;
     }
 
     public void addChild(@NotNull ASTNode child, ASTNode anchorBefore) {
-      throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
+        throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
     }
 
     public void addLeaf(@NotNull final IElementType leafType, final CharSequence leafText, final ASTNode anchorBefore) {
-      throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
+        throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
     }
 
     public void addChild(@NotNull ASTNode child) {
-      throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
+        throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
     }
 
     public void removeChild(@NotNull ASTNode child) {
-      throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
+        throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
     }
 
     public void replaceChild(@NotNull ASTNode oldChild, @NotNull ASTNode newChild) {
-      throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
+        throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
     }
 
     public void replaceAllChildrenToChildrenOf(ASTNode anotherParent) {
-      throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
+        throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
     }
 
     public void removeRange(@NotNull ASTNode first, ASTNode firstWhichStayInTree) {
-      throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
+        throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
     }
 
     public void addChildren(ASTNode firstChild, ASTNode lastChild, ASTNode anchorBefore) {
-      throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
+        throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
     }
 
     public PsiElement getPsi() {
-      return null;
+        return null;
     }
 
 }

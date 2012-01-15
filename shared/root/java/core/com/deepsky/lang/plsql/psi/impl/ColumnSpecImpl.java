@@ -27,6 +27,7 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.psi.ColumnSpec;
+import com.deepsky.lang.plsql.psi.ColumnSpecList;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.struct.Type;
@@ -61,6 +62,12 @@ public class ColumnSpecImpl extends PlSqlCompositeNameBase implements ColumnSpec
 
         // todo -- resolve stuff refactoring
         throw new NotSupportedException();
+    }
+
+    public ColumnSpecList getColumnSpecList() {
+        return (getParent() instanceof ColumnSpecList)?
+                (ColumnSpecList) getParent():
+                null;
     }
 
 /*

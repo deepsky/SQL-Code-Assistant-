@@ -100,26 +100,6 @@ public class MouseEventHandler extends MouseAdapter {
             }
         }
 
-
-/*
-        class ActionListenerImpl implements ActionListener {
-            AnAction action;
-
-            public ActionListenerImpl(AnAction action) {
-                this.action = action;
-            }
-
-            public void actionPerformed(ActionEvent e) {
-                action.actionPerformed(
-                        new AnActionEvent(null, DataManager.getInstance().getDataContext(DbBrowserPopup.this),
-                                ActionPlaces.UNKNOWN, action.getTemplatePresentation(),
-                                ActionManager.getInstance(), 0)
-                );
-            }
-        }
-*/
-
-
         private class ButtonModelImpl extends DefaultButtonModel implements ActionListener {
 
             private DbTreeElement.MenuItemAction action;

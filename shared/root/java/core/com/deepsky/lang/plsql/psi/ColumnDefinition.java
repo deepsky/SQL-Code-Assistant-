@@ -31,15 +31,21 @@ import com.intellij.psi.PsiElement;
 
 public interface ColumnDefinition extends PlSqlElement {
     String getColumnName();
+
     PsiElement getPsiColumnName();
+
     Type getType();
 
     boolean isNotNull();
+
     boolean isPrimaryKey();
+
     boolean hasCheckConstraint();
 
     ColumnPKSpec getPrimaryKeySpec();
+
     ColumnFKSpec getForeignKeySpec();
+
     TableDefinition getTableDefinition();
 
 }
