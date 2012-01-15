@@ -26,6 +26,7 @@
 package com.deepsky.view.query_pane;
 
 import com.deepsky.database.DBException;
+import com.deepsky.database.exec.RecordCache;
 import com.deepsky.database.exec.RowSetManager;
 import com.deepsky.database.exec.UpdatableRecordCache;
 import com.deepsky.gui.ExportSettings;
@@ -184,12 +185,19 @@ todo - implement me
 //        addHotKey("copy", getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK), new CopyAction());
         mm.setTableHeader(_grid.getTableHeader());
 
-        JMenuItem menuItem = new JMenuItem("Copy column value to Clipboard");
+        // Save selected column in the Clipboard
+        JMenuItem menuItem = new JMenuItem("Copy column value");
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String content = null;
                 try {
-                    content = extractContent(",", false, false, false);
+                    int column = _grid.getSelectedColumn();
+                    int row = _grid.getSelectedRow();
+                    int j = _grid.isToNumerate()? 1: 0;
+                    if(column-j < 0){
+                        // Column number selected, skip value copying
+                        return;
+                    }
+                    String content = getValue(rsModel.getModel(), row, column-j, false);
                     if (content != null) {
                         // save in Clipboard
                         StringSelection stsel = new StringSelection(content);
@@ -202,6 +210,26 @@ todo - implement me
             }
         });
         popupMenu.add(menuItem);
+
+        // Save selected row entirely in the Clipboard
+        menuItem = new JMenuItem("Copy row");
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String content = extractContent(",", false, false, false);
+                    if (content != null) {
+                        // save in Clipboard
+                        StringSelection stsel = new StringSelection(content);
+                        Clipboard system = Toolkit.getDefaultToolkit().getSystemClipboard();
+                        system.setContents(stsel, stsel);
+                    }
+                } catch (DBException e1) {
+                    // todo - handle exc
+                }
+            }
+        });
+        popupMenu.add(menuItem);
+
 
         _grid.addPopupListener(new PopupListener() {
             public void popupFared(MouseEvent e) {
@@ -248,8 +276,6 @@ todo - implement me
 
         if ( numrows != 0) {
             final StringBuilder sbf = new StringBuilder();
-            final int[] rowsselected = _grid.getSelectedRows();
-
             final String lineSeparator = getLineSeparator();
             if (saveHeader) {
                 // put header name list
@@ -263,30 +289,19 @@ todo - implement me
                 sbf.append(lineSeparator);
             }
 
-            // put content
-            for (int i = 0; i < numrows || !isLast(i+1); i++) {
-                if (i > 0) sbf.append(lineSeparator);
-
-                for (int j = 0; j < numcols; j++) {
-                    int rowIndex = numrows!=-1? rowsselected[i]: i;
-                    Object value = rsModel.getModel().getValueAt(rowIndex, j+1);
-                    if (value != null) {
-                        ValueConvertor4 convertor = ValueConvertor4Factory.create(project, value);
-                        try {
-                            String _value = convertor != null ? convertor.convertToString() : "";
-                            if (encloseWithDowbleQuotes) {
-                                sbf.append("\"").append(_value).append("\"");
-                            } else {
-                                sbf.append(_value);
-                            }
-                        } catch (SQLException e) {
-                            throw new DBException(e.getMessage());
-                        }
+            // Save content
+            final int[] selectedRows = saveAllRows? new int[0]: _grid.getSelectedRows();
+            iterateOverSelectedRows(selectedRows, new RecordHandler() {
+                public void handleRecord(RecordCache rCache, int rowIndex, boolean isRecord_1st) throws DBException {
+                    // Put line separator
+                    if (!isRecord_1st) sbf.append(lineSeparator);
+                    // Save column values
+                    for (int j = 0; j < numcols; j++) {
+                        sbf.append(getValue(rCache, rowIndex, j, encloseWithDowbleQuotes));
+                        if (j < numcols - 1) sbf.append(fieldDelimiter);
                     }
-
-                    if (j < numcols - 1) sbf.append(fieldDelimiter);
                 }
-            }
+            });
 
             return sbf.toString();
         }
@@ -299,14 +314,50 @@ todo - implement me
         return lineSeparator!=null? lineSeparator: "\n";
     }
 
-    private boolean isLast(int rownum){
-        if(rownum >= rsModel.getModel().getFetchedRowCount()-1 ){
-            if(rsModel.getModel().allRowsFetched()){
-                return true;
+    private String getValue(RecordCache rCache, int rowIndex, int column, boolean encloseWithDoubleQuotes) throws DBException {
+        Object value = rCache.getValueAt(rowIndex, column + 1);
+        if (value != null) {
+            ValueConvertor4 convertor = ValueConvertor4Factory.create(project, value);
+            try {
+                String _value = convertor != null ? convertor.convertToString() : "";
+                if (encloseWithDoubleQuotes) {
+                    return new StringBuilder().append("\"").append(_value).append("\"").toString();
+                } else {
+                    return _value;
+                }
+            } catch (SQLException e) {
+                throw new DBException(e.getMessage());
             }
         }
+        return "";
+    }
 
-        return false;
+    private void iterateOverSelectedRows(final int[] selectedRows, RecordHandler handler) throws DBException {
+        if(selectedRows.length > 0){
+            for(int i=0; i<selectedRows.length; i++){
+                handler.handleRecord(rsModel.getModel(), selectedRows[i], i == 0);
+            }
+        } else {
+            // Iterate over all records
+            int i = 0;
+            while(true){
+                if(i < rsModel.getModel().getFetchedRowCount() ){
+                    // keep iterating
+                } else if(rsModel.getModel().allRowsFetched()){
+                    break;
+                } else {
+                    // run one more cycle to
+                    continue;
+                }
+
+                handler.handleRecord(rsModel.getModel(), i, i == 0);
+                i++;
+            }
+        }
+    }
+
+    private interface RecordHandler {
+        void handleRecord(RecordCache rCache, int rowIndex, boolean isRecord_1st) throws DBException;
     }
 
     private static class CopyAction extends AbstractAction {
