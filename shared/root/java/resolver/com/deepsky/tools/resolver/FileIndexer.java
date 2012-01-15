@@ -101,7 +101,7 @@ public class FileIndexer {
                 System.out.println("ERROR [File] " + file2 + " Could not parse");
             } else {
                 int cacheSizeBefore = itree.getEntriesCount();
-                indexer.parse(root, itree);
+                indexer.index(root, itree);
                 int sizeAfter = itree.getEntriesCount();
                 int added = sizeAfter - cacheSizeBefore;
 

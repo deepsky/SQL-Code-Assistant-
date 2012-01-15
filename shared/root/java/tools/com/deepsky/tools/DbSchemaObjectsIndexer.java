@@ -292,7 +292,7 @@ public class DbSchemaObjectsIndexer {
 
                 int indexes = itree.getEntriesCount();
                 NamesIndexer indexer = new NamesIndexer();
-                indexer.parse(root, itree);
+                indexer.index(root, itree);
                 int added = itree.getEntriesCount() - indexes;
                 indexes = itree.getEntriesCount();
 

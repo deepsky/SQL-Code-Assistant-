@@ -53,9 +53,9 @@ import java.util.List;
 
 public class NamesIndexer extends PlSqlElementVisitor {
 
-    IndexTree itree;
+    protected IndexTree itree;
 
-    public void parse(ASTNode r, final IndexTree itree) {
+    public void index(ASTNode r, final IndexTree itree) {
         this.itree = itree;
 
         PsiElement element = r.getPsi();

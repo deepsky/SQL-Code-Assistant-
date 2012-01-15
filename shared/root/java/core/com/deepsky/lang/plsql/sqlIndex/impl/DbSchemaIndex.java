@@ -161,7 +161,7 @@ public class DbSchemaIndex extends SqlIndexBase {
                     itree.remove(fileCtx);
 
                     NamesIndexer indexer = new NamesIndexer();
-                    indexer.parse(root, itree);
+                    indexer.index(root, itree);
                     added = itree.getEntriesCount() - indexes;
                     indexes = itree.getEntriesCount();
 

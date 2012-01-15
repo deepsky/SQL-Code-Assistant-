@@ -76,7 +76,7 @@ public class FSIndexer implements Indexer {
 
         Set<String> types = IndexTreeUtil.getTypesInFile(itree, vf.getPath());
 //        itree.remove(file.getCtxPath1().getPath());
-        indexer.parse(file.getNode(), itree);
+        indexer.index(file.getNode(), itree);
 
         setFileTimestamp(vf.getPath(), vf.getModificationCount(), vf.getModificationStamp());
         ms = System.currentTimeMillis() - ms;
