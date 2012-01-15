@@ -32,20 +32,7 @@ public interface RowSetManager {
 
     RecordCache getModel();
 
-    /**
-     * Refresh result set with current order options
-     *
-     * @throws com.deepsky.database.DBException
-     *          - unable to perform SQL query
-     */
-//    void refresh() throws DBException;
-
-//    void orderByColumn(int columnId, int direction, boolean stickyTag) throws DBException;
-
     void close();
 
     void cancel();
-
-//    void addListener(TableResizeListener listener);
-//    void removeListener(TableResizeListener listener);
 }
