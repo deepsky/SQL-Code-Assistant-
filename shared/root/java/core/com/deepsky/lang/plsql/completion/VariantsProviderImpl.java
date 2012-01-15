@@ -50,7 +50,6 @@ import java.util.*;
 
 public class VariantsProviderImpl implements VariantsProvider {
 
-    //IndexTree itree;
     NameProvider nameProvider;
     ResolveHelper resolver;
 
@@ -91,10 +90,10 @@ public class VariantsProviderImpl implements VariantsProvider {
     }
 
     public List<LookupElement> collectNamesInContext(NameFragmentRef prev, String lookUpStr, int filter) {
-        ResolveDescriptor rhlp;
-        if(prev != null && (rhlp = prev.resolveLight()) != null){
+        ResolveDescriptor rHlp = (prev != null)? prev.resolveLight(): null;
+        if(rHlp != null){
             List<LookupElement> out = new ArrayList<LookupElement>();
-            Iterator<ContextItem> ite = rhlp.iterateOverChildren();
+            Iterator<ContextItem> ite = rHlp.iterateOverChildren();
             while (ite.hasNext()) {
                 ContextItem item = ite.next();
                 String name = ContextPathUtil.extractLastCtxName(item.getCtxPath());

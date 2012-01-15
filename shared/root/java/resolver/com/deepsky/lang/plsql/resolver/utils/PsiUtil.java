@@ -25,8 +25,11 @@
 
 package com.deepsky.lang.plsql.resolver.utils;
 
+import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.resolver.ContextPathProvider;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,5 +47,28 @@ public class PsiUtil {
             }
         }
         return out.toArray(new String[out.size()]);
+    }
+
+    /**
+     * Iterate over siblings except WS and comments
+     * @param e
+     * @param visitor
+     */
+    public static void iterateOverSiblings(PsiElement e, SiblingVisitor visitor) {
+        if(e != null){
+            PsiElement prev = e.getPrevSibling();
+            while(prev!= null){
+                if(PlSqlTokenTypes.WS_TOKENS.contains(prev.getNode().getElementType())){
+                    // ignore WS, LF, comments
+                } else if(!visitor.visit(prev)){
+                    break;
+                }
+                prev = prev.getPrevSibling();
+            }
+        }
+    }
+
+    public static interface SiblingVisitor {
+        boolean visit(PsiElement e);
     }
 }
