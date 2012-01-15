@@ -59,19 +59,19 @@ public class SqlScriptRunService implements SqlScriptRunner {
     private String errorMessage = "";
     private long startMs = 0;
 
-    public SqlScriptRunService(Project project){
+    public SqlScriptRunService(Project project) {
         this.project = project;
     }
 
     public static SqlScriptRunner getInstance(Project project) {
-      return ServiceManager.getService(project, SqlScriptRunner.class);
+        return ServiceManager.getService(project, SqlScriptRunner.class);
     }
 
     public synchronized void runSqlStatement(
             @NotNull ASTNode statement,
             @NotNull SqlStatementResultListener listener) throws AlreadyStartedException, DBException {
 
-        if(status == SqlRunnerStatusIndicator.INPROGRESS){
+        if (status == SqlRunnerStatusIndicator.INPROGRESS) {
             throw new AlreadyStartedException();
         }
 
@@ -87,7 +87,7 @@ public class SqlScriptRunService implements SqlScriptRunner {
             @NotNull final String objectName,
             @NotNull final DMLResultListener listener) throws AlreadyStartedException, DBException {
 
-        if(status == SqlRunnerStatusIndicator.INPROGRESS){
+        if (status == SqlRunnerStatusIndicator.INPROGRESS) {
             throw new AlreadyStartedException();
         }
 
@@ -98,16 +98,16 @@ public class SqlScriptRunService implements SqlScriptRunner {
         ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
         this.executor = manager.getSQLExecutor();
         runSqlStatementInternal(
-                new QueryRunner(select, new QueryResultListener(){
+                new QueryRunner(select, new QueryResultListener() {
                     public void handleQueryResult(RowSetManager result) {
                         try {
                             if (result.getModel().getFetchedRowCount() == 1) {
                                 Object o = result.getModel().getValueAt(0, 1);
                                 if (o instanceof CLOB) {
                                     listener.handleDMLResult(
-                                        new DDLScript(1,
-                                                result.getModel().timeSpentOnFetch(),
-                                                "", clob2string((CLOB) o))
+                                            new DDLScript(1,
+                                                    result.getModel().timeSpentOnFetch(),
+                                                    "", clob2string((CLOB) o))
                                     );
                                 }
                             }
@@ -135,15 +135,15 @@ public class SqlScriptRunService implements SqlScriptRunner {
 
     public void runQuery(
             @NotNull String select, @NotNull final QueryResultListener listener
-        ) throws AlreadyStartedException, DBException {
+    ) throws AlreadyStartedException, DBException {
 
-        if(status == SqlRunnerStatusIndicator.INPROGRESS){
+        if (status == SqlRunnerStatusIndicator.INPROGRESS) {
             throw new AlreadyStartedException();
         }
         ConnectionManager manager = PluginKeys.CONNECTION_MANAGER.getData(project);
         this.executor = manager.getSQLExecutor();
         runSqlStatementInternal(
-                new QueryRunner(select, new QueryResultListener(){
+                new QueryRunner(select, new QueryResultListener() {
                     public void handleQueryResult(RowSetManager result) {
                         try {
                             listener.handleQueryResult(result);
@@ -203,7 +203,7 @@ public class SqlScriptRunService implements SqlScriptRunner {
         private SqlStatementResultListener listener;
         private ASTNode statement;
 
-        public SqlStmtRunner(ASTNode statement, SqlStatementResultListener listener){
+        public SqlStmtRunner(ASTNode statement, SqlStatementResultListener listener) {
             this.statement = statement;
             this.listener = listener;
         }
@@ -211,12 +211,11 @@ public class SqlScriptRunService implements SqlScriptRunner {
         public void run() {
             try {
                 startMs = System.currentTimeMillis();
-                if(PlSqlElementTypes.QUERIES.contains(statement.getElementType())){
-                    // Run query
+                if (PlSqlElementTypes.QUERIES.contains(statement.getElementType())) {
                     final RowSetManager rowSet;
                     // run Query
-                    if(statement.getElementType() == PLSqlTypesAdopted.SUBQUERY){
-                        rowSet = executor.executeQuery((Subquery)statement.getPsi());
+                    if (statement.getElementType() == PLSqlTypesAdopted.SUBQUERY) {
+                        rowSet = executor.executeQuery((Subquery) statement.getPsi());
                     } else {
                         rowSet = executor.executeQuery((SelectStatement) statement.getPsi());
                     }
@@ -263,7 +262,7 @@ public class SqlScriptRunService implements SqlScriptRunner {
         private QueryResultListener listener;
         private String query;
 
-        public QueryRunner(String query, QueryResultListener listener){
+        public QueryRunner(String query, QueryResultListener listener) {
             this.query = query;
             this.listener = listener;
         }
@@ -380,6 +379,7 @@ public class SqlScriptRunService implements SqlScriptRunner {
 
     /**
      * CLOB to string convertor
+     *
      * @param clob source
      * @return string extracted from CLOB
      * @throws SQLException
@@ -403,7 +403,7 @@ public class SqlScriptRunService implements SqlScriptRunner {
             } catch (IOException e) {
                 throw new SQLException(e.getMessage());
             } finally {
-                if(r != null){
+                if (r != null) {
                     try {
                         r.close();
                     } catch (IOException ignored) {

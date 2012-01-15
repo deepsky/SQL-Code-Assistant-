@@ -27,9 +27,10 @@ package com.deepsky.database.exec.impl;
 
 import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.DBException;
-import com.deepsky.database.exec.*;
-import com.deepsky.database.ora.DbUrl;
-import com.deepsky.lang.common.PluginKeys;
+import com.deepsky.database.exec.RecordCache;
+import com.deepsky.database.exec.RowSetManager;
+import com.deepsky.database.exec.SQLExecutor;
+import com.deepsky.database.exec.SQLUpdateStatistics;
 import com.deepsky.lang.common.ResolveProvider;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
@@ -44,10 +45,8 @@ import com.deepsky.lang.plsql.psi.resolve.ASTTreeProcessor;
 import com.deepsky.lang.plsql.psi.spices.CompilableObject;
 import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
 import com.deepsky.lang.plsql.resolver.ResolveFacade;
-import com.deepsky.lang.plsql.sqlIndex.IndexManager;
 import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
@@ -55,15 +54,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class SQLExecutorSimple implements SQLExecutor {
 
     private Connection conn;
     private ConnectionManager connectionManager;
-    private java.sql.Statement stmt;
-    private String sql = null;
+    private Statement stmt;
 
     boolean canceled = false;
 
@@ -92,7 +88,7 @@ public abstract class SQLExecutorSimple implements SQLExecutor {
 
         ResolveFacade domainResolver = getDefaultResolver();
         PsiElement element = ast.getPsi();
-        ((ResolveProvider)element).setResolver(domainResolver);
+        ((ResolveProvider) element).setResolver(domainResolver);
 
         return executeQuery((SelectStatement) node.getPsi());
     }
@@ -271,7 +267,7 @@ public abstract class SQLExecutorSimple implements SQLExecutor {
                     }
                 }
             });
-            
+
             return false;
         } catch (Error e) {
             // bind varible found
