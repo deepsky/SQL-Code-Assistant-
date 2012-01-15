@@ -43,6 +43,10 @@
             <li><b>1.1.4.11</b>
                  <ul>
                     - [FIX] Misbehavior after editing of connection settings in the DBBrowser<br>
+                    - [FIX] Not correct value saving in the Result Panel<br>
+                    - [FIX] SQL files opened in the Editor not indexed properly<br>
+                    - [FIX] Minor fixes in completion<br>
+                    - [NEW] "Create DDL script" added<br>
                  </ul>
             </li>
             <li><b>1.1.3.11</b>
