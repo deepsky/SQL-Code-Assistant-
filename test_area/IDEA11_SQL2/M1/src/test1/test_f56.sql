@@ -25,7 +25,7 @@ select text, id
 from f56
 
 
-select department_id, e.*
+select department_id, e.*, commission_pct
 from employees e
 
 
