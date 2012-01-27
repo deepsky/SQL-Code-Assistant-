@@ -35,12 +35,11 @@ import com.deepsky.integration.CustomRecognitionException;
 import com.deepsky.integration.PlSqlTokenType;
 import com.deepsky.lang.parser.plsql.ANTLRType2AdoptedType;
 import com.deepsky.lang.parser.plsql.PLSqlParserAdoptedExt;
-import com.deepsky.lang.plsql.parser.WrappedPackageException;
+import com.deepsky.lang.plsql.completion.Constants;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
-import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,7 +66,7 @@ public class PlSqlPsiParser implements PsiParser {
         parser = new PLSqlParser2(new TokenStreamAdapter(builder), builder);
         ms1 = System.currentTimeMillis() - ms1;
 
-        long ms2 = 0L, ms4 =0L;
+        long ms2 = 0L, ms4 = 0L;
         ASTNode astNode = null;
         long ms2_ = System.currentTimeMillis();
 

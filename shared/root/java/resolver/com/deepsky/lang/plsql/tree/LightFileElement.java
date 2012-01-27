@@ -26,22 +26,20 @@
 package com.deepsky.lang.plsql.tree;
 
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.CharTableImpl;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.util.CharTable;
 
 public class LightFileElement extends LightweightElement {
 
+/*
     private volatile CharTable myCharTable = new CharTableImpl();
-    private CharSequence myText;
 
     public CharTable getCharTable() {
       return myCharTable;
     }
+*/
 
-    public LightFileElement(IElementType type, CharSequence text) {
-      super(type);
-        this.myText = text;
+    public LightFileElement(IElementType type) {
+        super(type);
     }
 
     public void setPsi(PsiFile psi) {

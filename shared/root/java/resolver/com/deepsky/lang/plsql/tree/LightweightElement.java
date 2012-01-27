@@ -74,8 +74,25 @@ public class LightweightElement implements ASTNode, ContextPathProvider { //exte
         throw new MethodNotSupportedException("Not supported: clone");
     }
 
-    public LeafElement findLeafElementAt(int offset) {
-        throw new MethodNotSupportedException("Not supported: findLeafElementAt");
+    public ASTNode findLeafElementAt(int offset) {
+        LightweightElement element = this;
+        startFind:
+        while (true) {
+            LightweightElement child = element.getFirstChildNode();
+            while (child != null) {
+                final int textLength = child.getTextLength();
+                if (textLength > offset) {
+                    if (child instanceof LightLeafElement) {
+                        return child;
+                    }
+                    element = child;
+                    continue startFind;
+                }
+                offset -= textLength;
+                child = child.getTreeNext();
+            }
+            return null;
+        }
     }
 
     public <T> T getCopyableUserData(Key<T> key) {
