@@ -18,7 +18,7 @@ tokens {
     PACKAGE_SPEC; PACKAGE_BODY; PACKAGE_NAME; PACKAGE_OBJ_BODY;
     RECORD_TYPE_DECL;
     SELECT_EXPRESSION; SELECT_EXPRESSION_UNION;
-    PLSQL_BLOCK;
+    PLSQL_BLOCK; PLSQL_BLOCK_END;
     CURSOR_DECLARATION;
     VARIABLE_DECLARATION;
     PROCEDURE_BODY;
@@ -244,14 +244,23 @@ tokens {
     COLUMN_FK_SPEC;
     NOT_NULL_STMT;
     COLUMN_CHECK_CONSTRAINT; COLUMN_NOT_NULL_CONSTRAINT;
-    CONSTRAINT;
+//    CONSTRAINT;
     PK_SPEC; FK_SPEC;
-    UNIQUE_CONSTRAINT;
+    UNIQUE_CONSTRAINT;CHECK_CONSTRAINT;
+
     CONSTRAINT_NAME;
     ADD_CONSTRAINT;
     ADD_PRIMARY_KEY;
 
     IOT_TYPE; HEAP_ORGINIZED; EXTERNAL_TYPE;
+
+    EXTERNAL_TABLE_SPEC;
+    WRITE_ACCESS_PARAMS_SPEC; LOADER_ACCESS_PARAMS;
+    EXT_FIELD_SPEC_LIST; EXT_FIELD_SPEC; RECORD_FMT_SPEC;
+    EXT_TABLE_LOCATION_SPEC;
+
+    STORAGE_PARAM; STORAGE_SPEC;
+    PARALLEL_CLAUSE; REJECT_SPEC;
 
     //
     NAME_FRAGMENT; EXEC_NAME_REF;
@@ -280,6 +289,8 @@ tokens {
     EXIT_STATEMENT;
     LABEL_NAME;
     PARTITION_SPEC; RANGE_PARTITION; HASH_PARTITION;
+
+    MONITORING_CLAUSE;
 
     CREATE_TABLESPACE; DROP_TABLESPACE; TABLESPACE_NAME; ALTER_TABLESPACE;
     CREATE_TYPE;
@@ -858,7 +869,6 @@ create_directory:
 create_table2:
     "table"! (schema_name DOT!)? table_name_ddl
     (OPEN_PAREN! column_def (COMMA! (column_def|constaraint))* CLOSE_PAREN!)?
-//    (nested_tab_spec)? (lob_storage_clause)? (organization_spec)? (physical_properties|table_properties)*
     (nested_tab_spec)? (lob_storage_clause)? (physical_properties|table_properties)*
     ("as" select_expression)?
     ;
@@ -917,6 +927,7 @@ segment_attributes_clause:
 //    | ("compute" "statistics" ("parallel"|"noparallel"|identifier2)? )
     | logging_clause
     | table_compression
+    | ("pctthreshold" numeric_literal)
     ;
 
 logging_clause:
@@ -935,7 +946,9 @@ physical_attributes_clause:
     | ("pctused" numeric_literal)
     | ("initrans" numeric_literal)
     | ("maxtrans" numeric_literal)
-    | ("compute" "statistics" ("parallel"|"noparallel"|identifier)? )
+    | (options {greedy = true;} :
+        "compute" "statistics" ("parallel"|"noparallel"|identifier)?
+        )
     | storage_spec
     ;
 
@@ -954,7 +967,8 @@ cache_clause:
     ;
 
 monitoring_clause:
-    "monitoring" | "nomonitoring"
+    ("monitoring" | "nomonitoring")
+    {#monitoring_clause = #([MONITORING_CLAUSE, "MONITORING_CLAUSE" ], #monitoring_clause);}
     ;
 
 table_partitioning_clause:
@@ -1036,12 +1050,16 @@ organization_spec:
             { #organization_spec = #([IOT_TYPE, "IOT_TYPE" ], #organization_spec);}
         | "heap"!
             { #organization_spec = #([HEAP_ORGINIZED, "HEAP_ORGINIZED" ], #organization_spec);}
-        | ("external") => external_table_spec
+//        | ("external") => external_table_spec
+//            { #.organization_spec = #.([EXTERNAL_TYPE, "EXTERNAL_TYPE" ], #.organization_spec);}
+//        | ("external" OPEN_PAREN external_table_spec CLOSE_PAREN (reject_spec|parallel_clause)*)
+        | ("external" OPEN_PAREN external_table_spec CLOSE_PAREN (reject_spec)?)
             { #organization_spec = #([EXTERNAL_TYPE, "EXTERNAL_TYPE" ], #organization_spec);}
         )
     ;
 
 parallel_clause:
+(
     ("parallel"
         (
             ( OPEN_PAREN
@@ -1052,18 +1070,23 @@ parallel_clause:
         )?
     )
     | "noparallel"
+)
+    { #parallel_clause = #([PARALLEL_CLAUSE, "PARALLEL_CLAUSE" ], #parallel_clause);}
     ;
 
 // REJECT LIMIT UNLIMITED
 reject_spec:
     "reject" "limit" ("unlimited"| NUMBER)
+    { #reject_spec = #([REJECT_SPEC, "REJECT_SPEC" ], #reject_spec);}
     ;
 
 storage_spec:
     "storage" OPEN_PAREN (storage_params)+ CLOSE_PAREN
+    { #storage_spec = #([STORAGE_SPEC, "STORAGE_SPEC" ], #storage_spec);}
     ;
 
 storage_params:
+(
     ("initial" (STORAGE_SIZE|numeric_literal))
     | ("next" (STORAGE_SIZE|numeric_literal))
     | ("minextents" numeric_literal)
@@ -1076,39 +1099,45 @@ storage_params:
     | ("flash_cache" ( "keep" | "none" | "default"))
     | ("cell_flash_cache" ( "keep" | "none" | "default"))
     | "encrypt"
+)
+    { #storage_param = #([STORAGE_PARAM, "STORAGE_PARAM" ], #storage_param);}
     ;
 
-
 constaraint:
-    "constraint"! constraint_name (
+    ("constraint" constraint_name)? (
         pk_spec_constr
+            { #constaraint = #([PK_SPEC, "PK_SPEC" ], #constaraint);}
         | fk_spec_constr
+            { #constaraint = #([FK_SPEC, "FK_SPEC" ], #constaraint);}
         | check_condition
-        | unique_contsr
+            { #constaraint = #([CHECK_CONSTRAINT, "CHECK_CONSTRAINT" ], #constaraint);}
+        | unique_constr
+            { #constaraint = #([UNIQUE_CONSTRAINT, "UNIQUE_CONSTRAINT" ], #constaraint);}
      )
-    { #constaraint = #([CONSTRAINT, "CONSTRAINT" ], #constaraint);}
+//    { #.constaraint = #.([CONSTRAINT, "CONSTRAINT" ], #.constaraint);}
     ;
 
 pk_spec_constr:
-    "primary"! "key"! OPEN_PAREN! owner_column_name_ref_list CLOSE_PAREN! (using_index_clause)?
-    { #pk_spec_constr = #([PK_SPEC, "PK_SPEC" ], #pk_spec_constr);}
+    "primary"! "key"! OPEN_PAREN! owner_column_name_ref_list CLOSE_PAREN! (enable_disable_clause)? (using_index_clause)?
+//    { #.pk_spec_constr = #.([PK_SPEC, "PK_SPEC" ], #.pk_spec_constr);}
     ;
 
 fk_spec_constr:
     "foreign"! "key"! OPEN_PAREN! owner_column_name_ref_list CLOSE_PAREN!
     "references"! (schema_name DOT)? table_ref OPEN_PAREN! column_name_ref_list CLOSE_PAREN!
-    ("rely")? ("disable"|"enable")? ("on" "update" referential_actions)? ("on" "delete" referential_actions)?
-    { #fk_spec_constr = #([FK_SPEC, "FK_SPEC" ], #fk_spec_constr);}
+    ("rely")? (enable_disable_clause)?
+    ("on" ("delete"|"update") referential_actions)?
+//    { #.fk_spec_constr = #.([FK_SPEC, "FK_SPEC" ], #.fk_spec_constr);}
     ;
 
-unique_contsr:
+unique_constr:
     "unique" OPEN_PAREN column_name_ref (COMMA! column_name_ref)* CLOSE_PAREN (using_index_clause)?
-    { #unique_contsr = #([UNIQUE_CONSTRAINT, "UNIQUE_CONSTRAINT" ], #unique_contsr);}
+//    { #.unique_constr = #.([UNIQUE_CONSTRAINT, "UNIQUE_CONSTRAINT" ], #.unique_constr);}
     ;
 
 check_condition:
     "check" condition
-    { #check_condition = #([COLUMN_CHECK_CONSTRAINT, "COLUMN_CHECK_CONSTRAINT" ], #check_condition);}
+//    { #.check_condition = #.([CHECK_CONSTRAINT, "CHECK_CONSTRAINT" ], #.check_condition);}
     ;
 
 column_name_ref_list:
@@ -1211,10 +1240,6 @@ drop_clause:
     ("primary" "key" ("cascade")? (("keep"|"drop") "index")? )
     | ("unique" OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN ("cascade")? (("keep"|"drop") "index")?)
     | ("constraint" identifier ("cascade")?)
-    ;
-
-enable_disable_clause2:
-    using_index_clause ("cascade")? (("keep"|"drop") "index")?
     ;
 
 using_index_clause:
@@ -1589,7 +1614,7 @@ assignment_statement :
 rvalue
 {boolean tag1=false;}
 :
-    (("prior")? ( name_fragment2 DOT )* name_fragment2 ~OPEN_PAREN ) => (("prior"!)? ( name_fragment2 DOT! )* name_fragment2)
+    (("prior")? ( name_fragment2 DOT )* name_fragment2 ~OPEN_PAREN ) => (("prior")? ( name_fragment2 DOT)* name_fragment2)
         {#rvalue = #([VAR_REF, "VAR_REF" ], #rvalue);} /// !!!!!! actual type needs to be resolved
 
     | (COLON ("new"|"old") DOT) => (COLON ("new"|"old") DOT! name_fragment)
@@ -1795,12 +1820,12 @@ sequence_ref :
     ;
 
 name_fragment :
-     identifier2
+     (identifier2|"primary"|"foreign")
     { #name_fragment = #([NAME_FRAGMENT, "NAME_FRAGMENT" ], #name_fragment);}
     ;
 
 name_fragment_ex :
-     identifier3
+     (identifier3|"primary"|"foreign")
     { #name_fragment_ex = #([NAME_FRAGMENT, "NAME_FRAGMENT" ], #name_fragment_ex);}
     ;
 
@@ -1815,6 +1840,8 @@ identifier4:
     | "prior"
     | "start"
     | "create"
+    |"primary"
+    |"foreign"
     ;
 
 type_name :
@@ -1965,7 +1992,12 @@ plsql_block :
     "begin"!
     (seq_of_statements )?
     ( exception_section )?
-    "end"! ( identifier ) ?
+    plsql_block_end
+    ;
+
+plsql_block_end:
+    "end"! ( identifier )?
+    { #plsql_block_end = #([PLSQL_BLOCK_END, "PLSQL_BLOCK_END" ], #plsql_block_end);}
     ;
 
 exception_section:
@@ -3225,11 +3257,21 @@ identifier :
 /////////////////////////////////////////////////////////////////
 
 external_table_spec:
+    "type" (
+        ("oracle_loader" directory_spec (access_parameters)?)
+        | ("oracle_datapump"  directory_spec (write_access_parameters)?)
+    ) location
+    { #external_table_spec = #([EXTERNAL_TABLE_SPEC, "EXTERNAL_TABLE_SPEC" ], #external_table_spec);}
+    ;
+
+/*
+external_table_spec:
     "external"! OPEN_PAREN! "type" (oracle_loader_params|oracle_datapump_params)location CLOSE_PAREN!
 //    ("as" select_expression)? (reject_spec|parallel_clause)*
     (reject_spec|parallel_clause)*
     ;
-
+*/
+/*
 oracle_loader_params:
     "oracle_loader" directory_spec (access_parameters)?
     ;
@@ -3237,6 +3279,7 @@ oracle_loader_params:
 oracle_datapump_params:
     "oracle_datapump" directory_spec (write_access_parameters)?
     ;
+*/
 
 directory_spec:
     ("default")? "directory" identifier
@@ -3244,23 +3287,28 @@ directory_spec:
 
 write_access_parameters:
     "access" "parameters"
-        OPEN_PAREN!
-            ("nologfile"|("logfile" file_location_spec))?
-            ("version" ("compatible"|"latest"|string_literal))?
-            ("compression" ("enabled"|"disabled"))?
-            ("encryption" ("enabled"|"disabled"))?
-        CLOSE_PAREN!
+     OPEN_PAREN  write_access_parameters_spec CLOSE_PAREN
+    ;
+
+write_access_parameters_spec:
+    ("nologfile"|("logfile" file_location_spec))?
+    ("version" ("compatible"|"latest"|string_literal))?
+    ("compression" ("enabled"|"disabled"))?
+    ("encryption" ("enabled"|"disabled"))?
+    { #write_access_parameters_spec = #([WRITE_ACCESS_PARAMS_SPEC, "WRITE_ACCESS_PARAMS_SPEC" ], #write_access_parameters_spec);}
     ;
 
 access_parameters:
-    "access" "parameters"
-        OPEN_PAREN!
-             (record_format_info)? (field_definitions)? (column_transforms)?
-        CLOSE_PAREN!
+    "access" "parameters" OPEN_PAREN loader_access_parameters CLOSE_PAREN
+    ;
+
+loader_access_parameters:
+    (record_format_info)? (field_definitions)? (column_transforms)?
+    { #loader_access_parameters = #([LOADER_ACCESS_PARAMS, "LOADER_ACCESS_PARAMS" ], #loader_access_parameters);}
     ;
 
 record_format_info:
-    "records" rec_format (rec_format_tail)*
+    "records" rec_format (rec_format_spec)*
     ;
 
 rec_format:
@@ -3269,7 +3317,8 @@ rec_format:
     | ("delimited" "by" ("newline"|string_literal))
     ;
 
-rec_format_tail:
+rec_format_spec:
+(
     ("characterset" (string_literal | identifier) )
     | ("data" "is" ("big"|"little") "endian")
     | ("byte" "order" "mark" ("check"|"nocheck"))
@@ -3280,13 +3329,15 @@ rec_format_tail:
     | ("nologfile"|("logfile" file_location_spec) )
     | ( ("readsize"|"data_cache"|"skip") NUMBER)
     | ( "preprocessor" file_location_spec)
+)    
+    { #rec_format_spec = #([RECORD_FMT_SPEC, "RECORD_FMT_SPEC" ], #rec_format_spec);}
     ;
 
 field_definitions:
     "fields" (delim_spec)? (trim_spec)?
         ("missing" "field" "values" "are" "null")?
         ("reject" "rows" "with" "all" "null" "fields")?
-        (field_list)?
+        (OPEN_PAREN field_list CLOSE_PAREN)?
     ;
 
 column_transforms:
@@ -3331,11 +3382,13 @@ trim_spec:
     ;
 
 field_list:
-    OPEN_PAREN! field_spec (COMMA! field_spec)* CLOSE_PAREN!
+    field_spec (COMMA! field_spec)*
+    { #field_list = #([EXT_FIELD_SPEC_LIST, "EXT_FIELD_SPEC_LIST" ], #field_list);}
     ;
 
 field_spec:
     identifier2 (pos_spec)? (datatype_spec)?
+    { #field_spec = #([EXT_FIELD_SPEC, "EXT_FIELD_SPEC" ], #field_spec);}
     ;
 
 pos_spec:
@@ -3368,6 +3421,7 @@ location:
         OPEN_PAREN
             (file_location_spec| string_literal ) (COMMA! (file_location_spec|string_literal))*
         CLOSE_PAREN
+    { #location = #([EXT_TABLE_LOCATION_SPEC, "EXT_TABLE_LOCATION_SPEC" ], #location);}
     ;
 
 file_location_spec:
@@ -3467,8 +3521,8 @@ identifier2:
     | "nextval"
     | "currval"
     | "rows"
-    | "foreign"
-    | "primary"
+//    | "foreign"
+//    | "primary"
     | "records"
     | "parameters"
     | "access"
@@ -3480,7 +3534,7 @@ identifier2:
     | "little"
     | "endian"
     | "mark"
-    | "check"
+//    | "check"   column not allowed
     | "nocheck"
     | "string"
     | "sizes"
@@ -3694,6 +3748,7 @@ identifier2:
     | "minextents"
     | "maxextents"
     | "pctincrease"
+    | "overflow"
     )
     ;
 
@@ -3799,7 +3854,7 @@ variable_name :
     | "little"
     | "endian"
     | "mark"
-//    | "check"
+//    | "check" variable not allowed
     | "nocheck"
     | "string"
     | "sizes"

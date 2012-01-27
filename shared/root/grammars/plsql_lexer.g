@@ -179,10 +179,12 @@ LF :   (
 SL_COMMENT
         :        "--"
                 (~('\n'|'\r'|'\uFFFF'))*
+/*
                 (   '\n' {newline();}
                     |'\r'('\n')? {newline();}
                     |{ int dummy = 0;}  ///'\uFFFF'
                 )
+*/
         ;
 
 
@@ -209,8 +211,6 @@ ML_COMMENT :          "/*"
                 |        ~('*'|'\n'|'\r'|'\uFFFF')
                 )*
 		( '\uFFFF'! {$setType(PLSql2TokenTypes.BAD_ML_COMMENT);} | "*/" )
-//                "*/"
-//        { $setType(Token.SKIP); }
 ;
 
 IF_COND_CMPL:

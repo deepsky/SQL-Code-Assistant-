@@ -28,12 +28,28 @@ package com.deepsky.lang.parser.plsql;
 import com.intellij.psi.tree.TokenSet;
 
 
-public interface PlSqlElementTypes extends PLSqlTypesAdopted{
+public interface PlSqlElementTypes extends PLSqlTypesAdopted {
 
-    TokenSet STATEMENTS = TokenSet.create(
-      PLSQL_BLOCK, RAISE_STATEMENT, LOOP_STATEMENT, ASSIGNMENT_STATEMENT, IF_STATEMENT,
-      CASE_STATEMENT, COMMIT_STATEMENT, NULL_STATEMENT,
-      RETURN_STATEMENT
+    TokenSet PLSQL_STATEMENTS = TokenSet.create(
+            RAISE_STATEMENT, LOOP_STATEMENT, ASSIGNMENT_STATEMENT, IF_STATEMENT,
+            CASE_STATEMENT, COMMIT_STATEMENT, NULL_STATEMENT, RETURN_STATEMENT,
+            MERGE_COMMAND, INSERT_COMMAND, DELETE_COMMAND, UPDATE_COMMAND,
+            SELECT_EXPRESSION, SELECT_EXPRESSION_UNION
+    );
+
+    TokenSet DB_OBJECTS_MAYBE_NESTED = TokenSet.create(
+            PlSqlElementTypes.FUNCTION_BODY,
+            PlSqlElementTypes.FUNCTION_SPEC,
+            PlSqlElementTypes.PROCEDURE_BODY,
+            PlSqlElementTypes.PROCEDURE_SPEC
+    );
+
+    TokenSet PLSQL_BLOCK_PARENTS = TokenSet.create(
+            PlSqlElementTypes.FUNCTION_BODY,
+            PlSqlElementTypes.FUNCTION_SPEC,
+            PlSqlElementTypes.PROCEDURE_BODY,
+            PlSqlElementTypes.PROCEDURE_SPEC,
+            PlSqlElementTypes.CREATE_TRIGGER
     );
 
     TokenSet BLOCKS = TokenSet.create(
@@ -41,14 +57,21 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
     );
 
     TokenSet SELECT_FROM_CLAUSE = TokenSet.create(
-            TABLE_ALIAS, FROM_SUBQUERY, TABLE_FUNCTION            
+            TABLE_ALIAS, FROM_SUBQUERY, TABLE_FUNCTION
     );
 
     TokenSet LOOP_SPEC_TYPES = TokenSet.create(
             NUMERIC_LOOP_SPEC, CURSOR_REF_LOOP_SPEC, CURSOR_LOOP_SPEC, FORALL_LOOP_SPEC
     );
 
+    TokenSet CONSTRAINTS = TokenSet.create(
+            PK_SPEC, FK_SPEC, UNIQUE_CONSTRAINT, CHECK_CONSTRAINT
+    );
 
+
+    TokenSet TABLE_ORGANIZATION = TokenSet.create(
+            EXTERNAL_TYPE, IOT_TYPE, HEAP_ORGINIZED
+    );
     // Type Extension Section
 /*
     PlSqlElementType MINUS_OP = new PlSqlElementType("MINUS_OP");
@@ -63,7 +86,7 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
 
 
     TokenSet DISPLAYED_COLUMN = TokenSet.create(
-        ASTERISK_COLUMN, IDENT_ASTERISK_COLUMN, EXPR_COLUMN
+            ASTERISK_COLUMN, IDENT_ASTERISK_COLUMN, EXPR_COLUMN
     );
 
     TokenSet ORDER_BY_EXPR = TokenSet.create(
@@ -75,7 +98,7 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
     TokenSet EXPR_TYPES = TokenSet.create(
             CAST_FUNC, LAG_FUNCTION, LEAD_FUNCTION, COUNT_FUNC, TRIM_FUNC, EXTRACT_DATE_FUNC,
             ARITHMETIC_EXPR, EXISTS_EXPR, INTERVAL_DAY_TO_SEC_EXPR,
-            FUNCTION_CALL,  SYSTIMESTAMP_CONST, SYSDATE_CONST, DBTIMEZONE,
+            FUNCTION_CALL, SYSTIMESTAMP_CONST, SYSDATE_CONST, DBTIMEZONE,
             ROWCOUNT_EXRESSION,
             STRING_LITERAL, NUMERIC_LITERAL, BOOLEAN_LITERAL, NULL_STATEMENT,
             PARENTHESIZED_EXPR, COLUMN_OUTER_JOIN,
@@ -108,25 +131,25 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
             SUBQUERY_CONDITION, EXISTS_EXPR, RELATION_CONDITION, IN_CONDITION, LIKE_CONDITION, BETWEEN_CONDITION, ISNULL_CONDITION
     );
 
-    TokenSet  OBJECT_SPEC = TokenSet.create(
-            VARIABLE_DECLARATION, 
+    TokenSet OBJECT_SPEC = TokenSet.create(
+            VARIABLE_DECLARATION,
             PROCEDURE_SPEC, FUNCTION_SPEC,
             RECORD_TYPE_DECL,
             TABLE_COLLECTION, OBJECT_TYPE_DEF, REF_CURSOR, VARRAY_COLLECTION,
             PROCEDURE_BODY, FUNCTION_BODY
     );
 
-    TokenSet  DECLARATIONS = TokenSet.create(
+    TokenSet DECLARATIONS = TokenSet.create(
             VARIABLE_DECLARATION,
             TABLE_COLLECTION,
             OBJECT_TYPE_DEF,
             RECORD_TYPE_DECL,
             // todo - REF_CURSOR,
-            VARRAY_COLLECTION, 
+            VARRAY_COLLECTION,
             CURSOR_DECLARATION
     );
 
-    TokenSet  SQL_STATEMENTS = TokenSet.create(
+    TokenSet SQL_STATEMENTS = TokenSet.create(
             SELECT_EXPRESSION,
             INSERT_COMMAND,
             DELETE_COMMAND,
@@ -134,19 +157,19 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
 //            SELECT_SUBSEQ
     );
 
-    TokenSet  SUBQUERY_SELECTS = TokenSet.create(
+    TokenSet SUBQUERY_SELECTS = TokenSet.create(
             SELECT_EXPRESSION,
             SELECT_EXPRESSION_UNION
             //SUBQUERY
     );
 
-    TokenSet  QUERIES = TokenSet.create(
+    TokenSet QUERIES = TokenSet.create(
             SELECT_EXPRESSION,
             SELECT_EXPRESSION_UNION,
             SUBQUERY
     );
 
-    TokenSet  DML_STATEMENTS = TokenSet.create(
+    TokenSet DML_STATEMENTS = TokenSet.create(
 //            INSERT_SUBQUERY,
             MERGE_COMMAND,
             INSERT_COMMAND,
@@ -154,12 +177,12 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
             UPDATE_COMMAND
     );
 
-    TokenSet  EXEC_CONTEXT = TokenSet.create(
+    TokenSet EXEC_CONTEXT = TokenSet.create(
             PROCEDURE_BODY,
             FUNCTION_BODY
     );
 
-    TokenSet  CALLABLE_CONTEXT = TokenSet.create(
+    TokenSet CALLABLE_CONTEXT = TokenSet.create(
             PROCEDURE_CALL,
             FUNCTION_CALL
     );
@@ -167,7 +190,7 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted{
     TokenSet PKG_BODY_TRIGGER_CONTEXT = TokenSet.create(
             PACKAGE_BODY, PACKAGE_SPEC, CREATE_TRIGGER
     );
-    TokenSet  PKG_SPEC_CONTEXT = TokenSet.create(
+    TokenSet PKG_SPEC_CONTEXT = TokenSet.create(
             PACKAGE_SPEC
     );
 

@@ -1342,40 +1342,6 @@ tryAgain:
 			
 		} while (true);
 		}
-		{
-		switch ( LA(1)) {
-		case '\n':
-		{
-			match('\n');
-			if ( inputState.guessing==0 ) {
-				newline();
-			}
-			break;
-		}
-		case '\r':
-		{
-			match('\r');
-			{
-			if ((LA(1)=='\n')) {
-				match('\n');
-			}
-			else {
-			}
-			
-			}
-			if ( inputState.guessing==0 ) {
-				newline();
-			}
-			break;
-		}
-		default:
-			{
-				if ( inputState.guessing==0 ) {
-					int dummy = 0;
-				}
-			}
-		}
-		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
 			_token.setText(new String(text.getBuffer(), _begin, text.length()-_begin));
@@ -1390,7 +1356,7 @@ tryAgain:
 		
 		match("/*");
 		{
-		_loop99:
+		_loop97:
 		do {
 			if ((LA(1)=='\r') && (LA(2)=='\n') && ((LA(3) >= '\u0000' && LA(3) <= '\uffff'))) {
 				match('\r');
@@ -1420,7 +1386,7 @@ tryAgain:
 				}
 			}
 			else {
-				break _loop99;
+				break _loop97;
 			}
 			
 		} while (true);

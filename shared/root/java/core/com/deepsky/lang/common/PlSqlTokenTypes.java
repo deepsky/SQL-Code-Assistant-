@@ -48,6 +48,10 @@ public interface PlSqlTokenTypes extends PlSqlBaseTokenTypes {
             SL_COMMENT, ML_COMMENT, BAD_ML_COMMENT
     );
 
+    TokenSet COMMENTS2 = TokenSet.create(
+            SL_COMMENT, ML_COMMENT
+    );
+
     TokenSet WS_TOKENS = TokenSet.create(
             TokenType.WHITE_SPACE,
             WS, SL_COMMENT, ML_COMMENT, BAD_ML_COMMENT, LF
