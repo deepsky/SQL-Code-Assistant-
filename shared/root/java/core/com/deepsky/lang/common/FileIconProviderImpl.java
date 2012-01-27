@@ -26,6 +26,7 @@
 package com.deepsky.lang.common;
 
 import com.deepsky.database.ora.DbUrl;
+import com.deepsky.lang.plsql.ConfigurationException;
 import com.deepsky.lang.plsql.psi.impl.TableDefinitionImpl;
 import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.index.IndexEntriesWalkerInterruptable;
@@ -50,44 +51,46 @@ public class FileIconProviderImpl implements FileIconProvider {
             return null;
         }
 
-        IndexManager indexManager = PluginKeys.SQL_INDEX_MAN.getData(project);
+        try {
+            IndexManager indexManager = PluginKeys.SQL_INDEX_MAN.getData(project);
+            if (file instanceof DbDumpedSqlFile) {
+                // SQL file from DbSchemaIndex
+                DbUrl dbUrl = ((DbDumpedSqlFile) file).getDbUrl();
+                AbstractSchema schema = indexManager.getIndex(dbUrl, 0);
+                if (schema != null) {
+                    String encoded = ((SqlFile) file).getEncodedFilePathCtx();
+                    return getFileIcon(schema.getIndexTree(), ContextPathUtil.extractFilePath(encoded)); //sqlFile.getEncodedFilePathCtx()); //file.getPath());
+                } else {
+                    return null;
+                }
+            } else if (file instanceof FSSqlFile) {
+                // SQL file from FSIndex
+                SqlDomainIndex index = indexManager.getFSIndex();
+                return getFileIcon(index.getIndex(IndexManager.FS_SCHEMA_NAME), file.getPath());
+            } else if (file instanceof SysSqlFile) {
+                // SQL file from Sys const
+                DbUrl dbUrl = ((SysSqlFile) file).getDbUrl();
+                AbstractSchema schema = indexManager.getIndex(dbUrl, 0);
+                if (schema != null) {
+                    String encoded = ((SqlFile) file).getEncodedFilePathCtx();
+                    return getFileIcon(schema.getIndexTree(), ContextPathUtil.extractFilePath(encoded)); //sqlFile.getEncodedFilePathCtx()); //file.getPath());
+                } else {
+                    return null;
+                }
 
-        if (file instanceof DbDumpedSqlFile) {
-            // SQL file from DbSchemaIndex
-            DbUrl dbUrl = ((DbDumpedSqlFile) file).getDbUrl();
-            //SqlDomainIndex index = indexManager.findOrCreateIndex(dbUrl);
-            AbstractSchema schema = indexManager.getIndex(dbUrl, 0);
-            if (schema != null) {
-                String encoded = ((SqlFile) file).getEncodedFilePathCtx();
-                return getFileIcon(schema.getIndexTree(), ContextPathUtil.extractFilePath(encoded)); //sqlFile.getEncodedFilePathCtx()); //file.getPath());
             } else {
-                return null;
+                // SQL file from FSIndex
+                String path = file.getPath();
+                IndexTree itree = indexManager.getFSIndex().getIndex(IndexManager.FS_SCHEMA_NAME);
+                if (!itree.fileExists(path)) {
+                    // not found in the index, file is outside of the content tree
+                    return Icons.SQL_FILE_OUTSIDE;
+                } else {
+                    return getFileIcon(itree, file.getPath());
+                }
             }
-        } else if (file instanceof FSSqlFile) {
-            // SQL file from FSIndex
-            SqlDomainIndex index = indexManager.getFSIndex();
-            return getFileIcon(index.getIndex(IndexManager.FS_SCHEMA_NAME), file.getPath());
-        } else if (file instanceof SysSqlFile) {
-            // SQL file from Sys const
-            DbUrl dbUrl = ((SysSqlFile) file).getDbUrl();
-            AbstractSchema schema = indexManager.getIndex(dbUrl, 0);
-            if (schema != null) {
-                String encoded = ((SqlFile) file).getEncodedFilePathCtx();
-                return getFileIcon(schema.getIndexTree(), ContextPathUtil.extractFilePath(encoded)); //sqlFile.getEncodedFilePathCtx()); //file.getPath());
-            } else {
-                return null;
-            }
-
-        } else {
-            // SQL file from FSIndex
-            String path = file.getPath();
-            IndexTree itree = indexManager.getFSIndex().getIndex(IndexManager.FS_SCHEMA_NAME);
-            if (!itree.fileExists(path)) {
-                // not found in the index, file is outside of the content tree
-                return Icons.SQL_FILE_OUTSIDE;
-            } else {
-                return getFileIcon(itree, file.getPath());
-            }
+        } catch (ConfigurationException e) {
+            return null;
         }
     }
 

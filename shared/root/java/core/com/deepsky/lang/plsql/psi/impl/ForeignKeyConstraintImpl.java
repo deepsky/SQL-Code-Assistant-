@@ -27,11 +27,9 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.plsql.psi.ColumnNameDDL;
 import com.deepsky.lang.plsql.psi.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.ForeignKeyConstraint;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.ref.DDLTable;
 import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
@@ -46,18 +44,14 @@ public class ForeignKeyConstraintImpl extends PlSqlElementBase implements Foreig
     }
 
     public String getReferencedTable() {
-        ASTNode fkSpec = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
-        __ASSERT_NOT_NULL__(fkSpec);
-        ASTNode tableName = fkSpec.findChildByType(PLSqlTypesAdopted.TABLE_REF);
+        ASTNode tableName = getNode().findChildByType(PLSqlTypesAdopted.TABLE_REF);
         __ASSERT_NOT_NULL__(tableName);
 
         return StringUtils.discloseDoubleQuotes(tableName.getText());
     }
 
     public String[] getReferencedColumns() {
-        ASTNode fkSpec = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
-        __ASSERT_NOT_NULL__(fkSpec);
-        ASTNode columnList = fkSpec.findChildByType(PLSqlTypesAdopted.COLUMN_NAME_LIST);
+        ASTNode columnList = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_NAME_LIST);
         ASTNode[] columns = columnList.getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_REF));
         String[] out = new String[columns == null ? 0 : columns.length];
         for (int i = 0; i < out.length; i++) {
@@ -68,9 +62,7 @@ public class ForeignKeyConstraintImpl extends PlSqlElementBase implements Foreig
     }
 
     public String[] getOwnColumns() {
-        ASTNode fkSpec = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
-        __ASSERT_NOT_NULL__(fkSpec);
-        ASTNode columnList = fkSpec.findChildByType(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST);
+        ASTNode columnList = getNode().findChildByType(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST);
         ASTNode[] columns = columnList.getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_REF));
         String[] out = new String[columns == null ? 0 : columns.length];
         for (int i = 0; i < out.length; i++) {
@@ -82,13 +74,8 @@ public class ForeignKeyConstraintImpl extends PlSqlElementBase implements Foreig
 
     @NotNull
     public TableRef getReferencedTable2() {
-        ASTNode fkSpec = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
-        __ASSERT_NOT_NULL__(fkSpec);
-        ASTNode tableName = fkSpec.findChildByType(PLSqlTypesAdopted.TABLE_REF);
+        ASTNode tableName = getNode().findChildByType(PLSqlTypesAdopted.TABLE_REF);
         __ASSERT_NOT_NULL__(tableName);
-
-//        ASTNode node = getLevelBelow().findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL);
-//        __ASSERT_NOT_NULL__(node);
 
         return (TableRef) tableName.getPsi();
     }
@@ -96,7 +83,7 @@ public class ForeignKeyConstraintImpl extends PlSqlElementBase implements Foreig
 
     @NotNull
     public ColumnNameRef[] getReferencedColumns2() {
-        ASTNode columnList = getLevelBelow().findChildByType(PLSqlTypesAdopted.COLUMN_NAME_LIST);
+        ASTNode columnList = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_NAME_LIST);
         if (columnList == null) {
             throw new SyntaxTreeCorruptedException();
         }
@@ -112,9 +99,7 @@ public class ForeignKeyConstraintImpl extends PlSqlElementBase implements Foreig
 
     @NotNull
     public ColumnNameRef[] getOwnColumns2() {
-        ASTNode fkSpec = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
-        __ASSERT_NOT_NULL__(fkSpec);
-        ASTNode columnList = fkSpec.findChildByType(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST);
+        ASTNode columnList = getNode().findChildByType(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST);
         ASTNode[] columns = columnList.getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_REF));
         ColumnNameRef[] out = new ColumnNameRef[columns == null ? 0 : columns.length];
         for (int i = 0; i < out.length; i++) {
@@ -124,15 +109,13 @@ public class ForeignKeyConstraintImpl extends PlSqlElementBase implements Foreig
         return out;
     }
 
-    @NotNull
-    private ASTNode getLevelBelow() {
-        ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.FK_SPEC);
-        __ASSERT_NOT_NULL__(node);
-        return node;
-    }
-
     public String getConstraintName() {
-        return StringUtils.discloseDoubleQuotes(getNode().findChildByType(PLSqlTypesAdopted.CONSTRAINT_NAME).getText());
+        ASTNode constraintName = getNode().findChildByType(PLSqlTypesAdopted.CONSTRAINT_NAME);
+        if(constraintName != null){
+            return StringUtils.discloseDoubleQuotes(constraintName.getText());
+        } else {
+            return "";
+        }
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {

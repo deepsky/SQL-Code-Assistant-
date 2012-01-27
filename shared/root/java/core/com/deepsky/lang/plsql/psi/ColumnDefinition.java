@@ -26,6 +26,7 @@
 package com.deepsky.lang.plsql.psi;
 
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
+import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.psi.PsiElement;
 
@@ -33,6 +34,7 @@ public interface ColumnDefinition extends PlSqlElement {
     String getColumnName();
 
     PsiElement getPsiColumnName();
+    TypeSpec getTypeSpec();
 
     Type getType();
 

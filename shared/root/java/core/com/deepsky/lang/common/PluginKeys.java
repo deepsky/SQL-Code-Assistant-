@@ -29,6 +29,7 @@ import com.deepsky.database.ConnectionManager;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.database.ora2.DbSchemaIndexer;
 import com.deepsky.lang.integration.PlSqlFileChangeTracker;
+import com.deepsky.lang.integration.PlSqlFileChangeTrackerAbstract;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
 import com.deepsky.navigation.NameLookupService;
 import com.deepsky.navigation.DbObjectContributor;
@@ -47,7 +48,7 @@ public final class PluginKeys {
     public static final PluginKey<QueryResultWindow> QR_WINDOW = PluginKey.create(SharedConstants.QR_WINDOW);
     public static final PluginKey<SqlCodeAssistantSettings> PLUGIN_SETTINGS = PluginKey.create(SharedConstants.PLUGIN_SETTINGS);
 
-    public static final PluginKey<PlSqlFileChangeTracker> PLSQLFILE_CHANGE_TRACKER = PluginKey.create(SharedConstants.PLSQLFILE_CHANGE_TRACKER);
+    public static final PluginKey<PlSqlFileChangeTrackerAbstract> PLSQLFILE_CHANGE_TRACKER = PluginKey.create(SharedConstants.PLSQLFILE_CHANGE_TRACKER);
     public static final PluginKey<DbSchemaIndexer> DB_NAMES_INDEXER = PluginKey.create(SharedConstants.CACHE_MANAGER);
     public static final PluginKey<IndexManager> SQL_INDEX_MAN = PluginKey.create(SharedConstants.SQL_INDEX_MANAGER);
     public static final PluginKey<NameLookupService> NAME_LOOKUP = PluginKey.create(SharedConstants.NAME_LOOKUP);

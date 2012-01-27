@@ -10,7 +10,7 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *       
+ *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -23,36 +23,40 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.psi.impl;
+package com.deepsky.lang.plsql.formatter2.settings;
 
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.plsql.psi.ColumnCheckConstraint;
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.utils.StringUtils;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
 
-public class ColumnCheckConstraintImpl extends PlSqlElementBase implements ColumnCheckConstraint {
-    public ColumnCheckConstraintImpl(ASTNode astNode) {
-        super(astNode);
+public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
+    /**
+     * Defines if 'flying geese' style should be used for curly braces formatting, e.g. if we want to format code like
+     * <p/>
+     * <pre>
+     *     class Test {
+     *         {
+     *             System.out.println();
+     *         }
+     *     }
+     * </pre>
+     * to
+     * <pre>
+     *     class Test { {
+     *         System.out.println();
+     *     } }
+     * </pre>
+     */
+    public boolean USE_FLYING_GEESE_BRACES = false;
+
+    public boolean SPACE_IN_NAMED_ARGUMENT = true;
+
+    public PlSqlCodeStyleSettings(CodeStyleSettings container) {
+        super("PlSqlCodeStyleSettings", container);
     }
 
-    public String getConstraintName() {
-        ASTNode constraintName = getNode().findChildByType(PLSqlTypesAdopted.CONSTRAINT_NAME);
-        if(constraintName != null){
-            return StringUtils.discloseDoubleQuotes(constraintName.getText());
-        }
+    public boolean SPACE_BEFORE_OPEN_PAREN_IN_DATATYPE = false;
 
-        return null;
-    }
-
-    public void accept(@NotNull PsiElementVisitor visitor) {
-        if (visitor instanceof PlSqlElementVisitor) {
-            ((PlSqlElementVisitor) visitor).visitColumnCheckConstraint(this);
-        } else {
-            super.accept(visitor);
-        }
-    }
+    // indent parameters
+    public int TAB_SIZE = 4;
 
 }

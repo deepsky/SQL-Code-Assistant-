@@ -185,6 +185,8 @@ public class PlSqlParserDefinition implements ParserDefinition {
                 return new UpdateStatementImpl(node);
             case PLSqlTokenTypes.DELETE_COMMAND:
                 return new DeleteStatementImpl(node);
+
+/*
             case PLSqlTokenTypes.CONSTRAINT:
                 if (node.findChildByType(PlSqlElementTypes.FK_SPEC) != null) {
                     return new ForeignKeyConstraintImpl(node);
@@ -198,10 +200,25 @@ public class PlSqlParserDefinition implements ParserDefinition {
                     // todo - not implemented
                 }
                 break;
+*/
+            case PLSqlTokenTypes.FK_SPEC:
+                return new ForeignKeyConstraintImpl(node);
+            case PLSqlTokenTypes.PK_SPEC:
+                return new PrimaryKeyConstraintImpl(node);
+            case PLSqlTokenTypes.CHECK_CONSTRAINT:
+                // todo - implement me
+                break;
+            case PLSqlTokenTypes.UNIQUE_CONSTRAINT:
+                return new ColumnUniqueConstraintImpl(node);
+
             case PLSqlTokenTypes.COLUMN_FK_SPEC:
                 return new ColumnFKSpecImpl(node);
             case PLSqlTokenTypes.COLUMN_PK_SPEC:
                 return new ColumnPKSpecImpl(node);
+            case PLSqlTokenTypes.COLUMN_CHECK_CONSTRAINT:
+                return new ColumnCheckConstraintImpl(node);
+            case PLSqlTokenTypes.COLUMN_NOT_NULL_CONSTRAINT:
+                return new ColumnNotNullConstraintImpl(node);
             case PLSqlTokenTypes.ASTERISK_COLUMN:
                 return new SelectFieldAsteriskImpl(node);
             case PLSqlTokenTypes.IDENT_ASTERISK_COLUMN:

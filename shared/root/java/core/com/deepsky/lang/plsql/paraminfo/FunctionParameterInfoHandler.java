@@ -58,13 +58,13 @@ public class FunctionParameterInfoHandler implements ParameterInfoHandler {
         return new Object[0];
     }
 
-    CallArgumentList callArgumentsList;
-    ResolveFacade facade;
+    private PsiElement paramInfoElement;
+    private ResolveFacade facade;
 
     public Object findElementForParameterInfo(CreateParameterInfoContext context) {
 
         PsiElement el = context.getFile().findElementAt(context.getOffset());
-        callArgumentsList = (CallArgumentList) SqlTreeUtil.findAncestor(el, PlSqlElementTypes.CALL_ARGUMENT_LIST);
+        PsiElement callArgumentsList = SqlTreeUtil.findAncestor(el, PlSqlElementTypes.CALL_ARGUMENT_LIST);
         if (callArgumentsList != null) {
             PsiElement _callable = callArgumentsList.getParent();
             if (_callable instanceof Callable) {
@@ -74,22 +74,30 @@ public class FunctionParameterInfoHandler implements ParameterInfoHandler {
                 ResolveDescriptor[] methods = resolveCallWithOverloads(facade, callable);
                 if(methods.length > 0){
                     context.setItemsToShow(createMethods(methods));
+                    paramInfoElement = callArgumentsList;
                     return callArgumentsList;
+                }
+            }
+        } else {
+            // syntax tree might be corrupted, so check on  PlSqlElementTypes.CALL_ARGUMENT
+            PsiElement element = SqlTreeUtil.findAncestor(el, PlSqlElementTypes.CALL_ARGUMENT);
+            if(element != null){
+                PsiElement _callable = element.getParent();
+                if (_callable instanceof Callable) {
+                    Callable callable = (Callable) _callable;
+                    facade = ((PlSqlFile) callable.getContainingFile()).getResolver();
+
+                    ResolveDescriptor[] methods = resolveCallWithOverloads(facade, callable);
+                    if(methods.length > 0){
+                        context.setItemsToShow(createMethods(methods));
+                        paramInfoElement = element;
+                        return element;
+                    }
                 }
             }
         }
         return null;
     }
-
-    private ResolveDescriptor resolveCall(ResolveFacade facade, Callable callable){
-        ResolveHelper rhelper = facade.getLLResolver();
-        int ctype = callable instanceof FunctionCall? ContextPath.FUNC_CALL: ContextPath.PROC_CALL;
-        String ctxType = callable.getCtxPath1().getPath();
-        return rhelper.resolveCallable(
-                ctype, ctxType, callable.getFunctionName(), callable.getCallArguments()
-        );
-    }
-
 
     private ResolveDescriptor[] resolveCallWithOverloads(ResolveFacade facade, Callable callable){
         ResolveHelper rhelper = facade.getLLResolver();
@@ -119,7 +127,7 @@ public class FunctionParameterInfoHandler implements ParameterInfoHandler {
         PsiElement el = context.getFile().findElementAt(context.getOffset());
         PsiElement callArgumentsList = SqlTreeUtil.findAncestor(el, PlSqlElementTypes.CALL_ARGUMENT_LIST);
         if (callArgumentsList != null) {
-            if (callArgumentsList == this.callArgumentsList) {
+            if (callArgumentsList == paramInfoElement){ //this.callArgumentsList) {
                 return callArgumentsList;
             }
 /*
@@ -129,29 +137,26 @@ public class FunctionParameterInfoHandler implements ParameterInfoHandler {
                 return callArgumentsList;
             }
 */
+        } else {
+            PsiElement callArgument = SqlTreeUtil.findAncestor(el, PlSqlElementTypes.CALL_ARGUMENT);
+            if (callArgument != null && callArgument == paramInfoElement) {
+                return callArgument;
+            }
         }
         return null;
     }
 
     public void updateParameterInfo(@NotNull Object o, UpdateParameterInfoContext context) {
-
+        // Highlight entered parameter list
         Object[] candidates = context.getObjectsToView();
         if (candidates.length > 1) {
             for (Object c : candidates) {
                 ExecutableResolveHelper cEx = (ExecutableResolveHelper) c;
                 if (o instanceof CallArgumentList) {
                     CallArgumentList callArgs = (CallArgumentList) o;
-                    ArgumentSpec[] args = cEx.getArgumentSpecification();
                     if(callArgumentListMatchesArgumentList(cEx, callArgs)){
                         context.setHighlightedParameter(c);
                     }
-/*
-                    ArgumentList argList = cEx.getArgumentList();
-                    boolean i = facade.callArgumentListMatchesArgumentList(callArgs, argList);
-                    if (i) {
-                        context.setHighlightedParameter(c);
-                    }
-*/
                 }
             }
         }
@@ -187,76 +192,15 @@ public class FunctionParameterInfoHandler implements ParameterInfoHandler {
         );
     }
 
-    private ExecutableResolveHelper[] createMethods(ResolveDescriptor[] el){ //PsiElement[] el) {
+    private ExecutableResolveHelper[] createMethods(ResolveDescriptor[] el){
 
-        //CandidateInfo[] out = new CandidateInfo[el.length];
         List<ExecutableResolveHelper> out = new ArrayList<ExecutableResolveHelper>();
-        for (int i = 0; i < el.length; i++) {
-            if(el[i] instanceof ExecutableResolveHelper){
-                out.add((ExecutableResolveHelper) el[i]); //new CandidateInfoEx((ExecutableResolveHelper) el[i]));//, PsiSubstitutor.EMPTY);
+        for (ResolveDescriptor rDesc : el) {
+            if (rDesc instanceof ExecutableResolveHelper) {
+                out.add((ExecutableResolveHelper) rDesc);
             }
         }
-        return out.toArray(new ExecutableResolveHelper[0]);
+        return out.toArray(new ExecutableResolveHelper[out.size()]);
     }
-
-/*
-    private class CandidateInfoEx extends CandidateInfo {
-        public CandidateInfoEx(PsiElement candidate) {
-            super(candidate, PsiSubstitutor.EMPTY);
-        }
-
-        */
-/**
-         * Get formal Argument List
-         *
-         * @return
-         *//*
-
-        public ArgumentList getArgumentList() {
-            PsiElement e = getElement();
-            if (e instanceof ExecutableSpec) {
-                return ((ExecutableSpec) e).getArgumentList();
-            } else if (e instanceof Executable) {
-                return ((Executable) e).getArgumentList();
-            }
-            return null;
-        }
-
-        public String getParamInfo() {
-            PsiElement e = getElement();
-            if (e instanceof ProcedureSpec) {
-                if (((ProcedureSpec) e).getArguments().length == 0) {
-                    return "no parameters";
-                }
-//                return Formatter.formatArgList((ExecutableSpec) e, false);
-                return Formatter.argument2strLong(((ExecutableSpec) e).getArguments(), false);
-
-            } else if (e instanceof FunctionSpec) {
-                if (((FunctionSpec) e).getArguments().length == 0) {
-                    return "no parameters";
-                }
-//                return Formatter.formatArgList((ExecutableSpec) e, false);
-                return Formatter.argument2strLong(((ExecutableSpec) e).getArguments(), false);
-
-            } else if (e instanceof Function) {
-                if (((Function) e).getArguments().length == 0) {
-                    return "no parameters";
-                }
-//                return Formatter.formatArgList((Executable) e, false);
-                return Formatter.argument2strLong(((Executable) e).getArguments(), false);
-
-            } else if (e instanceof Procedure) {
-                if (((Procedure) e).getArguments().length == 0) {
-                    return "no parameters";
-                }
-//                return Formatter.formatArgList((Executable) e, false);
-                return Formatter.argument2strLong(((Executable) e).getArguments(), false);
-
-            } else {
-                return null;
-            }
-        }
-    }
-*/
 
 }

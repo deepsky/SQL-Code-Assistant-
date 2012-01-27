@@ -35,6 +35,6 @@ public interface TypeSpec extends PlSqlElement {
 
     Type getType();
 
-    boolean isTypeValid(); // may throw ValidationException
+    boolean isTypeValid(); // may throw ValidationException ?
 
 }

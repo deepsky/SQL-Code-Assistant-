@@ -42,9 +42,7 @@ public class PrimaryKeyConstraintImpl extends PlSqlElementBase implements Primar
     }
 
     public String[] getPrimaryKeys() {
-        ASTNode pkSpec = getNode().findChildByType(PLSqlTypesAdopted.PK_SPEC);
-        __ASSERT_NOT_NULL__(pkSpec);
-        ASTNode[] columnLists = pkSpec.getChildren(TokenSet.create(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST));
+        ASTNode[] columnLists = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST));
         ASTNode[] columns = columnLists[0].getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_REF));
         String[] out = new String[columns == null ? 0 : columns.length];
         for (int i = 0; i < out.length; i++) {
@@ -56,9 +54,7 @@ public class PrimaryKeyConstraintImpl extends PlSqlElementBase implements Primar
 
     @NotNull
     public ColumnNameRef[] getPKColumns() {
-        ASTNode pkSpec = getNode().findChildByType(PLSqlTypesAdopted.PK_SPEC);
-        __ASSERT_NOT_NULL__(pkSpec);
-        ASTNode columnList = pkSpec.findChildByType(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST);
+        ASTNode columnList = getNode().findChildByType(PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST);
         ASTNode[] columns = columnList.getChildren(TokenSet.create(PLSqlTypesAdopted.COLUMN_NAME_REF));
         ColumnNameRef[] out = new ColumnNameRef[columns == null ? 0 : columns.length];
         for (int i = 0; i < out.length; i++) {
@@ -68,9 +64,12 @@ public class PrimaryKeyConstraintImpl extends PlSqlElementBase implements Primar
     }
 
     public String getConstraintName() {
-        return StringUtils.discloseDoubleQuotes(
-                getNode().findChildByType(PLSqlTypesAdopted.CONSTRAINT_NAME).getText()
-        );
+        ASTNode constraintName = getNode().findChildByType(PLSqlTypesAdopted.CONSTRAINT_NAME);
+        if(constraintName != null){
+            return StringUtils.discloseDoubleQuotes(constraintName.getText());
+        } else {
+            return "";
+        }
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {

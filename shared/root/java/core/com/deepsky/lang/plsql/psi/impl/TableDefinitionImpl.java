@@ -26,6 +26,7 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
 import com.deepsky.lang.plsql.psi.GenericConstraint;
@@ -87,7 +88,7 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
 
     @NotNull
     public GenericConstraint[] getConstraints() {
-        ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.CONSTRAINT));
+        ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.CONSTRAINTS); //PLSqlTypesAdopted.CONSTRAINT));
         if (nodes != null) {
             List<GenericConstraint> out = new ArrayList<GenericConstraint>();
             for (ASTNode node : nodes) {

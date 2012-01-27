@@ -30,8 +30,8 @@ import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ctrl.CommitStatement;
 import com.deepsky.lang.plsql.psi.ctrl.RollbackStatement;
 import com.deepsky.lang.plsql.psi.ddl.*;
-import com.deepsky.lang.plsql.psi.impl.*;
-import com.deepsky.lang.plsql.psi.impl.spec_func_call.SpecFunctionCallBaseImpl;
+import com.deepsky.lang.plsql.psi.impl.ColumnNotNullConstraintImpl;
+import com.deepsky.lang.plsql.psi.impl.SqlPlusPromptRem;
 import com.deepsky.lang.plsql.psi.internal.CreateViewColumnDefInternal;
 import com.deepsky.lang.plsql.psi.ref.*;
 import com.deepsky.lang.plsql.psi.types.ColumnTypeRef;
@@ -89,7 +89,7 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
         visitElement(node);
     }
 
-//    public void visitSubquery(FromSubquery node) {
+    //    public void visitSubquery(FromSubquery node) {
     public void visitSubquery(Subquery node) {
         visitElement(node);
     }
@@ -228,7 +228,7 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     public void visitTableDefinition(TableDefinition tableDefinition) {
         // give a chance to catch any exception in the closest catch block
         visitElement(tableDefinition);
-       
+
 //        for (GenericConstraint constr : tableDefinition.getConstraints()) {
 //            constr.accept(this);
 //        }
@@ -345,7 +345,7 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
         for (Declaration decl : declarationList.getDeclList()) {
             try {
                 decl.accept(this);
-            }catch(SyntaxTreeCorruptedException e){
+            } catch (SyntaxTreeCorruptedException e) {
                 // skip failed declaration
             }
         }
@@ -417,13 +417,13 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitHashPartition(HashPartition partition) {
-        for(ColumnNameRef c: partition.getPartitionColumns()){
+        for (ColumnNameRef c : partition.getPartitionColumns()) {
             c.accept(this);
         }
     }
 
     public void visitRangePartition(RangePartition partition) {
-        for(ColumnNameRef c: partition.getPartitionColumns()){
+        for (ColumnNameRef c : partition.getPartitionColumns()) {
             c.accept(this);
         }
     }
@@ -462,5 +462,17 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
 
     public void visitForUpdateClause(ForUpdateClause clause) {
         visitElement(clause);
+    }
+
+    public void visitColumnPKSpec(ColumnPKSpec columnPKSpec) {
+        visitElement(columnPKSpec);
+    }
+
+    public void visitColumnCheckConstraint(ColumnCheckConstraint checkConstraint) {
+        visitElement(checkConstraint);
+    }
+
+    public void visitColumnNotNullConstraint(ColumnNotNullConstraint nullConstraint) {
+        visitElement(nullConstraint);
     }
 }

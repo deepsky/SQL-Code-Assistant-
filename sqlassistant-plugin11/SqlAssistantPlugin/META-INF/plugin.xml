@@ -202,6 +202,9 @@
         <scopeDescriptorProvider implementation="com.deepsky.findUsages.scopes.DbScopeDescriptorProvider"/>
         <readWriteAccessDetector implementation="com.deepsky.findUsages.providers.PlSqlReadWriteAccessDetector"/>
 
+        <lang.formatter language="PlSql" implementationClass="com.deepsky.lang.plsql.formatter2.PlSqlFormattingModelBuilder"/>
+        <codeStyleSettingsProvider implementation="com.deepsky.lang.plsql.formatter2.settings.PlSqlCodeStyleSettingsProvider"/>
+
         <definitionsSearch implementation="com.deepsky.navigation.ImplementationsSearcher"/>
         <targetElementEvaluator language="PlSql" implementationClass="com.deepsky.navigation.PlSqlTargetElementEvaluator"/>
         <fileIconProvider implementation="com.deepsky.lang.common.FileIconProviderImpl"/>

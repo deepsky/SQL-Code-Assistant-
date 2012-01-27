@@ -266,7 +266,7 @@ public class TreeNodeBuilderEx2 implements PsiBuilder {
             return fileEl;
         } else if (prod.size() > 2) {
             StartMarker start = (StartMarker) prod.get(0);
-            LightFileElement fileEl = new LightFileElement(start.type, null);
+            LightFileElement fileEl = new LightFileElement(start.type);
 
             int startPos = 1;
             int stop = prod.size() - 1;

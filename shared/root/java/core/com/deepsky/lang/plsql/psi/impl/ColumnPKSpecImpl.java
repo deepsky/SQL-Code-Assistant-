@@ -27,11 +27,22 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.psi.ColumnPKSpec;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 public class ColumnPKSpecImpl extends PlSqlElementBase implements ColumnPKSpec {
     public ColumnPKSpecImpl(ASTNode astNode) {
         super(astNode);
+    }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitColumnPKSpec(this);
+        } else {
+            super.accept(visitor);
+        }
     }
 
     public String getConstraintName() {

@@ -45,7 +45,7 @@ import java.util.Map;
 
 public class DataTypeLookupElement<T extends LookupElement> extends LookupElementDecorator<T> {
 
-    SQLDatatype datatype;
+    private SQLDatatype datatype;
     protected DataTypeLookupElement(SQLDatatype datatype, T delegate) {
         super(delegate);
         this.datatype = datatype;
@@ -63,17 +63,14 @@ public class DataTypeLookupElement<T extends LookupElement> extends LookupElemen
     public void handleInsert(final InsertionContext context) {
         final Editor editor = context.getEditor();
         final char completionChar = context.getCompletionChar();
-        final TailType tailType = null;//getTailType(item, context);
-        //final Document document = editor.getDocument();
+        final TailType tailType = null;
         final PsiFile file = context.getFile();
-        //final int offset = editor.getCaretModel().getOffset();
 
         context.setAddCompletionChar(false);
 
-        final LookupElement[] allItems = context.getElements();
-        final boolean overloadsMatter = false;//allItems.length == 1 && item.getUserData(LookupItem.FORCE_SHOW_SIGNATURE_ATTR) == null;
+        final boolean overloadsMatter = false;
 
-        final boolean hasParams = datatype.isSizeable(); //DataTypeParenthesesHandler.hasParams(item, allItems, overloadsMatter); //, myMethod);
+        final boolean hasParams = datatype.isSizeable();
         final boolean needLeftParenth = isToInsertParenth(file.findElementAt(context.getStartOffset()));
         final boolean needRightParenth = shouldInsertRParenth(completionChar, tailType, hasParams);
 
@@ -87,7 +84,6 @@ public class DataTypeLookupElement<T extends LookupElement> extends LookupElemen
                     needRightParenth
             ).handleInsert(context, getDelegate()); // item
 //            PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
-
         }
 
 /*
@@ -109,18 +105,12 @@ public class DataTypeLookupElement<T extends LookupElement> extends LookupElemen
             // Invoke parameters popup
             AutoPopupController.getInstance(context.getProject()).autoPopupParameterInfo(editor, null); //f0);
         }
-//      if (tailType == TailType.SMART_COMPLETION || needLeftParenth && needRightParenth) {
-//        tailType.processTail(editor, context.getTailOffset());
-//      }
         editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
 
 
     private boolean isToInsertParenth(PsiElement place) {
         return datatype.isSizeable() && !datatype.isSizeOptional();
-        //return true;
-//      if (place == null) return true;
-//      return !(place.getParent() instanceof PsiImportStaticReferenceElement);
     }
 
     private boolean shouldInsertRParenth(char completionChar, TailType tailType, boolean hasParams) {
@@ -221,6 +211,4 @@ todo -- is this check needed?
             return isSizeOptional;
         }
     }
-
-
 }

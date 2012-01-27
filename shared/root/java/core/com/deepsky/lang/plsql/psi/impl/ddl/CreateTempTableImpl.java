@@ -26,6 +26,7 @@
 package com.deepsky.lang.plsql.psi.impl.ddl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
 import com.deepsky.lang.plsql.psi.GenericConstraint;
@@ -82,7 +83,7 @@ public class CreateTempTableImpl extends PlSqlElementBase implements CreateTempT
 
     @NotNull
     public GenericConstraint[] getConstraints() {
-        ASTNode[] nodes = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.CONSTRAINT));
+        ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.CONSTRAINTS); //TokenSet.create(PLSqlTypesAdopted.CONSTRAINT));
         if (nodes != null) {
             List<GenericConstraint> out = new ArrayList<GenericConstraint>();
             for (ASTNode node : nodes) {
