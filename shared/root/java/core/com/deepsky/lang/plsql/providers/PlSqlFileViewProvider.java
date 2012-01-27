@@ -29,6 +29,7 @@ import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlLanguage;
 import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.integration.PlSqlFileChangeTracker;
+import com.deepsky.lang.integration.PlSqlFileChangeTrackerAbstract;
 import com.intellij.lang.Language;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlSqlFileViewProvider extends SingleRootFileViewProvider{
 
-    private PlSqlFileChangeTracker tracker;
+    private PlSqlFileChangeTrackerAbstract tracker;
 
     public PlSqlFileViewProvider(@NotNull PsiManager manager, @NotNull VirtualFile virtualFile, boolean physical) {
         super(manager, virtualFile, physical);

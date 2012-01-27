@@ -44,7 +44,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import java.util.Arrays;
 import java.util.Set;
 
-public class PlSqlFileChangeTracker {
+public class PlSqlFileChangeTracker implements PlSqlFileChangeTrackerAbstract {
 
     private static final LoggerProxy log = LoggerProxy.getInstance("#PlSqlFileChangeTracker");
 
