@@ -72,7 +72,6 @@ tokens {
     CAST_FUNC;
     VAR_REF; PLSQL_VAR_REF; PARAMETER_REF;
     EXCEPTION_SECTION;
-    FETCH_STATEMENT;
 
     SELECTED_TABLE;
     CREATE_PROCEDURE;
@@ -83,6 +82,9 @@ tokens {
     ASSIGNMENT_STATEMENT;
     PROCEDURE_CALL;
     RETURN_STATEMENT;
+
+    LOCK_TABLE_STATEMENT; OPEN_STATEMENT;
+    FETCH_STATEMENT; SET_TRN_STATEMENT; CLOSE_STATEMENT;
 
     OBJECT_NAME;
     PARAMETER_NAME;
@@ -141,7 +143,6 @@ tokens {
     IMMEDIATE_COMMAND;
     FUNCTION_SPEC;
     NEGATE_FACTOR;
-    PRAGMA;
     TABLE_TYPE_REF;
     COLUMN_TYPE_REF;
     STATEMENT_ANNOT;
@@ -162,12 +163,15 @@ tokens {
     SUBQUERY_CONDITION;
     RECORD_ITEM;
     EXCEPTION_DECL;
-    EXCEPTION_PRAGMA;
+
     COMPLEX_NAME;
-    RESTRICT_REF_PRAGMA;
     CHARACTER_SET;
     AUTHID;
+
+    RESTRICT_REF_PRAGMA; AUTONOMOUS_TRN_PRAGMA; EXCEPTION_PRAGMA;
     FIPSFLAG_PRAGMA; BUILTIN_PRAGMA; INTERFACE_PRAGMA; TIMESTAMPG_PRAGMA;
+    SERIALLY_REUSABLE_PRAGMA;
+
     TIMESTAMP_CONST;
     SUBTYPE_DECL;
     MEMBER_OF;
@@ -202,7 +206,6 @@ tokens {
     COLUMN_NAME_LIST;
     OWNER_COLUMN_NAME_LIST;
 
-    SERIALLY_REUSABLE_PRAGMA;
     CREATE_VIEW;
     DATATYPE_PARAM_INFO;
 
@@ -381,11 +384,11 @@ start_rule_inner:
             { #start_rule_inner = #([CREATE_TRIGGER, "CREATE_TRIGGER" ], #start_rule_inner);}
         | (sql_statement (SEMI!)?)
         | ("alter") => (alter_command (SEMI!)?)
-        | (associate_statistics (SEMI!)?)
-        | (comment (SEMI!)?)
+        | associate_statistics
+        | comment
         | (type_definition (SEMI!)?)
-        | ( drop_command (SEMI!)?)
-        | ( truncate_command (SEMI!)?)
+        | drop_command
+        | truncate_command
         | sqlplus_command_internal
     ;
 
@@ -427,12 +430,12 @@ drop_command:
             { #drop_command = #([DROP_TRIGGER, "DROP_TRIGGER" ], #drop_command);}
         | drop_tablespace
             { #drop_command = #([DROP_TABLESPACE, "DROP_TABLESPACE" ], #drop_command);}
-     )
+     ) (SEMI)?
     ;
 
 // ASSOCIATE STATISTICS -----------------------------------------------------------------------
 associate_statistics:
-    "associate" "statistics"  "with" (column_association|function_association) (storage_table_clause)?
+    "associate" "statistics"  "with" (column_association|function_association) (storage_table_clause)? (SEMI!)?
     ;
 
 column_association:
@@ -479,7 +482,7 @@ statistics_type:
 // --------------------------------------------------------------------------------------------
 
 truncate_command:
-    "truncate"! "table"! table_ref
+    "truncate"! "table"! table_ref (SEMI)?
     { #truncate_command = #([TRUNCATE_TABLE, "TRUNCATE_TABLE" ], #truncate_command);}
     ;
 
@@ -487,7 +490,7 @@ comment:
     "comment"! "on"! (
         ("table"! table_ref "is"! comment_string)
         | ("column"! table_ref DOT column_name_ref "is"! comment_string)
-     )
+     ) (SEMI)?
     { #comment = #([COMMENT, "COMMENT" ], #comment);}
     ;
 
@@ -865,17 +868,28 @@ create_directory:
 // -------------------------------------------------------------------
 // [CREATE TABLE START] ----------------------------------
 // -------------------------------------------------------------------
-
+/*
 create_table2:
     "table"! (schema_name DOT!)? table_name_ddl
-    (OPEN_PAREN! column_def (COMMA! (column_def|constaraint))* CLOSE_PAREN!)?
+//    (OPEN_PAREN! column_def (COMMA! (column_def|constraint))* CLOSE_PAREN!)?
+    (OPEN_PAREN! column_def (COMMA! (column_def|constraint))* CLOSE_PAREN!)
     (nested_tab_spec)? (lob_storage_clause)? (physical_properties|table_properties)*
     ("as" select_expression)?
+    ;
+*/
+
+create_table2:
+    "table"! (schema_name DOT!)? table_name_ddl (
+            ( OPEN_PAREN! column_def (COMMA! (column_def|constraint))* CLOSE_PAREN!
+                (nested_tab_spec)? (lob_storage_clause)? (physical_properties|table_properties)*
+                )
+            | ( (physical_properties|table_properties)* "as" select_expression)
+        )
     ;
 
 create_temp_table:
     ("global")? "temporary"! (schema_name DOT!)? "table"! table_name_ddl
-    (OPEN_PAREN! column_def (COMMA! (column_def|constaraint))* CLOSE_PAREN!)?
+    (OPEN_PAREN! column_def (COMMA! (column_def|constraint))* CLOSE_PAREN!)?
     ("on" "commit" ("preserve" | "delete") "rows" )
     (cache_clause)?
     ("as" select_expression)?
@@ -924,7 +938,6 @@ segment_attributes_clause:
     physical_attributes_clause
     | ("tablespace" identifier2)
     | "online"
-//    | ("compute" "statistics" ("parallel"|"noparallel"|identifier2)? )
     | logging_clause
     | table_compression
     | ("pctthreshold" numeric_literal)
@@ -960,6 +973,7 @@ table_properties:
     | alter_table_options
     | row_movement_clause
     | monitoring_clause
+    | index_org_overflow_clause
     ;
 
 cache_clause:
@@ -969,6 +983,10 @@ cache_clause:
 monitoring_clause:
     ("monitoring" | "nomonitoring")
     {#monitoring_clause = #([MONITORING_CLAUSE, "MONITORING_CLAUSE" ], #monitoring_clause);}
+    ;
+
+index_org_overflow_clause:
+    ("including" column_name_ref)? "overflow" (physical_attributes_clause)*
     ;
 
 table_partitioning_clause:
@@ -1103,23 +1121,21 @@ storage_params:
     { #storage_param = #([STORAGE_PARAM, "STORAGE_PARAM" ], #storage_param);}
     ;
 
-constaraint:
+constraint:
     ("constraint" constraint_name)? (
         pk_spec_constr
-            { #constaraint = #([PK_SPEC, "PK_SPEC" ], #constaraint);}
+            { #constraint = #([PK_SPEC, "PK_SPEC" ], #constraint);}
         | fk_spec_constr
-            { #constaraint = #([FK_SPEC, "FK_SPEC" ], #constaraint);}
+            { #constraint = #([FK_SPEC, "FK_SPEC" ], #constraint);}
         | check_condition
-            { #constaraint = #([CHECK_CONSTRAINT, "CHECK_CONSTRAINT" ], #constaraint);}
+            { #constraint = #([CHECK_CONSTRAINT, "CHECK_CONSTRAINT" ], #constraint);}
         | unique_constr
-            { #constaraint = #([UNIQUE_CONSTRAINT, "UNIQUE_CONSTRAINT" ], #constaraint);}
+            { #constraint = #([UNIQUE_CONSTRAINT, "UNIQUE_CONSTRAINT" ], #constraint);}
      )
-//    { #.constaraint = #.([CONSTRAINT, "CONSTRAINT" ], #.constaraint);}
     ;
 
 pk_spec_constr:
     "primary"! "key"! OPEN_PAREN! owner_column_name_ref_list CLOSE_PAREN! (enable_disable_clause)? (using_index_clause)?
-//    { #.pk_spec_constr = #.([PK_SPEC, "PK_SPEC" ], #.pk_spec_constr);}
     ;
 
 fk_spec_constr:
@@ -1127,17 +1143,14 @@ fk_spec_constr:
     "references"! (schema_name DOT)? table_ref OPEN_PAREN! column_name_ref_list CLOSE_PAREN!
     ("rely")? (enable_disable_clause)?
     ("on" ("delete"|"update") referential_actions)?
-//    { #.fk_spec_constr = #.([FK_SPEC, "FK_SPEC" ], #.fk_spec_constr);}
     ;
 
 unique_constr:
     "unique" OPEN_PAREN column_name_ref (COMMA! column_name_ref)* CLOSE_PAREN (using_index_clause)?
-//    { #.unique_constr = #.([UNIQUE_CONSTRAINT, "UNIQUE_CONSTRAINT" ], #.unique_constr);}
     ;
 
 check_condition:
     "check" condition
-//    { #.check_condition = #.([CHECK_CONSTRAINT, "CHECK_CONSTRAINT" ], #.check_condition);}
     ;
 
 column_name_ref_list:
@@ -1208,13 +1221,14 @@ column_modi_name:
     column_name_ref (datatype)? (column_qualifier)*
     ;
 
-constraint:
-    inline_out_of_line_constraint
+//constraint_OLD:
+//    inline_out_of_line_constraint
 // todo    inline_constraint
 // todo    | out_of_line_constraint
 // todo    | inline_ref_constraint
 // todo    | out_of_line_ref_constraint
-    ;
+//    ;
+
 /*
    ADD CONSTRAINT OTA_LL1_TUI_FK FOREIGN KEY (DDE_ID)
       REFERENCES OTA_LL1_HRDATE_T (ID)
@@ -1582,27 +1596,9 @@ case_statement:
     {#case_statement = #([CASE_STATEMENT, "CASE_STATEMENT"], #case_statement);}
     ;
 
-/*
-declare_spec2:
-        (type_definition SEMI!)
-        | cursor_declaration
-        | subtype_declaration
-        | ("pragma" "autonomous_transaction") => pragma_autonomous_transaction
-        | exception_pragma
-        | function_body
-        | procedure_body
-*//*
-        |( (function_declaration) => function_body
-           | function_spec )
-        |( (procedure_declaration) => procedure_body
-           | procedure_spec)
-*//*
-        ;
-*/
-
 pragma_autonomous_transaction:
     "pragma"! "autonomous_transaction" SEMI!
-    {#pragma_autonomous_transaction = #([PRAGMA, "PRAGMA" ], #pragma_autonomous_transaction);}
+    {#pragma_autonomous_transaction = #([AUTONOMOUS_TRN_PRAGMA, "AUTONOMOUS_TRN_PRAGMA" ], #pragma_autonomous_transaction);}
     ;
 
 assignment_statement :
@@ -1714,7 +1710,7 @@ datatype :
             )
         | "smallint"
         | "real"
-        | "numeric" (OPEN_PAREN! (NUMBER (COMMA! NUMBER)?)? CLOSE_PAREPlSqlPlllN! )?
+        | "numeric" (OPEN_PAREN! (NUMBER (COMMA! NUMBER)?)? CLOSE_PAREN! )?
         | "int"
         | "integer" (OPEN_PAREN! (NUMBER)? CLOSE_PAREN! )?
         | "pls_integer"
@@ -1870,19 +1866,6 @@ parameter_name :
     { #parameter_name = #([PARAMETER_NAME, "PARAMETER_NAME" ], #parameter_name);}
     ;
 
-/*
-cursor_spec :
-        c:"cursor" cursor_name
-        (o:OPEN_PAREN!
-(options {
-    greedy = true;
-} :
-      parameter_spec
-        (COMMA parameter_spec)* ) CLOSE_PAREN!)?
-        "return" return_type SEMI!
-        ;
-*/
-
 procedure_spec :
     procedure_declaration SEMI!
     {#procedure_spec = #([PROCEDURE_SPEC, "PROCEDURE_SPEC" ], #procedure_spec);}
@@ -1923,7 +1906,7 @@ exception_pragma :
     "pragma"! "exception_init"! OPEN_PAREN! complex_name COMMA! plsql_expression CLOSE_PAREN! SEMI!
     {#exception_pragma = #([EXCEPTION_PRAGMA, "EXCEPTION_PRAGMA" ], #exception_pragma);}
     ;
-
+/*
 restrict_ref_pragma :
     "pragma"! "restrict_references"! OPEN_PAREN! identifier3 (COMMA! identifier3)+ CLOSE_PAREN! SEMI!
     {#restrict_ref_pragma = #([RESTRICT_REF_PRAGMA, "RESTRICT_REF_PRAGMA" ], #restrict_ref_pragma);}
@@ -1948,6 +1931,9 @@ timestamp_pragma:
     "pragma"! "timestamp"! OPEN_PAREN! string_literal CLOSE_PAREN! SEMI!
     {#timestamp_pragma = #([TIMESTAMPG_PRAGMA, "TIMESTAMPG_PRAGMA" ], #timestamp_pragma);}
     ;
+*/
+
+
 
 numeric_literal :
     NUMBER
@@ -2107,7 +2093,6 @@ procedure_body
 
 
 argument_list:
-    // argument ( COMMA! argument )*
     parameter_spec ( COMMA! parameter_spec )*
     { #argument_list = #([ARGUMENT_LIST, "ARGUMENT_LIST" ], #argument_list); }
     ;
@@ -3165,7 +3150,7 @@ insert_columns:
 
 
 simple_update:
-    "update"! table_alias
+    "update" (table_alias | (subquery (alias)?))
     "set" column_spec EQ plsql_expression ( COMMA! column_spec EQ plsql_expression )*
     ( where_condition ) ?
     ( returning )?
@@ -3181,8 +3166,7 @@ returning:
 
 
 subquery_update:
-    "update"! table_alias
-    "set"
+    "update" (table_alias | (subquery (alias)?)) "set"
     OPEN_PAREN! column_spec_list CLOSE_PAREN! EQ subquery
     ( where_condition )?
     { #subquery_update = #([SUBQUERY_UPDATE_COMMAND, "SUBQUERY_UPDATE_COMMAND" ], #subquery_update); }
@@ -3194,12 +3178,14 @@ delete_command:
     ;
 
 set_transaction_command:
-        "set" "transaction" r:"read" "only"
-        ;
+    "set" "transaction" r:"read" "only"
+    {#set_transaction_command = #([SET_TRN_STATEMENT, "SET_TRN_STATEMENT" ], #set_transaction_command);}
+    ;
 
 close_statement :
-      "close" cursor_name_ref
-      ;
+    "close" cursor_name_ref
+    {#close_statement = #([CLOSE_STATEMENT, "CLOSE_STATEMENT" ], #close_statement);}
+    ;
 
 fetch_statement:
     "fetch" cursor_name_ref ( "bulk" "collect" ) ? "into" variable_ref (COMMA! variable_ref )* ("limit" (identifier2|numeric_literal))?
@@ -3212,9 +3198,9 @@ variable_ref:
     ;
 
 lock_table_statement:
-        l:"lock" t:"table" table_reference_list
-        i:"in" lock_mode m:"mode" ( n:"nowait" )?
-        ;
+    "lock" "table" table_reference_list "in" lock_mode "mode" ( "nowait" )?
+    {#lock_table_statement = #([LOCK_TABLE_STATEMENT, "LOCK_TABLE_STATEMENT" ], #lock_table_statement);}
+    ;
 
 lock_mode:
         r1:"row" s1:"share"
@@ -3226,10 +3212,13 @@ lock_mode:
         ;
 
 open_statement:
+(
         o:"open" cursor_name_ref  (parentesized_exp_list)?
          ( f:"for" ( select_expression | plsql_expression ))?
          ( "using" ("in")? plsql_lvalue_list )?
-        ;
+)
+    {#open_statement = #([OPEN_STATEMENT, "OPEN_STATEMENT" ], #open_statement);}
+    ;
 
 rollback_statement:
         "rollback" ( "work" )?

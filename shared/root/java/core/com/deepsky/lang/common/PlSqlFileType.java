@@ -26,6 +26,7 @@
 package com.deepsky.lang.common;
 
 import com.deepsky.view.Icons;
+import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +35,7 @@ import javax.swing.*;
 public class PlSqlFileType extends LanguageFileType {
 
     public static final PlSqlFileType FILE_TYPE = new PlSqlFileType();
+    public static final Language PLSQL_LANGUAGE = FILE_TYPE.getLanguage();
 
     public PlSqlFileType() {
         super(new PlSqlLanguage());

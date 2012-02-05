@@ -39,6 +39,37 @@ import java.util.List;
 
 public class PsiUtil {
 
+    public static List<ASTNode> nextVisibleSiblings(ASTNode node) {
+        ArrayList<ASTNode> list = new ArrayList<ASTNode>();
+        ASTNode next = node.getTreeNext();
+        while(next != null){
+            if (canBeCorrectBlock(next)) {
+                list.add(next);
+            }
+            next = next.getTreeNext();
+        }
+        return list;
+    }
+
+
+    public static List<ASTNode> visibleChildren(ASTNode node) {
+        ArrayList<ASTNode> list = new ArrayList<ASTNode>();
+        for (ASTNode astNode : node.getChildren(null)) {
+            if (canBeCorrectBlock(astNode)) {
+                list.add(astNode);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * @param node Tree node
+     * @return true, if the current node can be myBlock node, else otherwise
+     */
+    private static boolean canBeCorrectBlock(final ASTNode node) {
+        return (node.getText().trim().length() > 0);
+    }
+    
     public static ASTNode findTreePrevForTypes(@NotNull ASTNode node, @Nullable TokenSet tokens) {
         if (tokens == null) {
             // Pick up any previous node

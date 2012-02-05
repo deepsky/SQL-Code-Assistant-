@@ -33,13 +33,18 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.1.4.11</version>
+    <version>1.2.0.11</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.2.0.11</b>
+                 <ul>
+                    - [NEW] Code formatter added<br>
+                 </ul>
+            </li>
             <li><b>1.1.4.11</b>
                  <ul>
                     - [FIX] Misbehavior after editing of connection settings in the DBBrowser<br>
@@ -203,7 +208,9 @@
         <readWriteAccessDetector implementation="com.deepsky.findUsages.providers.PlSqlReadWriteAccessDetector"/>
 
         <lang.formatter language="PlSql" implementationClass="com.deepsky.lang.plsql.formatter2.PlSqlFormattingModelBuilder"/>
+        <postFormatProcessor implementation="com.deepsky.lang.plsql.formatter2.PlSqlPostFormatProcessor"/>
         <codeStyleSettingsProvider implementation="com.deepsky.lang.plsql.formatter2.settings.PlSqlCodeStyleSettingsProvider"/>
+        <langCodeStyleSettingsProvider implementation="com.deepsky.lang.plsql.formatter2.settings.PlSqlLanguageCodeStyleSettingsProvider"/>
 
         <definitionsSearch implementation="com.deepsky.navigation.ImplementationsSearcher"/>
         <targetElementEvaluator language="PlSql" implementationClass="com.deepsky.navigation.PlSqlTargetElementEvaluator"/>

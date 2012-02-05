@@ -28,6 +28,7 @@ package com.deepsky.lang.common;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 import com.deepsky.integration.PlSqlElementType;
 import com.deepsky.integration.lexer.generated.PlSqlBaseTokenTypes;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
@@ -89,4 +90,24 @@ public interface PlSqlTokenTypes extends PlSqlBaseTokenTypes {
     TokenSet STRING_LITERALS = TokenSet.create(
             QUOTED_STR
     );
+
+    TokenSet SORTED_DEF_TOKENS = TokenSet.create(
+            PlSqlTokenTypes.KEYWORD_ASC, PlSqlTokenTypes.KEYWORD_DESC,
+            PlSqlTokenTypes.KEYWORD_NULLS, PlSqlTokenTypes.KEYWORD_FIRST,
+            PlSqlTokenTypes.KEYWORD_LAST
+    );
+
+
+    final static TokenSet PACKAGE_LEVEL_WORDS =
+            TokenSet.create(
+                    PlSqlTokenTypes.KEYWORD_CREATE,
+                    PlSqlTokenTypes.KEYWORD_OR,
+                    PlSqlTokenTypes.KEYWORD_REPLACE,
+                    PlSqlTokenTypes.KEYWORD_PACKAGE,
+                    PlSqlTokenTypes.KEYWORD_BODY,
+                    PlSqlTokenTypes.KEYWORD_END,
+                    PlSqlTokenTypes.KEYWORD_AS,
+                    PlSqlTokenTypes.KEYWORD_IS
+            );
+
 }

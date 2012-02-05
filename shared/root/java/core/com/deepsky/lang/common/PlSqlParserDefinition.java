@@ -37,7 +37,6 @@ import com.deepsky.lang.plsql.psi.impl.ctrl.RollbackStatementImpl;
 import com.deepsky.lang.plsql.psi.impl.ddl.*;
 import com.deepsky.lang.plsql.psi.impl.internal.CreateViewColumnDefInternalImpl;
 import com.deepsky.lang.plsql.psi.impl.ref.SequenceRefImpl;
-import com.deepsky.lang.plsql.psi.impl.ref.SysFunctionReferenceImpl;
 import com.deepsky.lang.plsql.psi.impl.ref.TableRefImpl;
 import com.deepsky.lang.plsql.psi.impl.ref.TableRefWithLinkImpl;
 import com.deepsky.lang.plsql.psi.impl.spec_func_call.*;
@@ -206,10 +205,9 @@ public class PlSqlParserDefinition implements ParserDefinition {
             case PLSqlTokenTypes.PK_SPEC:
                 return new PrimaryKeyConstraintImpl(node);
             case PLSqlTokenTypes.CHECK_CONSTRAINT:
-                // todo - implement me
-                break;
+                return new CheckConstraintImpl(node);
             case PLSqlTokenTypes.UNIQUE_CONSTRAINT:
-                return new ColumnUniqueConstraintImpl(node);
+                return new UniqueConstraintImpl(node);
 
             case PLSqlTokenTypes.COLUMN_FK_SPEC:
                 return new ColumnFKSpecImpl(node);

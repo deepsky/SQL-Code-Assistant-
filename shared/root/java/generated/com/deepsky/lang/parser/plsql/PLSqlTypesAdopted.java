@@ -18,6 +18,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType SQLPLUS_VARIABLE = new PlSqlElementType("SQLPLUS_VARIABLE", PLSqlTokenTypes.SQLPLUS_VARIABLE);
 	PlSqlElementType SELECT_EXPRESSION = new PlSqlElementType("SELECT_EXPRESSION", PLSqlTokenTypes.SELECT_EXPRESSION);
 	PlSqlElementType DROP_PACKAGE = new PlSqlElementType("DROP_PACKAGE", PLSqlTokenTypes.DROP_PACKAGE);
+	PlSqlElementType SET_TRN_STATEMENT = new PlSqlElementType("SET_TRN_STATEMENT", PLSqlTokenTypes.SET_TRN_STATEMENT);
 	PlSqlElementType FUNCTION_SPEC = new PlSqlElementType("FUNCTION_SPEC", PLSqlTokenTypes.FUNCTION_SPEC);
 	PlSqlElementType OBJECT_NAME = new PlSqlElementType("OBJECT_NAME", PLSqlTokenTypes.OBJECT_NAME);
 	PlSqlElementType STRING_LITERAL = new PlSqlElementType("STRING_LITERAL", PLSqlTokenTypes.STRING_LITERAL);
@@ -138,9 +139,11 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType SQLPLUS_COMMAND = new PlSqlElementType("SQLPLUS_COMMAND", PLSqlTokenTypes.SQLPLUS_COMMAND);
 	PlSqlElementType SQLPLUS_SPOOL = new PlSqlElementType("SQLPLUS_SPOOL", PLSqlTokenTypes.SQLPLUS_SPOOL);
 	PlSqlElementType EXTERNAL_TABLE_SPEC = new PlSqlElementType("EXTERNAL_TABLE_SPEC", PLSqlTokenTypes.EXTERNAL_TABLE_SPEC);
+	PlSqlElementType OPEN_STATEMENT = new PlSqlElementType("OPEN_STATEMENT", PLSqlTokenTypes.OPEN_STATEMENT);
 	PlSqlElementType CAST_FUNC = new PlSqlElementType("CAST_FUNC", PLSqlTokenTypes.CAST_FUNC);
 	PlSqlElementType BOOLEAN_LITERAL = new PlSqlElementType("BOOLEAN_LITERAL", PLSqlTokenTypes.BOOLEAN_LITERAL);
 	PlSqlElementType IN_CONDITION = new PlSqlElementType("IN_CONDITION", PLSqlTokenTypes.IN_CONDITION);
+	PlSqlElementType CLOSE_STATEMENT = new PlSqlElementType("CLOSE_STATEMENT", PLSqlTokenTypes.CLOSE_STATEMENT);
 	PlSqlElementType SUBQUERY_EXPR = new PlSqlElementType("SUBQUERY_EXPR", PLSqlTokenTypes.SUBQUERY_EXPR);
 	PlSqlElementType DBTIMEZONE = new PlSqlElementType("DBTIMEZONE", PLSqlTokenTypes.DBTIMEZONE);
 	PlSqlElementType VARRAY_COLLECTION = new PlSqlElementType("VARRAY_COLLECTION", PLSqlTokenTypes.VARRAY_COLLECTION);
@@ -230,7 +233,6 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType EXIT_STATEMENT = new PlSqlElementType("EXIT_STATEMENT", PLSqlTokenTypes.EXIT_STATEMENT);
 	PlSqlElementType TYPE_SPEC = new PlSqlElementType("TYPE_SPEC", PLSqlTokenTypes.TYPE_SPEC);
 	PlSqlElementType DROP_OPERATOR = new PlSqlElementType("DROP_OPERATOR", PLSqlTokenTypes.DROP_OPERATOR);
-	PlSqlElementType PRAGMA = new PlSqlElementType("PRAGMA", PLSqlTokenTypes.PRAGMA);
 	PlSqlElementType INTO_CLAUSE = new PlSqlElementType("INTO_CLAUSE", PLSqlTokenTypes.INTO_CLAUSE);
 	PlSqlElementType ROLLBACK_STATEMENT = new PlSqlElementType("ROLLBACK_STATEMENT", PLSqlTokenTypes.ROLLBACK_STATEMENT);
 	PlSqlElementType INTERVAL_CONST = new PlSqlElementType("INTERVAL_CONST", PLSqlTokenTypes.INTERVAL_CONST);
@@ -258,6 +260,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType DROP_SYNONYM = new PlSqlElementType("DROP_SYNONYM", PLSqlTokenTypes.DROP_SYNONYM);
 	PlSqlElementType NAME_FRAGMENT = new PlSqlElementType("NAME_FRAGMENT", PLSqlTokenTypes.NAME_FRAGMENT);
 	PlSqlElementType PROCEDURE_BODY = new PlSqlElementType("PROCEDURE_BODY", PLSqlTokenTypes.PROCEDURE_BODY);
+	PlSqlElementType LOCK_TABLE_STATEMENT = new PlSqlElementType("LOCK_TABLE_STATEMENT", PLSqlTokenTypes.LOCK_TABLE_STATEMENT);
 	PlSqlElementType RESTRICT_REF_PRAGMA = new PlSqlElementType("RESTRICT_REF_PRAGMA", PLSqlTokenTypes.RESTRICT_REF_PRAGMA);
 	PlSqlElementType CASE_EXPRESSION_SRCH = new PlSqlElementType("CASE_EXPRESSION_SRCH", PLSqlTokenTypes.CASE_EXPRESSION_SRCH);
 	PlSqlElementType CASE_EXPRESSION_SMPL = new PlSqlElementType("CASE_EXPRESSION_SMPL", PLSqlTokenTypes.CASE_EXPRESSION_SMPL);
@@ -269,6 +272,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType RECORD_TYPE_DECL = new PlSqlElementType("RECORD_TYPE_DECL", PLSqlTokenTypes.RECORD_TYPE_DECL);
 	PlSqlElementType GROUP_CLAUSE = new PlSqlElementType("GROUP_CLAUSE", PLSqlTokenTypes.GROUP_CLAUSE);
 	PlSqlElementType EXISTS_EXPR = new PlSqlElementType("EXISTS_EXPR", PLSqlTokenTypes.EXISTS_EXPR);
+	PlSqlElementType AUTONOMOUS_TRN_PRAGMA = new PlSqlElementType("AUTONOMOUS_TRN_PRAGMA", PLSqlTokenTypes.AUTONOMOUS_TRN_PRAGMA);
 	PlSqlElementType COND_COMP_SEQ2 = new PlSqlElementType("COND_COMP_SEQ2", PLSqlTokenTypes.COND_COMP_SEQ2);
 	PlSqlElementType DEFAULT = new PlSqlElementType("DEFAULT", PLSqlTokenTypes.DEFAULT);
 	PlSqlElementType NULL_STATEMENT = new PlSqlElementType("NULL_STATEMENT", PLSqlTokenTypes.NULL_STATEMENT);
