@@ -28,130 +28,225 @@ package com.deepsky.lang.plsql.formatter2;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.formatter2.settings.PlSqlCodeStyleSettings;
+import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
 import com.intellij.formatting.Wrap;
 import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
+
+import java.util.List;
 
 public class PlSqlWrapProcessor {
 
     /**
      * Calculates wrap, based on code style, between parent block and child node
      *
+     *
      * @param parent parent block
      * @param child  child node
+     * @param plSqlSettings
      * @return wrap
      */
-    public static Wrap getChildWrap(PlSqlBlock parent, ASTNode child) {
+    public static Wrap getChildWrap(PlSqlBlock parent, ASTNode child, PlSqlCodeStyleSettings settings) {
         ASTNode astParent = parent.getNode();
         final PsiElement psiParent = astParent.getPsi();
+        final IElementType childType = child.getElementType();
+        final IElementType parentType = astParent.getElementType();
 
         // For PL/SQL file
         if (psiParent instanceof PlSqlFile) {
+            if (childType == PlSqlTokenTypes.DIVIDE) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+
             return Wrap.createWrap(WrapType.NONE, false);
         }
 
         // Table vs Column Definition, Constraint, CloseParenthesis, StorageSpec
         if (psiParent instanceof TableDefinition) {
-            if (child.getElementType() == PlSqlElementTypes.COLUMN_DEF ||
-                    PlSqlElementTypes.CONSTRAINTS.contains(child.getElementType())) {
+            if (childType == PlSqlElementTypes.COLUMN_DEF ||
+                    PlSqlElementTypes.TABLE_LEVEL_CONSTRAINTS.contains(childType)) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
-            } else if (child.getElementType() == PlSqlTokenTypes.CLOSE_PAREN) {
+            } else if (childType == PlSqlTokenTypes.OPEN_PAREN) {
+                return settings.WRAP_OPEN_PAREN_IN_CRATE_TABLE?
+                    Wrap.createWrap(WrapType.ALWAYS, true): null;
+            } else if (childType == PlSqlTokenTypes.CLOSE_PAREN) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
-            } else if (child.getElementType() == PlSqlElementTypes.STORAGE_SPEC) {
+            } else if (childType == PlSqlElementTypes.STORAGE_SPEC) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
-            } else if (child.getElementType() == PlSqlElementTypes.PARALLEL_CLAUSE) {
+            } else if (childType == PlSqlElementTypes.PARALLEL_CLAUSE) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
-            } else if (child.getElementType() == PlSqlElementTypes.MONITORING_CLAUSE) {
+            } else if (childType == PlSqlElementTypes.MONITORING_CLAUSE) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
+            } else if (childType == PlSqlTokenTypes.KEYWORD_AS) {
+                final List<ASTNode> list = PsiUtil.nextVisibleSiblings(child);
+                if(list.size() > 0){
+                    if(list.get(0).getElementType() == PlSqlElementTypes.SELECT_EXPRESSION
+                            || list.get(0).getElementType() == PlSqlElementTypes.SELECT_EXPRESSION_UNION){
+                        return Wrap.createWrap(WrapType.ALWAYS, true);
+                    }
+                }
             }
         }
 
-        if (PlSqlElementTypes.TABLE_ORGANIZATION.contains(child.getElementType())) {
+        if (PlSqlElementTypes.TABLE_ORGANIZATION.contains(childType)) {
             return Wrap.createWrap(WrapType.ALWAYS, true);
         }
 
         // CONSTRAINT PRIMARY KEY .. USING ... STORAGE
-        if (PlSqlElementTypes.CONSTRAINTS.contains(astParent.getElementType())) { //astParent.getElementType() == PlSqlElementTypes.PK_SPEC){
-            if (child.getElementType() == PlSqlElementTypes.STORAGE_SPEC) {
+        if (PlSqlElementTypes.TABLE_LEVEL_CONSTRAINTS.contains(parentType)) {
+            if (childType == PlSqlElementTypes.STORAGE_SPEC) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
 
         // STORAGE ( ... )
-        if (astParent.getElementType() == PlSqlElementTypes.STORAGE_SPEC) {
-            if (child.getElementType() == PlSqlElementTypes.STORAGE_PARAM) {
+        if (parentType == PlSqlElementTypes.STORAGE_SPEC) {
+            if (childType == PlSqlElementTypes.STORAGE_PARAM) {
                 if (PsiUtil.findTreePrevForType(child, PlSqlElementTypes.STORAGE_PARAM) == null) {
                     // First Storage param element
                     return Wrap.createWrap(WrapType.ALWAYS, true);
                 } else {
                     return Wrap.createWrap(WrapType.NORMAL, false);
                 }
-            } else if (child.getElementType() == PlSqlTokenTypes.CLOSE_PAREN) {
+            } else if (childType == PlSqlTokenTypes.CLOSE_PAREN) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
 
-        if (astParent.getElementType() == PlSqlElementTypes.EXTERNAL_TYPE) {
-            if (child.getElementType() == PlSqlElementTypes.EXTERNAL_TABLE_SPEC) {
+        if (parentType == PlSqlElementTypes.EXTERNAL_TYPE) {
+            if (childType == PlSqlElementTypes.EXTERNAL_TABLE_SPEC) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
-        if (astParent.getElementType() == PlSqlElementTypes.EXTERNAL_TABLE_SPEC) {
-            if (child.getElementType() == PlSqlElementTypes.LOADER_ACCESS_PARAMS
-                    || child.getElementType() == PlSqlElementTypes.WRITE_ACCESS_PARAMS_SPEC) {
+        if (parentType == PlSqlElementTypes.EXTERNAL_TABLE_SPEC) {
+            if (childType == PlSqlElementTypes.LOADER_ACCESS_PARAMS
+                    || childType == PlSqlElementTypes.WRITE_ACCESS_PARAMS_SPEC) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
-        if (child.getElementType() == PlSqlElementTypes.EXT_FIELD_SPEC) {
+        if (childType == PlSqlElementTypes.EXT_FIELD_SPEC) {
             return Wrap.createWrap(WrapType.ALWAYS, true);
         }
 
-        if (child.getElementType() == PlSqlElementTypes.RECORD_FMT_SPEC) {
+        if (childType == PlSqlElementTypes.RECORD_FMT_SPEC) {
             return Wrap.createWrap(WrapType.ALWAYS, true);
         }
-        if (child.getElementType() == PlSqlElementTypes.PARALLEL_CLAUSE) {
+        if (childType == PlSqlElementTypes.PARALLEL_CLAUSE) {
             return Wrap.createWrap(WrapType.ALWAYS, true);
         }
-        if (child.getElementType() == PlSqlElementTypes.REJECT_SPEC) {
+        if (childType == PlSqlElementTypes.REJECT_SPEC) {
             return Wrap.createWrap(WrapType.ALWAYS, true);
         }
-        if (child.getElementType() == PlSqlElementTypes.EXT_TABLE_LOCATION_SPEC) {
+        if (childType == PlSqlElementTypes.EXT_TABLE_LOCATION_SPEC) {
             return Wrap.createWrap(WrapType.ALWAYS, true);
         }
 
-        if (PlSqlElementTypes.DB_OBJECTS_MAYBE_NESTED.contains(child.getElementType())) {
+        if (PlSqlElementTypes.DB_OBJECTS_MAYBE_NESTED.contains(childType)) {
             return Wrap.createWrap(WrapType.ALWAYS, true);
         }
 
 /*
-        if(child.getElementType() == PlSqlElementTypes.DECLARE_LIST){
+        if(childType == PlSqlElementTypes.DECLARE_LIST){
             return Wrap.createWrap(WrapType.ALWAYS, true);
         }
 */
-        if (astParent.getElementType() == PlSqlElementTypes.PLSQL_BLOCK) {
-            if (child.getElementType() == PlSqlTokenTypes.KEYWORD_BEGIN) {
+        if (parentType == PlSqlElementTypes.PLSQL_BLOCK) {
+            if (childType == PlSqlTokenTypes.KEYWORD_BEGIN) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
-            } else if (child.getElementType() == PlSqlElementTypes.PLSQL_BLOCK_END) {
+            } else if (childType == PlSqlElementTypes.PLSQL_BLOCK_END) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
-        if (child.getElementType() == PlSqlElementTypes.VARIABLE_DECLARATION) {
+        if (childType == PlSqlElementTypes.VARIABLE_DECLARATION
+                || child.getPsi() instanceof TypeDeclaration) {
             return Wrap.createWrap(WrapType.ALWAYS, true);
         }
-
-        if (PlSqlElementTypes.PLSQL_STATEMENTS.contains(child.getElementType())) {
-            return Wrap.createWrap(WrapType.ALWAYS, true);
-        }
-
-//        if(child.getElementType() == PlSqlElementTypes.STATEMENT_LIST){
-//            return Wrap.createWrap(WrapType.ALWAYS, true);
-//        }
 
         // SELECT_EXPRESSION, SELECT_EXPRESSION_UNION
-//        if(PlSqlElementTypes.SUBQUERY_SELECTS.contains(child.getElementType())){
+        if (PlSqlElementTypes.SUBQUERY_SELECTS.contains(childType)) {
+            if (psiParent instanceof InsertStatement) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+        }
+
+        if (parentType == PlSqlElementTypes.STATEMENT_LIST) {
+            if (PlSqlElementTypes.PLSQL_STATEMENTS.contains(childType)) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+            if (PlSqlElementTypes.DML_STATEMENTS.contains(childType)) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+            if (PlSqlElementTypes.SUBQUERY_SELECTS.contains(childType)) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+        }
+
+        if (psiParent instanceof SelectStatement) {
+            if (childType == PlSqlElementTypes.WHERE_CONDITION) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+            if (childType == PlSqlElementTypes.TABLE_REFERENCE_LIST_FROM) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+            if (childType == PlSqlElementTypes.CONNECT_CLAUSE) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+
+            if (childType == PlSqlElementTypes.GROUP_CLAUSE) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+            if (childType == PlSqlElementTypes.ORDER_CLAUSE) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+            if (childType == PlSqlElementTypes.FOR_UPDATE_CLAUSE) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+
+            if (childType == PlSqlElementTypes.EXPR_COLUMN) {
+                SelectStatement select = (SelectStatement) psiParent;
+                if (select.getSelectFieldList().length > 3) {
+                    return Wrap.createWrap(WrapType.ALWAYS, true);
+                }
+            }
+        }
+
+        if (childType == PlSqlElementTypes.TABLE_ALIAS) {
+            if (psiParent instanceof FromClause) {
+                FromClause from = (FromClause) psiParent;
+                if (from.getTableList().length > 3) {
+                    return Wrap.createWrap(WrapType.ALWAYS, true);
+                }
+            }
+        }
+        if (childType == PlSqlElementTypes.FROM_SUBQUERY) {
+            if (psiParent instanceof FromClause) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+        }
+
+        if (parentType == PlSqlElementTypes.FUNCTION_BODY
+                || parentType == PlSqlElementTypes.PROCEDURE_BODY) {
+            if(childType == PlSqlTokenTypes.KEYWORD_IS || childType == PlSqlTokenTypes.KEYWORD_AS){
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+        }
+
+        if ( parentType == PlSqlElementTypes.PACKAGE_BODY
+                || parentType == PlSqlElementTypes.PACKAGE_SPEC) {
+            if(childType == PlSqlTokenTypes.KEYWORD_IS
+                    || childType == PlSqlTokenTypes.KEYWORD_AS
+                    || childType == PlSqlTokenTypes.KEYWORD_END){
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+        }
+
+        // SELECT_EXPRESSION, SELECT_EXPRESSION_UNION
+//        if(PlSqlElementTypes.SUBQUERY_SELECTS.contains(childType)){
 //            return Wrap.createWrap(WrapType.ALWAYS, true);
 //        }
         return null; //Wrap.createWrap(WrapType.NORMAL, false);

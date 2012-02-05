@@ -88,7 +88,7 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
 
     @NotNull
     public GenericConstraint[] getConstraints() {
-        ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.CONSTRAINTS); //PLSqlTypesAdopted.CONSTRAINT));
+        ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.TABLE_LEVEL_CONSTRAINTS);
         if (nodes != null) {
             List<GenericConstraint> out = new ArrayList<GenericConstraint>();
             for (ASTNode node : nodes) {

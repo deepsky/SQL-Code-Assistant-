@@ -25,6 +25,7 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
@@ -39,6 +40,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,13 +53,23 @@ public class ArgumentImpl extends PlSqlElementBase implements Argument {
         super(astNode);
     }
 
+    @NotNull
     public String getArgumentName() {
         PsiElement e = findChildByType(PLSqlTypesAdopted.PARAMETER_NAME);
         if (e != null) {
             return e.getText();
         } else {
             throw new SyntaxTreeCorruptedException();
-//            return "";
+        }
+    }
+
+    @NotNull
+    public PsiElement getPsiArgumentName() {
+        PsiElement e = findChildByType(PLSqlTypesAdopted.PARAMETER_NAME);
+        if (e != null) {
+            return e;
+        } else {
+            throw new SyntaxTreeCorruptedException();
         }
     }
 
@@ -124,6 +136,23 @@ public class ArgumentImpl extends PlSqlElementBase implements Argument {
         return false;
     }
 
+    static TokenSet ARGUMENT_QUALIFIERS = TokenSet.create(
+            PlSqlTokenTypes.KEYWORD_IN,
+            PlSqlTokenTypes.KEYWORD_OUT,
+            PlSqlTokenTypes.KEYWORD_NOCOPY,
+            PlSqlTokenTypes.KEYWORD_REF
+    ); 
+    
+    public PsiElement[] getQualifiers(){
+        final ASTNode[] nodes = getNode().getChildren(ARGUMENT_QUALIFIERS);
+        final PsiElement[] out = new PsiElement[nodes!= null? nodes.length: 0];
+        for(int i =0; i<out.length; i++){
+            out[i] = nodes[i].getPsi();
+        }
+
+        return out;
+    }
+    
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
             ((PlSqlElementVisitor) visitor).visitArgument(this);

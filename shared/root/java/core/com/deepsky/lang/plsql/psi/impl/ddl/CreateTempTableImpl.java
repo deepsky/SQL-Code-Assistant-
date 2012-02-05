@@ -35,8 +35,6 @@ import com.deepsky.lang.plsql.psi.ddl.CreateTempTable;
 import com.deepsky.lang.plsql.psi.ddl.PartitionSpecification;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
-import com.deepsky.lang.plsql.resolver.ContextPath;
-import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
@@ -44,7 +42,6 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,7 +80,7 @@ public class CreateTempTableImpl extends PlSqlElementBase implements CreateTempT
 
     @NotNull
     public GenericConstraint[] getConstraints() {
-        ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.CONSTRAINTS); //TokenSet.create(PLSqlTypesAdopted.CONSTRAINT));
+        ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.TABLE_LEVEL_CONSTRAINTS); //TokenSet.create(PLSqlTypesAdopted.CONSTRAINT));
         if (nodes != null) {
             List<GenericConstraint> out = new ArrayList<GenericConstraint>();
             for (ASTNode node : nodes) {

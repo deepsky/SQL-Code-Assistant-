@@ -27,10 +27,16 @@ package com.deepsky.lang.plsql.psi;
 
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.struct.Type;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 public interface Argument extends PlSqlElement{
+
+    @NotNull
     String getArgumentName();
+    @NotNull
+    PsiElement getPsiArgumentName();
+
     @NotNull
     Type getType();
     TypeSpec getTypeSpec();
@@ -43,4 +49,6 @@ public interface Argument extends PlSqlElement{
     boolean isOut();
     boolean isNocopy();
     boolean isAssigned();
+
+    PsiElement[] getQualifiers();
 }

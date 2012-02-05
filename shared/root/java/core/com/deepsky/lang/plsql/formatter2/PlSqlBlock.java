@@ -25,12 +25,20 @@
 
 package com.deepsky.lang.plsql.formatter2;
 
+import com.deepsky.lang.common.PlSqlFile;
+import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.formatter2.settings.PlSqlCodeStyleSettings;
+import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
+import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
 import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import com.intellij.psi.formatter.FormatterUtil;
 import com.intellij.psi.formatter.common.AbstractBlock;
+import com.intellij.psi.impl.source.tree.JavaElementType;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.CollectionFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -96,8 +104,12 @@ public class PlSqlBlock extends AbstractBlock {
                 return Spacing.getReadOnlySpacing();
             }
 
-            Spacing spacing = new PlSqlSpacingProcessor(((PlSqlBlock)child2).getNode(), commonSettings, customSettings).getSpacing();
-            return spacing != null ? spacing : PlSqlSpacingProcessorBasic.getSpacing(((PlSqlBlock)child1), ((PlSqlBlock)child2), commonSettings);
+            Spacing spacing = new PlSqlSpacingProcessor(
+                    ((PlSqlBlock)child2).getNode(), commonSettings, customSettings
+            ).getSpacing();
+            return spacing != null ?
+                    spacing :
+                    PlSqlSpacingProcessorBasic.getSpacing(((PlSqlBlock)child1), ((PlSqlBlock)child2), commonSettings);
         }
         return null;
     }
@@ -117,4 +129,92 @@ public class PlSqlBlock extends AbstractBlock {
     public Map<PsiElement, Alignment> getInnerAlignments() {
         return innerAlignments;
     }
+
+    private Boolean myIncomplete2 = null;
+    @Override
+    public boolean isIncomplete() {
+        if (myIncomplete2 == null) {
+            myIncomplete2 = isIncomplete(getNode());
+        }
+        return myIncomplete2;
+    }
+
+
+    @Override
+    @NotNull
+    public ChildAttributes getChildAttributes(final int newChildIndex) {
+        if(getNode().getPsi() instanceof PlSqlFile){
+            return new ChildAttributes(Indent.getNoneIndent(), null);
+        }
+
+        return new ChildAttributes(getChildIndent(getNode(), newChildIndex), null);
+    }
+    
+    
+    private static boolean isIncomplete(ASTNode node){
+        return !PlSqlUtil.iterateOver(node, new PlSqlUtil.ASTNodeProcessorBreakable() {
+            public boolean process(ASTNode node) {
+                return node.getElementType() != PlSqlElementTypes.ERROR_TOKEN_A;
+            }
+        });
+    }
+
+
+    private static Indent getChildIndent(final ASTNode parent, final int newChildIndex) {
+        final IElementType parentType = parent.getElementType();
+        if (parentType == PlSqlElementTypes.COLUMN_DEF) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.PK_SPEC) return Indent.getContinuationWithoutFirstIndent();
+        if (parentType == PlSqlElementTypes.TABLE_DEF) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.STATEMENT_LIST) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.IF_STATEMENT) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.ELSE_STATEMENT) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.SELECT_EXPRESSION) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.SELECT_EXPRESSION_UNION) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.WHERE_CONDITION) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.TABLE_REFERENCE_LIST_FROM) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.ORDER_CLAUSE) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.IN_CONDITION) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.SIMPLE_UPDATE_COMMAND) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.SUBQUERY) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.LOOP_STATEMENT) return Indent.getNormalIndent();
+
+        if (parentType == PlSqlElementTypes.FUNCTION_BODY) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.PROCEDURE_BODY) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.DECLARE_LIST) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.DATATYPE) return Indent.getNormalIndent();
+        if (parentType == PlSqlElementTypes.PLSQL_BLOCK) {
+            if (PlSqlElementTypes.PLSQL_BLOCK_PARENTS.contains(parent.getTreeParent().getElementType())) {
+                return Indent.getNoneIndent();
+            } else {
+                return Indent.getNormalIndent(false);
+            }
+        }
+
+        if (parentType == PlSqlElementTypes.PACKAGE_BODY || parentType == PlSqlElementTypes.PACKAGE_SPEC){
+            List<ASTNode> children = PsiUtil.visibleChildren(parent);
+            if(children.size() > newChildIndex){
+                IElementType ie = children.get(newChildIndex).getElementType();
+                if(ie == PlSqlTokenTypes.KEYWORD_AS || ie == PlSqlTokenTypes.KEYWORD_IS){
+                    return Indent.getNoneIndent();
+                }
+            }
+            return Indent.getNormalIndent();
+        }
+
+        // todo -- handle more cases
+        return Indent.getNoneIndent();
+    }
+
+
+    protected boolean isAfter(final int newChildIndex, final IElementType[] elementTypes) {
+        if (newChildIndex == 0) return false;
+        final Block previousBlock = getSubBlocks().get(newChildIndex - 1);
+        if (!(previousBlock instanceof AbstractBlock)) return false;
+        final IElementType previousElementType = ((AbstractBlock)previousBlock).getNode().getElementType();
+        for (IElementType elementType : elementTypes) {
+            if (previousElementType == elementType) return true;
+        }
+        return false;
+    }
+
 }

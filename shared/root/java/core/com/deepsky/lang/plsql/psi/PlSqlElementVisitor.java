@@ -30,12 +30,15 @@ import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ctrl.CommitStatement;
 import com.deepsky.lang.plsql.psi.ctrl.RollbackStatement;
 import com.deepsky.lang.plsql.psi.ddl.*;
+import com.deepsky.lang.plsql.psi.impl.ArgumentListImpl;
 import com.deepsky.lang.plsql.psi.impl.ColumnNotNullConstraintImpl;
 import com.deepsky.lang.plsql.psi.impl.SqlPlusPromptRem;
+import com.deepsky.lang.plsql.psi.impl.types.RowtypeTypeImpl;
 import com.deepsky.lang.plsql.psi.internal.CreateViewColumnDefInternal;
 import com.deepsky.lang.plsql.psi.ref.*;
 import com.deepsky.lang.plsql.psi.types.ColumnTypeRef;
 import com.deepsky.lang.plsql.psi.types.DataType;
+import com.deepsky.lang.plsql.psi.types.RowtypeType;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReferenceExpression;
 
@@ -474,5 +477,13 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
 
     public void visitColumnNotNullConstraint(ColumnNotNullConstraint nullConstraint) {
         visitElement(nullConstraint);
+    }
+
+    public void visitRowtypeType(RowtypeType type) {
+        visitElement(type);
+    }
+
+    public void visitArgumentList(ArgumentList argumentList) {
+        visitElement(argumentList);
     }
 }

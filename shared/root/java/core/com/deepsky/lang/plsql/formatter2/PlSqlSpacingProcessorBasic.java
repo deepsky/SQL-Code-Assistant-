@@ -37,14 +37,6 @@ import com.intellij.psi.tree.TokenSet;
 public class PlSqlSpacingProcessorBasic {
 
     static TokenSet PUNCTUATION_SIGNS = TokenSet.create(PlSqlTokenTypes.COMMA,PlSqlTokenTypes.DOT);
-    
-    private static final Spacing NO_SPACING_WITH_NEWLINE = Spacing.createSpacing(0, 0, 0, true, 1);
-    private static final Spacing NO_SPACING = Spacing.createSpacing(0, 0, 0, false, 0);
-    private static final Spacing COMMON_SPACING = Spacing.createSpacing(1, 1, 0, true, 100);
-    private static final Spacing COMMON_SPACING_WITH_NL = Spacing.createSpacing(1, 1, 1, true, 100);
-    private static final Spacing IMPORT_BETWEEN_SPACING = Spacing.createSpacing(0, 0, 1, true, 100);
-    private static final Spacing IMPORT_OTHER_SPACING = Spacing.createSpacing(0, 0, 2, true, 100);
-    private static final Spacing LAZY_SPACING = Spacing.createSpacing(0, 239, 0, true, 100);
 
     public static Spacing getSpacing(PlSqlBlock child1, PlSqlBlock child2, CommonCodeStyleSettings settings) {
 
@@ -57,12 +49,23 @@ public class PlSqlSpacingProcessorBasic {
         IElementType rightType = rightNode.getElementType();
 
         // For dots, commas etc.
+        if(rightType == PlSqlTokenTypes.COMMA){
+            if(leftType == PlSqlElementTypes.PARAMETER_SPEC
+                    || leftType == PlSqlElementTypes.CALL_ARGUMENT
+                    || leftType == PlSqlElementTypes.COLUMN_DEF
+                    || leftType == PlSqlElementTypes.PK_SPEC
+                    || leftType == PlSqlElementTypes.FK_SPEC
+                    || leftType == PlSqlElementTypes.UNIQUE_CONSTRAINT
+                    || leftType == PlSqlElementTypes.CHECK_CONSTRAINT){
+                return SpacingConstants.NO_SPACING;
+            }
+        }
         if (PUNCTUATION_SIGNS.contains(rightType)) {
-            return NO_SPACING_WITH_NEWLINE;
+            return SpacingConstants.NO_SPACING_WITH_NEWLINE;
         } else if(leftType == PlSqlTokenTypes.DOT){
-            return NO_SPACING_WITH_NEWLINE;
+            return SpacingConstants.NO_SPACING_WITH_NEWLINE;
         } else if(rightType == PlSqlTokenTypes.SEMI){
-            return NO_SPACING;
+            return SpacingConstants.NO_SPACING;
         }
 
         if(leftType == PlSqlTokenTypes.OPEN_PAREN || rightType == PlSqlTokenTypes.CLOSE_PAREN ){
@@ -71,9 +74,12 @@ public class PlSqlSpacingProcessorBasic {
                     parent.getNode().getElementType() == PlSqlElementTypes.DATATYPE
                     && settings.SPACE_WITHIN_BRACKETS;
 //            return shouldHaveSpace ? COMMON_SPACING : NO_SPACING; //NO_SPACING_WITH_NEWLINE;
-            return shouldHaveSpace ? COMMON_SPACING : NO_SPACING_WITH_NEWLINE;
+            return shouldHaveSpace ? SpacingConstants.COMMON_SPACING : SpacingConstants.NO_SPACING_WITH_NEWLINE;
         }
         
-        return COMMON_SPACING;
+        if(leftType == PlSqlTokenTypes.KEYWORD_AS || rightType == PlSqlElementTypes.ALIAS_IDENT ){
+            return SpacingConstants.ONE_SPACE_WITHOUT_NEWLINE;
+        }
+        return SpacingConstants.COMMON_SPACING;
     }
 }

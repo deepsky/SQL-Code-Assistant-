@@ -28,7 +28,9 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.psi.Argument;
 import com.deepsky.lang.plsql.psi.ArgumentList;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -97,4 +99,13 @@ public class ArgumentListImpl extends PlSqlElementBase implements ArgumentList {
         }
         return null;
     }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitArgumentList(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
 }

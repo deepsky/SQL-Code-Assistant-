@@ -25,7 +25,12 @@
 
 package com.deepsky.lang.plsql.formatter2;
 
+import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.formatter2.settings.PlSqlCodeStyleSettings;
+import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
+import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
 import com.intellij.formatting.Alignment;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.Indent;
@@ -35,6 +40,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +50,7 @@ public class PlSqlBlockGenerator {
     private final Alignment myAlignment;
     private final Wrap myWrap;
     private final CommonCodeStyleSettings mySettings;
-    private final Map<PsiElement,Alignment> myInnerAlignments;
+    private final Map<PsiElement, Alignment> myInnerAlignments;
     private final PlSqlCodeStyleSettings plSqlSettings;
 
     public PlSqlBlockGenerator(PlSqlBlock block) {
@@ -58,15 +64,64 @@ public class PlSqlBlockGenerator {
     }
 
     public List<Block> generateSubBlocks() {
+        final PsiElement blockPsi = myNode.getPsi();
+        if (blockPsi instanceof TableDefinition) {
+            final ArrayList<Block> subBlocks = new ArrayList<Block>();
+            List<ASTNode> children = PsiUtil.visibleChildren(myNode);
+            if (plSqlSettings.ALIGN_DATATYPE_IN_COLUMN_DEF)
+                calculateAlignments(children);
+            for (ASTNode childNode : children) {
+                final Indent indent = PlSqlIndentProcessor.getChildIndent(myBlock, childNode);
+                Wrap wrap = PlSqlWrapProcessor.getChildWrap(myBlock, childNode, plSqlSettings);
+                subBlocks.add(
+                        new PlSqlBlock(childNode, wrap, indent,
+                                myInnerAlignments.get(childNode.getPsi()),
+                                mySettings, plSqlSettings,
+                                myInnerAlignments));
+            }
+            return subBlocks;
+        }
 
-        //For binary expressions
-        PsiElement blockPsi = myNode.getPsi();
+
+        if (blockPsi instanceof DeclarationList) {
+            final ArrayList<Block> subBlocks = new ArrayList<Block>();
+            List<ASTNode> children = PsiUtil.visibleChildren(myNode);
+            if (plSqlSettings.ALIGN_DATATYPE_IN_DECL)
+                calculateAlignments(children);
+            for (ASTNode childNode : children) {
+                final Indent indent = PlSqlIndentProcessor.getChildIndent(myBlock, childNode);
+                Wrap wrap = PlSqlWrapProcessor.getChildWrap(myBlock, childNode, plSqlSettings);
+                subBlocks.add(
+                        new PlSqlBlock(childNode, wrap, indent,
+                                myInnerAlignments.get(childNode.getPsi()),
+                                mySettings, plSqlSettings,
+                                myInnerAlignments));
+            }
+            return subBlocks;
+        }
+
+        if (blockPsi instanceof ArgumentList) {
+            final ArrayList<Block> subBlocks = new ArrayList<Block>();
+            List<ASTNode> children = PsiUtil.visibleChildren(myNode);
+            if (plSqlSettings.ALIGN_DATATYPE_IN_ARGUMENT_LIST)
+                calculateAlignments(children);
+            for (ASTNode childNode : children) {
+                final Indent indent = PlSqlIndentProcessor.getChildIndent(myBlock, childNode);
+                Wrap wrap = PlSqlWrapProcessor.getChildWrap(myBlock, childNode, plSqlSettings);
+                subBlocks.add(
+                        new PlSqlBlock(childNode, wrap, indent,
+                                myInnerAlignments.get(childNode.getPsi()),
+                                mySettings, plSqlSettings,
+                                myInnerAlignments));
+            }
+            return subBlocks;
+        }
 
         // For other cases
         final ArrayList<Block> subBlocks = new ArrayList<Block>();
-        for (ASTNode childNode : visibleChildren(myNode)) {
+        for (ASTNode childNode : PsiUtil.visibleChildren(myNode)) {
             final Indent indent = PlSqlIndentProcessor.getChildIndent(myBlock, childNode);
-            Wrap wrap = PlSqlWrapProcessor.getChildWrap(myBlock, childNode);
+            Wrap wrap = PlSqlWrapProcessor.getChildWrap(myBlock, childNode, plSqlSettings);
             subBlocks.add(
                     new PlSqlBlock(childNode, wrap, indent,
                             myInnerAlignments.get(childNode.getPsi()),
@@ -76,22 +131,50 @@ public class PlSqlBlockGenerator {
         return subBlocks;
     }
 
-    private static List<ASTNode> visibleChildren(ASTNode node) {
-        ArrayList<ASTNode> list = new ArrayList<ASTNode>();
-        for (ASTNode astNode : node.getChildren(null)) {
-            if (canBeCorrectBlock(astNode)) {
-                list.add(astNode);
+
+    private void calculateAlignments(List<ASTNode> children) {
+        try {
+            List<Alignment> currentGroup = null;
+            for (ASTNode child : children) {
+                PsiElement psi = child.getPsi();
+                if (psi instanceof ColumnDefinition) {
+                    if (currentGroup == null) {
+                        currentGroup = Arrays.asList(Alignment.createAlignment(true), Alignment.createAlignment(true));
+                    }
+
+                    ColumnDefinition column = (ColumnDefinition) psi;
+                    myInnerAlignments.put(column.getPsiColumnName(), currentGroup.get(0));
+                    myInnerAlignments.put(column.getTypeSpec(), currentGroup.get(1));
+                } else if (psi instanceof VariableDecl) {
+                    if (currentGroup == null) {
+                        currentGroup = Arrays.asList(Alignment.createAlignment(true), Alignment.createAlignment(true), Alignment.createAlignment(true));
+                    }
+
+                    VariableDecl decl = (VariableDecl) psi;
+                    myInnerAlignments.put(decl.getVariableName(), currentGroup.get(0));
+                    myInnerAlignments.put(decl.getTypeSpec(), currentGroup.get(1));
+
+                    ASTNode eq = child.findChildByType(PlSqlTokenTypes.ASSIGNMENT_EQ);
+                    if (eq != null) {
+                        myInnerAlignments.put(eq.getPsi(), currentGroup.get(2));
+                    }
+                } else if (psi instanceof Argument) {
+                    if (currentGroup == null) {
+                        currentGroup = Arrays.asList(Alignment.createAlignment(true), Alignment.createAlignment(true), Alignment.createAlignment(true));
+                    }
+
+                    Argument argument = (Argument) psi;
+                    myInnerAlignments.put(argument.getPsiArgumentName(), currentGroup.get(0));
+                    myInnerAlignments.put(argument.getTypeSpec(), currentGroup.get(1));
+                    // If there is any parameter qualifier align the first one
+                    PsiElement[] qualifiers = argument.getQualifiers();
+                    if (qualifiers.length > 0) {
+                        myInnerAlignments.put(qualifiers[0], currentGroup.get(2));
+                    }
+                }
             }
+        } catch (SyntaxTreeCorruptedException e) {
+            // do nothing
         }
-        return list;
     }
-
-    /**
-     * @param node Tree node
-     * @return true, if the current node can be myBlock node, else otherwise
-     */
-    private static boolean canBeCorrectBlock(final ASTNode node) {
-        return (node.getText().trim().length() > 0);
-    }
-
 }

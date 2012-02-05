@@ -68,10 +68,25 @@ public class PlSqlUtil {
         }
     }
 
+    public static boolean iterateOver(@NotNull ASTNode node, @NotNull ASTNodeProcessorBreakable processor){
+        ASTNode curr = node.getFirstChildNode();
+        while(curr != null){
+            processor.process(curr);
+            if(!iterateOver(curr, processor)){
+                return false;
+            }
+            curr = curr.getTreeNext();
+        }
+        return true;
+    }
+
     public static interface ASTNodeProcessor {
         void process(ASTNode node);
     }
 
+    public static interface ASTNodeProcessorBreakable {
+        boolean process(ASTNode node);
+    }
 
     public static boolean moveToOffset(@NotNull PlSqlFile plSqlFile, int offset) {
         Project project = plSqlFile.getProject();

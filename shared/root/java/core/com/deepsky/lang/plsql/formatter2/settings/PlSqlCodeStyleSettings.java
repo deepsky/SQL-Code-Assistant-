@@ -48,13 +48,27 @@ public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
      */
     public boolean USE_FLYING_GEESE_BRACES = false;
 
-    public boolean SPACE_IN_NAMED_ARGUMENT = true;
+    public boolean ALIGN_DATATYPE_IN_COLUMN_DEF = true;
+    public boolean ALIGN_DATATYPE_IN_DECL = true;
+    public boolean ALIGN_DATATYPE_IN_ARGUMENT_LIST = true;
+    public boolean SPACE_BEFORE_OPEN_PAREN_IN_DATATYPE = false;
+    public boolean SPACE_BEFORE_PARAMETERS = false;
+    public boolean WRAP_OPEN_PAREN_IN_CRATE_TABLE = false;
+
+    
+    final static public int CASE_NAME_DONT_CHANGE = 1;
+    final static public int CASE_NAME_UPPER = 2;
+    final static public int CASE_NAME_LOWER = 3;
+
+    // 1 - "Don't change", 2 - "Upper", 3 - "Lower"
+    public int NAMES_CASE = 1;
+    public int KEYWORD_CASE = 1;
+
+
 
     public PlSqlCodeStyleSettings(CodeStyleSettings container) {
         super("PlSqlCodeStyleSettings", container);
     }
-
-    public boolean SPACE_BEFORE_OPEN_PAREN_IN_DATATYPE = false;
 
     // indent parameters
     public int TAB_SIZE = 4;
