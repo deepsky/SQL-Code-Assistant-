@@ -30,11 +30,11 @@ import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ctrl.CommitStatement;
 import com.deepsky.lang.plsql.psi.ctrl.RollbackStatement;
 import com.deepsky.lang.plsql.psi.ddl.*;
-import com.deepsky.lang.plsql.psi.impl.ArgumentListImpl;
-import com.deepsky.lang.plsql.psi.impl.ColumnNotNullConstraintImpl;
+import com.deepsky.lang.plsql.psi.impl.FromSubqueryImpl;
+import com.deepsky.lang.plsql.psi.impl.LogicalExpressionImpl;
 import com.deepsky.lang.plsql.psi.impl.SqlPlusPromptRem;
-import com.deepsky.lang.plsql.psi.impl.types.RowtypeTypeImpl;
 import com.deepsky.lang.plsql.psi.internal.CreateViewColumnDefInternal;
+import com.deepsky.lang.plsql.psi.names.*;
 import com.deepsky.lang.plsql.psi.ref.*;
 import com.deepsky.lang.plsql.psi.types.ColumnTypeRef;
 import com.deepsky.lang.plsql.psi.types.DataType;
@@ -78,10 +78,10 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitPlSqlBlock(PlSqlBlock node) {
-        for (PlSqlElement psi : node.getObjectList()) {
-            psi.accept(this);
-        }
-//        visitElement(node);
+//        for (PlSqlElement psi : node.getObjectList()) {
+//            psi.accept(this);
+//        }
+        visitElement(node);
     }
 
     public void visitFunction(Function node) {
@@ -92,7 +92,6 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
         visitElement(node);
     }
 
-    //    public void visitSubquery(FromSubquery node) {
     public void visitSubquery(Subquery node) {
         visitElement(node);
     }
@@ -148,18 +147,15 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitFunctionCall(FunctionCall node) {
-//        visitElement(node);
-        node.getCompositeName().accept(this);
-        for (CallArgument arg : node.getCallArguments()) {
-            arg.accept(this);
-        }
+        visitElement(node);
     }
 
     public void visitProcedureCall(ProcedureCall node) {
-        node.getCompositeName().accept(this);
-        for (CallArgument arg : node.getCallArguments()) {
-            arg.accept(this);
-        }
+        visitElement(node);
+//        node.getCompositeName().accept(this);
+//        for (CallArgument arg : node.getCallArguments()) {
+//            arg.accept(this);
+//        }
     }
 
     public void visitCondition(Condition node) {
@@ -171,9 +167,10 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitCallArgumentList(CallArgumentList node) {
-        for (CallArgument arg : node.getArguments()) {
-            arg.accept(this);
-        }
+        visitElement(node);
+//        for (CallArgument arg : node.getArguments()) {
+//            arg.accept(this);
+//        }
     }
 
 //    public void visitTable(Table table) {
@@ -288,20 +285,22 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitDatatype(DataType dataType) {
+        visitElement(dataType);
     }
 
     public void visitDDLTable(DDLTable table) {
     }
 
     public void visitForeignKeyConstraint(ForeignKeyConstraint constraint) {
-        TableRef tab = constraint.getReferencedTable2();
-        tab.accept(this);
-        for (ColumnNameRef c : constraint.getReferencedColumns2()) {
-            c.accept(this);
-        }
-        for (ColumnNameRef c : constraint.getOwnColumns2()) {
-            c.accept(this);
-        }
+        visitElement(constraint);
+//        TableRef tab = constraint.getReferencedTable2();
+//        tab.accept(this);
+//        for (ColumnNameRef c : constraint.getReferencedColumns2()) {
+//            c.accept(this);
+//        }
+//        for (ColumnNameRef c : constraint.getOwnColumns2()) {
+//            c.accept(this);
+//        }
     }
 
     public void visitColumnNameDDL(ColumnNameDDL columnNameDDL) {
@@ -319,9 +318,11 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitCallableCompositeName(CallableCompositeName compositeName) {
+        visitElement(compositeName);
     }
 
     public void visitParameterReference(ParameterReference reference) {
+        visitElement(reference);
     }
 
     public void visitCRecordItemRef(CRecordItemRef ref) {
@@ -362,11 +363,12 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitArgument(Argument argument) {
-        argument.getTypeSpec().accept(this);
-        Expression expr = argument.getDefaultExpr();
-        if (expr != null) {
-            expr.accept(this);
-        }
+        visitElement(argument);
+//        argument.getTypeSpec().accept(this);
+//        Expression expr = argument.getDefaultExpr();
+//        if (expr != null) {
+//            expr.accept(this);
+//        }
     }
 
     public void visitColumnDefinition(ColumnDefinition definition) {
@@ -388,9 +390,11 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitCreateSynonym(CreateSynonym synonym) {
+        visitElement(synonym);
     }
 
     public void visitCreateSequence(CreateSequence sequence) {
+        visitElement(sequence);
     }
 
     public void visitCreateViewColumnDefInternal(CreateViewColumnDefInternal node) {
@@ -405,9 +409,10 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitPrimaryKeyConstraint(PrimaryKeyConstraint constraint) {
-        for (ColumnNameRef c : constraint.getPKColumns()) {
-            c.accept(this);
-        }
+        visitElement(constraint);
+//        for (ColumnNameRef c : constraint.getPKColumns()) {
+//            c.accept(this);
+//        }
     }
 
     public void visitTableRef(TableRef ref) {
@@ -426,9 +431,10 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitRangePartition(RangePartition partition) {
-        for (ColumnNameRef c : partition.getPartitionColumns()) {
-            c.accept(this);
-        }
+        visitElement(partition);
+//        for (ColumnNameRef c : partition.getPartitionColumns()) {
+//            c.accept(this);
+//        }
     }
 
     public void visitColumnFKSpec(ColumnFKSpec columnFKSpec) {
@@ -485,5 +491,38 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
 
     public void visitArgumentList(ArgumentList argumentList) {
         visitElement(argumentList);
+    }
+
+    public void visitPartitionName(PartitionName partitionName) {
+    }
+
+    public void visitConstraintName(ConstraintName name) {
+    }
+
+    public void visitTablespaceName(TablespaceName name) {
+    }
+
+    public void visitVariableName(VariableName name) {
+    }
+
+    public void visitParameterName(ParameterName name) {
+    }
+
+    public void visitExecNameRef(ExecNameRef name) {
+    }
+
+    public void visitSchemaName(SchemaName name) {
+    }
+
+    public void visitCreateUser(CreateUser user) {
+        visitElement(user);
+    }
+
+    public void visitFromSubquery(FromSubquery fromSubquery) {
+        visitElement(fromSubquery);
+    }
+
+    public void visitLogicalExpression(LogicalExpression expression) {
+        visitElement(expression);
     }
 }

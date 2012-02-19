@@ -23,10 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.psi;
+package com.deepsky.lang.plsql.psi.ctrl;
 
-public interface ParameterName extends PlSqlElement {
-
-    String getParameterName();
-    Argument getArgument();
+public interface RevokeCommand extends ControlStatement {
 }

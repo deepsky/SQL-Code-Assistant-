@@ -23,30 +23,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.psi.impl;
+package com.deepsky.lang.plsql.psi.names;
 
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.PlSqlElement;
 import com.deepsky.lang.plsql.psi.VariableDecl;
-import com.deepsky.lang.plsql.psi.VariableName;
-import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
-public class VariableNameImpl extends PlSqlElementBase implements VariableName {
-
-    public VariableNameImpl(ASTNode node) {
-        super(node);
-    }
+public interface VariableName extends PlSqlElement {
+    @NotNull
+    String getVarName();
 
     @NotNull
-    public String getVarName() {
-        return getText();
-    }
-
-    @NotNull
-    public VariableDecl getVariableDecl() {
-        if (getParent() instanceof VariableDecl) {
-            return (VariableDecl) getParent();
-        }
-        throw new SyntaxTreeCorruptedException();
-    }
+    VariableDecl getVariableDecl();
 }

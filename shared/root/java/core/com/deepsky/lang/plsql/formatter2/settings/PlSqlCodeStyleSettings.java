@@ -54,8 +54,20 @@ public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
     public boolean SPACE_BEFORE_OPEN_PAREN_IN_DATATYPE = false;
     public boolean SPACE_BEFORE_PARAMETERS = false;
     public boolean WRAP_OPEN_PAREN_IN_CRATE_TABLE = false;
+    public boolean WRAP_SEQUENCE_OPTIONS = true;
+    public boolean WRAP_USER_OPTIONS = true;
+    public boolean ALIGN_ASSIGNMENTS = false;
 
-    
+    public int MIN_LINES_BETWEEN_FILE_LEVEL_STMT = 1;
+    public int MIN_LINES_BETWEEN_BLOCK_LEVEL_STMT = 1;
+    public int MIN_LINES_BEFORE_BLOCK = 1;
+    public int MIN_LINES_BEFORE_MULTILINE_COMMENT = 1;
+    public int MIN_LINES_AFTER_MULTILINE_COMMENT = 1;
+    public int MIN_LINES_AFTER_VARIBLE_DECL = 1;
+
+    public int MAX_LINES_BETWEEN_FILE_LEVEL_STMT = 2;
+    public int MAX_LINES_BETWEEN_BLOCK_LEVEL_STMT = 1;
+
     final static public int CASE_NAME_DONT_CHANGE = 1;
     final static public int CASE_NAME_UPPER = 2;
     final static public int CASE_NAME_LOWER = 3;
@@ -63,7 +75,6 @@ public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
     // 1 - "Don't change", 2 - "Upper", 3 - "Lower"
     public int NAMES_CASE = 1;
     public int KEYWORD_CASE = 1;
-
 
 
     public PlSqlCodeStyleSettings(CodeStyleSettings container) {

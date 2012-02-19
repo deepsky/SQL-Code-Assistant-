@@ -26,6 +26,7 @@
 package com.deepsky.lang.plsql.resolver.psibased;
 
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.ref.SequenceRef;
 import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.deepsky.lang.plsql.resolver.utils.PsiElementUtil;

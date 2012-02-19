@@ -28,8 +28,7 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.resolver.ContextPath;
-import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.deepsky.lang.plsql.psi.names.CompositeName;
 import com.deepsky.lang.plsql.struct.TableDescriptorForSubquery;
 import com.deepsky.lang.plsql.struct.TableDescriptorLegacy;
 import com.deepsky.lang.plsql.struct.Type;
@@ -37,6 +36,7 @@ import com.deepsky.lang.plsql.struct.TypeFactory;
 import com.deepsky.lang.validation.ValidationException;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -170,14 +170,14 @@ public class FromSubqueryImpl extends GenericTableBase implements FromSubquery {
         }
     }
 
-/*
+
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
-            ((PlSqlElementVisitor) visitor).visitSubquery(this);
+            ((PlSqlElementVisitor) visitor).visitFromSubquery(this);
         } else {
             super.accept(visitor);
         }
     }
-*/
+
 
 }

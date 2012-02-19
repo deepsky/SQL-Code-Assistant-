@@ -71,58 +71,6 @@ public class DDLTableImpl extends PlSqlElementBase implements DDLTable { //}, Ps
         throw new SyntaxTreeCorruptedException();
     }
 
-
-//    public boolean isReferenceTo(PsiElement psiElement) {
-//        if (psiElement instanceof TableDefinition) {
-//            if (((TableDefinition) psiElement).getTableName().equalsIgnoreCase(getText())) {
-//                return psiElement == resolve();
-//            }
-//        } else if (psiElement instanceof CreateView) {
-//            if (((CreateView) psiElement).getViewName().equalsIgnoreCase(getText())) {
-//                return psiElement == resolve();
-//            }
-//        }
-//        return false;
-//    }
-
-/*
-    @NotNull
-    public Object[] getVariants(String text) {
-
-        log.info("#getVariants, type: "
-                + this.getNode().getElementType()
-                + ", parent: " + this.getNode().getTreeParent().getElementType()
-                + ", text: " + text
-        );
-
-        String[] candidates =
-                getTableNameVariantsForPrefix(getProject(), text);
-
-        return adopt(text, candidates);
-    }
-
-
-    static String[] getTableNameVariantsForPrefix(Project project, String prefix) {
-
-        ObjectCache cache = PluginKeys.OBJECT_CACHE.getData(project); //ObjectCacheFactory.getObjectCache();
-        if (prefix.length() == 0) {
-            String user = cache.getCurrentUser();
-            return cache.getNameListForType(user, ObjectCache.TABLE | ObjectCache.VIEW);
-        } else {
-            return cache.findByNamePrefix2(ObjectCache.TABLE | ObjectCache.VIEW, prefix);
-        }
-    }
-*/
-
-//    static String[] extractNames(DbObject[] objs){
-//        String[] out = new String[objs.length];
-//        for(int i=0; i<objs.length; i++){
-//            out[i] = objs[i].getName();
-//        }
-//
-//        return out;
-//    }
-
     String[] adopt(String template, String[] variants) {
         List<String> cc = new ArrayList<String>();
 

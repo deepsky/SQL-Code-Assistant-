@@ -182,7 +182,7 @@
             </li>
         </ul>
     </html>]]></change-notes>
-    <idea-version since-build="111.1" until-build="111.999"/>
+    <idea-version since-build="111.1" until-build="114.999"/>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 
@@ -206,6 +206,10 @@
         <!--<usageGroupingRuleProvider implementation="com.deepsky.findUsages.SqlUsageGroupingRuleProviderImpl"/>-->
         <scopeDescriptorProvider implementation="com.deepsky.findUsages.scopes.DbScopeDescriptorProvider"/>
         <readWriteAccessDetector implementation="com.deepsky.findUsages.providers.PlSqlReadWriteAccessDetector"/>
+
+<!--
+        <enterHandlerDelegate implementation="com.deepsky.lang.plsql.formatter2.BeginEndEnterHandler"/>
+-->
 
         <lang.formatter language="PlSql" implementationClass="com.deepsky.lang.plsql.formatter2.PlSqlFormattingModelBuilder"/>
         <postFormatProcessor implementation="com.deepsky.lang.plsql.formatter2.PlSqlPostFormatProcessor"/>
@@ -266,9 +270,11 @@
         <component>
             <implementation-class>com.deepsky.lang.common.PlSqlSupportLoader</implementation-class>
         </component>
+<!--
         <component>
             <implementation-class>com.deepsky.findUsages.converter.UsageConverter</implementation-class>
         </component>
+-->
 
         <!--
         <component>
@@ -311,6 +317,8 @@
             <add-to-group group-id="EditorPopupMenu1" anchor="before" relative-to-action="AnalyzeMenu"/>
         </action>
 
+<!--
+todo - just for testing
         <action id="ExecSQLStmtStructurePopupAction"
                 class="com.deepsky.actions.ExecSQLStmtStructurePopupAction"
                 text="Execute SQL Statement" description="Execute SQL Statement ..."
@@ -324,6 +332,7 @@
             <add-to-group group-id="StructureViewPopupMenu"
                           anchor="after" relative-to-action="ExecSQLStmtStructurePopupAction"/>
         </action>
+-->
 
         <!-- We use "PluginName.ComponentName.ActionName" notation for "id" to avoid conflicts -->
         <action id="ActionsSample.ActionsPlugin.ExecSQL" class="com.deepsky.actions.ExecuteSQLStatementAction"
@@ -346,6 +355,46 @@
             <separator/>
             <add-to-group group-id="MainToolBar" anchor="before" relative-to-action="HelpTopics"/>
         </group>
+
+        <action id="SQLAssistant.ActionsPlugin.ExecSQL" class="com.deepsky.actions.ExecuteSQLStatementAction"
+                text="Execute SQL Statement" description="Execute SQL Statement"
+                icon="/icons/exec_sql_small.png">
+            <keyboard-shortcut first-keystroke="control shift M" keymap="$default"/>
+        </action>
+
+        <action id="SQLAssistant.ActionsPlugin.FindUsages"
+                class="com.deepsky.findUsages.actions.FindUsageStructureViewPopupAction"
+                text="Find Usages" description="Find Usages ..." icon="/icons/find.png">
+        </action>
+
+
+        <group id="SQLAssistantSV" popup="true" text="SQL Assistant">
+            <reference ref="SQLAssistant.ActionsPlugin.ExecSQL"/>
+            <reference ref="SQLAssistant.ActionsPlugin.FindUsages"/>
+            <!--<add-to-group anchor="last" group-id="ProjectViewPopupMenu"/>-->
+            <add-to-group anchor="first" group-id="StructureViewPopupMenu"/>
+        </group>
+
+<!--
+        <group id="StructureView.ActionGroup"
+               text="SQL Assistant" description="Sql Assistant Plugin">
+            <action id="ActionsSample.ActionsPlugin.ExecSQL.2" class="com.deepsky.actions.ExecuteSQLStatementAction"
+                    text="Execute SQL Statement" description="Execute SQL Statement"
+                    icon="/icons/exec_sql_small.png">
+                <keyboard-shortcut first-keystroke="control shift M" keymap="$default"/>
+            </action>
+            <action id="com.deepsky.navigation.GotoDbObjectAction.2" class="com.deepsky.navigation.GotoDbObjectAction"
+                    text="Goto Db Object" description="Search Database Object">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift O"/>
+            </action>
+            <action id="com.deepsky.navigation.showParameterInfo.2" class="com.deepsky.actions.ShowParameterInfoFake"
+                    text="Parameter Info" description="Parameter Info">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl P"/>
+            </action>
+            <add-to-group group-id="StructureViewPopupMenu" anchor="first"/>
+        </group>
+-->
+
     </actions>
 
     <helpset file="help.jar" path="/helpset.hs"/>

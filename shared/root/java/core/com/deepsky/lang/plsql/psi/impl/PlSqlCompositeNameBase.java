@@ -26,7 +26,7 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.plsql.psi.CompositeName;
+import com.deepsky.lang.plsql.psi.names.CompositeName;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
 import com.intellij.lang.ASTNode;

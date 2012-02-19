@@ -57,6 +57,8 @@ tokens {
     CASE_STATEMENT;
     COUNT_FUNC;
 
+    SQLPLUS_ANONYM_PLSQL_BLOCK;
+
     RANK_FUNCTION; LEAD_FUNCTION; LAG_FUNCTION;
     TRIM_FUNC; DECODE_FUNC;
 
@@ -109,6 +111,8 @@ tokens {
     GROUP_CLAUSE;
     INTO_CLAUSE;
     FOR_UPDATE_CLAUSE;
+
+    PARTITION_NAME;
 
     ASTERISK1;
     ROWCOUNT_EXRESSION;
@@ -176,7 +180,8 @@ tokens {
     SUBTYPE_DECL;
     MEMBER_OF;
 
-    SQLPLUS_SET; SQLPLUS_COMMAND;
+    SQLPLUS_SET;
+    //SQLPLUS_COMMAND;
     SQLPLUS_SHOW; SQLPLUS_DEFINE; SQLPLUS_VARIABLE; SQLPLUS_EXEC; SQLPLUS_WHENEVER;
     SQLPLUS_PROMPT; SQLPLUS_COLUMN; SQLPLUS_START;
     SQLPLUS_SERVEROUTPUT;  SQLPLUS_REPFOOTER;  SQLPLUS_REPHEADER;
@@ -192,6 +197,8 @@ tokens {
 
     AT_TIME_ZONE_EXPR;
     TIMEZONE_SPEC;
+
+    GRANT_COMMAND; REVOKE_COMMAND;
 
     ALTER_TABLE; ALTER_GENERIC;
     CREATE_TEMP_TABLE;
@@ -296,7 +303,7 @@ tokens {
     MONITORING_CLAUSE;
 
     CREATE_TABLESPACE; DROP_TABLESPACE; TABLESPACE_NAME; ALTER_TABLESPACE;
-    CREATE_TYPE;
+    CREATE_USER; CREATE_TYPE;
     BIND_VAR;
     RETURNING_CLAUSE;
 /*
@@ -445,17 +452,13 @@ column_spec_ex:
     ;
 
 function_association:
-    (   ("functions"  ident_list (COMMA ident_list)* )
-        | ("packages" ident_list (COMMA ident_list)* )
-        | ("types"  ident_list (COMMA ident_list)* )
-        | ("indexes" ident_list (COMMA ident_list)* )
-        | ("indextypes" ident_list (COMMA ident_list)* )
+    (   ("functions"  object_name (COMMA object_name)* )
+        | ("packages" object_name (COMMA object_name)* )
+        | ("types"  object_name (COMMA object_name)* )
+        | ("indexes" object_name (COMMA object_name)* )
+        | ("indextypes" object_name (COMMA object_name)* )
     )
     (default_clause | using_statistics_type)
-    ;
-
-ident_list:
-    (schema_name DOT)? identifier
     ;
 
 storage_table_clause:
@@ -536,7 +539,7 @@ column_qualifier:
 
 sqlplus_command_internal:
     (sqlplus_command)+
-    {  __markRule(SQLPLUS_COMMAND);}
+//    { #.sqlplus_command_internal = #.([SQLPLUS_COMMAND, "SQLPLUS_COMMAND" ], #.sqlplus_command_internal);}
     ;
 
 sqlplus_command:
@@ -577,6 +580,8 @@ sqlplus_command:
         {  __markRule(SQLPLUS_SERVEROUTPUT);}
 
     | ("begin"|"declare") => (begin_block (SEMI!)? (DIVIDE!)? )
+        {  __markRule(SQLPLUS_ANONYM_PLSQL_BLOCK);}
+
     | (AT_PREFIXED (~CUSTOM_TOKEN)* CUSTOM_TOKEN )
         {  __markRule(SQLPLUS_RUNSCRIPT);}
     ;
@@ -626,8 +631,42 @@ create_or_replace:
             {  __markRule(CREATE_SYNONYM);}
         | (create_tablespace (SEMI!)?)
             {  __markRule(CREATE_TABLESPACE);}
+        | (create_user (SEMI!)?)
+            {  __markRule(CREATE_USER);}
     )
     ;
+
+/*
+CREATE USER helen
+    IDENTIFIED BY out_standing1
+    DEFAULT TABLESPACE example
+    QUOTA 10M ON example
+    TEMPORARY TABLESPACE temp
+    QUOTA 5M ON system
+    PROFILE app_user
+    PASSWORD EXPIRE;
+*/
+create_user:
+    "user" object_name "identified" (
+        ("by" password)
+        | ("externally" ("as" string_literal)?)
+        | ("globally" ("as" string_literal)?)
+    ) (create_user_spec)*
+    ;
+
+create_user_spec:
+    ("default" "tablespace" tablespace_name)
+    | ("temporary" "tablespace" tablespace_name)
+    | ("quota" ("unlimited"|STORAGE_SIZE) "on" tablespace_name)
+    | ("profile" identifier)
+    | ("password" "expire")
+    | ("account" ("lock"|"unlock"))
+    ;
+
+password:
+    identifier2
+    ;
+
 
 // TABLESPACE -----------------------------------------------------------------
 create_tablespace:
@@ -814,7 +853,7 @@ trigger_target:
     ;
 
 instead_of_trigger:
-    "instead"! "of"! ("delete"|"insert"|"update") "on"! identifier  // todo -- view_name_ddl
+    "instead"! "of"! ("delete"|"insert"|"update") "on"! table_ref  // todo -- view_name_ddl
     {  __markRule(INSTEADOF_TRIGGER);}
     ;
 
@@ -905,7 +944,7 @@ lob_storage_clause:
     ;
 
 lob_parameters:
-    ("tablespace" identifier2)
+    ("tablespace" tablespace_name)
     | storage_spec
     | ("chunk" NUMBER)
     | (("nocache" | ("cache" ("reads")?)) (logging_clause)?)
@@ -934,7 +973,7 @@ cluster_clause:
 
 segment_attributes_clause:
     physical_attributes_clause
-    | ("tablespace" identifier2)
+    | ("tablespace" tablespace_name)
     | "online"
     | logging_clause
     | table_compression
@@ -1007,7 +1046,7 @@ range_partitions:
     ;
 
 partition_item:
-    "partition" (identifier2)? range_values_clause (table_partition_description)+
+    "partition" (partition_name)? range_values_clause (table_partition_description)+
     ;
 
 range_values_clause:
@@ -1032,11 +1071,16 @@ individual_hash_partitions:
     ;
 
 hash_partition_spec:
-    "partition" (identifier)? (partition_storage_clause)*
+    "partition" (partition_name)? (partition_storage_clause)*
+    ;
+
+partition_name:
+    identifier2
+    {  __markRule(PARTITION_NAME);}
     ;
 
 partition_storage_clause:
-    ("tablespace" identifier2)
+    ("tablespace" tablespace_name)
     | "overflow"
     | table_compression
 // todo     | lob_partition_storage
@@ -1196,7 +1240,7 @@ constraint_clause:
     ;
 
 modify_constraint_clause:
-    ("constraint" identifier ("rely")? ("disable"|"enable")? ("validate"|"novalidate")?)
+    ("constraint" constraint_name ("rely")? ("disable"|"enable")? ("validate"|"novalidate")?)
     | ("primary" "key" (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)?)
     | ("unique" OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)
     ;
@@ -1234,7 +1278,7 @@ column_modi_name:
 */
 
 inline_out_of_line_constraint:
-    ("constraint" identifier)? (
+    ("constraint" constraint_name)? (
         not_null
         | ("unique" (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)?)
         | ("primary" "key" (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)?) // ("rely" "using" "index" identifier2)? ("enable")? )
@@ -1251,7 +1295,7 @@ inline_out_of_line_constraint:
 drop_clause:
     ("primary" "key" ("cascade")? (("keep"|"drop") "index")? )
     | ("unique" OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN ("cascade")? (("keep"|"drop") "index")?)
-    | ("constraint" identifier ("cascade")?)
+    | ("constraint" constraint_name ("cascade")?)
     ;
 
 using_index_clause:
@@ -1269,7 +1313,7 @@ index_properties:
     ;
 
 index_attributes:
-    ("tablespace" (identifier2|"default"))
+    ("tablespace" (tablespace_name|"default"))
     | physical_attributes_clause
     | logging_clause
     | "online"
@@ -1287,7 +1331,7 @@ global_partitioned_index:
     ;
 
 index_partitioning_clause:
-    "partition" (identifier2)? "values" "less" "than"
+    "partition" (partition_name)? "values" "less" "than"
             OPEN_PAREN numeric_literal (COMMA! numeric_literal)* CLOSE_PAREN segment_attributes_clause
     ;
 
@@ -1305,7 +1349,7 @@ on_range_partitioned_table:
     ;
 
 local_partition_item:
-     "partition" (identifier2)? (segment_attributes_clause|table_compression)*
+     "partition" (partition_name)? (segment_attributes_clause|table_compression)*
      ;
 
 // -------------------------------------------------------------------
@@ -1484,7 +1528,8 @@ subtype_declaration :
     ;
 
 cursor_spec :
-    "cursor" cursor_name (OPEN_PAREN argument_list  CLOSE_PAREN)? (
+//    "cursor" cursor_name (OPEN_PAREN argument_list  CLOSE_PAREN)? (
+    "cursor" cursor_name (argument_list)? (
         ("is"! select_command)
             { __markRule(CURSOR_DECLARATION);}
         | ("return" return_type)
@@ -2018,15 +2063,21 @@ exception_handler :
 function_declaration :
     "function"! object_name
      (options { greedy = true; } :
-        ( OPEN_PAREN! argument_list CLOSE_PAREN! )?
+        // 'argument_list' is made optional just to keep parser happy
+        //     todo - annotator should take care of absence of the argument list
+//        ( OPEN_PAREN! (argument_list)? CLOSE_PAREN! )?
+        ( argument_list )?
     )
     "return"! return_type (character_set)? ("pipelined")? ("parallel_enable")? ("using" identifier2)? ("deterministic")?
     ;
 
 procedure_declaration :
-    "procedure"! object_name  /// object_name_func_proc //
+    "procedure"! object_name
     (options { greedy = true; } :
-        ( OPEN_PAREN! argument_list CLOSE_PAREN! )?  //(("as"|"is") "language" "java" "name" string_literal)?
+        // 'argument_list' is made optional just to keep parser happy
+        //     todo - annotator should take care of absence of the argument list
+//        ( OPEN_PAREN! (argument_list)? CLOSE_PAREN! )?
+        ( argument_list )?
     )
     ;
 /*
@@ -2072,7 +2123,6 @@ procedure_body
 { boolean tag1 = false;} :
     procedure_declaration
         (("is"|"as") (
-//            (("language" "java" "name") => ("language" "java" "name" {tag1 = false;} string_literal))
             ("language" "java" "name" {tag1 = false;} string_literal)
             | (func_proc_statements {tag1 = true;} )
                 {  __markRule(PROCEDURE_BODY); }
@@ -2091,7 +2141,7 @@ procedure_body
 
 
 argument_list:
-    parameter_spec ( COMMA! parameter_spec )*
+    OPEN_PAREN (parameter_spec ( COMMA! parameter_spec )*)? CLOSE_PAREN
     {  __markRule(ARGUMENT_LIST); }
     ;
 
@@ -2099,11 +2149,6 @@ argument_list:
 object_name :
 //    identifier3 (DOT! identifier2 )?
     (identifier3 DOT)? identifier2
-    {  __markRule(OBJECT_NAME); }
-    ;
-
-object_name_func_proc :
-    (identifier2 DOT)? identifier
     {  __markRule(OBJECT_NAME); }
     ;
 
@@ -2543,7 +2588,7 @@ query_partition_clause:
 
 timezone_spec:
     ( string_literal
-     | complex_name // identifier (DOT identifier)*
+     | complex_name
      | "sessiontimezone"
      | "dbtimezone")
     {  __markRule(TIMEZONE_SPEC); }
@@ -2677,17 +2722,33 @@ sql_statement:
         | update_command
         | delete_command
         | merge_command
-        | grant_revoke_command
+        | grant_command
+        | revoke_command
         | commit_statement
         | rollback_statement
     ;
 
-grant_revoke_command:
-    ("grant" | "revoke") privilege (COMMA privilege)* "on" identifier2 ("to" | "from") (identifier2 |"public")
+grant_command:
+    "grant"  (
+        (privilege (COMMA privilege)* "on" identifier2)
+        | ("all" "privileges")
+    )
+    "to" (identifier2 |"public")
+    {  __markRule(GRANT_COMMAND); }
     ;
 
+revoke_command:
+    "revoke"  (
+        (privilege (COMMA privilege)* "on" identifier2)
+        | ("all" "privileges")
+    )
+    "from" (identifier2 |"public")
+    {  __markRule(REVOKE_COMMAND); }
+    ;
+
+
 privilege:
-    "select" | "insert" | "update" | "delete" | "references" | "alter" | "index" | "execute" |"all"
+    "select" | "insert" | "update" | "delete" | "references" | "alter" | "index" | "execute"
     ;
 
 select_command:
@@ -2770,7 +2831,9 @@ plsql_lvalue_list:
 select_up_to_list:
     "select"! ( "all" | "distinct" | "unique")? displayed_column ( COMMA! displayed_column )*
     ;
-
+	exception catch [RecognitionException ex] {
+	    throw ex;
+	}
 
 displayed_column:
     asterisk_column
@@ -2851,7 +2914,7 @@ table_reference_list_from:
         "from"! selected_table // ("partition"! OPEN_PAREN! identifier2 CLOSE_PAREN!)?
         (
          ( "left" | "right" | "inner" | "outer" | "join" | "full") => ansi_spec
-         | (COMMA! selected_table ("partition"! OPEN_PAREN! identifier2 CLOSE_PAREN!)?)
+         | (COMMA! selected_table ("partition"! OPEN_PAREN! partition_name CLOSE_PAREN!)?)
         )*
 {
      __markRule(TABLE_REFERENCE_LIST_FROM);
@@ -2972,7 +3035,7 @@ selected_table:
     {  __markRule(TABLE_FUNCTION); }
     | ("the") => the_proc ( alias )?
     | from_subquery   ///subquery ( alias )?
-    | (table_alias ("partition"! OPEN_PAREN! identifier2 CLOSE_PAREN!)?)
+    | (table_alias ("partition"! OPEN_PAREN! partition_name CLOSE_PAREN!)?)
     ;
 
 
@@ -3103,7 +3166,7 @@ update_clause:
 insert_command:
     "insert"! "into"!
         (
-          (table_alias) => table_alias ( OPEN_PAREN! column_spec_list CLOSE_PAREN! )?
+          (table_alias) => table_alias (column_spec_list)?
                 ( ( "values"! (parentesized_exp_list | variable_ref)) | select_expression ) (returning)?
             {  __markRule(INSERT_COMMAND); }
 
@@ -3114,6 +3177,11 @@ insert_command:
     ;
 
 column_spec_list:
+    OPEN_PAREN column_spec ( COMMA! column_spec )* CLOSE_PAREN
+    {  __markRule(COLUMN_SPEC_LIST); }
+    ;
+
+column_spec_list_wo_paren:
     column_spec ( COMMA! column_spec )*
     {  __markRule(COLUMN_SPEC_LIST); }
     ;
@@ -3142,7 +3210,7 @@ when_action:
     ;
 
 insert_columns:
-    "insert"! ( OPEN_PAREN! column_spec_list CLOSE_PAREN! )?
+    "insert"! ( column_spec_list )?
     "values"! parentesized_exp_list
     ;
 
@@ -3158,14 +3226,13 @@ simple_update:
 returning:
 //      RETURNING id INTO l_fst_ids(indx);
 //      RETURNING id,upd_cnt INTO o_alertId,o_updateCtr;
-    ("returning"! | "return"!) column_spec_list "into"! expr_list
+    ("returning"! | "return"!) column_spec_list_wo_paren "into"! expr_list
     {  __markRule(RETURNING_CLAUSE); }
     ;
 
 
 subquery_update:
-    "update" (table_alias | (subquery (alias)?)) "set"
-    OPEN_PAREN! column_spec_list CLOSE_PAREN! EQ subquery
+    "update" (table_alias | (subquery (alias)?)) "set"  column_spec_list EQ subquery
     ( where_condition )?
     {  __markRule(SUBQUERY_UPDATE_COMMAND); }
     ;
@@ -3736,6 +3803,14 @@ identifier2:
     | "maxextents"
     | "pctincrease"
     | "overflow"
+    | "quota"
+    | "profile"
+    | "password"
+    | "expire"
+    | "account"
+    | "lock"
+    | "unlock"
+    | "privileges"
     )
     ;
 
@@ -4060,6 +4135,14 @@ variable_name :
     | "systimestamp"
     | "rownum"
     | "rowid"
+    | "quota"
+    | "profile"
+    | "password"
+    | "expire"
+    | "account"
+    | "lock"
+    | "unlock"
+    | "privileges"
     )
     {  __markRule(VARIABLE_NAME); }
     ;

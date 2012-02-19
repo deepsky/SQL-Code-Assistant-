@@ -35,6 +35,8 @@ import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.impl.SqlPlusPromptRem;
+import com.deepsky.lang.plsql.psi.names.ColumnNameDDL;
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.ref.SequenceRef;
 import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.deepsky.lang.plsql.psi.ref.TableRefWithLink;

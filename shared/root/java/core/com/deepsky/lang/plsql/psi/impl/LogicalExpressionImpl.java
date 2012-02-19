@@ -29,9 +29,11 @@ import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.ConfigurationException;
 import com.deepsky.lang.plsql.psi.Expression;
 import com.deepsky.lang.plsql.psi.LogicalExpression;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class LogicalExpressionImpl extends ConditionBase implements LogicalExpression {
@@ -42,16 +44,6 @@ public class LogicalExpressionImpl extends ConditionBase implements LogicalExpre
 
     @NotNull
     public Type getExpressionType() {
-
-//        Type type;
-//        ASTNode node = this.getNode().getFirstChildNode();
-//        try {
-//            type = new LogicalExprTypeEvaluator(new Expr(node)).calc();
-//        } catch (TypeCastException e) {
-//            throw new ValidationException(e.getMessage(), this);
-//        }
-//
-//        return type;
         return TypeFactory.createTypeById(Type.BOOLEAN);
     }
 
@@ -68,4 +60,13 @@ public class LogicalExpressionImpl extends ConditionBase implements LogicalExpre
 
         return out;
     }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitLogicalExpression(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
 }

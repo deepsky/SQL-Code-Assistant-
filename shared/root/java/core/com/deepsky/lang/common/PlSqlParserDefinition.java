@@ -36,6 +36,7 @@ import com.deepsky.lang.plsql.psi.impl.ctrl.CommitStatementImpl;
 import com.deepsky.lang.plsql.psi.impl.ctrl.RollbackStatementImpl;
 import com.deepsky.lang.plsql.psi.impl.ddl.*;
 import com.deepsky.lang.plsql.psi.impl.internal.CreateViewColumnDefInternalImpl;
+import com.deepsky.lang.plsql.psi.impl.names.*;
 import com.deepsky.lang.plsql.psi.impl.ref.SequenceRefImpl;
 import com.deepsky.lang.plsql.psi.impl.ref.TableRefImpl;
 import com.deepsky.lang.plsql.psi.impl.ref.TableRefWithLinkImpl;
@@ -269,6 +270,12 @@ public class PlSqlParserDefinition implements ParserDefinition {
             case PLSqlTokenTypes.TABLE_REF:
                 // reference to a table
                 return new TableRefImpl(node);
+            case PLSqlTokenTypes.PARTITION_NAME:
+                return new PartitionNameImpl(node);
+            case PLSqlTokenTypes.CONSTRAINT_NAME:
+                return new ConstraintNameImpl(node);
+            case PLSqlTokenTypes.TABLESPACE_NAME:
+                return new TablespaceNameImpl(node);
 
 // [ ------------------- ]
             case PLSqlTokenTypes.NAME_FRAGMENT:
@@ -419,6 +426,9 @@ public class PlSqlParserDefinition implements ParserDefinition {
                 return new DataTypeImpl(node);
 // [ ==================== ]
 
+            case PLSqlTokenTypes.SCHEMA_NAME:
+                return new SchemaNameImpl(node);
+
             case PLSqlTokenTypes.SEQUENCE_REF:
                 return new SequenceRefImpl(node);
 
@@ -460,6 +470,8 @@ public class PlSqlParserDefinition implements ParserDefinition {
                 return new CreateViewColumnDefInternalImpl(node);
             case PLSqlTokenTypes.CREATE_SEQUENCE:
                 return new CreateSequenceImpl(node);
+            case PLSqlTokenTypes.CREATE_USER:
+                return new CreateUserImpl(node);
             case PLSqlTokenTypes.CREATE_DB_LINK:
                 return new CreateDbObjectGenericImpl(node, "DB LINK");
             case PLSqlTokenTypes.CREATE_SYNONYM:
@@ -555,6 +567,7 @@ public class PlSqlParserDefinition implements ParserDefinition {
                     // todo - workaround for now
                     return new CreateTriggerGenericImpl(node);
                 }
+
             case PLSqlTokenTypes.SQLPLUS_SET:
             case PLSqlTokenTypes.SQLPLUS_SHOW:
             case PLSqlTokenTypes.SQLPLUS_VARIABLE:
@@ -571,6 +584,8 @@ public class PlSqlParserDefinition implements ParserDefinition {
             case PLSqlTokenTypes.SQLPLUS_REPFOOTER:
             case PLSqlTokenTypes.SQLPLUS_REPHEADER:
                 return new SqlPlusCommandImpl(node);
+            case PLSqlTokenTypes.SQLPLUS_ANONYM_PLSQL_BLOCK:
+                return new SqlPlusAnonymPlSqlBlockImpl(node);
 
             case PLSqlTokenTypes.COMMIT_STATEMENT:
                 return new CommitStatementImpl(node);

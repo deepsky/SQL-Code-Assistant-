@@ -66,21 +66,4 @@ public class CreateSequenceImpl extends PlSqlElementBase implements CreateSequen
         }
     }
 
-/*
-    // [Contex Management Stuff] Start -------------------------------
-    CtxPath cachedCtxPath = null;
-
-    public CtxPath getCtxPath() {
-        if (cachedCtxPath != null) {
-            return cachedCtxPath;
-        } else {
-            CtxPath parent = super.getCtxPath();
-            cachedCtxPath = new ContextPathUtil.CtxPathImpl(
-                    parent.getPath() + ContextPathUtil.encodeCtx(ContextPath.SEQUENCE, "..$" + getSequenceName().toLowerCase()));
-        }
-        return cachedCtxPath;
-    }
-    // [Contex Management Stuff] End ---------------------------------
-*/
-
 }

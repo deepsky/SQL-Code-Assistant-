@@ -30,6 +30,8 @@ import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.formatter2.settings.PlSqlCodeStyleSettings;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.ddl.CreateSequence;
+import com.deepsky.lang.plsql.psi.ddl.CreateUser;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.types.ColumnTypeRef;
 import com.deepsky.lang.plsql.psi.types.DataType;
@@ -44,6 +46,7 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.FormatterUtil;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.CompositeElement;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,9 +57,13 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
     private Spacing myResult;
     private ASTNode leftChild;
     private ASTNode rightChild;
+//    private final IElementType leftChildType;
+//    private IElementType rightChildType;
+
     private PlSqlCodeStyleSettings plSqlCodeStyleSettings;
 
-    public PlSqlSpacingProcessor(ASTNode node, CommonCodeStyleSettings settings, PlSqlCodeStyleSettings plSqlSettings) {
+    public PlSqlSpacingProcessor(
+            ASTNode  node,  CommonCodeStyleSettings settings, PlSqlCodeStyleSettings plSqlSettings) {
         commonSettings = settings;
         plSqlCodeStyleSettings = plSqlSettings;
 
@@ -83,6 +90,7 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
                 && PlSqlTokenTypes.COMMENTS.contains(rightChild.getElementType())) {
             return;
         }
+
 
         if (prev != null && prev.getElementType() == PlSqlTokenTypes.SL_COMMENT) {
             myResult = Spacing.createSpacing(0, Integer.MAX_VALUE, 1, commonSettings.KEEP_LINE_BREAKS, commonSettings.KEEP_BLANK_LINES_IN_CODE);
@@ -153,8 +161,8 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
     }
 
     public void visitTableDefinition(TableDefinition tableDefinition) {
-        if (rightChild.getElementType() == PlSqlTokenTypes.OPEN_PAREN ){
-            if( !plSqlCodeStyleSettings.WRAP_OPEN_PAREN_IN_CRATE_TABLE){
+        if (rightChild.getElementType() == PlSqlTokenTypes.OPEN_PAREN) {
+            if (!plSqlCodeStyleSettings.WRAP_OPEN_PAREN_IN_CRATE_TABLE) {
                 myResult = SpacingConstants.ONE_SPACE_WITHOUT_NEWLINE;
             }
         }
@@ -166,6 +174,8 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
         } else if (leftChild.getElementType() == PlSqlTokenTypes.OPEN_PAREN
                 || rightChild.getElementType() == PlSqlTokenTypes.CLOSE_PAREN) {
             createSpaceProperty(0, false, commonSettings.KEEP_BLANK_LINES_IN_CODE);
+        } else if (rightChild.getElementType() == PlSqlTokenTypes.COMMA) {
+            createSpaceProperty(0, false, 0);
         } else {
             myResult = SpacingConstants.ONE_SPACE_WITHOUT_NEWLINE;
         }
@@ -181,7 +191,7 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
             spaces = plSqlCodeStyleSettings.TAB_SIZE * 2 - spaces;
             createSpaceProperty(spaces, false, commonSettings.KEEP_BLANK_LINES_IN_CODE);
         } else {
-            if(rightChild.getElementType() == PlSqlTokenTypes.SEMI){
+            if (rightChild.getElementType() == PlSqlTokenTypes.SEMI) {
                 myResult = SpacingConstants.NO_SPACING;
             } else {
                 createSpaceProperty(1, false, commonSettings.KEEP_BLANK_LINES_IN_CODE);
@@ -251,7 +261,7 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
 //            myResult = SpacingConstants.NO_SPACING;
         }
     }
-    
+
     public void visitRowtypeType(RowtypeType type) {
         if (leftChild.getElementType() == PlSqlTokenTypes.PERCENTAGE
                 || rightChild.getElementType() == PlSqlTokenTypes.PERCENTAGE) {
@@ -266,6 +276,136 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
         }
     }
 
+    public void visitColumnSpecList(ColumnSpecList node) {
+        if (leftChild.getElementType() == PlSqlTokenTypes.OPEN_PAREN
+                || rightChild.getElementType() == PlSqlTokenTypes.CLOSE_PAREN) {
+            myResult = SpacingConstants.NO_SPACING_WITH_NEWLINE;
+        }
+    }
+
+    /*
+    CREATE SEQUENCE T1_SEQ
+      START WITH 100000
+      INCREMENT BY 2
+      MINVALUE 1
+      MAXVALUE 9999999999999999999999999999
+      MINVALUE 1
+      CYCLE
+      CACHE 25
+      NOORDER;
+    */
+    public void visitCreateSequence(CreateSequence sequence) {
+        if (compose(PlSqlTokenTypes.KEYWORD_CREATE, PlSqlTokenTypes.KEYWORD_SEQUENCE, PlSqlElementTypes.OBJECT_NAME)) {
+        } else if (compose(PlSqlTokenTypes.KEYWORD_START, PlSqlTokenTypes.KEYWORD_WITH, PlSqlElementTypes.NUMERIC_LITERAL)) {
+        } else if (compose(PlSqlTokenTypes.KEYWORD_INCREMENT, PlSqlTokenTypes.KEYWORD_BY, PlSqlElementTypes.NUMERIC_LITERAL)) {
+        } else if (compose(PlSqlTokenTypes.KEYWORD_MINVALUE, PlSqlElementTypes.NUMERIC_LITERAL)) {
+        } else if (compose(PlSqlTokenTypes.KEYWORD_MAXVALUE, PlSqlElementTypes.NUMERIC_LITERAL)) {
+        } else if (compose(PlSqlTokenTypes.KEYWORD_CACHE, PlSqlElementTypes.NUMERIC_LITERAL)) {
+        } else if (rightChild.getElementType() == PlSqlTokenTypes.SEMI) {
+            myResult = SpacingConstants.NO_SPACING;
+        } else {
+            // do not keep blank lines
+            myResult = SpacingConstants.ONE_SPACE_WITH_NEWLINE;
+        }
+    }
+
+
+    /*
+    CREATE USER helen
+        IDENTIFIED BY out_standing1
+        DEFAULT TABLESPACE example
+        QUOTA 10M ON example
+        TEMPORARY TABLESPACE temp
+        QUOTA 5M ON system
+        PROFILE app_user
+        PASSWORD EXPIRE;
+    */
+    public void visitCreateUser(CreateUser user) {
+        if (compose(PlSqlTokenTypes.KEYWORD_CREATE, PlSqlTokenTypes.KEYWORD_USER, PlSqlElementTypes.OBJECT_NAME)) {
+        } else if (compose(PlSqlTokenTypes.KEYWORD_IDENTIFIED, PlSqlTokenTypes.KEYWORD_BY, PlSqlTokenTypes.IDENTIFIER)) {
+        } else if (compose(PlSqlTokenTypes.KEYWORD_DEFAULT, PlSqlTokenTypes.KEYWORD_TABLESPACE, PlSqlElementTypes.TABLESPACE_NAME)) {
+        } else if (compose(PlSqlTokenTypes.KEYWORD_QUOTA, PlSqlTokenTypes.STORAGE_SIZE, PlSqlTokenTypes.KEYWORD_ON, PlSqlElementTypes.TABLESPACE_NAME)) {
+        } else if (compose(PlSqlTokenTypes.KEYWORD_TEMPORARY, PlSqlTokenTypes.KEYWORD_TABLESPACE, PlSqlElementTypes.TABLESPACE_NAME)) {
+        } else if (compose(PlSqlTokenTypes.KEYWORD_PROFILE, PlSqlTokenTypes.IDENTIFIER)) {
+        } else if (compose(PlSqlTokenTypes.KEYWORD_PASSWORD, PlSqlTokenTypes.KEYWORD_EXPIRE)) {
+        } else if (rightChild.getElementType() == PlSqlTokenTypes.SEMI) {
+            myResult = SpacingConstants.NO_SPACING;
+        } else {
+            // do not keep blank lines
+            myResult = SpacingConstants.ONE_SPACE_WITH_NEWLINE;
+        }
+    }
+
+
+    public void visitGroupByClause(GroupByClause clause) {
+        if (leftChild.getElementType() == PlSqlTokenTypes.KEYWORD_GROUP
+                && rightChild.getElementType() == PlSqlTokenTypes.KEYWORD_BY) {
+            myResult = SpacingConstants.ONE_SPACE_WITHOUT_NEWLINE;
+        }
+    }
+
+
+    public void visitOrderByClause(OrderByClause clause) {
+        if (leftChild.getElementType() == PlSqlTokenTypes.KEYWORD_ORDER
+                && rightChild.getElementType() == PlSqlTokenTypes.KEYWORD_BY) {
+            myResult = SpacingConstants.ONE_SPACE_WITHOUT_NEWLINE;
+        }
+    }
+
+
+    public void visitSubquery(Subquery node) {
+        if (leftChild.getElementType() == PlSqlTokenTypes.OPEN_PAREN
+                || rightChild.getElementType() == PlSqlTokenTypes.CLOSE_PAREN) {
+            myResult = SpacingConstants.NO_SPACING_WITH_NEWLINE;
+        }
+    }
+
+    private boolean compose(IElementType... types) {
+        for (int i = 1; i < types.length; i++) {
+            if (leftChild.getElementType() == types[i - 1]) {
+                if (rightChild.getElementType() == types[i]) {
+                    myResult = SpacingConstants.ONE_SPACE_WITHOUT_NEWLINE;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+/*
+    public void visitSelectStatementUnion(SelectStatementUnion select) {
+        myResult = SpacingConstants.ONE_SPACE_WITH_NEWLINE;
+    }
+
+    public void visitSelectStatement(SelectStatement select) {
+        myResult = SpacingConstants.ONE_SPACE_WITH_NEWLINE;
+    }
+
+    public void visitFromClause(FromClause node) {
+        myResult = SpacingConstants.ONE_SPACE_WITH_NEWLINE;
+    }
+
+    public void visitPlainTable(TableAlias node) {
+        myResult = SpacingConstants.ONE_SPACE_WITH_NEWLINE;
+    }
+
+    public void visitFromSubquery(FromSubquery fromSubquery) {
+        myResult = SpacingConstants.ONE_SPACE_WITH_NEWLINE;
+    }
+
+    public void visitSubquery(Subquery subquery) {
+        myResult = SpacingConstants.ONE_SPACE_WITH_NEWLINE;
+    }
+
+    public void visitWhereCondition(WhereCondition node) {
+        myResult = SpacingConstants.ONE_SPACE_WITH_NEWLINE;
+    }
+
+    public void visitLogicalExpression(LogicalExpression expression) {
+        myResult = SpacingConstants.ONE_SPACE_WITH_NEWLINE;
+    }
+*/
+
     final private static TokenSet PACKAGE_LEVEL_WORDS =
             TokenSet.create(
                     PlSqlTokenTypes.KEYWORD_CREATE,
@@ -279,15 +419,15 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
 
 
     public void visitPackageBody(PackageBody body) {
-        if(PACKAGE_LEVEL_WORDS.contains(leftChild.getElementType()) &&
-                PACKAGE_LEVEL_WORDS.contains(rightChild.getElementType())){
+        if (PACKAGE_LEVEL_WORDS.contains(leftChild.getElementType()) &&
+                PACKAGE_LEVEL_WORDS.contains(rightChild.getElementType())) {
             createSpaceProperty(1, false, 0);
         }
     }
 
     public void visitPackageSpec(PackageSpec spec) {
-        if(PACKAGE_LEVEL_WORDS.contains(leftChild.getElementType()) &&
-                PACKAGE_LEVEL_WORDS.contains(rightChild.getElementType())){
+        if (PACKAGE_LEVEL_WORDS.contains(leftChild.getElementType()) &&
+                PACKAGE_LEVEL_WORDS.contains(rightChild.getElementType())) {
             createSpaceProperty(1, false, 0);
         }
     }

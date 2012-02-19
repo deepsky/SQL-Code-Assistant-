@@ -60,19 +60,23 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
     }
 
     public String getColumnName() {
-        return StringUtils.discloseDoubleQuotes(
-                this.findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL).getText()
-        );
+        PsiElement elem = findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL);
+        if(elem != null){
+            return StringUtils.discloseDoubleQuotes(elem.getText());
+        }
+        throw new SyntaxTreeCorruptedException();
     }
 
     public PsiElement getPsiColumnName() {
         return this.findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL);
     }
 
+/*
     public int getTextOffset() {
-        // todo !!!
-        return findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL).getTextOffset();
-    }
+        PsiElement elem = findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL);
+        return elem == null? 0: elem.getTextOffset();
+}
+*/
 
 
     public Type getType() {

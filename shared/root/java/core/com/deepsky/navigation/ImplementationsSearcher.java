@@ -28,6 +28,7 @@ package com.deepsky.navigation;
 import com.deepsky.database.fs.CachedVirtualFileSystem;
 import com.deepsky.lang.plsql.psi.*;
 //import com.deepsky.lang.plsql.psi.resolve.ResolveHelper;
+import com.deepsky.lang.plsql.psi.names.ObjectName;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Processor;

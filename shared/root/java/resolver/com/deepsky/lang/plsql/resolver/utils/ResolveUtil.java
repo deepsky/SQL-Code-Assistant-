@@ -29,6 +29,7 @@ import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.AlterTable;
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.deepsky.lang.plsql.psi.types.ColumnTypeRef;
 import com.deepsky.lang.plsql.resolver.ContextPath;

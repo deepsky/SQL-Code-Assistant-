@@ -40,14 +40,6 @@ public class SqlPlusCommandImpl extends PlSqlElementBase implements SqlPlusComma
         super(astNode);
     }
 
-    public int getSqlPlusCommandType() {
-        return 0;
-    }
-
-    public PlSqlBlock getBlock() {
-        return null;
-    }
-
     @NotNull
     public PsiElement getCommand() {
         PsiElement first = getFirstChild();

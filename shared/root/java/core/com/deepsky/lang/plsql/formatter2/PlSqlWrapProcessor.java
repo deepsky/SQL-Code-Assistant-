@@ -29,7 +29,10 @@ import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.formatter2.settings.PlSqlCodeStyleSettings;
-import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.FromClause;
+import com.deepsky.lang.plsql.psi.InsertStatement;
+import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.deepsky.lang.plsql.psi.TypeDeclaration;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
 import com.intellij.formatting.Wrap;
@@ -45,9 +48,8 @@ public class PlSqlWrapProcessor {
     /**
      * Calculates wrap, based on code style, between parent block and child node
      *
-     *
-     * @param parent parent block
-     * @param child  child node
+     * @param parent        parent block
+     * @param child         child node
      * @param plSqlSettings
      * @return wrap
      */
@@ -72,8 +74,8 @@ public class PlSqlWrapProcessor {
                     PlSqlElementTypes.TABLE_LEVEL_CONSTRAINTS.contains(childType)) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             } else if (childType == PlSqlTokenTypes.OPEN_PAREN) {
-                return settings.WRAP_OPEN_PAREN_IN_CRATE_TABLE?
-                    Wrap.createWrap(WrapType.ALWAYS, true): null;
+                return settings.WRAP_OPEN_PAREN_IN_CRATE_TABLE ?
+                        Wrap.createWrap(WrapType.ALWAYS, true) : null;
             } else if (childType == PlSqlTokenTypes.CLOSE_PAREN) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             } else if (childType == PlSqlElementTypes.STORAGE_SPEC) {
@@ -84,9 +86,9 @@ public class PlSqlWrapProcessor {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             } else if (childType == PlSqlTokenTypes.KEYWORD_AS) {
                 final List<ASTNode> list = PsiUtil.nextVisibleSiblings(child);
-                if(list.size() > 0){
-                    if(list.get(0).getElementType() == PlSqlElementTypes.SELECT_EXPRESSION
-                            || list.get(0).getElementType() == PlSqlElementTypes.SELECT_EXPRESSION_UNION){
+                if (list.size() > 0) {
+                    if (list.get(0).getElementType() == PlSqlElementTypes.SELECT_EXPRESSION
+                            || list.get(0).getElementType() == PlSqlElementTypes.SELECT_EXPRESSION_UNION) {
                         return Wrap.createWrap(WrapType.ALWAYS, true);
                     }
                 }
@@ -223,28 +225,79 @@ public class PlSqlWrapProcessor {
                 }
             }
         }
+/*
         if (childType == PlSqlElementTypes.FROM_SUBQUERY) {
             if (psiParent instanceof FromClause) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
+*/
 
         if (parentType == PlSqlElementTypes.FUNCTION_BODY
                 || parentType == PlSqlElementTypes.PROCEDURE_BODY) {
-            if(childType == PlSqlTokenTypes.KEYWORD_IS || childType == PlSqlTokenTypes.KEYWORD_AS){
+            if (childType == PlSqlTokenTypes.KEYWORD_IS || childType == PlSqlTokenTypes.KEYWORD_AS) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
 
-        if ( parentType == PlSqlElementTypes.PACKAGE_BODY
+        if (parentType == PlSqlElementTypes.PACKAGE_BODY
                 || parentType == PlSqlElementTypes.PACKAGE_SPEC) {
-            if(childType == PlSqlTokenTypes.KEYWORD_IS
+            if (childType == PlSqlTokenTypes.KEYWORD_IS
                     || childType == PlSqlTokenTypes.KEYWORD_AS
-                    || childType == PlSqlTokenTypes.KEYWORD_END){
+                    || childType == PlSqlTokenTypes.KEYWORD_END) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
 
+        /*
+        CREATE SEQUENCE T1_SEQ
+          START WITH 100000
+          INCREMENT BY 2
+          MINVALUE 1
+          MAXVALUE 9999999999999999999999999999
+          MINVALUE 1
+          CYCLE
+          CACHE 25
+          NOORDER;
+        */
+        if (parentType == PlSqlElementTypes.CREATE_SEQUENCE
+                && settings.WRAP_SEQUENCE_OPTIONS) {
+            if (childType == PlSqlTokenTypes.KEYWORD_START
+                    || childType == PlSqlTokenTypes.KEYWORD_INCREMENT
+                    || childType == PlSqlTokenTypes.KEYWORD_MINVALUE
+                    || childType == PlSqlTokenTypes.KEYWORD_MAXVALUE
+                    || childType == PlSqlTokenTypes.KEYWORD_CYCLE
+                    || childType == PlSqlTokenTypes.KEYWORD_NOCYCLE
+                    || childType == PlSqlTokenTypes.KEYWORD_CACHE
+                    || childType == PlSqlTokenTypes.KEYWORD_NOCACHE
+                    || childType == PlSqlTokenTypes.KEYWORD_ORDER
+                    || childType == PlSqlTokenTypes.KEYWORD_NOORDER) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+        }
+
+
+        /*
+        CREATE USER helen
+            IDENTIFIED BY out_standing1
+            DEFAULT TABLESPACE example
+            QUOTA 10M ON example
+            TEMPORARY TABLESPACE temp
+            QUOTA 5M ON system
+            PROFILE app_user
+            PASSWORD EXPIRE;
+        */
+        if (parentType == PlSqlElementTypes.CREATE_USER
+                && settings.WRAP_USER_OPTIONS) {
+            if (childType == PlSqlTokenTypes.KEYWORD_IDENTIFIED
+                    || childType == PlSqlTokenTypes.KEYWORD_DEFAULT
+                    || childType == PlSqlTokenTypes.KEYWORD_QUOTA
+                    || childType == PlSqlTokenTypes.KEYWORD_TEMPORARY
+                    || childType == PlSqlTokenTypes.KEYWORD_PROFILE
+                    || childType == PlSqlTokenTypes.KEYWORD_PASSWORD) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+        }
         // SELECT_EXPRESSION, SELECT_EXPRESSION_UNION
 //        if(PlSqlElementTypes.SUBQUERY_SELECTS.contains(childType)){
 //            return Wrap.createWrap(WrapType.ALWAYS, true);

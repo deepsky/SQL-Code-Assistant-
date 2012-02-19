@@ -25,5 +25,10 @@
 
 package com.deepsky.lang.plsql.psi;
 
-public interface AssignmentStatement extends Statement{
+import com.intellij.psi.PsiElement;
+
+public interface AssignmentStatement extends Statement {
+    PsiElement getLValue();
+    PsiElement getRValue();
+    PsiElement getEQ_Sign();
 }

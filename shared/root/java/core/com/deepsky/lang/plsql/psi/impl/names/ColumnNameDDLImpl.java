@@ -23,10 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.psi.impl;
+package com.deepsky.lang.plsql.psi.impl.names;
 
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
-import com.deepsky.lang.plsql.psi.ColumnNameDDL;
+import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
+import com.deepsky.lang.plsql.psi.names.ColumnNameDDL;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;

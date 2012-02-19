@@ -29,8 +29,6 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 public interface SqlPlusCommand extends PlSqlElement {
-    int getSqlPlusCommandType();
-    PlSqlBlock getBlock();
 
     @NotNull
     PsiElement getCommand();

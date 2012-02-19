@@ -25,6 +25,8 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.psi.names.CompositeName;
+
 public interface ObjectReference extends Expression, CompositeName {
 
     // todo -- workaround, later ObjectReference should be splitted for GenericRef and PlSqlRef   

@@ -23,8 +23,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.psi;
+package com.deepsky.lang.plsql.psi.impl.names;
 
-public interface ColumnNameDDL extends PlSqlElement { //}, PsiReference {
-    ColumnDefinition getColumnDefinition();        
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
+import com.deepsky.lang.plsql.psi.names.SchemaName;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
+import org.jetbrains.annotations.NotNull;
+
+public class SchemaNameImpl extends PlSqlElementBase implements SchemaName {
+
+    public SchemaNameImpl(ASTNode astNode) {
+        super(astNode);
+    }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitSchemaName(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
 }

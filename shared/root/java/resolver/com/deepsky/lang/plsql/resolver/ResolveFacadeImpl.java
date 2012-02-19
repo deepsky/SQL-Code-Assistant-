@@ -28,6 +28,8 @@ package com.deepsky.lang.plsql.resolver;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.ConfigurationException;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
+import com.deepsky.lang.plsql.psi.names.CompositeName;
 import com.deepsky.lang.plsql.psi.ref.SequenceRef;
 import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.deepsky.lang.plsql.resolver.factory.PlSqlElementLocator;

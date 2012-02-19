@@ -27,12 +27,12 @@ package com.deepsky.lang.plsql.completion;
 
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
-import com.deepsky.integration.PlSqlElementType;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.deepsky.lang.plsql.psi.resolve.ASTNodeHandler;
 import com.deepsky.lang.plsql.psi.resolve.ASTNodeHandlerAdapter;
@@ -42,7 +42,10 @@ import com.deepsky.lang.plsql.resolver.factory.CompositeElementExt;
 import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
 import com.deepsky.lang.plsql.sqlIndex.AbstractSchema;
 import com.deepsky.utils.StringUtils;
-import com.intellij.codeInsight.completion.*;
+import com.intellij.codeInsight.completion.CompletionContributor;
+import com.intellij.codeInsight.completion.CompletionInitializationContext;
+import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.lang.ASTNode;
@@ -224,9 +227,9 @@ public class ComplContributor extends CompletionContributor {
                 return processNameFragment2(provider, nameFragment);
 
             } else if (target.getElementType() == PlSqlElementTypes.ALIAS_IDENT) {
-                if(sqlStmt[0] != null && sqlStmt[0].getElementType() == PlSqlElementTypes.UPDATE_COMMAND ){
-                    if(lookUpStr.length() == 0 || "set".startsWith(lookUpStr) ){
-                         out.add(LookupElementBuilder.create("set"));
+                if (sqlStmt[0] != null && sqlStmt[0].getElementType() == PlSqlElementTypes.UPDATE_COMMAND) {
+                    if (lookUpStr.length() == 0 || "set".startsWith(lookUpStr)) {
+                        out.add(LookupElementBuilder.create("set"));
 /*
                             .setInsertHandler(new InsertHandler<LookupElement>() {
                                 public void handleInsert(InsertionContext context, LookupElement item) {
@@ -268,22 +271,25 @@ public class ComplContributor extends CompletionContributor {
                         // 1. return variable
                         // 2. function call result
                         // 3. a complex name - <package_name>.<object_name>
-                        out.addAll(provider.collectVarVariants(
-                                ctxPath,
-                                lookUpStr)
-                        );
-
-                        out.addAll(provider.collectFuncCall(
-                                ctxPath,
-                                null,
-                                lookUpStr)
-                        );
-
-                        out.addAll(provider.collectPackageVariants(
-                                lookUpStr)
-                        );
+                        out.addAll(provider.collectVarVariants(ctxPath,lookUpStr));
+                        out.addAll(provider.collectFuncCall(ctxPath,null,lookUpStr));
+                        out.addAll(provider.collectPackageVariants(lookUpStr));
 
                         return out.toArray(new LookupElement[out.size()]);
+                    }
+                } else if (parent.getElementType() == PlSqlElementTypes.ASSIGNMENT_STATEMENT) {
+                    final ASTNode prev = PsiUtil.prevVisibleSibling(target);
+                    if (prev != null && prev.getElementType() == PlSqlTokenTypes.ASSIGNMENT_EQ) {
+                        // rvalue
+                        if (getExecCtx() != null) {
+                            String ctxPath = ((CompositeElementExt) parent).getCtxPath1().getPath();
+                            // 1. return variable
+                            // 2. function call result
+                            // 3. a complex name - <package_name>.<object_name>
+                            out.addAll(provider.collectVarVariants(ctxPath,lookUpStr));
+                            out.addAll(provider.collectFuncCall(ctxPath,null,lookUpStr));
+                            out.addAll(provider.collectPackageVariants(lookUpStr));
+                        }
                     }
                 } else if (parent.getElementType() == PlSqlElementTypes.PLSQL_BLOCK) {
                     // todo -- generate lookup variants
@@ -542,7 +548,7 @@ public class ComplContributor extends CompletionContributor {
                     // subquery update
                     if (list.getParent() instanceof PsiFile) {
                         TableAlias tab = identifyTableAlias(list);
-                        if(tab != null)
+                        if (tab != null)
                             out.addAll(provider.collectColumnNames(tab, lookUpStr));
                     } else {
                         __collect__(COLLECT_COLUMN_EXPR_VARS);
@@ -552,7 +558,7 @@ public class ComplContributor extends CompletionContributor {
                     // update/update-merge
                     if (l.getParent() instanceof PsiFile) {
                         TableAlias tab = identifyTableAlias(l);
-                        if(tab != null)
+                        if (tab != null)
                             out.addAll(provider.collectColumnNames(tab, lookUpStr));
                     } else {
                         __collect__(COLLECT_COLUMN_EXPR_VARS);
@@ -665,19 +671,19 @@ public class ComplContributor extends CompletionContributor {
 
     private TableAlias identifyTableAlias(PsiElement e) {
         final TableAlias[] alias = new TableAlias[1];
-        final int[] index = {insertStmt.length-1};
+        final int[] index = {insertStmt.length - 1};
         PsiUtil.iterateOverSiblings(e, new PsiUtil.SiblingVisitor() {
             public boolean visit(PsiElement e) {
-                if(index[0] < 0){
+                if (index[0] < 0) {
                     return false;
                 }
                 ASTNode n = e.getNode();
-                if( n.getElementType() != insertStmt[index[0]]){
+                if (n.getElementType() != insertStmt[index[0]]) {
                     return false;
                 }
 
-                if( n.getElementType() == PlSqlElementTypes.TABLE_ALIAS){
-                    alias[0]= (TableAlias) e;
+                if (n.getElementType() == PlSqlElementTypes.TABLE_ALIAS) {
+                    alias[0] = (TableAlias) e;
                 }
                 index[0]--;
                 return true;

@@ -25,7 +25,10 @@
 
 package com.deepsky.lang.plsql.formatter2;
 
+import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -33,10 +36,25 @@ import com.intellij.psi.impl.source.codeStyle.PostFormatProcessor;
 
 public class PlSqlPostFormatProcessor implements PostFormatProcessor {
     public PsiElement processElement(PsiElement source, CodeStyleSettings settings) {
-        return new CaseFormatter(settings, source.getContainingFile()).process(source);
+        if (PsiUtil.isSqlFile(source.getContainingFile().getVirtualFile())) {
+            PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(source.getProject());
+            Document document = psiDocumentManager.getDocument(source.getContainingFile());
+            if (document != null) {
+                return new CaseFormatter(settings, psiDocumentManager, document).process(source);
+            }
+        }
+        return source;
     }
 
     public TextRange processText(PsiFile source, TextRange rangeToReformat, CodeStyleSettings settings) {
-        return new CaseFormatter(settings, source.getContainingFile()).processText(source, rangeToReformat);
+        if (PsiUtil.isSqlFile(source.getContainingFile().getVirtualFile())) {
+            PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(source.getProject());
+            Document document = psiDocumentManager.getDocument(source.getContainingFile());
+            if (document != null) {
+                return new CaseFormatter(settings, psiDocumentManager, document).processText(source, rangeToReformat);
+            }
+        }
+
+        return rangeToReformat;
     }
 }

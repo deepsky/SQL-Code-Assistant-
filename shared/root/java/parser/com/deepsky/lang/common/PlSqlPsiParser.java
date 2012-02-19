@@ -160,11 +160,11 @@ public class PlSqlPsiParser implements PsiParser {
         }
     }
 
-    class PLSqlParser2 extends PLSqlParserAdoptedExt {
+    private class PLSqlParser2 extends PLSqlParserAdoptedExt {
 
-        PsiBuilder builder;
+        final PsiBuilder builder;
 
-        public int getPredicting() {
+        final public int getPredicting() {
             return predicting;
         }
 
@@ -173,18 +173,18 @@ public class PlSqlPsiParser implements PsiParser {
             this.builder = builder;
         }
 
-        public void rewind(int pos) {
+        final public void rewind(int pos) {
             super.rewind(pos);
             predicting--;
         }
 
-        public int mark() {
+        final public int mark() {
             int mark = super.mark();
             predicting++;
             return mark;
         }
 
-        public void consume() throws TokenStreamException {
+        final public void consume() throws TokenStreamException {
             PlSqlTokenType etype = (PlSqlTokenType) builder.getTokenType();
             if (predicting == 0 && etype != null) {
                 // let's save some resources - skip non significant (leaf) tokens
@@ -217,18 +217,18 @@ public class PlSqlPsiParser implements PsiParser {
             super.consume();
         }
 
-        public void reportError(RecognitionException ex) {
+        final public void reportError(RecognitionException ex) {
             // Do not report syntax errors
         }
 
         /**
          * Parser error-reporting function can be overridden in subclass
          */
-        public void reportError(String s) {
+        final public void reportError(String s) {
 //            log.debug("[PARSER] Syntax Error2: " + s);
         }
 
-        public void recover(RecognitionException ex, BitSet tokenSet) throws TokenStreamException {
+        final public void recover(RecognitionException ex, BitSet tokenSet) throws TokenStreamException {
             PsiBuilder.Marker m = builder.mark();
             super.recover(ex, tokenSet);
             m.done(ANTLRType2AdoptedType.type2etype[ERROR_TOKEN_A]);

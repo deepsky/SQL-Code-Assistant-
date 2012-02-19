@@ -23,9 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.psi.impl;
+package com.deepsky.lang.plsql.psi.impl.names;
 
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
+import com.deepsky.lang.plsql.psi.names.ObjectName;
 import com.deepsky.lang.plsql.psi.utils.Formatter;
 import com.deepsky.navigation.PlSqlPackageUtil;
 import com.deepsky.view.Icons;

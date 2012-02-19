@@ -45,6 +45,14 @@ public interface PlSqlTokenTypes extends PlSqlBaseTokenTypes {
     PlSqlElementType AND = new PlSqlElementType("AND", PLSqlTokenTypes.AND_LOGICAL);
     IElementType PROXY_KEYWORD = new PlSqlElementType("PROXY_KEYWORD", 10001);
 
+
+    TokenSet NOT_KEYWORDS = TokenSet.create(
+            SL_COMMENT, ML_COMMENT, BAD_ML_COMMENT,
+            LT, LE, GE, GT, EQ, NOT_EQ, PLUS, MINUS, DIVIDE, PERCENTAGE, ASSIGNMENT_EQ, OR, AND,
+            COMMA, SEMI, DOT, ASTERISK, OPEN_PAREN, CLOSE_PAREN,
+            WS, LF
+    );
+
     TokenSet COMMENTS = TokenSet.create(
             SL_COMMENT, ML_COMMENT, BAD_ML_COMMENT
     );
@@ -61,6 +69,7 @@ public interface PlSqlTokenTypes extends PlSqlBaseTokenTypes {
     TokenSet NUMERIC_LITERAL = TokenSet.create(
             NUMBER
     );
+
 
     TokenSet OPERATIONS = TokenSet.create(
             LT, LE, GE, GT, EQ, NOT_EQ, PLUS, MINUS, DIVIDE, PERCENTAGE, ASSIGNMENT_EQ, OR, AND

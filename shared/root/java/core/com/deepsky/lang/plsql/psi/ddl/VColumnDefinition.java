@@ -25,7 +25,7 @@
 
 package com.deepsky.lang.plsql.psi.ddl;
 
-import com.deepsky.lang.plsql.psi.CompositeName;
+import com.deepsky.lang.plsql.psi.names.CompositeName;
 import org.jetbrains.annotations.NotNull;
 
 

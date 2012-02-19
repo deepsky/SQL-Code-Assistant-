@@ -25,16 +25,13 @@
 
 package com.deepsky.lang.plsql.completion;
 
-import com.deepsky.lang.plsql.psi.ColumnNameRef;
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.ParameterReference;
 import com.deepsky.lang.plsql.psi.TableAlias;
 import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.List;
 

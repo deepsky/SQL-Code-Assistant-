@@ -26,10 +26,12 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.names.CompositeName;
 import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class ExecNameRefImpl extends PlSqlReferenceBase implements ExecNameRef {
@@ -87,7 +89,6 @@ public class ExecNameRefImpl extends PlSqlReferenceBase implements ExecNameRef {
         return null;
     }
 
-
     public ResolveDescriptor resolveLight() {
         CallableCompositeName cname = (CallableCompositeName)getParent();
         int type = cname.getCallable() instanceof FunctionCall? ContextPath.FUNC_CALL: ContextPath.PROC_CALL;
@@ -96,4 +97,13 @@ public class ExecNameRefImpl extends PlSqlReferenceBase implements ExecNameRef {
                 type, getCtxPath1().getPath(), cname.getText(),  getCallArgumentList()
         );
     }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitExecNameRef(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
 }

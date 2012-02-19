@@ -25,6 +25,7 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
 import org.jetbrains.annotations.NotNull;
 
 public interface PrimaryKeyConstraint extends GenericConstraint {

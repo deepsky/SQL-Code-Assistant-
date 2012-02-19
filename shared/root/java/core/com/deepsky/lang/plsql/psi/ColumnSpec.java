@@ -25,6 +25,7 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.psi.names.CompositeName;
 import com.deepsky.lang.plsql.struct.Type;
 import org.jetbrains.annotations.Nullable;
 

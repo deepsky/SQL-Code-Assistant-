@@ -25,7 +25,7 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
-import com.deepsky.lang.plsql.psi.ColumnNameRef;
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;

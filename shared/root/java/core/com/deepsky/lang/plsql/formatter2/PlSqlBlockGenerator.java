@@ -26,6 +26,7 @@
 package com.deepsky.lang.plsql.formatter2;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.formatter2.settings.PlSqlCodeStyleSettings;
 import com.deepsky.lang.plsql.psi.*;
@@ -117,6 +118,24 @@ public class PlSqlBlockGenerator {
             return subBlocks;
         }
 
+
+        if (blockPsi.getNode().getElementType() == PlSqlElementTypes.STATEMENT_LIST) {
+            final ArrayList<Block> subBlocks = new ArrayList<Block>();
+            List<ASTNode> children = PsiUtil.visibleChildren(myNode);
+            if (plSqlSettings.ALIGN_ASSIGNMENTS)
+                calculateAlignments(children);
+            for (ASTNode childNode : children) {
+                final Indent indent = PlSqlIndentProcessor.getChildIndent(myBlock, childNode);
+                Wrap wrap = PlSqlWrapProcessor.getChildWrap(myBlock, childNode, plSqlSettings);
+                subBlocks.add(
+                        new PlSqlBlock(childNode, wrap, indent,
+                                myInnerAlignments.get(childNode.getPsi()),
+                                mySettings, plSqlSettings,
+                                myInnerAlignments));
+            }
+            return subBlocks;
+        }
+
         // For other cases
         final ArrayList<Block> subBlocks = new ArrayList<Block>();
         for (ASTNode childNode : PsiUtil.visibleChildren(myNode)) {
@@ -171,6 +190,15 @@ public class PlSqlBlockGenerator {
                     if (qualifiers.length > 0) {
                         myInnerAlignments.put(qualifiers[0], currentGroup.get(2));
                     }
+                } else if (psi instanceof AssignmentStatement) {
+                    if (currentGroup == null) {
+                        currentGroup = Arrays.asList(Alignment.createAlignment(true), Alignment.createAlignment(true), Alignment.createAlignment(true));
+                    }
+
+                    AssignmentStatement assignment = (AssignmentStatement) psi;
+                    myInnerAlignments.put(assignment.getLValue(), currentGroup.get(0));
+                    myInnerAlignments.put(assignment.getEQ_Sign(), currentGroup.get(1));
+                    myInnerAlignments.put(assignment.getRValue(), currentGroup.get(2));
                 }
             }
         } catch (SyntaxTreeCorruptedException e) {

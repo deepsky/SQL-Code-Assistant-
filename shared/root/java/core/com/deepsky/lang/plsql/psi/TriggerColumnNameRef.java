@@ -25,5 +25,7 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.psi.names.CompositeName;
+
 public interface TriggerColumnNameRef  extends Expression, CompositeName {
 }

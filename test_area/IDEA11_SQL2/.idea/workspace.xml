@@ -58,55 +58,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="test11.sql" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/M1/src/test1/deeper/test11.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="0" selection-start="2203" selection-end="2203" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="xdv_adk_sig_tdr_et.sql" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/M1/src/test1/xdv_adk_sig_tdr_et.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="0" selection-start="464" selection-end="464" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test45.sql" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/M1/src/test1/test45.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="20" selection-start="68" selection-end="68" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="create_tables.sql" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/M1/src/test1/create_tables.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="151" column="0" selection-start="4242" selection-end="4242" vertical-scroll-proportion="1.5027624">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="INSERT_TEST_FUNC1.sql" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/M1/src/test1/INSERT_TEST_FUNC1.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="31" selection-start="1331" selection-end="1331" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test_f56.sql" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/M1/src/test1/test_f56.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="271" column="9" selection-start="5767" selection-end="5767" vertical-scroll-proportion="0.0">
+            <state line="54" column="31" selection-start="1114" selection-end="1114" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -115,7 +70,16 @@
       <file leaf-file-name="test_pkg.sql" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/M1/src/test1/test_pkg.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="0" selection-start="18" selection-end="18" vertical-scroll-proportion="0.0">
+            <state line="79" column="12" selection-start="1950" selection-end="1950" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_indent.sql" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/M1/src/test1/test_indent.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="42" column="23" selection-start="0" selection-end="985" vertical-scroll-proportion="0.4750594">
               <folding />
             </state>
           </provider>
@@ -129,35 +93,35 @@
     </FindUsagesManager>
   </component>
   <component name="Git.Settings">
-    <option name="CHECKOUT_INCLUDE_TAGS" value="false" />
-    <option name="UPDATE_CHANGES_POLICY" value="STASH" />
     <option name="LINE_SEPARATORS_CONVERSION" value="ASK" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/M1/src/Test452.java" />
-        <option value="$PROJECT_DIR$/M1/src/test1/deeper/test45.sql" />
-        <option value="$PROJECT_DIR$/M1/src/t1.xml" />
-        <option value="$PROJECT_DIR$/M1/src/test1/ordcom.pks" />
         <option value="$PROJECT_DIR$/M1/src/Test1.java" />
         <option value="$PROJECT_DIR$/M1/src/java_pkg/Test1.java" />
         <option value="$PROJECT_DIR$/M1/src/test1/ordcom.pkb" />
-        <option value="$PROJECT_DIR$/M1/src/test1/deeper/test11.sql" />
-        <option value="$PROJECT_DIR$/M1/src/test1/INSERT_TEST_FUNC1.sql" />
         <option value="$PROJECT_DIR$/M1/src/test1/test_f56.sql" />
-        <option value="$PROJECT_DIR$/M1/src/test1/test_pkg.sql" />
         <option value="$PROJECT_DIR$/M1/src/test1/xdv_adk_sig_tdr_et.sql" />
         <option value="$PROJECT_DIR$/M1/src/test1/test45.sql" />
         <option value="$PROJECT_DIR$/M1/src/test1/create_tables.sql" />
+        <option value="$PROJECT_DIR$/M1/src/java_pkg/Test452.java" />
+        <option value="$PROJECT_DIR$/M1/src/java_pkg/Align.java" />
+        <option value="$PROJECT_DIR$/M1/src/test1/check_blank_lines.sql" />
+        <option value="$PROJECT_DIR$/M1/src/test1/deeper/test11.sql" />
+        <option value="$PROJECT_DIR$/M1/src/test1/small_proc.sql" />
+        <option value="$PROJECT_DIR$/M1/src/test1/INSERT_TEST_FUNC1.sql" />
+        <option value="[hr@//localhost:1521/orcl] g" />
+        <option value="$PROJECT_DIR$/M1/src/test1/test_pkg.sql" />
+        <option value="$PROJECT_DIR$/M1/src/test1/test_indent.sql" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="31" />
-    <option name="y" value="13" />
-    <option name="width" value="966" />
-    <option name="height" value="402" />
+    <option name="x" value="433" />
+    <option name="y" value="11" />
+    <option name="width" value="886" />
+    <option name="height" value="608" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -185,7 +149,20 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="PackagesPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IDEA11_SQL2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="M1" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -247,21 +224,21 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="options.splitter.main.proportions" value="0.22764228" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="options.lastSelected" value="preferences.sourceCode.PlSql" />
+    <property name="options.lastSelected" value="preferences.pluginManager" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="PsiViewer.ProjectComponent">
-    <option name="HIGHLIGHT" value="true" />
+    <option name="HIGHLIGHT" value="false" />
     <option name="FILTER_WHITESPACE" value="true" />
     <option name="SHOW_PROPERTIES" value="false" />
-    <option name="SPLIT_DIVIDER_POSITION" value="241" />
+    <option name="SPLIT_DIVIDER_POSITION" value="326" />
     <option name="AUTOSCROLL_TO_SOURCE" value="true" />
     <option name="AUTOSCROLL_FROM_SOURCE" value="false" />
   </component>
@@ -294,6 +271,24 @@
         <option name="Maven.BeforeRunTask" enabled="false" />
       </method>
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="true" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -319,24 +314,6 @@
       <envs />
       <properties />
       <listeners />
-      <method>
-        <option name="AntTarget" enabled="false" />
-        <option name="BuildArtifacts" enabled="false" />
-        <option name="Make" enabled="true" />
-        <option name="Maven.BeforeRunTask" enabled="false" />
-      </method>
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method>
         <option name="AntTarget" enabled="false" />
         <option name="BuildArtifacts" enabled="false" />
@@ -396,8 +373,27 @@
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="SqlCodeAssistantSettings">
+    <option name="connection" value="jdbc:oracle:thin:hr/qwe123@//localhost:1521/orcl" />
     <option name="dbBrowserSelectedConnection" value="IDEA11_SQL2" />
-    <option name="dbBrowserSplitDividerLocation" value="42" />
+    <option name="dbBrowserSplitDividerLocation" value="33" />
+  </component>
+  <component name="SvnConfiguration17" maxAnnotateRevisions="500" myUseAcceleration="nothing">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="DETECT_NESTED_COPIES" value="true" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <configuration useDefault="false">C:\Users\sky\AppData\Roaming\Subversion</configuration>
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -408,25 +404,26 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="31" y="13" width="966" height="402" extended-state="0" />
+    <frame x="433" y="11" width="886" height="608" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24972253" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35119048" sideWeight="0.49582836" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2565172" sideWeight="0.5731415" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47855917" sideWeight="0.470024" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29300776" sideWeight="0.7380952" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2552719" sideWeight="0.5731415" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.435094" sideWeight="0.54817986" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29185727" sideWeight="0.7380952" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="PsiViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.46328294" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="PsiViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47990257" sideWeight="0.9905213" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5061425" sideWeight="0.49582836" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.45182014" sideWeight="0.49582836" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -467,6 +464,7 @@
     <option name="INCLUDE_TEXT_INTO_PATCH" value="false" />
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
     <option name="CREATE_PATCH_EXPAND_DETAILS_DEFAULT" value="true" />
+    <option name="SHOW_FILE_HISTORY_DETAILS" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="LAST_COMMIT_MESSAGE" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
@@ -495,44 +493,71 @@
         <state line="5" column="0" selection-start="70" selection-end="70" vertical-scroll-proportion="0.23097827" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/M1/src/test1/ordcom.pkb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="128" column="19" selection-start="3587" selection-end="3587" vertical-scroll-proportion="0.05666667" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/M1/src/test1/deeper/test11.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="0" selection-start="2203" selection-end="2203" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/M1/src/test1/xdv_adk_sig_tdr_et.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state line="12" column="0" selection-start="464" selection-end="464" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/M1/src/test1/test45.sql">
+    <entry file="file://$PROJECT_DIR$/M1/src/java_pkg/Align.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="20" selection-start="68" selection-end="68" vertical-scroll-proportion="0.0" />
+        <state line="2" column="13" selection-start="32" selection-end="32" vertical-scroll-proportion="0.106583074" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/M1/src/test1/INSERT_TEST_FUNC1.sql">
+    <entry file="file://$PROJECT_DIR$/M1/src/java_pkg/Test452.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="31" selection-start="1331" selection-end="1331" vertical-scroll-proportion="0.0" />
+        <state line="4" column="22" selection-start="69" selection-end="69" vertical-scroll-proportion="0.14733543" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/M1/src/test1/ordcom.pkb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="4" selection-start="34" selection-end="34" vertical-scroll-proportion="0.11971831" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/M1/src/test1/deeper/test11.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="198" column="15" selection-start="5022" selection-end="5022" vertical-scroll-proportion="0.31398416" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/M1/src/test1/check_blank_lines.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="36" selection-start="335" selection-end="335" vertical-scroll-proportion="0.67830426" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/M1/src/test1/test45.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="20" selection-start="68" selection-end="68" vertical-scroll-proportion="0.2543641" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/M1/src/test1/test_f56.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="271" column="9" selection-start="5767" selection-end="5767" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/M1/src/test1/test_pkg.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="18" selection-end="18" vertical-scroll-proportion="0.0" />
+        <state line="271" column="9" selection-start="5767" selection-end="5767" vertical-scroll-proportion="0.042394016" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/M1/src/test1/create_tables.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="151" column="0" selection-start="4242" selection-end="4242" vertical-scroll-proportion="1.5027624">
+        <state line="21" column="0" selection-start="780" selection-end="780" vertical-scroll-proportion="-1.23918" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/M1/src/test1/small_proc.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="29" selection-start="95" selection-end="95" vertical-scroll-proportion="0.11617312" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/M1/src/test1/INSERT_TEST_FUNC1.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="31" selection-start="1114" selection-end="1114" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/M1/src/test1/test_pkg.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="79" column="12" selection-start="1950" selection-end="1950" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/M1/src/test1/test_indent.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="23" selection-start="0" selection-end="985" vertical-scroll-proportion="0.4750594">
           <folding />
         </state>
       </provider>
@@ -612,6 +637,17 @@
         </settings>
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ScopeChooserConfigurable.UI">
         <settings>
           <splitter-proportions>
             <option name="proportions">

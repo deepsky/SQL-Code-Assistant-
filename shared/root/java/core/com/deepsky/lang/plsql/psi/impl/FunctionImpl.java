@@ -29,6 +29,7 @@ import com.deepsky.lang.common.ResolveProvider;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.names.ObjectName;
 import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
 import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.ResolveFacade;

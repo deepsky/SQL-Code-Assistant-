@@ -52,7 +52,8 @@ public class PlSqlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
                 return SPACING_SAMPLE;
             case WRAPPING_AND_BRACES_SETTINGS:
                 return LANGUAGE_SPECIFIC_SAMPLE;
-//            case BLANK_LINES_SETTINGS: return BLANK_LINE_SAMPLE;
+            case BLANK_LINES_SETTINGS:
+                return BLANK_LINE_SAMPLE;
             default:
                 return "";
         }
@@ -125,7 +126,11 @@ public class PlSqlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_COLUMN_DEF", "In column definition", "Alignment");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_DECL", "In variable declaration", "Alignment");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_ARGUMENT_LIST", "In argument list", "Alignment");
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_ASSIGNMENTS", "Assignment statements", "Alignment");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "WRAP_OPEN_PAREN_IN_CRATE_TABLE", "Wrap '(' in CREATE TABLE", "Wrapping");
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "WRAP_SEQUENCE_OPTIONS", "Wrap options in CREATE SEQUENCE", "Wrapping");
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "WRAP_USER_OPTIONS", "Wrap options in CREATE USER", "Wrapping");
+
             consumer.showCustomOption(PlSqlCodeStyleSettings.class,
                     "NAMES_CASE", "Case of Names", "Others",
                     new String[]{"Don't change", "Upper", "Lower"}, new int[]{1, 2, 3});
@@ -139,9 +144,40 @@ public class PlSqlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
 //            consumer.showAllStandardOptions();
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "SPACE_BEFORE_OPEN_PAREN_IN_DATATYPE", "Datatype parentheses", CodeStyleSettingsCustomizable.SPACES_BEFORE_PARENTHESES);
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "SPACE_BEFORE_PARAMETERS", "Method call parentheses", CodeStyleSettingsCustomizable.SPACES_BEFORE_PARENTHESES);
-
-//            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "NAMES_CASE_UPPER", "Case of Names", CodeStyleSettingsCustomizable.SPACES_BEFORE_PARENTHESES);
             return;
+        }
+        if (settingsType == SettingsType.BLANK_LINES_SETTINGS) {
+            // Blank Line to KEEP
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class,
+                    "MAX_LINES_BETWEEN_FILE_LEVEL_STMT",
+                    "Between CREATE, ALTER, DROP, etc",
+                    CodeStyleSettingsCustomizable.BLANK_LINES_KEEP);
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class,
+                    "MAX_LINES_BETWEEN_BLOCK_LEVEL_STMT",
+                    "Between statements inside a block",
+                    CodeStyleSettingsCustomizable.BLANK_LINES_KEEP);
+
+            // Min blank lines
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class,
+                    "MIN_LINES_BETWEEN_FILE_LEVEL_STMT",
+                    "Between CREATE, ALTER, DROP, etc",
+                    CodeStyleSettingsCustomizable.BLANK_LINES);
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class,
+                    "MIN_LINES_BETWEEN_BLOCK_LEVEL_STMT",
+                    "Between statements inside a block",
+                    CodeStyleSettingsCustomizable.BLANK_LINES);
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class,
+                    "MIN_LINES_BEFORE_BLOCK",
+                    "Before a PL/SQL block",
+                    CodeStyleSettingsCustomizable.BLANK_LINES);
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class,
+                    "MIN_LINES_BEFORE_MULTILINE_COMMENT",
+                    "Before C Style comment",
+                    CodeStyleSettingsCustomizable.BLANK_LINES);
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class,
+                    "MIN_LINES_AFTER_MULTILINE_COMMENT",
+                    "After C Style comment",
+                    CodeStyleSettingsCustomizable.BLANK_LINES);
         }
 //        consumer.showAllStandardOptions();
     }
@@ -180,13 +216,43 @@ public class PlSqlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
                     "    retVal out double precision)\n" +
                     "RETURN binary_integer\n" +
                     "IS\n" +
-                    "    load_id       INTEGER;\n" +
-                    "    load_st_dt    DATE;\n" +
-                    "    load_end_dt   DATE;\n" +
-                    "    tz              VARCHAR2(50) := P_TIME_ZONE;\n" +
+                    "    inArgTable       INTEGER;\n" +
+                    "    inArgTypeTable   DATE;\n" +
+                    "    dblVal VARCHAR2(50) := P_TIME_ZONE;\n" +
+                    "    ret binary_integer;\n" +
                     "BEGIN\n" +
-                    "    i := OAgetNumber(token, PropName, inArgTable, inArgTypeTable, dblVal, argCount);\n" +
-                    "    retval := dblVal;\n" +
-                    "    RETURN i;\n" +
+                    "    ret := OAgetNumber(token, PropName, inArgTable, inArgTypeTable, dblVal, argCount);\n" +
+                    "    retVal := ret;\n" +
+                    "    RETURN ret;\n" +
+                    "END GetProperty;" +
+                    "\n"+
+                    "CREATE SEQUENCE T1_SEQ START WITH 100000\n" +
+                            " INCREMENT BY 2\n" +
+                            " MINVALUE 1\n" +
+                            "MAXVALUE 9999999999999999999999999999  MINVALUE 1\n" +
+                            "CYCLE CACHE 25\n" +
+                            "NOORDER;";
+
+
+    private final static String BLANK_LINE_SAMPLE =
+            "create table SALES(\n" +
+                    "    id number,\n" +
+                    "    text varchar2(64)\n" +
+                    ");\n" +
+                    "FUNCTION GetProperty (\n" +
+                    "    token binary_integer,\n" +
+                    "    PropName IN NOCOPY VARCHAR2,\n" +
+                    "    argCount binary_integer,\n" +
+                    "    retVal out double precision)\n" +
+                    "RETURN binary_integer\n" +
+                    "IS\n" +
+                    "    inArgTable       INTEGER;\n" +
+                    "    inArgTypeTable   DATE;\n" +
+                    "    dblVal VARCHAR2(50) := P_TIME_ZONE;\n" +
+                    "    retval binary_integer;\n" +
+                    "BEGIN\n" +
+                    "    retval := OAgetNumber(token, PropName, inArgTable, inArgTypeTable, dblVal, argCount);\n" +
+                    "    RETURN retval;\n" +
                     "END GetProperty;";
+
 }

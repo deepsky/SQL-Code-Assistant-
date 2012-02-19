@@ -23,8 +23,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.psi;
+package com.deepsky.lang.plsql.psi.names;
 
-public interface Column extends PlSqlElement {
-    String getColumnName();
+import com.deepsky.lang.plsql.psi.NameFragmentRef;
+import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
+import org.jetbrains.annotations.NotNull;
+
+public interface CompositeName extends PlSqlElement {
+
+    @NotNull
+    NameFragmentRef[] getNamePieces();
+
+    int getFragmentIndex(@NotNull NameFragmentRef fragment);
+    NameFragmentRef getFragmentByPos(int position);
+
+    ResolveDescriptor resolveLight();
 }

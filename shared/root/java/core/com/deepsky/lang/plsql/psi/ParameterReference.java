@@ -25,6 +25,8 @@
 
 package com.deepsky.lang.plsql.psi;
 
-public interface ParameterReference extends CompositeName  {
+import com.deepsky.lang.plsql.psi.names.CompositeName;
+
+public interface ParameterReference extends CompositeName {
     CallArgument getCallArgument();
 }

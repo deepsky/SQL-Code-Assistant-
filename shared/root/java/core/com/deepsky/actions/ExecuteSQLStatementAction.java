@@ -99,7 +99,7 @@ public class ExecuteSQLStatementAction extends AnAction {
                             Messages.showErrorDialog(
                                     "SQL statement was not recognized, please check the syntax.",
                                     "SQL Statement syntax error");
-                        } else if (ancestor.getElementType() == PlSqlElementTypes.SQLPLUS_COMMAND) {
+                        } else if (ancestor.getElementType() == PlSqlElementTypes.SQLPLUS_ANONYM_PLSQL_BLOCK) {
                             // should be check for the particular command
                             ASTNode plsqlBlk = ancestor.findChildByType(PlSqlElementTypes.PLSQL_BLOCK);
                             if (plsqlBlk != null) {

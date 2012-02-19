@@ -29,10 +29,21 @@ import com.intellij.formatting.Spacing;
 
 public interface SpacingConstants {
 
-    Spacing NO_SPACING_WITH_NEWLINE = Spacing.createSpacing(0, 0, 0, true, 1);
+//    Spacing NO_SPACING_WITH_NEWLINE = Spacing.createSpacing(0, 0, 0, true, 1);
+    Spacing NO_SPACING_WITH_NEWLINE = Spacing.createSpacing(0, 0, 0, true, 0);
+
+    // No spaces, NO newline, NO blank lines
     Spacing NO_SPACING = Spacing.createSpacing(0, 0, 0, false, 0);
+
+    // One whitespace, NO newlines
     Spacing ONE_SPACE_WITHOUT_NEWLINE = Spacing.createSpacing(1, 1, 0, false, 0);
+
+    // One whitespace, DON'T keep blank lines
+    Spacing ONE_SPACE_WITH_NEWLINE = Spacing.createSpacing(1, 1, 0, true, 0);
+
+    // One whitespace, keep blank lines
     Spacing COMMON_SPACING = Spacing.createSpacing(1, 1, 0, true, 100);
+
     Spacing COMMON_SPACING_WITH_NL = Spacing.createSpacing(1, 1, 1, true, 100);
     Spacing IMPORT_BETWEEN_SPACING = Spacing.createSpacing(0, 0, 1, true, 100);
     Spacing IMPORT_OTHER_SPACING = Spacing.createSpacing(0, 0, 2, true, 100);

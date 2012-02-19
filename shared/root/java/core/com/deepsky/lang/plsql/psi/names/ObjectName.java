@@ -23,7 +23,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.psi;
+package com.deepsky.lang.plsql.psi.names;
 
-public interface NameReference extends PlSqlElement {
+import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.intellij.navigation.NavigationItem;
+import com.intellij.psi.PsiNamedElement;
+
+public interface ObjectName extends PlSqlElement, NavigationItem, PsiNamedElement {
+    String getObjectName();
 }

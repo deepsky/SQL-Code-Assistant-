@@ -31,6 +31,8 @@ import com.deepsky.lang.plsql.psi.ddl.CreateSequence;
 import com.deepsky.lang.plsql.psi.ddl.CreateView;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.ddl.VColumnDefinition;
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
+import com.deepsky.lang.plsql.psi.names.CompositeName;
 import com.deepsky.lang.plsql.psi.ref.SequenceRef;
 import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.deepsky.lang.plsql.resolver.ContextPath;

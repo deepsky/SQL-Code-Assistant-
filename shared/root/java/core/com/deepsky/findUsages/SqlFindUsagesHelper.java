@@ -27,7 +27,6 @@ package com.deepsky.findUsages;
 
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.findUsages.options.*;
-import com.deepsky.findUsages.ui.SQLFindUsagesDialog;
 import com.deepsky.findUsages.workarounds.UsageViewManagerImpl;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.ResolveProvider;
@@ -38,6 +37,10 @@ import com.deepsky.lang.plsql.psi.ddl.CreateSequence;
 import com.deepsky.lang.plsql.psi.ddl.CreateView;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.ddl.VColumnDefinition;
+import com.deepsky.lang.plsql.psi.names.ColumnNameDDL;
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
+import com.deepsky.lang.plsql.psi.names.ParameterName;
+import com.deepsky.lang.plsql.psi.names.VariableName;
 import com.deepsky.lang.plsql.psi.ref.DDLTable;
 import com.deepsky.lang.plsql.psi.ref.DDLView;
 import com.deepsky.lang.plsql.psi.ref.TableRef;

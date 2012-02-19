@@ -25,6 +25,7 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.psi.names.ObjectName;
 import com.intellij.navigation.NavigationItem;
 import org.jetbrains.annotations.NotNull;
 

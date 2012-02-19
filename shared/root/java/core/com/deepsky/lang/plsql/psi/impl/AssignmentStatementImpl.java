@@ -25,11 +25,30 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.psi.AssignmentStatement;
+import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 public class AssignmentStatementImpl extends PlSqlElementBase implements AssignmentStatement {
     public AssignmentStatementImpl(ASTNode astNode) {
         super(astNode);
+    }
+
+    public PsiElement getLValue() {
+        ASTNode node = getNode().findChildByType(PlSqlTokenTypes.ASSIGNMENT_EQ);
+        node = PsiUtil.prevVisibleSibling(node);
+        return node!=null? node.getPsi(): null;
+    }
+
+    public PsiElement getRValue() {
+        ASTNode node = getNode().findChildByType(PlSqlTokenTypes.ASSIGNMENT_EQ);
+        node = PsiUtil.nextVisibleSibling(node);
+        return node!=null? node.getPsi(): null;
+    }
+
+    public PsiElement getEQ_Sign() {
+        return findChildByType(PlSqlTokenTypes.ASSIGNMENT_EQ);
     }
 }

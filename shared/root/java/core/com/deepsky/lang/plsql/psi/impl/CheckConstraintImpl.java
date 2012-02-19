@@ -26,6 +26,7 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.psi.CheckConstraint;
 import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
 

@@ -99,7 +99,7 @@ public abstract class RespMessageTable {
         createEntry(PLSqlTypesAdopted.ROLLBACK_STATEMENT, "Rollbacked");
 
         // more checks needed 
-        createEntry(PLSqlTypesAdopted.SQLPLUS_COMMAND, "");
+        createEntry(PLSqlTypesAdopted.SQLPLUS_ANONYM_PLSQL_BLOCK, "");
         createEntry(PLSqlTypesAdopted.PLSQL_BLOCK, "");
     }
 

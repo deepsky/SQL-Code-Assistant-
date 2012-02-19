@@ -35,9 +35,7 @@ import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.formatter.FormatterUtil;
 import com.intellij.psi.formatter.common.AbstractBlock;
-import com.intellij.psi.impl.source.tree.JavaElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.CollectionFactory;
 import org.jetbrains.annotations.NotNull;
@@ -109,7 +107,7 @@ public class PlSqlBlock extends AbstractBlock {
             ).getSpacing();
             return spacing != null ?
                     spacing :
-                    PlSqlSpacingProcessorBasic.getSpacing(((PlSqlBlock)child1), ((PlSqlBlock)child2), commonSettings);
+                    PlSqlSpacingProcessorBasic.getSpacing(((PlSqlBlock)child1), ((PlSqlBlock)child2), customSettings);
         }
         return null;
     }
@@ -161,36 +159,56 @@ public class PlSqlBlock extends AbstractBlock {
 
 
     private static Indent getChildIndent(final ASTNode parent, final int newChildIndex) {
-        final IElementType parentType = parent.getElementType();
-        if (parentType == PlSqlElementTypes.COLUMN_DEF) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.PK_SPEC) return Indent.getContinuationWithoutFirstIndent();
-        if (parentType == PlSqlElementTypes.TABLE_DEF) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.STATEMENT_LIST) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.IF_STATEMENT) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.ELSE_STATEMENT) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.SELECT_EXPRESSION) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.SELECT_EXPRESSION_UNION) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.WHERE_CONDITION) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.TABLE_REFERENCE_LIST_FROM) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.ORDER_CLAUSE) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.IN_CONDITION) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.SIMPLE_UPDATE_COMMAND) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.SUBQUERY) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.LOOP_STATEMENT) return Indent.getNormalIndent();
+        
+        final IElementType targetType = parent.getElementType();
+        if (targetType == PlSqlElementTypes.COLUMN_DEF) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.PK_SPEC) return Indent.getContinuationWithoutFirstIndent();
+        if (targetType == PlSqlElementTypes.TABLE_DEF) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.STATEMENT_LIST) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.IF_STATEMENT) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.ELSE_STATEMENT) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.SELECT_EXPRESSION) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.SELECT_EXPRESSION_UNION) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.WHERE_CONDITION) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.TABLE_REFERENCE_LIST_FROM) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.ORDER_CLAUSE) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.IN_CONDITION) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.SIMPLE_UPDATE_COMMAND) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.SUBQUERY) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.LOOP_STATEMENT) return Indent.getNormalIndent();
 
-        if (parentType == PlSqlElementTypes.FUNCTION_BODY) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.PROCEDURE_BODY) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.DECLARE_LIST) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.DATATYPE) return Indent.getNormalIndent();
-        if (parentType == PlSqlElementTypes.PLSQL_BLOCK) {
+        if (targetType == PlSqlElementTypes.FUNCTION_BODY){
+            ASTNode target = PsiUtil.getVisibleChildByPos(parent, newChildIndex);
+            return getChildIndent(target, -1);
+            // return Indent.getNoneIndent(); //Indent.getNormalIndent();
+        }
+        if (targetType == PlSqlElementTypes.PROCEDURE_BODY) {
+            ASTNode target = PsiUtil.getVisibleChildByPos(parent, newChildIndex);
+            return getChildIndent(target, -1);
+            // return Indent.getNoneIndent(); //Indent.getNormalIndent();
+        }
+        if (targetType == PlSqlElementTypes.FUNCTION_SPEC) {
+            ASTNode target = PsiUtil.getVisibleChildByPos(parent, newChildIndex);
+            return getChildIndent(target, -1);
+            // return Indent.getNoneIndent(); //Indent.getNormalIndent();
+        }
+        if (targetType == PlSqlElementTypes.PROCEDURE_SPEC) {
+            ASTNode target = PsiUtil.getVisibleChildByPos(parent, newChildIndex);
+            return getChildIndent(target, -1);
+            // return Indent.getNoneIndent(); //Indent.getNormalIndent();
+        }
+        if (targetType == PlSqlElementTypes.DECLARE_LIST) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.ARGUMENT_LIST) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.DATATYPE) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.PLSQL_BLOCK) {
             if (PlSqlElementTypes.PLSQL_BLOCK_PARENTS.contains(parent.getTreeParent().getElementType())) {
                 return Indent.getNoneIndent();
             } else {
-                return Indent.getNormalIndent(false);
+                return Indent.getNormalIndent(true);
             }
         }
 
-        if (parentType == PlSqlElementTypes.PACKAGE_BODY || parentType == PlSqlElementTypes.PACKAGE_SPEC){
+        if (targetType == PlSqlElementTypes.PACKAGE_BODY || targetType == PlSqlElementTypes.PACKAGE_SPEC){
             List<ASTNode> children = PsiUtil.visibleChildren(parent);
             if(children.size() > newChildIndex){
                 IElementType ie = children.get(newChildIndex).getElementType();

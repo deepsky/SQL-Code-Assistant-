@@ -23,14 +23,39 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.psi;
+package com.deepsky.lang.plsql.psi.impl.names;
 
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.Argument;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
+import com.deepsky.lang.plsql.psi.names.ParameterName;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
-public interface VariableName extends PlSqlElement {
-    @NotNull
-    String getVarName();
+public class ParameterNameImpl extends PlSqlElementBase implements ParameterName {
+    public ParameterNameImpl(ASTNode astNode) {
+        super(astNode);
+    }
 
-    @NotNull
-    VariableDecl getVariableDecl();
+    public String getParameterName() {
+        return getText();
+    }
+
+    public Argument getArgument() {
+        if (getParent() instanceof Argument) {
+            return (Argument) getParent();
+        }
+        throw new SyntaxTreeCorruptedException();
+    }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitParameterName(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
 }

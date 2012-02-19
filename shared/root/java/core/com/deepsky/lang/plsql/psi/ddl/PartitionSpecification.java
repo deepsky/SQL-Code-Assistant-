@@ -25,7 +25,7 @@
 
 package com.deepsky.lang.plsql.psi.ddl;
 
-import com.deepsky.lang.plsql.psi.ColumnNameRef;
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
 import org.jetbrains.annotations.NotNull;
 

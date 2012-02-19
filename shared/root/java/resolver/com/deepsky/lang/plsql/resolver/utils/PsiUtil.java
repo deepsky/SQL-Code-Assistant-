@@ -25,9 +25,13 @@
 
 package com.deepsky.lang.plsql.resolver.utils;
 
+import com.deepsky.lang.common.PlSqlFileType;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.resolver.ContextPathProvider;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.fileTypes.FileNameMatcher;
+import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
@@ -51,6 +55,48 @@ public class PsiUtil {
         return list;
     }
 
+
+    public static ASTNode getVisibleChildByPos(@NotNull ASTNode parent, int position) {
+        ASTNode next = parent.getFirstChildNode();
+        int index = 0;
+        while(next != null){
+            if (canBeCorrectBlock(next)) {
+                if(index++ == position){
+                    return next;
+                }
+            }
+            next = next.getTreeNext();
+        }
+        return null;
+    }
+
+    public static ASTNode prevVisibleSibling(@Nullable ASTNode node) {
+        if(node == null){
+            return null;
+        }
+        ASTNode next = node.getTreePrev();
+        while(next != null){
+            if (canBeCorrectBlock(next)) {
+                return next;
+            }
+            next = next.getTreePrev();
+        }
+        return null;
+    }
+
+    public static ASTNode nextVisibleSibling(ASTNode node) {
+        if(node == null){
+            return null;
+        }
+        ASTNode next = node.getTreeNext();
+        while(next != null){
+            if (canBeCorrectBlock(next)) {
+                return next;
+            }
+            next = next.getTreeNext();
+        }
+        return null;
+    }
 
     public static List<ASTNode> visibleChildren(ASTNode node) {
         ArrayList<ASTNode> list = new ArrayList<ASTNode>();
@@ -135,7 +181,20 @@ public class PsiUtil {
         }
     }
 
+
     public static interface SiblingVisitor {
         boolean visit(PsiElement e);
+    }
+
+    public static boolean isSqlFile(@Nullable VirtualFile file) {
+        if(file != null){
+            for (FileNameMatcher m : FileTypeManager.getInstance().getAssociations(PlSqlFileType.FILE_TYPE)) {
+                if (m.accept(file.getName())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
