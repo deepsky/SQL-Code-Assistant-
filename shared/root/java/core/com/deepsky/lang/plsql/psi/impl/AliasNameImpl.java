@@ -23,30 +23,41 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.formatter2;
+package com.deepsky.lang.plsql.psi.impl;
 
-import com.intellij.formatting.Spacing;
+import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.AliasName;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
-public interface SpacingConstants {
+public class AliasNameImpl extends PlSqlElementBase implements AliasName  {
 
-//    Spacing NO_SPACING_WITH_NEWLINE = Spacing.createSpacing(0, 0, 0, true, 1);
-    Spacing NO_SPACING_WITH_NEWLINE = Spacing.createSpacing(0, 0, 0, true, 0);
+    public AliasNameImpl(ASTNode astNode) {
+        super(astNode);
+    }
 
-    // No spaces, NO newline, NO blank lines
-    Spacing NO_SPACING = Spacing.createSpacing(0, 0, 0, false, 0);
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitAliasName(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
 
-    // One whitespace, NO newlines
-    Spacing ONE_SPACE_WITHOUT_NEWLINE = Spacing.createSpacing(1, 1, 0, false, 0);
+    public PsiElement getAliasIdent() {
+        ASTNode ident = getNode().findChildByType(PlSqlElementTypes.ALIAS_IDENT);
+        if(ident == null)
+            throw new SyntaxTreeCorruptedException();
+        return ident.getPsi();
+    }
 
-    // One whitespace, DON'T keep blank lines
-    Spacing ONE_SPACE_WITH_NEWLINE = Spacing.createSpacing(1, 1, 0, true, 0);
-
-    // One whitespace, keep blank lines
-    Spacing COMMON_SPACING = Spacing.createSpacing(1, 1, 0, true, 100);
-
-    Spacing COMMON_SPACING_WITH_NL = Spacing.createSpacing(1, 1, 1, true, 100);
-    Spacing IMPORT_BETWEEN_SPACING = Spacing.createSpacing(0, 0, 1, true, 100);
-    Spacing IMPORT_OTHER_SPACING = Spacing.createSpacing(0, 0, 2, true, 100);
-    Spacing LAZY_SPACING = Spacing.createSpacing(0, 239, 0, true, 100);
-
+    public PsiElement getKeywordAS() {
+        ASTNode ident = getNode().findChildByType(PlSqlTokenTypes.KEYWORD_AS);
+        return ident != null? ident.getPsi(): null;
+    }
 }

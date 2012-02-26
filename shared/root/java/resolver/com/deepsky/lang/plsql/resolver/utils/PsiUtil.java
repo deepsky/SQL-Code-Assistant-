@@ -98,9 +98,13 @@ public class PsiUtil {
         return null;
     }
 
-    public static List<ASTNode> visibleChildren(ASTNode node) {
+    public static List<ASTNode> visibleChildren(@NotNull ASTNode node) {
+        return visibleChildren(node, null);
+    }
+
+    public static List<ASTNode> visibleChildren(@NotNull ASTNode node, @Nullable TokenSet tokenSet) {
         ArrayList<ASTNode> list = new ArrayList<ASTNode>();
-        for (ASTNode astNode : node.getChildren(null)) {
+        for (ASTNode astNode : node.getChildren(tokenSet)) {
             if (canBeCorrectBlock(astNode)) {
                 list.add(astNode);
             }
@@ -180,7 +184,6 @@ public class PsiUtil {
             }
         }
     }
-
 
     public static interface SiblingVisitor {
         boolean visit(PsiElement e);

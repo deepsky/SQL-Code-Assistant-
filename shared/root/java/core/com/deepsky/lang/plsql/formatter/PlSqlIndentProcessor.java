@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.formatter2;
+package com.deepsky.lang.plsql.formatter;
 
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlTokenTypes;
@@ -94,28 +94,32 @@ public class PlSqlIndentProcessor {
         if (psiParent instanceof TableDefinition) {
             if (childType == PlSqlElementTypes.COLUMN_DEF
                     || PlSqlElementTypes.TABLE_LEVEL_CONSTRAINTS.contains(childType)) {
-                return Indent.getNormalIndent(true);
+                return Indent.getNormalIndent(false);
             } else if (childType == PlSqlElementTypes.STORAGE_SPEC) {
                 return Indent.getNoneIndent();
             } else if (childType == PlSqlTokenTypes.COMMA) {
-                return Indent.getNormalIndent(true);
+                return Indent.getNormalIndent(false);
             }
         }
 
         if (PlSqlElementTypes.COLUMN_LEVEL_CONSTRAINTS.contains(astParent.getElementType())) {
-            return Indent.getContinuationIndent(true);
-//            return Indent.getNormalIndent(false);
+//            return Indent.getContinuationIndent(true);
+            return Indent.getNormalIndent(false);
         }
 
         if (PlSqlElementTypes.TABLE_LEVEL_CONSTRAINTS.contains(parentType)) {
-            return Indent.getContinuationWithoutFirstIndent(true);
+//            return Indent.getContinuationWithoutFirstIndent(true);
+            return Indent.getNormalIndent(false);
         }
 
         if (parentType == PlSqlElementTypes.COLUMN_DEF) {
-            return Indent.getContinuationWithoutFirstIndent(true);
+//            return Indent.getContinuationWithoutFirstIndent(true);
+            return Indent.getNormalIndent(false);
         }
+
         if (parentType == PlSqlElementTypes.DATATYPE) {
-            return Indent.getContinuationWithoutFirstIndent(true);
+//            return Indent.getContinuationWithoutFirstIndent(true);
+            return Indent.getNormalIndent(false);
         }
 
         // STORAGE ( ... )
@@ -197,31 +201,25 @@ public class PlSqlIndentProcessor {
             return Indent.getNoneIndent();
         }
 
+        if(parentType == PlSqlElementTypes.IF_STATEMENT){
+            if(PlSqlElementTypes.CONDITION_EXPR_TYPES.contains(childType)){
+                return Indent.getIndent(Indent.Type.NORMAL, true, true);
+//                return Indent.getNormalIndent(true);
+            }
+        }
+
+        if(parentType == PlSqlElementTypes.LOOP_STATEMENT){
+            if(childType == PlSqlTokenTypes.KEYWORD_IN
+                    || childType == PlSqlElementTypes.CURSOR_LOOP_INDEX){
+                return Indent.getNormalIndent(false);
+            }
+        }
+
         if (psiParent instanceof InsertStatement) {
             if(child instanceof SelectStatement){
                 // SELECT_EXPRESSION, SELECT_EXPRESSION_UNION
                 return Indent.getNoneIndent();
             }
-        }
-
-        if (parentType == PlSqlElementTypes.SUBQUERY) {
-            final PsiElement granpa = psiParent.getParent();
-            if(granpa instanceof PlSqlFile){
-                return Indent.getNoneIndent();
-            } else if(granpa instanceof FromSubquery){
-                return Indent.getNormalIndent(false);
-            }
-            return Indent.getContinuationIndent();
-        }
-
-        // SELECT statement's children
-        if (psiParent instanceof SelectStatement) {
-            if (childType == PlSqlElementTypes.EXPR_COLUMN) {
-                return Indent.getNormalIndent(true);
-            } else if(childType == PlSqlTokenTypes.COMMA){
-                return Indent.getNormalIndent(true);
-            }
-            return Indent.getIndent(Indent.Type.NONE, true, false);
         }
 
         if (parentType == PlSqlElementTypes.STATEMENT_LIST) {
@@ -234,6 +232,36 @@ public class PlSqlIndentProcessor {
             if (PlSqlElementTypes.SUBQUERY_SELECTS.contains(childType)) {
                 return Indent.getNormalIndent(false);
             }
+            if (childType == PlSqlTokenTypes.COMMA) {
+                return Indent.getNormalIndent(false);
+            }
+        }
+
+        if (parentType == PlSqlElementTypes.SUBQUERY) {
+            final PsiElement granpa = psiParent.getParent();
+            if(granpa instanceof PlSqlFile){
+                return Indent.getNoneIndent();
+            } else if(granpa instanceof FromSubquery){
+               return Indent.getNormalIndent(false);
+//                return Indent.getIndent(Indent.Type.NORMAL, true, true);
+            }
+            return Indent.getContinuationIndent();
+        }
+
+        // SELECT statement's children
+        if (psiParent instanceof SelectStatement) {
+            if (childType == PlSqlElementTypes.EXPR_COLUMN) {
+                return Indent.getNormalIndent(true);
+                // Enforce Indent to Children!!!!
+//                return Indent.getIndent(Indent.Type.NORMAL, true, true);
+            } else if(childType == PlSqlTokenTypes.COMMA){
+                return Indent.getNormalIndent(true);
+            }
+            return Indent.getIndent(Indent.Type.NONE, true, false);
+        }
+
+        if(psiParent instanceof RelationCondition){
+            return normalWithoutFirstIndent(child);
         }
 
         if (psiParent instanceof GroupByClause) {
@@ -267,31 +295,29 @@ public class PlSqlIndentProcessor {
         }
 
         if (psiParent instanceof FromClause) {
-//            if (childType == PlSqlElementTypes.FROM_SUBQUERY) {
-//                return Indent.getNormalIndent(false);
-//            } else
             if (childType == PlSqlElementTypes.TABLE_ALIAS) {
                 return Indent.getNormalIndent(false);
             }
         }
 
-/*
-        if (childType == PlSqlElementTypes.SUBQUERY) {
-            if (parentType == PlSqlElementTypes.EXISTS_EXPR
-                    || parentType == PlSqlElementTypes.IN_CONDITION
-                    || parentType == PlSqlElementTypes.SUBQUERY_EXPR) {
-                return Indent.getNormalIndent(false);
-            }
-        }
-*/
-
         if (parentType == PlSqlElementTypes.WHERE_CONDITION) {
             if (childType == PlSqlTokenTypes.KEYWORD_WHERE) {
+                return Indent.getNoneIndent();
+            } else {
+                // Enforce Indent to Children!!!!
+                return Indent.getIndent(Indent.Type.NORMAL, true, true);
+            }
+        }
+/*
+        if(parentType == PlSqlElementTypes.LOGICAL_EXPR){
+            if(psiParent.getParent() instanceof LogicalExpression){
                 return Indent.getNoneIndent();
             } else {
                 return Indent.getNormalIndent(false);
             }
         }
+*/
+
 
         if (parentType == PlSqlElementTypes.SIMPLE_UPDATE_COMMAND
                 || parentType == PlSqlElementTypes.SUBQUERY_UPDATE_COMMAND) {
@@ -319,7 +345,7 @@ public class PlSqlIndentProcessor {
                     || parentType == PlSqlElementTypes.VARIABLE_DECLARATION
                     || parentType == PlSqlElementTypes.AUTONOMOUS_TRN_PRAGMA
                     || parentType == PlSqlElementTypes.TRUNCATE_TABLE
-                    || parentType == PlSqlElementTypes.STATEMENT_LIST
+//                    || parentType == PlSqlElementTypes.STATEMENT_LIST
                     || parentType == PlSqlElementTypes.TABLE_DEF
                 // todo -- lots of drop commands
                     ) {
@@ -335,5 +361,13 @@ public class PlSqlIndentProcessor {
         }
 
         return Indent.getNoneIndent();
+    }
+
+    private static Indent normalWithoutFirstIndent(ASTNode node){
+        if(PsiUtil.prevVisibleSibling(node) == null){
+            return Indent.getNoneIndent();
+        } else {
+            return Indent.getNormalIndent(false);
+        }
     }
 }

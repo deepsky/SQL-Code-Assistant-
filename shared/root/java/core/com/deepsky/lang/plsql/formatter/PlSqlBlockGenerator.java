@@ -23,13 +23,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.formatter2;
+package com.deepsky.lang.plsql.formatter;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.plsql.formatter2.settings.PlSqlCodeStyleSettings;
+import com.deepsky.lang.plsql.formatter.settings.PlSqlCodeStyleSettings;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.ddl.AlterTable;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
 import com.intellij.formatting.Alignment;
@@ -39,6 +40,7 @@ import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import com.intellij.psi.tree.TokenSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,11 +68,10 @@ public class PlSqlBlockGenerator {
 
     public List<Block> generateSubBlocks() {
         final PsiElement blockPsi = myNode.getPsi();
-        if (blockPsi instanceof TableDefinition) {
+        if (blockPsi instanceof TableDefinition || blockPsi instanceof AlterTable) {
             final ArrayList<Block> subBlocks = new ArrayList<Block>();
             List<ASTNode> children = PsiUtil.visibleChildren(myNode);
-            if (plSqlSettings.ALIGN_DATATYPE_IN_COLUMN_DEF)
-                calculateAlignments(children);
+            calculateColumnDefAlignments(children, plSqlSettings.ALIGNMENT_IN_COLUMN_DEF);
             for (ASTNode childNode : children) {
                 final Indent indent = PlSqlIndentProcessor.getChildIndent(myBlock, childNode);
                 Wrap wrap = PlSqlWrapProcessor.getChildWrap(myBlock, childNode, plSqlSettings);
@@ -82,6 +83,26 @@ public class PlSqlBlockGenerator {
             }
             return subBlocks;
         }
+
+
+
+        if (blockPsi instanceof SelectStatement) {
+            final ArrayList<Block> subBlocks = new ArrayList<Block>();
+            List<ASTNode> children = PsiUtil.visibleChildren(myNode);
+            if (plSqlSettings.ALIGN_ALIAS_NAME_IN_SELECT)
+                calculateAliasNameAlignments(children);
+            for (ASTNode childNode : children) {
+                final Indent indent = PlSqlIndentProcessor.getChildIndent(myBlock, childNode);
+                Wrap wrap = PlSqlWrapProcessor.getChildWrap(myBlock, childNode, plSqlSettings);
+                subBlocks.add(
+                        new PlSqlBlock(childNode, wrap, indent,
+                                myInnerAlignments.get(childNode.getPsi()),
+                                mySettings, plSqlSettings,
+                                myInnerAlignments));
+            }
+            return subBlocks;
+        }
+
 
 
         if (blockPsi instanceof DeclarationList) {
@@ -150,6 +171,29 @@ public class PlSqlBlockGenerator {
         return subBlocks;
     }
 
+    private void calculateAliasNameAlignments(List<ASTNode> children) {
+        try {
+            List<Alignment> currentGroup = null;
+            for (ASTNode child : children) {
+                PsiElement psi = child.getPsi();
+                if (psi instanceof SelectFieldExpr) {
+                    if (currentGroup == null) {
+                        currentGroup = Arrays.asList(Alignment.createAlignment(true), Alignment.createAlignment(true));
+                    }
+
+                    SelectFieldExpr column = (SelectFieldExpr) psi;
+                    PsiElement alias = column.getAliasName();
+                    if(alias != null){
+                        myInnerAlignments.put(column.getExpression(), currentGroup.get(0));
+                        myInnerAlignments.put(alias, currentGroup.get(1));
+                    }
+                }
+            }
+        } catch (SyntaxTreeCorruptedException e) {
+            // do nothing
+        }
+    }
+
 
     private void calculateAlignments(List<ASTNode> children) {
         try {
@@ -205,4 +249,35 @@ public class PlSqlBlockGenerator {
             // do nothing
         }
     }
+
+    private void calculateColumnDefAlignments(List<ASTNode> children, int type) {
+        List<Alignment> currentGroup = new ArrayList<Alignment>();
+        switch(type){
+            case 1: // Don't change
+                return;
+            case 3: // Type & NOT NULL
+                currentGroup.add(Alignment.createAlignment(true));
+            case 2: // Type
+                currentGroup.add(Alignment.createAlignment(true));
+                currentGroup.add(Alignment.createAlignment(true));
+                break;
+        }
+        try {
+            for (final ASTNode child : children) {
+                PsiElement psi = child.getPsi();
+                if (psi instanceof ColumnDefinition) {
+                    ColumnDefinition column = (ColumnDefinition) psi;
+                    myInnerAlignments.put(column.getPsiColumnName(), currentGroup.get(0));
+                    myInnerAlignments.put(column.getTypeSpec(), currentGroup.get(1));
+                    GenericConstraint constr = column.getNotNullConstraint();
+                    if(constr != null && currentGroup.size() == 3){
+                        myInnerAlignments.put(constr, currentGroup.get(2));
+                    }
+                }
+            }
+        } catch (SyntaxTreeCorruptedException e) {
+            // do nothing
+        }
+    }
+
 }

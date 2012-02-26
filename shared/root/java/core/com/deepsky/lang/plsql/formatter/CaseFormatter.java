@@ -23,11 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.formatter2;
+package com.deepsky.lang.plsql.formatter;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.plsql.formatter2.settings.PlSqlCodeStyleSettings;
+import com.deepsky.lang.plsql.formatter.settings.PlSqlCodeStyleSettings;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.names.*;
 import com.deepsky.lang.plsql.psi.ref.DDLTable;
@@ -46,25 +46,19 @@ import org.jetbrains.annotations.NotNull;
 
 public class CaseFormatter extends PlSqlElementVisitor {
 
-    //private CodeStyleSettings settings;
     private PlSqlCodeStyleSettings customSettings;
-    //private PsiFile file;
-    PsiDocumentManager psiDocumentManager;
-    final Document document;
-    TextRange rangeToReformat;
+    private PsiDocumentManager psiDocumentManager;
+    private final Document document;
+    private TextRange rangeToReformat;
 
     public CaseFormatter(
             @NotNull CodeStyleSettings settings, 
-            //@NotNull PsiFile file,
             @NotNull PsiDocumentManager psiDocumentManager,
             @NotNull Document document
             ) {
-        //this.settings = settings;
-        //this.file = file;
         this.customSettings = settings.getCustomSettings(PlSqlCodeStyleSettings.class);
-        this.psiDocumentManager = psiDocumentManager; //PsiDocumentManager.getInstance(file.getProject());
-        this.document = document; //psiDocumentManager.getDocument(file);
-        //this.rangeToReformat = file.getTextRange();
+        this.psiDocumentManager = psiDocumentManager;
+        this.document = document;
     }
 
     public PsiElement process(PsiElement source) {
@@ -112,6 +106,16 @@ public class CaseFormatter extends PlSqlElementVisitor {
         applyCaseFormattingFor(name);
     }
 
+    public void visitAliasName(AliasName aliasName) {
+        applyCaseFormattingFor(aliasName.getAliasIdent());
+        PsiElement as = aliasName.getKeywordAS();
+        if(as != null){
+            applyCaseFormattingFor(
+                    customSettings.KEYWORD_CASE,
+                    as.getNode());
+        }
+    }
+
     public void visitDDLTable(DDLTable table) {
         applyCaseFormattingFor(table);
     }
@@ -143,7 +147,6 @@ public class CaseFormatter extends PlSqlElementVisitor {
     public void visitTableRef(TableRef name) {
         applyCaseFormattingFor(name);
     }
-
 
     private void applyCaseFormattingFor(PsiElement name){
         if (rangeToReformat.contains(name.getTextRange())) {

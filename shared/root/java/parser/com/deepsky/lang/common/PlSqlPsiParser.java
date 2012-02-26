@@ -160,7 +160,7 @@ public class PlSqlPsiParser implements PsiParser {
         }
     }
 
-    private class PLSqlParser2 extends PLSqlParserAdoptedExt {
+    class PLSqlParser2 extends PLSqlParserAdoptedExt {
 
         final PsiBuilder builder;
 

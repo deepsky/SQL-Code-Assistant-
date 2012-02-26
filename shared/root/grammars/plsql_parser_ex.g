@@ -262,6 +262,8 @@ tokens {
     ADD_CONSTRAINT;
     ADD_PRIMARY_KEY;
 
+    ALTER_COLUMN_SPEC;
+
     IOT_TYPE; HEAP_ORGINIZED; EXTERNAL_TYPE;
 
     EXTERNAL_TABLE_SPEC;
@@ -388,10 +390,10 @@ start_rule_inner:
         | (create_trigger (SEMI!)? (DIVIDE!)?)
             {  __markRule(CREATE_TRIGGER);}
         | (sql_statement (SEMI!)?)
-        | ("alter") => (alter_command (SEMI!)?)
+        | ("alter") => (alter_command)
         | associate_statistics
         | comment
-        | (type_definition (SEMI!)?)
+        | type_definition
         | drop_command
         | truncate_command
         | sqlplus_command_internal
@@ -610,7 +612,7 @@ create_or_replace:
             {  __markRule(CREATE_VIEW);}
         | create_view_column_def
             {  __markRule(CREATE_VIEW_COLUMN_DEF);}
-        | (type_definition (SEMI!)?)
+        | type_definition
         | (create_table2 (SEMI!)?)
             {  __markRule(TABLE_DEF);}
 
@@ -1228,8 +1230,10 @@ alter_table:
 constraint_clause:
     ("add" (add_syntax_1 | (OPEN_PAREN! add_syntax_2 CLOSE_PAREN!) ) )
     | ("modify" (modify_constraint_clause
-                    | (OPEN_PAREN! column_modi_name (COMMA! column_modi_name)* CLOSE_PAREN!)
-                    | column_modi_name)
+//                    | (OPEN_PAREN! column_modi_name (COMMA! column_modi_name)* CLOSE_PAREN!)
+//                    | column_modi_name)
+                    | (OPEN_PAREN! column_def (COMMA! column_def)* CLOSE_PAREN!)
+                    | column_def)
        )
     | ("rename"
             (   ("constraint" identifier2 "to" identifier2)
@@ -1246,21 +1250,27 @@ modify_constraint_clause:
     ;
 
 add_syntax_1:
-    column_add_name
+//    column_add_name
+    column_def
     | inline_out_of_line_constraint
     ;
 
 add_syntax_2:
-    (column_add_name) => (column_add_name (COMMA! column_add_name)*)
+    (column_def) => (column_def (COMMA! column_def)*)
+//    (column_add_name) => (column_add_name (COMMA! column_add_name)*)
     | inline_out_of_line_constraint
     ;
 
 column_add_name:
-    column_name_ddl (datatype)? (column_qualifier)*
+    column_def
+//    column_name_ddl (datatype)? (column_qualifier)*
+//    {  __markRule(ALTER_COLUMN_SPEC);}
     ;
 
 column_modi_name:
-    column_name_ref (datatype)? (column_qualifier)*
+    column_def
+//    column_name_ref (datatype)? (column_qualifier)*
+//    {  __markRule(ALTER_COLUMN_SPEC);}
     ;
 
 //constraint_OLD:
@@ -1377,7 +1387,7 @@ type_definition:
                 {  __markRule(VARRAY_COLLECTION); }
           )
       )
-    )
+    ) (SEMI)?
     ;
 
 
@@ -1448,7 +1458,7 @@ package_init_section:
 package_obj_spec:
     subtype_declaration
     | cursor_spec
-    | (type_definition SEMI!)
+    | type_definition
     | procedure_body
     | function_body
     | pragmas
@@ -2042,7 +2052,7 @@ declare_list:
 
 
 declare_spec:
-        (type_definition SEMI!)
+        type_definition
         | variable_declaration
 //        | cursor_declaration
         | cursor_spec
@@ -2884,13 +2894,13 @@ plsql_exp_list_using:
 
 alter_command:
     "alter" (
-        alter_system_session
+        alter_system_session (SEMI)?
             { __markRule(ALTER_GENERIC);}
-        | alter_table
+        | alter_table (SEMI)?
             {  __markRule(ALTER_TABLE);}
-        | alter_trigger
+        | alter_trigger (SEMI)?
             {  __markRule(ALTER_TRIGGER);}
-        | alter_tablespace
+        | alter_tablespace (SEMI)?
             {  __markRule(ALTER_TABLESPACE);}
     )
     ;
@@ -2977,7 +2987,6 @@ alias :
     ;
 
 alias_ident:
-//    identifier2
     (identifier2 | "timestamp")
     { __markRule(ALIAS_IDENT);}
     ;

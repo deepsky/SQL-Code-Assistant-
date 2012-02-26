@@ -276,6 +276,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType RECORD_TYPE_DECL = new PlSqlElementType("RECORD_TYPE_DECL", PLSqlTokenTypes.RECORD_TYPE_DECL);
 	PlSqlElementType GROUP_CLAUSE = new PlSqlElementType("GROUP_CLAUSE", PLSqlTokenTypes.GROUP_CLAUSE);
 	PlSqlElementType EXISTS_EXPR = new PlSqlElementType("EXISTS_EXPR", PLSqlTokenTypes.EXISTS_EXPR);
+	PlSqlElementType ALTER_COLUMN_SPEC = new PlSqlElementType("ALTER_COLUMN_SPEC", PLSqlTokenTypes.ALTER_COLUMN_SPEC);
 	PlSqlElementType AUTONOMOUS_TRN_PRAGMA = new PlSqlElementType("AUTONOMOUS_TRN_PRAGMA", PLSqlTokenTypes.AUTONOMOUS_TRN_PRAGMA);
 	PlSqlElementType COND_COMP_SEQ2 = new PlSqlElementType("COND_COMP_SEQ2", PLSqlTokenTypes.COND_COMP_SEQ2);
 	PlSqlElementType DEFAULT = new PlSqlElementType("DEFAULT", PLSqlTokenTypes.DEFAULT);

@@ -23,12 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.formatter2.settings;
+package com.deepsky.lang.plsql.formatter.settings;
 
 import com.deepsky.lang.common.PlSqlFileType;
 import com.intellij.application.options.IndentOptionsEditor;
 import com.intellij.application.options.SmartIndentOptionsEditor;
-import com.intellij.application.options.codeStyle.WrappingAndBracesPanel;
 import com.intellij.lang.Language;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
@@ -123,13 +122,25 @@ public class PlSqlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
         }
         if (settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS) {
 //            consumer.showAllStandardOptions();
-            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_COLUMN_DEF", "In column definition", "Alignment");
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class,
+                    "ALIGNMENT_IN_COLUMN_DEF", "In column definition", "Alignment",
+                    new String[]{"Don't change", "Types", "Types & NULL"}, new int[]{1, 2, 3});
+
+//            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_COLUMN_DEF", "In column definition", "Alignment");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_DECL", "In variable declaration", "Alignment");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_ARGUMENT_LIST", "In argument list", "Alignment");
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_ALIAS_NAME_IN_SELECT", "Alias in column expressions", "Alignment");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_ASSIGNMENTS", "Assignment statements", "Alignment");
-            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "WRAP_OPEN_PAREN_IN_CRATE_TABLE", "Wrap '(' in CREATE TABLE", "Wrapping");
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "WRAP_OPEN_PAREN_IN_CREATE_TABLE", "Wrap '(' in CREATE TABLE", "Wrapping");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "WRAP_SEQUENCE_OPTIONS", "Wrap options in CREATE SEQUENCE", "Wrapping");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "WRAP_USER_OPTIONS", "Wrap options in CREATE USER", "Wrapping");
+
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class,
+                    "COMMA_AFTER_SELECT_EXPR", "In relation to column expression in SELECT", "Comma placement",
+                    new String[]{"Don't change", "After", "Before"}, new int[]{1, 2, 3});
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class,
+                    "COMMA_AFTER_COLUMN_DEFINITION", "In relation to column definition in CREATE TABLE", "Comma placement",
+                    new String[]{"Don't change", "After", "Before"}, new int[]{1, 2, 3});
 
             consumer.showCustomOption(PlSqlCodeStyleSettings.class,
                     "NAMES_CASE", "Case of Names", "Others",
@@ -204,8 +215,8 @@ public class PlSqlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
     private final static String LANGUAGE_SPECIFIC_SAMPLE =
                     "create table SALES(\n" +
                     "    Id number primary key,\n" +
-                    "    Text varchar2(255),\n" +
-                    "    Email_address varchar2(64)," +
+                    "    Text varchar2(255) not null,\n" +
+                    "    Email_address varchar2(64) not null," +
                     "    CONSTRAINT \"SALES_EMAIL\" UNIQUE (\"EMAIL_ADDRESS\")\n" +
                     ");" +
                     "\n" +
@@ -231,7 +242,17 @@ public class PlSqlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
                             " MINVALUE 1\n" +
                             "MAXVALUE 9999999999999999999999999999  MINVALUE 1\n" +
                             "CYCLE CACHE 25\n" +
-                            "NOORDER;";
+                            "NOORDER;\n" +
+                            "\n" +
+                            "SELECT\n" +
+                            "p1.min_tspan AS TSPAN\n" +
+                            "\t,\n" +
+                            "        msk.id AS MASK_ID\n" +
+                            "        ,         msk.mask_name AS MASK_NAME,\n" +
+                            "        cr.column_name AS COLUMN_NAME,\n" +
+                            "        cr.column_id AS COLUMN_ID\n" +
+                            "    FROM\n" +
+                            "    meta_data cr, mask_options msk, column p1;";
 
 
     private final static String BLANK_LINE_SAMPLE =

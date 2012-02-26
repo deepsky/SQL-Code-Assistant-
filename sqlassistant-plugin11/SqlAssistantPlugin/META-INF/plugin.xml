@@ -211,10 +211,10 @@
         <enterHandlerDelegate implementation="com.deepsky.lang.plsql.formatter2.BeginEndEnterHandler"/>
 -->
 
-        <lang.formatter language="PlSql" implementationClass="com.deepsky.lang.plsql.formatter2.PlSqlFormattingModelBuilder"/>
-        <postFormatProcessor implementation="com.deepsky.lang.plsql.formatter2.PlSqlPostFormatProcessor"/>
-        <codeStyleSettingsProvider implementation="com.deepsky.lang.plsql.formatter2.settings.PlSqlCodeStyleSettingsProvider"/>
-        <langCodeStyleSettingsProvider implementation="com.deepsky.lang.plsql.formatter2.settings.PlSqlLanguageCodeStyleSettingsProvider"/>
+        <lang.formatter language="PlSql" implementationClass="com.deepsky.lang.plsql.formatter.PlSqlFormattingModelBuilder"/>
+        <postFormatProcessor implementation="com.deepsky.lang.plsql.formatter.PlSqlPostFormatProcessor"/>
+        <codeStyleSettingsProvider implementation="com.deepsky.lang.plsql.formatter.settings.PlSqlCodeStyleSettingsProvider"/>
+        <langCodeStyleSettingsProvider implementation="com.deepsky.lang.plsql.formatter.settings.PlSqlLanguageCodeStyleSettingsProvider"/>
 
         <definitionsSearch implementation="com.deepsky.navigation.ImplementationsSearcher"/>
         <targetElementEvaluator language="PlSql" implementationClass="com.deepsky.navigation.PlSqlTargetElementEvaluator"/>

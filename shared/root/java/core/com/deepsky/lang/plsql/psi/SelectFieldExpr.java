@@ -25,7 +25,12 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import org.jetbrains.annotations.Nullable;
+
 public interface SelectFieldExpr extends SelectFieldCommon {
     String getAlias();
+
+    @Nullable
+    AliasName getAliasName();
     Expression getExpression();
 }

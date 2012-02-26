@@ -28,10 +28,7 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.plsql.psi.ColumnDefinition;
-import com.deepsky.lang.plsql.psi.ColumnFKSpec;
-import com.deepsky.lang.plsql.psi.ColumnPKSpec;
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.struct.Type;
@@ -137,6 +134,14 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
             return (TableDefinition) parent.getPsi();
         }
         throw new SyntaxTreeCorruptedException();
+    }
+
+    public ColumnNotNullConstraint getNotNullConstraint() {
+        ASTNode notNull = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_NOT_NULL_CONSTRAINT);
+        if (notNull != null) {
+            return (ColumnNotNullConstraint) notNull.getPsi();
+        }
+        return null;
     }
 
 

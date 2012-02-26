@@ -4,7 +4,7 @@ import com.intellij.psi.tree.IElementType;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 
 public class ANTLRType2AdoptedType {
-	static public IElementType[] type2etype = new IElementType[385];
+	static public IElementType[] type2etype = new IElementType[386];
 	static {
 		type2etype[PLSqlTokenTypes.DROP_VIEW] = PLSqlTypesAdopted.DROP_VIEW;
 		type2etype[PLSqlTokenTypes.CREATE_VIEW_COLUMN_DEF] = PLSqlTypesAdopted.CREATE_VIEW_COLUMN_DEF;
@@ -276,6 +276,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.RECORD_TYPE_DECL] = PLSqlTypesAdopted.RECORD_TYPE_DECL;
 		type2etype[PLSqlTokenTypes.GROUP_CLAUSE] = PLSqlTypesAdopted.GROUP_CLAUSE;
 		type2etype[PLSqlTokenTypes.EXISTS_EXPR] = PLSqlTypesAdopted.EXISTS_EXPR;
+		type2etype[PLSqlTokenTypes.ALTER_COLUMN_SPEC] = PLSqlTypesAdopted.ALTER_COLUMN_SPEC;
 		type2etype[PLSqlTokenTypes.AUTONOMOUS_TRN_PRAGMA] = PLSqlTypesAdopted.AUTONOMOUS_TRN_PRAGMA;
 		type2etype[PLSqlTokenTypes.COND_COMP_SEQ2] = PLSqlTypesAdopted.COND_COMP_SEQ2;
 		type2etype[PLSqlTokenTypes.DEFAULT] = PLSqlTypesAdopted.DEFAULT;

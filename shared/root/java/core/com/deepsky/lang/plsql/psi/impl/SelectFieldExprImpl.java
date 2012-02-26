@@ -27,6 +27,7 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.psi.AliasName;
 import com.deepsky.lang.plsql.psi.Expression;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.SelectFieldExpr;
@@ -49,6 +50,12 @@ public class SelectFieldExprImpl extends PlSqlElementBase implements SelectField
         } else {
             return null;
         }
+    }
+
+    @Nullable
+    public AliasName getAliasName() {
+        ASTNode alias = getNode().findChildByType(PlSqlElementTypes.ALIAS_NAME);
+        return (alias != null)? (AliasName) alias.getPsi(): null;
     }
 
     public Expression getExpression() {

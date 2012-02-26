@@ -262,6 +262,8 @@ tokens {
     ADD_CONSTRAINT;
     ADD_PRIMARY_KEY;
 
+    ALTER_COLUMN_SPEC;
+
     IOT_TYPE; HEAP_ORGINIZED; EXTERNAL_TYPE;
 
     EXTERNAL_TABLE_SPEC;
@@ -390,10 +392,10 @@ start_rule_inner:
         | (create_trigger (SEMI!)? (DIVIDE!)?)
             { #start_rule_inner = #([CREATE_TRIGGER, "CREATE_TRIGGER" ], #start_rule_inner);}
         | (sql_statement (SEMI!)?)
-        | ("alter") => (alter_command (SEMI!)?)
+        | ("alter") => (alter_command)
         | associate_statistics
         | comment
-        | (type_definition (SEMI!)?)
+        | type_definition
         | drop_command
         | truncate_command
         | sqlplus_command_internal
@@ -612,7 +614,7 @@ create_or_replace:
             { #create_or_replace = #([CREATE_VIEW, "CREATE_VIEW" ], #create_or_replace);}
         | create_view_column_def
             { #create_or_replace = #([CREATE_VIEW_COLUMN_DEF, "CREATE_VIEW_COLUMN_DEF" ], #create_or_replace);}
-        | (type_definition (SEMI!)?)
+        | type_definition
         | (create_table2 (SEMI!)?)
             { #create_or_replace = #([TABLE_DEF, "TABLE_DEF" ], #create_or_replace);}
 
@@ -1230,8 +1232,10 @@ alter_table:
 constraint_clause:
     ("add" (add_syntax_1 | (OPEN_PAREN! add_syntax_2 CLOSE_PAREN!) ) )
     | ("modify" (modify_constraint_clause
-                    | (OPEN_PAREN! column_modi_name (COMMA! column_modi_name)* CLOSE_PAREN!)
-                    | column_modi_name)
+//                    | (OPEN_PAREN! column_modi_name (COMMA! column_modi_name)* CLOSE_PAREN!)
+//                    | column_modi_name)
+                    | (OPEN_PAREN! column_def (COMMA! column_def)* CLOSE_PAREN!)
+                    | column_def)
        )
     | ("rename"
             (   ("constraint" identifier2 "to" identifier2)
@@ -1248,21 +1252,27 @@ modify_constraint_clause:
     ;
 
 add_syntax_1:
-    column_add_name
+//    column_add_name
+    column_def
     | inline_out_of_line_constraint
     ;
 
 add_syntax_2:
-    (column_add_name) => (column_add_name (COMMA! column_add_name)*)
+    (column_def) => (column_def (COMMA! column_def)*)
+//    (column_add_name) => (column_add_name (COMMA! column_add_name)*)
     | inline_out_of_line_constraint
     ;
 
 column_add_name:
-    column_name_ddl (datatype)? (column_qualifier)*
+    column_def
+//    column_name_ddl (datatype)? (column_qualifier)*
+//    { #column_add_name = #([ALTER_COLUMN_SPEC, "ALTER_COLUMN_SPEC" ], #column_add_name);}
     ;
 
 column_modi_name:
-    column_name_ref (datatype)? (column_qualifier)*
+    column_def
+//    column_name_ref (datatype)? (column_qualifier)*
+//    { #column_modi_name = #([ALTER_COLUMN_SPEC, "ALTER_COLUMN_SPEC" ], #column_modi_name);}
     ;
 
 //constraint_OLD:
@@ -1379,7 +1389,7 @@ type_definition:
                 { #type_definition = #([VARRAY_COLLECTION, "VARRAY_COLLECTION" ], #type_definition); }
           )
       )
-    )
+    ) (SEMI)?
     ;
 
 
@@ -1450,7 +1460,7 @@ package_init_section:
 package_obj_spec:
     subtype_declaration
     | cursor_spec
-    | (type_definition SEMI!)
+    | type_definition
     | procedure_body
     | function_body
     | pragmas
@@ -2044,7 +2054,7 @@ declare_list:
 
 
 declare_spec:
-        (type_definition SEMI!)
+        type_definition
         | variable_declaration
 //        | cursor_declaration
         | cursor_spec
@@ -2886,13 +2896,13 @@ plsql_exp_list_using:
 
 alter_command:
     "alter" (
-        alter_system_session
+        alter_system_session (SEMI)?
             {#alter_command = #([ALTER_GENERIC, "ALTER_GENERIC" ], #alter_command);}
-        | alter_table
+        | alter_table (SEMI)?
             { #alter_table = #([ALTER_TABLE, "ALTER_TABLE" ], #alter_table);}
-        | alter_trigger
+        | alter_trigger (SEMI)?
             { #alter_command = #([ALTER_TRIGGER, "ALTER_TRIGGER" ], #alter_command);}
-        | alter_tablespace
+        | alter_tablespace (SEMI)?
             { #alter_command = #([ALTER_TABLESPACE, "ALTER_TABLESPACE" ], #alter_command);}
     )
     ;
@@ -2979,7 +2989,6 @@ alias :
     ;
 
 alias_ident:
-//    identifier2
     (identifier2 | "timestamp")
     {#alias_ident = #([ALIAS_IDENT,"ALIAS_IDENT" ], #alias_ident);}
     ;

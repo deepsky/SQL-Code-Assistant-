@@ -50,4 +50,6 @@ public interface ColumnDefinition extends PlSqlElement {
 
     TableDefinition getTableDefinition();
 
+    ColumnNotNullConstraint getNotNullConstraint();
+
 }

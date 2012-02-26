@@ -28,8 +28,10 @@ package com.deepsky.lang.plsql.psi.impl;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.psi.Expression;
 import com.deepsky.lang.plsql.psi.ParenthesizedExpr;
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class ParenthesizedExprImpl extends PlSqlElementBase implements ParenthesizedExpr {
@@ -49,4 +51,13 @@ public class ParenthesizedExprImpl extends PlSqlElementBase implements Parenthes
         ASTNode node = getNode().findChildByType(PlSqlElementTypes.EXPR_TYPES);
         return (Expression) node.getPsi();
     }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitParenthesizedExpr(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
 }

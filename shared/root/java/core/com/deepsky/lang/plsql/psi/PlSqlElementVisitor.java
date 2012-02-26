@@ -30,9 +30,7 @@ import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ctrl.CommitStatement;
 import com.deepsky.lang.plsql.psi.ctrl.RollbackStatement;
 import com.deepsky.lang.plsql.psi.ddl.*;
-import com.deepsky.lang.plsql.psi.impl.FromSubqueryImpl;
-import com.deepsky.lang.plsql.psi.impl.LogicalExpressionImpl;
-import com.deepsky.lang.plsql.psi.impl.SqlPlusPromptRem;
+import com.deepsky.lang.plsql.psi.impl.*;
 import com.deepsky.lang.plsql.psi.internal.CreateViewColumnDefInternal;
 import com.deepsky.lang.plsql.psi.names.*;
 import com.deepsky.lang.plsql.psi.ref.*;
@@ -524,5 +522,12 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
 
     public void visitLogicalExpression(LogicalExpression expression) {
         visitElement(expression);
+    }
+
+    public void visitParenthesizedExpr(ParenthesizedExpr expr) {
+        visitElement(expr);
+    }
+
+    public void visitAliasName(AliasName aliasName) {
     }
 }

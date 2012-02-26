@@ -230,6 +230,8 @@ public class PlSqlParserDefinition implements ParserDefinition {
                 return new CursorDeclImpl(node);
             case PLSqlTokenTypes.TABLE_ALIAS:
                 return new TableAliasImpl(node);
+            case PLSqlTokenTypes.ALIAS_NAME:
+                return new AliasNameImpl(node);
             case PLSqlTokenTypes.TABLE_FUNCTION:
                 return new TableFunctionImpl(node);
             case PLSqlTokenTypes.FUNCTION_BODY:

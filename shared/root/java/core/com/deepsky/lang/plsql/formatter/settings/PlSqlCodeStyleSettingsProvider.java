@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.formatter2.settings;
+package com.deepsky.lang.plsql.formatter.settings;
 
 import com.deepsky.lang.common.PlSqlLanguage;
 import com.intellij.application.options.CodeStyleAbstractConfigurable;

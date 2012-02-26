@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.formatter2.settings;
+package com.deepsky.lang.plsql.formatter.settings;
 
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
@@ -48,15 +48,20 @@ public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
      */
     public boolean USE_FLYING_GEESE_BRACES = false;
 
+    // TODO -- implement me
+    public int ALIGNMENT_IN_COLUMN_DEF = 2;
+
     public boolean ALIGN_DATATYPE_IN_COLUMN_DEF = true;
     public boolean ALIGN_DATATYPE_IN_DECL = true;
     public boolean ALIGN_DATATYPE_IN_ARGUMENT_LIST = true;
     public boolean SPACE_BEFORE_OPEN_PAREN_IN_DATATYPE = false;
     public boolean SPACE_BEFORE_PARAMETERS = false;
-    public boolean WRAP_OPEN_PAREN_IN_CRATE_TABLE = false;
+    public boolean WRAP_OPEN_PAREN_IN_CREATE_TABLE = false;
     public boolean WRAP_SEQUENCE_OPTIONS = true;
     public boolean WRAP_USER_OPTIONS = true;
     public boolean ALIGN_ASSIGNMENTS = false;
+    // todo -- put into setting dialog
+    public boolean ALIGN_ALIAS_NAME_IN_SELECT = true;
 
     public int MIN_LINES_BETWEEN_FILE_LEVEL_STMT = 1;
     public int MIN_LINES_BETWEEN_BLOCK_LEVEL_STMT = 1;
@@ -76,6 +81,9 @@ public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
     public int NAMES_CASE = 1;
     public int KEYWORD_CASE = 1;
 
+    // 1 - "Don't change", 2 - "After", 3 - "Before"
+    public int COMMA_AFTER_SELECT_EXPR = 1;
+    public int COMMA_AFTER_COLUMN_DEFINITION = 1;
 
     public PlSqlCodeStyleSettings(CodeStyleSettings container) {
         super("PlSqlCodeStyleSettings", container);
