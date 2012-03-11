@@ -29,12 +29,14 @@ import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.names.RecordItemName;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.psi.utils.ASTNodeIterator;
 import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,8 +51,16 @@ public class RecordTypeItemImpl extends PlSqlElementBase implements RecordTypeIt
         if (name != null) {
             return name.getText();
         } else {
-            // todo
-            return "";
+            throw new SyntaxTreeCorruptedException();
+        }
+    }
+
+    public RecordItemName getPsiRecordItemName() {
+        ASTNode name = getNode().findChildByType(PLSqlTypesAdopted.RECORD_ITEM_NAME);
+        if (name != null) {
+            return (RecordItemName) name.getPsi();
+        } else {
+            throw new SyntaxTreeCorruptedException();
         }
     }
 

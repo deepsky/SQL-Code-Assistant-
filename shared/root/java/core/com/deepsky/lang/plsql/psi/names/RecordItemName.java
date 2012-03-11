@@ -23,9 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.psi;
+package com.deepsky.lang.plsql.psi.names;
+
+import com.deepsky.lang.plsql.psi.PlSqlElement;
 
 public interface RecordItemName extends PlSqlElement {
-
-    String getRecordItemName();
 }

@@ -6,8 +6,8 @@ import com.deepsky.generated.plsql.PLSqlTokenTypes;
 import com.deepsky.integration.PlSqlElementType;
 
 public interface PLSqlTypesAdopted {
-	PlSqlElementType DROP_VIEW = new PlSqlElementType("DROP_VIEW", PLSqlTokenTypes.DROP_VIEW);
 	PlSqlElementType CREATE_VIEW_COLUMN_DEF = new PlSqlElementType("CREATE_VIEW_COLUMN_DEF", PLSqlTokenTypes.CREATE_VIEW_COLUMN_DEF);
+	PlSqlElementType DROP_VIEW = new PlSqlElementType("DROP_VIEW", PLSqlTokenTypes.DROP_VIEW);
 	PlSqlElementType PROCEDURE_SPEC = new PlSqlElementType("PROCEDURE_SPEC", PLSqlTokenTypes.PROCEDURE_SPEC);
 	PlSqlElementType MERGE_COMMAND = new PlSqlElementType("MERGE_COMMAND", PLSqlTokenTypes.MERGE_COMMAND);
 	PlSqlElementType DML_TRIGGER_CLAUSE = new PlSqlElementType("DML_TRIGGER_CLAUSE", PLSqlTokenTypes.DML_TRIGGER_CLAUSE);
@@ -62,10 +62,10 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType EXPR_COLUMN = new PlSqlElementType("EXPR_COLUMN", PLSqlTokenTypes.EXPR_COLUMN);
 	PlSqlElementType TRIGGER_TARGET = new PlSqlElementType("TRIGGER_TARGET", PLSqlTokenTypes.TRIGGER_TARGET);
 	PlSqlElementType RANK_FUNCTION = new PlSqlElementType("RANK_FUNCTION", PLSqlTokenTypes.RANK_FUNCTION);
-	PlSqlElementType REF_CURSOR = new PlSqlElementType("REF_CURSOR", PLSqlTokenTypes.REF_CURSOR);
 	PlSqlElementType DROP_FUNCTION = new PlSqlElementType("DROP_FUNCTION", PLSqlTokenTypes.DROP_FUNCTION);
-	PlSqlElementType IF_STATEMENT = new PlSqlElementType("IF_STATEMENT", PLSqlTokenTypes.IF_STATEMENT);
+	PlSqlElementType REF_CURSOR = new PlSqlElementType("REF_CURSOR", PLSqlTokenTypes.REF_CURSOR);
 	PlSqlElementType LEAD_FUNCTION = new PlSqlElementType("LEAD_FUNCTION", PLSqlTokenTypes.LEAD_FUNCTION);
+	PlSqlElementType IF_STATEMENT = new PlSqlElementType("IF_STATEMENT", PLSqlTokenTypes.IF_STATEMENT);
 	PlSqlElementType TABLE_FUNCTION = new PlSqlElementType("TABLE_FUNCTION", PLSqlTokenTypes.TABLE_FUNCTION);
 	PlSqlElementType PARENTHESIZED_EXPR = new PlSqlElementType("PARENTHESIZED_EXPR", PLSqlTokenTypes.PARENTHESIZED_EXPR);
 	PlSqlElementType ERROR_TOKEN_A = new PlSqlElementType("ERROR_TOKEN_A", PLSqlTokenTypes.ERROR_TOKEN_A);
@@ -80,8 +80,8 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType COLUMN_NOT_NULL_CONSTRAINT = new PlSqlElementType("COLUMN_NOT_NULL_CONSTRAINT", PLSqlTokenTypes.COLUMN_NOT_NULL_CONSTRAINT);
 	PlSqlElementType TIMEZONE_SPEC = new PlSqlElementType("TIMEZONE_SPEC", PLSqlTokenTypes.TIMEZONE_SPEC);
 	PlSqlElementType SQLPLUS_COLUMN = new PlSqlElementType("SQLPLUS_COLUMN", PLSqlTokenTypes.SQLPLUS_COLUMN);
-	PlSqlElementType SQLPLUS_ANONYM_PLSQL_BLOCK = new PlSqlElementType("SQLPLUS_ANONYM_PLSQL_BLOCK", PLSqlTokenTypes.SQLPLUS_ANONYM_PLSQL_BLOCK);
 	PlSqlElementType RELATION_CONDITION = new PlSqlElementType("RELATION_CONDITION", PLSqlTokenTypes.RELATION_CONDITION);
+	PlSqlElementType SQLPLUS_ANONYM_PLSQL_BLOCK = new PlSqlElementType("SQLPLUS_ANONYM_PLSQL_BLOCK", PLSqlTokenTypes.SQLPLUS_ANONYM_PLSQL_BLOCK);
 	PlSqlElementType SELECT_EXPRESSION_UNION = new PlSqlElementType("SELECT_EXPRESSION_UNION", PLSqlTokenTypes.SELECT_EXPRESSION_UNION);
 	PlSqlElementType MONITORING_CLAUSE = new PlSqlElementType("MONITORING_CLAUSE", PLSqlTokenTypes.MONITORING_CLAUSE);
 	PlSqlElementType DATATYPE = new PlSqlElementType("DATATYPE", PLSqlTokenTypes.DATATYPE);
@@ -109,8 +109,8 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType BIND_VAR = new PlSqlElementType("BIND_VAR", PLSqlTokenTypes.BIND_VAR);
 	PlSqlElementType SUBQUERY_UPDATE_COMMAND = new PlSqlElementType("SUBQUERY_UPDATE_COMMAND", PLSqlTokenTypes.SUBQUERY_UPDATE_COMMAND);
 	PlSqlElementType INSERT_COMMAND = new PlSqlElementType("INSERT_COMMAND", PLSqlTokenTypes.INSERT_COMMAND);
-	PlSqlElementType SQLPLUS_EXEC = new PlSqlElementType("SQLPLUS_EXEC", PLSqlTokenTypes.SQLPLUS_EXEC);
 	PlSqlElementType LOGICAL_EXPR = new PlSqlElementType("LOGICAL_EXPR", PLSqlTokenTypes.LOGICAL_EXPR);
+	PlSqlElementType SQLPLUS_EXEC = new PlSqlElementType("SQLPLUS_EXEC", PLSqlTokenTypes.SQLPLUS_EXEC);
 	PlSqlElementType SUBQUERY = new PlSqlElementType("SUBQUERY", PLSqlTokenTypes.SUBQUERY);
 	PlSqlElementType ALIAS_NAME = new PlSqlElementType("ALIAS_NAME", PLSqlTokenTypes.ALIAS_NAME);
 	PlSqlElementType CREATE_SYNONYM = new PlSqlElementType("CREATE_SYNONYM", PLSqlTokenTypes.CREATE_SYNONYM);
@@ -141,16 +141,16 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType INDEX_NAME = new PlSqlElementType("INDEX_NAME", PLSqlTokenTypes.INDEX_NAME);
 	PlSqlElementType SQLPLUS_SPOOL = new PlSqlElementType("SQLPLUS_SPOOL", PLSqlTokenTypes.SQLPLUS_SPOOL);
 	PlSqlElementType EXTERNAL_TABLE_SPEC = new PlSqlElementType("EXTERNAL_TABLE_SPEC", PLSqlTokenTypes.EXTERNAL_TABLE_SPEC);
-	PlSqlElementType OPEN_STATEMENT = new PlSqlElementType("OPEN_STATEMENT", PLSqlTokenTypes.OPEN_STATEMENT);
 	PlSqlElementType CAST_FUNC = new PlSqlElementType("CAST_FUNC", PLSqlTokenTypes.CAST_FUNC);
+	PlSqlElementType OPEN_STATEMENT = new PlSqlElementType("OPEN_STATEMENT", PLSqlTokenTypes.OPEN_STATEMENT);
 	PlSqlElementType BOOLEAN_LITERAL = new PlSqlElementType("BOOLEAN_LITERAL", PLSqlTokenTypes.BOOLEAN_LITERAL);
 	PlSqlElementType IN_CONDITION = new PlSqlElementType("IN_CONDITION", PLSqlTokenTypes.IN_CONDITION);
 	PlSqlElementType CLOSE_STATEMENT = new PlSqlElementType("CLOSE_STATEMENT", PLSqlTokenTypes.CLOSE_STATEMENT);
 	PlSqlElementType SUBQUERY_EXPR = new PlSqlElementType("SUBQUERY_EXPR", PLSqlTokenTypes.SUBQUERY_EXPR);
 	PlSqlElementType DBTIMEZONE = new PlSqlElementType("DBTIMEZONE", PLSqlTokenTypes.DBTIMEZONE);
 	PlSqlElementType VARRAY_COLLECTION = new PlSqlElementType("VARRAY_COLLECTION", PLSqlTokenTypes.VARRAY_COLLECTION);
-	PlSqlElementType SYNONYM_OBJ_WITH_LINK = new PlSqlElementType("SYNONYM_OBJ_WITH_LINK", PLSqlTokenTypes.SYNONYM_OBJ_WITH_LINK);
 	PlSqlElementType SUBQUERY_CONDITION = new PlSqlElementType("SUBQUERY_CONDITION", PLSqlTokenTypes.SUBQUERY_CONDITION);
+	PlSqlElementType SYNONYM_OBJ_WITH_LINK = new PlSqlElementType("SYNONYM_OBJ_WITH_LINK", PLSqlTokenTypes.SYNONYM_OBJ_WITH_LINK);
 	PlSqlElementType COLUMN_TYPE_REF = new PlSqlElementType("COLUMN_TYPE_REF", PLSqlTokenTypes.COLUMN_TYPE_REF);
 	PlSqlElementType COLLECTION_METHOD_CALL = new PlSqlElementType("COLLECTION_METHOD_CALL", PLSqlTokenTypes.COLLECTION_METHOD_CALL);
 	PlSqlElementType INSTEADOF_TRIGGER = new PlSqlElementType("INSTEADOF_TRIGGER", PLSqlTokenTypes.INSTEADOF_TRIGGER);
@@ -167,12 +167,12 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType PARALLEL_CLAUSE = new PlSqlElementType("PARALLEL_CLAUSE", PLSqlTokenTypes.PARALLEL_CLAUSE);
 	PlSqlElementType FUNCTION_BODY = new PlSqlElementType("FUNCTION_BODY", PLSqlTokenTypes.FUNCTION_BODY);
 	PlSqlElementType COLUMN_SPEC_LIST = new PlSqlElementType("COLUMN_SPEC_LIST", PLSqlTokenTypes.COLUMN_SPEC_LIST);
-	PlSqlElementType PACKAGE_INIT_SECTION = new PlSqlElementType("PACKAGE_INIT_SECTION", PLSqlTokenTypes.PACKAGE_INIT_SECTION);
 	PlSqlElementType ASSIGNMENT_STATEMENT = new PlSqlElementType("ASSIGNMENT_STATEMENT", PLSqlTokenTypes.ASSIGNMENT_STATEMENT);
+	PlSqlElementType PACKAGE_INIT_SECTION = new PlSqlElementType("PACKAGE_INIT_SECTION", PLSqlTokenTypes.PACKAGE_INIT_SECTION);
 	PlSqlElementType IDENT_ASTERISK_COLUMN = new PlSqlElementType("IDENT_ASTERISK_COLUMN", PLSqlTokenTypes.IDENT_ASTERISK_COLUMN);
 	PlSqlElementType PARTITION_NAME = new PlSqlElementType("PARTITION_NAME", PLSqlTokenTypes.PARTITION_NAME);
-	PlSqlElementType OBJECT_TYPE_DEF = new PlSqlElementType("OBJECT_TYPE_DEF", PLSqlTokenTypes.OBJECT_TYPE_DEF);
 	PlSqlElementType SQLCODE_SYSVAR = new PlSqlElementType("SQLCODE_SYSVAR", PLSqlTokenTypes.SQLCODE_SYSVAR);
+	PlSqlElementType OBJECT_TYPE_DEF = new PlSqlElementType("OBJECT_TYPE_DEF", PLSqlTokenTypes.OBJECT_TYPE_DEF);
 	PlSqlElementType LOOP_STATEMENT = new PlSqlElementType("LOOP_STATEMENT", PLSqlTokenTypes.LOOP_STATEMENT);
 	PlSqlElementType SQLPLUS_START = new PlSqlElementType("SQLPLUS_START", PLSqlTokenTypes.SQLPLUS_START);
 	PlSqlElementType CURSOR_LOOP_INDEX = new PlSqlElementType("CURSOR_LOOP_INDEX", PLSqlTokenTypes.CURSOR_LOOP_INDEX);
@@ -237,8 +237,8 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType TYPE_SPEC = new PlSqlElementType("TYPE_SPEC", PLSqlTokenTypes.TYPE_SPEC);
 	PlSqlElementType DROP_OPERATOR = new PlSqlElementType("DROP_OPERATOR", PLSqlTokenTypes.DROP_OPERATOR);
 	PlSqlElementType INTO_CLAUSE = new PlSqlElementType("INTO_CLAUSE", PLSqlTokenTypes.INTO_CLAUSE);
-	PlSqlElementType ROLLBACK_STATEMENT = new PlSqlElementType("ROLLBACK_STATEMENT", PLSqlTokenTypes.ROLLBACK_STATEMENT);
 	PlSqlElementType INTERVAL_CONST = new PlSqlElementType("INTERVAL_CONST", PLSqlTokenTypes.INTERVAL_CONST);
+	PlSqlElementType ROLLBACK_STATEMENT = new PlSqlElementType("ROLLBACK_STATEMENT", PLSqlTokenTypes.ROLLBACK_STATEMENT);
 	PlSqlElementType STORAGE_PARAM = new PlSqlElementType("STORAGE_PARAM", PLSqlTokenTypes.STORAGE_PARAM);
 	PlSqlElementType RELATION_OP = new PlSqlElementType("RELATION_OP", PLSqlTokenTypes.RELATION_OP);
 	PlSqlElementType CURSOR_NAME = new PlSqlElementType("CURSOR_NAME", PLSqlTokenTypes.CURSOR_NAME);
@@ -251,11 +251,11 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType EXPR_LIST = new PlSqlElementType("EXPR_LIST", PLSqlTokenTypes.EXPR_LIST);
 	PlSqlElementType VARIABLE_NAME = new PlSqlElementType("VARIABLE_NAME", PLSqlTokenTypes.VARIABLE_NAME);
 	PlSqlElementType DROP_TABLESPACE = new PlSqlElementType("DROP_TABLESPACE", PLSqlTokenTypes.DROP_TABLESPACE);
-	PlSqlElementType REVOKE_COMMAND = new PlSqlElementType("REVOKE_COMMAND", PLSqlTokenTypes.REVOKE_COMMAND);
 	PlSqlElementType CREATE_SEQUENCE = new PlSqlElementType("CREATE_SEQUENCE", PLSqlTokenTypes.CREATE_SEQUENCE);
+	PlSqlElementType REVOKE_COMMAND = new PlSqlElementType("REVOKE_COMMAND", PLSqlTokenTypes.REVOKE_COMMAND);
 	PlSqlElementType RETURN_STATEMENT = new PlSqlElementType("RETURN_STATEMENT", PLSqlTokenTypes.RETURN_STATEMENT);
-	PlSqlElementType DROP_TYPE = new PlSqlElementType("DROP_TYPE", PLSqlTokenTypes.DROP_TYPE);
 	PlSqlElementType SQLPLUS_REPHEADER = new PlSqlElementType("SQLPLUS_REPHEADER", PLSqlTokenTypes.SQLPLUS_REPHEADER);
+	PlSqlElementType DROP_TYPE = new PlSqlElementType("DROP_TYPE", PLSqlTokenTypes.DROP_TYPE);
 	PlSqlElementType DB_EVNT_TRIGGER_CLAUSE = new PlSqlElementType("DB_EVNT_TRIGGER_CLAUSE", PLSqlTokenTypes.DB_EVNT_TRIGGER_CLAUSE);
 	PlSqlElementType TYPE_NAME = new PlSqlElementType("TYPE_NAME", PLSqlTokenTypes.TYPE_NAME);
 	PlSqlElementType FIPSFLAG_PRAGMA = new PlSqlElementType("FIPSFLAG_PRAGMA", PLSqlTokenTypes.FIPSFLAG_PRAGMA);
@@ -297,7 +297,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType CURSOR_NAME_REF = new PlSqlElementType("CURSOR_NAME_REF", PLSqlTokenTypes.CURSOR_NAME_REF);
 	PlSqlElementType CREATE_DIRECTORY = new PlSqlElementType("CREATE_DIRECTORY", PLSqlTokenTypes.CREATE_DIRECTORY);
 	PlSqlElementType DROP_TABLE = new PlSqlElementType("DROP_TABLE", PLSqlTokenTypes.DROP_TABLE);
-	PlSqlElementType COMMENT_STR = new PlSqlElementType("COMMENT_STR", PLSqlTokenTypes.COMMENT_STR);
 	PlSqlElementType SQLPLUS_SERVEROUTPUT = new PlSqlElementType("SQLPLUS_SERVEROUTPUT", PLSqlTokenTypes.SQLPLUS_SERVEROUTPUT);
+	PlSqlElementType COMMENT_STR = new PlSqlElementType("COMMENT_STR", PLSqlTokenTypes.COMMENT_STR);
 	PlSqlElementType CREATE_DB_LINK = new PlSqlElementType("CREATE_DB_LINK", PLSqlTokenTypes.CREATE_DB_LINK);
 }

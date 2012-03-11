@@ -23,12 +23,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.formatter;
+package com.deepsky.lang.plsql.formatter.processors;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.formatter.settings.PlSqlCodeStyleSettings;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.impl.names.RecordItemNameImpl;
 import com.deepsky.lang.plsql.psi.names.*;
 import com.deepsky.lang.plsql.psi.ref.DDLTable;
 import com.deepsky.lang.plsql.psi.ref.DDLView;
@@ -44,18 +45,18 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import org.jetbrains.annotations.NotNull;
 
-public class CaseFormatter extends PlSqlElementVisitor {
+public class CharacterCaseProcessor extends PlSqlElementVisitor {
 
     private PlSqlCodeStyleSettings customSettings;
     private PsiDocumentManager psiDocumentManager;
     private final Document document;
     private TextRange rangeToReformat;
 
-    public CaseFormatter(
-            @NotNull CodeStyleSettings settings, 
+    public CharacterCaseProcessor(
+            @NotNull CodeStyleSettings settings,
             @NotNull PsiDocumentManager psiDocumentManager,
             @NotNull Document document
-            ) {
+    ) {
         this.customSettings = settings.getCustomSettings(PlSqlCodeStyleSettings.class);
         this.psiDocumentManager = psiDocumentManager;
         this.document = document;
@@ -99,6 +100,10 @@ public class CaseFormatter extends PlSqlElementVisitor {
     }
 
     public void visitTablespaceName(TablespaceName name) {
+        applyCaseFormattingFor(name);
+    }
+
+    public void visitRecordItemName(RecordItemNameImpl name) {
         applyCaseFormattingFor(name);
     }
 

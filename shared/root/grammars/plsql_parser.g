@@ -24,7 +24,6 @@ tokens {
     PROCEDURE_BODY;
     FUNCTION_BODY;
     PARAMETER_SPEC;
-    SQL_STATEMENT;
     IF_STATEMENT;
     LOOP_STATEMENT;
     STATEMENT;
@@ -382,7 +381,7 @@ start_rule:
     ;
 
 start_rule_inner:
-        (create_or_replace (DIVIDE!)?)
+        create_or_replace
         | ("package" "body") => (package_body  (DIVIDE!)?)
             { #start_rule_inner = #([PACKAGE_BODY, "PACKAGE_BODY" ], #start_rule_inner); }
         | ("package") => (package_spec  (DIVIDE!)?)
@@ -391,7 +390,24 @@ start_rule_inner:
         | (procedure_body (DIVIDE!)?)
         | (create_trigger (SEMI!)? (DIVIDE!)?)
             { #start_rule_inner = #([CREATE_TRIGGER, "CREATE_TRIGGER" ], #start_rule_inner);}
-        | (sql_statement (SEMI!)?)
+        | (select_command (SEMI)?)
+
+        | insert_command
+        | (update_command (SEMI)?)
+            { #start_rule_inner = #([UPDATE_COMMAND, "UPDATE_COMMAND" ], #start_rule_inner); }
+        | (delete_command (SEMI)?)
+            { #start_rule_inner = #([DELETE_COMMAND, "DELETE_COMMAND" ], #start_rule_inner); }
+        | (merge_command (SEMI)?)
+            { #start_rule_inner = #([MERGE_COMMAND, "MERGE_COMMAND" ], #start_rule_inner); }
+        | (grant_command (SEMI)?)
+            { #start_rule_inner = #([GRANT_COMMAND, "GRANT_COMMAND" ], #start_rule_inner); }
+        | (revoke_command  (SEMI)?)
+            { #start_rule_inner = #([REVOKE_COMMAND, "REVOKE_COMMAND" ], #start_rule_inner); }
+        | (rollback_statement (SEMI)?)
+            { #start_rule_inner = #([ROLLBACK_STATEMENT, "ROLLBACK_STATEMENT" ], #start_rule_inner); }
+        | (commit_statement (SEMI)?)
+          {#start_rule_inner=#([COMMIT_STATEMENT, "COMMIT_STATEMENT"], #start_rule_inner);}
+
         | ("alter") => (alter_command)
         | associate_statistics
         | comment
@@ -543,7 +559,6 @@ column_qualifier:
 
 sqlplus_command_internal:
     (sqlplus_command)+
-//    { #.sqlplus_command_internal = #.([SQLPLUS_COMMAND, "SQLPLUS_COMMAND" ], #.sqlplus_command_internal);}
     ;
 
 sqlplus_command:
@@ -593,6 +608,7 @@ sqlplus_command:
 
 sqlplus_exec_statement:
     ( plsql_lvalue ASSIGNMENT_EQ) => assignment_statement
+        {#sqlplus_exec_statement =   #([ASSIGNMENT_STATEMENT, "ASSIGNMENT_STATEMENT" ], #sqlplus_exec_statement);}
     | ( procedure_call ( DOT procedure_call )*)
     ;
 
@@ -614,7 +630,6 @@ create_or_replace:
             { #create_or_replace = #([CREATE_VIEW, "CREATE_VIEW" ], #create_or_replace);}
         | create_view_column_def
             { #create_or_replace = #([CREATE_VIEW_COLUMN_DEF, "CREATE_VIEW_COLUMN_DEF" ], #create_or_replace);}
-        | type_definition
         | (create_table2 (SEMI!)?)
             { #create_or_replace = #([TABLE_DEF, "TABLE_DEF" ], #create_or_replace);}
 
@@ -637,7 +652,19 @@ create_or_replace:
             { #create_or_replace = #([CREATE_TABLESPACE, "CREATE_TABLESPACE" ], #create_or_replace);}
         | (create_user (SEMI!)?)
             { #create_or_replace = #([CREATE_USER, "CREATE_USER" ], #create_or_replace);}
-    )
+
+        // CREATE OR REPLACE TYPE ATYPE AS OBJECT ...
+        | ("type"! (schema_name DOT)? type_name
+            (
+              ("under" (schema_name DOT!)?  type_name_ref // type_name_ref_single - using instead of type_name_ref affects parsing time
+                OPEN_PAREN! record_item (COMMA! record_item )* CLOSE_PAREN! ("not" "final")? )
+                { #create_or_replace = #([OBJECT_TYPE_DEF, "OBJECT_TYPE_DEF" ], #create_or_replace);}
+              | (
+                  ("as"|"is") "object" OPEN_PAREN! record_item (COMMA! record_item )* CLOSE_PAREN! ("not" "final")?
+                  { #create_or_replace = #([OBJECT_TYPE_DEF, "OBJECT_TYPE_DEF" ], #create_or_replace);}
+                )
+            ) (SEMI)?)
+    ) (DIVIDE)?
     ;
 
 /*
@@ -1521,7 +1548,7 @@ cond_comp_seq2:
 
 variable_declaration :
     variable_name ("constant")?  type_spec ("not" "null")? ((ASSIGNMENT_EQ|default1) plsql_expression)?
-        // todo -- workaround to enable completion for variable type 
+        // todo -- workaround to enable completion for variable type
         (SEMI)?
     {#variable_declaration = #([VARIABLE_DECLARATION, "VARIABLE_DECLARATION" ], #variable_declaration);}
     ;
@@ -1540,9 +1567,8 @@ subtype_declaration :
     ;
 
 cursor_spec :
-//    "cursor" cursor_name (OPEN_PAREN argument_list  CLOSE_PAREN)? (
     "cursor" cursor_name (argument_list)? (
-        ("is"! select_command)
+        ("is"! select_statement)
             {#cursor_spec = #([CURSOR_DECLARATION, "CURSOR_DECLARATION" ], #cursor_spec);}
         | ("return" return_type)
     )  SEMI!
@@ -1561,7 +1587,8 @@ seq_of_statements:
 
 
 statement_tmpl:
-    (statement SEMI!)
+//    (statement SEMI!)
+    statement
     | (START_LABEL label_name END_LABEL)
     | (IF_COND_CMPL condition THEN_COND_CMPL seq_of_statements (ELSE_COND_CMPL seq_of_statements)?  END_COND_CMPL )
 //    | (if_cond_cmpl condition then_cond_cmpl seq_of_statements (else_cond_cmpl seq_of_statements)?  end_cond_cmpl )
@@ -1571,38 +1598,61 @@ statement_tmpl:
 statement
 {boolean tag1=false;}
 :
-        ("begin" | "declare") => begin_block
-        | ( "loop" | "for" | "while" ) => loop_statement
-          {#statement = #([LOOP_STATEMENT, "LOOP_STATEMENT" ], #statement);}
-        | ( "forall" ) => forall_loop
-          {#statement = #([LOOP_STATEMENT, "LOOP_STATEMENT" ], #statement);}
-        | ("if" ) => if_statement
-        | ( "goto" ) => goto_statement
-          {#statement = #([GOTO_STATEMENT, "GOTO_STATEMENT" ], #statement);}
-        | ( "raise" )=> raise_statement
-          {#statement = #([RAISE_STATEMENT, "RAISE_STATEMENT" ], #statement);}
-        | ( "exit" ) => exit_statement
-          {#statement = #([EXIT_STATEMENT, "EXIT_STATEMENT" ], #statement);}
-        | null_statement
-        | ( "return" ) => return_statement
-          {#statement = #([RETURN_STATEMENT, "RETURN_STATEMENT" ], #statement);}
-        | ( "case" ) => case_statement
-          {#statement = #([CASE_STATEMENT, "CASE_STATEMENT" ], #statement);}
-        | ( "select" | "update" | "insert" | "delete" | "merge" |
-            "grant" | "revoke" |
-            "commit" | "rollback" ) => sql_statement
-        | ("execute") => immediate_command
-        | ("lock") => lock_table_statement
-        | ("open") => open_statement
-        | ("close") => close_statement
-        | ("fetch") => fetch_statement
-        | set_transaction_command
-        | savepoint_statement
+        ("begin" | "declare") => (begin_block SEMI)
+        | ( "loop" | "for" | "while" ) => (loop_statement SEMI)
+            {#statement = #([LOOP_STATEMENT, "LOOP_STATEMENT" ], #statement);}
+        | forall_loop
+            {#statement = #([LOOP_STATEMENT, "LOOP_STATEMENT" ], #statement);}
+        | (if_statement SEMI)
+            { #statement = #([IF_STATEMENT, "IF_STATEMENT" ], #statement); }
+        | ( goto_statement SEMI)
+            {#statement = #([GOTO_STATEMENT, "GOTO_STATEMENT" ], #statement);}
+        | ( raise_statement SEMI)
+            {#statement = #([RAISE_STATEMENT, "RAISE_STATEMENT" ], #statement);}
+        | ( exit_statement SEMI )
+            {#statement = #([EXIT_STATEMENT, "EXIT_STATEMENT" ], #statement);}
+        | ("null" SEMI)
+            {#statement = #([NULL_STATEMENT, "NULL_STATEMENT" ], #statement);}
+        | ("return"! (condition)? SEMI)
+            {#statement = #([RETURN_STATEMENT, "RETURN_STATEMENT" ], #statement);}
+        | ( case_statement SEMI)
+            {#statement = #([CASE_STATEMENT, "CASE_STATEMENT" ], #statement);}
+        | ( select_command (SEMI)?)
+        | insert_command
+        | (update_command (SEMI)?)
+            { #statement = #([UPDATE_COMMAND, "UPDATE_COMMAND" ], #statement); }
+        | (delete_command (SEMI)?)
+            { #statement = #([DELETE_COMMAND, "DELETE_COMMAND" ], #statement); }
+        | (merge_command (SEMI)?)
+            { #statement = #([MERGE_COMMAND, "MERGE_COMMAND" ], #statement); }
+        | (grant_command (SEMI)?)
+            { #statement = #([GRANT_COMMAND, "GRANT_COMMAND" ], #statement); }
+        | (revoke_command (SEMI)?)
+            { #statement = #([REVOKE_COMMAND, "REVOKE_COMMAND" ], #statement); }
+        | (rollback_statement (SEMI)?)
+            { #statement = #([ROLLBACK_STATEMENT, "ROLLBACK_STATEMENT" ], #statement); }
+        | (commit_statement (SEMI)?)
+            {#statement=#([COMMIT_STATEMENT, "COMMIT_STATEMENT"], #statement);}
+        | (immediate_command SEMI)
+            { #statement = #([IMMEDIATE_COMMAND, "IMMEDIATE_COMMAND" ], #statement);}
+        | (lock_table_statement SEMI)
+            {#statement = #([LOCK_TABLE_STATEMENT, "LOCK_TABLE_STATEMENT" ], #statement);}
+        | (open_statement SEMI)
+            {#statement = #([OPEN_STATEMENT, "OPEN_STATEMENT" ], #statement);}
+        | (close_statement SEMI)
+            {#statement = #([CLOSE_STATEMENT, "CLOSE_STATEMENT" ], #statement);}
+        | (fetch_statement SEMI)
+            {#statement = #([FETCH_STATEMENT, "FETCH_STATEMENT" ], #statement);}
+        | (set_transaction_command SEMI)
+            {#statement = #([SET_TRN_STATEMENT, "SET_TRN_STATEMENT" ], #statement);}
+        | (savepoint_statement (SEMI)?)
         | alter_command
-        | ( plsql_lvalue ASSIGNMENT_EQ) => assignment_statement
+        | ( plsql_lvalue ASSIGNMENT_EQ) => (assignment_statement  (SEMI)? )
+            {#statement =   #([ASSIGNMENT_STATEMENT, "ASSIGNMENT_STATEMENT" ], #statement);}
 // todo -- subject to revise
-        | (( name_fragment_ex DOT )* exec_name_ref ~OPEN_PAREN ) => procedure_call_no_args
-        | ( procedure_call ( DOT {tag1=true;} procedure_call )*)
+        | (( name_fragment_ex DOT )* exec_name_ref ~OPEN_PAREN ) => (callable_name_ref (SEMI)?)
+            {#statement = #([PROCEDURE_CALL, "PROCEDURE_CALL"], #statement);}
+        | ( procedure_call ( DOT {tag1=true;} procedure_call )* (SEMI)? )
             {
                 if(tag1){
                     #statement = #([COLLECTION_METHOD_CALL2, "COLLECTION_METHOD_CALL2" ], #statement);
@@ -1613,12 +1663,12 @@ statement
 //l_ret_val.EXTEND;
 //l_ret_val(1).amk_cols.EXTEND;
 //ota_logger_pkg.info(a_log_section => pc_pkg_log_section);
-
+/*
 procedure_call_no_args:
     callable_name_ref
     {#procedure_call_no_args = #([PROCEDURE_CALL, "PROCEDURE_CALL"], #procedure_call_no_args);}
     ;
-
+*/
 
 sql_percentage:
     "sql" PERCENTAGE (
@@ -1648,7 +1698,6 @@ case_statement:
         | ( "when" condition t:"then" seq_of_statements )+ )
     ( e:"else" seq_of_statements ) ?
     "end"! "case"!
-    {#case_statement = #([CASE_STATEMENT, "CASE_STATEMENT"], #case_statement);}
     ;
 
 pragma_autonomous_transaction:
@@ -1659,7 +1708,6 @@ pragma_autonomous_transaction:
 assignment_statement :
 //    plsql_lvalue p:ASSIGNMENT_EQ! {#p.setType(ASSIGNMENT_OP);} condition
     plsql_lvalue ASSIGNMENT_EQ  condition
-    {#assignment_statement =   #([ASSIGNMENT_STATEMENT, "ASSIGNMENT_STATEMENT" ], #assignment_statement);}
     ;
 
 rvalue
@@ -2202,10 +2250,6 @@ raise_statement :
     "raise"! ( exception_name )?
     ;
 
-return_statement :
-    "return"! (condition)? // ( plsql_expression)?
-    ;
-
 forall_loop:
     forall_header ("save" "exceptions")?
 	statement
@@ -2269,7 +2313,7 @@ cursor_loop_spec :
 cursor_loop_spec2:
     (cursor_name_ref ( call_argument_list )?)
         {#cursor_loop_spec2 = #([CURSOR_REF_LOOP_SPEC, "CURSOR_REF_LOOP_SPEC" ], #cursor_loop_spec2);}
-    | select_command
+    | select_statement
         {#cursor_loop_spec2 = #([CURSOR_LOOP_SPEC, "CURSOR_LOOP_SPEC" ], #cursor_loop_spec2);}
     ;
 
@@ -2685,7 +2729,6 @@ date_literal:
 
 commit_statement:
     "commit" ( "work" )?
-    {#commit_statement=#([COMMIT_STATEMENT, "COMMIT_STATEMENT"], #commit_statement);}
     ;
 
 case_expression
@@ -2715,7 +2758,6 @@ if_statement:
     (elsif_statements)*
     (else_statements)?
     "end"! "if"!
-    { #if_statement = #([IF_STATEMENT, "IF_STATEMENT" ], #if_statement); }
     ;
 
 elsif_statements:
@@ -2728,17 +2770,6 @@ else_statements:
     { #else_statements = #([ELSE_STATEMENT, "ELSE_STATEMENT" ], #else_statements); }
     ;
 
-sql_statement:
-        select_command
-        | insert_command
-        | update_command
-        | delete_command
-        | merge_command
-        | grant_command
-        | revoke_command
-        | commit_statement
-        | rollback_statement
-    ;
 
 grant_command:
     "grant"  (
@@ -2746,7 +2777,6 @@ grant_command:
         | ("all" "privileges")
     )
     "to" (identifier2 |"public")
-    { #grant_command = #([GRANT_COMMAND, "GRANT_COMMAND" ], #grant_command); }
     ;
 
 revoke_command:
@@ -2755,7 +2785,6 @@ revoke_command:
         | ("all" "privileges")
     )
     "from" (identifier2 |"public")
-    { #revoke_command = #([REVOKE_COMMAND, "REVOKE_COMMAND" ], #revoke_command); }
     ;
 
 
@@ -2764,7 +2793,13 @@ privilege:
     ;
 
 select_command:
-    ( select_expression | subquery )
+    select_expression
+    | subquery
+    ;
+
+select_statement:
+    select_expression
+    | subquery
     ;
 
 subquery:
@@ -2787,13 +2822,6 @@ select_expression
     }
     ;
 
-
-/*
- * There are ambiguity issues here; it seems to be legal to put any number
- * of brackets round a select statement, but then the thing reports an
- * unexpected token when the MINUS turns up.
- */
-
 select_first:
     ( select_up_to_list
         ( into_clause ) ?     // the only difference
@@ -2805,9 +2833,8 @@ select_first:
         ( update_clause )?
      )
         { #select_first = #([SELECT_EXPRESSION, "SELECT_EXPRESSION" ], #select_first); }
-    | OPEN_PAREN select_expression CLOSE_PAREN
+   | OPEN_PAREN select_expression CLOSE_PAREN
         { #select_first = #([SUBQUERY, "SUBQUERY" ], #select_first); }
-//    | subquery
     ;
 
 
@@ -2832,7 +2859,7 @@ into_clause:
 
 
 into_clause:
-    ("bulk" "collect")? "into"! plsql_lvalue_list  ///plsql_exp_list
+    ("bulk" "collect")? "into"! plsql_lvalue_list
     { #into_clause = #([INTO_CLAUSE, "INTO_CLAUSE" ], #into_clause);}
     ;
 
@@ -2859,7 +2886,6 @@ asterisk_column:
     ;
 
 ident_asterisk_column:
-//    table_ref DOT ASTERISK
     name_fragment DOT ASTERISK
     { #ident_asterisk_column = #([IDENT_ASTERISK_COLUMN, "IDENT_ASTERISK_COLUMN" ], #ident_asterisk_column ); }
     ;
@@ -2877,7 +2903,6 @@ immediate_command:
                 )
         ( ("bulk" "collect")? "into" plsql_lvalue_list ) ?
         ( "using" plsql_exp_list_using ) ?
-    { #immediate_command = #([IMMEDIATE_COMMAND, "IMMEDIATE_COMMAND" ], #immediate_command);}
     ;
 
 
@@ -2950,7 +2975,7 @@ call_argument_list:
     ;
 
 call_argument :
-    (parameter_name_ref PASS_BY_NAME!)? condition   
+    (parameter_name_ref PASS_BY_NAME!)? condition
     { #call_argument = #([CALL_ARGUMENT, "CALL_ARGUMENT" ], #call_argument);}
     ;
 	exception catch [RecognitionException ex] {
@@ -3073,7 +3098,7 @@ ansi_spec :
 table_func:
     "table"! OPEN_PAREN!
         (
-            select_command
+            select_statement
             | cast_function
             | (( name_fragment DOT )* name_fragment ~OPEN_PAREN ) => ( name_fragment DOT! )* name_fragment
             | function_call
@@ -3175,7 +3200,7 @@ update_clause:
     ;
 
 insert_command:
-    "insert"! "into"!
+    ("insert"! "into"!
         (
           (table_alias) => table_alias (column_spec_list)?
                 ( ( "values"! (parentesized_exp_list | variable_ref)) | select_expression ) (returning)?
@@ -3185,6 +3210,7 @@ insert_command:
          | subquery ( "values"! (parentesized_exp_list | function_call) )
             { #insert_command = #([INSERT_INTO_SUBQUERY_COMMAND, "INSERT_INTO_SUBQUERY_COMMAND" ], #insert_command); }
          )
+    ) (SEMI)?
     ;
 
 column_spec_list:
@@ -3200,7 +3226,6 @@ column_spec_list_wo_paren:
 update_command:
     (   ( subquery_update ) => subquery_update
         | simple_update )
-    { #update_command = #([UPDATE_COMMAND, "UPDATE_COMMAND" ], #update_command); }
     ;
 
 merge_command:
@@ -3208,7 +3233,6 @@ merge_command:
     "using"! ( table_alias | from_subquery ) "on" condition
     when_action (when_action)?
     ("delete" "where" condition)?
-    { #merge_command = #([MERGE_COMMAND, "MERGE_COMMAND" ], #merge_command); }
     ;
 
 when_action:
@@ -3250,22 +3274,18 @@ subquery_update:
 
 delete_command:
     "delete"! ( "from"! )? table_alias ( where_condition )? (returning)?
-    { #delete_command = #([DELETE_COMMAND, "DELETE_COMMAND" ], #delete_command); }
     ;
 
 set_transaction_command:
     "set" "transaction" r:"read" "only"
-    {#set_transaction_command = #([SET_TRN_STATEMENT, "SET_TRN_STATEMENT" ], #set_transaction_command);}
     ;
 
 close_statement :
     "close" cursor_name_ref
-    {#close_statement = #([CLOSE_STATEMENT, "CLOSE_STATEMENT" ], #close_statement);}
     ;
 
 fetch_statement:
     "fetch" cursor_name_ref ( "bulk" "collect" ) ? "into" variable_ref (COMMA! variable_ref )* ("limit" (identifier2|numeric_literal))?
-    {#fetch_statement = #([FETCH_STATEMENT, "FETCH_STATEMENT" ], #fetch_statement);}
     ;
 
 variable_ref:
@@ -3275,7 +3295,6 @@ variable_ref:
 
 lock_table_statement:
     "lock" "table" table_reference_list "in" lock_mode "mode" ( "nowait" )?
-    {#lock_table_statement = #([LOCK_TABLE_STATEMENT, "LOCK_TABLE_STATEMENT" ], #lock_table_statement);}
     ;
 
 lock_mode:
@@ -3288,19 +3307,15 @@ lock_mode:
         ;
 
 open_statement:
-(
         o:"open" cursor_name_ref  (parentesized_exp_list)?
          ( f:"for" ( select_expression | plsql_expression ))?
          ( "using" ("in")? plsql_lvalue_list )?
-)
-    {#open_statement = #([OPEN_STATEMENT, "OPEN_STATEMENT" ], #open_statement);}
     ;
 
 rollback_statement:
         "rollback" ( "work" )?
         ( "to"! ( "savepoint" )? savepoint_name )?
         ( "comment"! string_literal! )?
-        { #rollback_statement = #([ROLLBACK_STATEMENT, "ROLLBACK_STATEMENT" ], #rollback_statement); }
         ;
 
 savepoint_statement:
@@ -3394,7 +3409,7 @@ rec_format_spec:
     | ("nologfile"|("logfile" file_location_spec) )
     | ( ("readsize"|"data_cache"|"skip") NUMBER)
     | ( "preprocessor" file_location_spec)
-)    
+)
     { #rec_format_spec = #([RECORD_FMT_SPEC, "RECORD_FMT_SPEC" ], #rec_format_spec);}
     ;
 

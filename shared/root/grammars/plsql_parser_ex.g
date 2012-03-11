@@ -24,7 +24,7 @@ tokens {
     PROCEDURE_BODY;
     FUNCTION_BODY;
     PARAMETER_SPEC;
-    SQL_STATEMENT;
+//    SQL_STATEMENT;
     IF_STATEMENT;
     LOOP_STATEMENT;
     STATEMENT;
@@ -380,7 +380,7 @@ start_rule:
     ;
 
 start_rule_inner:
-        (create_or_replace (DIVIDE!)?)
+        create_or_replace
         | ("package" "body") => (package_body  (DIVIDE!)?)
             {  __markRule(PACKAGE_BODY); }
         | ("package") => (package_spec  (DIVIDE!)?)
@@ -389,7 +389,24 @@ start_rule_inner:
         | (procedure_body (DIVIDE!)?)
         | (create_trigger (SEMI!)? (DIVIDE!)?)
             {  __markRule(CREATE_TRIGGER);}
-        | (sql_statement (SEMI!)?)
+        | (select_command (SEMI)?)
+
+        | insert_command
+        | (update_command (SEMI)?)
+            {  __markRule(UPDATE_COMMAND); }
+        | (delete_command (SEMI)?)
+            {  __markRule(DELETE_COMMAND); }
+        | (merge_command (SEMI)?)
+            {  __markRule(MERGE_COMMAND); }
+        | (grant_command (SEMI)?)
+            {  __markRule(GRANT_COMMAND); }
+        | (revoke_command  (SEMI)?)
+            {  __markRule(REVOKE_COMMAND); }
+        | (rollback_statement (SEMI)?)
+            {  __markRule(ROLLBACK_STATEMENT); }
+        | (commit_statement (SEMI)?)
+          { __markRule(COMMIT_STATEMENT);}
+
         | ("alter") => (alter_command)
         | associate_statistics
         | comment
@@ -541,7 +558,6 @@ column_qualifier:
 
 sqlplus_command_internal:
     (sqlplus_command)+
-//    { #.sqlplus_command_internal = #.([SQLPLUS_COMMAND, "SQLPLUS_COMMAND" ], #.sqlplus_command_internal);}
     ;
 
 sqlplus_command:
@@ -591,6 +607,7 @@ sqlplus_command:
 
 sqlplus_exec_statement:
     ( plsql_lvalue ASSIGNMENT_EQ) => assignment_statement
+        { __markRule(ASSIGNMENT_STATEMENT);}
     | ( procedure_call ( DOT procedure_call )*)
     ;
 
@@ -612,7 +629,6 @@ create_or_replace:
             {  __markRule(CREATE_VIEW);}
         | create_view_column_def
             {  __markRule(CREATE_VIEW_COLUMN_DEF);}
-        | type_definition
         | (create_table2 (SEMI!)?)
             {  __markRule(TABLE_DEF);}
 
@@ -635,7 +651,19 @@ create_or_replace:
             {  __markRule(CREATE_TABLESPACE);}
         | (create_user (SEMI!)?)
             {  __markRule(CREATE_USER);}
-    )
+
+        // CREATE OR REPLACE TYPE ATYPE AS OBJECT ...
+        | ("type"! (schema_name DOT)? type_name
+            (
+              ("under" (schema_name DOT!)?  type_name_ref // type_name_ref_single - using instead of type_name_ref affects parsing time
+                OPEN_PAREN! record_item (COMMA! record_item )* CLOSE_PAREN! ("not" "final")? )
+                {  __markRule(OBJECT_TYPE_DEF);}
+              | (
+                  ("as"|"is") "object" OPEN_PAREN! record_item (COMMA! record_item )* CLOSE_PAREN! ("not" "final")?
+                  {  __markRule(OBJECT_TYPE_DEF);}
+                )
+            ) (SEMI)?)
+    ) (DIVIDE)?
     ;
 
 /*
@@ -1519,7 +1547,7 @@ cond_comp_seq2:
 
 variable_declaration :
     variable_name ("constant")?  type_spec ("not" "null")? ((ASSIGNMENT_EQ|default1) plsql_expression)?
-        // todo -- workaround to enable completion for variable type 
+        // todo -- workaround to enable completion for variable type
         (SEMI)?
     { __markRule(VARIABLE_DECLARATION);}
     ;
@@ -1538,9 +1566,8 @@ subtype_declaration :
     ;
 
 cursor_spec :
-//    "cursor" cursor_name (OPEN_PAREN argument_list  CLOSE_PAREN)? (
     "cursor" cursor_name (argument_list)? (
-        ("is"! select_command)
+        ("is"! select_statement)
             { __markRule(CURSOR_DECLARATION);}
         | ("return" return_type)
     )  SEMI!
@@ -1559,7 +1586,8 @@ seq_of_statements:
 
 
 statement_tmpl:
-    (statement SEMI!)
+//    (statement SEMI!)
+    statement
     | (START_LABEL label_name END_LABEL)
     | (IF_COND_CMPL condition THEN_COND_CMPL seq_of_statements (ELSE_COND_CMPL seq_of_statements)?  END_COND_CMPL )
 //    | (if_cond_cmpl condition then_cond_cmpl seq_of_statements (else_cond_cmpl seq_of_statements)?  end_cond_cmpl )
@@ -1569,38 +1597,61 @@ statement_tmpl:
 statement
 {boolean tag1=false;}
 :
-        ("begin" | "declare") => begin_block
-        | ( "loop" | "for" | "while" ) => loop_statement
-          { __markRule(LOOP_STATEMENT);}
-        | ( "forall" ) => forall_loop
-          { __markRule(LOOP_STATEMENT);}
-        | ("if" ) => if_statement
-        | ( "goto" ) => goto_statement
-          { __markRule(GOTO_STATEMENT);}
-        | ( "raise" )=> raise_statement
-          { __markRule(RAISE_STATEMENT);}
-        | ( "exit" ) => exit_statement
-          { __markRule(EXIT_STATEMENT);}
-        | null_statement
-        | ( "return" ) => return_statement
-          { __markRule(RETURN_STATEMENT);}
-        | ( "case" ) => case_statement
-          { __markRule(CASE_STATEMENT);}
-        | ( "select" | "update" | "insert" | "delete" | "merge" |
-            "grant" | "revoke" |
-            "commit" | "rollback" ) => sql_statement
-        | ("execute") => immediate_command
-        | ("lock") => lock_table_statement
-        | ("open") => open_statement
-        | ("close") => close_statement
-        | ("fetch") => fetch_statement
-        | set_transaction_command
-        | savepoint_statement
+        ("begin" | "declare") => (begin_block SEMI)
+        | ( "loop" | "for" | "while" ) => (loop_statement SEMI)
+            { __markRule(LOOP_STATEMENT);}
+        | forall_loop
+            { __markRule(LOOP_STATEMENT);}
+        | (if_statement SEMI)
+            {  __markRule(IF_STATEMENT); }
+        | ( goto_statement SEMI)
+            { __markRule(GOTO_STATEMENT);}
+        | ( raise_statement SEMI)
+            { __markRule(RAISE_STATEMENT);}
+        | ( exit_statement SEMI )
+            { __markRule(EXIT_STATEMENT);}
+        | ("null" SEMI)
+            { __markRule(NULL_STATEMENT);}
+        | ("return"! (condition)? SEMI)
+            { __markRule(RETURN_STATEMENT);}
+        | ( case_statement SEMI)
+            { __markRule(CASE_STATEMENT);}
+        | ( select_command (SEMI)?)
+        | insert_command
+        | (update_command (SEMI)?)
+            {  __markRule(UPDATE_COMMAND); }
+        | (delete_command (SEMI)?)
+            {  __markRule(DELETE_COMMAND); }
+        | (merge_command (SEMI)?)
+            {  __markRule(MERGE_COMMAND); }
+        | (grant_command (SEMI)?)
+            {  __markRule(GRANT_COMMAND); }
+        | (revoke_command (SEMI)?)
+            {  __markRule(REVOKE_COMMAND); }
+        | (rollback_statement (SEMI)?)
+            {  __markRule(ROLLBACK_STATEMENT); }
+        | (commit_statement (SEMI)?)
+            { __markRule(COMMIT_STATEMENT);}
+        | (immediate_command SEMI)
+            {  __markRule(IMMEDIATE_COMMAND);}
+        | (lock_table_statement SEMI)
+            { __markRule(LOCK_TABLE_STATEMENT);}
+        | (open_statement SEMI)
+            { __markRule(OPEN_STATEMENT);}
+        | (close_statement SEMI)
+            { __markRule(CLOSE_STATEMENT);}
+        | (fetch_statement SEMI)
+            { __markRule(FETCH_STATEMENT);}
+        | (set_transaction_command SEMI)
+            { __markRule(SET_TRN_STATEMENT);}
+        | (savepoint_statement (SEMI)?)
         | alter_command
-        | ( plsql_lvalue ASSIGNMENT_EQ) => assignment_statement
+        | ( plsql_lvalue ASSIGNMENT_EQ) => (assignment_statement  (SEMI)? )
+            { __markRule(ASSIGNMENT_STATEMENT);}
 // todo -- subject to revise
-        | (( name_fragment_ex DOT )* exec_name_ref ~OPEN_PAREN ) => procedure_call_no_args
-        | ( procedure_call ( DOT {tag1=true;} procedure_call )*)
+        | (( name_fragment_ex DOT )* exec_name_ref ~OPEN_PAREN ) => (callable_name_ref (SEMI)?)
+            { __markRule(PROCEDURE_CALL);}
+        | ( procedure_call ( DOT {tag1=true;} procedure_call )* (SEMI)? )
             {
                 if(tag1){
                      __markRule(COLLECTION_METHOD_CALL2);
@@ -1611,12 +1662,12 @@ statement
 //l_ret_val.EXTEND;
 //l_ret_val(1).amk_cols.EXTEND;
 //ota_logger_pkg.info(a_log_section => pc_pkg_log_section);
-
+/*
 procedure_call_no_args:
     callable_name_ref
     { __markRule(PROCEDURE_CALL);}
     ;
-
+*/
 
 sql_percentage:
     "sql" PERCENTAGE (
@@ -1646,7 +1697,6 @@ case_statement:
         | ( "when" condition t:"then" seq_of_statements )+ )
     ( e:"else" seq_of_statements ) ?
     "end"! "case"!
-    { __markRule(CASE_STATEMENT);}
     ;
 
 pragma_autonomous_transaction:
@@ -1657,7 +1707,6 @@ pragma_autonomous_transaction:
 assignment_statement :
 //    plsql_lvalue p:ASSIGNMENT_EQ! {#p.setType(ASSIGNMENT_OP);} condition
     plsql_lvalue ASSIGNMENT_EQ  condition
-    { __markRule(ASSIGNMENT_STATEMENT);}
     ;
 
 rvalue
@@ -2200,10 +2249,6 @@ raise_statement :
     "raise"! ( exception_name )?
     ;
 
-return_statement :
-    "return"! (condition)? // ( plsql_expression)?
-    ;
-
 forall_loop:
     forall_header ("save" "exceptions")?
 	statement
@@ -2267,7 +2312,7 @@ cursor_loop_spec :
 cursor_loop_spec2:
     (cursor_name_ref ( call_argument_list )?)
         { __markRule(CURSOR_REF_LOOP_SPEC);}
-    | select_command
+    | select_statement
         { __markRule(CURSOR_LOOP_SPEC);}
     ;
 
@@ -2683,7 +2728,6 @@ date_literal:
 
 commit_statement:
     "commit" ( "work" )?
-    { __markRule(COMMIT_STATEMENT);}
     ;
 
 case_expression
@@ -2713,7 +2757,6 @@ if_statement:
     (elsif_statements)*
     (else_statements)?
     "end"! "if"!
-    {  __markRule(IF_STATEMENT); }
     ;
 
 elsif_statements:
@@ -2726,17 +2769,6 @@ else_statements:
     {  __markRule(ELSE_STATEMENT); }
     ;
 
-sql_statement:
-        select_command
-        | insert_command
-        | update_command
-        | delete_command
-        | merge_command
-        | grant_command
-        | revoke_command
-        | commit_statement
-        | rollback_statement
-    ;
 
 grant_command:
     "grant"  (
@@ -2744,7 +2776,6 @@ grant_command:
         | ("all" "privileges")
     )
     "to" (identifier2 |"public")
-    {  __markRule(GRANT_COMMAND); }
     ;
 
 revoke_command:
@@ -2753,7 +2784,6 @@ revoke_command:
         | ("all" "privileges")
     )
     "from" (identifier2 |"public")
-    {  __markRule(REVOKE_COMMAND); }
     ;
 
 
@@ -2762,7 +2792,13 @@ privilege:
     ;
 
 select_command:
-    ( select_expression | subquery )
+    select_expression
+    | subquery
+    ;
+
+select_statement:
+    select_expression
+    | subquery
     ;
 
 subquery:
@@ -2785,13 +2821,6 @@ select_expression
     }
     ;
 
-
-/*
- * There are ambiguity issues here; it seems to be legal to put any number
- * of brackets round a select statement, but then the thing reports an
- * unexpected token when the MINUS turns up.
- */
-
 select_first:
     ( select_up_to_list
         ( into_clause ) ?     // the only difference
@@ -2803,9 +2832,8 @@ select_first:
         ( update_clause )?
      )
         {  __markRule(SELECT_EXPRESSION); }
-    | OPEN_PAREN select_expression CLOSE_PAREN
+   | OPEN_PAREN select_expression CLOSE_PAREN
         {  __markRule(SUBQUERY); }
-//    | subquery
     ;
 
 
@@ -2830,7 +2858,7 @@ into_clause:
 
 
 into_clause:
-    ("bulk" "collect")? "into"! plsql_lvalue_list  ///plsql_exp_list
+    ("bulk" "collect")? "into"! plsql_lvalue_list
     {  __markRule(INTO_CLAUSE);}
     ;
 
@@ -2857,7 +2885,6 @@ asterisk_column:
     ;
 
 ident_asterisk_column:
-//    table_ref DOT ASTERISK
     name_fragment DOT ASTERISK
     {  __markRule(IDENT_ASTERISK_COLUMN); }
     ;
@@ -2875,7 +2902,6 @@ immediate_command:
                 )
         ( ("bulk" "collect")? "into" plsql_lvalue_list ) ?
         ( "using" plsql_exp_list_using ) ?
-    {  __markRule(IMMEDIATE_COMMAND);}
     ;
 
 
@@ -2948,7 +2974,7 @@ call_argument_list:
     ;
 
 call_argument :
-    (parameter_name_ref PASS_BY_NAME!)? condition   
+    (parameter_name_ref PASS_BY_NAME!)? condition
     {  __markRule(CALL_ARGUMENT);}
     ;
 	exception catch [RecognitionException ex] {
@@ -3071,7 +3097,7 @@ ansi_spec :
 table_func:
     "table"! OPEN_PAREN!
         (
-            select_command
+            select_statement
             | cast_function
             | (( name_fragment DOT )* name_fragment ~OPEN_PAREN ) => ( name_fragment DOT! )* name_fragment
             | function_call
@@ -3173,7 +3199,7 @@ update_clause:
     ;
 
 insert_command:
-    "insert"! "into"!
+    ("insert"! "into"!
         (
           (table_alias) => table_alias (column_spec_list)?
                 ( ( "values"! (parentesized_exp_list | variable_ref)) | select_expression ) (returning)?
@@ -3183,6 +3209,7 @@ insert_command:
          | subquery ( "values"! (parentesized_exp_list | function_call) )
             {  __markRule(INSERT_INTO_SUBQUERY_COMMAND); }
          )
+    ) (SEMI)?
     ;
 
 column_spec_list:
@@ -3198,7 +3225,6 @@ column_spec_list_wo_paren:
 update_command:
     (   ( subquery_update ) => subquery_update
         | simple_update )
-    {  __markRule(UPDATE_COMMAND); }
     ;
 
 merge_command:
@@ -3206,7 +3232,6 @@ merge_command:
     "using"! ( table_alias | from_subquery ) "on" condition
     when_action (when_action)?
     ("delete" "where" condition)?
-    {  __markRule(MERGE_COMMAND); }
     ;
 
 when_action:
@@ -3248,22 +3273,18 @@ subquery_update:
 
 delete_command:
     "delete"! ( "from"! )? table_alias ( where_condition )? (returning)?
-    {  __markRule(DELETE_COMMAND); }
     ;
 
 set_transaction_command:
     "set" "transaction" r:"read" "only"
-    { __markRule(SET_TRN_STATEMENT);}
     ;
 
 close_statement :
     "close" cursor_name_ref
-    { __markRule(CLOSE_STATEMENT);}
     ;
 
 fetch_statement:
     "fetch" cursor_name_ref ( "bulk" "collect" ) ? "into" variable_ref (COMMA! variable_ref )* ("limit" (identifier2|numeric_literal))?
-    { __markRule(FETCH_STATEMENT);}
     ;
 
 variable_ref:
@@ -3273,7 +3294,6 @@ variable_ref:
 
 lock_table_statement:
     "lock" "table" table_reference_list "in" lock_mode "mode" ( "nowait" )?
-    { __markRule(LOCK_TABLE_STATEMENT);}
     ;
 
 lock_mode:
@@ -3286,19 +3306,15 @@ lock_mode:
         ;
 
 open_statement:
-(
         o:"open" cursor_name_ref  (parentesized_exp_list)?
          ( f:"for" ( select_expression | plsql_expression ))?
          ( "using" ("in")? plsql_lvalue_list )?
-)
-    { __markRule(OPEN_STATEMENT);}
     ;
 
 rollback_statement:
         "rollback" ( "work" )?
         ( "to"! ( "savepoint" )? savepoint_name )?
         ( "comment"! string_literal! )?
-        {  __markRule(ROLLBACK_STATEMENT); }
         ;
 
 savepoint_statement:
@@ -3392,7 +3408,7 @@ rec_format_spec:
     | ("nologfile"|("logfile" file_location_spec) )
     | ( ("readsize"|"data_cache"|"skip") NUMBER)
     | ( "preprocessor" file_location_spec)
-)    
+)
     {  __markRule(RECORD_FMT_SPEC);}
     ;
 

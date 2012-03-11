@@ -25,6 +25,7 @@
 
 package com.deepsky.lang.plsql.formatter;
 
+import com.deepsky.lang.plsql.formatter.processors.CharacterCaseProcessor;
 import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
@@ -40,7 +41,7 @@ public class PlSqlPostFormatProcessor implements PostFormatProcessor {
             PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(source.getProject());
             Document document = psiDocumentManager.getDocument(source.getContainingFile());
             if (document != null) {
-                return new CaseFormatter(settings, psiDocumentManager, document).process(source);
+                return new CharacterCaseProcessor(settings, psiDocumentManager, document).process(source);
             }
         }
         return source;
@@ -51,7 +52,7 @@ public class PlSqlPostFormatProcessor implements PostFormatProcessor {
             PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(source.getProject());
             Document document = psiDocumentManager.getDocument(source.getContainingFile());
             if (document != null) {
-                return new CaseFormatter(settings, psiDocumentManager, document).processText(source, rangeToReformat);
+                return new CharacterCaseProcessor(settings, psiDocumentManager, document).processText(source, rangeToReformat);
             }
         }
 

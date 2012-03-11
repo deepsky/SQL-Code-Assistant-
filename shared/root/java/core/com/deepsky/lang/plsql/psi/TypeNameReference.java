@@ -28,15 +28,5 @@ package com.deepsky.lang.plsql.psi;
 import com.deepsky.lang.plsql.psi.names.CompositeName;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 
-public interface TypeNameReference extends CompositeName, TypeSpec { //}, ContextAware {
-
-/*
-    @NotNull
-    UsagePlace getUsagePlace();
-
-    interface UsagePlace {
-        String getName();
-        boolean isPackage();
-    }
-*/
+public interface TypeNameReference extends CompositeName, TypeSpec {
 }

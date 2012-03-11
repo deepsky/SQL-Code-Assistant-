@@ -28,6 +28,8 @@ package com.deepsky.lang.plsql.formatter;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.formatter.processors.PlSqlSpacingProcessor;
+import com.deepsky.lang.plsql.formatter.processors.PlSqlSpacingProcessorBasic;
 import com.deepsky.lang.plsql.formatter.settings.PlSqlCodeStyleSettings;
 import com.deepsky.lang.plsql.psi.utils.PlSqlUtil;
 import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
@@ -103,11 +105,11 @@ public class PlSqlBlock extends AbstractBlock {
             }
 
             Spacing spacing = new PlSqlSpacingProcessor(
-                    ((PlSqlBlock)child2).getNode(), commonSettings, customSettings
+                    ((PlSqlBlock)child2).getNode(), customSettings
             ).getSpacing();
             return spacing != null ?
                     spacing :
-                    PlSqlSpacingProcessorBasic.getSpacing(((PlSqlBlock)child1), ((PlSqlBlock)child2), customSettings);
+                    PlSqlSpacingProcessorBasic.getSpacing(((PlSqlBlock) child1), ((PlSqlBlock) child2), customSettings);
         }
         return null;
     }

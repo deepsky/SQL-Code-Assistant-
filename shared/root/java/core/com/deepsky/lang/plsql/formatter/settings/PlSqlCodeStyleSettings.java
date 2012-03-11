@@ -29,27 +29,23 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
 
 public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
-    /**
-     * Defines if 'flying geese' style should be used for curly braces formatting, e.g. if we want to format code like
-     * <p/>
-     * <pre>
-     *     class Test {
-     *         {
-     *             System.out.println();
-     *         }
-     *     }
-     * </pre>
-     * to
-     * <pre>
-     *     class Test { {
-     *         System.out.println();
-     *     } }
-     * </pre>
-     */
-    public boolean USE_FLYING_GEESE_BRACES = false;
 
-    // TODO -- implement me
+    //public boolean KEEP_LINE_BREAKS_BETWEEN_SL_COMMENTS = true;
+
+    // 1 - "Don't change", 2 - "Type", 3 - "Type&Null"
     public int ALIGNMENT_IN_COLUMN_DEF = 2;
+
+    /**
+     * Controls END_OF_LINE_COMMENT's and C_STYLE_COMMENT's
+     */
+    public boolean KEEP_FIRST_COLUMN_COMMENT = true;
+
+    public boolean SPACE_WITHIN_BRACKETS = false;
+
+    /**
+     * Keep up to this amount of blank lines in code
+     */
+    public int KEEP_BLANK_LINES_IN_CODE = 0;
 
     public boolean ALIGN_DATATYPE_IN_COLUMN_DEF = true;
     public boolean ALIGN_DATATYPE_IN_DECL = true;
@@ -60,6 +56,8 @@ public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
     public boolean WRAP_SEQUENCE_OPTIONS = true;
     public boolean WRAP_USER_OPTIONS = true;
     public boolean ALIGN_ASSIGNMENTS = false;
+    public boolean KEEP_LINE_BREAKS = true;
+
     // todo -- put into setting dialog
     public boolean ALIGN_ALIAS_NAME_IN_SELECT = true;
 
@@ -69,9 +67,11 @@ public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
     public int MIN_LINES_BEFORE_MULTILINE_COMMENT = 1;
     public int MIN_LINES_AFTER_MULTILINE_COMMENT = 1;
     public int MIN_LINES_AFTER_VARIBLE_DECL = 1;
+    public int MIN_LINES_BETWEEN_SL_COMMENTS = 0;
 
     public int MAX_LINES_BETWEEN_FILE_LEVEL_STMT = 2;
     public int MAX_LINES_BETWEEN_BLOCK_LEVEL_STMT = 1;
+    public int MAX_LINES_BETWEEN_SL_COMMENTS = 0;
 
     final static public int CASE_NAME_DONT_CHANGE = 1;
     final static public int CASE_NAME_UPPER = 2;

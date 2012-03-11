@@ -25,11 +25,13 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.deepsky.lang.plsql.psi.names.RecordItemName;
 import com.deepsky.lang.plsql.struct.Type;
 
 
 public interface RecordTypeItem extends PlSqlElement {
     String getRecordItemName();
+    RecordItemName getPsiRecordItemName();
     Type getType();
     Expression getDefaultExpr();
     TypeDeclaration getRecordType();

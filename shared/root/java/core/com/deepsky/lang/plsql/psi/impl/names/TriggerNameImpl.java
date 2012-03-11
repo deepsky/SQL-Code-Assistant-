@@ -10,7 +10,7 @@
  *     2. Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *       
+ *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -23,36 +23,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.psi.impl;
+package com.deepsky.lang.plsql.psi.impl.names;
 
-import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
-import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
-import com.deepsky.lang.plsql.psi.UniqueConstraint;
-import com.deepsky.utils.StringUtils;
+import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
+import com.deepsky.lang.plsql.psi.names.TriggerName;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
-public class UniqueConstraintImpl extends PlSqlElementBase implements UniqueConstraint {
-    public UniqueConstraintImpl(ASTNode astNode) {
+public class TriggerNameImpl extends PlSqlElementBase implements TriggerName {
+    public TriggerNameImpl(ASTNode astNode) {
         super(astNode);
     }
-
-    public String getConstraintName() {
-        ASTNode constraintName = getNode().findChildByType(PLSqlTypesAdopted.CONSTRAINT_NAME);
-        if(constraintName != null){
-            return StringUtils.discloseDoubleQuotes(constraintName.getText());
-        }
-
-        return null;
-    }
-
-    public void accept(@NotNull PsiElementVisitor visitor) {
-        if (visitor instanceof PlSqlElementVisitor) {
-            ((PlSqlElementVisitor) visitor).visitUniqueConstraint(this);
-        } else {
-            super.accept(visitor);
-        }
-    }
-
 }

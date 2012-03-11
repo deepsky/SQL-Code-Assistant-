@@ -24,6 +24,7 @@
         <li>Find Usages tables, views, columns, function, procedures, etc over a database schema or objects in the sql scripts on the local File System
             SQL and PL/SQL code execution with sortable query result <b>(Ctrl-Shift-M)</b></li>
         <li>Code Folding and bracket matching support</li>
+        <li>Code formatter (experimental)</li>
         <li>Code commenting</li>
         <li>Database Schema Browsing</li>
         <li>Connection management</li>
@@ -182,7 +183,7 @@
             </li>
         </ul>
     </html>]]></change-notes>
-    <idea-version since-build="111.1" until-build="114.999"/>
+    <idea-version since-build="111.1" until-build="116.999"/>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 
@@ -207,9 +208,9 @@
         <scopeDescriptorProvider implementation="com.deepsky.findUsages.scopes.DbScopeDescriptorProvider"/>
         <readWriteAccessDetector implementation="com.deepsky.findUsages.providers.PlSqlReadWriteAccessDetector"/>
 
-<!--
-        <enterHandlerDelegate implementation="com.deepsky.lang.plsql.formatter2.BeginEndEnterHandler"/>
--->
+        <!--
+                <enterHandlerDelegate implementation="com.deepsky.lang.plsql.formatter2.BeginEndEnterHandler"/>
+        -->
 
         <lang.formatter language="PlSql" implementationClass="com.deepsky.lang.plsql.formatter.PlSqlFormattingModelBuilder"/>
         <postFormatProcessor implementation="com.deepsky.lang.plsql.formatter.PlSqlPostFormatProcessor"/>

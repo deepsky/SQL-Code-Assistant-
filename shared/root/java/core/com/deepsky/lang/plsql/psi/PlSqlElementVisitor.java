@@ -31,6 +31,7 @@ import com.deepsky.lang.plsql.psi.ctrl.CommitStatement;
 import com.deepsky.lang.plsql.psi.ctrl.RollbackStatement;
 import com.deepsky.lang.plsql.psi.ddl.*;
 import com.deepsky.lang.plsql.psi.impl.*;
+import com.deepsky.lang.plsql.psi.impl.names.RecordItemNameImpl;
 import com.deepsky.lang.plsql.psi.internal.CreateViewColumnDefInternal;
 import com.deepsky.lang.plsql.psi.names.*;
 import com.deepsky.lang.plsql.psi.ref.*;
@@ -408,9 +409,6 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
 
     public void visitPrimaryKeyConstraint(PrimaryKeyConstraint constraint) {
         visitElement(constraint);
-//        for (ColumnNameRef c : constraint.getPKColumns()) {
-//            c.accept(this);
-//        }
     }
 
     public void visitTableRef(TableRef ref) {
@@ -529,5 +527,12 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitAliasName(AliasName aliasName) {
+    }
+
+    public void visitRecordItemName(RecordItemNameImpl recordItemName) {
+    }
+
+    public void visitUniqueConstraint(UniqueConstraint  constraint) {
+        visitElement(constraint);
     }
 }

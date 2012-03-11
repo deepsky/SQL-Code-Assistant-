@@ -278,6 +278,10 @@ public class PlSqlParserDefinition implements ParserDefinition {
                 return new ConstraintNameImpl(node);
             case PLSqlTokenTypes.TABLESPACE_NAME:
                 return new TablespaceNameImpl(node);
+            case PLSqlTokenTypes.RECORD_ITEM_NAME:
+                return new RecordItemNameImpl(node);
+            case PLSqlTokenTypes.TRIGGER_NAME:
+                return new TriggerNameImpl(node);
 
 // [ ------------------- ]
             case PLSqlTokenTypes.NAME_FRAGMENT:

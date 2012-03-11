@@ -25,8 +25,6 @@
 
 package com.deepsky.lang.plsql.psi;
 
-import com.deepsky.lang.plsql.struct.Type;
-
 public interface RefCursorDecl extends TypeDeclaration {
 
 //    Type getDataType();

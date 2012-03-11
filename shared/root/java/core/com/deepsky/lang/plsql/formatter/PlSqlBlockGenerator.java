@@ -28,10 +28,14 @@ package com.deepsky.lang.plsql.formatter;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
+import com.deepsky.lang.plsql.formatter.processors.PlSqlIndentProcessor;
+import com.deepsky.lang.plsql.formatter.processors.PlSqlWrapProcessor;
 import com.deepsky.lang.plsql.formatter.settings.PlSqlCodeStyleSettings;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.AlterTable;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
+import com.deepsky.lang.plsql.psi.types.DataType;
+import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
 import com.intellij.formatting.Alignment;
 import com.intellij.formatting.Block;
@@ -40,7 +44,6 @@ import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.tree.TokenSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,8 +87,6 @@ public class PlSqlBlockGenerator {
             return subBlocks;
         }
 
-
-
         if (blockPsi instanceof SelectStatement) {
             final ArrayList<Block> subBlocks = new ArrayList<Block>();
             List<ASTNode> children = PsiUtil.visibleChildren(myNode);
@@ -102,8 +103,6 @@ public class PlSqlBlockGenerator {
             }
             return subBlocks;
         }
-
-
 
         if (blockPsi instanceof DeclarationList) {
             final ArrayList<Block> subBlocks = new ArrayList<Block>();
@@ -139,6 +138,22 @@ public class PlSqlBlockGenerator {
             return subBlocks;
         }
 
+        if (blockPsi instanceof ObjectTypeDecl) {
+            final ArrayList<Block> subBlocks = new ArrayList<Block>();
+            List<ASTNode> children = PsiUtil.visibleChildren(myNode);
+            if (plSqlSettings.ALIGNMENT_IN_COLUMN_DEF != 1)
+                calculateAlignments(children);
+            for (ASTNode childNode : children) {
+                final Indent indent = PlSqlIndentProcessor.getChildIndent(myBlock, childNode);
+                Wrap wrap = PlSqlWrapProcessor.getChildWrap(myBlock, childNode, plSqlSettings);
+                subBlocks.add(
+                        new PlSqlBlock(childNode, wrap, indent,
+                                myInnerAlignments.get(childNode.getPsi()),
+                                mySettings, plSqlSettings,
+                                myInnerAlignments));
+            }
+            return subBlocks;
+        }
 
         if (blockPsi.getNode().getElementType() == PlSqlElementTypes.STATEMENT_LIST) {
             final ArrayList<Block> subBlocks = new ArrayList<Block>();
@@ -183,7 +198,7 @@ public class PlSqlBlockGenerator {
 
                     SelectFieldExpr column = (SelectFieldExpr) psi;
                     PsiElement alias = column.getAliasName();
-                    if(alias != null){
+                    if (alias != null) {
                         myInnerAlignments.put(column.getExpression(), currentGroup.get(0));
                         myInnerAlignments.put(alias, currentGroup.get(1));
                     }
@@ -200,15 +215,7 @@ public class PlSqlBlockGenerator {
             List<Alignment> currentGroup = null;
             for (ASTNode child : children) {
                 PsiElement psi = child.getPsi();
-                if (psi instanceof ColumnDefinition) {
-                    if (currentGroup == null) {
-                        currentGroup = Arrays.asList(Alignment.createAlignment(true), Alignment.createAlignment(true));
-                    }
-
-                    ColumnDefinition column = (ColumnDefinition) psi;
-                    myInnerAlignments.put(column.getPsiColumnName(), currentGroup.get(0));
-                    myInnerAlignments.put(column.getTypeSpec(), currentGroup.get(1));
-                } else if (psi instanceof VariableDecl) {
+                if (psi instanceof VariableDecl) {
                     if (currentGroup == null) {
                         currentGroup = Arrays.asList(Alignment.createAlignment(true), Alignment.createAlignment(true), Alignment.createAlignment(true));
                     }
@@ -243,6 +250,14 @@ public class PlSqlBlockGenerator {
                     myInnerAlignments.put(assignment.getLValue(), currentGroup.get(0));
                     myInnerAlignments.put(assignment.getEQ_Sign(), currentGroup.get(1));
                     myInnerAlignments.put(assignment.getRValue(), currentGroup.get(2));
+                } else if (psi instanceof RecordTypeItem) {
+                    if (currentGroup == null) {
+                        currentGroup = Arrays.asList(Alignment.createAlignment(true), Alignment.createAlignment(true));
+                    }
+
+                    RecordTypeItem item = (RecordTypeItem) psi;
+                    myInnerAlignments.put(item.getPsiRecordItemName(), currentGroup.get(0));
+                    myInnerAlignments.put(item.getRecordType(), currentGroup.get(1));
                 }
             }
         } catch (SyntaxTreeCorruptedException e) {
@@ -252,7 +267,7 @@ public class PlSqlBlockGenerator {
 
     private void calculateColumnDefAlignments(List<ASTNode> children, int type) {
         List<Alignment> currentGroup = new ArrayList<Alignment>();
-        switch(type){
+        switch (type) {
             case 1: // Don't change
                 return;
             case 3: // Type & NOT NULL
@@ -270,8 +285,14 @@ public class PlSqlBlockGenerator {
                     myInnerAlignments.put(column.getPsiColumnName(), currentGroup.get(0));
                     myInnerAlignments.put(column.getTypeSpec(), currentGroup.get(1));
                     GenericConstraint constr = column.getNotNullConstraint();
-                    if(constr != null && currentGroup.size() == 3){
-                        myInnerAlignments.put(constr, currentGroup.get(2));
+                    // Collect NULL/NOT NULL only if
+                    // 1. Type & NOT NULL configured
+                    // 2. NULL/NOT NULL constraint goes after type immediately
+                    if (constr != null && currentGroup.size() == 3) {
+                        final PsiElement datatype = PsiUtil.prevVisibleSibling(constr.getNode()).getPsi();
+                        if(datatype instanceof TypeSpec){
+                            myInnerAlignments.put(constr, currentGroup.get(2));
+                        }
                     }
                 }
             }

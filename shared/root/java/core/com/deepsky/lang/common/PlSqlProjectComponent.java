@@ -25,22 +25,25 @@
 
 package com.deepsky.lang.common;
 
-import com.deepsky.database.*;
+import com.deepsky.database.CacheManagerListener;
+import com.deepsky.database.ConnectionInfo;
+import com.deepsky.database.ConnectionManagerListener;
+import com.deepsky.database.MyProgressIndicator;
 import com.deepsky.database.impl.ConnectionManagerImpl;
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.database.ora.DbUrlSID;
 import com.deepsky.database.ora2.DbSchemaIndexer;
-import com.deepsky.lang.integration.LocalFSChangeTracker;
 import com.deepsky.lang.integration.CodeChangeEventAggregator;
+import com.deepsky.lang.integration.LocalFSChangeTracker;
 import com.deepsky.lang.integration.PlSqlFileChangeTracker;
 import com.deepsky.lang.plsql.ConfigurationException;
 import com.deepsky.lang.plsql.indexMan.FSIndexer;
 import com.deepsky.lang.plsql.indexMan.IndexManagerImpl;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
-import com.deepsky.navigation.NameLookupService;
-import com.deepsky.navigation.impl.NameLookupServiceImpl;
 import com.deepsky.navigation.DbObjectContributor;
+import com.deepsky.navigation.NameLookupService;
 import com.deepsky.navigation.impl.DbObjectContribNewImpl;
+import com.deepsky.navigation.impl.NameLookupServiceImpl;
 import com.deepsky.settings.SqlCodeAssistantSettings;
 import com.deepsky.view.query_pane.QueryResultWindow;
 import com.deepsky.view.query_pane.converters.TIMESTAMPLTZ_Convertor;
@@ -49,9 +52,15 @@ import com.deepsky.view.query_pane.converters.TIMESTAMP_Convertor;
 import com.deepsky.view.query_pane.util.DateTimeParser;
 import com.deepsky.view.utils.ProgressIndicatorHelper;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeFactory;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
@@ -82,7 +91,7 @@ public class PlSqlProjectComponent implements ProjectComponent {
     }
 
     public void projectOpened() {
-        dbUrl = new DbUrlSID(IndexManager.FS_URL.getFullUrl()){
+        dbUrl = new DbUrlSID(IndexManager.FS_URL.getFullUrl()) {
             public String getAlias() {
                 return project.getName();
             }
@@ -148,7 +157,7 @@ public class PlSqlProjectComponent implements ProjectComponent {
         boolean flag = settings.isAccessOfflineEnabled();
         ConnectionInfo[] infos = connectionManager.getSessionList();
         DbUrl[] urls = new DbUrl[infos.length];
-        for(int i =0; i<infos.length; i++){
+        for (int i = 0; i < infos.length; i++) {
             urls[i] = infos[i].getUrl();
             nbr++;
         }
@@ -180,6 +189,49 @@ public class PlSqlProjectComponent implements ProjectComponent {
 
         nameLookupService = new NameLookupServiceImpl(project);
         PluginKeys.NAME_LOOKUP.putData(nameLookupService, project);
+
+        // make sure there are no plugins with SQL like extensions
+        ApplicationManager.getApplication().runWriteAction(new Runnable (){
+            public void run() {
+//                IdeaPluginDescriptor[] desc = PluginManager.getPlugins();
+                FileType sql = FileTypeManager.getInstance().getFileTypeByFileName("test.sql");
+                FileType pkb = FileTypeManager.getInstance().getFileTypeByFileName("test.pkb");
+                FileType pks = FileTypeManager.getInstance().getFileTypeByFileName("test.pks");
+
+                FileType stranger = null;
+                if( !(sql instanceof PlSqlFileType) ){
+                    // Ext 'sql' by someone else, report and disable plugin
+                    //PluginManager.getPlugins()
+                    //FileTypeManager.getInstance().
+                    stranger = sql;
+                    log.warn("sql ext is used by someone else.");
+                } else if(!( pkb instanceof PlSqlFileType)){
+                    // Ext 'pkb' by someone else, report and disable plugin
+                    log.warn("pkb ext is used by someone else.");
+                    stranger = pkb;
+                } else if(!( pks instanceof PlSqlFileType)){
+                    // Ext 'pks' by someone else, report and disable plugin
+                    log.warn("pks ext is used by someone else.");
+                    stranger = pks;
+                }
+
+                //PluginManager.getPlugins()[2].setEnabled(false);
+                //log.warn("Plugin was disabled!");
+                int hh =0;
+/*
+                final FileTypeFactory[] fileTypeFactories = Extensions.getExtensions(FileTypeFactory.FILE_TYPE_FACTORY_EP);
+                for (final FileTypeFactory factory : fileTypeFactories) {
+                    try {
+                        //initFactory(consumer, factory);
+                        factory.
+                    } catch (final Error ex) {
+                        //PluginManager.disableIncompatiblePlugin(factory, ex);
+                    }
+                }
+*/
+            }
+        });
+
     }
 
 
