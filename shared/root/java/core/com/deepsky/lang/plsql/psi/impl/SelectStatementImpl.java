@@ -33,6 +33,7 @@ import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.names.CompositeName;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
@@ -146,6 +147,12 @@ public class SelectStatementImpl extends PlSqlElementBase implements SelectState
     public ForUpdateClause getForUpdateClause(){
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.FOR_UPDATE_CLAUSE);
         return (node != null) ? (ForUpdateClause) node.getPsi() : null;
+    }
+
+    @Nullable
+    public PsiElement getIntoClause() {
+        ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.INTO_CLAUSE);
+        return (node != null) ? node.getPsi() : null;
     }
 
     @Nullable

@@ -87,6 +87,14 @@ public class RecordTypeItemImpl extends PlSqlElementBase implements RecordTypeIt
         }
     }
 
+    public TypeSpec getTypeSpec() {
+        TypeSpec type = this.findChildByClass(TypeSpec.class);
+        if (type != null) {
+            return type;
+        }
+        throw new SyntaxTreeCorruptedException();
+    }
+
     public Expression getDefaultExpr() {
         return null;
     }

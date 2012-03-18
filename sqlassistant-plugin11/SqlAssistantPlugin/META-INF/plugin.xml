@@ -19,12 +19,12 @@
         <li>Static code analysis (arithmetic expression evaluation, resolving references)</li>
         <li>Context aware code completion</li>
         <li>Viewing the Structure of SQL and PL/SQL code</li>
+        <li>SQL and PL/SQL code formatting (experimental)</li>
         <li>Code Navigation</li>
         <li>Quick object lookup <b>(Ctrl-Shift-O)</b></li>
         <li>Find Usages tables, views, columns, function, procedures, etc over a database schema or objects in the sql scripts on the local File System
             SQL and PL/SQL code execution with sortable query result <b>(Ctrl-Shift-M)</b></li>
         <li>Code Folding and bracket matching support</li>
-        <li>Code formatter (experimental)</li>
         <li>Code commenting</li>
         <li>Database Schema Browsing</li>
         <li>Connection management</li>

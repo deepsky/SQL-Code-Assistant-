@@ -37,6 +37,7 @@ import com.deepsky.lang.plsql.resolver.utils.PsiUtil;
 import com.intellij.formatting.Wrap;
 import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 
@@ -94,7 +95,7 @@ public class PlSqlWrapProcessor {
             }
         }
 
-        if(psiParent instanceof ObjectTypeDecl){
+        if (psiParent instanceof ObjectTypeDecl) {
             if (childType == PlSqlTokenTypes.OPEN_PAREN) {
                 return settings.WRAP_OPEN_PAREN_IN_CREATE_TABLE ?
                         Wrap.createWrap(WrapType.ALWAYS, true) : null;
@@ -102,7 +103,7 @@ public class PlSqlWrapProcessor {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             } else if (childType == PlSqlTokenTypes.DIVIDE) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
-            } else if (childType == PlSqlElementTypes.RECORD_ITEM){
+            } else if (childType == PlSqlElementTypes.RECORD_ITEM) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
@@ -162,12 +163,14 @@ public class PlSqlWrapProcessor {
 
         // AlterTable vs Column Definition, Constraint, CloseParenthesis
         if (psiParent instanceof AlterTable) {
-            if (childType == PlSqlElementTypes.COLUMN_DEF) {
+            if (childType == PlSqlElementTypes.A_COLUMN_DEF) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             } else if (childType == PlSqlTokenTypes.OPEN_PAREN) {
                 return settings.WRAP_OPEN_PAREN_IN_CREATE_TABLE ?
                         Wrap.createWrap(WrapType.ALWAYS, true) : null;
             } else if (childType == PlSqlTokenTypes.CLOSE_PAREN) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            } else if (childType == PlSqlElementTypes.ALTER_TABLE_CONSTRAINT) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
@@ -185,12 +188,15 @@ public class PlSqlWrapProcessor {
         if (parentType == PlSqlElementTypes.PLSQL_BLOCK) {
             if (childType == PlSqlTokenTypes.KEYWORD_BEGIN) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
+            } else if (childType == PlSqlTokenTypes.KEYWORD_DECLARE) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
             } else if (childType == PlSqlElementTypes.PLSQL_BLOCK_END) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
         if (childType == PlSqlElementTypes.VARIABLE_DECLARATION
-                || child.getPsi() instanceof TypeDeclaration) {
+                || child.getPsi() instanceof TypeDeclaration
+                || child.getPsi() instanceof CursorDecl) {
             return Wrap.createWrap(WrapType.ALWAYS, true);
         }
 
@@ -200,6 +206,14 @@ public class PlSqlWrapProcessor {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
+
+/*
+        if (childType == PlSqlElementTypes.ASSIGNMENT_STATEMENT
+                || childType == PlSqlElementTypes.IF_STATEMENT
+                || childType == PlSqlElementTypes.PROCEDURE_CALL) {
+            return Wrap.createWrap(WrapType.ALWAYS, true);
+        }
+*/
 
         if (parentType == PlSqlElementTypes.STATEMENT_LIST) {
             if (PlSqlElementTypes.PLSQL_STATEMENTS.contains(childType)) {
@@ -213,7 +227,22 @@ public class PlSqlWrapProcessor {
             }
         }
 
+        if (psiParent instanceof SelectStatementUnion) {
+            if (child.getElementType() == PlSqlElementTypes.SELECT_EXPRESSION) {
+                if (PsiUtil.prevVisibleSibling(child) != null) {
+                    return Wrap.createWrap(WrapType.ALWAYS, true);
+                }
+            } else if (child.getElementType() == PlSqlTokenTypes.KEYWORD_UNION
+                    || child.getElementType() == PlSqlTokenTypes.KEYWORD_MINUS
+                    || child.getElementType() == PlSqlTokenTypes.KEYWORD_INTERSECT) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+        }
+
         if (psiParent instanceof SelectStatement) {
+            if (settings.DONT_WRAP_SELECT_IF_SIMPLE && isSelectTrivial((SelectStatement) psiParent)) {
+                return null;
+            }
             if (childType == PlSqlElementTypes.WHERE_CONDITION) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
@@ -236,11 +265,11 @@ public class PlSqlWrapProcessor {
 
             if (childType == PlSqlElementTypes.EXPR_COLUMN) {
                 SelectStatement select = (SelectStatement) psiParent;
-                if (select.getSelectFieldList().length > 3 && settings.COMMA_AFTER_SELECT_EXPR == 2 ) {
+                if (select.getSelectFieldList().length > 3 && settings.COMMA_AFTER_SELECT_EXPR == 2) {
                     return Wrap.createWrap(WrapType.ALWAYS, true);
-                } else if (select.getSelectFieldList().length > 3 && settings.COMMA_AFTER_SELECT_EXPR == 3 ) {
+                } else if (select.getSelectFieldList().length > 3 && settings.COMMA_AFTER_SELECT_EXPR == 3) {
                     // Wrap the first expr_column
-                    if(select.getSelectFieldList()[0] == child.getPsi()){
+                    if (select.getSelectFieldList()[0] == child.getPsi()) {
                         return Wrap.createWrap(WrapType.ALWAYS, true);
                     }
                 }
@@ -251,7 +280,6 @@ public class PlSqlWrapProcessor {
                     return Wrap.createWrap(WrapType.ALWAYS, true);
                 }
             }
-
         }
 
         if (childType == PlSqlElementTypes.TABLE_ALIAS) {
@@ -274,6 +302,8 @@ public class PlSqlWrapProcessor {
                 || parentType == PlSqlElementTypes.PROCEDURE_BODY) {
             if (childType == PlSqlTokenTypes.KEYWORD_IS || childType == PlSqlTokenTypes.KEYWORD_AS) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
+            } else if (childType == PlSqlTokenTypes.DIVIDE) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
 
@@ -281,8 +311,15 @@ public class PlSqlWrapProcessor {
                 || parentType == PlSqlElementTypes.PACKAGE_SPEC) {
             if (childType == PlSqlTokenTypes.KEYWORD_IS
                     || childType == PlSqlTokenTypes.KEYWORD_AS
-                    || childType == PlSqlTokenTypes.KEYWORD_END) {
+                    || childType == PlSqlTokenTypes.KEYWORD_END
+                    || childType == PlSqlTokenTypes.DIVIDE) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
+            } else {
+                // Wrap any declaration or comment if it follows immediately after AS
+                ASTNode prev = PsiUtil.prevVisibleSibling(child);
+                if(prev != null && prev.getElementType() == PlSqlTokenTypes.KEYWORD_AS){
+                    return Wrap.createWrap(WrapType.ALWAYS, true);
+                }
             }
         }
 
@@ -292,6 +329,8 @@ public class PlSqlWrapProcessor {
                     || childType == PlSqlTokenTypes.KEYWORD_INSTEAD)
                     && PsiUtil.prevVisibleSibling(child).getElementType() == PlSqlElementTypes.TRIGGER_NAME) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
+            } else if (childType == PlSqlTokenTypes.DIVIDE) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
 
@@ -300,6 +339,8 @@ public class PlSqlWrapProcessor {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             } else if (childType == PlSqlElementTypes.SELECT_EXPRESSION
                     || childType == PlSqlElementTypes.SELECT_EXPRESSION_UNION) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            } else if (childType == PlSqlTokenTypes.DIVIDE) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
@@ -315,18 +356,23 @@ public class PlSqlWrapProcessor {
           CACHE 25
           NOORDER;
         */
-        if (parentType == PlSqlElementTypes.CREATE_SEQUENCE
-                && settings.WRAP_SEQUENCE_OPTIONS) {
-            if (childType == PlSqlTokenTypes.KEYWORD_START
-                    || childType == PlSqlTokenTypes.KEYWORD_INCREMENT
-                    || childType == PlSqlTokenTypes.KEYWORD_MINVALUE
-                    || childType == PlSqlTokenTypes.KEYWORD_MAXVALUE
-                    || childType == PlSqlTokenTypes.KEYWORD_CYCLE
-                    || childType == PlSqlTokenTypes.KEYWORD_NOCYCLE
-                    || childType == PlSqlTokenTypes.KEYWORD_CACHE
-                    || childType == PlSqlTokenTypes.KEYWORD_NOCACHE
-                    || childType == PlSqlTokenTypes.KEYWORD_ORDER
-                    || childType == PlSqlTokenTypes.KEYWORD_NOORDER) {
+        if (parentType == PlSqlElementTypes.CREATE_SEQUENCE) {
+            if (settings.WRAP_SEQUENCE_OPTIONS) {
+                if (childType == PlSqlTokenTypes.KEYWORD_START
+                        || childType == PlSqlTokenTypes.KEYWORD_INCREMENT
+                        || childType == PlSqlTokenTypes.KEYWORD_MINVALUE
+                        || childType == PlSqlTokenTypes.KEYWORD_MAXVALUE
+                        || childType == PlSqlTokenTypes.KEYWORD_CYCLE
+                        || childType == PlSqlTokenTypes.KEYWORD_NOCYCLE
+                        || childType == PlSqlTokenTypes.KEYWORD_CACHE
+                        || childType == PlSqlTokenTypes.KEYWORD_NOCACHE
+                        || childType == PlSqlTokenTypes.KEYWORD_ORDER
+                        || childType == PlSqlTokenTypes.KEYWORD_NOORDER) {
+                    return Wrap.createWrap(WrapType.ALWAYS, true);
+                }
+            }
+
+            if (childType == PlSqlTokenTypes.DIVIDE) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
@@ -359,5 +405,93 @@ public class PlSqlWrapProcessor {
 //        }
         return null; //Wrap.createWrap(WrapType.NORMAL, false);
 
+    }
+
+
+    private static final Key<Boolean> SELECT_IS_SIMPLE = Key.create("SELECT_IS_SIMPLE");
+
+    /**
+     * Check whether select is simple. Examples of select
+     * select * from tab1
+     * select ab1, ad1 from meta_table
+     * select * from tab1 order by id
+     * select to_char(sysdate - 4, 'YYMM') from dual
+     *
+     * @param select
+     * @return
+     */
+    private static boolean isSelectTrivial(final SelectStatement select) {
+        if (select instanceof SelectStatementUnion) {
+            return false;
+        }
+
+        Boolean isSimple = select.getUserData(SELECT_IS_SIMPLE);
+        if (isSimple != null) {
+            return isSimple;
+        }
+
+        int sizeOfSelect = 0;
+        int keywordsSize = "select".length();
+        for (SelectFieldCommon field : select.getSelectFieldList()) {
+            sizeOfSelect += field.getTextLength();
+        }
+
+        int fromSize = select.getFromClause().getTextLength();
+        sizeOfSelect += (fromSize - "from".length());
+        keywordsSize += "from".length();
+        float multiplifier = 3.f;
+
+
+        if (sizeOfSelect > keywordsSize * multiplifier) {
+            select.putUserData(SELECT_IS_SIMPLE, false);
+            return false;
+        }
+
+        PsiElement into = select.getIntoClause();
+        if (into != null) {
+            multiplifier -= 0.5;
+            sizeOfSelect += (into.getTextLength() - "into".length());
+            keywordsSize += "into".length();
+            if (sizeOfSelect > keywordsSize * multiplifier) {
+                select.putUserData(SELECT_IS_SIMPLE, false);
+                return false;
+            }
+        }
+
+        WhereCondition where = select.getWhereCondition();
+        if (where != null) {
+            multiplifier -= 0.7;
+            sizeOfSelect += (where.getTextLength() - "where".length());
+            keywordsSize += "where".length();
+            if (sizeOfSelect > keywordsSize * multiplifier) {
+                select.putUserData(SELECT_IS_SIMPLE, false);
+                return false;
+            }
+        }
+
+        OrderByClause orderBy = select.getOrderByClause();
+        if (orderBy != null) {
+            multiplifier -= 0.5;
+            sizeOfSelect += (orderBy.getTextLength() - "order by".length());
+            keywordsSize += "order by".length();
+            if (sizeOfSelect > keywordsSize * multiplifier) {
+                select.putUserData(SELECT_IS_SIMPLE, false);
+                return false;
+            }
+        }
+
+        GroupByClause groupBy = select.getGroupByClause();
+        if (groupBy != null) {
+            multiplifier -= 0.5;
+            sizeOfSelect += (groupBy.getTextLength() - "group by".length());
+            keywordsSize += "group by".length();
+            if (sizeOfSelect > keywordsSize * multiplifier) {
+                select.putUserData(SELECT_IS_SIMPLE, false);
+                return false;
+            }
+        }
+
+        select.putUserData(SELECT_IS_SIMPLE, true);
+        return true;
     }
 }

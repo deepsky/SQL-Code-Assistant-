@@ -25,6 +25,7 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
@@ -68,9 +69,9 @@ public class VariableDeclImpl extends PlSqlDeclarationBase implements VariableDe
         }
     }
 
-    public boolean isConstant() {
-        // todo --
-        return false;
+    public PsiElement getConstant(){
+        ASTNode _const = getNode().findChildByType(PlSqlTokenTypes.KEYWORD_CONSTANT);
+        return _const!=null? _const.getPsi(): null;
     }
 
     public boolean isNotNull() {

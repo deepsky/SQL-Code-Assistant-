@@ -166,7 +166,7 @@ public class PlSqlBlock extends AbstractBlock {
         if (targetType == PlSqlElementTypes.COLUMN_DEF) return Indent.getNormalIndent();
         if (targetType == PlSqlElementTypes.PK_SPEC) return Indent.getContinuationWithoutFirstIndent();
         if (targetType == PlSqlElementTypes.TABLE_DEF) return Indent.getNormalIndent();
-        if (targetType == PlSqlElementTypes.STATEMENT_LIST) return Indent.getNormalIndent();
+        //if (targetType == PlSqlElementTypes.STATEMENT_LIST) return Indent.getNormalIndent();
         if (targetType == PlSqlElementTypes.IF_STATEMENT) return Indent.getNormalIndent();
         if (targetType == PlSqlElementTypes.ELSE_STATEMENT) return Indent.getNormalIndent();
         if (targetType == PlSqlElementTypes.SELECT_EXPRESSION) return Indent.getNormalIndent();
@@ -203,11 +203,20 @@ public class PlSqlBlock extends AbstractBlock {
         if (targetType == PlSqlElementTypes.ARGUMENT_LIST) return Indent.getNormalIndent();
         if (targetType == PlSqlElementTypes.DATATYPE) return Indent.getNormalIndent();
         if (targetType == PlSqlElementTypes.PLSQL_BLOCK) {
+            if(parent.findChildByType(PlSqlElementTypes.DECLARE_LIST) != null){
+                return Indent.getNoneIndent();
+            } else {
+                return Indent.getNormalIndent(false);
+            }
+/*
             if (PlSqlElementTypes.PLSQL_BLOCK_PARENTS.contains(parent.getTreeParent().getElementType())) {
                 return Indent.getNoneIndent();
             } else {
                 return Indent.getNormalIndent(true);
             }
+            return Indent.getNormalIndent(true);
+*/
+//            return Indent.getNoneIndent();
         }
 
         if (targetType == PlSqlElementTypes.PACKAGE_BODY || targetType == PlSqlElementTypes.PACKAGE_SPEC){

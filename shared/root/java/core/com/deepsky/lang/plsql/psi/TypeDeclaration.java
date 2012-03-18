@@ -26,7 +26,9 @@
 package com.deepsky.lang.plsql.psi;
 
 import com.intellij.navigation.NavigationItem;
+import com.intellij.psi.PsiElement;
 
 public interface TypeDeclaration extends Declaration, NavigationItem {
+    PsiElement getPsiDeclName();
 
 }

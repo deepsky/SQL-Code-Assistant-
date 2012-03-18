@@ -514,6 +514,10 @@ public class PlSqlParserDefinition implements ParserDefinition {
                 return new ColumnDefinitionImpl(node);
             case PLSqlTokenTypes.V_COLUMN_DEF:
                 return new VColumnDefinitionImpl(node);
+
+            case PLSqlTokenTypes.A_COLUMN_DEF:
+                // TODO -- should be revised
+                return new ColumnDefinitionForAlterImpl(node);
             case PLSqlTokenTypes.RECORD_ITEM:
                 return new RecordTypeItemImpl(node);
             case PLSqlTokenTypes.COLUMN_SPEC_LIST:

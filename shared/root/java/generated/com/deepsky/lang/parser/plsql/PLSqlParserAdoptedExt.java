@@ -159,11 +159,12 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void function_body() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public java.lang.Integer function_body() throws antlr.RecognitionException,antlr.TokenStreamException{
+		java.lang.Integer ret;
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
 			try {
-			super.function_body();
+			ret =super.function_body();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
@@ -174,16 +175,18 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 				throw ex;
 			}
 		} else {
-			super.function_body();
+		ret = super.function_body();
 		}
 		returnType = -1;
+		return ret;
 	}
 
-	public void procedure_body() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public java.lang.Integer procedure_body() throws antlr.RecognitionException,antlr.TokenStreamException{
+		java.lang.Integer ret;
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
 			try {
-			super.procedure_body();
+			ret =super.procedure_body();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
@@ -194,9 +197,10 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 				throw ex;
 			}
 		} else {
-			super.procedure_body();
+		ret = super.procedure_body();
 		}
 		returnType = -1;
+		return ret;
 	}
 
 	public void create_trigger() throws antlr.RecognitionException,antlr.TokenStreamException{
@@ -939,11 +943,11 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
-	public void column_qualifier() throws antlr.RecognitionException,antlr.TokenStreamException{
+	public void column_constraint() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
 			try {
-			super.column_qualifier();
+			super.column_constraint();
 			if(returnType > 0 ){
 				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
 			} else {
@@ -954,7 +958,7 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 				throw ex;
 			}
 		} else {
-			super.column_qualifier();
+			super.column_constraint();
 		}
 		returnType = -1;
 	}
@@ -3119,6 +3123,26 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void alter_column_def() throws antlr.RecognitionException,antlr.TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.alter_column_def();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.alter_column_def();
+		}
+		returnType = -1;
+	}
+
 	public void drop_clause() throws antlr.RecognitionException,antlr.TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();
@@ -3155,46 +3179,6 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 			}
 		} else {
 			super.inline_out_of_line_constraint();
-		}
-		returnType = -1;
-	}
-
-	public void column_add_name() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			try {
-			super.column_add_name();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-			} catch(antlr.RecognitionException ex){
-				m.drop();
-				throw ex;
-			}
-		} else {
-			super.column_add_name();
-		}
-		returnType = -1;
-	}
-
-	public void column_modi_name() throws antlr.RecognitionException,antlr.TokenStreamException{
-		if (getPredicting() == 0) {
-			PsiBuilder.Marker m = builder.mark();
-			try {
-			super.column_modi_name();
-			if(returnType > 0 ){
-				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
-			} else {
-				m.drop();
-			}
-			} catch(antlr.RecognitionException ex){
-				m.drop();
-				throw ex;
-			}
-		} else {
-			super.column_modi_name();
 		}
 		returnType = -1;
 	}

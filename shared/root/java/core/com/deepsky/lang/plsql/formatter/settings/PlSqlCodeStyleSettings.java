@@ -30,15 +30,8 @@ import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
 
 public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
 
-    //public boolean KEEP_LINE_BREAKS_BETWEEN_SL_COMMENTS = true;
-
     // 1 - "Don't change", 2 - "Type", 3 - "Type&Null"
     public int ALIGNMENT_IN_COLUMN_DEF = 2;
-
-    /**
-     * Controls END_OF_LINE_COMMENT's and C_STYLE_COMMENT's
-     */
-    public boolean KEEP_FIRST_COLUMN_COMMENT = true;
 
     public boolean SPACE_WITHIN_BRACKETS = false;
 
@@ -55,8 +48,19 @@ public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
     public boolean WRAP_OPEN_PAREN_IN_CREATE_TABLE = false;
     public boolean WRAP_SEQUENCE_OPTIONS = true;
     public boolean WRAP_USER_OPTIONS = true;
-    public boolean ALIGN_ASSIGNMENTS = false;
+    public boolean ALIGN_ASSIGNMENTS = true;
+    public boolean DONT_WRAP_SELECT_IF_SIMPLE = true;
+
     public boolean KEEP_LINE_BREAKS = true;
+
+    /**
+     * Controls END_OF_LINE_COMMENT's and C_STYLE_COMMENT's
+     */
+    public boolean COMMENT_AT_FIRST_COLUMN = false;
+
+
+    // If true then alignment will not go out of the group similar declarations
+    public boolean KEEP_ALIGNMENT_IN_GROUP = true;   // todo -- make it configurable
 
     // todo -- put into setting dialog
     public boolean ALIGN_ALIAS_NAME_IN_SELECT = true;
@@ -72,6 +76,7 @@ public class PlSqlCodeStyleSettings extends CustomCodeStyleSettings {
     public int MAX_LINES_BETWEEN_FILE_LEVEL_STMT = 2;
     public int MAX_LINES_BETWEEN_BLOCK_LEVEL_STMT = 1;
     public int MAX_LINES_BETWEEN_SL_COMMENTS = 0;
+    public int MAX_LINES_BETWEEN_PKG_LEVEL_STMT = 2;
 
     final static public int CASE_NAME_DONT_CHANGE = 1;
     final static public int CASE_NAME_UPPER = 2;

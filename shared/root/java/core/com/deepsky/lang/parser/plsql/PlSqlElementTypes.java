@@ -25,7 +25,6 @@
 
 package com.deepsky.lang.parser.plsql;
 
-import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.intellij.psi.tree.TokenSet;
 
 
@@ -197,9 +196,6 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted {
     TokenSet PKG_BODY_TRIGGER_CONTEXT = TokenSet.create(
             PACKAGE_BODY, PACKAGE_SPEC, CREATE_TRIGGER
     );
-    TokenSet PKG_SPEC_CONTEXT = TokenSet.create(
-            PACKAGE_SPEC
-    );
 
     TokenSet TYPES = TokenSet.create(
             TYPE_NAME_REF,
@@ -207,4 +203,15 @@ public interface PlSqlElementTypes extends PLSqlTypesAdopted {
             TABLE_TYPE_REF,
             DATATYPE
     );
+
+
+    TokenSet PKG_LEVEL = TokenSet.create(
+            SUBTYPE_DECL, VARIABLE_DECLARATION, CURSOR_DECLARATION,
+            OBJECT_TYPE_DEF, TABLE_COLLECTION, RECORD_TYPE_DECL, REF_CURSOR, VARRAY_COLLECTION,
+            PROCEDURE_BODY, PROCEDURE_SPEC, FUNCTION_BODY, FUNCTION_SPEC,
+            RESTRICT_REF_PRAGMA, INTERFACE_PRAGMA, BUILTIN_PRAGMA, FIPSFLAG_PRAGMA,
+            TIMESTAMPG_PRAGMA, EXCEPTION_PRAGMA,
+            EXCEPTION_DECL
+    );
+
 }

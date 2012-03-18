@@ -259,24 +259,26 @@ public class PlSqlPsiParser implements PsiParser {
         }
 
 
-        public void function_body() throws RecognitionException, TokenStreamException {
+        public Integer function_body() throws RecognitionException, TokenStreamException {
             try {
-                super.function_body();
+                return super.function_body();
             } catch (CustomRecognitionException ex) {
                 returnType = -1;
                 recover(ex, _tokenSet_10101);
             }
             returnAST = null;
+            return -1;
         }
 
-        public void procedure_body() throws RecognitionException, TokenStreamException {
+        public Integer procedure_body() throws RecognitionException, TokenStreamException {
             try {
-                super.procedure_body();
+                return super.procedure_body();
             } catch (CustomRecognitionException ex) {
                 returnType = -1;
                 recover(ex, _tokenSet_10101);
             }
             returnAST = null;
+            return -1;
         }
 
     }

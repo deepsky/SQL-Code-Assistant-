@@ -102,6 +102,10 @@ public class SelectStatementUnionImpl extends PlSqlElementBase implements Select
         return (node != null) ? (ForUpdateClause) node.getPsi() : null;
     }
 
+    public PsiElement getIntoClause() {
+        return getSelectStatements()[0].getIntoClause();
+    }
+
 
     @NotNull
     private SelectStatement get_1stSelectStatement() {

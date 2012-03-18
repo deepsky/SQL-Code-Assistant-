@@ -52,11 +52,13 @@ public class PlSqlSpacingProcessorBasic {
             Executable.class, TypeDeclaration.class,
             PackageBody.class, PackageSpec.class,
             SqlPlusCommand.class,
-            //PsiComment.class,
             SelectStatement.class, Subquery.class,
-//            DeleteStatement.class, UpdateStatement.class, MergeStatement.class, InsertStatement.class,
             CommitStatement.class, RollbackStatement.class,
             ControlStatement.class
+    };
+
+    final static Class[] topLevelDML = new Class[]{
+            DeleteStatement.class, UpdateStatement.class, MergeStatement.class, InsertStatement.class
     };
 
     public static Spacing getSpacing(com.deepsky.lang.plsql.formatter.PlSqlBlock child1,
@@ -103,11 +105,12 @@ public class PlSqlSpacingProcessorBasic {
             return SpacingConstants.NO_SPACING;
         }
 
-
+/*
         if (left instanceof PsiComment || right instanceof PsiComment) {
             // Keep comments
             return Spacing.createSpacing(1, 1, 1, true, settings.MAX_LINES_BETWEEN_FILE_LEVEL_STMT + 1);
         }
+*/
 
         // pragma_autonomous_transaction
         if (leftType == PlSqlTokenTypes.KEYWORD_PRAGMA) {
@@ -153,14 +156,24 @@ public class PlSqlSpacingProcessorBasic {
                             true,
                             settings.MAX_LINES_BETWEEN_FILE_LEVEL_STMT + 1);
                 }
-            } else if (containedIn(topLevel, right)) {
-                // indent ahead
+            } else if (left instanceof PsiComment || right instanceof PsiComment) {
+                // Keep comments
+                return Spacing.createSpacing(1, 1, 0, true, settings.MAX_LINES_BETWEEN_FILE_LEVEL_STMT + 1);
+            } else if (containedIn(topLevel, right) || containedIn(topLevel, left)) {
+                // indent ahead OR behind
                 return Spacing.createSpacing(1, 1,
                         settings.MIN_LINES_BETWEEN_FILE_LEVEL_STMT + 1,
                         true,
                         settings.MAX_LINES_BETWEEN_FILE_LEVEL_STMT + 1);
-            } else if (containedIn(topLevel, left)) {
-                // indent behind
+            } if (compose(left, right, topLevelDML)) {
+                // Between DML statements of the file level
+                return Spacing.createSpacing(1, 1,
+                        0,
+                        true,
+                        settings.MAX_LINES_BETWEEN_FILE_LEVEL_STMT);
+
+            }else if (containedIn(topLevelDML, left) || containedIn(topLevelDML, right)) {
+                // indent behind OR ahead of DML statement
                 return Spacing.createSpacing(1, 1,
                         settings.MIN_LINES_BETWEEN_FILE_LEVEL_STMT + 1,
                         true,
@@ -203,17 +216,40 @@ public class PlSqlSpacingProcessorBasic {
             } else {
                 return SpacingConstants.ONE_SPACE_WITHOUT_NEWLINE;
             }
-        }
-
-
-/*
-        if(parentType == PlSqlElementTypes.LAST_STMT_RESULT_BOOL
-                || parentType == PlSqlElementTypes.LAST_STMT_RESULT_NUM){
-            if(rightType == PlSqlTokenTypes.PERCENTAGE || leftType == PlSqlTokenTypes.PERCENTAGE){
+        } else if (parentType == PlSqlElementTypes.ALTER_TABLE_CONSTRAINT) {
+            if (leftType == PlSqlTokenTypes.OPEN_PAREN || rightType == PlSqlTokenTypes.CLOSE_PAREN) {
+                return SpacingConstants.NO_SPACING;
+            }
+        } else if (parentType == PlSqlElementTypes.VARRAY_COLLECTION) {
+            if (leftType == PlSqlTokenTypes.OPEN_PAREN || rightType == PlSqlTokenTypes.OPEN_PAREN
+                    || rightType == PlSqlTokenTypes.CLOSE_PAREN) {
+                return SpacingConstants.NO_SPACING;
+            }
+        } else if (parent instanceof PackageSpec || parent instanceof PackageBody) {
+            // Package content
+            if (compose(left, right, PlSqlElementTypes.PKG_LEVEL)) {
+                return Spacing.createSpacing(1, 1,
+                        0,
+                        true,
+                        settings.MAX_LINES_BETWEEN_PKG_LEVEL_STMT);
+            } else if (left instanceof PsiComment || right instanceof PsiComment) {
+                // Keep comments
+                return Spacing.createSpacing(1, 1, 0, true, settings.MAX_LINES_BETWEEN_PKG_LEVEL_STMT);
+            } else if (PlSqlElementTypes.PKG_LEVEL.contains(left.getNode().getElementType())
+                    || PlSqlElementTypes.PKG_LEVEL.contains(right.getNode().getElementType())) {
+                // Keep blank lines ahead and behind
+                return Spacing.createSpacing(1, 1, 0, true, settings.MAX_LINES_BETWEEN_PKG_LEVEL_STMT);
+            }
+        } else if (parent instanceof DeclarationList ) {
+            return Spacing.createSpacing(1, 1,
+                    0,
+                    true,
+                    settings.MAX_LINES_BETWEEN_BLOCK_LEVEL_STMT);
+        } else if (parentType == PlSqlElementTypes.EXCEPTION_PRAGMA) {
+            if (leftType == PlSqlTokenTypes.OPEN_PAREN || rightType == PlSqlTokenTypes.CLOSE_PAREN) {
                 return SpacingConstants.NO_SPACING;
             }
         }
-*/
 
         return SpacingConstants.ONE_SPACE_WITH_NEWLINE; //COMMON_SPACING;
     }
@@ -247,4 +283,9 @@ public class PlSqlSpacingProcessorBasic {
     }
 
 
+    private static boolean compose(final PsiElement left, final PsiElement right, TokenSet elements) {
+        return elements.contains(left.getNode().getElementType())
+                && elements.contains(right.getNode().getElementType());
+
+    }
 }

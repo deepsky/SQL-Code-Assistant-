@@ -25,6 +25,7 @@
 
 package com.deepsky.lang.plsql.psi;
 
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,6 +49,10 @@ public interface SelectStatement extends Statement {
 
     @Nullable   GroupByClause getGroupByClause();
     @Nullable   ForUpdateClause getForUpdateClause();
+
+    @Nullable
+    PsiElement getIntoClause();
+
 
 /*
     @Nullable SelectStatement getFollowingSelectStatement();

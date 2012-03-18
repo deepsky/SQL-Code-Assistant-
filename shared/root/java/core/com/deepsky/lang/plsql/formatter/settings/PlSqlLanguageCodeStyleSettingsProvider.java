@@ -123,17 +123,20 @@ public class PlSqlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
         if (settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS) {
 //            consumer.showAllStandardOptions();
             consumer.showCustomOption(PlSqlCodeStyleSettings.class,
-                    "ALIGNMENT_IN_COLUMN_DEF", "In column definition", "Alignment",
+                    "ALIGNMENT_IN_COLUMN_DEF", "Column definition", "Alignment",
                     new String[]{"Don't change", "Types", "Types & NULL"}, new int[]{1, 2, 3});
 
-//            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_COLUMN_DEF", "In column definition", "Alignment");
-            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_DECL", "In variable declaration", "Alignment");
-            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_ARGUMENT_LIST", "In argument list", "Alignment");
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_DECL", "Declaration list", "Alignment");
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_DATATYPE_IN_ARGUMENT_LIST", "Argument list", "Alignment");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_ALIAS_NAME_IN_SELECT", "Alias in column expressions", "Alignment");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "ALIGN_ASSIGNMENTS", "Assignment statements", "Alignment");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "WRAP_OPEN_PAREN_IN_CREATE_TABLE", "Wrap '(' in CREATE TABLE", "Wrapping");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "WRAP_SEQUENCE_OPTIONS", "Wrap options in CREATE SEQUENCE", "Wrapping");
             consumer.showCustomOption(PlSqlCodeStyleSettings.class, "WRAP_USER_OPTIONS", "Wrap options in CREATE USER", "Wrapping");
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "DONT_WRAP_SELECT_IF_SIMPLE", "Don't wrap Select statement if trivial", "Wrapping");
+
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "COMMENT_AT_FIRST_COLUMN", "Comment at first column", "Keep when reformatting");
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class, "KEEP_LINE_BREAKS", "Line breaks", "Keep when reformatting");
 
             consumer.showCustomOption(PlSqlCodeStyleSettings.class,
                     "COMMA_AFTER_SELECT_EXPR", "In relation to column expression in SELECT", "Comma placement",
@@ -166,6 +169,10 @@ public class PlSqlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
             consumer.showCustomOption(PlSqlCodeStyleSettings.class,
                     "MAX_LINES_BETWEEN_BLOCK_LEVEL_STMT",
                     "Between statements inside a block",
+                    CodeStyleSettingsCustomizable.BLANK_LINES_KEEP);
+            consumer.showCustomOption(PlSqlCodeStyleSettings.class,
+                    "MAX_LINES_BETWEEN_PKG_LEVEL_STMT",
+                    "Between declarations in package body/specification",
                     CodeStyleSettingsCustomizable.BLANK_LINES_KEEP);
 
             // Min blank lines
@@ -232,6 +239,7 @@ public class PlSqlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
                     "    dblVal VARCHAR2(50) := P_TIME_ZONE;\n" +
                     "    ret binary_integer;\n" +
                     "BEGIN\n" +
+                    "       -- Find number\n" +
                     "    ret := OAgetNumber(token, PropName, inArgTable, inArgTypeTable, dblVal, argCount);\n" +
                     "    retVal := ret;\n" +
                     "    RETURN ret;\n" +

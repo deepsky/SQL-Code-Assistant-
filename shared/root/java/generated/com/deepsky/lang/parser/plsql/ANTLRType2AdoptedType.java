@@ -4,7 +4,7 @@ import com.intellij.psi.tree.IElementType;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 
 public class ANTLRType2AdoptedType {
-	static public IElementType[] type2etype = new IElementType[385];
+	static public IElementType[] type2etype = new IElementType[387];
 	static {
 		type2etype[PLSqlTokenTypes.CREATE_VIEW_COLUMN_DEF] = PLSqlTypesAdopted.CREATE_VIEW_COLUMN_DEF;
 		type2etype[PLSqlTokenTypes.DROP_VIEW] = PLSqlTypesAdopted.DROP_VIEW;
@@ -47,6 +47,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.WHERE_CONDITION] = PLSqlTypesAdopted.WHERE_CONDITION;
 		type2etype[PLSqlTokenTypes.CHECK_CONSTRAINT] = PLSqlTypesAdopted.CHECK_CONSTRAINT;
 		type2etype[PLSqlTokenTypes.BETWEEN_CONDITION] = PLSqlTypesAdopted.BETWEEN_CONDITION;
+		type2etype[PLSqlTokenTypes.A_COLUMN_DEF] = PLSqlTypesAdopted.A_COLUMN_DEF;
 		type2etype[PLSqlTokenTypes.CUSTOM_AGGR_FUNCTION] = PLSqlTypesAdopted.CUSTOM_AGGR_FUNCTION;
 		type2etype[PLSqlTokenTypes.NOT_NULL_STMT] = PLSqlTypesAdopted.NOT_NULL_STMT;
 		type2etype[PLSqlTokenTypes.PARAMETER_NAME] = PLSqlTypesAdopted.PARAMETER_NAME;
@@ -91,6 +92,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.PLSQL_EXPR_LIST_USING] = PLSqlTypesAdopted.PLSQL_EXPR_LIST_USING;
 		type2etype[PLSqlTokenTypes.FUNCTION_CALL] = PLSqlTypesAdopted.FUNCTION_CALL;
 		type2etype[PLSqlTokenTypes.INTERFACE_PRAGMA] = PLSqlTypesAdopted.INTERFACE_PRAGMA;
+		type2etype[PLSqlTokenTypes.ALTER_TABLE_CONSTRAINT] = PLSqlTypesAdopted.ALTER_TABLE_CONSTRAINT;
 		type2etype[PLSqlTokenTypes.PARAMETER_REF] = PLSqlTypesAdopted.PARAMETER_REF;
 		type2etype[PLSqlTokenTypes.SQLPLUS_REPFOOTER] = PLSqlTypesAdopted.SQLPLUS_REPFOOTER;
 		type2etype[PLSqlTokenTypes.DROP_LIBRARY] = PLSqlTypesAdopted.DROP_LIBRARY;
@@ -276,7 +278,6 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.RECORD_TYPE_DECL] = PLSqlTypesAdopted.RECORD_TYPE_DECL;
 		type2etype[PLSqlTokenTypes.GROUP_CLAUSE] = PLSqlTypesAdopted.GROUP_CLAUSE;
 		type2etype[PLSqlTokenTypes.EXISTS_EXPR] = PLSqlTypesAdopted.EXISTS_EXPR;
-		type2etype[PLSqlTokenTypes.ALTER_COLUMN_SPEC] = PLSqlTypesAdopted.ALTER_COLUMN_SPEC;
 		type2etype[PLSqlTokenTypes.AUTONOMOUS_TRN_PRAGMA] = PLSqlTypesAdopted.AUTONOMOUS_TRN_PRAGMA;
 		type2etype[PLSqlTokenTypes.COND_COMP_SEQ2] = PLSqlTypesAdopted.COND_COMP_SEQ2;
 		type2etype[PLSqlTokenTypes.DEFAULT] = PLSqlTypesAdopted.DEFAULT;

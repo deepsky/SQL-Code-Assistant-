@@ -32,6 +32,7 @@ import com.deepsky.lang.plsql.formatter.SpacingConstants;
 import com.deepsky.lang.plsql.formatter.settings.PlSqlCodeStyleSettings;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.*;
+import com.deepsky.lang.plsql.psi.impl.ColumnDefinitionForAlterImpl;
 import com.deepsky.lang.plsql.psi.types.ColumnTypeRef;
 import com.deepsky.lang.plsql.psi.types.DataType;
 import com.deepsky.lang.plsql.psi.types.RowtypeType;
@@ -234,6 +235,19 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
     }
 
     public void visitColumnDefinition(ColumnDefinition definition) {
+        if (leftChild.getElementType() == PlSqlElementTypes.COLUMN_NAME_DDL
+                && rightChild.getPsi() instanceof TypeSpec) {
+
+            int len = leftChild.getTextLength();
+            int spaces = len % (styleSettings.TAB_SIZE * 2);
+            spaces = styleSettings.TAB_SIZE * 2 - spaces;
+            createSpaceProperty(spaces, false, styleSettings.KEEP_BLANK_LINES_IN_CODE);
+        } else {
+            createSpaceProperty(1, false, styleSettings.KEEP_BLANK_LINES_IN_CODE);
+        }
+    }
+
+    public void visitColumnDefinitionForAlter(ColumnDefinitionForAlterImpl definition) {
         if (leftChild.getElementType() == PlSqlElementTypes.COLUMN_NAME_DDL
                 && rightChild.getPsi() instanceof TypeSpec) {
 

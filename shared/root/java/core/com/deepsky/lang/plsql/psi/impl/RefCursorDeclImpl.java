@@ -26,11 +26,13 @@
 package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.RefCursorDecl;
 import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,13 +42,16 @@ public class RefCursorDeclImpl extends PlSqlDeclarationBase implements RefCursor
         super(astNode);
     }
 
-//    public Type getDataType() {
-//        return null;  //To change body of implemented methods use File | Settings | File Templates.
-//    }
-
     public String getDeclName() {
+        return getPsiDeclName().getText();
+    }
+
+    public PsiElement getPsiDeclName() {
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.TYPE_NAME);
-        return node.getText();
+        if(node == null){
+            throw new SyntaxTreeCorruptedException();
+        }
+        return node.getPsi();
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {

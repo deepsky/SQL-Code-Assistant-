@@ -48,7 +48,7 @@ public class PlSqlFileType extends LanguageFileType {
 
     @NotNull
     public String getDescription() {
-        return "SQL (PL/SQL) file type";
+        return "SQL (PL/SQL) files";
     }
 
     @NotNull

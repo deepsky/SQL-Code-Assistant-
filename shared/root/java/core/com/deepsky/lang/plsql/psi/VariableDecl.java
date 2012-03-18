@@ -29,6 +29,7 @@ import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface VariableDecl extends Declaration {
 
@@ -40,29 +41,13 @@ public interface VariableDecl extends Declaration {
 
     TypeSpec getTypeSpec();
 
-    boolean isConstant();
-
     boolean isNotNull();
 
     boolean isBeingAssigned();
 
     boolean isDefault();
 
+    @Nullable
+    PsiElement getConstant();
 
-//    @NotNull
-//    VariableDescriptor describe();
-
-/*
-    DefinitionContextSpec getDefContext();
-
-    public interface DefinitionContextSpec {
-        DefinitionContext getDefContext();
-    }
-
-    enum DefinitionContext {
-        PACKAGE_CTX,
-        PROCEDURE_CTX,
-        FUNCTION_CTX
-    }
-*/
 }

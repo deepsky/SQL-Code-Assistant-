@@ -62,7 +62,11 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PlSqlProjectComponent implements ProjectComponent {
@@ -190,7 +194,7 @@ public class PlSqlProjectComponent implements ProjectComponent {
         nameLookupService = new NameLookupServiceImpl(project);
         PluginKeys.NAME_LOOKUP.putData(nameLookupService, project);
 
-        // make sure there are no plugins with SQL like extensions
+        // Make sure there are no plugins with SQL like extensions
         ApplicationManager.getApplication().runWriteAction(new Runnable (){
             public void run() {
 //                IdeaPluginDescriptor[] desc = PluginManager.getPlugins();
@@ -198,23 +202,50 @@ public class PlSqlProjectComponent implements ProjectComponent {
                 FileType pkb = FileTypeManager.getInstance().getFileTypeByFileName("test.pkb");
                 FileType pks = FileTypeManager.getInstance().getFileTypeByFileName("test.pks");
 
-                FileType stranger = null;
+                List<FileType> strangers = new ArrayList<FileType>();
                 if( !(sql instanceof PlSqlFileType) ){
                     // Ext 'sql' by someone else, report and disable plugin
                     //PluginManager.getPlugins()
                     //FileTypeManager.getInstance().
-                    stranger = sql;
+                    strangers.add(sql);
                     log.warn("sql ext is used by someone else.");
-                } else if(!( pkb instanceof PlSqlFileType)){
-                    // Ext 'pkb' by someone else, report and disable plugin
-                    log.warn("pkb ext is used by someone else.");
-                    stranger = pkb;
-                } else if(!( pks instanceof PlSqlFileType)){
-                    // Ext 'pks' by someone else, report and disable plugin
-                    log.warn("pks ext is used by someone else.");
-                    stranger = pks;
                 }
 
+                if(!( pkb instanceof PlSqlFileType)){
+                    // Ext 'pkb' by someone else, report and disable plugin
+                    log.warn("pkb ext is used by someone else.");
+                    strangers.add(pkb);
+                }
+
+                if(!( pks instanceof PlSqlFileType)){
+                    // Ext 'pks' by someone else, report and disable plugin
+                    log.warn("pks ext is used by someone else.");
+                    strangers.add(pks);
+                }
+
+                if(strangers.size() > 0){
+                    // Format warning messages
+                    StringBuilder b1 = new StringBuilder();
+                    StringBuilder b2 = new StringBuilder();
+                    for(FileType ft: strangers){
+                        String ext = ft.getDefaultExtension();
+                        if(b1.length() > 0){
+                            b1.append(",");
+                            b2.append(",");
+                        }
+                        b1.append(ext);
+                        b2.append("*.").append(ext);
+                    }
+
+                    String message =
+                            "To identify SQL files, SQL Code Assistant plugin uses the following file extensions: sql, pks and pkb.\n" +
+                            "But it seems another plugin has already registered these file types. To let SQL Code Assistant plugin work properly " +
+                            "you may need to associate " + b1.toString() + " file extension(s) with the plugin.\"" +
+                            "Go to Settings -> File Types and add registered patterns " + b2.toString() + " to SQL (PL/SQL) files.";
+                    Messages.showWarningDialog(project,
+                            message,
+                            "Conflict in file extensions detected");
+                }
                 //PluginManager.getPlugins()[2].setEnabled(false);
                 //log.warn("Plugin was disabled!");
                 int hh =0;

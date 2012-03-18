@@ -47,6 +47,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType WHERE_CONDITION = new PlSqlElementType("WHERE_CONDITION", PLSqlTokenTypes.WHERE_CONDITION);
 	PlSqlElementType CHECK_CONSTRAINT = new PlSqlElementType("CHECK_CONSTRAINT", PLSqlTokenTypes.CHECK_CONSTRAINT);
 	PlSqlElementType BETWEEN_CONDITION = new PlSqlElementType("BETWEEN_CONDITION", PLSqlTokenTypes.BETWEEN_CONDITION);
+	PlSqlElementType A_COLUMN_DEF = new PlSqlElementType("A_COLUMN_DEF", PLSqlTokenTypes.A_COLUMN_DEF);
 	PlSqlElementType CUSTOM_AGGR_FUNCTION = new PlSqlElementType("CUSTOM_AGGR_FUNCTION", PLSqlTokenTypes.CUSTOM_AGGR_FUNCTION);
 	PlSqlElementType NOT_NULL_STMT = new PlSqlElementType("NOT_NULL_STMT", PLSqlTokenTypes.NOT_NULL_STMT);
 	PlSqlElementType PARAMETER_NAME = new PlSqlElementType("PARAMETER_NAME", PLSqlTokenTypes.PARAMETER_NAME);
@@ -91,6 +92,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType PLSQL_EXPR_LIST_USING = new PlSqlElementType("PLSQL_EXPR_LIST_USING", PLSqlTokenTypes.PLSQL_EXPR_LIST_USING);
 	PlSqlElementType FUNCTION_CALL = new PlSqlElementType("FUNCTION_CALL", PLSqlTokenTypes.FUNCTION_CALL);
 	PlSqlElementType INTERFACE_PRAGMA = new PlSqlElementType("INTERFACE_PRAGMA", PLSqlTokenTypes.INTERFACE_PRAGMA);
+	PlSqlElementType ALTER_TABLE_CONSTRAINT = new PlSqlElementType("ALTER_TABLE_CONSTRAINT", PLSqlTokenTypes.ALTER_TABLE_CONSTRAINT);
 	PlSqlElementType PARAMETER_REF = new PlSqlElementType("PARAMETER_REF", PLSqlTokenTypes.PARAMETER_REF);
 	PlSqlElementType SQLPLUS_REPFOOTER = new PlSqlElementType("SQLPLUS_REPFOOTER", PLSqlTokenTypes.SQLPLUS_REPFOOTER);
 	PlSqlElementType DROP_LIBRARY = new PlSqlElementType("DROP_LIBRARY", PLSqlTokenTypes.DROP_LIBRARY);
@@ -276,7 +278,6 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType RECORD_TYPE_DECL = new PlSqlElementType("RECORD_TYPE_DECL", PLSqlTokenTypes.RECORD_TYPE_DECL);
 	PlSqlElementType GROUP_CLAUSE = new PlSqlElementType("GROUP_CLAUSE", PLSqlTokenTypes.GROUP_CLAUSE);
 	PlSqlElementType EXISTS_EXPR = new PlSqlElementType("EXISTS_EXPR", PLSqlTokenTypes.EXISTS_EXPR);
-	PlSqlElementType ALTER_COLUMN_SPEC = new PlSqlElementType("ALTER_COLUMN_SPEC", PLSqlTokenTypes.ALTER_COLUMN_SPEC);
 	PlSqlElementType AUTONOMOUS_TRN_PRAGMA = new PlSqlElementType("AUTONOMOUS_TRN_PRAGMA", PLSqlTokenTypes.AUTONOMOUS_TRN_PRAGMA);
 	PlSqlElementType COND_COMP_SEQ2 = new PlSqlElementType("COND_COMP_SEQ2", PLSqlTokenTypes.COND_COMP_SEQ2);
 	PlSqlElementType DEFAULT = new PlSqlElementType("DEFAULT", PLSqlTokenTypes.DEFAULT);

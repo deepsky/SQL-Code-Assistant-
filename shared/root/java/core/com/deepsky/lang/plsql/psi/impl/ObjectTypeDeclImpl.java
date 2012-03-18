@@ -37,6 +37,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.vcs.FileStatus;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,8 +54,15 @@ public class ObjectTypeDeclImpl extends PlSqlDeclarationBase implements ObjectTy
     }
 
     public String getDeclName() {
+        return getPsiDeclName().getText();
+    }
+
+    public PsiElement getPsiDeclName() {
         ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.TYPE_NAME);
-        return node.getText();
+        if(node == null){
+            throw new SyntaxTreeCorruptedException();
+        }
+        return node.getPsi();
     }
 
 

@@ -345,13 +345,14 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitDeclarationList(DeclarationList declarationList) {
-        for (Declaration decl : declarationList.getDeclList()) {
-            try {
-                decl.accept(this);
-            } catch (SyntaxTreeCorruptedException e) {
-                // skip failed declaration
-            }
-        }
+        visitElement(declarationList);
+//        for (Declaration decl : declarationList.getDeclList()) {
+//            try {
+//                decl.accept(this);
+//            } catch (SyntaxTreeCorruptedException e) {
+//                // skip failed declaration
+//            }
+//        }
     }
 
     public void visitLoopIndex(LoopIndex loopIndex) {
@@ -534,5 +535,9 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
 
     public void visitUniqueConstraint(UniqueConstraint  constraint) {
         visitElement(constraint);
+    }
+
+    public void visitColumnDefinitionForAlter(ColumnDefinitionForAlterImpl definitionForAlter) {
+        visitElement(definitionForAlter);
     }
 }

@@ -24,7 +24,6 @@ tokens {
     PROCEDURE_BODY;
     FUNCTION_BODY;
     PARAMETER_SPEC;
-//    SQL_STATEMENT;
     IF_STATEMENT;
     LOOP_STATEMENT;
     STATEMENT;
@@ -191,6 +190,7 @@ tokens {
     SEQUENCE_EXPR; SEQUENCE_REF;
     ALIAS_IDENT;
     COLUMN_NAME_DDL; COLUMN_DEF; TABLE_DEF;
+    A_COLUMN_DEF;
     TABLE_COLLECTION; VARRAY_COLLECTION;
     REF_CURSOR;
     OBJECT_TYPE_DEF;
@@ -200,7 +200,8 @@ tokens {
 
     GRANT_COMMAND; REVOKE_COMMAND;
 
-    ALTER_TABLE; ALTER_GENERIC;
+    ALTER_TABLE; ALTER_GENERIC; ALTER_TABLE_CONSTRAINT;
+
     CREATE_TEMP_TABLE;
     COMMENT; COMMENT_STR;
     CREATE_INDEX;
@@ -379,14 +380,17 @@ start_rule:
     )*
     ;
 
-start_rule_inner:
+start_rule_inner
+{Integer retVal = -1; }:
         create_or_replace
         | ("package" "body") => (package_body  (DIVIDE!)?)
             {  __markRule(PACKAGE_BODY); }
         | ("package") => (package_spec  (DIVIDE!)?)
             {  __markRule(PACKAGE_SPEC); }
-        | (function_body (DIVIDE!)?)
-        | (procedure_body (DIVIDE!)?)
+        | (retVal=function_body (DIVIDE!)?)
+            {  __markRule(retVal); }
+        | (retVal=procedure_body (DIVIDE!)?)
+            {  __markRule(retVal); }
         | (create_trigger (SEMI!)? (DIVIDE!)?)
             {  __markRule(CREATE_TRIGGER);}
         | (select_command (SEMI)?)
@@ -520,7 +524,7 @@ comment_string:
     ;
 
 column_def:
-    column_name_ddl type_spec (column_qualifier)*
+    column_name_ddl type_spec (column_constraint)*
     {  __markRule(COLUMN_DEF);}
     ;
 
@@ -533,7 +537,7 @@ row_movement_clause:
     ("disable"|"enable") "row" "movement"
     ;
 
-column_qualifier:
+column_constraint:
     ("constraint" constraint_name (
         ("primary" "key"  ("disable"|"enable")? )
             {  __markRule(COLUMN_PK_SPEC);}
@@ -616,15 +620,18 @@ sqlplus_path:
     ;
 
 
-create_or_replace:
+create_or_replace
+{Integer retVal = -1;}:
     "create"! ( "or"! "replace"! )? ("force")?
     (
         package_spec
             {  __markRule(PACKAGE_SPEC); }
         | package_body
             {  __markRule(PACKAGE_BODY);}
-        | procedure_body
-        | function_body
+        | (retVal = procedure_body)
+            {  __markRule(retVal); }
+        | (retVal = function_body)
+            {  __markRule(retVal); }
         | create_view
             {  __markRule(CREATE_VIEW);}
         | create_view_column_def
@@ -935,16 +942,6 @@ create_directory:
 // -------------------------------------------------------------------
 // [CREATE TABLE START] ----------------------------------
 // -------------------------------------------------------------------
-/*
-create_table2:
-    "table"! (schema_name DOT!)? table_name_ddl
-//    (OPEN_PAREN! column_def (COMMA! (column_def|constraint))* CLOSE_PAREN!)?
-    (OPEN_PAREN! column_def (COMMA! (column_def|constraint))* CLOSE_PAREN!)
-    (nested_tab_spec)? (lob_storage_clause)? (physical_properties|table_properties)*
-    ("as" select_expression)?
-    ;
-*/
-
 create_table2:
     "table"! (schema_name DOT!)? table_name_ddl (
             ( OPEN_PAREN! column_def (COMMA! (column_def|constraint))* CLOSE_PAREN!
@@ -1252,16 +1249,14 @@ constraint_name:
 // [ALTER TABLE START] ------------------------------------------------
 // -------------------------------------------------------------------
 alter_table:
-    "table"! table_ref (constraint_clause)? ///(alter_table_options)?
+    "table"! table_ref (constraint_clause)?
     ;
 
 constraint_clause:
     ("add" (add_syntax_1 | (OPEN_PAREN! add_syntax_2 CLOSE_PAREN!) ) )
     | ("modify" (modify_constraint_clause
-//                    | (OPEN_PAREN! column_modi_name (COMMA! column_modi_name)* CLOSE_PAREN!)
-//                    | column_modi_name)
-                    | (OPEN_PAREN! column_def (COMMA! column_def)* CLOSE_PAREN!)
-                    | column_def)
+                    | (OPEN_PAREN! alter_column_def (COMMA! alter_column_def)* CLOSE_PAREN!)
+                    | alter_column_def)
        )
     | ("rename"
             (   ("constraint" identifier2 "to" identifier2)
@@ -1278,27 +1273,18 @@ modify_constraint_clause:
     ;
 
 add_syntax_1:
-//    column_add_name
-    column_def
+    alter_column_def
     | inline_out_of_line_constraint
     ;
 
 add_syntax_2:
-    (column_def) => (column_def (COMMA! column_def)*)
-//    (column_add_name) => (column_add_name (COMMA! column_add_name)*)
+    (alter_column_def) => (alter_column_def (COMMA! alter_column_def)*)
     | inline_out_of_line_constraint
     ;
 
-column_add_name:
-    column_def
-//    column_name_ddl (datatype)? (column_qualifier)*
-//    {  __markRule(ALTER_COLUMN_SPEC);}
-    ;
-
-column_modi_name:
-    column_def
-//    column_name_ref (datatype)? (column_qualifier)*
-//    {  __markRule(ALTER_COLUMN_SPEC);}
+alter_column_def:
+    column_name_ddl type_spec (column_constraint)*
+    {  __markRule(A_COLUMN_DEF);}
     ;
 
 //constraint_OLD:
@@ -1316,10 +1302,11 @@ column_modi_name:
 */
 
 inline_out_of_line_constraint:
+(
     ("constraint" constraint_name)? (
         not_null
         | ("unique" (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)?)
-        | ("primary" "key" (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)?) // ("rely" "using" "index" identifier2)? ("enable")? )
+        | ("primary" "key" (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)?)
         | ("foreign" "key"
                 (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)
                 "references" (schema_name DOT)? table_ref (OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN)
@@ -1328,6 +1315,8 @@ inline_out_of_line_constraint:
         | ("check" condition)
     )
     (using_index_clause)?
+)
+    {  __markRule(ALTER_TABLE_CONSTRAINT);}
     ;
 
 drop_clause:
@@ -1483,12 +1472,15 @@ package_init_section:
     {  __markRule(PACKAGE_INIT_SECTION);}
     ;
 
-package_obj_spec:
+package_obj_spec
+{Integer retVal = -1;}:
     subtype_declaration
     | cursor_spec
     | type_definition
-    | procedure_body
-    | function_body
+    | (retVal = procedure_body)
+      {  __markRule(retVal); }
+    | (retVal = function_body)
+      {  __markRule(retVal); }
     | pragmas
     | variable_declaration
     | exception_declaration
@@ -1903,7 +1895,6 @@ percentage_type_w_schema:
 
 type_name_ref :
      name_fragment (DOT! name_fragment )*
-//    ( name_fragment DOT)* name_fragment
     {  __markRule(TYPE_NAME_REF);}
     ;
 
@@ -2008,34 +1999,6 @@ exception_pragma :
     "pragma"! "exception_init"! OPEN_PAREN! complex_name COMMA! plsql_expression CLOSE_PAREN! SEMI!
     { __markRule(EXCEPTION_PRAGMA);}
     ;
-/*
-restrict_ref_pragma :
-    "pragma"! "restrict_references"! OPEN_PAREN! identifier3 (COMMA! identifier3)+ CLOSE_PAREN! SEMI!
-    { __markRule(RESTRICT_REF_PRAGMA);}
-    ;
-
-interface_pragma:
-    "pragma"! "interface"! OPEN_PAREN! identifier3 (COMMA! identifier3)+ CLOSE_PAREN! SEMI!
-    { __markRule(INTERFACE_PRAGMA);}
-    ;
-
-builtin_pragma:
-    "pragma"! "builtin"! OPEN_PAREN! string_literal (COMMA! plsql_expression)+ CLOSE_PAREN! SEMI!
-    { __markRule(BUILTIN_PRAGMA);}
-    ;
-
-fipsflag_pragma:
-    "pragma"! "fipsflag"! OPEN_PAREN! string_literal (COMMA! plsql_expression)+ CLOSE_PAREN! SEMI!
-    { __markRule(FIPSFLAG_PRAGMA);}
-    ;
-
-timestamp_pragma:
-    "pragma"! "timestamp"! OPEN_PAREN! string_literal CLOSE_PAREN! SEMI!
-    { __markRule(TIMESTAMPG_PRAGMA);}
-    ;
-*/
-
-
 
 numeric_literal :
     NUMBER
@@ -2047,7 +2010,6 @@ oracle_err_number:
         ;
 
 record_item:
-//    record_item_name type_spec ("not" "null")? ((default1 |p:ASSIGNMENT_EQ {#p.setType(ASSIGNMENT_OP);}) plsql_expression)?
     record_item_name type_spec ("not" "null")? ((default1 |ASSIGNMENT_EQ) plsql_expression)?
     {  __markRule(RECORD_ITEM); }
     ;
@@ -2100,16 +2062,18 @@ declare_list:
     ;
 
 
-declare_spec:
+declare_spec
+{Integer retVal = -1;}:
         type_definition
         | variable_declaration
-//        | cursor_declaration
         | cursor_spec
         | subtype_declaration
         | ("pragma" "autonomous_transaction") => pragma_autonomous_transaction
         | exception_pragma
-        | function_body
-        | procedure_body
+        | (retVal = function_body)
+            {  __markRule(retVal); }
+        | (retVal = procedure_body)
+            {  __markRule(retVal); }
         | exception_declaration
     ;
 
@@ -2156,19 +2120,21 @@ function_body2  :
     ;
 */
 
-function_body
-{ boolean tag1 = false;} :
+function_body returns [Integer retValue]
+{ boolean tag1 = false; retValue = -1;} :
     function_declaration
         (( "is"! | "as"! ) (
 //            (("language" "java" "name") => ("language" "java" "name" {tag1 = false;} string_literal ))
             ("language" "java" "name" {tag1 = false;} string_literal )
             | ( func_proc_statements {tag1 = true;})
-                {  __markRule(FUNCTION_BODY); }
+//                {  __markRule(FUNCTION_BODY); }
+                { retValue = FUNCTION_BODY; }
             )
         )? (SEMI)?
     {
         if(!tag1){
-             __markRule(FUNCTION_SPEC);
+//             __markRule(FUNCTION_SPEC);
+            { retValue = FUNCTION_SPEC; }
         }
     }
     ;
@@ -2178,18 +2144,20 @@ function_body
 	}
 
 
-procedure_body
-{ boolean tag1 = false;} :
+procedure_body returns [Integer retValue]
+{ boolean tag1 = false; retValue = -1;} :
     procedure_declaration
         (("is"|"as") (
             ("language" "java" "name" {tag1 = false;} string_literal)
             | (func_proc_statements {tag1 = true;} )
-                {  __markRule(PROCEDURE_BODY); }
+//                {  __markRule(PROCEDURE_BODY); }
+                { retValue = PROCEDURE_BODY; }
             )
         )? (SEMI)?
     {
         if(!tag1){
-             __markRule(PROCEDURE_SPEC);
+//             __markRule(PROCEDURE_SPEC);
+            { retValue = PROCEDURE_SPEC; }
         }
     }
     ;
