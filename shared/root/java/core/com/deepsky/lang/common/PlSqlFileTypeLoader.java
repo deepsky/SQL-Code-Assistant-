@@ -34,14 +34,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlSqlFileTypeLoader extends FileTypeFactory  {
+public class PlSqlFileTypeLoader extends FileTypeFactory {
 
     public static final List<FileType> PLSQL_FILE_TYPES = new ArrayList<FileType>();
+    public static final String[] FILE_EXTENSIONS = new String[]{"sql", "pks", "pkb"};
 
     @Override
     public void createFileTypes(@NotNull FileTypeConsumer consumer) {
-        // todo - refine initialization
-        consumer.consume(PlSqlFileType.FILE_TYPE, StringUtil.join(new String[]{"sql", "pks", "pkb"}, ";"));
+        consumer.consume(
+                PlSqlFileType.FILE_TYPE,
+                StringUtil.join(
+                        FILE_EXTENSIONS,
+                        FileTypeConsumer.EXTENSION_DELIMITER
+                )
+        );
         PLSQL_FILE_TYPES.add(PlSqlFileType.FILE_TYPE);
     }
 }

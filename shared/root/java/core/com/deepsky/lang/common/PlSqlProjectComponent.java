@@ -58,14 +58,24 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.fileTypes.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.WindowManager;
+import com.intellij.ui.awt.RelativePoint;
+import org.apache.xmlbeans.impl.xb.xsdschema.LocalSimpleType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 
@@ -181,7 +191,7 @@ public class PlSqlProjectComponent implements ProjectComponent {
         PluginKeys.DB_OBJECT_CONTR.putData(dbObjContrib, project);
 
         // create SQL file indexer
-        fsIndexer = new FSIndexer(project, indexManager.getFSIndex());
+        fsIndexer = new FSIndexer(indexManager.getFSIndex());
         fsIndexer.start();
 //        PluginKeys.FS_SQL_NAMES_INDEXER.putData(fsIndexManager, project);
 
@@ -194,77 +204,69 @@ public class PlSqlProjectComponent implements ProjectComponent {
         nameLookupService = new NameLookupServiceImpl(project);
         PluginKeys.NAME_LOOKUP.putData(nameLookupService, project);
 
+        // Save active file extensions
+        PluginKeys.ACTIVE_FILE_PATTERNS.putData(getActiveFilePatterns(), project);
+
         // Make sure there are no plugins with SQL like extensions
         ApplicationManager.getApplication().runWriteAction(new Runnable (){
             public void run() {
 //                IdeaPluginDescriptor[] desc = PluginManager.getPlugins();
-                FileType sql = FileTypeManager.getInstance().getFileTypeByFileName("test.sql");
-                FileType pkb = FileTypeManager.getInstance().getFileTypeByFileName("test.pkb");
-                FileType pks = FileTypeManager.getInstance().getFileTypeByFileName("test.pks");
-
-                List<FileType> strangers = new ArrayList<FileType>();
-                if( !(sql instanceof PlSqlFileType) ){
-                    // Ext 'sql' by someone else, report and disable plugin
-                    //PluginManager.getPlugins()
-                    //FileTypeManager.getInstance().
-                    strangers.add(sql);
-                    log.warn("sql ext is used by someone else.");
+//                PluginManager.getPlugins()[2].setEnabled(false);
+                List<String> extensions = new ArrayList<String>();
+                extensions.addAll(Arrays.asList(PlSqlFileTypeLoader.FILE_EXTENSIONS));
+                for(String ext: PlSqlFileTypeLoader.FILE_EXTENSIONS){
+                    for(String pattern: PluginKeys.ACTIVE_FILE_PATTERNS.getData(project)){
+                        // '*.pks' or something like
+                        //String pattern = m.getPresentableString();
+                        if(pattern.endsWith("." + ext)){
+                            extensions.remove(ext);
+                            break;
+                        }
+                    }
                 }
 
-                if(!( pkb instanceof PlSqlFileType)){
-                    // Ext 'pkb' by someone else, report and disable plugin
-                    log.warn("pkb ext is used by someone else.");
-                    strangers.add(pkb);
-                }
-
-                if(!( pks instanceof PlSqlFileType)){
-                    // Ext 'pks' by someone else, report and disable plugin
-                    log.warn("pks ext is used by someone else.");
-                    strangers.add(pks);
-                }
-
-                if(strangers.size() > 0){
+                if(extensions.size() > 0){
                     // Format warning messages
                     StringBuilder b1 = new StringBuilder();
                     StringBuilder b2 = new StringBuilder();
-                    for(FileType ft: strangers){
-                        String ext = ft.getDefaultExtension();
+                    int cnt = 0;
+                    for(String ext: extensions){
+                        log.warn("File extension '" + ext + "' is used by another plugin.");
                         if(b1.length() > 0){
                             b1.append(",");
                             b2.append(",");
                         }
                         b1.append(ext);
                         b2.append("*.").append(ext);
+                        cnt++;
                     }
 
                     String message =
-                            "To identify SQL files, SQL Code Assistant plugin uses the following file extensions: sql, pks and pkb.\n" +
-                            "But it seems another plugin has already registered these file types. To let SQL Code Assistant plugin work properly " +
-                            "you may need to associate " + b1.toString() + " file extension(s) with the plugin.\"" +
-                            "Go to Settings -> File Types and add registered patterns " + b2.toString() + " to SQL (PL/SQL) files.";
-                    Messages.showWarningDialog(project,
-                            message,
-                            "Conflict in file extensions detected");
+                            "<html><span style=\"color: navy; font-weight: bold;\">SQL Code Assistant</span> plugin uses <b>sql</b>, <b>pks</b> and <b>pkb</b> file extensions. " +
+                            "But it looks one of these file extensions has already been registered by another plugin. " +
+                            "To let <span style=\"color: navy; font-weight: bold;\">SQL Code Assistant</span> plugin work properly you may need to associate " +
+                            "<span style=\"color: #006400; font-weight: bold;\">" + b1.toString() + "</span> file extension" + (cnt==1?"":"s") + " with the plugin. " +
+                            "Go to <b>Settings</b> -> <b>File Types</b> and add pattern"   + (cnt==1?" '":"s '") +  b2.toString() +
+                            "' to <b>SQL (PL/SQL)</b> files.</html>";
+
+                    showBalloon(project, message, MessageType.WARNING);
+//                    showBalloon(project, StringUtil.escapeXml(message), MessageType.WARNING);
+
                 }
-                //PluginManager.getPlugins()[2].setEnabled(false);
-                //log.warn("Plugin was disabled!");
-                int hh =0;
-/*
-                final FileTypeFactory[] fileTypeFactories = Extensions.getExtensions(FileTypeFactory.FILE_TYPE_FACTORY_EP);
-                for (final FileTypeFactory factory : fileTypeFactories) {
-                    try {
-                        //initFactory(consumer, factory);
-                        factory.
-                    } catch (final Error ex) {
-                        //PluginManager.disableIncompatiblePlugin(factory, ex);
-                    }
-                }
-*/
             }
         });
 
     }
 
+
+    public static Set<String> getActiveFilePatterns(){
+        Set<String> out = new HashSet<String>();
+        for(FileNameMatcher m: FileTypeManager.getInstance().getAssociations(PlSqlFileType.FILE_TYPE)){
+            out.add(m.getPresentableString());
+        }
+
+        return out;
+    }
 
     public void projectClosed() {
         connectionManager.removeStateListener(connectionListener);
@@ -320,5 +322,24 @@ public class PlSqlProjectComponent implements ProjectComponent {
             }
         });
     }
+
+
+    private static void showBalloon(Project project, String message, MessageType messageType) {
+        final JFrame frame = WindowManager.getInstance().getFrame(project.isDefault() ? null : project);
+        if (frame == null) return;
+        final JComponent component = frame.getRootPane();
+        if (component == null) return;
+        final Rectangle rect = component.getVisibleRect();
+        final Point p = new Point(rect.x + rect.width - 10, rect.y + 10);
+        final RelativePoint point = new RelativePoint(component, p);
+
+        JBPopupFactory.getInstance()
+                .createHtmlTextBalloonBuilder(message, messageType.getDefaultIcon(), messageType.getPopupBackground(), null)
+                .setShowCallout(false)
+                .setCloseButtonEnabled(true)
+                .createBalloon()
+                .show(point, Balloon.Position.atLeft);
+    }
+
 }
 

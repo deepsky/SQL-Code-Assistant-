@@ -61,4 +61,6 @@ public interface SharedConstants {
     String TIMESTAMP_ValueConvertor = "TIMESTAMP_ValueConvertor";
     String TIMESTAMPTZ_ValueConvertor = "TIMESTAMPTZ_ValueConvertor";
     String TIMESTAMPLTZ_ValueConvertor = "TIMESTAMPLTZ_ValueConvertor";
+
+    String ACTIVE_FILE_PATTERNS = "ACTIVE_FILE_PATTERNS";
 }

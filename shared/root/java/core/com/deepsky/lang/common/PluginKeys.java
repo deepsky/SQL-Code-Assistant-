@@ -39,6 +39,8 @@ import com.deepsky.view.query_pane.converters.TIMESTAMPLTZ_Convertor;
 import com.deepsky.view.query_pane.converters.TIMESTAMPTZ_Convertor;
 import com.deepsky.view.query_pane.converters.TIMESTAMP_Convertor;
 
+import java.util.Set;
+
 
 public final class PluginKeys {
 
@@ -58,4 +60,7 @@ public final class PluginKeys {
     public static final PluginKey<TIMESTAMP_Convertor> TS_CONVERTOR = PluginKey.create(SharedConstants.TIMESTAMP_ValueConvertor);
     public static final PluginKey<TIMESTAMPTZ_Convertor> TSTZ_CONVERTOR = PluginKey.create(SharedConstants.TIMESTAMPTZ_ValueConvertor);
     public static final PluginKey<TIMESTAMPLTZ_Convertor> TSLTZ_CONVERTOR = PluginKey.create(SharedConstants.TIMESTAMPLTZ_ValueConvertor);
+
+    public static final PluginKey<Set<String>> ACTIVE_FILE_PATTERNS = PluginKey.create(SharedConstants.ACTIVE_FILE_PATTERNS);
+
 }
