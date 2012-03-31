@@ -57,6 +57,10 @@ public abstract class SqlIndexBase implements SqlDomainIndex {
 
     private final LoggerProxy log = LoggerProxy.getInstance("#SqlIndexBase");
 
+    private final static String REVISION_FILE = "a12_345_$1.rev";
+    private final static String REVISION_ATTR = "revision";
+    private final static String INDEX_REVISION = "1203311338"; // Change value to get the index rebuilt on startup
+
     protected Map<String, RefResolver> user2resolver = new HashMap<String, RefResolver>();
     protected Map<String, AbstractSchema> user2index = new HashMap<String, AbstractSchema>();
     protected RefResolverListener cacheListener = new RefResolverListenerImpl();
@@ -230,7 +234,16 @@ public abstract class SqlIndexBase implements SqlDomainIndex {
             if (indexFile.exists()) {
                 long ms0 = System.currentTimeMillis();
                 try {
-                    user2index.get(userName).getIndexTree().loadNames(indexFile.getAbsolutePath());
+                    IndexTree itree = user2index.get(userName).getIndexTree();
+                    itree.loadNames(indexFile.getAbsolutePath());
+
+                    // Check index revision
+                    String value = itree.getFileAttribute(REVISION_FILE, REVISION_ATTR);
+                    if(value == null || !INDEX_REVISION.equals(value)){
+                        itree.clear();
+                        log.info("Index triggered for rebuilding: " + userName + " Old marker: " + value + " New: " + INDEX_REVISION);
+                        itree.setFileAttribute(REVISION_FILE, REVISION_ATTR, INDEX_REVISION);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
