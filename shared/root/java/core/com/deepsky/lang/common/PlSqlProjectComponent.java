@@ -52,25 +52,17 @@ import com.deepsky.view.query_pane.converters.TIMESTAMP_Convertor;
 import com.deepsky.view.query_pane.util.DateTimeParser;
 import com.deepsky.view.utils.ProgressIndicatorHelper;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileNameMatcher;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.awt.RelativePoint;
-import org.apache.xmlbeans.impl.xb.xsdschema.LocalSimpleType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -208,31 +200,31 @@ public class PlSqlProjectComponent implements ProjectComponent {
         PluginKeys.ACTIVE_FILE_PATTERNS.putData(getActiveFilePatterns(), project);
 
         // Make sure there are no plugins with SQL like extensions
-        ApplicationManager.getApplication().runWriteAction(new Runnable (){
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
             public void run() {
 //                IdeaPluginDescriptor[] desc = PluginManager.getPlugins();
 //                PluginManager.getPlugins()[2].setEnabled(false);
                 List<String> extensions = new ArrayList<String>();
                 extensions.addAll(Arrays.asList(PlSqlFileTypeLoader.FILE_EXTENSIONS));
-                for(String ext: PlSqlFileTypeLoader.FILE_EXTENSIONS){
-                    for(String pattern: PluginKeys.ACTIVE_FILE_PATTERNS.getData(project)){
+                for (String ext : PlSqlFileTypeLoader.FILE_EXTENSIONS) {
+                    for (String pattern : PluginKeys.ACTIVE_FILE_PATTERNS.getData(project)) {
                         // '*.pks' or something like
                         //String pattern = m.getPresentableString();
-                        if(pattern.endsWith("." + ext)){
+                        if (pattern.endsWith("." + ext)) {
                             extensions.remove(ext);
                             break;
                         }
                     }
                 }
 
-                if(extensions.size() > 0){
+                if (extensions.size() > 0) {
                     // Format warning messages
                     StringBuilder b1 = new StringBuilder();
                     StringBuilder b2 = new StringBuilder();
                     int cnt = 0;
-                    for(String ext: extensions){
+                    for (String ext : extensions) {
                         log.warn("File extension '" + ext + "' is used by another plugin.");
-                        if(b1.length() > 0){
+                        if (b1.length() > 0) {
                             b1.append(",");
                             b2.append(",");
                         }
@@ -243,11 +235,11 @@ public class PlSqlProjectComponent implements ProjectComponent {
 
                     String message =
                             "<html><span style=\"color: navy; font-weight: bold;\">SQL Code Assistant</span> plugin uses <b>sql</b>, <b>pks</b> and <b>pkb</b> file extensions. " +
-                            "But it looks one of these file extensions has already been registered by another plugin. " +
-                            "To let <span style=\"color: navy; font-weight: bold;\">SQL Code Assistant</span> plugin work properly you may need to associate " +
-                            "<span style=\"color: #006400; font-weight: bold;\">" + b1.toString() + "</span> file extension" + (cnt==1?"":"s") + " with the plugin. " +
-                            "Go to <b>Settings</b> -> <b>File Types</b> and add pattern"   + (cnt==1?" '":"s '") +  b2.toString() +
-                            "' to <b>SQL (PL/SQL)</b> files.</html>";
+                                    "But it looks one of these file extensions has already been registered by another plugin. " +
+                                    "To let <span style=\"color: navy; font-weight: bold;\">SQL Code Assistant</span> plugin work properly you may need to associate " +
+                                    "<span style=\"color: #006400; font-weight: bold;\">" + b1.toString() + "</span> file extension" + (cnt == 1 ? "" : "s") + " with the plugin. " +
+                                    "Go to <b>Settings</b> -> <b>File Types</b> and add pattern" + (cnt == 1 ? " '" : "s '") + b2.toString() +
+                                    "' to <b>SQL (PL/SQL)</b> files.</html>";
 
                     showBalloon(project, message, MessageType.WARNING);
 //                    showBalloon(project, StringUtil.escapeXml(message), MessageType.WARNING);
@@ -259,9 +251,9 @@ public class PlSqlProjectComponent implements ProjectComponent {
     }
 
 
-    public static Set<String> getActiveFilePatterns(){
+    public static Set<String> getActiveFilePatterns() {
         Set<String> out = new HashSet<String>();
-        for(FileNameMatcher m: FileTypeManager.getInstance().getAssociations(PlSqlFileType.FILE_TYPE)){
+        for (FileNameMatcher m : FileTypeManager.getInstance().getAssociations(PlSqlFileType.FILE_TYPE)) {
             out.add(m.getPresentableString());
         }
 
