@@ -29,4 +29,5 @@ import com.deepsky.lang.plsql.psi.PlSqlElement;
 import com.intellij.psi.PsiReference;
 
 public interface ColumnNameRef extends PlSqlElement, PsiReference {
+    String getColumnName();
 }

@@ -46,18 +46,6 @@ public class TableRefImpl extends PlSqlReferenceBase implements TableRef {
     @NotNull
     public Object[] getVariants(final String text) {
         return new Object[0]; 
-/*
-        final List<NameHandler.NamedItem> out = new ArrayList<NameHandler.NamedItem>();
-        NameProvider provider = getResolveFacade().getNameProvider();
-        provider.iterateInRootContext(ContextPath.TABLE_DEF, new NameHandler(){
-            public void handle(NamedItem item) {
-                if(text.length() == 0 || item.getName().toLowerCase().startsWith(text.toLowerCase())){
-                    out.add(item);
-                }
-            }
-        });
-        return adopt(text, out);
-*/
     }
 
     public String getTableName() {

@@ -29,6 +29,7 @@ import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.names.CompositeName;
 import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
+import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;

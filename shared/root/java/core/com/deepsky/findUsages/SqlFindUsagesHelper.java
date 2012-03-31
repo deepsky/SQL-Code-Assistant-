@@ -250,7 +250,9 @@ public class SqlFindUsagesHelper {
 
         } else if (ietype == PlSqlElementTypes.COLUMN_NAME_DDL) {
             ColumnDefinition columnDef = ((ColumnNameDDL) etype[0]).getColumnDefinition();
-            return new TableColumnSearchOptions(columnDef);
+            // Make sure that syntax is correct
+            if(columnDef != null && columnDef.getTableDefinition() != null)
+                return new TableColumnSearchOptions(columnDef);
 
         } else if (ietype == PlSqlElementTypes.V_COLUMN_DEF) {
             return new ViewColumnSearchOptions((VColumnDefinition) etype[0]);

@@ -29,6 +29,7 @@ import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.types.TypeSpec;
 import com.deepsky.lang.plsql.struct.Type;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.Nullable;
 
 public interface ColumnDefinition extends PlSqlElement {
     String getColumnName();
@@ -48,6 +49,7 @@ public interface ColumnDefinition extends PlSqlElement {
 
     ColumnFKSpec getForeignKeySpec();
 
+    @Nullable
     TableDefinition getTableDefinition();
 
     ColumnNotNullConstraint getNotNullConstraint();

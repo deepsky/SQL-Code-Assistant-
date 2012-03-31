@@ -36,6 +36,7 @@ import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.navigation.PlSqlPackageUtil;
+import com.deepsky.utils.StringUtils;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
@@ -62,7 +63,7 @@ public class TableCollectionDeclImpl extends PlSqlDeclarationBase implements Tab
     }
 
     public String getDeclName() {
-        return getPsiDeclName().getText();
+        return StringUtils.discloseDoubleQuotes(getPsiDeclName().getText());
     }
 
     public PsiElement getPsiDeclName() {

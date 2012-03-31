@@ -29,6 +29,7 @@ import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.impl.PlSqlReferenceBase;
 import com.deepsky.lang.plsql.psi.ref.SequenceRef;
 import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
+import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -41,7 +42,7 @@ public class SequenceRefImpl extends PlSqlReferenceBase implements SequenceRef {
     }
 
     public String getSequenceName() {
-        return getText();
+        return StringUtils.discloseDoubleQuotes(getText());
     }
 
     @Override

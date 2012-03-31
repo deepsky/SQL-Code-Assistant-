@@ -39,6 +39,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,7 +59,7 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
 
     public String getColumnName() {
         PsiElement elem = findChildByType(PLSqlTypesAdopted.COLUMN_NAME_DDL);
-        if(elem != null){
+        if (elem != null) {
             return StringUtils.discloseDoubleQuotes(elem.getText());
         }
         throw new SyntaxTreeCorruptedException();
@@ -130,10 +131,13 @@ public class ColumnDefinitionImpl extends PlSqlElementBase implements ColumnDefi
 
     public TableDefinition getTableDefinition() {
         ASTNode parent = getNode().getTreeParent();
-        if (parent != null && parent.getElementType() == PLSqlTypesAdopted.TABLE_DEF) {
-            return (TableDefinition) parent.getPsi();
+        if (parent != null) {
+            final IElementType etype = parent.getElementType();
+            if (etype == PLSqlTypesAdopted.TABLE_DEF || etype == PLSqlTypesAdopted.CREATE_TEMP_TABLE) {
+                return (TableDefinition) parent.getPsi();
+            }
         }
-        throw new SyntaxTreeCorruptedException();
+        return null;
     }
 
     public ColumnNotNullConstraint getNotNullConstraint() {

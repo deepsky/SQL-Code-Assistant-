@@ -29,6 +29,7 @@ import com.deepsky.lang.parser.plsql.PLSqlTypesAdopted;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.navigation.PlSqlPackageUtil;
+import com.deepsky.utils.StringUtils;
 import com.deepsky.view.Icons;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
@@ -48,7 +49,7 @@ public class RecordTypeDeclImpl extends PlSqlDeclarationBase implements RecordTy
     }
 
     public String getDeclName() {
-        return getPsiDeclName().getText();
+        return StringUtils.discloseDoubleQuotes(getPsiDeclName().getText());
     }
 
     public PsiElement getPsiDeclName() {

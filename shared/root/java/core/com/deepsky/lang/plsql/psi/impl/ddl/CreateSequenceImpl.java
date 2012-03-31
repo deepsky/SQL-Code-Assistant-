@@ -32,6 +32,7 @@ import com.deepsky.lang.plsql.psi.ddl.CreateSequence;
 import com.deepsky.lang.plsql.psi.impl.PlSqlElementBase;
 import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
+import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -52,9 +53,9 @@ public class CreateSequenceImpl extends PlSqlElementBase implements CreateSequen
         String name = oname.getText();
         int start = name.indexOf('.');
         if (start < 0) {
-            return name;
+            return StringUtils.discloseDoubleQuotes(name);
         } else {
-            return name.substring(start + 1);
+            return StringUtils.discloseDoubleQuotes(name.substring(start + 1));
         }
     }
 

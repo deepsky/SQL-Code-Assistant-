@@ -28,6 +28,7 @@ package com.deepsky.lang.plsql.struct.parser;
 import antlr.*;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 import com.deepsky.integration.PLSqlLexerEx;
+import com.deepsky.utils.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.Reader;
@@ -79,6 +80,11 @@ public class PLSqlIndexingLexer extends PLSqlLexerEx implements PLSqlFilteringLe
                 case PLSqlTokenTypes.IDENTIFIER:
                     if(processor != null){
                         processor.process(t.getText());
+                    }
+                    break;
+                case PLSqlTokenTypes.DOUBLE_QUOTED_STRING:
+                    if(processor != null){
+                        processor.process(com.deepsky.utils.StringUtils.discloseDoubleQuotes(getText()));
                     }
                     break;
                 default:

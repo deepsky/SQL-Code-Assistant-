@@ -27,6 +27,7 @@ package com.deepsky.lang.plsql.psi.impl;
 
 import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.utils.StringUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -73,4 +74,7 @@ todo -- resolve stuff refactoring
         }
     }
 
+    public String getColumnName() {
+        return StringUtils.discloseDoubleQuotes(getText());
+    }
 }

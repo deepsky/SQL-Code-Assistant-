@@ -162,7 +162,6 @@ public class ResolveUtil {
                     TokenSet.create(PlSqlElementTypes.NAME_FRAGMENT, PlSqlElementTypes.EXEC_NAME_REF));
             int k = 0;
             do {
-//                hlp = callback.resolve(hlp, (CompositeElementExt) nested[k]);
                 hlp = callback.resolve(hlp, (PlSqlElement) nested[k].getPsi());
             } while (hlp != null && ++k < nested.length);
         } while (hlp != null && ++i < funcs.length);
@@ -218,8 +217,6 @@ public class ResolveUtil {
                 RefHolder holder = new RefHolder(ContextPath.TABLE_REF, "", text);
                 ResolveDescriptor tableRHelper = resolver.resolveReference(holder);
                 if (tableRHelper != null) {
-//                    RefHolder holder2 = new RefHolder(ContextPath.TABLE_COLUMN_REF, tableRHelper.getCtxPath(), columnText);
-//                    out[0] = resolver.resolveReference(holder2);
                     ResolveDescriptor[] rr = tableRHelper.resolve(columnText);
                     if(rr.length == 1){
                         out[0] = rr[0];
@@ -233,10 +230,6 @@ public class ResolveUtil {
                 RefHolder holder = new RefHolder(ContextPath.TABLE_REF, "", text);
                 ResolveDescriptor tableRHelper = resolver.resolveReference(holder);
                 if (tableRHelper != null) {
-/*
-                    RefHolder holder2 = new RefHolder(ContextPath.TABLE_COLUMN_REF, tableRHelper.getCtxPath(), columnText);
-                    out[0] = resolver.resolveReference(holder2);
-*/
                     ResolveDescriptor[] out1 = tableRHelper.resolve(columnText);
                     if(out1.length == 1){
                         out[0] = out1[0];
@@ -262,79 +255,6 @@ public class ResolveUtil {
         return out[0];
     }
 
-/*
-Obsolete Code
-
-    public static ResolveDescriptor resolveColumnNameRef222(ResolveHelper resolver, ColumnNameRef ref) {
-        PsiElement parent = ref.getParent();
-        IElementType ietype = parent.getNode().getElementType();
-        ResolveDescriptor out = null;
-        String columnText = ref.getText();
-
-        if(ietype == PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST
-           || ietype == PLSqlTypesAdopted.RANGE_PARTITION
-           || ietype == PLSqlTypesAdopted.HASH_PARTITION ){
-            // column names references
-            String path = ref.getCtxPath1().getPath();
-            String text = ref.getText();
-            RefHolder holder = new RefHolder(ContextPath.TABLE_COLUMN_REF, path, text);
-            return resolver.resolveReference(holder);
-        } else if(ietype == PLSqlTypesAdopted.COLUMN_NAME_LIST){
-            // FK_SPEC case, requires reference table resolving
-            ForeignKeyConstraint fkConst = (ForeignKeyConstraint) parent.getParent().getParent();
-            TableRef tref = fkConst.getReferencedTable2();
-//            String path = tref.getCtxPath1().getPath();
-            String text = tref.getText();
-            RefHolder holder = new RefHolder(ContextPath.TABLE_REF, "", text);
-            ResolveDescriptor tableRHelper = resolver.resolveReference(holder);
-            if(tableRHelper != null){
-                RefHolder holder2 = new RefHolder(ContextPath.TABLE_COLUMN_REF, tableRHelper.getCtxPath(), columnText);
-                return resolver.resolveReference(holder2);
-            }
-
-        } else if(ietype == PLSqlTypesAdopted.COLUMN_TYPE_REF){
-            ColumnTypeRef cTypeRef = (ColumnTypeRef) parent;
-            TableRef tref = cTypeRef.getTableRef();
-//            String path = tref.getCtxPath1().getPath();
-            String text = tref.getText();
-            RefHolder holder = new RefHolder(ContextPath.TABLE_REF, "", text);
-            ResolveDescriptor tableRHelper = resolver.resolveReference(holder);
-            if(tableRHelper != null){
-                RefHolder holder2 = new RefHolder(ContextPath.TABLE_COLUMN_REF, tableRHelper.getCtxPath(), columnText);
-                return resolver.resolveReference(holder2);
-            }
-
-        } else if(ietype == PLSqlTypesAdopted.FOR_UPDATE_CLAUSE){
-            // todo -- implement me
-            int hh =0;
-        } else if(ietype == PLSqlTypesAdopted.COMMENT){
-            // todo -- implement me
-            int hh =0;
-        } else if(ietype == PLSqlTypesAdopted.COLUMN_FK_SPEC){
-            ColumnFKSpec fkSpec = (ColumnFKSpec) parent;
-//            String path = fkSpec.getCtxPath1().getPath();
-            String text = fkSpec.getReferencedTable();
-            RefHolder holder = new RefHolder(ContextPath.TABLE_REF, "", text);
-            ResolveDescriptor tableRHelper = resolver.resolveReference(holder);
-            if(tableRHelper != null){
-                RefHolder holder2 = new RefHolder(ContextPath.TABLE_COLUMN_REF, tableRHelper.getCtxPath(), columnText);
-                return resolver.resolveReference(holder2);
-            }
-
-        } else if(ietype == PLSqlTypesAdopted.UNIQUE_CONSTRAINT){
-            int hh =0;
-        } else if(ietype == PLSqlTypesAdopted.ALTER_TABLE){
-            int hh =0;
-        } else {
-            // todo -- not supported case?
-            int hh =0;
-        }
-
-        return null;
-    }
-*/
-
-
     public static void resolveColumnNameRef(ColumnNameRef ref, ColumnNameRefCallback callback) {
         PsiElement parent = ref.getParent();
         IElementType ietype = parent.getNode().getElementType();
@@ -347,9 +267,9 @@ Obsolete Code
             callback.process(parent);
         } else if (ietype == PLSqlTypesAdopted.COLUMN_NAME_LIST) {
             // FK_SPEC case, requires reference table resolving
-            PsiElement candidate = parent.getParent().getParent();
+            final PsiElement candidate = parent.getParent();
             if (candidate instanceof ForeignKeyConstraint) {
-                ForeignKeyConstraint fkConst = (ForeignKeyConstraint) parent.getParent().getParent();
+                ForeignKeyConstraint fkConst = (ForeignKeyConstraint) candidate;
                 callback.process(fkConst);
             } else {
                 // it seems syntax is not correct (PSI tree corrupted)

@@ -243,19 +243,6 @@ public class ReferenceSearcher {
             // example: l_ret_val(1).amk_cols.EXTEND
             ASTNode[] procs = elem.getNode().getChildren(TokenSet.create(PlSqlElementTypes.PROCEDURE_CALL));
 
-//            if(procs.length > 0){
-//                ProcedureCall proc = (ProcedureCall) procs[0].getPsi();
-//                PsiElement _first = proc.getCompositeName().getNamePieces()[0].resolve();
-//                if(_first instanceof PlSqlElement){
-//                    if(((PlSqlElement)_first).getCtxPath1().getPath().equals(ctxPathTarget)){ //endsWith(text)){
-//                        // search target is the first ftarment
-//                        int hh =0;
-//                    } else {
-//                        int hh =0;
-//                    }
-//                    int hh =0;
-//                }
-//            }
             for (ASTNode n : procs) {
                 ProcedureCall proc = (ProcedureCall) n.getPsi();
 
@@ -323,7 +310,7 @@ public class ReferenceSearcher {
 
         @Override
         protected void visitSequenceRef(SequenceRef node) {
-            String sequenceName = node.getSequenceName().toLowerCase();
+            final String sequenceName = node.getSequenceName().toLowerCase();
             if (ReferenceExtractorImpl.this.text.equals(sequenceName)) {
                 PsiElement _target = node.resolve();
                 if (_target != null && ((PlSqlElement) _target).getCtxPath1().getPath().equals(ctxPathTarget)) {
@@ -336,7 +323,8 @@ public class ReferenceSearcher {
 
         @Override
         protected void visitColumnNameRef(ColumnNameRef columnNameRef) {
-            if(ReferenceExtractorImpl.this.text.equalsIgnoreCase(columnNameRef.getText())){
+            final String name = columnNameRef.getColumnName().toLowerCase();
+            if(ReferenceExtractorImpl.this.text.equalsIgnoreCase(name)){
                 PsiElement _target = columnNameRef.resolve();
                 if (_target != null && ((PlSqlElement) _target).getCtxPath1().getPath().equals(ctxPathTarget)) {
                     // reference found
