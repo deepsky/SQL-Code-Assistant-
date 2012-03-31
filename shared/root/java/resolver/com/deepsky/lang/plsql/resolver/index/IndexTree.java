@@ -49,13 +49,22 @@ public interface IndexTree extends BaseLookupService {
 
     boolean remove(String ctxPath);
 
-    // access to entries
-//    String getContextPathValue(String ctxPath);
-
-    // file attributes accessors
+    /**
+     * Get attribute for the file
+     * @param fileName file
+     * @param attributeName attribute name
+     * @return attribute value
+     */
     String getFileAttribute(String fileName, String attributeName);
 
+    /**
+     * Set attribute for the file
+     * @param fileName file
+     * @param attributeName attribute name
+     * @param value attribute value
+     */
     void setFileAttribute(String fileName, String attributeName, String value);
+
     void changeFileName(String oldFileName, String newFileName);
 
     boolean setContextPathAttr(String ctxPath, String attrName, String value);
@@ -71,17 +80,14 @@ public interface IndexTree extends BaseLookupService {
     // number of entries
     int getEntriesCount();
 
+    // Search methods -------------------------------------
+
     // iterate thru entries : Down - Up
     void iterateThru(IndexEntriesWalker iproc);
 
     // iterate thru top nodes only (no deep diving)
     void iterateTopNodes(IndexEntriesWalkerInterruptable iproc);
     void iterateTopNodes(String name, IndexEntriesWalkerInterruptable iproc);
-
-    // iterate thru top nodes only for the specified type (no deep diving)
-//    void iterateTopNodes(int ctxType, IndexEntriesWalkerInterruptable iproc);
-//    ContextItem[] findInRootContext(int[] types);
-
 
     /**
      * Search for the items in the root context
@@ -118,11 +124,6 @@ public interface IndexTree extends BaseLookupService {
 
     boolean fileExists(String fileNameEncoded);
 
-    // search methods
-//    TreeNode[] findInContext(String ctxPath, String name);
-
-    // search for the name in the root context
-//    TreeNode[] findInRootContext(String name);
 
     /**
      * Search for name starting from startCtxPath and climbing Up

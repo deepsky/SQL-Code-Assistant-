@@ -431,7 +431,7 @@ todo - should be implemented along with fixing of the addContextPath
         modCount++;
     }
 
-    public void changeFileName(String oldFileName, String newFileName) {
+   public void changeFileName(String oldFileName, String newFileName) {
         String fileName = oldFileName.replace(' ', '?').replace('\\', '|').replace('/', '|');
         FileEntitiesHolder fileHolder = files.remove(fileName);
         if (fileHolder == null) {
