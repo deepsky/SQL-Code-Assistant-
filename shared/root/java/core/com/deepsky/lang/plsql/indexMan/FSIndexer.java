@@ -40,6 +40,8 @@ import com.intellij.psi.PsiFile;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -47,20 +49,15 @@ public class FSIndexer implements Indexer {
 
     private final Logger log = Logger.getInstance("#FSIndexer");
 
-    IndexTree itree;
-    SqlDomainIndex sqlIndex;
-    long modCounter = -1L;
-    Project project;
+    final IndexTree itree;
+    final SqlDomainIndex sqlIndex;
+    final long modCounter = -1L;
 
-    public FSIndexer(Project project, SqlDomainIndex sqlIndex) {
+    public FSIndexer(SqlDomainIndex sqlIndex) {
         this.sqlIndex = sqlIndex;
         this.itree = sqlIndex.getIndex(IndexManager.FS_URL.getUser());
     }
 
-
-//    public IndexUpdater getUpdater() {
-//        return new IndexUpdaterImpl();
-//    }
 
     public void indexPlSqlFile(PlSqlElement file, DbTypeChangeListener listener) {
         NamesIndexerWithChangesCollecting indexer = new NamesIndexerWithChangesCollecting();
@@ -95,6 +92,10 @@ public class FSIndexer implements Indexer {
         itree.setFileAttribute(fileName, "mod_cnt", Long.toString(cnt));
     }
 
+    public IndexTree getIndex(){
+        return itree;
+    }
+
 
     /**
      * Get timestamp for file on the file system
@@ -116,9 +117,9 @@ public class FSIndexer implements Indexer {
 
 
     /**
-     * Delete file from the index and return types in the file
-     * @param path
-     * @return
+     * Delete a file from the index and return types in the file
+     * @param path file path
+     * @return types found in the file
      */
     public Set<String> deleteFile(String path) {
         Set<String> types = IndexTreeUtil.getTypesInFile(itree, path);
@@ -137,21 +138,31 @@ public class FSIndexer implements Indexer {
     }
 
 
-    public void start() {
-        // restore index from the cache directory
-/*
-        long ms0 = System.currentTimeMillis();
-        String indexFile = new File(cacheDir, indexFileName).toString();
-        try {
-            itree.loadNames(indexFile);
-        } catch (IOException e) {
-            // todo -- handle
+    /**
+     * Delete files from the index and return types found in the files
+     * @param paths file path
+     * @return types found in the file
+     */
+    public Set<String> deleteFile(List<String> paths) {
+        Set<String> types = new HashSet<String>();
+        for(String path: paths){
+            types.addAll(IndexTreeUtil.getTypesInFile(itree, path));
+            String ctxPath = ContextPathUtil.encodeFilePathCtx(path);
+            itree.remove(ctxPath);
         }
-        long ms1 = System.currentTimeMillis();
-        int entries = itree.getEntriesCount();
-        modCounter = itree.getModificationCount();
-        log.info("[Index load], time spent (ms): " + (ms1 - ms0) + " indexes: " + entries);
-*/
+
+        // replace FUNCTION_BODY with FUNCTION, PROCEDURE_BODY with PROCEDURE (if that is a case)
+        if(types.remove(DbObject.FUNCTION_BODY)){
+            types.add(DbObject.FUNCTION);
+        }
+        if(types.remove(DbObject.PROCEDURE_BODY)){
+            types.add(DbObject.PROCEDURE);
+        }
+
+        return types;
+    }
+
+    public void start() {
     }
 
     public void stop() {
@@ -161,46 +172,5 @@ public class FSIndexer implements Indexer {
             sqlIndex.flush();
         }
     }
-
-    /**
-     * Move file and ste modification timestamp for it
-     * @param oldF
-     * @param newF
-     * @param newModificationStamp
-     * @return
-     */
-/*
-    public Set<String> moveFile(File oldF, File newF, long newModificationStamp) {
-        Set<String> types = IndexTreeUtil.getTypesInFile(itree, oldF.getPath());
-//        String oldCtxPath = ContextPathUtil.encodeFilePathCtx(oldF.getPath());
-//        String newCtxPath = ContextPathUtil.encodeFilePathCtx(newF.getPath());
-        itree.changeFileName(oldF.getPath(), newF.getPath());
-        itree.setFileAttribute(newF.getPath(), "mod_cnt", Long.toString(newModificationStamp));
-
-        return types;
-    }
-*/
-
-
-/*
-    private class IndexUpdaterImpl implements IndexUpdater {
-
-        public long getFileTimestamp(String path) {
-            return 0;  //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        public void setFileTimestamp(String fileName, long time, long cnt) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        public void indexPlSqlFile(PlSqlElement file, DbTypeChangeListener listener) {
-            FSIndexer.this.indexPlSqlFile(file, listener);
-        }
-
-        public void completeUpdate(DbTypeChangeListener listener) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-    }
-*/
 
 }
