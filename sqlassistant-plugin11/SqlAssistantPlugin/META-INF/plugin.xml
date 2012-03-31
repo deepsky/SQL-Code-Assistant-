@@ -34,13 +34,20 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.2.0.11</version>
+    <version>1.2.1.11</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.2.1.11</b>
+                 <ul>
+                    - [FIX] Handling changes of File Type extensions<br>
+                    - [FIX] Find Usages for names in double quotes<br>
+                    - [FIX] Parsing<br>
+                 </ul>
+            </li>
             <li><b>1.2.0.11</b>
                  <ul>
                     - [NEW] Code formatter added<br>
@@ -183,7 +190,7 @@
             </li>
         </ul>
     </html>]]></change-notes>
-    <idea-version since-build="111.1" until-build="116.999"/>
+    <idea-version since-build="111.1" until-build="117.999"/>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 
