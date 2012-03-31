@@ -51,16 +51,7 @@ public class FSTrackHelper {
             for (FileNameMatcher m : ftManager.getAssociations(PlSqlFileType.FILE_TYPE)) {
                 if (m.accept(file.getName())) {
                     processor.process(file, operation);
-
-/*
-                    if(operation == LocalFileProcessor.REMOVE_FROM_INDEX){
-                        System.out.println("File being deleted from index: " + file);
-                    // todo -- implement me
-                    } else if(operation == LocalFileProcessor.ADD_TO_INDEX){
-                        System.out.println("File being add to index: " + file);
-                    // todo -- implement me
-                    }
-*/
+                    break;
                 }
             }
         }
@@ -161,8 +152,26 @@ public class FSTrackHelper {
         return true;
     }
 
+    public void iterateOverContentEntries(@NotNull LocalFileProcessor processor){
+        this.processor = processor;
+        for (TrivialContentEntry e : contentEntries) {
+            VirtualFile contentRoot = e.getRoot();
+            final VirtualFile[] excludedFolders = e.getExcludeFolders();
+            processFilesRecursively(contentRoot, new Processor<VirtualFile>() {
+                public boolean process(VirtualFile virtualFile) {
+                    if (isFileInExcludedContent(virtualFile, excludedFolders)) {
+                        return false;
+                    } else {
+                        // put file in the queue for adding to index
+                        enqueueFile(virtualFile, LocalFileProcessor.ADD_TO_INDEX);
+                    }
+                    return true;
+                }
+            });
+        }
+    }
 
-    public void process(Set<TrivialContentEntry> newOnes, @NotNull LocalFileProcessor processor){
+    public void processChangesInContentEntries(Set<TrivialContentEntry> newOnes, @NotNull LocalFileProcessor processor){
         this.processor = processor;
 
         List<List> pairs = new ArrayList<List>();
@@ -269,7 +278,6 @@ public class FSTrackHelper {
                 });
             }
         }
-
 
         // 5. save results
         contentEntries.clear();

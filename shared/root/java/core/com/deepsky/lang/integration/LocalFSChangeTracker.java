@@ -1,11 +1,16 @@
 package com.deepsky.lang.integration;
 
 import com.deepsky.lang.common.PlSqlFile;
+import com.deepsky.lang.common.PlSqlProjectComponent;
+import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.indexMan.DbTypeChangeListener;
 import com.deepsky.lang.plsql.indexMan.FSIndexer;
 import com.deepsky.lang.plsql.indexMan.IndexBulkChangeListener;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
 import com.deepsky.lang.plsql.resolver.factory.PlSqlElementLocator;
+import com.deepsky.lang.plsql.resolver.index.IndexEntriesWalkerInterruptable;
+import com.deepsky.lang.plsql.resolver.index.IndexTree;
+import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
 import com.deepsky.lang.plsql.sqlIndex.WordIndexChangeListener;
 import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
@@ -17,6 +22,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileTypes.FileTypeEvent;
+import com.intellij.openapi.fileTypes.FileTypeListener;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.ModuleListener;
@@ -32,10 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class LocalFSChangeTracker {
 
@@ -57,6 +62,7 @@ public class LocalFSChangeTracker {
         MessageBus bus = project.getMessageBus();
         bus.connect().subscribe(ProjectTopics.MODULES, new ModuleListenerImpl());
         bus.connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListenerImpl());
+        bus.connect().subscribe(FileTypeManager.TOPIC, new FileTypeListenerImpl());
 
         excludePolicies = Extensions.getExtensions(DirectoryIndexExcludePolicy.EP_NAME, project);
     }
@@ -78,7 +84,7 @@ public class LocalFSChangeTracker {
         final MessageBus bus1 = project.getMessageBus();
         Module[] modules = ModuleManager.getInstance(project).getModules();
 
-        helper.process(convert(modules), new LocalFileProcessor() {
+        helper.processChangesInContentEntries(convert(modules), new LocalFileProcessor() {
             public void process(VirtualFile virtualFile, int command) {
                 if (command == LocalFileProcessor.ADD_TO_INDEX) {
                     long ts = fsIndexer.getFileTimestamp(virtualFile.getPath());
@@ -239,7 +245,7 @@ public class LocalFSChangeTracker {
     private class VirtualFileListenerImpl implements VirtualFileListener {
         public void propertyChanged(VirtualFilePropertyEvent event) {
             log.info("propertyChanged: " + event.getPropertyName());
-            if(event.getPropertyName().equals(VirtualFile.PROP_NAME)){
+            if (event.getPropertyName().equals(VirtualFile.PROP_NAME)) {
                 // name was changed
                 File parent = new File(event.getParent().getPath());
                 String oldFileName = (String) event.getOldValue();
@@ -424,4 +430,93 @@ public class LocalFSChangeTracker {
     }
 
 
+    private class FileTypeListenerImpl implements FileTypeListener {
+        public void beforeFileTypesChanged(FileTypeEvent event) {
+        }
+
+        public void fileTypesChanged(FileTypeEvent event) {
+            Set<String> old = PluginKeys.ACTIVE_FILE_PATTERNS.getData(project);
+            Set<String> newOnes = PlSqlProjectComponent.getActiveFilePatterns();
+
+            Set<String> intersected = new HashSet<String>(old);
+            intersected.retainAll(newOnes);
+
+            final Set<String> beingDeleted = new HashSet<String>(old);
+            beingDeleted.removeAll(intersected);
+
+            final Set<String> beingAdded = new HashSet<String>(newOnes);
+            beingAdded.removeAll(intersected);
+
+            PluginKeys.ACTIVE_FILE_PATTERNS.putData(newOnes, project);
+            if (beingAdded.size() == 0 && beingDeleted.size() == 0) {
+                // No changes in SQL PL/SQL file types
+                return;
+            }
+
+            ApplicationManager.getApplication().runWriteAction(new Runnable() {
+                public void run() {
+                    final MessageBus bus1 = project.getMessageBus();
+                    final Set<String> typesBeingUpdated = new HashSet<String>();
+                    if (beingDeleted.size() != 0 && !project.isDisposed()) {
+                        final List<String> fileToDelete = new ArrayList<String>();
+                        final List<String> filePatterns = convertToPatterns(beingDeleted);
+                        IndexTree itree = fsIndexer.getIndex();
+                        // Iterate over index and collect file being deleted
+                        itree.iterateFileNames(new IndexEntriesWalkerInterruptable() {
+                            public boolean process(String ctxPath, String value) {
+                                String path = ContextPathUtil.extractFilePath(ctxPath);
+                                for (String p : filePatterns) {
+                                    if (new File(path).getName().matches(p)) {
+                                        fileToDelete.add(path);
+                                    }
+                                }
+                                return true;
+                            }
+                        });
+
+                        // Do actual file deletion form index
+                        typesBeingUpdated.addAll(fsIndexer.deleteFile(fileToDelete));
+                        // Notify services
+                        for (String f : fileToDelete) {
+                            bus1.syncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, f);
+                            log.info("fileDeleted: " + f );
+                        }
+                    }
+
+                    if (beingAdded.size() != 0 && !project.isDisposed()) {
+                        helper.iterateOverContentEntries(new LocalFileProcessor() {
+                            public void process(VirtualFile virtualFile, int command) {
+                                if (command == LocalFileProcessor.ADD_TO_INDEX) {
+                                    long ts = fsIndexer.getFileTimestamp(virtualFile.getPath());
+                                    if (ts != virtualFile.getTimeStamp()) {
+                                        log.info("#INDEX FILE: " + virtualFile.getPath());
+                                        Set<String> typesBeenAdded = indexFile(virtualFile);
+                                        typesBeingUpdated.addAll(typesBeenAdded);
+                                        bus1.syncPublisher(WordIndexChangeListener.TOPIC).handleUpdate(IndexManager.FS_URL, virtualFile.getPath());
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if (typesBeingUpdated.size() > 0) {
+                        bus1.syncPublisher(IndexBulkChangeListener.TOPIC).handleUpdate(
+                                IndexManager.FS_URL, typesBeingUpdated.toArray(new String[typesBeingUpdated.size()])
+                        );
+                    }
+                }
+            });
+
+            System.out.println("FileType changed, added: " + beingAdded.size() + " deleted: " + beingDeleted.size());
+        }
+
+        private List<String> convertToPatterns(Set<String> set) {
+            List<String> out = new ArrayList<String>(set.size());
+            for (String type : set) {
+                out.add(type.replace(".", "\\.").replace("?", ".").replace("*", ".*").replace("_", "\\_"));
+            }
+
+            return out;
+        }
+    }
 }
