@@ -636,7 +636,8 @@ create_or_replace
             {  __markRule(CREATE_VIEW);}
         | create_view_column_def
             {  __markRule(CREATE_VIEW_COLUMN_DEF);}
-        | (create_table2 (SEMI!)?)
+
+        | (create_table (SEMI!)?)
             {  __markRule(TABLE_DEF);}
 
         | (("global")? "temporary" (schema_name DOT!)? "table") => (create_temp_table (SEMI!)?)
@@ -928,7 +929,7 @@ alter_trigger:
 create_index2:
     ("unique"|"bitmap")? "index"! (schema_name DOT!)? index_name "on"! (schema_name DOT!)? table_ref
     OPEN_PAREN index_column_spec_list CLOSE_PAREN
-    (physical_properties|table_properties)*
+    (physical_properties)*
     ;
 
 index_column_spec_list:
@@ -942,14 +943,15 @@ create_directory:
 // -------------------------------------------------------------------
 // [CREATE TABLE START] ----------------------------------
 // -------------------------------------------------------------------
-create_table2:
+create_table:
     "table"! (schema_name DOT!)? table_name_ddl (
             ( OPEN_PAREN! column_def (COMMA! (column_def|constraint))* CLOSE_PAREN!
-                (nested_tab_spec)? (lob_storage_clause)? (physical_properties|table_properties)*
+                (nested_tab_spec)? (lob_storage_clause)? (physical_properties)*
                 )
-            | ( (physical_properties|table_properties)* "as" select_expression)
+            | ( (physical_properties)* "as" select_expression)
         )
     ;
+
 
 create_temp_table:
     ("global")? "temporary"! (schema_name DOT!)? "table"! table_name_ddl
@@ -988,6 +990,7 @@ physical_properties:
             | organization_spec)
     )
     | cluster_clause
+    | table_properties
     ;
 
 deferred_segment_creation:
@@ -1137,10 +1140,7 @@ organization_spec:
             {  __markRule(IOT_TYPE);}
         | "heap"!
             {  __markRule(HEAP_ORGINIZED);}
-//        | ("external") => external_table_spec
-//            { #.organization_spec = #.([EXTERNAL_TYPE, "EXTERNAL_TYPE" ], #.organization_spec);}
-//        | ("external" OPEN_PAREN external_table_spec CLOSE_PAREN (reject_spec|parallel_clause)*)
-        | ("external" OPEN_PAREN external_table_spec CLOSE_PAREN (reject_spec)?)
+        | ("external" OPEN_PAREN external_table_spec CLOSE_PAREN (ext_table_properties)*)
             {  __markRule(EXTERNAL_TYPE);}
         )
     ;
@@ -1160,6 +1160,14 @@ parallel_clause:
 )
     {  __markRule(PARALLEL_CLAUSE);}
     ;
+
+ext_table_properties:
+    cache_clause
+    | parallel_clause
+    | monitoring_clause
+    | reject_spec
+    ;
+
 
 // REJECT LIMIT UNLIMITED
 reject_spec:
@@ -2107,17 +2115,6 @@ procedure_declaration :
 	exception catch [RecognitionException ex] {
 	    throw ex;
 	}
-*/
-/*
-function_body2  :
-    function_declaration ( "is"! | "as"! ) (
-        (("language" "java" "name") => ("language" "java" "name" string_literal))
-        | func_proc_statements
-            {  __markRule(FUNCTION_BODY); }
-//          | ("aggregate" "using" identifier2)
-//            {  __markRule(CUSTOM_AGGR_FUNCTION); }
-        )
-    ;
 */
 
 function_body returns [Integer retValue]
@@ -3310,23 +3307,6 @@ external_table_spec:
     ) location
     {  __markRule(EXTERNAL_TABLE_SPEC);}
     ;
-
-/*
-external_table_spec:
-    "external"! OPEN_PAREN! "type" (oracle_loader_params|oracle_datapump_params)location CLOSE_PAREN!
-//    ("as" select_expression)? (reject_spec|parallel_clause)*
-    (reject_spec|parallel_clause)*
-    ;
-*/
-/*
-oracle_loader_params:
-    "oracle_loader" directory_spec (access_parameters)?
-    ;
-
-oracle_datapump_params:
-    "oracle_datapump" directory_spec (write_access_parameters)?
-    ;
-*/
 
 directory_spec:
     ("default")? "directory" identifier

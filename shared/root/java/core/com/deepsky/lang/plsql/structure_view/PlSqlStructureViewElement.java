@@ -162,7 +162,8 @@ public class PlSqlStructureViewElement implements StructureViewTreeElement {
             }
 
             public void visitColumnDefinition(ColumnDefinition columnDefinition) {
-                childrenElements.add(columnDefinition);
+                if(columnDefinition.getTableDefinition() != null)
+                    childrenElements.add(columnDefinition);
             }
 
             public void visitCreateIndex(CreateIndex index) {

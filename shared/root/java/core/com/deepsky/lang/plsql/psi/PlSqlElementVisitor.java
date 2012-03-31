@@ -292,14 +292,6 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
 
     public void visitForeignKeyConstraint(ForeignKeyConstraint constraint) {
         visitElement(constraint);
-//        TableRef tab = constraint.getReferencedTable2();
-//        tab.accept(this);
-//        for (ColumnNameRef c : constraint.getReferencedColumns2()) {
-//            c.accept(this);
-//        }
-//        for (ColumnNameRef c : constraint.getOwnColumns2()) {
-//            c.accept(this);
-//        }
     }
 
     public void visitColumnNameDDL(ColumnNameDDL columnNameDDL) {

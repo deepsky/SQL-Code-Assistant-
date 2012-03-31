@@ -176,6 +176,13 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
         }
     }
 
+    public void visitForeignKeyConstraint(ForeignKeyConstraint constraint) {
+        if (leftChild.getElementType() == PlSqlTokenTypes.OPEN_PAREN
+                || rightChild.getElementType() == PlSqlTokenTypes.CLOSE_PAREN) {
+            myResult = SpacingConstants.NO_SPACING;
+        }
+    }
+
     public void visitAlterTable(AlterTable table) {
         if (compose(PlSqlTokenTypes.KEYWORD_ALTER, PlSqlTokenTypes.KEYWORD_TABLE, PlSqlElementTypes.TABLE_REF)) {
         } else if (compose(PlSqlElementTypes.TABLE_REF, PlSqlTokenTypes.KEYWORD_ADD)) {
@@ -218,15 +225,21 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
 
 
     public void visitVariableDecl(VariableDecl node) {
-        if (leftChild.getElementType() == PlSqlElementTypes.VARIABLE_NAME
-                && rightChild.getPsi() instanceof TypeSpec) {
+        final IElementType leftType = leftChild.getElementType();
+        final IElementType rightType = rightChild.getElementType();
 
+        if (leftType == PlSqlElementTypes.VARIABLE_NAME && rightChild.getPsi() instanceof TypeSpec) {
+            int len = leftChild.getTextLength();
+            int spaces = len % (styleSettings.TAB_SIZE * 2);
+            spaces = styleSettings.TAB_SIZE * 2 - spaces;
+            createSpaceProperty(spaces, false, styleSettings.KEEP_BLANK_LINES_IN_CODE);
+        } else if (leftType == PlSqlElementTypes.VARIABLE_NAME && rightType == PlSqlTokenTypes.KEYWORD_CONSTANT) {
             int len = leftChild.getTextLength();
             int spaces = len % (styleSettings.TAB_SIZE * 2);
             spaces = styleSettings.TAB_SIZE * 2 - spaces;
             createSpaceProperty(spaces, false, styleSettings.KEEP_BLANK_LINES_IN_CODE);
         } else {
-            if (rightChild.getElementType() == PlSqlTokenTypes.SEMI) {
+            if (rightType == PlSqlTokenTypes.SEMI) {
                 myResult = SpacingConstants.NO_SPACING;
             } else {
                 createSpaceProperty(1, false, styleSettings.KEEP_BLANK_LINES_IN_CODE);
@@ -259,6 +272,46 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
             createSpaceProperty(1, false, styleSettings.KEEP_BLANK_LINES_IN_CODE);
         }
     }
+
+    public void visitTableCollectionDecl(TableCollectionDecl node) {
+        final IElementType leftType = leftChild.getElementType();
+        final IElementType rightType = rightChild.getElementType();
+        if (leftType == PlSqlElementTypes.TYPE_NAME
+                && (rightType == PlSqlTokenTypes.KEYWORD_AS || rightType == PlSqlTokenTypes.KEYWORD_IS)) {
+            int len = "TYPE ".length() + leftChild.getTextLength();
+            int spaces = len % (styleSettings.TAB_SIZE * 2);
+            spaces = styleSettings.TAB_SIZE * 2 - spaces;
+            createSpaceProperty(spaces, false, styleSettings.KEEP_BLANK_LINES_IN_CODE);
+        } else {
+            if (rightType == PlSqlTokenTypes.SEMI) {
+                myResult = SpacingConstants.NO_SPACING;
+            } else {
+                createSpaceProperty(1, false, styleSettings.KEEP_BLANK_LINES_IN_CODE);
+            }
+        }
+    }
+
+    public void visitVarrayCollectionDecl(VarrayCollectionDecl decl) {
+        final IElementType leftType = leftChild.getElementType();
+        final IElementType rightType = rightChild.getElementType();
+        if (leftType == PlSqlElementTypes.TYPE_NAME
+                && (rightType == PlSqlTokenTypes.KEYWORD_AS || rightType == PlSqlTokenTypes.KEYWORD_IS)) {
+            int len = "TYPE ".length() + leftChild.getTextLength();
+            int spaces = len % (styleSettings.TAB_SIZE * 2);
+            spaces = styleSettings.TAB_SIZE * 2 - spaces;
+            createSpaceProperty(spaces, false, styleSettings.KEEP_BLANK_LINES_IN_CODE);
+        } else {
+            if (rightType == PlSqlTokenTypes.SEMI
+                    || rightType == PlSqlTokenTypes.CLOSE_PAREN
+                    || rightType == PlSqlTokenTypes.OPEN_PAREN
+                    || leftType == PlSqlTokenTypes.OPEN_PAREN) {
+                myResult = SpacingConstants.NO_SPACING;
+            } else {
+                createSpaceProperty(1, false, styleSettings.KEEP_BLANK_LINES_IN_CODE);
+            }
+        }
+    }
+
 
     public void visitInsertStatement(InsertStatement node) {
         if (leftChild.getElementType() == PlSqlTokenTypes.OPEN_PAREN

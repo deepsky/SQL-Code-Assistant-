@@ -48,7 +48,6 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.CHECK_CONSTRAINT] = PLSqlTypesAdopted.CHECK_CONSTRAINT;
 		type2etype[PLSqlTokenTypes.BETWEEN_CONDITION] = PLSqlTypesAdopted.BETWEEN_CONDITION;
 		type2etype[PLSqlTokenTypes.A_COLUMN_DEF] = PLSqlTypesAdopted.A_COLUMN_DEF;
-		type2etype[PLSqlTokenTypes.CUSTOM_AGGR_FUNCTION] = PLSqlTypesAdopted.CUSTOM_AGGR_FUNCTION;
 		type2etype[PLSqlTokenTypes.NOT_NULL_STMT] = PLSqlTypesAdopted.NOT_NULL_STMT;
 		type2etype[PLSqlTokenTypes.PARAMETER_NAME] = PLSqlTypesAdopted.PARAMETER_NAME;
 		type2etype[PLSqlTokenTypes.RANGE_PARTITION] = PLSqlTypesAdopted.RANGE_PARTITION;

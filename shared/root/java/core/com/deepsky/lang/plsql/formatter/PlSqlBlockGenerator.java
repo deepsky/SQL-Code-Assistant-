@@ -211,7 +211,6 @@ public class PlSqlBlockGenerator {
                 PsiElement psi = child.getPsi();
                 if (psi instanceof VariableDecl) {
                     if (currentGroup == null || !checkElem(prevChild, VariableDecl.class)){
-//                            (plSqlSettings.KEEP_ALIGNMENT_IN_GROUP && !(prevChild instanceof VariableDecl))) {
                         currentGroup = Arrays.asList(
                                 Alignment.createAlignment(true),
                                 Alignment.createAlignment(true),

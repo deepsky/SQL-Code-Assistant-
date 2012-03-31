@@ -48,7 +48,6 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType CHECK_CONSTRAINT = new PlSqlElementType("CHECK_CONSTRAINT", PLSqlTokenTypes.CHECK_CONSTRAINT);
 	PlSqlElementType BETWEEN_CONDITION = new PlSqlElementType("BETWEEN_CONDITION", PLSqlTokenTypes.BETWEEN_CONDITION);
 	PlSqlElementType A_COLUMN_DEF = new PlSqlElementType("A_COLUMN_DEF", PLSqlTokenTypes.A_COLUMN_DEF);
-	PlSqlElementType CUSTOM_AGGR_FUNCTION = new PlSqlElementType("CUSTOM_AGGR_FUNCTION", PLSqlTokenTypes.CUSTOM_AGGR_FUNCTION);
 	PlSqlElementType NOT_NULL_STMT = new PlSqlElementType("NOT_NULL_STMT", PLSqlTokenTypes.NOT_NULL_STMT);
 	PlSqlElementType PARAMETER_NAME = new PlSqlElementType("PARAMETER_NAME", PLSqlTokenTypes.PARAMETER_NAME);
 	PlSqlElementType RANGE_PARTITION = new PlSqlElementType("RANGE_PARTITION", PLSqlTokenTypes.RANGE_PARTITION);
