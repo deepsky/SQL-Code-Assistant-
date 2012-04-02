@@ -74,34 +74,6 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
             return;
         }
 
-
-/*
-        ASTNode prev = getPrevElementType(rightChild);
-        if (prev != null && prev.getElementType() == PlSqlTokenTypes.LF) {
-            prev = getPrevElementType(prev);
-        }
-        if (rightChild != null && styleSettings.KEEP_FIRST_COLUMN_COMMENT
-                && PlSqlTokenTypes.COMMENTS.contains(rightChild.getElementType())) {
-            return;
-        }
-
-        if (prev != null && prev.getElementType() == PlSqlTokenTypes.SL_COMMENT) {
-            myResult = Spacing.createSpacing(0, Integer.MAX_VALUE, 1, styleSettings.KEEP_LINE_BREAKS, styleSettings.MAX_LINES_BETWEEN_SL_COMMENTS);
-//            myResult = Spacing.createSpacing(0, Integer.MAX_VALUE, 0, commonSettings.KEEP_LINE_BREAKS, commonSettings.KEEP_BLANK_LINES_IN_CODE);
-//            myResult = Spacing.createSpacing(0, Integer.MAX_VALUE, 0, false, 1);
-            return;
-        }
-
-        if(rightChild.getElementType() == PlSqlTokenTypes.SL_COMMENT
-                && leftChild.getElementType() == PlSqlTokenTypes.SL_COMMENT){
-
-            int min = styleSettings.MIN_LINES_BETWEEN_SL_COMMENTS;
-            int max = styleSettings.MAX_LINES_BETWEEN_SL_COMMENTS;
-            myResult = Spacing.createSpacing(0, Integer.MAX_VALUE, 1, styleSettings.KEEP_LINE_BREAKS, styleSettings.MAX_LINES_BETWEEN_SL_COMMENTS);
-            return;
-        }
-*/
-
         if (myParent instanceof PlSqlElement) {
             myParent.accept(this);
         }
@@ -124,10 +96,12 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
         }
     }
 
+/*
     @Nullable
     static ASTNode getPrevElementType(final ASTNode child) {
         return FormatterUtil.getPreviousNonWhitespaceLeaf(child);
     }
+*/
 
     static boolean isWhiteSpace(final ASTNode node) {
         return node != null && (node.getPsi() instanceof PsiWhiteSpace || node.getTextLength() == 0);

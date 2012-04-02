@@ -202,6 +202,10 @@ public class PlSqlBlock extends AbstractBlock {
         if (targetType == PlSqlElementTypes.DECLARE_LIST) return Indent.getNormalIndent();
         if (targetType == PlSqlElementTypes.ARGUMENT_LIST) return Indent.getNormalIndent();
         if (targetType == PlSqlElementTypes.DATATYPE) return Indent.getNormalIndent();
+
+        if (targetType == PlSqlElementTypes.EXCEPTION_SECTION) return Indent.getNormalIndent();
+        if (targetType == PlSqlElementTypes.EXCEPTION_HANDLER) return Indent.getNormalIndent();
+
         if (targetType == PlSqlElementTypes.PLSQL_BLOCK) {
             if(parent.findChildByType(PlSqlElementTypes.DECLARE_LIST) != null){
                 return Indent.getNoneIndent();

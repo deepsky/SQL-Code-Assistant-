@@ -11,8 +11,6 @@ Copy the following jars to the SQL-Code-Assistant-/sqlassistant-plugin10/idea-10
  trove4j.jar
  util.jar
 
-(Build #IC-107.587 was used for the building of the plugin)
-
 Also, Oracle JDBC driver (ojdbc5.jar) is needed to build the plugin.
 The driver can be downloaded free of charge from Oracle Technet. 
 	

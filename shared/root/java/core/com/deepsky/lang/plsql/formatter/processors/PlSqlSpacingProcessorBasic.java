@@ -249,6 +249,17 @@ public class PlSqlSpacingProcessorBasic {
             if (leftType == PlSqlTokenTypes.OPEN_PAREN || rightType == PlSqlTokenTypes.CLOSE_PAREN) {
                 return SpacingConstants.NO_SPACING;
             }
+        } else if (parentType == PlSqlElementTypes.EXCEPTION_HANDLER) {
+            if (leftType == PlSqlTokenTypes.KEYWORD_WHEN || rightType == PlSqlTokenTypes.KEYWORD_THEN) {
+                return SpacingConstants.ONE_SPACE_WITHOUT_NEWLINE;
+            }
+        } else if (parentType == PlSqlElementTypes.ARITHMETIC_EXPR) {
+            // Check for "-3" case
+            if(leftType == PlSqlTokenTypes.MINUS && PsiUtil.prevVisibleSibling(leftNode) == null){
+                if(rightType == PlSqlElementTypes.NUMERIC_LITERAL){
+                    return SpacingConstants.NO_SPACING;
+                }
+            }
         }
 
         return SpacingConstants.ONE_SPACE_WITH_NEWLINE; //COMMON_SPACING;

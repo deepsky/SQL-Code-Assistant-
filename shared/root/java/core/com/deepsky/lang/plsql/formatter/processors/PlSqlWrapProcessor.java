@@ -179,21 +179,26 @@ public class PlSqlWrapProcessor {
             return Wrap.createWrap(WrapType.ALWAYS, true);
         }
 
-
-/*
-        if(childType == PlSqlElementTypes.DECLARE_LIST){
-            return Wrap.createWrap(WrapType.ALWAYS, true);
-        }
-*/
         if (parentType == PlSqlElementTypes.PLSQL_BLOCK) {
             if (childType == PlSqlTokenTypes.KEYWORD_BEGIN) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             } else if (childType == PlSqlTokenTypes.KEYWORD_DECLARE) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
+            } else if (childType == PlSqlElementTypes.DECLARE_LIST) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
             } else if (childType == PlSqlElementTypes.PLSQL_BLOCK_END) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            } else if (childType == PlSqlElementTypes.EXCEPTION_SECTION) {
                 return Wrap.createWrap(WrapType.ALWAYS, true);
             }
         }
+
+        if (parentType == PlSqlElementTypes.EXCEPTION_SECTION) {
+            if (childType == PlSqlElementTypes.EXCEPTION_HANDLER) {
+                return Wrap.createWrap(WrapType.ALWAYS, true);
+            }
+        }
+
         if (childType == PlSqlElementTypes.VARIABLE_DECLARATION
                 || child.getPsi() instanceof TypeDeclaration
                 || child.getPsi() instanceof CursorDecl) {
@@ -290,6 +295,11 @@ public class PlSqlWrapProcessor {
                 }
             }
         }
+
+        if (childType == PlSqlElementTypes.ANSI_JOIN_TAB_SPEC) {
+            return Wrap.createWrap(WrapType.ALWAYS, true);
+        }
+
 /*
         if (childType == PlSqlElementTypes.FROM_SUBQUERY) {
             if (psiParent instanceof FromClause) {
@@ -317,7 +327,7 @@ public class PlSqlWrapProcessor {
             } else {
                 // Wrap any declaration or comment if it follows immediately after AS
                 ASTNode prev = PsiUtil.prevVisibleSibling(child);
-                if(prev != null && prev.getElementType() == PlSqlTokenTypes.KEYWORD_AS){
+                if (prev != null && prev.getElementType() == PlSqlTokenTypes.KEYWORD_AS) {
                     return Wrap.createWrap(WrapType.ALWAYS, true);
                 }
             }
