@@ -59,7 +59,7 @@ public abstract class SqlIndexBase implements SqlDomainIndex {
 
     private final static String REVISION_FILE = "a12_345_$1.rev";
     private final static String REVISION_ATTR = "revision";
-    private final static String INDEX_REVISION = "1203311338"; // Change value to get the index rebuilt on startup
+    private final static String INDEX_REVISION = "1203311530"; // Change value to get the index rebuilt on startup
 
     protected Map<String, RefResolver> user2resolver = new HashMap<String, RefResolver>();
     protected Map<String, AbstractSchema> user2index = new HashMap<String, AbstractSchema>();
