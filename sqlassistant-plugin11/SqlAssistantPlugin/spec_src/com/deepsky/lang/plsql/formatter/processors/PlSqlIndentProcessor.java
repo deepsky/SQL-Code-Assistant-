@@ -198,6 +198,7 @@ public class PlSqlIndentProcessor {
                     || childType == PlSqlElementTypes.CURSOR_DECLARATION
                     || childType == PlSqlElementTypes.AUTONOMOUS_TRN_PRAGMA
                     || childType == PlSqlElementTypes.EXCEPTION_PRAGMA
+                    || childType == PlSqlElementTypes.EXCEPTION_DECL
                     || child.getPsi() instanceof TypeDeclaration) {
                 return Indent.getNormalIndent(false);
             }
@@ -214,10 +215,8 @@ public class PlSqlIndentProcessor {
                         return Indent.getIndent(Indent.Type.NONE, plSqlSettings.TAB_SIZE, true, true);
                     }
                     return Indent.getSpaceIndent(plSqlSettings.TAB_SIZE, true);
-//                    return Indent.getNormalIndent(true);
                 } else {
                     return Indent.getNormalIndent(false);
-//                    return Indent.getIndent(Indent.Type.NORMAL, 4, true, true);
                 }
             } else if (child.getPsi() instanceof PsiComment) {
                 if (plSqlSettings.COMMENT_AT_FIRST_COLUMN) {
@@ -225,10 +224,24 @@ public class PlSqlIndentProcessor {
                 } else {
                     return Indent.getNormalIndent(false);
                 }
-//
-//                return Indent.getNormalIndent(true);
             }
             return Indent.getNoneIndent();
+        }
+
+        if (parentType == PlSqlElementTypes.EXCEPTION_SECTION) {
+            if(childType == PlSqlTokenTypes.KEYWORD_EXCEPTION){
+                return Indent.getNoneIndent();
+            } else {
+                return Indent.getNormalIndent(false);
+            }
+        }
+
+        if (parentType == PlSqlElementTypes.EXCEPTION_HANDLER) {
+            if (childType == PlSqlElementTypes.STATEMENT_LIST) {
+                return Indent.getNormalIndent(false);
+            } else {
+                return Indent.getNoneIndent();
+            }
         }
 
         if (parentType == PlSqlElementTypes.STATEMENT_LIST) {
@@ -370,6 +383,8 @@ public class PlSqlIndentProcessor {
 
         if (psiParent instanceof FromClause) {
             if (childType == PlSqlElementTypes.TABLE_ALIAS) {
+                return Indent.getNormalIndent(false);
+            } else if (childType == PlSqlElementTypes.ANSI_JOIN_TAB_SPEC) {
                 return Indent.getNormalIndent(false);
             }
         }
