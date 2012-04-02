@@ -83,10 +83,10 @@ public class NamesIndexer extends PlSqlElementVisitor {
         }
     }
 
-    protected void saveCtxValue(String ctxPath, String value){
+    protected void saveCtxValue(String ctxPath, String value) {
         itree.addContextPath(ctxPath, value);
     }
-    
+
     public void visitPlSqlFile(PlSqlFile plSqlFile) {
         visitElement(plSqlFile);
     }
@@ -403,19 +403,23 @@ public class NamesIndexer extends PlSqlElementVisitor {
      * @param node
      */
     public void visitColumnDefinition(ColumnDefinition node) {
-        ColumnFKSpec fkSpec = node.getForeignKeySpec();
-        ColumnPKSpec pkSpec = node.getPrimaryKeySpec();
-        if (pkSpec != null || fkSpec != null) {
-            String refColumn = fkSpec!=null? fkSpec.getReferencedColumn(): null;
-            String refTable = fkSpec!=null? fkSpec.getReferencedTable(): null;
-            String constraintName = pkSpec != null? pkSpec.getConstraintName(): fkSpec.getConstraintName();
-            String value = ContextPathUtil.encodeColumnValue(
-                    node.getType(), constraintName, node.isNotNull(), pkSpec != null, refColumn, refTable
-            );
-            saveCtxValue(node.getCtxPath1().getPath(), value);
+        if (node.getParent() instanceof TableDefinition) {
+            ColumnFKSpec fkSpec = node.getForeignKeySpec();
+            ColumnPKSpec pkSpec = node.getPrimaryKeySpec();
+            if (pkSpec != null || fkSpec != null) {
+                String refColumn = fkSpec != null ? fkSpec.getReferencedColumn() : null;
+                String refTable = fkSpec != null ? fkSpec.getReferencedTable() : null;
+                String constraintName = pkSpec != null ? pkSpec.getConstraintName() : fkSpec.getConstraintName();
+                String value = ContextPathUtil.encodeColumnValue(
+                        node.getType(), constraintName, node.isNotNull(), pkSpec != null, refColumn, refTable
+                );
+                saveCtxValue(node.getCtxPath1().getPath(), value);
+            } else {
+                String value = ContextPathUtil.encodeColumnValue(node.getType(), node.isNotNull());
+                saveCtxValue(node.getCtxPath1().getPath(), value);
+            }
         } else {
-            String value = ContextPathUtil.encodeColumnValue(node.getType(), node.isNotNull());
-            saveCtxValue(node.getCtxPath1().getPath(), value);
+            // Table Definition looks broken, skip indexing of the column
         }
     }
 
@@ -470,16 +474,16 @@ public class NamesIndexer extends PlSqlElementVisitor {
                 PlSqlElementTypes.DB_EVNT_TRIGGER_CLAUSE, PlSqlElementTypes.DDL_TRIGGER_CLAUSE, PlSqlElementTypes.INSTEADOF_TRIGGER)
         );
 
-        if(nodes != null && nodes.length == 1){
-            if(nodes[0].getElementType() == PlSqlElementTypes.DB_EVNT_TRIGGER_CLAUSE ){
+        if (nodes != null && nodes.length == 1) {
+            if (nodes[0].getElementType() == PlSqlElementTypes.DB_EVNT_TRIGGER_CLAUSE) {
                 CreateTriggerDbEvent t = (CreateTriggerDbEvent) trigger;
                 String value = "db_event|" + t.getEventName() + "|" + t.getTarget();
                 saveCtxValue(trigger.getCtxPath1().getPath(), value.toLowerCase());
-            } else if(nodes[0].getElementType() == PlSqlElementTypes.DDL_TRIGGER_CLAUSE ){
+            } else if (nodes[0].getElementType() == PlSqlElementTypes.DDL_TRIGGER_CLAUSE) {
                 CreateTriggerDDL t = (CreateTriggerDDL) trigger;
                 String value = "ddl|" + t.getEventName() + "|" + t.getTarget();
                 saveCtxValue(trigger.getCtxPath1().getPath(), value);
-            } else if(nodes[0].getElementType() == PlSqlElementTypes.INSTEADOF_TRIGGER ){
+            } else if (nodes[0].getElementType() == PlSqlElementTypes.INSTEADOF_TRIGGER) {
                 saveCtxValue(trigger.getCtxPath1().getPath(), "insteadof|");
             }
         } else {
@@ -493,7 +497,7 @@ public class NamesIndexer extends PlSqlElementVisitor {
         String tableName = StringUtils.discloseDoubleQuotes(trigger.getTableName());
 
         String clause = trigger.getConditionClause();
-        if(clause != null){
+        if (clause != null) {
             String cclause = "|" + clause.replace(" ", ".").toLowerCase();
             saveCtxValue(trigger.getCtxPath1().getPath(), "dml|" + tableName.toLowerCase() + cclause);
         } else {
@@ -521,20 +525,20 @@ public class NamesIndexer extends PlSqlElementVisitor {
             cols.add(new ArgumentSpecImpl(name.toLowerCase(), null));
         }
 
-        if(cols.size() == 0){
+        if (cols.size() == 0) {
             // no explicit column definition, try to extract column names from SELECT column list
-            for(SelectFieldCommon f: view.getSelectExpr().getSelectFieldList()){
-                if( f instanceof SelectFieldExpr){
-                    SelectFieldExpr fieldExpr = (SelectFieldExpr)f;
+            for (SelectFieldCommon f : view.getSelectExpr().getSelectFieldList()) {
+                if (f instanceof SelectFieldExpr) {
+                    SelectFieldExpr fieldExpr = (SelectFieldExpr) f;
                     String alias = fieldExpr.getAlias();
-                    if(alias != null){
+                    if (alias != null) {
                         cols.add(new ArgumentSpecImpl(alias.toLowerCase(), null));
                     } else {
                         Expression expr = fieldExpr.getExpression();
                         String exprText = expr.getText();
-                        if(GenericTableBase.isColumnNameCorrect(exprText)){
+                        if (GenericTableBase.isColumnNameCorrect(exprText)) {
                             cols.add(new ArgumentSpecImpl(expr.getText(), null));
-                        } else if(GenericTableBase.isColumnNameCorrectWithDot(exprText)){
+                        } else if (GenericTableBase.isColumnNameCorrectWithDot(exprText)) {
                             String[] alias_name = exprText.split("\\.");
                             cols.add(new ArgumentSpecImpl(alias_name[1], null));
                         }
@@ -553,7 +557,7 @@ public class NamesIndexer extends PlSqlElementVisitor {
         // todo -- subject to revise - it is expected view will be indexed before indexing of the view_internal
         String name = ContextPathUtil.extractLastCtxName(node.getCtxPath1().getPath());
         ContextItem[] items = itree.findCtxItems(new int[]{ContextPath.VIEW_DEF}, name); //[0].getCtxPath()
-        if(items.length == 1){
+        if (items.length == 1) {
 
             List<ArgumentSpec> cols = new ArrayList<ArgumentSpec>();
             for (ColumnDefinition c : node.getColumnDefs()) {

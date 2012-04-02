@@ -154,6 +154,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType SYNONYM_OBJ_WITH_LINK = new PlSqlElementType("SYNONYM_OBJ_WITH_LINK", PLSqlTokenTypes.SYNONYM_OBJ_WITH_LINK);
 	PlSqlElementType COLUMN_TYPE_REF = new PlSqlElementType("COLUMN_TYPE_REF", PLSqlTokenTypes.COLUMN_TYPE_REF);
 	PlSqlElementType COLLECTION_METHOD_CALL = new PlSqlElementType("COLLECTION_METHOD_CALL", PLSqlTokenTypes.COLLECTION_METHOD_CALL);
+	PlSqlElementType EXCEPTION_HANDLER = new PlSqlElementType("EXCEPTION_HANDLER", PLSqlTokenTypes.EXCEPTION_HANDLER);
 	PlSqlElementType INSTEADOF_TRIGGER = new PlSqlElementType("INSTEADOF_TRIGGER", PLSqlTokenTypes.INSTEADOF_TRIGGER);
 	PlSqlElementType TIMESTAMP_CONST = new PlSqlElementType("TIMESTAMP_CONST", PLSqlTokenTypes.TIMESTAMP_CONST);
 	PlSqlElementType LAST_STMT_RESULT_BOOL = new PlSqlElementType("LAST_STMT_RESULT_BOOL", PLSqlTokenTypes.LAST_STMT_RESULT_BOOL);

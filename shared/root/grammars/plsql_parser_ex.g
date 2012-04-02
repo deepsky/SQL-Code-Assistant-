@@ -72,7 +72,7 @@ tokens {
     TABLE_ALIAS;
     CAST_FUNC;
     VAR_REF; PLSQL_VAR_REF; PARAMETER_REF;
-    EXCEPTION_SECTION;
+    EXCEPTION_SECTION; EXCEPTION_HANDLER;
 
     SELECTED_TABLE;
     CREATE_PROCEDURE;
@@ -2089,6 +2089,7 @@ exception_handler :
     "when" exception_name
     ("or" exception_name )* "then"
     seq_of_statements
+    {  __markRule(EXCEPTION_HANDLER);}
     ;
 
 function_declaration :
@@ -3152,7 +3153,7 @@ order_clause:
     ;
 
 sorted_def:
-    plsql_expression (( a:"asc" | d:"desc" ) ("nulls" ("first" |"last"))? )?
+    plsql_expression (("asc" | "desc")? ("nulls" ("first" |"last"))? )?
     {  __markRule(SORTED_DEF); }
     ;
 

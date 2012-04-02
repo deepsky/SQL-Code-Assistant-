@@ -4,7 +4,7 @@ import com.intellij.psi.tree.IElementType;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 
 public class ANTLRType2AdoptedType {
-	static public IElementType[] type2etype = new IElementType[387];
+	static public IElementType[] type2etype = new IElementType[388];
 	static {
 		type2etype[PLSqlTokenTypes.CREATE_VIEW_COLUMN_DEF] = PLSqlTypesAdopted.CREATE_VIEW_COLUMN_DEF;
 		type2etype[PLSqlTokenTypes.DROP_VIEW] = PLSqlTypesAdopted.DROP_VIEW;
@@ -154,6 +154,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.SYNONYM_OBJ_WITH_LINK] = PLSqlTypesAdopted.SYNONYM_OBJ_WITH_LINK;
 		type2etype[PLSqlTokenTypes.COLUMN_TYPE_REF] = PLSqlTypesAdopted.COLUMN_TYPE_REF;
 		type2etype[PLSqlTokenTypes.COLLECTION_METHOD_CALL] = PLSqlTypesAdopted.COLLECTION_METHOD_CALL;
+		type2etype[PLSqlTokenTypes.EXCEPTION_HANDLER] = PLSqlTypesAdopted.EXCEPTION_HANDLER;
 		type2etype[PLSqlTokenTypes.INSTEADOF_TRIGGER] = PLSqlTypesAdopted.INSTEADOF_TRIGGER;
 		type2etype[PLSqlTokenTypes.TIMESTAMP_CONST] = PLSqlTypesAdopted.TIMESTAMP_CONST;
 		type2etype[PLSqlTokenTypes.LAST_STMT_RESULT_BOOL] = PLSqlTypesAdopted.LAST_STMT_RESULT_BOOL;

@@ -237,7 +237,7 @@ public class PlSqlProjectComponent implements ProjectComponent {
                             "<html><span style=\"color: navy; font-weight: bold;\">SQL Code Assistant</span> plugin uses <b>sql</b>, <b>pks</b> and <b>pkb</b> file extensions. " +
                                     "But it looks one of these file extensions has already been registered by another plugin. " +
                                     "To let <span style=\"color: navy; font-weight: bold;\">SQL Code Assistant</span> plugin work properly you may need to associate " +
-                                    "<span style=\"color: #006400; font-weight: bold;\">" + b1.toString() + "</span> file extension" + (cnt == 1 ? "" : "s") + " with the plugin. " +
+                                    "<span style=\"font-weight: bold;\">" + b1.toString() + "</span> file extension" + (cnt == 1 ? "" : "s") + " with the plugin. " +
                                     "Go to <b>Settings</b> -> <b>File Types</b> and add pattern" + (cnt == 1 ? " '" : "s '") + b2.toString() +
                                     "' to <b>SQL (PL/SQL)</b> files.</html>";
 

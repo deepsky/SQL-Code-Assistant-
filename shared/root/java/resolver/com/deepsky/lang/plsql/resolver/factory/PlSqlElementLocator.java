@@ -136,27 +136,31 @@ public class PlSqlElementLocator {
         VirtualFile vfile = sindex.getSourceFile(ctxPath);
         if (vfile != null) {
             String filePath = vfile.getPath();
-
             if (filePath != null) {
-                final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
-                for (VirtualFile v : fileEditorManager.getOpenFiles()) {
-                    if (v.getUrl().equals(vfile.getUrl())) {
-                        PsiFile file = PsiManager.getInstance(project).findFile(v);
-                        if (file instanceof PlSqlFile) {
-                            PsiElement psiElem = new PlSqlElementLocator().locate(file, ctxPath);
-                            int offset = psiElem.getTextOffset();
-                            moveToOffset((PlSqlFile) file, offset);
-                            return true;
+                try {
+                    final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+                    for (VirtualFile v : fileEditorManager.getOpenFiles()) {
+                        if (v.getUrl().equals(vfile.getUrl())) {
+                            PsiFile file = PsiManager.getInstance(project).findFile(v);
+                            if (file instanceof PlSqlFile) {
+                                PsiElement psiElem = new PlSqlElementLocator().locate(file, ctxPath);
+                                int offset = psiElem.getTextOffset();
+                                moveToOffset((PlSqlFile) file, offset);
+                                return true;
+                            }
                         }
                     }
-                }
 
-                PsiFile file = PsiManager.getInstance(project).findFile(vfile);
-                if (file != null) {
-                    PsiElement psiElem = new PlSqlElementLocator().locate((PlSqlFile) file, ctxPath);
-                    int offset = psiElem.getTextOffset();
-                    moveToOffset((PlSqlFile) file, offset);
-                    return true;
+                    PsiFile file = PsiManager.getInstance(project).findFile(vfile);
+                    if (file != null) {
+                        PsiElement psiElem = new PlSqlElementLocator().locate((PlSqlFile) file, ctxPath);
+                        int offset = psiElem.getTextOffset();
+                        moveToOffset((PlSqlFile) file, offset);
+                        return true;
+                    }
+                } catch(ClassCastException e){
+                    // It may be an issue with not correct assigning of file extension ...
+                    // TODO -- handle the case
                 }
             }
         }
