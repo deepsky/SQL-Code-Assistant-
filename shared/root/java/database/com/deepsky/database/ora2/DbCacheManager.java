@@ -36,7 +36,6 @@ import com.deepsky.utils.StringUtils;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -45,7 +44,7 @@ public class DbCacheManager {
     static LoggerProxy log = LoggerProxy.getInstance("#DbObjectManager");
 
     final String listObjectsSql =
-            "SELECT OWNER, OBJECT_NAME, OBJECT_TYPE, STATUS, CREATED, LAST_DDL_TIME, TIMESTAMP " +
+            "SELECT OWNER, OBJECT_NAME, OBJECT_TYPE, STATUS, CREATED, LAST_DDL_TIME " +
                     "FROM ALL_OBJECTS\n" +
                     "WHERE OBJECT_TYPE IN ( <OBJECT_TYPES> )\n" +
                     "AND SUBOBJECT_NAME IS NULL AND OWNER = '<USER>' " +
@@ -54,7 +53,8 @@ public class DbCacheManager {
                     "   OR OBJECT_NAME LIKE 'SYS_YOID%')";
 
     final String listSynonymsSql =
-            "select lnk.OWNER AS SYNONYM_OWNER, lnk.SYNONYM_NAME AS SYNONYM_NAME, t.TIMESTAMP AS TIMESTAMP, lnk.TABLE_OWNER, lnk.TABLE_NAME\n" +
+            "select lnk.OWNER AS SYNONYM_OWNER, lnk.SYNONYM_NAME AS SYNONYM_NAME, " +
+                    "t.LAST_DDL_TIME AS LAST_DDL_TIME, lnk.TABLE_OWNER, lnk.TABLE_NAME\n" +
                     "from ALL_SYNONYMS lnk, ALL_OBJECTS t\n" +
                     "WHERE\n" +
                     "lnk.TABLE_NAME = t.OBJECT_NAME\n" +
@@ -67,7 +67,7 @@ public class DbCacheManager {
 
 
     final private String _listUserObjectsSql =
-            "SELECT OBJECT_NAME, OBJECT_TYPE, STATUS, CREATED, LAST_DDL_TIME, TIMESTAMP " +
+            "SELECT OBJECT_NAME, OBJECT_TYPE, STATUS, CREATED, LAST_DDL_TIME " +
                     "FROM USER_OBJECTS a " +
                     "WHERE OBJECT_TYPE IN ( <OBJECT_TYPES> ) " +
 //                    "AND GENERATED = 'N' AND OBJECT_NAME NOT LIKE 'SYS_YOID%'\n" +
@@ -80,18 +80,16 @@ public class DbCacheManager {
     final private String _listUpdatesSql =
             "select\n" +
                     "   object_type,\n" +
-                    "   to_char(MAX_TIMESTAMP, 'yyyy-mm-dd:hh24:mi:ss') AS TIMESTAMP,\n" +
+                    "   LAST_DDL_TIME,\n" +
                     "   NBR_ELEMENTS\n" +
                     "from (\n" +
                     "   select \n" +
                     "       object_type,\n" +
-                    "       MAX(to_date(TIMESTAMP, 'yyyy-mm-dd:hh24:mi:ss')) as MAX_TIMESTAMP,\n" +
+                    "       MAX(LAST_DDL_TIME) as LAST_DDL_TIME,\n" +
                     "       count(*) as NBR_ELEMENTS\n" +
                     "   from all_objects a\n" +
                     "       where owner IN (<OWNERS>)\n" +
                     "       and object_type in ( <OBJECT_TYPES> )\n" +
-//                    "       and object_type in ('PACKAGE', 'PACKAGE BODY', 'SEQUENCE', 'TYPE', 'TABLE', 'VIEW', 'PROCEDURE', 'FUNCTION', 'TRIGGER', 'SYNONYM')\n" +
-//                    "       AND GENERATED = 'N' AND OBJECT_NAME NOT LIKE 'SYS_YOID%'\n" +
                     "       AND NOT (GENERATED = 'Y'\n" +
                     "           OR (OBJECT_NAME LIKE 'BIN$%' AND LENGTH(OBJECT_NAME) = 30)\n" +
                     "           OR OBJECT_NAME LIKE 'SYS_YOID%')\n" +
@@ -142,10 +140,10 @@ public class DbCacheManager {
     public void cancelUpdate() {
         cancelUpdate = true;
 
-        if(currentLoader != null){
+        if (currentLoader != null) {
             try {
                 currentLoader.cancelLoading();
-            } catch(Throwable e){
+            } catch (Throwable e) {
                 // actually we expect NullPointerException if currentLoader has done its job
             }
         }
@@ -175,12 +173,8 @@ public class DbCacheManager {
                 public void processRow(ResultSet rs) throws SQLException {
                     String object_type = rs.getString("object_type");
                     int nbr = rs.getInt("NBR_ELEMENTS");
-                    Date timestamp = null;
-                    try {
-                        timestamp = new Date(fmt.parse(rs.getString("TIMESTAMP")).getTime());
-                        typeLastDDLTime.put(object_type, new ValueHelper(timestamp, nbr));
-                    } catch (ParseException e) {
-                    }
+                    Date timestamp = new Date(rs.getTimestamp("LAST_DDL_TIME").getTime());
+                    typeLastDDLTime.put(object_type, new ValueHelper(timestamp, nbr));
                 }
             });
 
@@ -198,10 +192,10 @@ public class DbCacheManager {
                 for (String type : typesToCheck) {
                     int nbr = _ddata.getNbrObjectForType(type);
                     ValueHelper v = typeLastDDLTime.get(type);
-                    if(v == null && nbr>0){
+                    if (v == null && nbr > 0) {
                         // one or more objectes in the database were deleted
                         changed.add(type);
-                    } else if(v != null &&  v.nbr != nbr){
+                    } else if (v != null && v.nbr != nbr) {
                         // one or more objectes in the database were deleted
                         changed.add(type);
                     }
@@ -240,7 +234,7 @@ public class DbCacheManager {
 
 
     public Map<String, ItemToUpdate> createUserObjList(
-            final DbObjectCache _ddata,String[] types ) throws DBException {
+            final DbObjectCache _ddata, String[] types) throws DBException {
 
         // get list of objects updated since the last session
         final Map<String, ItemToUpdate> items2Update = new HashMap<String, ItemToUpdate>();
@@ -258,12 +252,7 @@ public class DbCacheManager {
                     String name = rs.getString("OBJECT_NAME");
                     String status = rs.getString("STATUS");
                     boolean isValid = "VALID".equals(status);
-                    Date lastDDLTime = null;
-                    try {
-                        lastDDLTime = new Date(fmt.parse(rs.getString("TIMESTAMP")).getTime());
-                    } catch (ParseException e) {
-                        lastDDLTime = new Date(0);
-                    }
+                    Date lastDDLTime = new Date(rs.getTimestamp("LAST_DDL_TIME").getTime());
 
                     ItemToUpdate item = null;
                     if (DbObject.PACKAGE.equalsIgnoreCase(type)) {
@@ -393,12 +382,7 @@ public class DbCacheManager {
                     String syn_owner = rs.getString("SYNONYM_OWNER");
                     String name = rs.getString("SYNONYM_NAME");
                     String table_owner = rs.getString("TABLE_OWNER");
-                    Date lastDDLTime = null;
-                    try {
-                        lastDDLTime = new Date(fmt.parse(rs.getString("TIMESTAMP")).getTime());
-                    } catch (ParseException e) {
-                        lastDDLTime = new Date(0);
-                    }
+                    Date lastDDLTime = new Date(rs.getTimestamp("LAST_DDL_TIME").getTime());
 
                     ItemToUpdate item = null;
 //                    name = table_owner + "." + name;
@@ -478,7 +462,7 @@ public class DbCacheManager {
                 for (DbObjectSpec dboEx : dbObjects) {
                     ItemToUpdate item = findItemToUpdate(dbObjVsCacheObj, dboEx.type, dboEx.name);
                     // Update the cache
-                    if(item == null){
+                    if (item == null) {
                         // returned item may be null in case of genereted substitutor objects by loader
                         ecache.update(dboEx.name, dboEx.type, dboEx.source, null, true);
                     } else {
@@ -508,7 +492,7 @@ public class DbCacheManager {
 
         // 2. go thru the cached objects to get list of objects being deleted
         for (ItemToUpdate item : cacheObj) {
-            if (dbObjVsCacheObj.get(item.getKey()) == null){
+            if (dbObjVsCacheObj.get(item.getKey()) == null) {
                 // object not found in the database, delete it from the cache
                 ecache.remove(item.type, item.name);
                 counter1++;
