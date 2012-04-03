@@ -35,6 +35,7 @@ import com.deepsky.database.ora.DbUrl;
 import com.deepsky.database.ora2.DbSchemaIndexer;
 import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.ConfigurationException;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
 import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
@@ -747,9 +748,15 @@ public class ConnectionManagerImpl implements ConnectionManager { //}, CacheMana
         public void disconnect() {
             if (isConnected()) {
                 holder.disconnect();
-                DbUrl url = DbUrl.parse(holder.getDbUrl().getFullUrl());
+                String dbUrl = holder.getDbUrl().getFullUrl();
+                try {
+                    // todo -- why don't use holder.getDbUrl() ?
+                    DbUrl url = DbUrl.parse(dbUrl);
+                    notifyLsnrs(new StateEventImpl(ConnectionManagerListener.DISCONNECTED, url));
+                } catch (ConfigurationException e) {
+                    log.warn("Could not parser Database Url: " + dbUrl);
+                }
                 holder = null;
-                notifyLsnrs(new StateEventImpl(ConnectionManagerListener.DISCONNECTED, url));
             }
         }
 

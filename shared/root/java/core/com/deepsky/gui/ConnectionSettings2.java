@@ -168,7 +168,7 @@ public class ConnectionSettings2 extends DialogWrapper implements ActionListener
             throw new ValidationException(host, "Host parameter must be specified");
         }
 
-        if (!((String) host.getSelectedItem()).matches("[a-zA-Z0-9\\.\\_]+")) {
+        if (!((String) host.getSelectedItem()).matches("[a-zA-Z0-9\\.\\_\\-]+")) {
             throw new ValidationException(host, "Host parameter contains not permissible characters");
         }
 

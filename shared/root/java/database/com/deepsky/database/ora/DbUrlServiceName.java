@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 public class DbUrlServiceName extends DbUrl {
 
     final private static Pattern NEW_FASHION_URL = Pattern.compile(
-            "jdbc:oracle:thin:([A-Za-z0-9\\_\\$]+(/[A-Za-z0-9\\_\\.\\-\\$]+)?)?\\@//([A-Za-z0-9\\_\\.]+):([0-9]+)/([A-Za-z0-9\\_\\.]+)"
+            "jdbc:oracle:thin:([A-Za-z0-9\\_\\$]+(/[A-Za-z0-9\\_\\.\\-\\$]+)?)?\\@//([A-Za-z0-9\\_\\.\\-]+):([0-9]+)/([A-Za-z0-9\\_\\.]+)"
     );
 
     private String user;

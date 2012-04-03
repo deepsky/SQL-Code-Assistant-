@@ -89,7 +89,7 @@ public abstract class DbUrl {
 
 
     final private static Pattern DB_URL = Pattern.compile(
-            "jdbc:oracle:thin:(?:[A-Za-z0-9\\_\\$]+(?:/[A-Za-z0-9\\_\\.\\-\\$]+)?)?\\@((?://)?[A-Za-z0-9\\_\\.]+):(?:[0-9]+)(/|:)([A-Za-z0-9\\_\\.]+)"
+            "jdbc:oracle:thin:(?:[A-Za-z0-9\\_\\$]+(?:/[A-Za-z0-9\\_\\.\\-\\$]+)?)?\\@((?://)?[A-Za-z0-9\\_\\.\\-]+):(?:[0-9]+)(/|:)([A-Za-z0-9\\_\\.]+)"
     );
 
     public static DbUrl parse(String dbUrl) throws ConfigurationException {
