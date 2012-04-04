@@ -17,6 +17,7 @@ Feature list:
 - Context aware code completion
 - Viewing the Structure of SQL and PL/SQL code
 - Code Navigation
+- Code Formatting
 - Quick object lookup (Ctrl-Shift-O)
 - Find Usages tables, views, columns, function, procedures, etc over a database schema
   or objects in the sql scripts on the local File System

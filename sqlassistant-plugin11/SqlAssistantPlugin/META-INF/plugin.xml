@@ -19,7 +19,7 @@
         <li>Static code analysis (arithmetic expression evaluation, resolving references)</li>
         <li>Context aware code completion</li>
         <li>Viewing the Structure of SQL and PL/SQL code</li>
-        <li>SQL and PL/SQL code formatting (experimental)</li>
+        <li>SQL and PL/SQL code formatting (experimental) <b>(Ctrl-Alt-L)</b></li>
         <li>Code Navigation</li>
         <li>Quick object lookup <b>(Ctrl-Shift-O)</b></li>
         <li>Find Usages tables, views, columns, function, procedures, etc over a database schema or objects in the sql scripts on the local File System
@@ -34,13 +34,19 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.2.1.11</version>
+    <version>1.2.2.11</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.2.2.11</b>
+                 <ul>
+                    - [FIX] Allow hyphen character in DB host name, example: 'host-101.com'<br>
+                    - [FIX] DatabaseBrowser is not properly updated on ALTER TABLE request<br>
+                 </ul>
+            </li>
             <li><b>1.2.1.11</b>
                  <ul>
                     - [FIX] Handling changes of File Type extensions<br>
