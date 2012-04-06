@@ -50,7 +50,7 @@ public interface PlSqlTokenTypes extends PlSqlBaseTokenTypes {
             SL_COMMENT, ML_COMMENT, BAD_ML_COMMENT,
             LT, LE, GE, GT, EQ, NOT_EQ, PLUS, MINUS, DIVIDE, PERCENTAGE, ASSIGNMENT_EQ, OR, AND,
             COMMA, SEMI, DOT, ASTERISK, OPEN_PAREN, CLOSE_PAREN,
-            WS, LF
+            WS, LF, QUOTED_STR, TokenType.WHITE_SPACE
     );
 
     TokenSet COMMENTS = TokenSet.create(
