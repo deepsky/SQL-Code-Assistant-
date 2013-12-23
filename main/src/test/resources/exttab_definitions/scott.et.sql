@@ -1,0 +1,28 @@
+ CREATE TABLE SCOTT.et
+ (
+   id    NUMBER(8,3),
+   name  VARCHAR2(10)
+ )
+ ORGANIZATION EXTERNAL
+   (  TYPE ORACLE_LOADER
+      DEFAULT DIRECTORY DDD
+      ACCESS PARAMETERS
+        (        RECORDS DELIMITED BY NEWLINE
+        BADFILE DDD:'et.bad'
+        DISCARDFILE DDD:'et.dsc'
+        LOGFILE DDD:'et.log'
+        READSIZE 512
+        DATA_CACHE 1000
+        SKIP 0
+        FIELDS TERMINATED BY ','
+        MISSING FIELD VALUES ARE NULL
+        REJECT ROWS WITH ALL NULL FIELDS
+        (
+          id CHAR,
+          name CHAR
+        ) )
+      LOCATION (DDD:'aa.txt')
+   )
+ REJECT LIMIT Unlimited
+ NOPARALLEL
+ NOMONITORING;

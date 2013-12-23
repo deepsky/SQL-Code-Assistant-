@@ -1,0 +1,5 @@
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/main
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/main/target
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/main/src
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/main/sql/resources
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/main/antlr

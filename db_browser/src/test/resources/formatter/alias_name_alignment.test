@@ -1,0 +1,31 @@
+    SELECT
+        transactionid AS transactionid,
+        bookingref AS bookingref,
+        event_timestamp AS event_timestamp,
+        activity AS activity,
+        amount   AS amount,
+        currency        AS currency,
+        default_currency_amount AS default_currency_amount,
+        guwId  AS guwId,
+        user_agent  AS   user_agent,
+        airline    AS airline,
+        clientId        AS clientId,
+        errormessage  AS errormessage
+    FROM
+        payment_events b1
+-----
+SELECT
+    transactionid           AS transactionid,
+    bookingref              AS bookingref,
+    event_timestamp         AS event_timestamp,
+    activity                AS activity,
+    amount                  AS amount,
+    currency                AS currency,
+    default_currency_amount AS default_currency_amount,
+    guwId                   AS guwId,
+    user_agent              AS user_agent,
+    airline                 AS airline,
+    clientId                AS clientId,
+    errormessage            AS errormessage
+FROM
+    payment_events b1

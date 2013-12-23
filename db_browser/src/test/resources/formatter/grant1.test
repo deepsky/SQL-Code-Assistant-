@@ -1,0 +1,57 @@
+GRANT select,
+DELETE ON SYS.AUD$ TO security_admin;
+grant security_admin,
+CREATE SESSION TO swilliams;
+GRANT security_admin TO system_administrator; GRANT create SESSION TO jward;
+
+GRANT
+SELECT
+, DELETE ON emp TO
+jward;
+
+GRANT INSERT (ENAME, job) ON emp TO swilliams, JWARD;
+
+
+GRANT
+     CREATE any
+     MATERIALIZED VIEW
+   , alter ANY MATERIALIZED VIEW
+   , DROP
+   ANY MATERIALIZED VIEW
+   , QUERY REWRITE
+   , GLOBAL QUERY REWRITE
+   TO dw_manager
+   WITH ADMIN OPTION;
+
+
+GRANT dw_manager
+   TO sh
+   WITH admin OPTION;
+
+GRANT CREATE SESSION
+   TO hr;
+-----
+GRANT SELECT, DELETE ON sys.aud$ TO security_admin;
+
+GRANT security_admin, CREATE SESSION TO swilliams;
+
+GRANT security_admin TO system_administrator;
+
+GRANT CREATE SESSION TO jward;
+
+GRANT SELECT, DELETE ON emp TO jward;
+
+GRANT INSERT (ename, job) ON emp TO swilliams, jward;
+
+
+GRANT
+    CREATE ANY MATERIALIZED VIEW,
+    ALTER ANY MATERIALIZED VIEW,
+    DROP ANY MATERIALIZED VIEW,
+    QUERY REWRITE,
+    GLOBAL QUERY REWRITE TO dw_manager WITH ADMIN OPTION;
+
+
+GRANT dw_manager TO sh WITH ADMIN OPTION;
+
+GRANT CREATE SESSION TO hr;

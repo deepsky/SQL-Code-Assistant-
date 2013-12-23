@@ -1,0 +1,63 @@
+
+CREATE ROLE security_admin IDENTIFIED BY honcho;
+
+GRANT CREATE PROFILE, ALTER PROFILE, DROP PROFILE,
+    CREATE ROLE, DROP ANY ROLE, GRANT ANY ROLE, AUDIT ANY,
+    AUDIT SYSTEM, CREATE USER, BECOME USER, ALTER USER, DROP USER
+    TO security_admin WITH ADMIN OPTION;
+
+GRANT SELECT, DELETE ON SYS.AUD$ TO security_admin;
+
+GRANT security_admin, CREATE SESSION TO swilliams;
+
+GRANT security_admin TO system_administrator;
+
+GRANT CREATE SESSION TO jward;
+
+GRANT SELECT, DELETE ON emp TO jward;
+
+GRANT INSERT (ename, job) ON emp TO swilliams, jward;
+
+
+GRANT
+     CREATE ANY MATERIALIZED VIEW
+   , ALTER ANY MATERIALIZED VIEW
+   , DROP ANY MATERIALIZED VIEW
+   , QUERY REWRITE
+   , GLOBAL QUERY REWRITE
+   TO dw_manager
+   WITH ADMIN OPTION;
+
+
+GRANT dw_manager
+   TO sh
+   WITH ADMIN OPTION;
+
+GRANT CREATE SESSION
+   TO hr;
+
+GRANT SELECT ON sh.sales TO warehouse_user;
+
+GRANT READ ON DIRECTORY bfile_dir TO hr
+   WITH GRANT OPTION;
+
+GRANT ALL ON bonuses TO hr
+   WITH GRANT OPTION;
+
+
+GRANT REFERENCES (employee_id),
+      UPDATE (employee_id, salary, commission_pct)
+   ON hr.employees
+   TO oe;
+
+grant
+    CREATE SESSION,
+    CREATE TABLE,
+    CREATE TRIGGER,
+    CREATE SEQUENCE,
+    CREATE TYPE,
+    CREATE VIEW,
+    CREATE PROCEDURE,
+UNLIMITED TABLESPACE
+to travelapi_events;
+

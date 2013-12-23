@@ -1,0 +1,12 @@
+CREATE TABLE OBJAUTH$ (
+	OBJ#		NUMBER(22)	NOT NULL,
+	GRANTOR#		NUMBER(22)	NOT NULL,
+	GRANTEE#		NUMBER(22)	NOT NULL,
+	PRIVILEGE#		NUMBER(22)	NOT NULL,
+	SEQUENCE#		NUMBER(22)	NOT NULL,
+	PARENT		ROWID,
+	OPTION$		NUMBER(22),
+	COL#		NUMBER(22)
+);
+-- Table script is not complete and should be used for referencing only
+-- Tablespace and storage parameters are not supported

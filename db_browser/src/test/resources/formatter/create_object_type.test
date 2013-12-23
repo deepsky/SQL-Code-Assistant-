@@ -1,0 +1,13 @@
+create type address as object (
+street VARCHAR2(200),
+city varchar2(20),
+state CHAR(2),
+zip varchar2(10) ); /
+-----
+create type address as object (
+    street VARCHAR2(200),
+    city   varchar2(20),
+    state  CHAR(2),
+    zip    varchar2(10)
+);
+/

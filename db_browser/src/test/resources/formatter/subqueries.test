@@ -1,0 +1,152 @@
+   (   SELECT
+                  COUNT (*)
+     FROM user_tab_columns
+
+     GROUP BY column2   )
+--///////////////
+(
+  SELECT
+
+    COUNT ( * )
+   FROM user_tab_columns
+       GROUP BY column2)
+--///////////////
+select *
+from (
+select *
+ from
+
+(
+    SELECT
+            COUNT ( * )
+    FROM user_tab_columns
+    GROUP BY column2)
+)
+--///////////////
+select *
+from (
+    select *
+    from
+  (
+        SELECT
+            COUNT ( * )
+        FROM user_tab_columns
+
+        GROUP BY column2)
+)  a1  ,  (
+    select *
+
+    from (
+
+    SELECT
+            COUNT ( * )
+    FROM user_tab_columns
+        GROUP BY column2)
+) a2
+
+union
+
+SELECT
+    COUNT ( * )
+FROM user_tab_columns
+
+GROUP BY column2
+--///////////////
+UPDATE suppliers
+SET supplier_name =
+            (SELECT
+                 customers.name
+             FROM customers
+             WHERE customers.customer_id = suppliers.supplier_id)
+    , aa = ldl
+WHERE EXISTS (
+        SELECT
+            customers.name
+        FROM customers
+        WHERE customers.customer_id = suppliers.supplier_id);
+--///////////////
+UPDATE suppliers
+SET supplier_name =
+            (SELECT
+                 customers.name
+             FROM customers
+             WHERE customers.customer_id = suppliers.supplier_id)
+    , aa = ldl
+WHERE
+EXISTS (
+        SELECT
+            customers.name
+        FROM customers
+        WHERE customers.customer_id = suppliers.supplier_id);
+-----
+(SELECT
+     COUNT (*)
+ FROM user_tab_columns
+ GROUP BY column2)
+--///////////////
+(
+SELECT
+    COUNT (*)
+FROM user_tab_columns
+GROUP BY column2)
+--///////////////
+select *
+from (
+    select *
+    from
+        (
+        SELECT
+            COUNT (*)
+        FROM user_tab_columns
+        GROUP BY column2)
+    )
+--///////////////
+select *
+from (
+    select *
+    from
+        (
+        SELECT
+            COUNT (*)
+        FROM user_tab_columns
+        GROUP BY column2)
+    ) a1, (
+    select *
+    from (
+        SELECT
+            COUNT (*)
+        FROM user_tab_columns
+        GROUP BY column2)
+    ) a2
+union
+SELECT
+    COUNT (*)
+FROM user_tab_columns
+GROUP BY column2
+--///////////////
+UPDATE suppliers
+SET supplier_name =
+            (SELECT
+                 customers.name
+             FROM customers
+             WHERE customers.customer_id = suppliers.supplier_id)
+    , aa = ldl
+WHERE EXISTS (
+            SELECT
+                customers.name
+            FROM customers
+            WHERE customers.customer_id = suppliers.supplier_id);
+--///////////////
+UPDATE suppliers
+SET supplier_name =
+            (SELECT
+                 customers.name
+             FROM customers
+             WHERE customers.customer_id = suppliers.supplier_id)
+    , aa = ldl
+WHERE
+    EXISTS (
+            SELECT
+                customers.name
+            FROM customers
+            WHERE customers.customer_id = suppliers.supplier_id);

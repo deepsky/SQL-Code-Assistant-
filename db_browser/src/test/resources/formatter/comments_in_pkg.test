@@ -1,0 +1,68 @@
+CREATE
+OR REPLACE PACKAGE
+logger_const_pkg
+AS/******************************************************************************
+   NAME:       logger_const_pkg -  (dynamically generated) logger constants Package
+   PURPOSE:
+
+   REVISIONS:
+   Ver        Date        Author           Description
+   --- --- ---  --- --- ----  --- ---- --  ---
+   1.0        12/10/2011    Stillard          1. Created this package.
+
+   TO DO:
+   a) Add :
+
+   NOTES:
+
+     Placeholder package holding place for the dynamically generated version!
+    The dynamically generated version is created by : logger_proxy_pkg
+
+******************************************************************************/
+
+    --
+    -- Public declaration of package
+    --
+
+    /*=========================*/
+    /*======= Constants =======*/
+    /*=========================*/
+
+
+
+
+END logger_const_pkg;
+/
+-----
+CREATE OR REPLACE PACKAGE logger_const_pkg
+AS
+    /******************************************************************************
+       NAME:       logger_const_pkg -  (dynamically generated) logger constants Package
+       PURPOSE:
+
+       REVISIONS:
+       Ver        Date        Author           Description
+       --- --- ---  --- --- ----  --- ---- --  ---
+       1.0        12/10/2011    Stillard          1. Created this package.
+
+       TO DO:
+       a) Add :
+
+       NOTES:
+
+         Placeholder package holding place for the dynamically generated version!
+        The dynamically generated version is created by : logger_proxy_pkg
+
+    ******************************************************************************/
+
+    --
+    -- Public declaration of package
+    --
+
+    /*=========================*/
+    /*======= Constants =======*/
+    /*=========================*/
+
+
+END logger_const_pkg;
+/

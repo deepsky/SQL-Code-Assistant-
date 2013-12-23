@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/antl_patch/antl_patch.iml" filepath="$PROJECT_DIR$/antl_patch/antl_patch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/commons/commons.iml" filepath="$PROJECT_DIR$/commons/commons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/database/database.iml" filepath="$PROJECT_DIR$/database/database.iml" />
+      <module fileurl="file://$PROJECT_DIR$/db_browser/db_browser.iml" filepath="$PROJECT_DIR$/db_browser/db_browser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/main/main.iml" filepath="$PROJECT_DIR$/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parser/parser.iml" filepath="$PROJECT_DIR$/parser/parser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugin_runner/plugin_runner.iml" filepath="$PROJECT_DIR$/plugin_runner/plugin_runner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/resolver/resolver.iml" filepath="$PROJECT_DIR$/resolver/resolver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/result_panel/result_panel.iml" filepath="$PROJECT_DIR$/result_panel/result_panel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spec_src/spec_src.iml" filepath="$PROJECT_DIR$/spec_src/spec_src.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sql-assistant.iml" filepath="$PROJECT_DIR$/sql-assistant.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tools/tools.iml" filepath="$PROJECT_DIR$/tools/tools.iml" />
+    </modules>
+  </component>
+</project>
+

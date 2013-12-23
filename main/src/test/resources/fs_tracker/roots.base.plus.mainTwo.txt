@@ -1,0 +1,42 @@
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/tools
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/surefire-reports
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/classes
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/test-classes
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/maven-status
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/surefire
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/maven-archiver
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/plugin_runner
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/resolver
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/resolver/target
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/spec_src
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/spec_src/target
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/parser
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/parser/target
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/commons
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/commons/target/classes
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/commons/target/surefire
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/commons/target/maven-status
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/commons/target/maven-archiver
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/commons/target/xsds
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/result_panel
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/result_panel/target
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/main
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/main/target
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/antl_patch
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/antl_patch/target
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/db_browser
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/db_browser/target
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/database
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/database/target
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/out
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/qa_accessory
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/qa_accessory/target
+
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/mainTwo
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/mainTwo/target/surefire-reports
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/mainTwo/target/classes
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/mainTwo/target/test-classes
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/mainTwo/target/maven-status
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/mainTwo/target/surefire
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/mainTwo/target/maven-archiver

@@ -1,0 +1,1 @@
+alter index abs_idx rebuild;

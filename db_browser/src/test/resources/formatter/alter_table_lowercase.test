@@ -1,0 +1,9 @@
+ALTER TABLE authorities ADD
+    CONSTRAINT fk_user_id FOREIGN KEY (USER_ID) REFERENCES users (ID) ON DELETE CASCADE;
+
+ALTER TABLE authorities DROP COLUMN USERNAME;
+-----
+ALTER TABLE authorities ADD
+    CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE;
+
+ALTER TABLE authorities DROP COLUMN username;

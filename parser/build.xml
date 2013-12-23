@@ -1,0 +1,328 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2009,2010 Serhiy Kulyk
+  ~ All rights reserved.
+  ~
+  ~ Redistribution and use in source and binary forms, with or without
+  ~ modification, are permitted provided that the following conditions are met:
+  ~
+  ~     1. Redistributions of source code must retain the above copyright
+  ~       notice, this list of conditions and the following disclaimer.
+  ~     2. Redistributions in binary form must reproduce the above copyright
+  ~       notice, this list of conditions and the following disclaimer in the
+  ~       documentation and/or other materials provided with the distribution.
+  ~
+  ~ SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
+  ~ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+  ~ THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ~ ARE DISCLAIMED. IN NO EVENT SHALL SERHIY KULYK BE LIABLE FOR ANY
+  ~ DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  ~ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  ~ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ~ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  ~ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  ~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  -->
+
+<project name="Sql Code Assistant Plugin parser generator" default="build_plsql_parser">
+
+    <!-- Global build parameters -->
+    <property file="build.properties"/>
+
+    <property name="antlr.patched.basedir" value="${basedir}/../antl_patch"/>
+    <property name="antlr.patched.classes" value="${basedir}/target/classes"/>
+
+    <property name="src.basedir" value="${basedir}/src/main/java"/>
+    <property name="plsql_parser.gen.path" value="${src.basedir}/com/deepsky/generated/plsql"/>
+    <property name="tools.gen.path" value="${src.basedir}/com/deepsky/tools/generated"/>
+
+    <property name="shared.resources.dir" value="${basedir}/src/main/ext_resources"/>
+    <property name="grammars.dir" value="${basedir}/src/main/grammars"/>
+
+    <target name="build_plsql_parser">
+
+        <echo message="basedir:  ${basedir}"/>
+        <echo message="src.basedir:  ${src.basedir}"/>
+        <echo message="plsql_parser.gen.path:  ${plsql_parser.gen.path}"/>
+        <echo message="antlr.patched.basedir:  ${antlr.patched.basedir}"/>
+
+
+        <!-- Generate lexer for PlSql language
+             NOTE: the order is significant!   -->
+        <java classname="antlr.ToolPatched" failonerror="true" fork="true">
+            <sysproperty key="BAD_CHARACTER" value="PLSqlTokenTypes.BAD_CHARACTER"/>
+            <arg line="-o ${plsql_parser.gen.path}"/>
+            <arg value="${grammars.dir}/plsql_lexer.g"/>
+            <classpath>
+                <pathelement path="${antlr_patch.dest.dir}"/>
+                <pathelement location="${antlr_classpath}"/>
+            </classpath>
+        </java>
+
+        <!-- patch lexer, allow mNUMBER method be overridden in derived classes -->
+        <replace file="${plsql_parser.gen.path}/PLSqlLexer.java" token="public final void mNUMBER" value="public void mNUMBER"/>
+
+        <!-- Generate parser for PlSql language -->
+        <java classname="antlr.ToolPatched" failonerror="true" fork="true">
+            <sysproperty key="BAD_CHARACTER" value="PLSqlTokenTypes.BAD_CHARACTER"/>
+            <arg line="-o ${plsql_parser.gen.path}"/>
+            <arg value="${grammars.dir}/plsql_parser.g"/>
+            <classpath>
+                <pathelement path="${antlr_patch.dest.dir}"/>
+                <pathelement location="${antlr_classpath}"/>
+            </classpath>
+        </java>
+
+        <!--
+            Actually, only PlSqlTokenTypes.java file is needed,
+            so delete intermediate PlSql parser
+        -->
+        <delete>
+            <fileset dir="${plsql_parser.gen.path}" includes="PLSqlParser.java"/>
+        </delete>
+
+        <!-- Generate Symbol Table for separated parser -->
+        <echo message="===== Generate Symbol Table for separated parser"/>
+        <java classname="com.deepsky.tools.SymbolTableGenerator" failonerror="true" fork="true">
+            <sysproperty key="keyword.source.dir" value="${shared.resources.dir}"/>
+            <sysproperty key="keyword.files" value="ansi92_list.txt;parser_01.12.2009.txt"/>
+
+            <arg line="${plsql_parser.gen.path}/PLSql2TokenTypes.txt ${plsql_parser.gen.path}/PLSqlTokenTypes.txt  ${src.basedir}"/>
+            <classpath>
+                <pathelement path="${antlr_patch.dest.dir}"/>
+                <pathelement path="${tools.dest.dir}"/>
+                <pathelement location="${antlr_classpath}"/>
+            </classpath>
+        </java>
+
+        <!-- compile PlSql lexer/parser  -->
+        <echo message="===== Compile PLSqlTokenType and rest in package: com/deepsky/generated/plsql"/>
+        <mkdir dir="${basedir}/target/classes"/>
+        <javac destdir="${basedir}/target/classes"
+               debug="on"
+               failonerror="true" fork="true">
+
+            <src path="${src.basedir}"/>
+            <include name="com/deepsky/generated/plsql/*.java"/>
+            <classpath>
+                <pathelement path="${antlr_patch.dest.dir}"/>
+                <pathelement location="${antlr_classpath}"/>
+            </classpath>
+        </javac>
+
+        <!--
+            1. Convert plsql_parser.g -> plsql_parser_ex.g
+            2. create interface PLSqlTypesAdopted (list of parser types)
+        -->
+        <echo message="===== Convert plsql_parser.g to plsql_parser_ex.g"/>
+        <java classname="com.deepsky.tools.GrammarConvertor" failonerror="true" fork="true">
+            <arg line="${grammars.dir}/plsql_parser.g  ${grammars.dir}/plsql_parser_ex.g"/>
+            <classpath>
+                <pathelement path="${antlr_patch.dest.dir}"/>
+                <pathelement path="${tools.dest.dir}"/>
+                <pathelement path="${basedir}/target/classes"/>
+                <pathelement location="${antlr_classpath}"/>
+            </classpath>
+        </java>
+
+        <!-- 3. Process plsql_parser_ex.g file -->
+        <echo message="==== Clean up directory ${plsql_parser.gen.path}/adopted"/>
+        <mkdir dir="${plsql_parser.gen.path}/adopted"/>
+        <delete>
+            <fileset dir="${plsql_parser.gen.path}/adopted" includes="*.java"/>
+            <fileset dir="${plsql_parser.gen.path}/adopted" includes="*.g"/>
+            <fileset dir="${plsql_parser.gen.path}/adopted" includes="*.txt"/>
+        </delete>
+
+        <echo message="===== Generate PlSqlParser from plsql_parser_ex.g grammar "/>
+
+        <!-- Make Lexer's Token Types available for adopted parser -->
+        <copyfile src="${plsql_parser.gen.path}/PLSql2TokenTypes.txt" dest="${plsql_parser.gen.path}/adopted/PLSql2TokenTypes.txt"/>
+        <!--<copyfile src="${generated.dir}/PLSql2TokenTypes.txt" dest="${generated.dir}/adopted/PLSql2TokenTypes.txt"/>-->
+
+        <java classname="antlr.ToolPatched" failonerror="true" fork="true">
+            <sysproperty key="BAD_CHARACTER" value="PLSqlTokenTypes.BAD_CHARACTER"/>
+            <arg line="-o ${plsql_parser.gen.path}/adopted"/>
+            <arg value="${grammars.dir}/plsql_parser_ex.g"/>
+            <classpath>
+                <pathelement path="${antlr_patch.dest.dir}"/>
+                <pathelement location="${antlr_classpath}"/>
+            </classpath>
+        </java>
+
+
+        <property name="adopted_types_pkg" value="${src.basedir}/com/deepsky/lang/parser/plsql"/>
+
+        <!-- Process com.deepsky.generated.plsql.adopted.PLSqlParserAdopted class -> generate derived class *Ext -->
+        <mkdir dir="${adopted_types_pkg}"/>
+        <echo message="===== Run InterfaceExtractor "/>
+        <java classname="com.deepsky.tools.PsiAdapterGenerator" failonerror="true" fork="true">
+            <arg line="com.deepsky.lang.parser.plsql"/>
+            <arg line="${plsql_parser.gen.path}/adopted/PLSqlParserAdopted.java"/>
+            <classpath>
+                <pathelement path="${tools.dest.dir}"/>
+                <pathelement location="${antlr2.7.7_classpath}"/>
+            </classpath>
+        </java>
+        <move file="./PLSqlParserAdoptedExt.java" todir="${adopted_types_pkg}"/>
+
+
+        <echo message="===== Move PLSqlTypesAdopted.java and ANTLRType2AdoptedType.java"/>
+        <move file="${grammars.dir}/PLSqlTypesAdopted.java" todir="${adopted_types_pkg}"/>
+        <move file="${grammars.dir}/ANTLRType2AdoptedType.java" todir="${adopted_types_pkg}"/>
+
+        <!-- patch parsers -->
+        <replace file="${plsql_parser.gen.path}/adopted/PLSqlParserAdopted.java" token="public final" value="public"/>
+
+        <!-- Fix parser, rule to fix:  start_rule -->
+        <replace file="${plsql_parser.gen.path}/adopted/PLSqlParserAdopted.java">
+            <replacetoken><![CDATA[else if ((_tokenSet_7.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {]]></replacetoken>
+            <replacevalue><![CDATA[else if(true){]]></replacevalue>
+        </replace>
+
+    </target>
+
+    <!--
+    =================================================================
+    TNS parser
+    =================================================================
+    -->
+
+    <target name="build_tnsnames_parser">
+
+        <property name="tnsname_parser.gen.path" value="${src.basedir}/com/deepsky/generated/tns"/>
+
+        <echo message="basedir:  ${basedir}"/>
+        <echo message="src.basedir:  ${src.basedir}"/>
+        <echo message="tnsname_parser.gen.path:  ${tnsname_parser.gen.path}"/>
+        <echo message="antlr.patched.basedir:  ${antlr.patched.basedir}"/>
+
+
+        <mkdir dir="${tnsname_parser.gen.path}"/>
+        <delete>
+            <fileset dir="${tnsname_parser.gen.path}" includes="*.java"/>
+            <fileset dir="${tnsname_parser.gen.path}" includes="*.g"/>
+            <fileset dir="${tnsname_parser.gen.path}" includes="*.txt"/>
+        </delete>
+        <!-- Generate lexer for PlSql language
+             NOTE: the order is significant!   -->
+        <java classname="antlr.ToolPatched" failonerror="true" fork="true">
+            <sysproperty key="BAD_CHARACTER" value="TNSTokenTypes.BAD_CHARACTER"/>
+            <arg line="-o ${tnsname_parser.gen.path}"/>
+            <arg value="${grammars.dir}/tnsnames.g"/>
+            <classpath>
+                <pathelement path="${antlr_patch.dest.dir}"/>
+                <pathelement location="${antlr_classpath}"/>
+            </classpath>
+        </java>
+
+        <!--
+            Actually, only PlSqlTokenTypes.java file is needed,
+            so delete intermediate PlSql parser
+        -->
+        <delete>
+            <fileset dir="${tnsname_parser.gen.path}" includes="TNSParser.java"/>
+        </delete>
+
+        <echo message="===== Generate Symbol Table for separated parser"/>
+        <java classname="com.deepsky.tools.TNSSymbolTableGenerator" failonerror="true" fork="true">
+            <sysproperty key="keyword.source.dir" value="${shared.resources.dir}"/>
+            <sysproperty key="keyword.files" value="ansi92_list.txt;parser_01.12.2009.txt"/>
+
+            <arg line="${tnsname_parser.gen.path}/TNSTokenTypes.txt  ${src.basedir}"/>
+            <classpath>
+                <pathelement path="${antlr_patch.dest.dir}"/>
+                <pathelement path="${tools.dest.dir}"/>
+                <pathelement location="${antlr_classpath}"/>
+            </classpath>
+        </java>
+
+        <!-- compile TNS lexer/parser  -->
+        <echo message="===== Compile TNSTokenType and rest in package: com/deepsky/generated/tns"/>
+        <mkdir dir="${basedir}/target/classes"/>
+        <javac destdir="${basedir}/target/classes"
+               debug="on"
+               failonerror="true" fork="true">
+
+            <src path="${src.basedir}"/>
+            <include name="com/deepsky/generated/tns/*.java"/>
+            <classpath>
+                <pathelement path="${antlr_patch.dest.dir}"/>
+                <pathelement location="${antlr_classpath}"/>
+            </classpath>
+        </javac>
+
+        <!--
+            1. Convert plsql_parser.g -> plsql_parser_ex.g
+            2. create interface PLSqlTypesAdopted (list of parser types)
+        -->
+        <echo message="===== Convert tnsnames.g to tnsnames_ex.g"/>
+        <java classname="com.deepsky.tools.TNSGrammarConvertor" failonerror="true" fork="true">
+            <arg line="${grammars.dir}/tnsnames.g  ${grammars.dir}/tnsnames_ex.g"/>
+            <classpath>
+                <pathelement path="${antlr_patch.dest.dir}"/>
+                <pathelement path="${tools.dest.dir}"/>
+                <pathelement path="${basedir}/target/classes"/>
+                <pathelement location="${antlr_classpath}"/>
+            </classpath>
+        </java>
+
+        <!-- 3. Process tnsnames_ex.g file -->
+        <echo message="==== Clean up directory ${tnsname_parser.gen.path}/adopted"/>
+        <mkdir dir="${tnsname_parser.gen.path}/adopted"/>
+        <delete>
+            <fileset dir="${tnsname_parser.gen.path}/adopted" includes="*.java"/>
+            <fileset dir="${tnsname_parser.gen.path}/adopted" includes="*.g"/>
+            <fileset dir="${tnsname_parser.gen.path}/adopted" includes="*.txt"/>
+        </delete>
+
+        <echo message="===== Generate TNSParserAdopted from tnsname_ex.g grammar "/>
+        <!-- Make Lexer's Token Types available for adopted parser -->
+        <!--<copyfile src="${tnsname_parser.gen.path}/TNS2TokenTypes.txt" dest="${tnsname_parser.gen.path}/adopted/TNS2TokenTypes.txt"/>-->
+        <!--<copyfile src="${generated.dir}/PLSql2TokenTypes.txt" dest="${generated.dir}/adopted/PLSql2TokenTypes.txt"/>-->
+
+        <java classname="antlr.ToolPatched" failonerror="true" fork="true">
+            <sysproperty key="BAD_CHARACTER" value="TNSTokenTypes.BAD_CHARACTER"/>
+            <arg line="-o ${tnsname_parser.gen.path}/adopted"/>
+            <arg value="${grammars.dir}/tnsnames_ex.g"/>
+            <classpath>
+                <pathelement path="${antlr_patch.dest.dir}"/>
+                <pathelement location="${antlr_classpath}"/>
+            </classpath>
+        </java>
+
+
+
+        <property name="adopted_types_pkg" value="${src.basedir}/com/deepsky/lang/parser/tns"/>
+
+        <!-- Process com.deepsky.generated.plsql.adopted.PLSqlParserAdopted class -> generate derived class *Ext -->
+        <mkdir dir="${adopted_types_pkg}"/>
+        <delete>
+            <fileset dir="${adopted_types_pkg}" includes="*.java"/>
+            <fileset dir="${adopted_types_pkg}" includes="*.g"/>
+            <fileset dir="${adopted_types_pkg}" includes="*.txt"/>
+        </delete>
+
+        <echo message="===== Run InterfaceExtractor "/>
+        <java classname="com.deepsky.tools.PsiAdapterGenerator" failonerror="true" fork="true">
+            <arg line="com.deepsky.lang.parser.tns"/>
+            <arg line="${tnsname_parser.gen.path}/adopted/TNSParserAdopted.java"/>
+            <classpath>
+                <pathelement path="${tools.dest.dir}"/>
+                <pathelement location="${antlr2.7.7_classpath}"/>
+            </classpath>
+        </java>
+        <move file="./TNSParserAdoptedExt.java" todir="${adopted_types_pkg}"/>
+
+
+        <echo message="===== Move TNSTypesAdopted.java and ANTLRType2AdoptedType.java"/>
+        <move file="${grammars.dir}/ANTLRType2AdoptedType.java" todir="${adopted_types_pkg}"/>
+        <move file="${grammars.dir}/TNSTypesAdopted.java" todir="${adopted_types_pkg}"/>
+
+        <!-- patch parsers -->
+        <replace file="${tnsname_parser.gen.path}/adopted/TNSParserAdopted.java" token="public final" value="public"/>
+
+    </target>
+
+
+</project>

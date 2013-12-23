@@ -1,0 +1,27 @@
+select *
+from
+    (select rownum rnum, t.*
+    from
+        (select booking_events.*
+        from booking_events
+        where
+        event_timestamp between to_date('2011 06 01', 'YYYY MM DD') and to_date('2011 09 01', 'YYYY MM DD')
+        order by event_timestamp
+        ) t
+    ) p
+where
+p.rnum between 100 and 200
+-----
+select *
+from
+    (select rownum rnum, t.*
+     from
+         (select booking_events.*
+          from booking_events
+          where
+              event_timestamp between to_date('2011 06 01', 'YYYY MM DD') and to_date('2011 09 01', 'YYYY MM DD')
+          order by event_timestamp
+         ) t
+    ) p
+where
+    p.rnum between 100 and 200

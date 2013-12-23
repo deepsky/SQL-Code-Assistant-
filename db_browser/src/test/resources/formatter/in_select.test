@@ -1,0 +1,33 @@
+select *
+from booking_events
+where bookingref in (
+select
+entity1
+|| CASE WHEN entity2 is not null THEN ' ' || entity2 ELSE NULL END
+|| CASE WHEN entity3 is not null THEN ' ' || entity3 ELSE NULL END
+|| CASE WHEN entity4 is not null THEN ' ' || entity4 ELSE NULL END
+AS brandName,
+abc  AS abc1,
+bookingref AS BOOKREF,
+count (*)            from booking_events            where bookingref is not null
+group by bookingref having count (*) > 1
+)
+order by bookingref, event_timestamp desc
+-----
+select *
+from booking_events
+where bookingref in (
+            select
+                entity1
+                || CASE WHEN entity2 is not null THEN ' ' || entity2 ELSE NULL END
+                || CASE WHEN entity3 is not null THEN ' ' || entity3 ELSE NULL END
+                || CASE WHEN entity4 is not null THEN ' ' || entity4 ELSE NULL END
+                           AS brandName,
+                abc        AS abc1,
+                bookingref AS BOOKREF,
+                count (*)
+            from booking_events
+            where bookingref is not null
+            group by bookingref having count (*) > 1
+            )
+order by bookingref, event_timestamp desc

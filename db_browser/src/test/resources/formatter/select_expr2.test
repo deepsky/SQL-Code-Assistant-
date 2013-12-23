@@ -1,0 +1,55 @@
+
+
+-- one flower
+
+select brandName, count ( * ) cnt
+from (
+select entity1
+|| CASE WHEN entity2 is not null THEN ' ' || entity2 ELSE NULL END
+|| CASE WHEN entity3 is not null THEN ' ' || entity3 ELSE NULL END
+|| CASE WHEN entity4 is not null THEN ' ' || entity4 ELSE NULL END
+AS brandName
+from MODEL_LOADER)
+group by brandName
+order by cnt desc
+
+-- another flower
+select brandName, count (*) cnt
+from (
+select
+        entity1
+            || CASE WHEN entity2 is not null THEN ' ' || entity2 ELSE NULL END
+            || CASE WHEN entity3 is not null THEN ' ' || entity3 ELSE NULL END
+            || CASE WHEN entity4 is not null THEN ' ' || entity4 ELSE NULL END
+        AS brandName,
+        abc AS abc1
+from MODEL_LOADER)
+group by brandName
+order by cnt desc
+-----
+-- one flower
+
+select brandName, count (*) cnt
+from (
+    select entity1
+           || CASE WHEN entity2 is not null THEN ' ' || entity2 ELSE NULL END
+           || CASE WHEN entity3 is not null THEN ' ' || entity3 ELSE NULL END
+           || CASE WHEN entity4 is not null THEN ' ' || entity4 ELSE NULL END
+        AS brandName
+    from MODEL_LOADER)
+group by brandName
+order by cnt desc
+
+-- another flower
+select brandName, count (*) cnt
+from (
+    select
+        entity1
+        || CASE WHEN entity2 is not null THEN ' ' || entity2 ELSE NULL END
+        || CASE WHEN entity3 is not null THEN ' ' || entity3 ELSE NULL END
+        || CASE WHEN entity4 is not null THEN ' ' || entity4 ELSE NULL END
+            AS brandName,
+        abc AS abc1
+    from MODEL_LOADER)
+group by brandName
+order by cnt desc

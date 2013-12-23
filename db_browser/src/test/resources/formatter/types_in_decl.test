@@ -1,0 +1,28 @@
+DECLARE  TYPE cursor_ref IS REF CURSOR;
+c1              cursor_ref;
+TYPE emp_tab IS TABLE OF employees % ROWTYPE;
+    rec_tab         emp_tab;    rows_fetched    NUMBER;
+BEGIN
+    OPEN c1 FOR 'SELECT * FROM employees';
+    FETCH c1 BULK COLLECT INTO rec_tab;
+    rows_fetched := c1 % ROWCOUNT;
+    DBMS_OUTPUT.PUT_LINE ( 'Number of employees fetched: '
+    || TO_CHAR(rows_fetched));
+END;
+
+/
+-----
+DECLARE
+    TYPE cursor_ref IS REF CURSOR;
+    c1      cursor_ref;
+    TYPE emp_tab    IS TABLE OF employees%ROWTYPE;
+    rec_tab         emp_tab;
+    rows_fetched    NUMBER;
+BEGIN
+    OPEN c1 FOR 'SELECT * FROM employees';
+    FETCH c1 BULK COLLECT INTO rec_tab;
+    rows_fetched := c1%ROWCOUNT;
+    DBMS_OUTPUT.PUT_LINE('Number of employees fetched: '
+        || TO_CHAR(rows_fetched));
+END;
+/

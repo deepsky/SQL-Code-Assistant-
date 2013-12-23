@@ -1,0 +1,89 @@
+rem $Id: xdv_ads_app_aggr_et.sql,v 1.1 2008/08/05 10:11:00 skulyk Exp $
+
+prompt ad: Creating XDV_ADS_APP_AGGR_ET table
+
+
+/*==============================================================*/
+/* Table: XDV_ADS_APP_AGGR_ET                                    */
+/*==============================================================*/
+     CREATE TABLE XDV_ADS_APP_AGGR_ET
+     (
+	PROTOCOL		VARCHAR2(4),
+	TEID			NUMBER(10),
+	BEGIN_TIME		VARCHAR2(18),
+	END_TIME		TIMESTAMP,
+	DURATION		NUMBER,
+	SERVER_SESSION_ID	VARCHAR2(128),
+	THREAD_ID		VARCHAR2(128),
+	TO_RECIPIENT		VARCHAR2(256),
+	TO_PATH			VARCHAR2(256),
+	TO_VIA			VARCHAR2(4000),
+	FROM_RECIPIENT		VARCHAR2(256),
+	FROM_PATH		VARCHAR2(256),
+	FROM_VIA		VARCHAR2(4000),
+	SESSION_TYPE		VARCHAR2(10),
+	NBR_BYTES		NUMBER,
+	NBR_MESSAGES		NUMBER,
+	STATUS_CODE		VARCHAR2(6),
+	STATUS_TEXT		VARCHAR2(50),
+	CREATION_STATUS		VARCHAR2(3),
+	CREATION_TEXT		VARCHAR2(50),
+	ROUTING_AREA		VARCHAR2(19),
+	CELL_IDENTITY		NUMBER(5),
+	COLLECTION_SOURCE	VARCHAR2(24),
+	ACCESS_POINT_NAME	VARCHAR2(32),
+	IMEI			VARCHAR2(16),
+	MSISDN			VARCHAR2(16),
+	IMSI			VARCHAR2(16),
+    SERVER			VARCHAR2(128),
+    RQOS            VARCHAR2(40),
+    NQOS            VARCHAR2(40)
+     )
+     ORGANIZATION EXTERNAL
+       (  TYPE ORACLE_LOADER
+          DEFAULT DIRECTORY XDV_EXT_GEN_DATA_DIR
+          ACCESS PARAMETERS
+            ( records delimited by newline
+        badfile     XDV_EXT_GEN_LOG_DIR:'app_aggr_datafile.bad'
+        discardfile XDV_EXT_GEN_LOG_DIR:'app_aggr_datafile.dis'
+        logfile     XDV_EXT_GEN_LOG_DIR:'app_aggr_datafile.log'
+        fields terminated by ';'
+        missing field values are null
+	(
+	PROTOCOL,
+	TEID,
+	BEGIN_TIME,
+	END_TIME CHAR(18) DATE_FORMAT timestamp mask "YYYYMMDD HH24MISSFF3",
+	DURATION,
+	SERVER_SESSION_ID,
+	THREAD_ID,
+	TO_RECIPIENT,
+	TO_PATH,
+	TO_VIA,
+	FROM_RECIPIENT,
+	FROM_PATH,
+	FROM_VIA,
+	SESSION_TYPE,
+	NBR_BYTES,
+	NBR_MESSAGES,
+	STATUS_CODE,
+	STATUS_TEXT,
+	CREATION_STATUS,
+	CREATION_TEXT,
+	ROUTING_AREA,
+	CELL_IDENTITY,
+	COLLECTION_SOURCE,
+	ACCESS_POINT_NAME,
+	IMEI,
+	MSISDN,
+	IMSI,
+    SERVER,
+    RQOS,
+    NQOS
+	)
+      )
+	LOCATION (XDV_EXT_GEN_DATA_DIR:'app_aggr_datafile.txt')
+    )
+    REJECT LIMIT UNLIMITED
+    PARALLEL (DEGREE DEFAULT INSTANCES DEFAULT)
+    NOMONITORING;

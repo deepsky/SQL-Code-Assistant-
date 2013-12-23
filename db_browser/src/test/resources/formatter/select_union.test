@@ -1,0 +1,24 @@
+select to_char(sysdate - 7, 'YYYYMMDD')
+from dual where mod(trunc(sysdate - 7 - to_date('1970-01-01', 'YYYY-MM-DD')), 3) = 0 union
+select to_char(sysdate - 6, 'YYYYMMDD')
+      from dual
+      where mod(trunc(sysdate - 6 - to_date('1970-01-01', 'YYYY-MM-DD')), 3) = 0
+union select to_char(sysdate - 5, 'YYYYMMDD')
+      from dual
+      where mod(trunc(sysdate - 5 - to_date('1970-01-01', 'YYYY-MM-DD')), 3) = 0
+union select to_char(sysdate - 4, 'YYYYMMDD') from dual
+-----
+select to_char(sysdate - 7, 'YYYYMMDD')
+from dual
+where mod(trunc(sysdate - 7 - to_date('1970-01-01', 'YYYY-MM-DD')), 3) = 0
+union
+select to_char(sysdate - 6, 'YYYYMMDD')
+from dual
+where mod(trunc(sysdate - 6 - to_date('1970-01-01', 'YYYY-MM-DD')), 3) = 0
+union
+select to_char(sysdate - 5, 'YYYYMMDD')
+from dual
+where mod(trunc(sysdate - 5 - to_date('1970-01-01', 'YYYY-MM-DD')), 3) = 0
+union
+select to_char(sysdate - 4, 'YYYYMMDD')
+from dual

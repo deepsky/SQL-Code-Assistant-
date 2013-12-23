@@ -1,0 +1,148 @@
+/usr/local/java/jdk1.7.0_07/bin/java -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:36652,suspend=y,server=n -ea -Xbootclasspath/a:/home/sky/idea-IC-129.549/lib/boot.jar -Didea.home.path=/home/sky/.IdeaIC12/system/plugins-sandbox/test -Didea.plugins.path=/home/sky/.IdeaIC12/system/plugins-sandbox/plugins -Dfile.encoding=UTF-8 -classpath /usr/local/java/jdk1.7.0_07/lib/tools.jar:/home/sky/idea-IC-129.549/lib/idea_rt.jar:/home/sky/idea-IC-129.549/plugins/junit/lib/junit-rt.jar:/usr/local/java/jdk1.7.0_07/jre/lib/plugin.jar:/usr/local/java/jdk1.7.0_07/jre/lib/management-agent.jar:/usr/local/java/jdk1.7.0_07/jre/lib/jce.jar:/usr/local/java/jdk1.7.0_07/jre/lib/jfxrt.jar:/usr/local/java/jdk1.7.0_07/jre/lib/jsse.jar:/usr/local/java/jdk1.7.0_07/jre/lib/jfr.jar:/usr/local/java/jdk1.7.0_07/jre/lib/rt.jar:/usr/local/java/jdk1.7.0_07/jre/lib/charsets.jar:/usr/local/java/jdk1.7.0_07/jre/lib/javaws.jar:/usr/local/java/jdk1.7.0_07/jre/lib/resources.jar:/usr/local/java/jdk1.7.0_07/jre/lib/deploy.jar:/usr/local/java/jdk1.7.0_07/jre/lib/ext/sunjce_provider.jar:/usr/local/java/jdk1.7.0_07/jre/lib/ext/localedata.jar:/usr/local/java/jdk1.7.0_07/jre/lib/ext/dnsns.jar:/usr/local/java/jdk1.7.0_07/jre/lib/ext/zipfs.jar:/usr/local/java/jdk1.7.0_07/jre/lib/ext/sunpkcs11.jar:/usr/local/java/jdk1.7.0_07/jre/lib/ext/sunec.jar:/home/sky/idea-IC-129.549/lib/openapi.jar:/home/sky/idea-IC-129.549/lib/jna-utils.jar:/home/sky/idea-IC-129.549/lib/jps-server.jar:/home/sky/idea-IC-129.549/lib/commons-net-3.1.jar:/home/sky/idea-IC-129.549/lib/boot.jar:/home/sky/idea-IC-129.549/lib/optimizedFileManager.jar:/home/sky/idea-IC-129.549/lib/jh.jar:/home/sky/idea-IC-129.549/lib/swingx-core-1.6.2.jar:/home/sky/idea-IC-129.549/lib/nanoxml-2.2.3.jar:/home/sky/idea-IC-129.549/lib/jgoodies-forms.jar:/home/sky/idea-IC-129.549/lib/oromatcher.jar:/home/sky/idea-IC-129.549/lib/velocity.jar:/home/sky/idea-IC-129.549/lib/xpp3-1.1.4-min.jar:/home/sky/idea-IC-129.549/lib/log4j.jar:/home/sky/idea-IC-129.549/lib/idea.jar:/home/sky/idea-IC-129.549/lib/asm-commons.jar:/home/sky/idea-IC-129.549/lib/picocontainer.jar:/home/sky/idea-IC-129.549/lib/jsch-0.1.49.jar:/home/sky/idea-IC-129.549/lib/trove4j_src.jar:/home/sky/idea-IC-129.549/lib/xstream-1.4.3.jar:/home/sky/idea-IC-129.549/lib/xerces.jar:/home/sky/idea-IC-129.549/lib/cli-parser-1.1.jar:/home/sky/idea-IC-129.549/lib/sanselan-0.98-snapshot.jar:/home/sky/idea-IC-129.549/lib/microba.jar:/home/sky/idea-IC-129.549/lib/commons-codec-1.3.jar:/home/sky/idea-IC-129.549/lib/xbean.jar:/home/sky/idea-IC-129.549/lib/jgoodies-looks-2.4.2.jar:/home/sky/idea-IC-129.549/lib/commons-logging-1.1.1.jar:/home/sky/idea-IC-129.549/lib/automaton.jar:/home/sky/idea-IC-129.549/lib/protobuf-2.4.1.jar:/home/sky/idea-IC-129.549/lib/resolver.jar:/home/sky/idea-IC-129.549/lib/bootstrap.jar:/home/sky/idea-IC-129.549/lib/cglib-2.2.2.jar:/home/sky/idea-IC-129.549/lib/commons-httpclient-3.1-patched.jar:/home/sky/idea-IC-129.549/lib/icons.jar:/home/sky/idea-IC-129.549/lib/serviceMessages.jar:/home/sky/idea-IC-129.549/lib/extensions.jar:/home/sky/idea-IC-129.549/lib/jdom.jar:/home/sky/idea-IC-129.549/lib/xmlrpc-2.0.jar:/home/sky/idea-IC-129.549/lib/jaxen-1.1.3.jar:/home/sky/idea-IC-129.549/lib/resources_en.jar:/home/sky/idea-IC-129.549/lib/junit-4.10.jar:/home/sky/idea-IC-129.549/lib/jgoodies-common-1.2.1.jar:/home/sky/idea-IC-129.549/lib/trang-core.jar:/home/sky/idea-IC-129.549/lib/asm4-all.jar:/home/sky/idea-IC-129.549/lib/gson-2.2.1.jar:/home/sky/idea-IC-129.549/lib/asm.jar:/home/sky/idea-IC-129.549/lib/resources.jar:/home/sky/idea-IC-129.549/lib/proxy-vole_20120920.jar:/home/sky/idea-IC-129.549/lib/groovy-all-2.0.6.jar:/home/sky/idea-IC-129.549/lib/guava-12.0.jar:/home/sky/idea-IC-129.549/lib/util.jar:/home/sky/idea-IC-129.549/lib/trove4j.jar:/home/sky/idea-IC-129.549/lib/jna.jar:/home/sky/idea-IC-129.549/lib/rhino-js-1_7R4.jar:/home/sky/idea-IC-129.549/lib/rngom-20051226-patched.jar:/home/sky/idea-IC-129.549/lib/winp-1.17-patched.jar:/home/sky/idea-IC-129.549/lib/netty-3.6.2.Final.jar:/home/sky/idea-IC-129.549/lib/jing.jar:/home/sky/idea-IC-129.549/lib/nekohtml-1.9.14.jar:/home/sky/idea-IC-129.549/lib/jdkAnnotations.jar:/home/sky/idea-IC-129.549/lib/annotations.jar:/home/sky/idea-IC-129.549/lib/ecj-4.2.1.jar:/home/sky/idea-IC-129.549/lib/miglayout-swing.jar:/home/sky/idea-IC-129.549/lib/isorelax.jar:/home/sky/idea-IC-129.549/lib/javac2.jar:/home/sky/idea-IC-129.549/lib/jsr173_1.0_api.jar:/home/sky/idea-IC-129.549/lib/jcip-annotations.jar:/home/sky/idea-IC-129.549/lib/forms_rt.jar:/home/sky/sqlcode_assistant/sql_assistant/main/target/test-classes:/home/sky/sqlcode_assistant/sql_assistant/main/target/classes:/home/sky/sqlcode_assistant/sql_assistant/commons/target/classes:/home/sky/sqlcode_assistant/sql_assistant/antl_patch/target/classes:/home/sky/.m2/repository/antlr/antlr/2.7.5-patched/antlr-2.7.5-patched.jar:/home/sky/.m2/repository/log4j/log4j/1.2.13/log4j-1.2.13.jar:/home/sky/.m2/repository/junit/junit/4.0/junit-4.0.jar:/home/sky/.m2/repository/oracle/ojdbc/5/ojdbc-5.jar:/home/sky/.m2/repository/org/codehaus/castor/castor/1.2/castor-1.2.jar:/home/sky/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar:/home/sky/sqlcode_assistant/sql_assistant/result_panel/target/classes:/home/sky/sqlcode_assistant/sql_assistant/database/target/classes:/home/sky/sqlcode_assistant/sql_assistant/parser/target/classes:/home/sky/sqlcode_assistant/sql_assistant/tools/target/classes:/home/sky/.m2/repository/com/jcraft/jsch/0.1.49/jsch-0.1.49.jar:/home/sky/sqlcode_assistant/sql_assistant/resolver/target/classes:/home/sky/.m2/repository/com/joestelmach/natty/0.4-SNAPSHOT/natty-0.4-SNAPSHOT.jar:/home/sky/.m2/repository/org/antlr/antlr-runtime/3.2/antlr-runtime-3.2.jar:/home/sky/.m2/repository/org/antlr/stringtemplate/3.2/stringtemplate-3.2.jar:/home/sky/.m2/repository/net/sf/opencsv/opencsv/2.0/opencsv-2.0.jar:/home/sky/.m2/repository/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar com.intellij.rt.execution.junit.JUnitStarter -ideVersion5 com.deepsky.lang.plsql.completion.SyntaxErrorResolverTest
+Connected to the target VM, address: '127.0.0.1:36652', transport: 'socket'
+FILE
+  PLSQL:GRANT_COMMAND
+    PLSQL:GRANT
+    PLSQL:ERROR_TOKEN_A
+      PLSQL:SYSTEM_PRIVILEGE
+        PLSQL:CREATE
+        PLSQL:SESSION
+      PLSQL:IDENTIFIER
+PLSQL:GRANT PLSQL:SYSTEM_PRIVILEGE PLSQL:IDENTIFIER
+FILE
+  PLSQL:ERROR_TOKEN_A
+    PLSQL:ERROR_TOKEN_A
+      PLSQL:GRANT
+      PLSQL:CREATE
+    PLSQL:IDENTIFIER
+PLSQL:GRANT PLSQL:CREATE PLSQL:IDENTIFIER
+FILE
+  PLSQL:GRANT_COMMAND
+    PLSQL:ERROR_TOKEN_A
+      PLSQL:GRANT
+      PLSQL:IDENTIFIER
+PLSQL:GRANT PLSQL:IDENTIFIER
+FILE
+  PLSQL:GRANT_COMMAND
+    PLSQL:GRANT
+    PLSQL:SYSTEM_PRIVILEGE
+      PLSQL:CREATE
+      PLSQL:SESSION
+    PLSQL:TO
+    PLSQL:USER_NAME
+      PLSQL:IDENTIFIER
+PLSQL:GRANT PLSQL:SYSTEM_PRIVILEGE PLSQL:TO PLSQL:USER_NAME
+FILE
+  PLSQL:ERROR_TOKEN_A
+    PLSQL:SELECT
+    PLSQL:ASTERISK
+  PLSQL:GRANT_COMMAND
+    PLSQL:GRANT
+    PLSQL:ERROR_TOKEN_A
+      PLSQL:SYSTEM_PRIVILEGE
+        PLSQL:CREATE
+        PLSQL:SESSION
+      PLSQL:IDENTIFIER
+PLSQL:SELECT PLSQL:ASTERISK
+FILE
+  PLSQL:TABLE_DEF
+    PLSQL:CREATE
+    PLSQL:ERROR_TOKEN_A
+      PLSQL:TABLE
+      PLSQL:GRANT
+  PLSQL:ERROR_TOKEN_A
+    PLSQL:CREATE
+    PLSQL:IDENTIFIER
+PLSQL:CREATE PLSQL:TABLE PLSQL:GRANT
+FILE
+  PLSQL:TABLE_DEF
+    PLSQL:CREATE
+    PLSQL:TABLE
+    PLSQL:TABLE_NAME_DDL
+      PLSQL:IDENTIFIER
+    PLSQL:OPEN_PAREN
+    PLSQL:COLUMN_DEF
+      PLSQL:COLUMN_NAME_DDL
+        PLSQL:IDENTIFIER
+      PLSQL:DATATYPE
+        PLSQL:INT
+    PLSQL:CLOSE_PAREN
+  PLSQL:GRANT_COMMAND
+    PLSQL:ERROR_TOKEN_A
+      PLSQL:GRANT
+      PLSQL:IDENTIFIER
+PLSQL:CREATE PLSQL:TABLE PLSQL:TABLE_NAME_DDL PLSQL:OPEN_PAREN PLSQL:COLUMN_DEF PLSQL:CLOSE_PAREN
+FILE
+  PLSQL:DELETE_COMMAND
+    PLSQL:DELETE
+    PLSQL:TABLE_ALIAS
+      PLSQL:TABLE_REF
+        PLSQL:IDENTIFIER
+      PLSQL:ALIAS_NAME
+        PLSQL:ALIAS_IDENT
+          PLSQL:GRANT
+  PLSQL:ERROR_TOKEN_A
+    PLSQL:CREATE
+    PLSQL:SESSION
+    PLSQL:TO
+    PLSQL:IDENTIFIER
+FILE
+  PLSQL:UPDATE_COMMAND
+    PLSQL:ERROR_TOKEN_A
+      PLSQL:UPDATE
+      PLSQL:TABLE_ALIAS
+        PLSQL:TABLE_REF
+          PLSQL:IDENTIFIER
+PLSQL:UPDATE PLSQL:TABLE_ALIAS
+PLSQL:DELETE PLSQL:TABLE_ALIAS
+FILE
+  PLSQL:UPDATE_COMMAND
+    PLSQL:ERROR_TOKEN_A
+      PLSQL:UPDATE
+      PLSQL:TABLE_ALIAS
+        PLSQL:TABLE_REF
+          PLSQL:IDENTIFIER
+        PLSQL:ALIAS_NAME
+          PLSQL:ALIAS_IDENT
+            PLSQL:IDENTIFIER
+PLSQL:UPDATE PLSQL:TABLE_ALIAS
+FILE
+  PLSQL:UPDATE_COMMAND
+    PLSQL:ERROR_TOKEN_A
+      PLSQL:UPDATE
+      PLSQL:TABLE_ALIAS
+        PLSQL:TABLE_REF
+          PLSQL:IDENTIFIER
+        PLSQL:ALIAS_NAME
+          PLSQL:ALIAS_IDENT
+            PLSQL:IDENTIFIER
+      PLSQL:IDENTIFIER
+PLSQL:UPDATE PLSQL:TABLE_ALIAS PLSQL:IDENTIFIER
+FILE
+  PLSQL:UPDATE_COMMAND
+    PLSQL:SIMPLE_UPDATE_COMMAND
+      PLSQL:UPDATE
+      PLSQL:TABLE_ALIAS
+        PLSQL:TABLE_REF
+          PLSQL:IDENTIFIER
+      PLSQL:SET
+      PLSQL:ERROR_TOKEN_A
+        PLSQL:IDENTIFIER
+PLSQL:SIMPLE_UPDATE_COMMAND
+FILE
+  PLSQL:UPDATE_COMMAND
+    PLSQL:SIMPLE_UPDATE_COMMAND
+      PLSQL:UPDATE
+      PLSQL:TABLE_ALIAS
+        PLSQL:TABLE_REF
+          PLSQL:IDENTIFIER
+      PLSQL:SET
+      PLSQL:COLUMN_SPEC
+        PLSQL:NAME_FRAGMENT
+          PLSQL:IDENTIFIER
+      PLSQL:EQ
+      PLSQL:ERROR_TOKEN_A
+PLSQL:SIMPLE_UPDATE_COMMAND
+Disconnected from the target VM, address: '127.0.0.1:36652', transport: 'socket'
+
+Process finished with exit code 0

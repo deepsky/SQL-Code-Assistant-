@@ -1,0 +1,11 @@
+CREATE OR REPLACE VIEW ctx_classes AS select cla_name
+                                          , cla_desc cla_description
+                                      from dr$class
+                                      where cla_system = 'N';
+-----
+CREATE OR REPLACE VIEW ctx_classes
+AS
+select cla_name
+    , cla_desc cla_description
+from dr$class
+where cla_system = 'N';

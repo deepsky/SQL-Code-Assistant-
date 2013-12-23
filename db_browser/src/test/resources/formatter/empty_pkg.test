@@ -1,0 +1,8 @@
+create or
+replace package
+e
+as end;
+-----
+create or replace package e
+as
+end;

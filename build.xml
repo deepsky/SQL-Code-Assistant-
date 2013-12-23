@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<project name="Sql Code Assistant Plugin builder" default="">
+
+    <property name="build.dir" value="./build_dir"/>
+    <property name="bundle.dir" value="./out"/>
+    <property name="bundle.name" value="sql-assistant"/>
+    <property name="plugin.ver" value="1.4.6.12"/>
+
+    <target name="build_plugin" description="Build PL/SQL plugin sources">
+
+        <delete>
+            <fileset dir="${build.dir}">
+                <include name="**/*"/>
+            </fileset>
+        </delete>
+
+        <!-- build plugin's jar  -->
+        <jar destfile="${build.dir}/sql-assistant-${plugin.ver}.jar">
+
+            <fileset dir="main/target/classes">
+                <exclude name="icons/Thumbs.db"/>
+            </fileset>
+            <fileset dir="antl_patch/target/classes" includes="*/**/*.class"/>
+
+            <fileset dir="database/target/classes" includes="*/**/*.class"/>
+            <fileset dir="db_browser/target/classes" includes="*/**/*.class"/>
+
+            <fileset dir="commons/target/classes" includes="*/**/*.class"/>
+            <fileset dir="commons/target/classes" includes="*.xml"/>
+
+            <fileset dir="parser/target/classes" includes="*/**/*.class"/>
+            <fileset dir="resolver/target/classes" includes="*/**/*.class"/>
+            <fileset dir="result_panel/target/classes" includes="*/**/*.class"/>
+            <fileset dir="spec_src/target/classes" includes="*/**/*.class"/>
+
+            <fileset dir="plugin_runner" includes="META-INF/*.xml"/>
+        </jar>
+
+    </target>
+
+    <target name="bundle_plugin" description="Bundle PL/SQL plugin libs">
+        <mkdir dir="${bundle.dir}"/>
+        <delete includeemptydirs="true">
+            <fileset dir="${bundle.dir}" includes="**/*"/>
+        </delete>
+
+        <mkdir dir="${bundle.dir}/${bundle.name}"/>
+        <mkdir dir="${bundle.dir}/${bundle.name}/lib"/>
+
+        <copy todir="${bundle.dir}/${bundle.name}/lib">
+            <fileset dir="lib">
+                <include name="antlr-2.7.5-patched.jar"/>
+                <include name="castor-1.2.jar"/>
+                <include name="const_jjar.zip"/>
+                <include name="commons-logging-1.1.jar"/>
+                <include name="commons-collections-3.2.1.jar"/>
+                <include name="ojdbc-5.jar"/>
+                <include name="natty-0.4-SNAPSHOT.jar"/>
+                <include name="antlr-runtime-3.2.jar"/>
+                <include name="jsch-0.1.50.jar"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${bundle.dir}/${bundle.name}/lib">
+            <fileset dir="src/main/resources/licenses">
+                <include name="jsch_license.txt"/>
+                <include name="castor_license.txt"/>
+                <include name="oracle_jdbc_driver_license.txt"/>
+                <include name="sql_code_assistant_plugin_license.txt"/>
+                <include name="natty_license.txt"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${bundle.dir}/${bundle.name}/lib">
+            <fileset dir="${build.dir}">
+                <include name="sql-assistant-${plugin.ver}.jar"/>
+            </fileset>
+        </copy>
+
+        <zip destfile="${bundle.dir}/${bundle.name}.zip">
+            <zipfileset dir="${bundle.dir}" includes="${bundle.name}/**/*"/>
+        </zip>
+    </target>
+
+</project>

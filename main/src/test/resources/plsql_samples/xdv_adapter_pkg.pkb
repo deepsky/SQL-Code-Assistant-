@@ -1,0 +1,2559 @@
+CREATE OR REPLACE PACKAGE BODY XDV_ADAPTER_PKG
+IS
+
+-- $Id: xdv_adapter_pkg.pkb,v 1.1 2008/09/03 08:52:03 skulyk Exp $
+
+  /** AQ add-on for the adapters. */
+  PROCEDURE enqueue_load              (
+                a_job_type           IN INTEGER,
+                a_load_id            IN NUMBER,
+                a_load_st_ts         IN DATE,
+                a_load_end_ts        IN DATE     DEFAULT SYSDATE,
+                a_sender_id          IN VARCHAR2 DEFAULT pc_sndr_unknown,
+                a_message            IN VARCHAR2 DEFAULT NULL,
+                a_msg_priority       IN NUMBER   DEFAULT 1) IS
+
+     l_msg                    med_load_message;
+
+  BEGIN
+
+    l_msg         := med_load_message(a_sender_id, a_load_id,  a_load_st_ts, a_load_end_ts, a_message);
+
+    xdv_logger_pkg.info(a_log_ctx => v_log_ctx, a_log_msg => 'Enqueueing message with load-id "' || a_load_id || '" of job type '|| a_job_type || ' ...');
+
+    xdv_aq_pkg.enqueue_load(
+        a_queue_name            => xdv_aq_pkg.get_queue_name(a_job_type, xdv_generic_const_pkg.pc_dflw_jp_pre_replication),
+        a_load_msg              => l_msg,
+        a_msg_priority          => a_msg_priority);
+
+    xdv_logger_pkg.info(a_log_ctx => v_log_ctx, a_log_msg => 'Message with load-id "' || a_load_id || '" of job type ' || a_job_type || ' was enqueued.');
+
+  END;
+
+  FUNCTION TEKELEC_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    l_tz                     VARCHAR2(50);
+
+    rv_row_cnt               INTEGER;
+
+  BEGIN
+
+    l_tz := P_TIME_ZONE;
+
+    IF l_tz IS NULL THEN
+      l_tz := DBTIMEZONE;
+    END IF;
+
+    SELECT
+      MIN(FROM_TZ(END_TIME, l_tz) AT TIME ZONE 'GMT'),
+      MAX(FROM_TZ(END_TIME, l_tz) AT TIME ZONE 'GMT')
+    INTO l_load_st_dt, l_load_end_dt
+    FROM xdv_adk_sig_tdr_et;
+
+    SELECT XDV_SGM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+    INSERT /*+ APPEND */ INTO XDV_SGM_TRN_MEDSIG_FT
+    (ROAMER_IND, NETWORK_IND, TST_ID, TRC_ID, TSR_ID, TSV_ID, TRQ_ID, DDE_ID, DTE_ID, END_TIME_MS,
+        DURATION, IMEI, IMSI, TMSI, PTMSI, NSAPI, PDP_ADDRESS,
+        FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+        FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+        INT_TRANSACTION_ID, TAC, SVN, LOAD_ID)
+    select
+      -1 as ROAMER_IND,
+      -1 as NETWORK_IND,
+      TST_ID       as TST_ID,
+      TRC_ID       as TRC_ID,
+      TSR_ID       as TSR_ID,
+      TSV_ID       as TSV_ID,
+      TRQ_ID       as TRQ_ID,
+      EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 AS DDE_ID,
+      EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 + END_TIME_SECONDS AS DTE_ID,
+      MOD(BEGIN_TIME_MS + DURATION, 1000) as END_TIME_MS,
+      DURATION      as DURATION,
+      IMEI          as IMEI,
+      IMSI          as IMSI,
+      TMSI          as TMSI,
+      PTMSI         as PTMSI,
+      NSAPI         as NSAPI,
+      PDP_ADDRESS   as PDP_ADDRESS,
+      CELLID        as FAC_INT_01,
+      ROUTING_AREA  as FAC_INT_02,
+      -1            as FAC_INT_03,
+      BSC           as FAC_INT_04,
+      -1            as FAC_INT_05,
+      -1            as FAC_INT_06,
+      -1            as FAC_INT_07,
+      -1            as FAC_INT_08,
+      -1            as FAC_INT_09,
+      -1            as FAC_INT_10,
+      SGSN          as FAC_EXT_01,
+      -1            as FAC_EXT_02,
+      ACCESS_POINT_NAME as FAC_EXT_03,
+      -1            as FAC_EXT_04,
+      -1            as FAC_EXT_05,
+      -1            as FAC_EXT_06,
+      -1            as FAC_EXT_07,
+      -1            as FAC_EXT_08,
+      -1            as FAC_EXT_09,
+      -1            as FAC_EXT_10,
+        (EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 + EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 +
+            END_TIME_SECONDS) * 10000000000 +
+            MOD(BEGIN_TIME_MS + DURATION, 1000) * 10000000 + 30000 + MOD(ROWNUM, 10000)
+            AS INT_TRANSACTION_ID,
+      (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+      (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+      l_load_id AS LOAD_ID
+     FROM
+    (
+    SELECT
+      '-1' AS TST_ID,
+      CA.ID AS TRC_ID,
+      (CASE WHEN SUCCESSFUL_ = 'Yes' THEN 20 ELSE 10 END) AS TSR_ID,
+      tv.ID AS TSV_ID,
+      ((FROM_TZ(END_TIME, l_tz) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0) AS END_TIME_INTERVAL,
+      MS AS BEGIN_TIME_MS,
+      EXTRACT(DAY FROM TRANSACTION_MS) * 86400000 + EXTRACT(HOUR FROM TRANSACTION_MS) * 3600000 + EXTRACT(MINUTE FROM TRANSACTION_MS) * 60000 +
+        EXTRACT(SECOND FROM TRANSACTION_MS) * 1000 AS DURATION,
+      EXTRACT(SECOND FROM END_TIME) AS END_TIME_SECONDS,
+      (CASE WHEN LENGTH(IMEI) IS NOT NULL AND IMEI <> '-' AND TRANSLATE(SUBSTR(IMEI, 2), ' 0123456789',' ') IS NULL
+        THEN SUBSTR(IMEI, 2) ELSE '-1' END) AS IMEI,
+      (CASE WHEN LENGTH(IMSI) IS NOT NULL AND IMSI <> '-' AND TRANSLATE(SUBSTR(IMSI, 2), ' 0123456789',' ') IS NULL
+        THEN SUBSTR(IMSI, 2) ELSE '-1' END) AS IMSI,
+      TO_NUMBER(TMSI,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx') AS TMSI,
+      TO_NUMBER(P_TMSI,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx') AS PTMSI,
+      NVL2(LENGTH(NSAPI), NVL2(TRANSLATE(NSAPI, ' 0123456789',' '), '-1', NSAPI), '-1') AS NSAPI,
+      (CASE WHEN (LENGTH(PDP_IP_ADDRESS) IS NOT NULL AND SUBSTR(PDP_IP_ADDRESS,1,1) <> '-') THEN PDP_IP_ADDRESS ELSE '-1' END) AS PDP_ADDRESS,
+      (CASE WHEN MCC <> '-' THEN (CASE WHEN SUBSTR(MCC,1,1) = '''' THEN SUBSTR(MCC,2) ELSE MCC END) END) || ':' ||
+      (CASE WHEN MNC <> '-' THEN (CASE WHEN SUBSTR(MNC,1,1) = '''' THEN SUBSTR(MNC,2) ELSE MNC END) END) || ':' ||
+      (CASE WHEN LAC <> '-' THEN (CASE WHEN SUBSTR(LAC,1,1) = '''' THEN SUBSTR(LAC,2) ELSE LAC END) END) || ':' ||
+      (CASE WHEN RAC <> '-' THEN (CASE WHEN SUBSTR(RAC,1,1) = '''' THEN SUBSTR(RAC,2) ELSE RAC END) END) AS ROUTING_AREA,
+        NVL2(LENGTH(CELLID), NVL2(TRANSLATE(CELLID, ' 0123456789',' '), '-1', CELLID), '-1') AS CELLID,
+      PCM_ID AS BSC, SGSN_ID AS SGSN,
+      NVL(APN, -1) AS ACCESS_POINT_NAME,
+      NVL(qs.ID, -1) AS TRQ_ID
+    FROM
+       xdv_adk_sig_tdr_et,
+       xdv_trn_causes_dt ca,
+       xdv_trn_sig_result_dt sr,
+       xdv_trn_sig_violation_dt tv,
+       xdv_trn_qos_dt qs
+    where
+          xdv_adk_sig_tdr_et.gmmcause   = ca.PRIMARY_CAUSE_TYPE
+      AND xdv_adk_sig_tdr_et.smcause    = ca.SECONDARY_CAUSE_TYPE
+      AND ca.technology = 'GPRS'
+      AND ca.interface = 'Gb'
+      AND ca.category = 'Signaling'
+      AND sr.technology = 'GPRS'
+      AND sr.interface = 'Gb'
+      AND sr.category = 'Signaling'
+      AND xdv_adk_sig_tdr_et.transaction_type  = sr.message_type
+      AND sr.result in ('GPRS only attached', 'RA updated')
+      AND xdv_adk_sig_tdr_et.dr_status         = tv.violation_type
+      AND xdv_adk_sig_tdr_et.violation         = tv.violation
+      AND xdv_adk_sig_tdr_et.RQOS = qs.RQOS_HEXID(+) AND xdv_adk_sig_tdr_et.NQOS = qs.NQOS_HEXID(+)
+    );
+
+    rv_row_cnt    := SQL%ROWCOUNT;
+
+    -- enqueue load-batch
+    enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_sig_trn,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_sgm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_sgm_qname);
+
+    COMMIT;
+
+    RETURN rv_row_cnt;
+  END TEKELEC_INSERT;
+
+
+  FUNCTION GN_VS_SESSION_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_VS_SES_ET;
+
+  SELECT XDV_ASM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  INSERT /*+ APPEND */ INTO XDV_ASM_TRN_MEDSES_FT
+  (ROAMER_IND, NETWORK_IND, TAT_ID, TAC_ID, TRC_ID, TRS_ID, DDE_ID, DTE_ID, END_TIME_MS, DURATION, SETUP_DURATION, DATA_TRANS_DURATION, TEID, USER_AGENT,
+   IMEI, MSISDN, IMSI, NBR_MESSAGES, NBR_BYTES, NBR_CLIENT_COMMANDS, NBR_BYTES_LOST, JITTER, USER_ID, MAILBOX_NAME, SRV_ID,TRQ_ID,
+   SESSION_ID, TO_RECIPIENT, TO_PATH, TO_VIA_PATH, FROM_ORIGINATOR, FROM_PATH, FROM_VIA_PATH, SERVER_AGENT,
+   FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+   FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+   INT_SESSION_ID, TAC, SVN, LOAD_ID)
+  SELECT
+   -1 as ROAMER_IND,
+   -1 as NETWORK_IND,
+   TAT_ID AS TAT_ID,
+   TAC_ID AS TAC_ID,
+   TRC_ID AS TRC_ID,
+   -1 AS TRS_ID,
+   EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 AS DDE_ID,
+   EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 + FLOOR(END_TIME_SECONDS) AS DTE_ID,
+   MOD(1000 * END_TIME_SECONDS, 1000) AS END_TIME_MS,
+   DURATION_MS AS DURATION,
+   NULL AS SETUP_DURATION,
+   NULL AS DATA_TRANS_DURATION,
+   NULL AS TEID,
+   USER_AGENT AS USER_AGENT,
+   IMEI AS IMEI,
+   MSISDN AS MSISDN,
+   IMSI AS IMSI,
+   NULL AS NBR_MESSAGES,
+   NBR_BYTES AS NBR_BYTES,
+   NBR_CLIENT_COMMANDS AS NBR_CLIENT_COMMANDS,
+   NBR_BYTES_LOST AS NBR_BYTES_LOST,
+   JITTER AS JITTER,
+   NULL AS USER_ID,
+   NULL AS MAILBOX_NAME,
+   SRV_ID AS SRV_ID,
+   TRQ_ID AS TRQ_ID,
+   SESSION_ID AS SESSION_ID,
+   NULL AS TO_RECIPIENT,
+   NULL AS TO_PATH,
+   NULL AS TO_VIA_PATH,
+   NULL AS FROM_ORIGINATOR,
+   NULL AS FROM_PATH,
+   NULL AS FROM_VIA_PATH,
+   NULL AS SERVER_AGENT,
+   -1       AS FAC_INT_01,
+   ROUTING_AREA AS FAC_INT_02,
+   -1       AS FAC_INT_03,
+   -1       AS FAC_INT_04,
+   -1       AS FAC_INT_05,
+   -1       AS FAC_INT_06,
+   -1       AS FAC_INT_07,
+   -1       AS FAC_INT_08,
+   -1       AS FAC_INT_09,
+   -1       AS FAC_INT_10,
+   'S'||COLLECTION_SOURCE   AS FAC_EXT_01,
+   'G'||COLLECTION_SOURCE   AS FAC_EXT_02,
+   ACCESS_POINT_NAME        AS FAC_EXT_03,
+   -1       AS FAC_EXT_04,
+   -1       AS FAC_EXT_05,
+   -1       AS FAC_EXT_06,
+   -1       AS FAC_EXT_07,
+   -1       AS FAC_EXT_08,
+   -1       AS FAC_EXT_09,
+   -1       AS FAC_EXT_10,
+      (EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 + EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 +
+          END_TIME_SECONDS) * 10000000000 +
+          20000 + MOD(ROWNUM, 10000)
+          AS INT_TRANSACTION_ID,
+   (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+   (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+   l_load_id AS LOAD_ID
+   FROM
+  (
+  SELECT
+      TT.ID AS TAT_ID,
+      CT.ID AS TAC_ID,
+      CA.ID AS TRC_ID,
+      ((FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0) AS END_TIME_INTERVAL,
+      EXTRACT(SECOND FROM END_TIME) AS END_TIME_SECONDS,
+      FLOOR(DURATION * 1000) AS DURATION_MS,
+      NVL(USER_AGENT, '-1') AS USER_AGENT,
+      (CASE WHEN LENGTH(IMEI) >= 8 AND TRANSLATE(TRANSLATE(IMEI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMEI, '1''- ', '1') ELSE '-1' END)
+          AS IMEI,
+      (CASE WHEN LENGTH(MSISDN) >= 8 AND TRANSLATE(TRANSLATE(MSISDN, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(MSISDN, '1''- ', '1') ELSE '-1' END)
+          AS MSISDN,
+      (CASE WHEN LENGTH(IMSI) >= 6 AND TRANSLATE(TRANSLATE(IMSI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMSI, '1''- ', '1') ELSE '-1' END)
+          AS IMSI,
+      NBR_BYTES AS NBR_BYTES,
+      NBR_CLIENT_COMMANDS AS NBR_CLIENT_COMMANDS,
+      BYTES_LOST AS NBR_BYTES_LOST,
+      JITTER AS JITTER,
+      FLOW_ID AS SESSION_ID,
+      RAI AS ROUTING_AREA,
+      NVL(ACCESS_POINT_NAME, -1) AS ACCESS_POINT_NAME,
+      LINK_COLLSRC_ID AS COLLECTION_SOURCE,
+      NVL(QS.ID, -1) AS TRQ_ID,
+      NVL(SV.ID, -1) AS SRV_ID
+  FROM
+      XDV_ADS_VS_SES_ET,
+      XDV_TRN_APP_TYPE_DT TT,
+      XDV_TRN_APP_CONTENT_TYPE_DT CT,
+      XDV_TRN_CAUSES_DT CA,
+      XDV_TRN_QOS_DT QS,
+      XDV_SRV_SERVER_DT SV
+  WHERE
+   TT.TECHNOLOGY = 'GPRS' AND
+   TT.INTERFACE = 'Gn' AND
+   TT.CATEGORY = 'Application' AND
+   TT.APPLICATION_TYPE = 'Video Streaming' AND
+   TT.XDR_TYPE = 'Session' AND
+   TT.PROTOCOL = UPPER(XDV_ADS_VS_SES_ET.PROTOCOL) AND
+   TT.MESSAGE_TYPE is null AND
+   TT.MESSAGE_CLASS is null AND
+   TT.ORIGINATOR is null AND
+   CA.PRIMARY_CAUSE_ID = XDV_ADS_VS_SES_ET.STATUS_CODE AND
+   CA.PRIMARY_CAUSE_TYPE = 'Video Streaming' AND
+   CA.SECONDARY_CAUSE_ID IS NULL AND
+   CA.TECHNOLOGY = 'GPRS' AND
+   CA.INTERFACE = 'Gn' AND
+   CA.CATEGORY = 'Application' AND CA.AMK_ID = 11080 AND
+   CT.TECHNOLOGY = 'GPRS' AND
+   CT.CATEGORY = 'Application' AND
+   CT.INTERFACE = 'Gn' AND
+   CT.CONTENT_TYPE IS NOT NULL AND CT.CONTENT_SUBTYPE IS NOT NULL AND
+   XDV_ADS_VS_SES_ET.CONTENT_TYPE LIKE CT.CONTENT_TYPE||'%'||CT.CONTENT_SUBTYPE AND
+   XDV_ADS_VS_SES_ET.RQOS = QS.RQOS_HEXID(+) AND XDV_ADS_VS_SES_ET.NQOS = QS.NQOS_HEXID(+) AND
+   SUBSTR(REGEXP_SUBSTR(XDV_ADS_VS_SES_ET.SERVER, '://([[:alnum:],-]+\.?){1,}'), 4) = SV.SERVER_ID(+)
+  );
+  RETVAL := SQL%ROWCOUNT;
+
+  -- enqueue load-batch
+  enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_ses_trn,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_asm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_asm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END GN_VS_SESSION_INSERT;
+
+  FUNCTION GN_EMAIL_SESSION_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_EMAIL_SES_ET;
+
+  SELECT XDV_ASM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  INSERT /*+ APPEND */ INTO XDV_ASM_TRN_MEDSES_FT
+  (ROAMER_IND, NETWORK_IND, TAT_ID, TAC_ID, TRC_ID, TRS_ID, DDE_ID, DTE_ID, END_TIME_MS, DURATION, SETUP_DURATION, DATA_TRANS_DURATION, TEID, USER_AGENT,
+   IMEI, MSISDN, IMSI, NBR_MESSAGES, NBR_BYTES, NBR_CLIENT_COMMANDS, NBR_BYTES_LOST, JITTER, USER_ID, MAILBOX_NAME, SRV_ID, TRQ_ID,
+   SESSION_ID, TO_RECIPIENT, TO_PATH, TO_VIA_PATH, FROM_ORIGINATOR, FROM_PATH, FROM_VIA_PATH, SERVER_AGENT,
+   FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+   FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+   INT_SESSION_ID, TAC, SVN, LOAD_ID)
+  SELECT
+      -1 as ROAMER_IND,
+      -1 as NETWORK_IND,
+      TAT_ID       as TAT_ID,
+      -1 AS TAC_ID,
+      TRC_ID       as TRC_ID,
+      TRS_ID       as TRS_ID,
+      EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 AS DDE_ID,
+      EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 + FLOOR(END_TIME_SECONDS) AS DTE_ID,
+      MOD(1000 * END_TIME_SECONDS, 1000) AS END_TIME_MS,
+      DURATION AS DURATION,
+      SETUP_DURATION AS SETUP_DURATION,
+      DATA_TRANSFER_TIME AS DATA_TRANSFER_TIME,
+      TEID AS TEID,
+      '-1' AS USER_AGENT,
+      IMEI AS IMEI,
+      MSISDN AS MSISDN,
+      IMSI AS IMSI,
+      NBR_MESSAGES AS NBR_MESSAGES,
+      NBR_BYTES AS NBR_BYTES,
+      NBR_CLIENT_COMMANDS AS NBR_CLIENT_COMMANDS,
+      NULL AS NBR_BYTES_LOST,
+      NULL AS JITTER,
+      USER_ID AS USER_ID,
+      MAILBOX_NAME AS MAILBOX_NAME,
+      SRV_ID AS SRV_ID,
+      TRQ_ID AS TRQ_ID,
+      NULL AS SESSION_ID,
+      NULL AS TO_RECIPIENT,
+      NULL AS TO_PATH,
+      NULL AS TO_VIA_PATH,
+      FROM_ORIGINATOR AS FROM_ORIGINATOR,
+      NULL AS FROM_PATH,
+      NULL AS FROM_VIA_PATH,
+      NULL AS SERVER_AGENT,
+      CELL_IDENTITY AS FAC_INT_01,
+      ROUTING_AREA  AS FAC_INT_02,
+      -1    AS FAC_INT_03,
+      -1    AS FAC_INT_04,
+      -1    AS FAC_INT_05,
+      -1    AS FAC_INT_06,
+      -1    AS FAC_INT_07,
+      -1    AS FAC_INT_08,
+      -1    AS FAC_INT_09,
+      -1    AS FAC_INT_10,
+      'S'||COLLECTION_SOURCE AS FAC_EXT_01,
+      'G'||COLLECTION_SOURCE AS FAC_EXT_02,
+      ACCESS_POINT_NAME      AS FAC_EXT_03,
+      -1    AS FAC_EXT_04,
+      -1    AS FAC_EXT_05,
+      -1    AS FAC_EXT_06,
+      -1    AS FAC_EXT_07,
+      -1    AS FAC_EXT_08,
+      -1    AS FAC_EXT_09,
+      -1    AS FAC_EXT_10,
+      (EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 + EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 +
+          END_TIME_SECONDS) * 10000000000 +
+          10000 + MOD(ROWNUM, 10000)
+          AS INT_TRANSACTION_ID,
+     (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+     (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+      l_load_id AS LOAD_ID
+   FROM
+  (
+  SELECT
+      TT.ID AS TAT_ID,
+      CA.ID AS TRC_ID,
+      SS.ID AS TRS_ID,
+      ((FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0) AS END_TIME_INTERVAL,
+      EXTRACT(SECOND FROM END_TIME) AS END_TIME_SECONDS,
+      DURATION AS DURATION,
+      SETUP_DURATION AS SETUP_DURATION,
+      DATA_TRANSFER_TIME AS DATA_TRANSFER_TIME,
+      TEID AS TEID,
+      (CASE WHEN LENGTH(IMEI) >= 8 AND TRANSLATE(TRANSLATE(IMEI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMEI, '1''- ', '1') ELSE '-1' END)
+          AS IMEI,
+      (CASE WHEN LENGTH(MSISDN) >= 8 AND TRANSLATE(TRANSLATE(MSISDN, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(MSISDN, '1''- ', '1') ELSE '-1' END)
+          AS MSISDN,
+      (CASE WHEN LENGTH(IMSI) >= 6 AND TRANSLATE(TRANSLATE(IMSI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMSI, '1''- ', '1') ELSE '-1' END)
+          AS IMSI,
+      NBR_EMAILS AS NBR_MESSAGES,
+      NBR_BYTES AS NBR_BYTES,
+      NBR_CLIENT_COMMANDS AS NBR_CLIENT_COMMANDS,
+      USER_ID AS USER_ID,
+      MAILBOX_NAME AS MAILBOX_NAME,
+      USER_EMAIL AS FROM_ORIGINATOR,
+      ROUTING_AREA AS ROUTING_AREA,
+      CELL_IDENTITY AS CELL_IDENTITY,
+      COLLECTION_SOURCE AS COLLECTION_SOURCE,
+      NVL(ACCESS_POINT_NAME, -1) AS ACCESS_POINT_NAME,
+      NVL(QS.ID, -1) AS TRQ_ID,
+      NVL(SV.ID, -1) AS SRV_ID
+  FROM
+      XDV_ADS_EMAIL_SES_ET,
+      XDV_TRN_CAUSES_DT CA,
+      XDV_TRN_APP_TYPE_DT TT,
+      XDV_TRN_STATUS_DT SS,
+      XDV_TRN_QOS_DT QS,
+      XDV_SRV_SERVER_DT SV
+  WHERE
+      TT.TECHNOLOGY = 'GPRS' AND
+      TT.INTERFACE = 'Gn' AND
+      TT.CATEGORY = 'Application' AND
+      TT.APPLICATION_TYPE = 'Email' AND
+      TT.XDR_TYPE = 'Session' AND
+      TT.PROTOCOL = XDV_ADS_EMAIL_SES_ET.PROTOCOL AND
+      TT.MESSAGE_TYPE is null AND
+      TT.MESSAGE_CLASS is null AND
+      TT.ORIGINATOR is null AND
+      SS.AMK_ID = 20040 AND
+      SS.TECHNOLOGY = 'GPRS' AND
+      SS.INTERFACE = 'Gn' AND
+      SS.CATEGORY = 'Application' AND
+      SS.STATUS_CODE = XDV_ADS_EMAIL_SES_ET.STATUS_CODE AND
+      CA.AMK_ID = 11090 AND
+      (XDV_ADS_EMAIL_SES_ET.STATUS_CODE = 'OK' AND CA.ID = -1 OR
+      XDV_ADS_EMAIL_SES_ET.STATUS_CODE <> 'OK' AND
+      CA.TECHNOLOGY = 'GPRS' AND CA.INTERFACE = 'Gn' AND CA.CATEGORY = 'Application' AND CA.SECONDARY_CAUSE_ID IS NULL AND
+      CA.PRIMARY_CAUSE_TYPE LIKE 'Email-'||XDV_ADS_EMAIL_SES_ET.PROTOCOL||'%' AND CA.PRIMARY_CAUSE_DESC = XDV_ADS_EMAIL_SES_ET.CREATION_TEXT AND
+      (CA.PRIMARY_CAUSE_ID = XDV_ADS_EMAIL_SES_ET.CREATION_STATUS OR NVL(XDV_ADS_EMAIL_SES_ET.CREATION_STATUS, '-') = '-')) AND
+      XDV_ADS_EMAIL_SES_ET.RQOS = QS.RQOS_HEXID(+) AND XDV_ADS_EMAIL_SES_ET.NQOS = QS.NQOS_HEXID(+) AND
+      SUBSTR(REGEXP_SUBSTR(XDV_ADS_EMAIL_SES_ET.SERVER, '://([[:alnum:],-]+\.?){1,}'), 4) = SV.SERVER_ID(+)
+  );
+  RETVAL := SQL%ROWCOUNT;
+
+  -- enqueue load-batch
+  enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_ses_trn,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_asm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_asm_qname);
+
+  COMMIT;
+
+  RETURN RETVAL;
+  END GN_EMAIL_SESSION_INSERT;
+
+  FUNCTION GN_IM_SESSION_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_IM_SES_ET;
+
+  SELECT XDV_ASM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  INSERT /*+ APPEND */ INTO XDV_ASM_TRN_MEDSES_FT
+  (ROAMER_IND, NETWORK_IND, TAT_ID, TAC_ID, TRC_ID, TRS_ID, DDE_ID, DTE_ID, END_TIME_MS, DURATION, SETUP_DURATION, DATA_TRANS_DURATION, TEID, USER_AGENT,
+   IMEI, MSISDN, IMSI, NBR_MESSAGES, NBR_BYTES, NBR_CLIENT_COMMANDS, NBR_BYTES_LOST, JITTER, USER_ID, MAILBOX_NAME, SRV_ID, TRQ_ID,
+   SESSION_ID, TO_RECIPIENT, TO_PATH, TO_VIA_PATH, FROM_ORIGINATOR, FROM_PATH, FROM_VIA_PATH, SERVER_AGENT,
+   FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+   FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+   INT_SESSION_ID, TAC, SVN, LOAD_ID)
+  SELECT
+      -1 as ROAMER_IND,
+      -1 as NETWORK_IND,
+      TAT_ID       as TAT_ID,
+      -1 AS TAC_ID,
+      TRC_ID       as TRC_ID,
+      TRS_ID       as TRS_ID,
+      EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 AS DDE_ID,
+      EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 + FLOOR(END_TIME_SECONDS) AS DTE_ID,
+      MOD(1000 * END_TIME_SECONDS, 1000) AS END_TIME_MS,
+      DURATION AS DURATION,
+      NULL AS SETUP_DURATION,
+      NULL AS DATA_TRANS_DURATION,
+      TEID AS TEID,
+      '-1' AS USER_AGENT,
+      IMEI AS IMEI,
+      MSISDN AS MSISDN,
+      IMSI AS IMSI,
+      NBR_MESSAGES AS NBR_MESSAGES,
+      NBR_BYTES AS NBR_BYTES,
+      NULL AS NBR_CLIENT_COMMANDS,
+      NULL AS NBR_BYTES_LOST,
+      NULL AS JITTER,
+      NULL AS USER_ID,
+      NULL AS MAILBOX_NAME,
+      SRV_ID AS SRV_ID,
+      TRQ_ID AS TRQ_ID,
+      SESSION_ID AS SESSION_ID,
+      TO_RECIPIENT AS TO_RECIPIENT,
+      TO_PATH AS TO_PATH,
+      TO_VIA_PATH AS TO_VIA_PATH,
+      FROM_ORIGINATOR AS FROM_ORIGINATOR,
+      FROM_PATH AS FROM_PATH,
+      FROM_VIA_PATH AS FROM_VIA_PATH,
+      NULL AS SERVER_AGENT,
+      CELL_IDENTITY     AS FAC_INT_01,
+      ROUTING_AREA      AS FAC_INT_02,
+      -1                AS FAC_INT_03,
+      -1                AS FAC_INT_04,
+      -1                AS FAC_INT_05,
+      -1                AS FAC_INT_06,
+      -1                AS FAC_INT_07,
+      -1                AS FAC_INT_08,
+      -1                AS FAC_INT_09,
+      -1                AS FAC_INT_10,
+      'S'||COLLECTION_SOURCE    AS FAC_EXT_01,
+      'G'||COLLECTION_SOURCE    AS FAC_EXT_02,
+      ACCESS_POINT_NAME         AS FAC_EXT_03,
+      -1                AS FAC_EXT_04,
+      -1                AS FAC_EXT_05,
+      -1                AS FAC_EXT_06,
+      -1                AS FAC_EXT_07,
+      -1                AS FAC_EXT_08,
+      -1                AS FAC_EXT_09,
+      -1                AS FAC_EXT_10,
+      (EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 + EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 +
+          END_TIME_SECONDS) * 10000000000 +
+          50000 + MOD(ROWNUM, 10000)
+          AS INT_TRANSACTION_ID,
+      (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+      (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+      l_load_id AS LOAD_ID
+   FROM
+  (
+  SELECT
+      TT.ID AS TAT_ID,
+      CA.ID AS TRC_ID,
+      SS.ID AS TRS_ID,
+      ((FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0) AS END_TIME_INTERVAL,
+      EXTRACT(SECOND FROM END_TIME) AS END_TIME_SECONDS,
+      DURATION AS DURATION,
+      TEID AS TEID,
+      (CASE WHEN LENGTH(IMEI) >= 8 AND TRANSLATE(TRANSLATE(IMEI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMEI, '1''- ', '1') ELSE '-1' END)
+          AS IMEI,
+      (CASE WHEN LENGTH(MSISDN) >= 8 AND TRANSLATE(TRANSLATE(MSISDN, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(MSISDN, '1''- ', '1') ELSE '-1' END)
+          AS MSISDN,
+      (CASE WHEN LENGTH(IMSI) >= 6 AND TRANSLATE(TRANSLATE(IMSI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMSI, '1''- ', '1') ELSE '-1' END)
+          AS IMSI,
+      NBR_MESSAGES AS NBR_MESSAGES,
+      NBR_BYTES AS NBR_BYTES,
+      THREAD_ID AS SERVER_ID,
+      SERVER_SESSION_ID AS SESSION_ID,
+      TO_RECIPIENT AS TO_RECIPIENT,
+      TO_PATH AS TO_PATH,
+      TO_VIA AS TO_VIA_PATH,
+      FROM_RECIPIENT AS FROM_ORIGINATOR,
+      FROM_PATH AS FROM_PATH,
+      FROM_VIA AS FROM_VIA_PATH,
+      ROUTING_AREA AS ROUTING_AREA,
+      CELL_IDENTITY AS CELL_IDENTITY,
+      COLLECTION_SOURCE AS COLLECTION_SOURCE,
+      NVL(ACCESS_POINT_NAME,-1) AS ACCESS_POINT_NAME,
+      NVL(QS.ID, -1) AS TRQ_ID,
+      NVL(SV.ID, -1) AS SRV_ID
+  FROM
+      XDV_ADS_IM_SES_ET,
+      XDV_TRN_CAUSES_DT CA,
+      XDV_TRN_APP_TYPE_DT TT,
+      XDV_TRN_STATUS_DT SS,
+      XDV_TRN_QOS_DT QS,
+      XDV_SRV_SERVER_DT SV
+  WHERE
+      TT.TECHNOLOGY = 'GPRS' AND
+      TT.INTERFACE = 'Gn' AND
+      TT.CATEGORY = 'Application' AND
+      TT.APPLICATION_TYPE = 'Instant Messaging' AND
+      TT.XDR_TYPE = 'Session' AND
+      TT.PROTOCOL = XDV_ADS_IM_SES_ET.PROTOCOL AND
+      NVL(TT.MESSAGE_TYPE, '-') = NVL(XDV_ADS_IM_SES_ET.SESSION_TYPE, '-') AND
+      TT.MESSAGE_CLASS is null AND
+      TT.ORIGINATOR is null AND
+      SS.TECHNOLOGY = 'GPRS' AND
+      SS.INTERFACE = 'Gn' AND
+      SS.CATEGORY = 'Application' AND
+      SS.STATUS_CODE = XDV_ADS_IM_SES_ET.STATUS_CODE AND SS.AMK_ID = 20050 AND
+      (XDV_ADS_IM_SES_ET.STATUS_CODE = 'OK' AND CA.ID = -1 OR
+      XDV_ADS_IM_SES_ET.STATUS_CODE <> 'OK' AND
+      CA.TECHNOLOGY = 'GPRS' AND CA.INTERFACE = 'Gn' AND CA.CATEGORY = 'Application' AND CA.SECONDARY_CAUSE_ID IS NULL AND
+      CA.PRIMARY_CAUSE_TYPE = 'IM-'||XDV_ADS_IM_SES_ET.PROTOCOL AND CA.AMK_ID = 11080 AND
+      (XDV_ADS_IM_SES_ET.PROTOCOL = 'SIP' AND CA.PRIMARY_CAUSE_ID = XDV_ADS_IM_SES_ET.CREATION_STATUS OR
+      XDV_ADS_IM_SES_ET.PROTOCOL = 'XMPP' AND CA.PRIMARY_CAUSE_DESC = XDV_ADS_IM_SES_ET.CREATION_TEXT)) AND
+      XDV_ADS_IM_SES_ET.RQOS = QS.RQOS_HEXID(+) AND XDV_ADS_IM_SES_ET.NQOS = QS.NQOS_HEXID(+) AND
+      SUBSTR(REGEXP_SUBSTR(XDV_ADS_IM_SES_ET.SERVER, '://([[:alnum:],-]+\.?){1,}'), 4) = SV.SERVER_ID(+)
+  );
+  RETVAL := SQL%ROWCOUNT;
+
+  -- enqueue load-batch
+  enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_ses_trn,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_asm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_asm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END GN_IM_SESSION_INSERT;
+
+  FUNCTION GN_WEB_SESSION_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_WEB_SES_ET;
+
+  SELECT XDV_ASM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  INSERT /*+ APPEND */ INTO XDV_ASM_TRN_MEDSES_FT
+  (ROAMER_IND, NETWORK_IND, TAT_ID, TAC_ID, TRC_ID, TRS_ID, DDE_ID, DTE_ID, END_TIME_MS, DURATION, SETUP_DURATION, DATA_TRANS_DURATION, TEID, USER_AGENT,
+   IMEI, MSISDN, IMSI, NBR_MESSAGES, NBR_BYTES, NBR_CLIENT_COMMANDS, NBR_BYTES_LOST, JITTER, USER_ID, MAILBOX_NAME, SRV_ID, TRQ_ID,
+   SESSION_ID, TO_RECIPIENT, TO_PATH, TO_VIA_PATH, FROM_ORIGINATOR, FROM_PATH, FROM_VIA_PATH, SERVER_AGENT,
+   FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+   FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+   INT_SESSION_ID, TAC, SVN, LOAD_ID)
+  SELECT
+      -1 as ROAMER_IND,
+      -1 as NETWORK_IND,
+      TAT_ID       as TAT_ID,
+      -1 AS TAC_ID,
+      TRC_ID       as TRC_ID,
+      TRS_ID       as TRS_ID,
+      EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 AS DDE_ID,
+      EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 + FLOOR(END_TIME_SECONDS) AS DTE_ID,
+      MOD(1000 * END_TIME_SECONDS, 1000) AS END_TIME_MS,
+      DURATION AS DURATION,
+      NULL AS SETUP_DURATION,
+      NULL AS DATA_TRANSFER_TIME,
+      TEID AS TEID,
+      USER_AGENT AS USER_AGENT,
+      IMEI AS IMEI,
+      MSISDN AS MSISDN,
+      IMSI AS IMSI,
+      NULL AS NBR_MESSAGES,
+      NBR_BYTES AS NBR_BYTES,
+      NBR_CLIENT_COMMANDS AS NBR_CLIENT_COMMANDS,
+      NULL AS NBR_BYTES_LOST,
+      NULL AS JITTER,
+      NULL AS USER_ID,
+      NULL AS MAILBOX_NAME,
+      SRV_ID AS SRV_ID,
+      TRQ_ID AS TRQ_ID,
+      NULL AS SESSION_ID,
+      NULL AS TO_RECIPIENT,
+      NULL AS TO_PATH,
+      NULL AS TO_VIA_PATH,
+      FROM_ORIGINATOR AS FROM_ORIGINATOR,
+      FROM_PATH AS FROM_PATH,
+      NULL AS FROM_VIA_PATH,
+      SERVER_AGENT AS SERVER_AGENT,
+      CELL_IDENTITY AS FAC_INT_01,
+      ROUTING_AREA  AS FAC_INT_02,
+      -1            AS FAC_INT_03,
+      -1            AS FAC_INT_04,
+      -1            AS FAC_INT_05,
+      -1            AS FAC_INT_06,
+      -1            AS FAC_INT_07,
+      -1            AS FAC_INT_08,
+      -1            AS FAC_INT_09,
+      -1            AS FAC_INT_10,
+      'S'||COLLECTION_SOURCE AS FAC_EXT_01,
+      'G'||COLLECTION_SOURCE AS FAC_EXT_02,
+      ACCESS_POINT_NAME AS FAC_EXT_03,
+      -1            AS FAC_EXT_04,
+      -1            AS FAC_EXT_05,
+      -1            AS FAC_EXT_06,
+      -1            AS FAC_EXT_07,
+      -1            AS FAC_EXT_08,
+      -1            AS FAC_EXT_09,
+      -1            AS FAC_EXT_10,
+      (EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 + EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 +
+          END_TIME_SECONDS) * 10000000000 +
+          60000 + MOD(ROWNUM, 10000)
+          AS INT_TRANSACTION_ID,
+      (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+      (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+      l_load_id AS LOAD_ID
+   FROM
+  (
+  SELECT
+      TT.ID AS TAT_ID,
+      CA.ID AS TRC_ID,
+      SS.ID AS TRS_ID,
+      ((FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0) AS END_TIME_INTERVAL,
+      EXTRACT(SECOND FROM END_TIME) AS END_TIME_SECONDS,
+      DURATION AS DURATION,
+      TEID AS TEID,
+      (CASE WHEN LENGTH(IMEI) >= 8 AND TRANSLATE(TRANSLATE(IMEI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMEI, '1''- ', '1') ELSE '-1' END)
+          AS IMEI,
+      (CASE WHEN LENGTH(MSISDN) >= 8 AND TRANSLATE(TRANSLATE(MSISDN, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(MSISDN, '1''- ', '1') ELSE '-1' END)
+          AS MSISDN,
+      (CASE WHEN LENGTH(IMSI) >= 6 AND TRANSLATE(TRANSLATE(IMSI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMSI, '1''- ', '1') ELSE '-1' END)
+          AS IMSI,
+      NVL(USER_AGENT, '-1') AS USER_AGENT,
+      NBR_BYTES AS NBR_BYTES,
+      NBR_CLIENT_COMMANDS AS NBR_CLIENT_COMMANDS,
+      SERVER AS SERVER_ID,
+      FROM_RECIPIENT AS FROM_ORIGINATOR,
+      REFERER AS FROM_PATH,
+      SERVER_AGENT AS SERVER_AGENT,
+      ROUTING_AREA AS ROUTING_AREA,
+      CELL_IDENTITY AS CELL_IDENTITY,
+      COLLECTION_SOURCE AS COLLECTION_SOURCE,
+      NVL(ACCESS_POINT_NAME,-1) AS ACCESS_POINT_NAME,
+      NVL(QS.ID, -1) AS TRQ_ID,
+      NVL(SV.ID, -1) AS SRV_ID
+  FROM
+      XDV_ADS_WEB_SES_ET,
+      XDV_TRN_CAUSES_DT CA,
+      XDV_TRN_APP_TYPE_DT TT,
+      XDV_TRN_STATUS_DT SS,
+      XDV_TRN_QOS_DT QS,
+      XDV_SRV_SERVER_DT SV
+  WHERE
+      TT.TECHNOLOGY = 'GPRS' AND
+      TT.INTERFACE = 'Gn' AND
+      TT.CATEGORY = 'Application' AND
+      TT.APPLICATION_TYPE = 'Web Browsing' AND
+      TT.XDR_TYPE = 'Session' AND
+      TT.PROTOCOL = XDV_ADS_WEB_SES_ET.PROTOCOL AND
+      NVL(TT.PROTOCOL_VERSION, '-') = NVL(XDV_ADS_WEB_SES_ET.PROTOCOL_VERSION, '-') AND
+      TT.MESSAGE_TYPE is null AND
+      TT.MESSAGE_CLASS is null AND
+      TT.ORIGINATOR is null AND
+      SS.TECHNOLOGY = 'GPRS' AND
+      SS.INTERFACE = 'Gn' AND
+      SS.CATEGORY = 'Application' AND
+      SS.STATUS_CODE = XDV_ADS_WEB_SES_ET.STATUS_CODE AND SS.AMK_ID = 20050 AND
+      CA.AMK_ID = 11080 AND
+      (XDV_ADS_WEB_SES_ET.STATUS_CODE = 'OK' AND CA.ID = -1 OR
+      XDV_ADS_WEB_SES_ET.STATUS_CODE <> 'OK' AND CA.TECHNOLOGY = 'GPRS' AND CA.INTERFACE = 'Gn' AND CA.CATEGORY = 'Application' AND
+      CA.SECONDARY_CAUSE_ID IS NULL AND CA.PRIMARY_CAUSE_TYPE = 'Web Browsing' AND CA.PRIMARY_CAUSE_ID = XDV_ADS_WEB_SES_ET.CREATION_STATUS) AND
+      XDV_ADS_WEB_SES_ET.RQOS = QS.RQOS_HEXID(+) AND XDV_ADS_WEB_SES_ET.NQOS = QS.NQOS_HEXID(+) AND
+      SUBSTR(REGEXP_SUBSTR(XDV_ADS_WEB_SES_ET.SERVER, '://([[:alnum:],-]+\.?){1,}'), 4) = SV.SERVER_ID(+)
+  );
+  RETVAL := SQL%ROWCOUNT;
+
+  -- enqueue load-batch
+  enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_ses_trn,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_asm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_asm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END GN_WEB_SESSION_INSERT;
+
+  FUNCTION GN_MMS_MSG_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_MMS_MSG_ET;
+
+  SELECT XDV_AMM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  INSERT /*+ APPEND */ INTO XDV_AMM_TRN_MEDMES_FT
+  (ROAMER_IND, NETWORK_IND, TAT_ID, TAC_ID, TRS_ID, TRC_ID, DDE_ID, DTE_ID, END_TIME_MS, DURATION, SEND_TIME, DELIVERY_TIME, EXPIRY_TIME, TEID, USER_AGENT, IMEI, MSISDN, IMSI,
+  NBR_BYTES, READ_REPLY, REPORT_ALLOWED, DELIVERY_REPORT, PRIORITY, SRV_ID, TRQ_ID, MESSAGE_ID, TRANSACTION_ID, TO_RECIPIENT, FROM_ORIGINATOR, SERVER_AGENT,
+  FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+  FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+  INT_TRANSACTION_ID, TAC, SVN, LOAD_ID)
+  SELECT
+   -1 as ROAMER_IND,
+   -1 as NETWORK_IND,
+   TAT_ID AS TAT_ID,
+   TAC_ID AS TAC_ID,
+   -1 AS TRS_ID,
+   TRC_ID AS TRC_ID,
+   EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 AS DDE_ID,
+   EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 + END_TIME_SECONDS AS DTE_ID,
+   0 AS END_TIME_MS,
+   DURATION_MS AS DURATION,
+   TO_CHAR(C_Y1970 + END_TIME_INTERVAL - DURATION_MS / 86400000, 'YYYY-MM-DD HH24:MI:SS') AS SEND_TIME,
+   DELIVERY_TIME AS DELIVERY_TIME,
+   EXPIRY_TIME AS EXPIRY_TIME,
+   NULL AS TEID,
+   '-1' AS USER_AGENT,
+   NULL AS IMEI,
+   MSISDN AS MSISDN,
+   IMSI AS IMSI,
+   NBR_BYTES AS NBR_BYTES,
+   READ_REPLY AS READ_REPORT,
+   NULL as REPORT_ALLOWED,
+   DELIVERY_REPORT AS DELIVERY_REPORT,
+   NULL AS PRIORITY,
+   SRV_ID AS SRV_ID,
+   TRQ_ID AS TRQ_ID,
+   MESSAGE_ID AS MESSAGE_ID,
+   TRANSACTION_ID AS TRANSACTION_ID,
+   TO_RECIPIENT AS TO_RECIPIENT,
+   FROM_ORIGINATOR AS FROM_ORIGINATOR,
+   NULL AS SERVER_AGENT,
+   -1   AS FAC_INT_01,
+   -1   AS FAC_INT_02,
+   -1   AS FAC_INT_03,
+   -1   AS FAC_INT_04,
+   -1   AS FAC_INT_05,
+   -1   AS FAC_INT_06,
+   -1   AS FAC_INT_07,
+   -1   AS FAC_INT_08,
+   -1   AS FAC_INT_09,
+   -1   AS FAC_INT_10,
+   SGSN AS FAC_EXT_01,
+   GGSN AS FAC_EXT_02,
+   ACCESS_POINT_NAME AS FAC_EXT_03,
+   -1   AS FAC_EXT_04,
+   -1   AS FAC_EXT_05,
+   -1   AS FAC_EXT_06,
+   -1   AS FAC_EXT_07,
+   -1   AS FAC_EXT_08,
+   -1   AS FAC_EXT_09,
+   -1   AS FAC_EXT_10,
+      (EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 + EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 +
+          END_TIME_SECONDS) * 10000000000 +
+          40000 + MOD(ROWNUM, 10000)
+          AS INT_TRANSACTION_ID,
+   '-1' AS TAC,
+   '-1' AS SVN,
+   l_load_id AS LOAD_ID
+   FROM
+  (
+  SELECT
+   TT.ID AS TAT_ID,
+   CT.ID AS TAC_ID,
+   NVL((SELECT CA.ID FROM XDV_TRN_CAUSES_DT CA
+      WHERE CA.TECHNOLOGY = 'GPRS' AND CA.INTERFACE = 'Gn' AND CA.CATEGORY = 'Application' AND
+      (XDV_ADS_MMS_MSG_ET.MMS_TYPE IN ('m-notification-ind', 'm-notifyresp-ind') AND CA.PRIMARY_CAUSE_TYPE = 'MMS-Notification' OR
+      XDV_ADS_MMS_MSG_ET.MMS_TYPE IN ('m-send-req', 'm-send-conf') AND CA.PRIMARY_CAUSE_TYPE = 'MMS-Send') AND
+      UPPER(CA.PRIMARY_CAUSE_DESC) = UPPER(XDV_ADS_MMS_MSG_ET.MMS_STATUS)),
+      -1) AS TRC_ID,
+   ((FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0) AS END_TIME_INTERVAL,
+      EXTRACT(SECOND FROM END_TIME) AS END_TIME_SECONDS,
+      EXTRACT(DAY FROM DURATION) * 86400000 + EXTRACT(HOUR FROM DURATION) * 3600000 + EXTRACT(MINUTE FROM DURATION) * 60000 +
+          EXTRACT(SECOND FROM DURATION) * 1000
+          AS DURATION_MS,
+   DELIVERY_TIME AS DELIVERY_TIME,
+   EXPIRY_TIME AS EXPIRY_TIME,
+   (CASE WHEN LENGTH(AB_MSISDN) IS NOT NULL AND AB_MSISDN <> '-' AND TRANSLATE(SUBSTR(AB_MSISDN, 2), ' 0123456789',' ') IS NULL
+      THEN SUBSTR(AB_MSISDN, 2) ELSE '-1' END) AS MSISDN,
+   (CASE WHEN LENGTH(IMSI) IS NOT NULL AND IMSI <> '-' AND TRANSLATE(SUBSTR(IMSI, 2), ' 0123456789', ' ') IS NULL
+      THEN SUBSTR(IMSI, 2) ELSE '-1' END) AS IMSI,
+   SIZE_UL + SIZE_DL AS NBR_BYTES,
+   READ_REPORT as READ_REPLY,
+   DELIVERY_REPORT AS DELIVERY_REPORT,
+   MESSAGE_ID AS MESSAGE_ID,
+   TRANSACTION_ID AS TRANSACTION_ID,
+   TO_RECEIVER AS TO_RECIPIENT,
+   FROM_SENDER AS FROM_ORIGINATOR,
+   SGSN_IP AS SGSN,
+   GGSN_IP AS GGSN,
+   NVL(ACCESS_POINT_NAME,-1) AS ACCESS_POINT_NAME,
+   NVL(QS.ID, -1) AS TRQ_ID,
+   NVL(SV.ID, -1) AS SRV_ID
+  FROM
+   XDV_ADS_MMS_MSG_ET,
+   XDV_TRN_APP_TYPE_DT TT,
+   XDV_TRN_APP_CONTENT_TYPE_DT CT,
+   XDV_TRN_QOS_DT QS,
+   XDV_SRV_SERVER_DT SV
+  WHERE
+   TT.TECHNOLOGY = 'GPRS' AND TT.INTERFACE = 'Gn' AND TT.CATEGORY = 'Application' AND TT.APPLICATION_TYPE = 'Multi-Media Messsaging' AND
+   TT.XDR_TYPE = 'Message' AND TT.PROTOCOL = 'MMSE' AND
+   TT.MESSAGE_CLASS is null AND TT.ORIGINATOR is null AND
+   (XDV_ADS_MMS_MSG_ET.MMS_TYPE = TT.MESSAGE_TYPE AND
+    NVL(TT.MESSAGE_CLASS, 'Personal') = 'Personal' OR
+    XDV_ADS_MMS_MSG_ET.MMS_TYPE IS NULL AND XDV_ADS_MMS_MSG_ET.WAP_PROCEDURE = 'Get' AND
+    TT.MESSAGE_TYPE = 'WSP/HTTP GET') AND
+    CT.AMK_ID = 13030 AND
+   CT.TECHNOLOGY = 'GPRS' AND
+   CT.CATEGORY = 'Application' AND
+   CT.INTERFACE = 'Gn' AND
+   XDV_ADS_MMS_MSG_ET.MMS_TYPE = 'm-send-req' AND
+    XDV_ADS_MMS_MSG_ET.RQOS = QS.RQOS_HEXID(+) AND XDV_ADS_MMS_MSG_ET.NQOS = QS.NQOS_HEXID(+) AND
+    SUBSTR(REGEXP_SUBSTR(XDV_ADS_MMS_MSG_ET.SERVER, '://([[:alnum:],-]+\.?){1,}'), 4) = SV.SERVER_ID(+)
+  );
+  RETVAL := SQL%ROWCOUNT;
+
+  -- enqueue load-batch
+  enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_mes_trn,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_amm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_amm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END GN_MMS_MSG_INSERT;
+
+  FUNCTION GN_IM_MSG_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_IM_MSG_ET;
+
+  SELECT XDV_AMM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  INSERT /*+ APPEND */ INTO XDV_AMM_TRN_MEDMES_FT
+  (ROAMER_IND, NETWORK_IND, TAT_ID, TAC_ID, TRS_ID, TRC_ID, DDE_ID, DTE_ID, END_TIME_MS, DURATION, SEND_TIME, DELIVERY_TIME, EXPIRY_TIME, TEID, USER_AGENT, IMEI, MSISDN, IMSI,
+  NBR_BYTES, READ_REPLY, REPORT_ALLOWED, DELIVERY_REPORT, PRIORITY, SRV_ID, TRQ_ID, MESSAGE_ID, TRANSACTION_ID, TO_RECIPIENT, FROM_ORIGINATOR, SERVER_AGENT,
+  FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+  FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+  INT_TRANSACTION_ID, TAC, SVN, LOAD_ID)
+  SELECT
+   -1 as ROAMER_IND,
+   -1 as NETWORK_IND,
+   TAT_ID AS TAT_ID,
+   TAC_ID AS TAC_ID,
+   -1 AS TRS_ID,
+   TRC_ID AS TRC_ID,
+   EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 AS DDE_ID,
+   EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 + FLOOR(END_TIME_SECONDS) AS DTE_ID,
+   MOD(1000 * END_TIME_SECONDS, 1000) AS END_TIME_MS,
+   DURATION AS DURATION,
+   NULL AS SEND_TIME,
+   NULL AS DELIVERY_TIME,
+   NULL AS EXPIRY_TIME,
+   TEID AS TEID,
+   USER_AGENT AS USER_AGENT,
+   IMEI AS IMEI,
+   MSISDN AS MSISDN,
+   IMSI AS IMSI,
+   NBR_BYTES AS NBR_BYTES,
+   NULL AS READ_REPLY,
+   NULL as REPORT_ALLOWED,
+   NULL AS DELIVERY_REPORT,
+   NULL AS PRIORITY,
+   SRV_ID AS SRV_ID,
+   TRQ_ID AS TRQ_ID,
+   MESSAGE_ID AS MESSAGE_ID,
+   NULL AS TRANSACTION_ID,
+   TO_RECIPIENT AS TO_RECIPIENT,
+   FROM_ORIGINATOR AS FROM_ORIGINATOR,
+   SERVER_AGENT AS SERVER_AGENT,
+   CELL_IDENTITY    AS FAC_INT_01,
+   ROUTING_AREA     AS FAC_INT_02,
+   -1       AS FAC_INT_03,
+   -1       AS FAC_INT_04,
+   -1       AS FAC_INT_05,
+   -1       AS FAC_INT_06,
+   -1       AS FAC_INT_07,
+   -1       AS FAC_INT_08,
+   -1       AS FAC_INT_09,
+   -1       AS FAC_INT_10,
+   'S'||COLLECTION_SOURCE AS FAC_EXT_01,
+   'G'||COLLECTION_SOURCE AS FAC_EXT_02,
+   ACCESS_POINT_NAME AS FAC_EXT_03,
+   -1       AS FAC_EXT_04,
+   -1       AS FAC_EXT_05,
+   -1       AS FAC_EXT_06,
+   -1       AS FAC_EXT_07,
+   -1       AS FAC_EXT_08,
+   -1       AS FAC_EXT_09,
+   -1       AS FAC_EXT_10,
+      (EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 + EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 +
+          END_TIME_SECONDS) * 10000000000 +
+          70000 + MOD(ROWNUM, 10000)
+          AS INT_TRANSACTION_ID,
+   (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+   (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+   l_load_id AS LOAD_ID
+   FROM
+  (
+  SELECT
+   TT.ID AS TAT_ID,
+   CT.ID AS TAC_ID,
+   CA.ID AS TRC_ID,
+   ((FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0) AS END_TIME_INTERVAL,
+      EXTRACT(SECOND FROM END_TIME) AS END_TIME_SECONDS,
+   DURATION AS DURATION,
+   TEID AS TEID,
+   NVL(USER_AGENT, '-1') AS USER_AGENT,
+      (CASE WHEN LENGTH(IMEI) >= 8 AND TRANSLATE(TRANSLATE(IMEI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMEI, '1''- ', '1') ELSE '-1' END)
+          AS IMEI,
+      (CASE WHEN LENGTH(MSISDN) >= 8 AND TRANSLATE(TRANSLATE(MSISDN, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(MSISDN, '1''- ', '1') ELSE '-1' END)
+          AS MSISDN,
+      (CASE WHEN LENGTH(IMSI) >= 6 AND TRANSLATE(TRANSLATE(IMSI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMSI, '1''- ', '1') ELSE '-1' END)
+          AS IMSI,
+   CONTENT_SIZE AS NBR_BYTES,
+   CALL_ID AS MESSAGE_ID,
+   TO_RECIPIENT AS TO_RECIPIENT,
+   FROM_SENDER AS FROM_ORIGINATOR,
+   XDV_ADS_IM_MSG_ET.SERVER_ID AS SERVER_AGENT,
+   ROUTING_AREA AS ROUTING_AREA,
+   CELL_IDENTITY AS CELL_IDENTITY,
+   COLLECTION_SOURCE AS COLLECTION_SOURCE,
+   NVL(ACCESS_POINT_NAME, -1) AS ACCESS_POINT_NAME,
+   NVL(QS.ID, -1) AS TRQ_ID,
+   NVL(SV.ID, -1) AS SRV_ID
+  FROM
+   XDV_ADS_IM_MSG_ET,
+   XDV_TRN_APP_TYPE_DT TT,
+   XDV_TRN_APP_CONTENT_TYPE_DT CT,
+   XDV_TRN_CAUSES_DT CA,
+   XDV_TRN_QOS_DT QS,
+   XDV_SRV_SERVER_DT SV
+  WHERE
+   TT.TECHNOLOGY = 'GPRS' AND
+   TT.INTERFACE = 'Gn' AND
+   TT.CATEGORY = 'Application' AND
+   TT.APPLICATION_TYPE = 'Instant Messaging' AND
+   TT.XDR_TYPE = 'Message' AND
+   TT.PROTOCOL = XDV_ADS_IM_MSG_ET.PROTOCOL AND TT.MESSAGE_TYPE = XDV_ADS_IM_MSG_ET.COMMAND AND
+   TT.MESSAGE_CLASS = 'Unknown' AND  --is null AND
+   TT.ORIGINATOR = 'MS' AND
+   TT.AMK_ID = 10090 AND
+   (
+   NVL(XDV_ADS_IM_MSG_ET.MESSAGE_STATUS_CODE, 0) = 0 AND CA.ID = -1 OR
+     CA.TECHNOLOGY = 'GPRS' AND
+     CA.CATEGORY = 'Application' AND
+     CA.INTERFACE = 'Gn' AND
+--     CA.TYPE = 'Message' AND
+     CA.CALL_RESULT = 'Success' AND
+     CA.AMK_ID = 11090 AND
+     CA.SEVERITY = 'Info' AND
+     CA.PRIMARY_CAUSE_ID = XDV_ADS_IM_MSG_ET.MESSAGE_STATUS_CODE AND
+     CA.PRIMARY_CAUSE_TYPE = 'IM-'||XDV_ADS_IM_MSG_ET.PROTOCOL AND
+     CA.SECONDARY_CAUSE_ID IS NULL ) AND
+   CT.AMK_ID = 13040 AND CT.TECHNOLOGY = 'GPRS' AND
+   CT.CATEGORY = 'Application' AND
+   CT.INTERFACE = 'Gn' AND
+   XDV_ADS_IM_MSG_ET.CONTENT_TYPE LIKE CT.CONTENT_TYPE||'%'||CT.CONTENT_SUBTYPE AND
+   XDV_ADS_IM_MSG_ET.RQOS = QS.RQOS_HEXID(+) AND XDV_ADS_IM_MSG_ET.NQOS = QS.NQOS_HEXID(+) AND
+   SUBSTR(REGEXP_SUBSTR(XDV_ADS_IM_MSG_ET.SERVER, '://([[:alnum:],-]+\.?){1,}'), 4) = SV.SERVER_ID(+)
+  );
+  RETVAL := SQL%ROWCOUNT;
+
+  -- enqueue load-batch
+  enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_mes_trn,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_amm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_amm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END GN_IM_MSG_INSERT;
+
+
+  FUNCTION CDR_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_CDR_TRN_ET;
+
+  SELECT XDV_ASM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  INSERT /*+ APPEND */ INTO XDV_CDM_TRN_MEDCDR_FT
+  ( TAT_ID, TAC_ID, TRC_ID, TRS_ID, TRQ_ID, SRV_ID, MSISDN_MO, MSISDN_MT,
+    IMSI_MO, NETWORK_IND_MO, SUB_TYPE_MO, ROAMER_IND_MO,
+    IMSI_MT, NETWORK_IND_MT, ROAMER_IND_MT, IMEI, TAC, SVN, DDE_ID, DTE_ID, DURATION,
+    NBR_BYTES_UL, NBR_BYTES_DL, NBR_BYTES_LOST, OTHER_SUB_NBR, CHG_ID, PLN_ID,
+    CALL_CHARGE, PREV_BALANCE, CUR_BALANCE, COUNTER, HANDOVERS_2G_3G, HANDOVERS_3G_2G,
+    PRIORITY, RECEIPT, TRANSACTION_ID,
+    FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+    FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+    INT_CDR_ID, LOAD_ID)
+  SELECT
+      TAT_ID    AS TAT_ID,
+      TAC_ID    AS TAC_ID,
+      TRC_ID    AS TRC_ID,
+      TRS_ID    AS TRS_ID,
+      -1        AS TRQ_ID,
+      -1        AS SRV_ID,
+      MSISDN_MO    AS MSISDN_MO,
+      MSISDN_MT    AS MSISDN_MT,
+      IMSI_MO      AS IMSI_MO,
+      -1        AS NETWORK_IND_MO,
+      -1        AS SUB_TYPE_MO,
+      (CASE WHEN ROAMER = 'no' THEN 1 ELSE (CASE WHEN ROAMER = 'yes' THEN 2 ELSE 3 END) END) AS ROAMER_IND_MO,
+      IMSI_MT   AS IMSI_MT,
+      -1        AS NETWORK_IND_MT,
+      3         AS ROAMER_IND_MT,
+      IMEI      AS IMEI,
+      (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+      (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+      EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 AS DDE_ID,
+      EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 + FLOOR(END_TIME_SECONDS) AS DTE_ID,
+      DURATION AS DURATION,
+      NULL      AS NBR_BYTES_UL,
+      NBR_BYTES AS NBR_BYTES_DL,
+      NULL      AS NBR_BYTES_LOST,
+      NULL      AS OTHER_SUB_NBR,
+      CHG_ID    AS CHG_ID,
+      PLN_ID    AS PLN_ID,
+      CHARGE     AS CALL_CHARGE,
+      NEW_BALANCE - CHARGE  AS PREV_BALANCE,
+      NEW_BALANCE AS CUR_BALANCE,
+      0     AS COUNTER,
+      -1    AS HANDOVERS_2G_3G,
+      -1    AS HANDOVERS_3G_2G,
+      NULL  AS PRIORITY,
+      NULL  AS RECEIPT,
+      TRANSACTION_ID AS TRANSACTION_ID,
+      START_CELL     AS FAC_INT_01,
+      -1             AS FAC_INT_02,
+      -1                AS FAC_INT_03,
+      BSC                AS FAC_INT_04,
+      MSC                AS FAC_INT_05,
+      -1                AS FAC_INT_06,
+      -1                AS FAC_INT_07,
+      -1                AS FAC_INT_08,
+      -1                AS FAC_INT_09,
+      -1                AS FAC_INT_10,
+      -1                AS FAC_EXT_01,
+      -1                AS FAC_EXT_02,
+      -1                AS FAC_EXT_03,
+      SMSC              AS FAC_EXT_04,
+      -1                AS FAC_EXT_05,
+      -1                AS FAC_EXT_06,
+      -1                AS FAC_EXT_07,
+      -1                AS FAC_EXT_08,
+      -1                AS FAC_EXT_09,
+      -1                AS FAC_EXT_10,
+      (EXTRACT(DAY FROM END_TIME_INTERVAL) * 86400 + EXTRACT(HOUR FROM END_TIME_INTERVAL) * 3600 + EXTRACT(MINUTE FROM END_TIME_INTERVAL) * 60 +
+          END_TIME_SECONDS) * 10000000000 +
+          50000 + MOD(ROWNUM, 10000)
+          AS INT_CDR_ID,
+      l_load_id AS LOAD_ID
+ FROM (
+   SELECT
+      TT.ID AS TAT_ID,
+      CA.ID AS TRC_ID,
+      AC.ID AS TAC_ID,
+      SS.ID AS TRS_ID,
+      CH.ID AS CHG_ID,
+      PL.ID AS PLN_ID,
+      ((FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0) AS END_TIME_INTERVAL,
+      EXTRACT(SECOND FROM END_TIME) AS END_TIME_SECONDS,
+      DURATION AS DURATION,
+      ET.IMSI_MO AS IMSI_MO,
+      ET.IMSI_MT AS IMSI_MT,
+      ET.MSISDN_MO AS MSISDN_MO,
+      ET.MSISDN_MT AS MSISDN_MT,
+      ET.IMEI AS IMEI,
+      ET.NEW_BALANCE AS NEW_BALANCE,
+      ET.CHARGE AS CHARGE,
+      ET.NBR_BYTES AS NBR_BYTES,
+      ET.START_CELL AS START_CELL,
+      ET.BSC AS BSC,
+      ET.MSC AS MSC,
+      ET.SMSC AS SMSC,
+      ET.ROAMER AS ROAMER,
+      ET.TRANSACTION_ID AS TRANSACTION_ID
+  FROM
+      XDV_ADS_CDR_TRN_ET ET,
+      XDV_TRN_CAUSES_DT CA,
+      XDV_TRN_APP_TYPE_DT TT,
+      XDV_TRN_APP_CONTENT_TYPE_DT AC,
+      XDV_TRN_STATUS_DT SS,
+      XDV_TRN_CDR_PLAN_DT PL,
+      XDV_TRN_CDR_CHARGE_DT CH
+  WHERE
+      TT.TECHNOLOGY = 'GSM' AND
+      TT.INTERFACE = 'SMS' AND
+      TT.CATEGORY = 'CDR' AND
+      TT.APPLICATION_TYPE = 'SMS' AND
+      TT.XDR_TYPE = 'CDR' AND
+      TT.PROTOCOL = 'SMS' AND
+      TT.PROTOCOL_VERSION = '1' AND
+      UPPER(TT.MESSAGE_TYPE) LIKE  UPPER('%' || ET.MSG_TYPE) AND
+      UPPER(TT.MESSAGE_CLASS) LIKE  UPPER('%' || ET.MSG_TYPE) AND
+      TT.ORIGINATOR = 'MS' AND
+      AC.AMK_ID = 0 AND
+      AC.TECHNOLOGY = 'GSM' AND
+      AC.INTERFACE = 'SMS' AND
+      AC.CATEGORY = 'CDR' AND
+      UPPER(AC.CONTENT_TYPE) LIKE  UPPER(ET.CONTENT_TYPE || '%') AND
+      SS.AMK_ID = 0 AND
+      SS.TECHNOLOGY = 'GSM' AND
+      SS.INTERFACE = 'SMS' AND
+      SS.CATEGORY = 'CDR' AND
+      SS.STATUS_CODE like '%' || ET.STATUS AND
+      PL.AMK_ID = 0 AND
+      PL.TECHNOLOGY = 'GSM' AND
+      PL.INTERFACE = 'SMS' AND
+      PL.CATEGORY = 'CDR' AND
+      PL.PLAN = ET.PLAN_TYPE AND
+      CA.AMK_ID = 0 AND
+      CA.TECHNOLOGY = 'GSM' AND
+      CA.INTERFACE = 'SMS' AND
+      CA.CATEGORY = 'CDR' AND
+      CA.PRIMARY_CAUSE_TYPE = 'SMS' AND
+      (ET.STATUS = 'delivered' AND CA.CALL_RESULT = 'Success' OR
+      CA.CALL_RESULT = 'Failure' AND CA.PRIMARY_CAUSE_DESC LIKE '%' || ET.CAUSE || '%') AND
+      CH.AMK_ID = 0 AND
+      CH.TECHNOLOGY = 'GSM' AND
+      CH.INTERFACE = 'SMS' AND
+      CH.CATEGORY = 'CDR' AND
+      CH.BILLING_TYPE = ET.BILLING_TYPE AND
+      CH.PAID_TYPE = ET.PAID_TYPE AND
+      CH.CHARGE_IND = ET.CHARGE_INDICATOR
+  );
+
+  RETVAL := SQL%ROWCOUNT;
+
+  -- enqueue load-batch
+  enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_cdr_trn,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_asm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_asm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END CDR_INSERT;
+
+
+  FUNCTION SIG_AGGR_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    l_end_ts                 TIMESTAMP;
+    l_end_timeinterval_ts    INTERVAL DAY (6) TO SECOND(0);
+    l_end_seconds            NUMBER;
+    l_dde_id                NUMBER;
+    l_dte_id                NUMBER;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_SIG_AGGR_ET;
+
+  SELECT XDV_ASM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  l_end_timeinterval_ts := ((FROM_TZ(l_load_st_dt, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0);
+  l_end_seconds := 0; --EXTRACT(SECOND FROM l_load_st_dt);
+  l_dde_id := FLOOR(xdv_date_pkg.date_to_sec(l_load_st_dt) / xdv_generic_const_pkg.pc_dt_dde_ivl) * xdv_generic_const_pkg.pc_dt_dde_ivl;
+  l_dte_id := EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 + FLOOR(l_end_seconds);
+
+  INSERT /*+ APPEND */ INTO XDV_SAM_15M_MEDSGA_FT
+  ( TST_ID,TRC_ID,TSR_ID,TSV_ID,TRS_ID,DDE_ID, DTE_ID, DTZ_ID,
+    TAC, SVN, IMEI, GDV_ID,  MNC,  MCC,  IMSI,
+    ROAMER_IND,  NETWORK_IND,  GNW_ID,
+    FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+    GPI_ID,
+    FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+    GPE_ID,
+    AC, AS_DURATION, INT_SIGAGGR_ID, LOAD_ID)
+  SELECT
+    TST_ID  AS TST_ID,
+    TRC_ID  AS TRC_ID,
+    TSR_ID  AS TSR_ID,
+    TSV_ID  AS TSV_ID,
+    TRS_ID  AS TRS_ID,
+    l_dde_id    AS DDE_ID,
+    l_dte_id    AS DTE_ID,
+    -1          AS DTZ_ID,
+    (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+    (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+    IMEI    AS IMEI,
+    -1      AS GDV_ID,
+    (CASE WHEN LENGTH(IMSI) >= 6 THEN SUBSTR(IMSI, 4,2) ELSE '-1' END) AS MNC,
+    (CASE WHEN LENGTH(IMSI) >= 4 THEN SUBSTR(IMSI, 1,3) ELSE '-1' END) AS MCC,
+    IMSI      AS IMSI,
+      -1        AS ROAMER_IND,
+      -1        AS NETWORK_IND,
+      -1        AS GNW_ID,
+      CELLID        as FAC_INT_01,
+      ROUTING_AREA  as FAC_INT_02,
+      -1            as FAC_INT_03,
+      BSC           as FAC_INT_04,
+      -1            as FAC_INT_05,
+      -1            as FAC_INT_06,
+      -1            as FAC_INT_07,
+      -1            as FAC_INT_08,
+      -1            as FAC_INT_09,
+      -1            as FAC_INT_10,
+      -1    AS GPI_ID,
+      SGSN          as FAC_EXT_01,
+      -1            as FAC_EXT_02,
+      ACCESS_POINT_NAME as FAC_EXT_03,
+      -1            as FAC_EXT_04,
+      -1            as FAC_EXT_05,
+      -1            as FAC_EXT_06,
+      -1            as FAC_EXT_07,
+      -1            as FAC_EXT_08,
+      -1            as FAC_EXT_09,
+      -1            as FAC_EXT_10,
+      -1    AS GPE_ID,
+      AS_COUNTER    AS AC,
+      AS_DURATION   AS AS_DURATION,
+      (EXTRACT(DAY FROM l_end_timeinterval_ts) * 86400 + EXTRACT(HOUR FROM l_end_timeinterval_ts) * 3600
+        + EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 +
+        l_end_seconds) * 10000000000 + 50000 + MOD(ROWNUM, 10000)
+        AS INT_SIGAGGR_ID,
+      l_load_id AS LOAD_ID
+   FROM (
+    SELECT
+    TST_ID,
+    TRC_ID,
+    TSR_ID,
+    TSV_ID,
+    TRS_ID,
+    IMEI,
+    IMSI,
+    CELLID,
+    ROUTING_AREA,
+    BSC,
+    SGSN,
+    ACCESS_POINT_NAME,
+    COUNT(*) AS AS_COUNTER,
+    SUM(DURATION) AS AS_DURATION
+    FROM (
+        SELECT
+        -1 AS TRS_ID,
+        '-1' AS TST_ID,
+        CA.ID AS TRC_ID,
+        (CASE WHEN SUCCESSFUL_ = 'Yes' THEN 20 ELSE 10 END) AS TSR_ID,
+        tv.ID AS TSV_ID,
+        EXTRACT(DAY FROM TRANSACTION_MS) * 86400000 + EXTRACT(HOUR FROM TRANSACTION_MS) * 3600000 + EXTRACT(MINUTE FROM TRANSACTION_MS) * 60000 +
+        EXTRACT(SECOND FROM TRANSACTION_MS) * 1000 AS DURATION,
+        (CASE WHEN LENGTH(IMEI) IS NOT NULL AND IMEI <> '-' AND TRANSLATE(SUBSTR(IMEI, 2), ' 0123456789',' ') IS NULL
+            THEN SUBSTR(IMEI, 2) ELSE '-1' END) AS IMEI,
+        (CASE WHEN LENGTH(IMSI) IS NOT NULL AND IMSI <> '-' AND TRANSLATE(SUBSTR(IMSI, 2), ' 0123456789',' ') IS NULL
+            THEN SUBSTR(IMSI, 2) ELSE '-1' END) AS IMSI,
+        NVL(qs.ID, -1) AS TRQ_ID,
+      (CASE WHEN MCC <> '-' THEN (CASE WHEN SUBSTR(MCC,1,1) = '''' THEN SUBSTR(MCC,2) ELSE MCC END) END) || ':' ||
+      (CASE WHEN MNC <> '-' THEN (CASE WHEN SUBSTR(MNC,1,1) = '''' THEN SUBSTR(MNC,2) ELSE MNC END) END) || ':' ||
+      (CASE WHEN LAC <> '-' THEN (CASE WHEN SUBSTR(LAC,1,1) = '''' THEN SUBSTR(LAC,2) ELSE LAC END) END) || ':' ||
+      (CASE WHEN RAC <> '-' THEN (CASE WHEN SUBSTR(RAC,1,1) = '''' THEN SUBSTR(RAC,2) ELSE RAC END) END) AS ROUTING_AREA,
+        NVL2(LENGTH(CELLID), NVL2(TRANSLATE(CELLID, ' 0123456789',' '), '-1', CELLID), '-1') AS CELLID,
+      PCM_ID AS BSC, SGSN_ID AS SGSN,
+      NVL(APN, -1) AS ACCESS_POINT_NAME
+    FROM
+       xdv_ads_sig_aggr_et et,
+       xdv_trn_causes_dt ca,
+       xdv_trn_sig_result_dt sr,
+       xdv_trn_sig_violation_dt tv,
+       xdv_trn_qos_dt qs
+    WHERE
+          et.gmmcause   = ca.PRIMARY_CAUSE_TYPE
+      AND et.smcause    = ca.SECONDARY_CAUSE_TYPE
+      AND ca.technology = 'GPRS'
+      AND ca.interface = 'Gb'
+      AND ca.category = 'Signaling'
+      AND sr.technology = 'GPRS'
+      AND sr.interface = 'Gb'
+      AND sr.category = 'Signaling'
+      AND et.transaction_type  = sr.message_type
+      AND sr.result in ('GPRS only attached', 'RA updated')
+      AND et.dr_status         = tv.violation_type
+      AND et.violation         = tv.violation
+      AND et.RQOS = qs.RQOS_HEXID(+) AND et.NQOS = qs.NQOS_HEXID(+)
+    )
+    GROUP BY
+        TST_ID,
+        TRC_ID,
+        TSR_ID,
+        TSV_ID,
+        TRS_ID,
+        IMEI,
+        IMSI,
+        CELLID,
+        ROUTING_AREA,
+        BSC,
+        SGSN,
+        ACCESS_POINT_NAME
+  );
+
+  RETVAL := SQL%ROWCOUNT;
+
+  enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_sga_15m,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_asm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_asm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END SIG_AGGR_INSERT;
+
+  FUNCTION SIG_AGGR_1HR_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    l_end_ts                 TIMESTAMP;
+    l_end_timeinterval_ts    INTERVAL DAY (6) TO SECOND(0);
+    l_end_seconds            NUMBER;
+    l_dde_id                NUMBER;
+    l_dte_id                NUMBER;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_1HR_SIGAGGR_ET;
+
+  SELECT XDV_ASM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  l_end_timeinterval_ts := ((FROM_TZ(l_load_st_dt, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0);
+  l_end_seconds := 0; --EXTRACT(SECOND FROM l_load_st_dt);
+  l_dde_id := FLOOR(xdv_date_pkg.date_to_sec(l_load_st_dt) / xdv_generic_const_pkg.pc_dt_dde_ivl) * xdv_generic_const_pkg.pc_dt_dde_ivl;
+  l_dte_id := EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 + FLOOR(l_end_seconds);
+
+  INSERT /*+ APPEND */ INTO XDV_SAM_1HR_MEDSGA_FT
+  ( TST_ID,TRC_ID,TSR_ID,TSV_ID,TRS_ID,DDE_ID, DTE_ID, DTZ_ID,
+    TAC, SVN, IMEI, GDV_ID,  MNC,  MCC,  IMSI,
+    ROAMER_IND,  NETWORK_IND,  GNW_ID,
+    FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+    GPI_ID,
+    FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+    GPE_ID,
+    AC, AS_DURATION, INT_SIGAGGR_ID, LOAD_ID)
+  SELECT
+    TST_ID  AS TST_ID,
+    TRC_ID  AS TRC_ID,
+    TSR_ID  AS TSR_ID,
+    TSV_ID  AS TSV_ID,
+    TRS_ID  AS TRS_ID,
+    l_dde_id    AS DDE_ID,
+    l_dte_id    AS DTE_ID,
+    -1          AS DTZ_ID,
+    (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+    (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+    IMEI    AS IMEI,
+    -1      AS GDV_ID,
+    (CASE WHEN LENGTH(IMSI) >= 6 THEN SUBSTR(IMSI, 4,2) ELSE '-1' END) AS MNC,
+    (CASE WHEN LENGTH(IMSI) >= 4 THEN SUBSTR(IMSI, 1,3) ELSE '-1' END) AS MCC,
+    IMSI      AS IMSI,
+      -1        AS ROAMER_IND,
+      -1        AS NETWORK_IND,
+      -1        AS GNW_ID,
+      CELLID        as FAC_INT_01,
+      ROUTING_AREA  as FAC_INT_02,
+      -1            as FAC_INT_03,
+      BSC           as FAC_INT_04,
+      -1            as FAC_INT_05,
+      -1            as FAC_INT_06,
+      -1            as FAC_INT_07,
+      -1            as FAC_INT_08,
+      -1            as FAC_INT_09,
+      -1            as FAC_INT_10,
+      -1    AS GPI_ID,
+      SGSN          as FAC_EXT_01,
+      -1            as FAC_EXT_02,
+      ACCESS_POINT_NAME as FAC_EXT_03,
+      -1            as FAC_EXT_04,
+      -1            as FAC_EXT_05,
+      -1            as FAC_EXT_06,
+      -1            as FAC_EXT_07,
+      -1            as FAC_EXT_08,
+      -1            as FAC_EXT_09,
+      -1            as FAC_EXT_10,
+      -1    AS GPE_ID,
+      AS_COUNTER    AS AC,
+      AS_DURATION   AS AS_DURATION,
+      (EXTRACT(DAY FROM l_end_timeinterval_ts) * 86400 + EXTRACT(HOUR FROM l_end_timeinterval_ts) * 3600
+        + EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 +
+        l_end_seconds) * 10000000000 + 50000 + MOD(ROWNUM, 10000)
+        AS INT_SIGAGGR_ID,
+      l_load_id AS LOAD_ID
+   FROM (
+    SELECT
+    TST_ID,
+    TRC_ID,
+    TSR_ID,
+    TSV_ID,
+    TRS_ID,
+    IMEI,
+    IMSI,
+    CELLID,
+    ROUTING_AREA,
+    BSC,
+    SGSN,
+    ACCESS_POINT_NAME,
+    COUNT(*) AS AS_COUNTER,
+    SUM(DURATION) AS AS_DURATION
+    FROM (
+        SELECT
+        -1 AS TRS_ID,
+        '-1' AS TST_ID,
+        CA.ID AS TRC_ID,
+        (CASE WHEN SUCCESSFUL_ = 'Yes' THEN 20 ELSE 10 END) AS TSR_ID,
+        tv.ID AS TSV_ID,
+        EXTRACT(DAY FROM TRANSACTION_MS) * 86400000 + EXTRACT(HOUR FROM TRANSACTION_MS) * 3600000 + EXTRACT(MINUTE FROM TRANSACTION_MS) * 60000 +
+        EXTRACT(SECOND FROM TRANSACTION_MS) * 1000 AS DURATION,
+        (CASE WHEN LENGTH(IMEI) IS NOT NULL AND IMEI <> '-' AND TRANSLATE(SUBSTR(IMEI, 2), ' 0123456789',' ') IS NULL
+            THEN SUBSTR(IMEI, 2) ELSE '-1' END) AS IMEI,
+        (CASE WHEN LENGTH(IMSI) IS NOT NULL AND IMSI <> '-' AND TRANSLATE(SUBSTR(IMSI, 2), ' 0123456789',' ') IS NULL
+            THEN SUBSTR(IMSI, 2) ELSE '-1' END) AS IMSI,
+        NVL(qs.ID, -1) AS TRQ_ID,
+      (CASE WHEN MCC <> '-' THEN (CASE WHEN SUBSTR(MCC,1,1) = '''' THEN SUBSTR(MCC,2) ELSE MCC END) END) || ':' ||
+      (CASE WHEN MNC <> '-' THEN (CASE WHEN SUBSTR(MNC,1,1) = '''' THEN SUBSTR(MNC,2) ELSE MNC END) END) || ':' ||
+      (CASE WHEN LAC <> '-' THEN (CASE WHEN SUBSTR(LAC,1,1) = '''' THEN SUBSTR(LAC,2) ELSE LAC END) END) || ':' ||
+      (CASE WHEN RAC <> '-' THEN (CASE WHEN SUBSTR(RAC,1,1) = '''' THEN SUBSTR(RAC,2) ELSE RAC END) END) AS ROUTING_AREA,
+        NVL2(LENGTH(CELLID), NVL2(TRANSLATE(CELLID, ' 0123456789',' '), '-1', CELLID), '-1') AS CELLID,
+      PCM_ID AS BSC, SGSN_ID AS SGSN,
+      NVL(APN, -1) AS ACCESS_POINT_NAME
+    FROM
+       XDV_ADS_1HR_SIGAGGR_ET et,
+       xdv_trn_causes_dt ca,
+       xdv_trn_sig_result_dt sr,
+       xdv_trn_sig_violation_dt tv,
+       xdv_trn_qos_dt qs
+    WHERE
+          et.gmmcause   = ca.PRIMARY_CAUSE_TYPE
+      AND et.smcause    = ca.SECONDARY_CAUSE_TYPE
+      AND ca.technology = 'GPRS'
+      AND ca.interface = 'Gb'
+      AND ca.category = 'Signaling'
+      AND sr.technology = 'GPRS'
+      AND sr.interface = 'Gb'
+      AND sr.category = 'Signaling'
+      AND et.transaction_type  = sr.message_type
+      AND sr.result in ('GPRS only attached', 'RA updated')
+      AND et.dr_status         = tv.violation_type
+      AND et.violation         = tv.violation
+      AND et.RQOS = qs.RQOS_HEXID(+) AND et.NQOS = qs.NQOS_HEXID(+)
+    )
+    GROUP BY
+        TST_ID,
+        TRC_ID,
+        TSR_ID,
+        TSV_ID,
+        TRS_ID,
+        IMEI,
+        IMSI,
+        CELLID,
+        ROUTING_AREA,
+        BSC,
+        SGSN,
+        ACCESS_POINT_NAME
+  );
+
+  RETVAL := SQL%ROWCOUNT;
+
+  enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_sga_1hr,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_asm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_asm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END SIG_AGGR_1HR_INSERT;
+
+-----------------------------------------------------------------------
+  FUNCTION APP_AGGR_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    l_end_ts                 TIMESTAMP;
+    l_end_timeinterval_ts    INTERVAL DAY (6) TO SECOND(0);
+    l_end_seconds            NUMBER;
+    l_dde_id                NUMBER;
+    l_dte_id                NUMBER;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_APP_AGGR_ET;
+
+  SELECT XDV_ASM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  l_end_timeinterval_ts := ((FROM_TZ(l_load_st_dt, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0);
+  l_end_seconds := 0; --EXTRACT(SECOND FROM l_load_st_dt);
+  l_dde_id := FLOOR(xdv_date_pkg.date_to_sec(l_load_st_dt) / xdv_generic_const_pkg.pc_dt_dde_ivl) * xdv_generic_const_pkg.pc_dt_dde_ivl;
+  --l_dde_id := EXTRACT(DAY FROM l_end_timeinterval_ts) * 86400 + EXTRACT(HOUR FROM l_end_timeinterval_ts) * 3600;
+  l_dte_id := EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 + FLOOR(l_end_seconds);
+
+  INSERT /*+ APPEND */ INTO XDV_AAM_15M_MEDAPA_FT
+  ( TAT_ID, TAC_ID, TRC_ID, TRS_ID, TRQ_ID, SERVER_ID, GSV_ID, USER_AGENT, GUA_ID, MNC, MCC, IMSI, ROAMER_IND,
+    NETWORK_IND, GNW_ID, TAC, SVN, IMEI, GDV_ID, COUNTRY_CODE, MSISDN, GSB_ID, DDE_ID, DTE_ID,
+    FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+    GPI_ID,
+    FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+    GPE_ID,
+    AC, AS_DURATION, AS_DATA_TRANS_DURATION, AS_NBR_MESSAGES, AS_NBR_BYTES, AS_NBR_BYTES_LOST,
+    INT_APPAGGR_ID, LOAD_ID)
+  SELECT
+      TAT_ID    AS TAT_ID,
+      -1        AS TAC_ID,
+      TRC_ID    AS TRC_ID,
+      TRS_ID    AS TRS_ID,
+      -1        AS TRQ_ID,
+      '-1'      AS SERVER_ID,
+      -1        AS GSV_ID,
+      -1        AS USER_AGENT,
+      -1        AS GUA_ID,
+      (CASE WHEN LENGTH(IMSI) >= 6 THEN SUBSTR(IMSI, 4,2) ELSE '-1' END) AS MNC,
+      (CASE WHEN LENGTH(IMSI) >= 4 THEN SUBSTR(IMSI, 1,3) ELSE '-1' END) AS MCC,
+      IMSI      AS IMSI,
+        -1      AS ROAMER_IND,
+      -1        AS NETWORK_IND,
+      -1        AS GNW_ID,
+      (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+      (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+      IMEI      AS IMEI,
+      -1        AS GDV_ID,
+      -1        AS COUNTRY_CODE,
+      MSISDN    AS MSISDN,
+      -1        AS GSB_ID,
+      l_dde_id AS DDE_ID,
+      l_dte_id AS DTE_ID,
+      CELL_IDENTITY     AS FAC_INT_01,
+      ROUTING_AREA      AS FAC_INT_02,
+      -1                AS FAC_INT_03,
+      -1                AS FAC_INT_04,
+      -1                AS FAC_INT_05,
+      -1                AS FAC_INT_06,
+      -1                AS FAC_INT_07,
+      -1                AS FAC_INT_08,
+      -1                AS FAC_INT_09,
+      -1                AS FAC_INT_10,
+      -1        AS GPI_ID,
+      'S'||COLLECTION_SOURCE    AS FAC_EXT_01,
+      'G'||COLLECTION_SOURCE    AS FAC_EXT_02,
+      ACCESS_POINT_NAME         AS FAC_EXT_03,
+      -1                AS FAC_EXT_04,
+      -1                AS FAC_EXT_05,
+      -1                AS FAC_EXT_06,
+      -1                AS FAC_EXT_07,
+      -1                AS FAC_EXT_08,
+      -1                AS FAC_EXT_09,
+      -1                AS FAC_EXT_10,
+      -1    AS GPE_ID,
+      AS_COUNTER    AS AC,
+      AS_DURATION   AS AS_DURATION,
+      AS_DURATION   AS AS_DATA_TRANS_DURATION,
+      AS_NBR_MESSAGES   AS AS_NBR_MESSAGES,
+      AS_NBR_BYTES  AS AS_NBR_BYTES,
+      0             AS AS_NBR_BYTES_LOST,
+      (EXTRACT(DAY FROM l_end_timeinterval_ts) * 86400 + EXTRACT(HOUR FROM l_end_timeinterval_ts) * 3600
+          + EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 +
+          l_end_seconds) * 10000000000 +
+          50000 + MOD(ROWNUM, 10000)
+          AS INT_APPAGGR_ID,
+      l_load_id AS LOAD_ID
+   FROM
+  (
+  SELECT
+    TAT_ID,
+    TRC_ID,
+    TRS_ID,
+    IMSI,
+    MSISDN,
+    IMEI,
+    CELL_IDENTITY,
+    ROUTING_AREA,
+    COLLECTION_SOURCE,
+    ACCESS_POINT_NAME,
+    SUM(NBR_BYTES) AS AS_NBR_BYTES,
+    SUM(NBR_MESSAGES) AS AS_NBR_MESSAGES,
+    SUM(DURATION) AS AS_DURATION,
+    COUNT(*) AS AS_COUNTER
+FROM (
+  SELECT
+      TT.ID AS TAT_ID,
+      CA.ID AS TRC_ID,
+      SS.ID AS TRS_ID,
+      (CASE WHEN LENGTH(IMEI) >= 8 AND TRANSLATE(TRANSLATE(IMEI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMEI, '1''- ', '1') ELSE '-1' END)
+          AS IMEI,
+      (CASE WHEN LENGTH(MSISDN) >= 8 AND TRANSLATE(TRANSLATE(MSISDN, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(MSISDN, '1''- ', '1') ELSE '-1' END)
+          AS MSISDN,
+      (CASE WHEN LENGTH(IMSI) >= 6 AND TRANSLATE(TRANSLATE(IMSI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMSI, '1''- ', '1') ELSE '-1' END)
+          AS IMSI,
+      CELL_IDENTITY AS CELL_IDENTITY,
+      ROUTING_AREA AS ROUTING_AREA,
+      COLLECTION_SOURCE AS COLLECTION_SOURCE,
+      NVL(ACCESS_POINT_NAME,-1) AS ACCESS_POINT_NAME,
+      NBR_BYTES AS NBR_BYTES,
+      DURATION AS DURATION,
+      NBR_MESSAGES AS NBR_MESSAGES
+  FROM
+      XDV_ADS_APP_AGGR_ET ET,
+      XDV_TRN_CAUSES_DT CA,
+      XDV_TRN_APP_TYPE_DT TT,
+      XDV_TRN_STATUS_DT SS
+  WHERE
+      TT.TECHNOLOGY = 'GPRS' AND
+      TT.INTERFACE = 'Gn' AND
+      TT.CATEGORY = 'Application' AND
+      TT.APPLICATION_TYPE = 'Instant Messaging' AND
+      TT.XDR_TYPE = 'Session' AND
+      TT.PROTOCOL = ET.PROTOCOL AND
+      TT.MESSAGE_TYPE is null AND
+      TT.MESSAGE_CLASS is null AND
+      TT.ORIGINATOR is null AND
+      NVL(TT.MESSAGE_TYPE, '-') = NVL(ET.SESSION_TYPE, '-') AND
+      SS.TECHNOLOGY = 'GPRS' AND SS.AMK_ID = 20050 AND
+      SS.INTERFACE = 'Gn' AND
+      SS.CATEGORY = 'Application' AND
+      SS.STATUS_CODE = ET.STATUS_CODE AND
+      (ET.STATUS_CODE = 'OK' AND CA.ID = -1 OR ET.STATUS_CODE <> 'OK' AND
+      CA.TECHNOLOGY = 'GPRS' AND CA.INTERFACE = 'Gn' AND CA.CATEGORY = 'Application' AND CA.SECONDARY_CAUSE_ID IS NULL AND
+      CA.PRIMARY_CAUSE_TYPE = 'IM-'|| ET.PROTOCOL AND CA.AMK_ID = 11080 AND
+      (ET.PROTOCOL = 'SIP' AND CA.PRIMARY_CAUSE_ID = ET.CREATION_STATUS OR
+      ET.PROTOCOL = 'XMPP' AND CA.PRIMARY_CAUSE_DESC = ET.CREATION_TEXT))
+  )
+  GROUP BY
+    TAT_ID,
+    TRC_ID,
+    TRS_ID,
+    IMSI,
+    MSISDN,
+    IMEI,
+    CELL_IDENTITY,
+    ROUTING_AREA,
+    COLLECTION_SOURCE,
+    ACCESS_POINT_NAME
+  );
+
+  RETVAL := SQL%ROWCOUNT;
+
+  enqueue_load  (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_apa_15m,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_asm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_asm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END APP_AGGR_INSERT;
+
+  FUNCTION APP_AGGR_1HR_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    l_end_ts                 TIMESTAMP;
+    l_end_timeinterval_ts    INTERVAL DAY (6) TO SECOND(0);
+    l_end_seconds            NUMBER;
+    l_dde_id                NUMBER;
+    l_dte_id                NUMBER;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_1HR_APPAGGR_ET;
+
+  SELECT XDV_ASM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  l_end_timeinterval_ts := ((FROM_TZ(l_load_st_dt, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0);
+  l_end_seconds := 0; --EXTRACT(SECOND FROM l_load_st_dt);
+  l_dde_id := FLOOR(xdv_date_pkg.date_to_sec(l_load_st_dt) / xdv_generic_const_pkg.pc_dt_dde_ivl) * xdv_generic_const_pkg.pc_dt_dde_ivl;
+  --l_dde_id := EXTRACT(DAY FROM l_end_timeinterval_ts) * 86400 + EXTRACT(HOUR FROM l_end_timeinterval_ts) * 3600;
+  l_dte_id := EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 + FLOOR(l_end_seconds);
+
+  INSERT /*+ APPEND */ INTO XDV_AAM_1HR_MEDAPA_FT
+  ( TAT_ID, TAC_ID, TRC_ID, TRS_ID, TRQ_ID, SERVER_ID, GSV_ID, USER_AGENT, GUA_ID, MNC, MCC, IMSI, ROAMER_IND,
+    NETWORK_IND, GNW_ID, TAC, SVN, IMEI, GDV_ID, COUNTRY_CODE, MSISDN, GSB_ID, DDE_ID, DTE_ID,
+    FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+    GPI_ID,
+    FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+    GPE_ID,
+    AC, AS_DURATION, AS_DATA_TRANS_DURATION, AS_NBR_MESSAGES, AS_NBR_BYTES, AS_NBR_BYTES_LOST,
+    INT_APPAGGR_ID, LOAD_ID)
+  SELECT
+      TAT_ID    AS TAT_ID,
+      -1        AS TAC_ID,
+      TRC_ID    AS TRC_ID,
+      TRS_ID    AS TRS_ID,
+      -1        AS TRQ_ID,
+      '-1'      AS SERVER_ID,
+      -1        AS GSV_ID,
+      -1        AS USER_AGENT,
+      -1        AS GUA_ID,
+      (CASE WHEN LENGTH(IMSI) >= 6 THEN SUBSTR(IMSI, 4,2) ELSE '-1' END) AS MNC,
+      (CASE WHEN LENGTH(IMSI) >= 4 THEN SUBSTR(IMSI, 1,3) ELSE '-1' END) AS MCC,
+      IMSI      AS IMSI,
+        -1      AS ROAMER_IND,
+      -1        AS NETWORK_IND,
+      -1        AS GNW_ID,
+      (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+      (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+      IMEI      AS IMEI,
+      -1        AS GDV_ID,
+      -1        AS COUNTRY_CODE,
+      MSISDN    AS MSISDN,
+      -1        AS GSB_ID,
+      l_dde_id AS DDE_ID,
+      l_dte_id AS DTE_ID,
+      CELL_IDENTITY     AS FAC_INT_01,
+      ROUTING_AREA      AS FAC_INT_02,
+      -1                AS FAC_INT_03,
+      -1                AS FAC_INT_04,
+      -1                AS FAC_INT_05,
+      -1                AS FAC_INT_06,
+      -1                AS FAC_INT_07,
+      -1                AS FAC_INT_08,
+      -1                AS FAC_INT_09,
+      -1                AS FAC_INT_10,
+      -1        AS GPI_ID,
+      'S'||COLLECTION_SOURCE    AS FAC_EXT_01,
+      'G'||COLLECTION_SOURCE    AS FAC_EXT_02,
+      ACCESS_POINT_NAME         AS FAC_EXT_03,
+      -1                AS FAC_EXT_04,
+      -1                AS FAC_EXT_05,
+      -1                AS FAC_EXT_06,
+      -1                AS FAC_EXT_07,
+      -1                AS FAC_EXT_08,
+      -1                AS FAC_EXT_09,
+      -1                AS FAC_EXT_10,
+      -1    AS GPE_ID,
+      AS_COUNTER    AS AC,
+      AS_DURATION   AS AS_DURATION,
+      AS_DURATION   AS AS_DATA_TRANS_DURATION,
+      AS_NBR_MESSAGES   AS AS_NBR_MESSAGES,
+      AS_NBR_BYTES  AS AS_NBR_BYTES,
+      0             AS AS_NBR_BYTES_LOST,
+      (EXTRACT(DAY FROM l_end_timeinterval_ts) * 86400 + EXTRACT(HOUR FROM l_end_timeinterval_ts) * 3600
+          + EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 +
+          l_end_seconds) * 10000000000 +
+          50000 + MOD(ROWNUM, 10000)
+          AS INT_APPAGGR_ID,
+      l_load_id AS LOAD_ID
+   FROM
+  (
+  SELECT
+    TAT_ID,
+    TRC_ID,
+    TRS_ID,
+    IMSI,
+    MSISDN,
+    IMEI,
+    CELL_IDENTITY,
+    ROUTING_AREA,
+    COLLECTION_SOURCE,
+    ACCESS_POINT_NAME,
+    SUM(NBR_BYTES) AS AS_NBR_BYTES,
+    SUM(NBR_MESSAGES) AS AS_NBR_MESSAGES,
+    SUM(DURATION) AS AS_DURATION,
+    COUNT(*) AS AS_COUNTER
+FROM (
+  SELECT
+      TT.ID AS TAT_ID,
+      CA.ID AS TRC_ID,
+      SS.ID AS TRS_ID,
+      (CASE WHEN LENGTH(IMEI) >= 8 AND TRANSLATE(TRANSLATE(IMEI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMEI, '1''- ', '1') ELSE '-1' END)
+          AS IMEI,
+      (CASE WHEN LENGTH(MSISDN) >= 8 AND TRANSLATE(TRANSLATE(MSISDN, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(MSISDN, '1''- ', '1') ELSE '-1' END)
+          AS MSISDN,
+      (CASE WHEN LENGTH(IMSI) >= 6 AND TRANSLATE(TRANSLATE(IMSI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMSI, '1''- ', '1') ELSE '-1' END)
+          AS IMSI,
+      CELL_IDENTITY AS CELL_IDENTITY,
+      ROUTING_AREA AS ROUTING_AREA,
+      COLLECTION_SOURCE AS COLLECTION_SOURCE,
+      NVL(ACCESS_POINT_NAME,-1) AS ACCESS_POINT_NAME,
+      NBR_BYTES AS NBR_BYTES,
+      DURATION AS DURATION,
+      NBR_MESSAGES AS NBR_MESSAGES
+  FROM
+      XDV_ADS_1HR_APPAGGR_ET ET,
+      XDV_TRN_CAUSES_DT CA,
+      XDV_TRN_APP_TYPE_DT TT,
+      XDV_TRN_STATUS_DT SS
+  WHERE
+      TT.TECHNOLOGY = 'GPRS' AND
+      TT.INTERFACE = 'Gn' AND
+      TT.CATEGORY = 'Application' AND
+      TT.APPLICATION_TYPE = 'Instant Messaging' AND
+      TT.XDR_TYPE = 'Session' AND
+      TT.PROTOCOL = ET.PROTOCOL AND
+      TT.MESSAGE_TYPE is null AND
+      TT.MESSAGE_CLASS is null AND
+      TT.ORIGINATOR is null AND
+      NVL(TT.MESSAGE_TYPE, '-') = NVL(ET.SESSION_TYPE, '-') AND
+      SS.TECHNOLOGY = 'GPRS' AND SS.AMK_ID = 20050 AND
+      SS.INTERFACE = 'Gn' AND
+      SS.CATEGORY = 'Application' AND
+      SS.STATUS_CODE = ET.STATUS_CODE AND
+      (ET.STATUS_CODE = 'OK' AND CA.ID = -1 OR ET.STATUS_CODE <> 'OK' AND
+      CA.TECHNOLOGY = 'GPRS' AND CA.INTERFACE = 'Gn' AND CA.CATEGORY = 'Application' AND CA.SECONDARY_CAUSE_ID IS NULL AND
+      CA.PRIMARY_CAUSE_TYPE = 'IM-'|| ET.PROTOCOL AND CA.AMK_ID = 11080 AND
+      (ET.PROTOCOL = 'SIP' AND CA.PRIMARY_CAUSE_ID = ET.CREATION_STATUS OR
+      ET.PROTOCOL = 'XMPP' AND CA.PRIMARY_CAUSE_DESC = ET.CREATION_TEXT))
+  )
+  GROUP BY
+    TAT_ID,
+    TRC_ID,
+    TRS_ID,
+    IMSI,
+    MSISDN,
+    IMEI,
+    CELL_IDENTITY,
+    ROUTING_AREA,
+    COLLECTION_SOURCE,
+    ACCESS_POINT_NAME
+  );
+
+  RETVAL := SQL%ROWCOUNT;
+
+  enqueue_load  (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_apa_1hr,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_asm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_asm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END APP_AGGR_1HR_INSERT;
+
+------------------------------------------------------------------------
+  FUNCTION CDR_AGGR_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    l_end_ts                 TIMESTAMP;
+    l_end_timeinterval_ts    INTERVAL DAY (6) TO SECOND(0);
+    l_end_seconds            NUMBER;
+    l_dde_id                NUMBER;
+    l_dte_id                NUMBER;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_CDR_AGGR_ET;
+
+  SELECT XDV_ASM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  l_end_timeinterval_ts := ((FROM_TZ(l_load_st_dt, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0);
+  l_end_seconds := 0; --EXTRACT(SECOND FROM l_load_st_dt);
+  l_dde_id := FLOOR(xdv_date_pkg.date_to_sec(l_load_st_dt) / xdv_generic_const_pkg.pc_dt_dde_ivl) * xdv_generic_const_pkg.pc_dt_dde_ivl;
+  l_dte_id := EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 + FLOOR(l_end_seconds);
+
+  INSERT /*+ APPEND */ INTO XDV_CAM_15M_MEDCDA_FT
+  ( TAT_ID, TAC_ID, TRC_ID, TRS_ID, CHG_ID, PLN_ID, SERVER_ID, GSV_ID, MSISDN_MO, GSO_ID, MSISDN_MT, GST_ID,
+    IMSI_MO, NETWORK_IND_MO, SUB_TYPE_MO, ROAMER_IND_MO, MNC_MO, MCC_MO, MNC_MT, MCC_MT, COUNTRY_CODE_MO, COUNTRY_CODE_MT,
+    IMSI_MT, NETWORK_IND_MT, ROAMER_IND_MT, GNT_ID, IMEI, GDV_ID, TAC, SVN, DDE_ID, DTE_ID, DTZ_ID,
+    AS_NBR_BYTES_UL, AS_NBR_BYTES_DL, AS_NBR_BYTES_LOST,
+    AS_CALL_CHARGE, AS_PREV_BALANCE, AS_CUR_BALANCE, AS_COUNTER,
+    FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+    FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+    INT_CDRAGGR_ID, LOAD_ID)
+  SELECT
+      TAT_ID    AS TAT_ID,
+      -1        AS TAC_ID,
+      TRC_ID    AS TRC_ID,
+      TRS_ID    AS TRS_ID,
+      -1        AS CHG_ID,
+      -1        AS PLN_ID,
+      '-1'      AS SERVER_ID,
+      -1        AS GSV_ID,
+      MSISDN    AS MSISDN_MO,
+      -1        AS GSO_ID,
+      MSISDN    AS MSISDN_MT,
+      -1        AS GST_ID,
+      IMSI      AS IMSI_MO,
+      -1        AS NETWORK_IND_MO,
+      -1        AS SUB_TYPE_MO,
+      -1        AS ROAMER_IND_MO,
+      (CASE WHEN LENGTH(IMSI) >= 6 THEN SUBSTR(IMSI, 4,2) ELSE '-1' END) AS MNC_MO,
+      (CASE WHEN LENGTH(IMSI) >= 4 THEN SUBSTR(IMSI, 1,3) ELSE '-1' END) AS MCC_MO,
+      (CASE WHEN LENGTH(IMSI) >= 6 THEN SUBSTR(IMSI, 4,2) ELSE '-1' END) AS MNC_MT,
+      (CASE WHEN LENGTH(IMSI) >= 4 THEN SUBSTR(IMSI, 1,3) ELSE '-1' END) AS MCC_MT,
+      -1        AS COUNTRY_CODE_MO,
+      -1        AS COUNTRY_CODE_MT,
+      IMSI      AS IMSI_MT,
+      -1        AS NETWORK_IND_MT,
+      -1        AS ROAMER_IND_MT,
+      -1        AS GNT_ID,
+      IMEI      AS IMEI,
+      -1        AS GDV_ID,
+      (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+      (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+      l_dde_id AS DDE_ID,
+      l_dte_id AS DTE_ID,
+      -1    AS DTZ_ID,
+      AS_NBR_BYTES AS AS_NBR_BYTES_UL,
+      0     AS AS_NBR_BYTES_DL,
+      0     AS AS_NBR_BYTES_LOST,
+      44    AS AS_CALL_CHARGE,
+      234   AS AS_PREV_BALANCE,
+      21    AS AS_CUR_BALANCE,
+      AS_COUNTER    AS AS_COUNTER,
+      CELL_IDENTITY     AS FAC_INT_01,
+      ROUTING_AREA      AS FAC_INT_02,
+      -1                AS FAC_INT_03,
+      -1                AS FAC_INT_04,
+      -1                AS FAC_INT_05,
+      -1                AS FAC_INT_06,
+      -1                AS FAC_INT_07,
+      -1                AS FAC_INT_08,
+      -1                AS FAC_INT_09,
+      -1                AS FAC_INT_10,
+      'S'||COLLECTION_SOURCE    AS FAC_EXT_01,
+      'G'||COLLECTION_SOURCE    AS FAC_EXT_02,
+      ACCESS_POINT_NAME         AS FAC_EXT_03,
+      -1                AS FAC_EXT_04,
+      -1                AS FAC_EXT_05,
+      -1                AS FAC_EXT_06,
+      -1                AS FAC_EXT_07,
+      -1                AS FAC_EXT_08,
+      -1                AS FAC_EXT_09,
+      -1                AS FAC_EXT_10,
+      (EXTRACT(DAY FROM l_end_timeinterval_ts) * 86400 + EXTRACT(HOUR FROM l_end_timeinterval_ts) * 3600
+          + EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 +
+          l_end_seconds) * 10000000000 +
+          50000 + MOD(ROWNUM, 10000)
+          AS INT_CDR_ID,
+      l_load_id AS INT_CDRAGGR_ID
+ FROM (
+  SELECT
+    TAT_ID,
+    TRC_ID,
+    TRS_ID,
+    IMSI,
+    MSISDN,
+    IMEI,
+    CELL_IDENTITY,
+    ROUTING_AREA,
+    COLLECTION_SOURCE,
+    ACCESS_POINT_NAME,
+    SUM(NBR_BYTES) AS AS_NBR_BYTES,
+    COUNT(*) AS AS_COUNTER
+ FROM (
+  SELECT
+      TT.ID AS TAT_ID,
+      CA.ID AS TRC_ID,
+      SS.ID AS TRS_ID,
+      (CASE WHEN LENGTH(IMEI) >= 8 AND TRANSLATE(TRANSLATE(IMEI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMEI, '1''- ', '1') ELSE '-1' END)
+          AS IMEI,
+      (CASE WHEN LENGTH(MSISDN) >= 8 AND TRANSLATE(TRANSLATE(MSISDN, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(MSISDN, '1''- ', '1') ELSE '-1' END)
+          AS MSISDN,
+      (CASE WHEN LENGTH(IMSI) >= 6 AND TRANSLATE(TRANSLATE(IMSI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMSI, '1''- ', '1') ELSE '-1' END)
+          AS IMSI,
+      CELL_IDENTITY AS CELL_IDENTITY,
+      ROUTING_AREA AS ROUTING_AREA,
+      COLLECTION_SOURCE AS COLLECTION_SOURCE,
+      NVL(ACCESS_POINT_NAME,-1) AS ACCESS_POINT_NAME,
+      NBR_BYTES AS NBR_BYTES,
+      DURATION AS DURATION,
+      NBR_MESSAGES AS NBR_MESSAGES
+  FROM
+      XDV_ADS_CDR_AGGR_ET ET,
+      XDV_TRN_CAUSES_DT CA,
+      XDV_TRN_APP_TYPE_DT TT,
+      XDV_TRN_STATUS_DT SS
+  WHERE
+      TT.TECHNOLOGY = 'GPRS' AND
+      TT.INTERFACE = 'Gn' AND
+      TT.CATEGORY = 'Application' AND
+      TT.APPLICATION_TYPE = 'Instant Messaging' AND
+      TT.XDR_TYPE = 'Session' AND
+      TT.PROTOCOL = ET.PROTOCOL AND
+      TT.MESSAGE_TYPE is null AND
+      TT.MESSAGE_CLASS is null AND
+      TT.ORIGINATOR is null AND
+      NVL(TT.MESSAGE_TYPE, '-') = NVL(ET.SESSION_TYPE, '-') AND
+      SS.TECHNOLOGY = 'GPRS' AND SS.AMK_ID = 20050 AND
+      SS.INTERFACE = 'Gn' AND
+      SS.CATEGORY = 'Application' AND
+      SS.STATUS_CODE = ET.STATUS_CODE AND
+      (ET.STATUS_CODE = 'OK' AND CA.ID = -1 OR ET.STATUS_CODE <> 'OK' AND
+      CA.TECHNOLOGY = 'GPRS' AND CA.INTERFACE = 'Gn' AND CA.CATEGORY = 'Application' AND CA.SECONDARY_CAUSE_ID IS NULL AND
+      CA.PRIMARY_CAUSE_TYPE = 'IM-'|| ET.PROTOCOL AND CA.AMK_ID = 11080 AND
+      (ET.PROTOCOL = 'SIP' AND CA.PRIMARY_CAUSE_ID = ET.CREATION_STATUS OR
+      ET.PROTOCOL = 'XMPP' AND CA.PRIMARY_CAUSE_DESC = ET.CREATION_TEXT))
+  )
+  GROUP BY
+    TAT_ID,
+    TRC_ID,
+    TRS_ID,
+    IMSI,
+    MSISDN,
+    IMEI,
+    CELL_IDENTITY,
+    ROUTING_AREA,
+    COLLECTION_SOURCE,
+    ACCESS_POINT_NAME
+  );
+
+  RETVAL := SQL%ROWCOUNT;
+
+  enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_cda_15m,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_asm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_asm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END CDR_AGGR_INSERT;
+
+
+  FUNCTION CDR_AGGR_1HR_INSERT(P_TIME_ZONE VARCHAR2 DEFAULT NULL)
+  RETURN INTEGER
+  IS
+    l_load_id                INTEGER;
+    l_load_st_dt             DATE;
+    l_load_end_dt            DATE;
+    l_end_ts                 TIMESTAMP;
+    l_end_timeinterval_ts    INTERVAL DAY (6) TO SECOND(0);
+    l_end_seconds            NUMBER;
+    l_dde_id                NUMBER;
+    l_dte_id                NUMBER;
+    RETVAL INTEGER;
+    TZ VARCHAR2(50) := P_TIME_ZONE;
+
+  BEGIN
+
+  IF TZ IS NULL THEN TZ := DBTIMEZONE; END IF;
+
+  SELECT
+    MIN(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT'),
+    MAX(FROM_TZ(END_TIME, TZ) AT TIME ZONE 'GMT')
+  INTO l_load_st_dt, l_load_end_dt
+  FROM XDV_ADS_1HR_CDRAGGR_ET;
+
+  SELECT XDV_ASM_TRN_SEQ.NEXTVAL INTO l_load_id FROM DUAL;
+
+  l_end_timeinterval_ts := ((FROM_TZ(l_load_st_dt, TZ) AT TIME ZONE 'GMT') - C_Y1970) DAY (6) TO SECOND(0);
+  l_end_seconds := 0; --EXTRACT(SECOND FROM l_load_st_dt);
+  l_dde_id := FLOOR(xdv_date_pkg.date_to_sec(l_load_st_dt) / xdv_generic_const_pkg.pc_dt_dde_ivl) * xdv_generic_const_pkg.pc_dt_dde_ivl;
+  l_dte_id := EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 + FLOOR(l_end_seconds);
+
+  INSERT /*+ APPEND */ INTO XDV_CAM_1HR_MEDCDA_FT
+  ( TAT_ID, TAC_ID, TRC_ID, TRS_ID, CHG_ID, PLN_ID, SERVER_ID, GSV_ID, MSISDN_MO, GSO_ID, MSISDN_MT, GST_ID,
+    IMSI_MO, NETWORK_IND_MO, SUB_TYPE_MO, ROAMER_IND_MO, MNC_MO, MCC_MO, MNC_MT, MCC_MT, COUNTRY_CODE_MO, COUNTRY_CODE_MT,
+    IMSI_MT, NETWORK_IND_MT, ROAMER_IND_MT, GNT_ID, IMEI, GDV_ID, TAC, SVN, DDE_ID, DTE_ID, DTZ_ID,
+    AS_NBR_BYTES_UL, AS_NBR_BYTES_DL, AS_NBR_BYTES_LOST,
+    AS_CALL_CHARGE, AS_PREV_BALANCE, AS_CUR_BALANCE, AS_COUNTER,
+    FAC_INT_01, FAC_INT_02, FAC_INT_03, FAC_INT_04, FAC_INT_05, FAC_INT_06, FAC_INT_07, FAC_INT_08, FAC_INT_09, FAC_INT_10,
+    FAC_EXT_01, FAC_EXT_02, FAC_EXT_03, FAC_EXT_04, FAC_EXT_05, FAC_EXT_06, FAC_EXT_07, FAC_EXT_08, FAC_EXT_09, FAC_EXT_10,
+    INT_CDRAGGR_ID, LOAD_ID)
+  SELECT
+      TAT_ID    AS TAT_ID,
+      -1        AS TAC_ID,
+      TRC_ID    AS TRC_ID,
+      TRS_ID    AS TRS_ID,
+      -1        AS CHG_ID,
+      -1        AS PLN_ID,
+      '-1'      AS SERVER_ID,
+      -1        AS GSV_ID,
+      MSISDN    AS MSISDN_MO,
+      -1        AS GSO_ID,
+      MSISDN    AS MSISDN_MT,
+      -1        AS GST_ID,
+      IMSI      AS IMSI_MO,
+      -1        AS NETWORK_IND_MO,
+      -1        AS SUB_TYPE_MO,
+      -1        AS ROAMER_IND_MO,
+      (CASE WHEN LENGTH(IMSI) >= 6 THEN SUBSTR(IMSI, 4,2) ELSE '-1' END) AS MNC_MO,
+      (CASE WHEN LENGTH(IMSI) >= 4 THEN SUBSTR(IMSI, 1,3) ELSE '-1' END) AS MCC_MO,
+      (CASE WHEN LENGTH(IMSI) >= 6 THEN SUBSTR(IMSI, 4,2) ELSE '-1' END) AS MNC_MT,
+      (CASE WHEN LENGTH(IMSI) >= 4 THEN SUBSTR(IMSI, 1,3) ELSE '-1' END) AS MCC_MT,
+      -1        AS COUNTRY_CODE_MO,
+      -1        AS COUNTRY_CODE_MT,
+      IMSI      AS IMSI_MT,
+      -1        AS NETWORK_IND_MT,
+      -1        AS ROAMER_IND_MT,
+      -1        AS GNT_ID,
+      IMEI      AS IMEI,
+      -1        AS GDV_ID,
+      (CASE WHEN LENGTH(IMEI) >= 8 THEN SUBSTR(IMEI, 1,8) ELSE '-1' END) AS TAC,
+      (CASE WHEN LENGTH(IMEI) >= 16 THEN SUBSTR(IMEI, 15, 2) ELSE '-1' END) AS SVN,
+      l_dde_id AS DDE_ID,
+      l_dte_id AS DTE_ID,
+      -1    AS DTZ_ID,
+      AS_NBR_BYTES AS AS_NBR_BYTES_UL,
+      0     AS AS_NBR_BYTES_DL,
+      0     AS AS_NBR_BYTES_LOST,
+      44    AS AS_CALL_CHARGE,
+      234   AS AS_PREV_BALANCE,
+      21    AS AS_CUR_BALANCE,
+      AS_COUNTER    AS AS_COUNTER,
+      CELL_IDENTITY     AS FAC_INT_01,
+      ROUTING_AREA      AS FAC_INT_02,
+      -1                AS FAC_INT_03,
+      -1                AS FAC_INT_04,
+      -1                AS FAC_INT_05,
+      -1                AS FAC_INT_06,
+      -1                AS FAC_INT_07,
+      -1                AS FAC_INT_08,
+      -1                AS FAC_INT_09,
+      -1                AS FAC_INT_10,
+      'S'||COLLECTION_SOURCE    AS FAC_EXT_01,
+      'G'||COLLECTION_SOURCE    AS FAC_EXT_02,
+      ACCESS_POINT_NAME         AS FAC_EXT_03,
+      -1                AS FAC_EXT_04,
+      -1                AS FAC_EXT_05,
+      -1                AS FAC_EXT_06,
+      -1                AS FAC_EXT_07,
+      -1                AS FAC_EXT_08,
+      -1                AS FAC_EXT_09,
+      -1                AS FAC_EXT_10,
+      (EXTRACT(DAY FROM l_end_timeinterval_ts) * 86400 + EXTRACT(HOUR FROM l_end_timeinterval_ts) * 3600
+          + EXTRACT(MINUTE FROM l_end_timeinterval_ts) * 60 +
+          l_end_seconds) * 10000000000 +
+          50000 + MOD(ROWNUM, 10000)
+          AS INT_CDR_ID,
+      l_load_id AS INT_CDRAGGR_ID
+ FROM (
+  SELECT
+    TAT_ID,
+    TRC_ID,
+    TRS_ID,
+    IMSI,
+    MSISDN,
+    IMEI,
+    CELL_IDENTITY,
+    ROUTING_AREA,
+    COLLECTION_SOURCE,
+    ACCESS_POINT_NAME,
+    SUM(NBR_BYTES) AS AS_NBR_BYTES,
+    COUNT(*) AS AS_COUNTER
+ FROM (
+  SELECT
+      TT.ID AS TAT_ID,
+      CA.ID AS TRC_ID,
+      SS.ID AS TRS_ID,
+      (CASE WHEN LENGTH(IMEI) >= 8 AND TRANSLATE(TRANSLATE(IMEI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMEI, '1''- ', '1') ELSE '-1' END)
+          AS IMEI,
+      (CASE WHEN LENGTH(MSISDN) >= 8 AND TRANSLATE(TRANSLATE(MSISDN, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(MSISDN, '1''- ', '1') ELSE '-1' END)
+          AS MSISDN,
+      (CASE WHEN LENGTH(IMSI) >= 6 AND TRANSLATE(TRANSLATE(IMSI, '1''- ', '1'), ' 0123456789', ' ') IS NULL
+          THEN TRANSLATE(IMSI, '1''- ', '1') ELSE '-1' END)
+          AS IMSI,
+      CELL_IDENTITY AS CELL_IDENTITY,
+      ROUTING_AREA AS ROUTING_AREA,
+      COLLECTION_SOURCE AS COLLECTION_SOURCE,
+      NVL(ACCESS_POINT_NAME,-1) AS ACCESS_POINT_NAME,
+      NBR_BYTES AS NBR_BYTES,
+      DURATION AS DURATION,
+      NBR_MESSAGES AS NBR_MESSAGES
+  FROM
+      XDV_ADS_1HR_CDRAGGR_ET ET,
+      XDV_TRN_CAUSES_DT CA,
+      XDV_TRN_APP_TYPE_DT TT,
+      XDV_TRN_STATUS_DT SS
+  WHERE
+      TT.TECHNOLOGY = 'GPRS' AND
+      TT.INTERFACE = 'Gn' AND
+      TT.CATEGORY = 'Application' AND
+      TT.APPLICATION_TYPE = 'Instant Messaging' AND
+      TT.XDR_TYPE = 'Session' AND
+      TT.PROTOCOL = ET.PROTOCOL AND
+      TT.MESSAGE_TYPE is null AND
+      TT.MESSAGE_CLASS is null AND
+      TT.ORIGINATOR is null AND
+      NVL(TT.MESSAGE_TYPE, '-') = NVL(ET.SESSION_TYPE, '-') AND
+      SS.TECHNOLOGY = 'GPRS' AND SS.AMK_ID = 20050 AND
+      SS.INTERFACE = 'Gn' AND
+      SS.CATEGORY = 'Application' AND
+      SS.STATUS_CODE = ET.STATUS_CODE AND
+      (ET.STATUS_CODE = 'OK' AND CA.ID = -1 OR ET.STATUS_CODE <> 'OK' AND
+      CA.TECHNOLOGY = 'GPRS' AND CA.INTERFACE = 'Gn' AND CA.CATEGORY = 'Application' AND CA.SECONDARY_CAUSE_ID IS NULL AND
+      CA.PRIMARY_CAUSE_TYPE = 'IM-'|| ET.PROTOCOL AND CA.AMK_ID = 11080 AND
+      (ET.PROTOCOL = 'SIP' AND CA.PRIMARY_CAUSE_ID = ET.CREATION_STATUS OR
+      ET.PROTOCOL = 'XMPP' AND CA.PRIMARY_CAUSE_DESC = ET.CREATION_TEXT))
+  )
+  GROUP BY
+    TAT_ID,
+    TRC_ID,
+    TRS_ID,
+    IMSI,
+    MSISDN,
+    IMEI,
+    CELL_IDENTITY,
+    ROUTING_AREA,
+    COLLECTION_SOURCE,
+    ACCESS_POINT_NAME
+  );
+
+  RETVAL := SQL%ROWCOUNT;
+
+  enqueue_load              (
+                a_job_type      => xdv_generic_const_pkg.pc_dflw_jt_cda_1hr,
+                a_load_id       => l_load_id,
+                a_load_st_ts    => l_load_st_dt,
+                a_load_end_ts   => l_load_end_dt,
+                a_sender_id     => pc_sndr_asm_tekelec,
+                a_message       => 'Message with load-id ' || l_load_id || ', enqueued onto ' || xdv_generic_const_pkg.pc_aq_med_load_asm_qname);
+
+  COMMIT;
+  RETURN RETVAL;
+  END CDR_AGGR_1HR_INSERT;
+
+--------------------------------------------------------------------
+  /**
+
+  */
+  FUNCTION create_log_context(
+      a_log_section                    IN VARCHAR2 DEFAULT 'xdv_adapter'
+  ) RETURN xdv_logger_pkg.r_lcontext
+  IS
+      l_log_context xdv_logger_pkg.r_lcontext;
+  BEGIN
+      xdv_logger_pkg.clearContext(l_log_context);
+
+    l_log_context := xdv_logger_pkg.initContext2(
+                 a_min_log_lvl_id  => xdv_logger_pkg.pc_ll_trace,
+                   a_show_user       => xdv_logger_pkg.pc_us_or_os,
+                   a_def_log_section => a_log_section,
+                   a_use_ssec_prc    => FALSE ,
+                   a_show_callstack  => TRUE ,
+
+                   a_use_logtable    => TRUE ,
+                   a_use_auto_trans  => TRUE ,
+
+                   a_use_dbms_output => FALSE ,
+                 a_use_log_alert   => FALSE ,
+                 a_use_log_trace   => FALSE ,
+                   a_use_dbms_pipe   => FALSE ,
+                 a_use_tcp_sock    => FALSE ,
+                   a_use_utl_file    => FALSE ,
+
+                   a_utl_file_name   => xdv_logger_pkg.pc_def_utl_file_name,
+                   a_utl_file_dir    => xdv_logger_pkg.pc_def_utl_file_dir,
+
+                   a_use_utl_email   => FALSE,
+                   a_utl_email_user  => xdv_logger_pkg.pc_def_utl_mail_user,
+                   a_utl_email_subj  => xdv_logger_pkg.pc_def_utl_mail_subj,
+                 a_utl_email_recs  => pc_def_email_recs,
+
+                   a_dbms_pipe_name  => 'LOG_PIPE',
+                   a_pipe_to_log4j   => FALSE ,
+                  a_dbms_output_lsize => 80,
+                 a_dbms_output_headr => TRUE
+                   );
+
+      xdv_logger_pkg.info(a_log_ctx => l_log_context, a_log_msg => 'Logger initialized ...');
+
+      RETURN l_log_context;
+
+  END create_log_context;
+
+
+--------------------------------------------------------------------
+  /**
+
+  */
+  PROCEDURE release_log_context (
+  	a_log_context					IN OUT NOCOPY xdv_logger_pkg.r_lcontext
+  )
+  IS
+  BEGIN
+  	xdv_logger_pkg.info(a_log_ctx => a_log_context, a_log_msg => 'Logger released.');
+  	xdv_logger_pkg.clearContext(a_log_context);
+  END release_log_context;
+
+/*=========================*/
+/*===== Pkg Main Block ====*/
+/*=========================*/
+--------------------------------------------------------------------
+BEGIN
+
+  v_log_ctx := create_log_context;
+
+END XDV_ADAPTER_PKG;

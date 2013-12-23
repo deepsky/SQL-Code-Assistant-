@@ -1,0 +1,9 @@
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/tools
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/surefire-reports
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/classes
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/test-classes
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/src
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/src/webapp
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/src/webapp/meta
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/src/test
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/antlr

@@ -1,0 +1,18 @@
+-- Tab Delimited External Table
+CREATE TABLE ext_tab3 (
+empno CHAR(4),
+ename CHAR(20),
+job CHAR(20),
+deptno CHAR(2))
+ORGANIZATION EXTERNAL
+(TYPE oracle_loader
+DEFAULT DIRECTORY ext
+ACCESS PARAMETERS (
+RECORDS DELIMITED BY NEWLINE
+FIELDS TERMINATED BY '0x09'
+MISSING FIELD VALUES ARE NULL
+(empno, ename, job, deptno)
+)
+LOCATION ('demo1.dat'))
+PARALLEL
+REJECT LIMIT 0;

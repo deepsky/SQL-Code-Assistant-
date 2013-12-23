@@ -1,0 +1,80 @@
+REVOKE DROP ANY TABLE
+    FROM hr, oe;
+
+-- Revoking a Role from a User
+REVOKE dw_manager
+    FROM sh;
+
+
+-- Revoking a System Privilege from a Role
+REVOKE CREATE TABLESPACE
+   FROM dw_manager;
+
+
+-- Revoking a Role from a Role
+REVOKE dw_user
+
+  FROM dw_manager;
+--The following statement revokes UPDATE privilege on emp_details_view from all users:
+REVOKE UPDATE
+    ON emp_details_view FROM public;
+
+-- Revoking an Object Privilege on a Sequence from a User: Example You can grant the user oe the SELECT privilege
+-- on the departments_seq sequence in the schema hr with the following statement:
+GRANT SELECT
+    ON hr.departments_seq TO oe;
+
+-- To revoke the SELECT privilege on departments_seq from oe, issue the following statement:
+REVOKE select
+    ON hr.departments_seq FROM oe;
+
+
+
+--You can revoke the REFERENCES privilege on hr.employees from oe by issuing
+
+-- the following statement that contains the CASCADE CONSTRAINTS clause:
+REVOKE REFERENCES
+    ON hr.employees
+    FROM oe
+    CASCADE CONSTRAINTS;
+
+
+-- Revoking an Object Privilege on a Directory from a User:
+-- Example You can revoke the READ object privilege on directory bfile_dir from hr by issuing the following statement:
+
+REVOKE reaD on DIRECTORY bfile_dir FROM hr;
+-----
+REVOKE DROP ANY TABLE FROM hr, oe;
+
+-- Revoking a Role from a User
+REVOKE dw_manager FROM sh;
+
+
+-- Revoking a System Privilege from a Role
+REVOKE CREATE TABLESPACE FROM dw_manager;
+
+
+-- Revoking a Role from a Role
+REVOKE dw_user FROM dw_manager;
+--The following statement revokes UPDATE privilege on emp_details_view from all users:
+REVOKE UPDATE ON emp_details_view FROM PUBLIC;
+
+-- Revoking an Object Privilege on a Sequence from a User: Example You can grant the user oe the SELECT privilege
+-- on the departments_seq sequence in the schema hr with the following statement:
+GRANT SELECT ON hr.departments_seq TO oe;
+
+-- To revoke the SELECT privilege on departments_seq from oe, issue the following statement:
+REVOKE SELECT ON hr.departments_seq FROM oe;
+
+
+
+--You can revoke the REFERENCES privilege on hr.employees from oe by issuing
+
+-- the following statement that contains the CASCADE CONSTRAINTS clause:
+REVOKE REFERENCES ON hr.employees FROM oe CASCADE CONSTRAINTS;
+
+
+-- Revoking an Object Privilege on a Directory from a User:
+-- Example You can revoke the READ object privilege on directory bfile_dir from hr by issuing the following statement:
+
+REVOKE READ ON DIRECTORY bfile_dir FROM hr;

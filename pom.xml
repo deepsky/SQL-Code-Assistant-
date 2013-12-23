@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>sql-assistant</groupId>
+    <artifactId>sql-assistant</artifactId>
+    <packaging>pom</packaging>
+    <version>1.2-SNAPSHOT</version>
+
+    <properties>
+        <idea.home>/home/sky/idea-IC-129.713</idea.home>
+    </properties>
+
+    <modules>
+        <module>commons</module>
+        <module>antl_patch</module>
+        <module>database</module>
+        <module>main</module>
+        <module>parser</module>
+        <module>db_browser</module>
+        <module>result_panel</module>
+        <module>spec_src</module>
+        <module>resolver</module>
+        <module>tools</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.13</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <!--
+        To build plugin from command line just type
+        mvn -Ddebug1=true clean install
+
+        Skip tests:
+        mvn -Dmaven.test.skip=true clean install
+        -->
+        <profile>
+            <id>build_by_maven</id>
+            <activation>
+                <property>
+                    <name>debug1</name>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.intellij</groupId>
+                    <artifactId>openapi</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/openapi.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>com.intellij</groupId>
+                    <artifactId>idea</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/idea.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>com.intellij</groupId>
+                    <artifactId>idea_rt</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/idea_rt.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>com.intellij</groupId>
+                    <artifactId>openapi.extensions</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/extensions.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>org.jetbrains</groupId>
+                    <artifactId>annotations</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/annotations.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>org.jetbrains</groupId>
+                    <artifactId>ui</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/util.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>com.intellij</groupId>
+                    <artifactId>uiDesigner</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/forms_rt.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>gnu</groupId>
+                    <artifactId>trove</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/trove4j.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>org</groupId>
+                    <artifactId>picocontainer</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/picocontainer.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>org</groupId>
+                    <artifactId>jdom</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/jdom.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>com.intellij</groupId>
+                    <artifactId>resources_en</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/resources_en.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>com.intellij</groupId>
+                    <artifactId>resources</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/resources.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>com.intellij</groupId>
+                    <artifactId>ide</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${idea.home}/lib/bootstrap.jar</systemPath>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>production</id>
+            <!-- ...and here -->
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+<!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12.4</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <idea.platform.prefix>Idea</idea.platform.prefix>
+                        <idea.plugins.path>/home/sky/.IdeaIC12/system/plugins-sandbox/plugins</idea.plugins.path>
+                        <idea.home.path>/home/sky/.IdeaIC12/system/plugins-sandbox/test</idea.home.path>
+                        <jbdt.test.fixture>com.intellij.designer.dt.IJTestFixture</jbdt.test.fixture>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+-->
+        </plugins>
+    </build>
+
+
+</project>

@@ -1,0 +1,9 @@
+create  table   abc ( id number,text varchar2(
+99
+))
+;
+-----
+create table abc (
+    id      number,
+    text    varchar2(99)
+);

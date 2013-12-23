@@ -1,10 +1,37 @@
+#*.png
+#*.jar
 
-# classes
-sqlassistant-plugin9/SqlAssistantPlugin/classes/*
-sqlassistant-plugin9/SqlAssistantPlugin/build-classes/
-sqlassistant-plugin9/SqlAssistantPlugin/build
-sqlassistant-plugin9/idea-9-lib/
-sqlassistant-plugin10/idea-10-lib/
-sqlassistant-plugin10/SqlAssistantPlugin/build
-sqlassistant-plugin10/SqlAssistantPlugin/classes/
-[2~[2~sqlassistant-plugin11/SqlAssistantPlugin/classes/
+out/sql-assistant
+
+# Ignore Idea's project files
+#*.iml
+#antl_patch/antl_patch.iml
+#commons/commons.iml
+#database/database.iml
+#db_browser/db_browser.iml
+#main/main.iml
+#parser/parser.iml
+#plugin_runner/plugin_runner.iml
+#qa_accessory/qa_accessory.iml
+#resolver/resolver.iml
+#result_panel/result_panel.iml
+#spec_src/spec_src.iml
+#sql_assistant.iml
+#tools/tools.iml
+
+
+antl_patch/target
+commons/target
+database/target
+db_browser/target
+main/target
+parser/target
+resolver/target
+result_panel/target
+spec_src/target
+tools/target
+
+
+build_dir
+
+

@@ -1,0 +1,9 @@
+
+ORA =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = skulyk.kiev.company.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ORA)
+    )
+  )

@@ -1,0 +1,50 @@
+#Example 1
+
+berlin =
+   (DESCRIPTION =
+     (ADDRESS_LIST =
+         (ADDRESS =
+           (COMMUNITY = TCP)
+           (PROTOCOL = TCP)
+          (HOST = hun)
+           (PORT = 1521)
+          )
+      )
+     (CONNECT_DATA = (SID = kraus))
+    )
+
+#Example 2
+ORCL.WORLD =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = hostname)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = ORCL.WORLD)
+    )
+  )
+
+
+#Example 3
+donna-beq.gennick.org =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS =
+          (PROTOCOL = BEQ)(PROGRAM = oracle)
+          (ARGV0 = oracleDONNA)
+          (ARGS = '(DESCRIPTION=(LOCAL=YES)(ADDRESS=(PROTOCOL=BEQ)))')
+      )
+    )
+    (CONNECT_DATA = (SERVICE_NAME = DONNA.GENNICK.ORG))
+  )
+
+
+/*
+ Example 4
+*/
+spx2tcp  = (description=
+              (source_route=yes)
+              (address=(protocol=spx)(service=orasrvc1))
+              (address=(protocol=tcp)(port=1580)(host=spcstn))
+              (connect_data=(service_name=sales2))
+          )

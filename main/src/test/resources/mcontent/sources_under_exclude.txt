@@ -1,0 +1,12 @@
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/tools
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/surefire-reports
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/classes
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/test-classes
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/src/test/resources
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/src/test/resources/com/abath/tersis
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/src/test/spec
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/src
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/sql
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/src/test/spec/src1
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/generated

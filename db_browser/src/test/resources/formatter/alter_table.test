@@ -1,0 +1,73 @@
+ALTER
+TABLE
+xdv_net_path_dt
+ADD (
+hash_code RAW(64),
+collection_source VARCHAR2(32 BYTE),
+load_seq_nbr INTEGER
+);
+
+ALTER TABLE xdv_ami_intmes_ft MODIFY (
+	read_reply						VARCHAR2(4 BYTE),
+	report_allowed					VARCHAR2(4 BYTE),
+	delivery_report					VARCHAR2(4 BYTE),
+	priority						VARCHAR2(8 BYTE),
+	content_location				VARCHAR2(128 BYTE),
+	message_id						VARCHAR2(128 BYTE),
+	transaction_id					VARCHAR2(128 BYTE),
+	to_recipient					VARCHAR2(128 BYTE),
+	from_originator					VARCHAR2(128 BYTE)
+);
+
+-- Syntax #2
+ALTER TABLE supplier
+ADD ( 	supplier_name 	varchar2(50),
+  	city 	varchar2(45) );
+ALTER TABLE XSL_RPT_PARAM_T ADD
+(
+CONSTRAINT XSL_RPT_PARAM_PK
+PRIMARY KEY(
+ID
+)
+);
+ALTER TABLE
+XSL_RPT_PARAM_T
+ADD
+CONSTRAINT XSL_RPT_PARAM_PK
+PRIMARY KEY (ID
+)
+;
+-----
+ALTER TABLE xdv_net_path_dt ADD (
+    hash_code               RAW(64),
+    collection_source       VARCHAR2(32 BYTE),
+    load_seq_nbr            INTEGER
+);
+
+ALTER TABLE xdv_ami_intmes_ft MODIFY (
+    read_reply              VARCHAR2(4 BYTE),
+    report_allowed          VARCHAR2(4 BYTE),
+    delivery_report         VARCHAR2(4 BYTE),
+    priority                VARCHAR2(8 BYTE),
+    content_location        VARCHAR2(128 BYTE),
+    message_id              VARCHAR2(128 BYTE),
+    transaction_id          VARCHAR2(128 BYTE),
+    to_recipient            VARCHAR2(128 BYTE),
+    from_originator         VARCHAR2(128 BYTE)
+);
+
+-- Syntax #2
+ALTER TABLE supplier ADD (
+    supplier_name   varchar2(50),
+    city            varchar2(45)
+);
+
+ALTER TABLE XSL_RPT_PARAM_T ADD
+(
+    CONSTRAINT XSL_RPT_PARAM_PK
+        PRIMARY KEY (ID)
+);
+
+ALTER TABLE XSL_RPT_PARAM_T ADD
+    CONSTRAINT XSL_RPT_PARAM_PK
+        PRIMARY KEY (ID);

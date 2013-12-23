@@ -1,0 +1,88 @@
+DECLARE TABLE_EXIST     NUMBER; CHECKINS_EXIST  NUMBER;
+BEGIN
+    SELECT COUNT (*),
+        SUM(CASE WHEN COLUMN_NAME = 'CHECKINS' THEN 1 ELSE 0 END) INTO TABLE_EXIST, CHECKINS_EXIST
+    FROM USER_TAB_COLUMNS
+    WHERE TABLE_NAME = 'BILLING_EVENTS';
+
+    IF TABLE_EXIST <> 0 THEN
+        -- Table exist, check CHECKINS column
+        IF CHECKINS_EXIST = 0 THEN
+        -- Column does not exists, create it
+        DBMS_OUTPUT.PUT_LINE('Column CHECKINS does not exists, create it ...');
+        EXECUTE IMMEDIATE 'ALTER TABLE BILLING_EVENTS ADD CHECKINS NUMBER';
+        DBMS_OUTPUT.PUT_LINE('Done');
+        ELSE
+        -- All stuff in place
+        DBMS_OUTPUT.PUT_LINE('All stuff in place, nothing to do');
+        END IF;
+    ELSE
+        -- Table does not exist, create table
+        DBMS_OUTPUT.PUT_LINE('Table BILLING_EVENTS does not exists, create it ...');
+        EXECUTE IMMEDIATE 'CREATE TABLE BILLING_EVENTS ('
+        || 'ID    INTEGER PRIMARY KEY,'
+        || 'AIRLINECODE    VARCHAR2(2),'
+        || 'PNR_CREATIONS		INTEGER,'
+            || 'PNR_CANCELS		   INTEGER,'
+            || 'TICKETS		      INTEGER,'
+            || 'CHECKINS		      INTEGER,'
+            || 'AVAILABILITIES		INTEGER,'
+            || 'AIRFARE_SHOPS		INTEGER,'
+            || 'AIRFARE_PRICES		INTEGER,'
+            || 'PNR_READS		   INTEGER,'
+            || 'EMAILS		   INTEGER,'
+            || 'SMSS		      INTEGER,'
+            || 'BAGTRACES		INTEGER,'
+            || 'FLIGHT_STATUS		INTEGER,'
+            || 'EVENT_TIMESTAMP   DATE)';
+        DBMS_OUTPUT.PUT_LINE('Done')
+        ;
+    END IF
+    ;
+END;
+
+/
+-----
+DECLARE
+    TABLE_EXIST     NUMBER;
+    CHECKINS_EXIST  NUMBER;
+BEGIN
+    SELECT COUNT (*),
+        SUM(CASE WHEN COLUMN_NAME = 'CHECKINS' THEN 1 ELSE 0 END) INTO TABLE_EXIST, CHECKINS_EXIST
+    FROM USER_TAB_COLUMNS
+    WHERE TABLE_NAME = 'BILLING_EVENTS';
+
+    IF TABLE_EXIST <> 0 THEN
+        -- Table exist, check CHECKINS column
+        IF CHECKINS_EXIST = 0 THEN
+            -- Column does not exists, create it
+            DBMS_OUTPUT.PUT_LINE('Column CHECKINS does not exists, create it ...');
+            EXECUTE IMMEDIATE 'ALTER TABLE BILLING_EVENTS ADD CHECKINS NUMBER';
+            DBMS_OUTPUT.PUT_LINE('Done');
+        ELSE
+            -- All stuff in place
+            DBMS_OUTPUT.PUT_LINE('All stuff in place, nothing to do');
+        END IF;
+    ELSE
+        -- Table does not exist, create table
+        DBMS_OUTPUT.PUT_LINE('Table BILLING_EVENTS does not exists, create it ...');
+        EXECUTE IMMEDIATE 'CREATE TABLE BILLING_EVENTS ('
+            || 'ID    INTEGER PRIMARY KEY,'
+            || 'AIRLINECODE    VARCHAR2(2),'
+            || 'PNR_CREATIONS		INTEGER,'
+            || 'PNR_CANCELS		   INTEGER,'
+            || 'TICKETS		      INTEGER,'
+            || 'CHECKINS		      INTEGER,'
+            || 'AVAILABILITIES		INTEGER,'
+            || 'AIRFARE_SHOPS		INTEGER,'
+            || 'AIRFARE_PRICES		INTEGER,'
+            || 'PNR_READS		   INTEGER,'
+            || 'EMAILS		   INTEGER,'
+            || 'SMSS		      INTEGER,'
+            || 'BAGTRACES		INTEGER,'
+            || 'FLIGHT_STATUS		INTEGER,'
+            || 'EVENT_TIMESTAMP   DATE)';
+        DBMS_OUTPUT.PUT_LINE('Done');
+    END IF;
+END;
+/

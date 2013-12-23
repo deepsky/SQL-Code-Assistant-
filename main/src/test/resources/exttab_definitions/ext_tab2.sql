@@ -1,0 +1,21 @@
+CREATE TABLE ext_tab2 (
+empno  CHAR(4),
+ename  CHAR(20),
+job    CHAR(20),
+deptno CHAR(2))
+ORGANIZATION EXTERNAL (
+  TYPE oracle_loader
+  DEFAULT DIRECTORY ext
+    ACCESS PARAMETERS (
+    RECORDS DELIMITED BY NEWLINE
+    BADFILE 'bad_%a_%p.bad'
+    LOGFILE 'log_%a_%p.log'
+    FIELDS TERMINATED BY ','
+    MISSING FIELD VALUES ARE NULL
+    REJECT ROWS WITH ALL NULL FIELDS
+    (empno, ename, job, deptno))
+    LOCATION ('demo1.dat')
+  )
+PARALLEL
+REJECT LIMIT 0
+NOMONITORING;

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="DEFAULT_COMPILER" value="Javac" />
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="antl_patch" />
+        <module name="commons" />
+        <module name="database" />
+        <module name="db_browser" />
+        <module name="main" />
+        <module name="parser" />
+        <module name="resolver" />
+        <module name="result_panel" />
+        <module name="spec_src" />
+        <module name="tools" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="antl_patch" target="1.6" />
+      <module name="commons" target="1.6" />
+      <module name="database" target="1.6" />
+      <module name="db_browser" target="1.6" />
+      <module name="main" target="1.6" />
+      <module name="parser" target="1.6" />
+      <module name="resolver" target="1.6" />
+      <module name="result_panel" target="1.6" />
+      <module name="spec_src" target="1.6" />
+      <module name="sql-assistant" target="1.6" />
+      <module name="tools" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
+

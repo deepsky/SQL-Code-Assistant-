@@ -1,0 +1,21 @@
+CREATE TABLE RPT_PARAM_T (
+    ID                      INTEGER NOT NULL,
+    OBJ_ID                  INTEGER NOT NULL,
+    CREATE_DATE             DATE NULL,
+    FREEZE_DATE             DATE,
+    NAME                    VARCHAR2(256 BYTE),
+    NOTES                   VARCHAR2(1024 CHAR) NOT NULL,
+    TYPE                    NUMBER NOT NULL,
+    REPORT_OBJECT_TYPE      NUMBER NOT NULL
+)
+-----
+CREATE TABLE RPT_PARAM_T (
+    ID                      INTEGER             NOT NULL,
+    OBJ_ID                  INTEGER             NOT NULL,
+    CREATE_DATE             DATE                NULL,
+    FREEZE_DATE             DATE,
+    NAME                    VARCHAR2(256 BYTE),
+    NOTES                   VARCHAR2(1024 CHAR) NOT NULL,
+    TYPE                    NUMBER              NOT NULL,
+    REPORT_OBJECT_TYPE      NUMBER              NOT NULL
+)

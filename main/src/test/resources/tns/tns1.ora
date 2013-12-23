@@ -1,0 +1,8 @@
+# Example1
+
+net_service_name=
+(DESCRIPTION=
+  (enable=broken)
+  (ADDRESS=(PROTOCOL=tcp)(HOST=sales1-svr)(PORT=1521))
+  (ADDRESS=(PROTOCOL=tcp)(HOST=sales2-svr)(PORT=1521))
+  (CONNECT_DATA=(SERVICE_NAME=sales.us.example.com)))

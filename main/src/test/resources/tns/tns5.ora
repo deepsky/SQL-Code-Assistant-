@@ -1,0 +1,66 @@
+/*
+    SECURITY permits the SSL_SERVER_CERT_DN subparameter.
+*/
+
+net_service_name=
+ (DESCRIPTION=
+  (ADDRESS=(PROTOCOL=tcp)(HOST=sales1-svr)(PORT=1521))
+  (ADDRESS=(PROTOCOL=tcp)(HOST=sales2-svr)(PORT=1521))
+  (CONNECT_DATA=
+   (SERVICE_NAME=sales.us.example.com))
+   (SECURITY=
+    (SSL_SERVER_CERT_DN="cn=sales,cn=OracleContext,dc=us,dc=example,dc=com")))
+
+
+net_service_name2=
+ (DESCRIPTION=
+  (ADDRESS=(PROTOCOL=tcp)(HOST=sales1-svr)(PORT=1521))
+  (ADDRESS=(PROTOCOL=tcp)(HOST=sales2-svr)(PORT=1521))
+   (CONNECT_DATA=
+    (SERVICE_NAME=sales.us.example.com)
+    (INSTANCE_NAME=sales1)))
+
+
+net_service_name3=
+ (DESCRIPTION=
+  (ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=1521))
+  (ADDRESS=(PROTOCOL=tcp)(HOST=sales2-svr)(PORT=1521))
+   (CONNECT_DATA=
+    (SERVICE_NAME=generic)
+    (GLOBAL_NAME=alpha5)))
+
+
+net_service_name4=
+ (DESCRIPTION=
+   (ADDRESS_LIST=
+     (ADDRESS=(PROTOCOL=tcp)(HOST=sales1-server)(PORT=1521)
+        (SEND_BUF_SIZE=11784))
+     (ADDRESS=(PROTOCOL=tcp)(HOST=sales2-server)(PORT=1521)
+        (SEND_BUF_SIZE=11784)))
+   (CONNECT_DATA=
+     (SERVICE_NAME=sales.us.example.com))
+   )
+
+net_service_name5=
+ (DESCRIPTION=
+   (SEND_BUF_SIZE=11784)
+   (ADDRESS_LIST=
+     (ADDRESS=(PROTOCOL=tcp)(HOST=hr1-server)(PORT=1521))
+     (ADDRESS=(PROTOCOL=tcp)(HOST=hr2-server)(PORT=1521)))
+   (CONNECT_DATA=
+     (SERVICE_NAME=hr.us.example.com))
+  )
+
+
+
+net_service_name6=
+(DESCRIPTION_LIST=
+ (DESCRIPTION=
+     (ADDRESS=(PROTOCOL=tcp)(HOST=hr1-server)(PORT=1521))
+    (CONNECT_DATA=(SERVICE_NAME=sales.example.com))
+ )
+ (DESCRIPTION=
+     (ADDRESS=(PROTOCOL=tcp)(HOST=hr2-server)(PORT=1521))
+  (CONNECT_DATA=(SERVICE_NAME=sales2.us.example.com)))
+
+ )

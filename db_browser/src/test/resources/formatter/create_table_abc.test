@@ -1,0 +1,5 @@
+create  table   abc ( id number )  ;
+-----
+create table abc (
+    id      number
+);

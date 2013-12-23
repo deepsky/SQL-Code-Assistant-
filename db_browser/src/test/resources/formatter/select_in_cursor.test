@@ -1,0 +1,33 @@
+procedure   GetEmpData ( indeptno IN NUMBER , EmpCursor in out empcur )
+is
+begin
+    open EmpCursor  for
+    select  *
+    from emp
+    where deptno = indeptno;
+end GetEmpData;
+
+procedure GetEmpData(  indeptno IN NUMBER , EmpCursor  in out empcur )
+is
+begin
+    open EmpCursor  for  select *
+       from emp
+       where deptno = indeptno;
+end GetEmpData;
+-----
+procedure GetEmpData (indeptno IN NUMBER, EmpCursor in out empcur)
+is
+begin
+    open EmpCursor for
+            select *
+            from emp
+            where deptno = indeptno;
+end GetEmpData;
+
+procedure GetEmpData (indeptno IN NUMBER, EmpCursor in out empcur)
+is
+begin
+    open EmpCursor for select *
+                       from emp
+                       where deptno = indeptno;
+end GetEmpData;

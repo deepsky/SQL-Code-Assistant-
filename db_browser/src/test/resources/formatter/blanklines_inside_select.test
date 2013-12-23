@@ -1,0 +1,33 @@
+SELECT
+                TR
+                .
+                TABLE_NAME AS TABLE_NAME,
+                TR1.TABLE_NAME AS    REF_TYPE,
+                TR1.INTERNAL_TABLE_NAME    AS   INTERNAL_TABLE_NAME,
+
+                MSK.MASK_NAME
+
+     --first_value(MSK.MASK_NAME) over (partition by TR.TABLE_NAME order by FA.CREATE_DATE DESC ) AS firstval
+                 --row_number() over (partition by TR.TABLE_NAME order by FA.CREATE_DATE DESC ) seq
+      FROM
+
+                XDV_PRD_AGGR_MASK_T MSK
+
+            WHERE
+                FA
+                .FMN_ID = FM
+                .ID
+                AND FA.TDM_ID = TR1.ID
+-----
+SELECT
+    TR.TABLE_NAME AS TABLE_NAME,
+    TR1.TABLE_NAME AS REF_TYPE,
+    TR1.INTERNAL_TABLE_NAME AS INTERNAL_TABLE_NAME,
+    MSK.MASK_NAME
+    --first_value(MSK.MASK_NAME) over (partition by TR.TABLE_NAME order by FA.CREATE_DATE DESC ) AS firstval
+    --row_number() over (partition by TR.TABLE_NAME order by FA.CREATE_DATE DESC ) seq
+FROM
+    XDV_PRD_AGGR_MASK_T MSK
+WHERE
+    FA.FMN_ID = FM.ID
+    AND FA.TDM_ID = TR1.ID

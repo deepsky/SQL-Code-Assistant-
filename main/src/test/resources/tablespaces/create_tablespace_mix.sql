@@ -1,0 +1,38 @@
+CREATE TEMPORARY TABLESPACE tbs_temp_02
+  TEMPFILE 'temp02.dbf' SIZE 5M AUTOEXTEND ON
+  TABLESPACE GROUP tbs_grp_01;
+
+CREATE TABLESPACE tbs_01
+   DATAFILE 'tbs_f2.dat' SIZE 40M
+   ONLINE;
+
+CREATE TABLESPACE tbs_03
+   DATAFILE 'tbs_f03.dbf' SIZE 20M
+   LOGGING;
+
+CREATE TABLESPACE tbs_02
+   DATAFILE 'diskb:tbs_f5.dat' SIZE 500K REUSE
+   AUTOEXTEND ON NEXT 500K MAXSIZE 100M;
+
+CREATE TABLESPACE tbs_04 DATAFILE 'file_1.f' SIZE 10M
+   EXTENT MANAGEMENT LOCAL UNIFORM SIZE 128K;
+
+
+create tablespace TEST01_TS
+  logging
+  datafile 'E:\app\sky\oradata\orcl\TEST01_TS.DBF'
+  size 10m
+  autoextend on
+  next 10m maxsize 128m
+  extent management local;
+
+CREATE UNDO TABLESPACE undots1
+   DATAFILE 'undotbs_1a.f'
+   SIZE 10M AUTOEXTEND ON
+   RETENTION GUARANTEE;
+
+
+CREATE BIGFILE TABLESPACE bigtbs_01
+  DATAFILE 'bigtbs_f1.dat'
+  SIZE 20M AUTOEXTEND ON;
+

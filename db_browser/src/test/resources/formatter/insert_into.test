@@ -1,0 +1,9 @@
+insert into dr$preference
+(   pre_id ,  pre_name, pre_owner#, pre_obj_id, pre_cla_id, pre_valid  )
+values
+( l_pre_id, p_pre_name  ,   l_owner#, l_obj_id,   l_cla_id, 'Y' );
+-----
+insert into dr$preference
+    (pre_id, pre_name, pre_owner#, pre_obj_id, pre_cla_id, pre_valid)
+values
+    (l_pre_id, p_pre_name, l_owner#, l_obj_id, l_cla_id, 'Y');

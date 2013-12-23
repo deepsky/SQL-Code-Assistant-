@@ -1,0 +1,23 @@
+RENAME
+TABLE
+xdv_net_path_dt to
+abc
+;
+
+RENAME
+TABLE
+xdv_net_path_dt to
+abc , supplier         to       good_supplier
+;     RENAME
+TABLE
+XSL_RPT_PARAM_T to
+XSL_RPT_PARAM_T345 , schema1. supplier to
+schema1.
+good_supplier
+;
+-----
+RENAME TABLE xdv_net_path_dt to abc;
+
+RENAME TABLE xdv_net_path_dt to abc, supplier to good_supplier;
+
+RENAME TABLE XSL_RPT_PARAM_T to XSL_RPT_PARAM_T345, schema1.supplier to schema1.good_supplier;

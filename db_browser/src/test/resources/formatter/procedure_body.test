@@ -1,0 +1,303 @@
+PROCEDURE populate_facility_from_pth (
+    a_msg IN xdv_flow_status_payload_tp
+)
+IS
+    -- Start declaration
+    l_start_cpu_time INTEGER;
+
+    --l_start_time    INTEGER;
+    l_row_count    NUMBER   := 0;
+    lc_ref_tab     xdv_prd_table_ref_def_t.INTERNAL_TABLE_NAME%TYPE := 'XDV_NET_FACILITY_T';
+
+    CURSOR CURS IS
+    SELECT
+        XDV_NET_NFA_SEQ.NEXTVAL,
+        FAC_TYPE_ID,
+        FAC_ID,
+        FAC_ID,
+        sysdate,
+        'xDR',
+        a_msg.load_id -- a_load_seq_nbr
+    FROM (
+        SELECT F01_TYPE_ID FAC_TYPE_ID, FACILITY_01 FAC_ID
+        FROM XDV_NET_PATH_TT
+        GROUP BY F01_TYPE_ID, FACILITY_01
+        UNION
+        SELECT F02_TYPE_ID FAC_TYPE_ID, FACILITY_02 FAC_ID
+        FROM XDV_NET_PATH_TT
+        GROUP BY F02_TYPE_ID, FACILITY_02
+        UNION
+        SELECT F03_TYPE_ID FAC_TYPE_ID, FACILITY_03 FAC_ID
+        FROM XDV_NET_PATH_TT
+        GROUP BY F03_TYPE_ID, FACILITY_03
+        UNION
+        SELECT F04_TYPE_ID FAC_TYPE_ID, FACILITY_04 FAC_ID
+        FROM XDV_NET_PATH_TT
+        GROUP BY F04_TYPE_ID, FACILITY_04
+        UNION
+        SELECT F10_TYPE_ID FAC_TYPE_ID, FACILITY_10 FAC_ID
+        FROM XDV_NET_PATH_TT
+        GROUP BY F10_TYPE_ID, FACILITY_10
+        ) XDR
+    LEFT OUTER JOIN XDV_NET_FACILITY_T FAC
+    ON (XDR.FAC_ID = FAC.FACILITY_ID AND
+    XDR.FAC_TYPE_ID = FAC.NFTID AND
+    FAC.OBSOLETE_DATE IS NULL
+    )
+    WHERE FAC.ID IS NULL;
+
+
+
+
+TYPE rc IS RECORD (
+    ID XDV_NET_FACILITY_T.ID%TYPE,
+    NFTIDSI XDV_NET_FACILITY_T.NFTID%TYPE,
+    FACILITY_ID XDV_NET_FACILITY_T.FACILITY_ID%TYPE,
+    FACILITY_NAME XDV_NET_FACILITY_T.FACILITY_NAME%TYPE,
+    CREATE_DATE XDV_NET_FACILITY_T.CREATE_DATE%TYPE,
+    CREATE_SOURCE XDV_NET_FACILITY_T.CREATE_SOURCE%TYPE,
+    LOAD_SEQ_NBR XDV_NET_FACILITY_T.LOAD_SEQ_NBR%TYPE
+    );
+
+    TYPE TABLE_ID IS TABLE OF rc;
+    v_table_id              TABLE_ID                                         := NULL;
+    n_rows                  PLS_INTEGER                                      := 5000;
+BEGIN
+
+    l_start_time     := DBMS_UTILITY.get_time;
+    l_start_cpu_time := DBMS_UTILITY.get_cpu_time;
+    xdv_logger_proxy_pkg.info(a_log_section => pc_pkg_log_section, a_log_msg => 'populate facility from ggt for load_seq_nbr=' || a_msg.load_id);
+
+
+    l_row_count      := extract_new_paths(
+        a_job_type => a_msg.job_type,
+        a_path_type => a_msg.job_id, -- path_type
+        a_load_seq_nbr => a_msg.load_id -- load_seq_nbr
+        );
+    IF l_row_count > 0 THEN
+        OPEN CURS;
+        LOOP
+            FETCH CURS BULK COLLECT INTO v_table_id limit n_rows;
+            EXIT WHEN v_table_id.COUNT = 0;
+            FORALL i IN v_table_id.FIRST .. v_table_id.LAST
+            INSERT /* APPEND */
+            INTO (select
+                      ID,
+                      NFTID,
+                      FACILITY_ID,
+                      FACILITY_NAME,
+                      CREATE_DATE,
+                      CREATE_SOURCE,
+                      LOAD_SEQ_NBR
+                  from XDV_NET_FACILITY_T)
+            values v_table_id(i);
+            commit;
+            l_row_count := l_row_count + v_table_id.COUNT;
+            --		   xdv_logger_proxy_pkg.info(a_log_section => pc_pkg_log_section, a_log_msg => 'XDV_NET_FACILITY_T - '||l_row_count);
+        END LOOP;
+        CLOSE CURS;
+        xdv_logger_proxy_pkg.info(a_log_section => pc_pkg_log_section, a_log_msg => 'XDV__NET_FACILITY_T - ' || l_row_count);
+
+        EXECUTE IMMEDIATE 'TRUNCATE TABLE XDV_NET_PATH_TT';
+    END IF;
+    xdv_logger_proxy_pkg.info(a_log_section => pc_pkg_log_section, a_log_msg => l_row_count || ' rows loaded into facility table for load_seq_nbr[' || a_msg.load_id || '] from ' || a_msg.sender_id || '. Elapsed time: ' || ((DBMS_UTILITY.get_time - l_start_time) / 100) || ' second(s) out of which CPU time ' || ((DBMS_UTILITY.get_cpu_time - l_start_cpu_time) / 100) || ' second(s).');
+
+    IF l_row_count > 0 THEN
+        xdv_int_job_control_pkg.update_ref_tab_lsn(a_msg.load_id, lc_ref_tab);
+ELSE
+    jdjd := '333';
+    END IF;
+END populate_facility_from_pth;/
+
+BEGIN
+-- Display the first 5 names to show they're messed up
+ uuu     := '333';
+    ieioeoe := 8938 + 383;
+  IF IN_BOOKING_REF IS NULL
+   THEN
+       -- not correct indent!
+       RETURN NULL;
+   END IF;
+   FOR REC IN (
+           SELECT TICKETNUMBER
+           FROM TICKETING_EVENTS
+           WHERE BOOKINGREF = IN_BOOKING_REF)
+   LOOP
+     IF (NOT TICKET_NUMBERS IS NULL) THEN
+          TICKET_NUMBERS := TICKET_NUMBERS || ', ';
+        END IF;
+        TICKET_NUMBERS := TICKET_NUMBERS || REC.TICKETNUMBER;
+    END LOOP;
+    --DECLARE
+    --kkk     varchar2(45);
+    BEGIN        uuu     := '333';
+ieioeoe := 8938 + 383;        DECLARE
+        kkk     varchar2(45);
+                BEGIN
+            uuu := '333';
+            DECLARE
+                kkk     varchar2(45);
+            BEGIN
+                uuu := '333';
+                delete from abc;
+                ieioeoe := 8938 + 383;
+            END;
+            ieioeoe := 8938 + 383;
+
+        END;
+    END;
+
+    RETURN TICKET_NUMBERS;
+END;
+/
+-----------------------------------------------------------------------------
+PROCEDURE populate_facility_from_pth (
+    a_msg IN xdv_flow_status_payload_tp
+)
+IS
+    -- Start declaration
+    l_start_cpu_time        INTEGER;
+
+    --l_start_time    INTEGER;
+    l_row_count             NUMBER                                           := 0;
+    lc_ref_tab              xdv_prd_table_ref_def_t.INTERNAL_TABLE_NAME%TYPE := 'XDV_NET_FACILITY_T';
+
+    CURSOR CURS IS
+        SELECT
+            XDV_NET_NFA_SEQ.NEXTVAL,
+            FAC_TYPE_ID,
+            FAC_ID,
+            FAC_ID,
+            sysdate,
+            'xDR',
+            a_msg.load_id -- a_load_seq_nbr
+        FROM (
+            SELECT F01_TYPE_ID FAC_TYPE_ID, FACILITY_01 FAC_ID
+            FROM XDV_NET_PATH_TT
+            GROUP BY F01_TYPE_ID, FACILITY_01
+            UNION
+            SELECT F02_TYPE_ID FAC_TYPE_ID, FACILITY_02 FAC_ID
+            FROM XDV_NET_PATH_TT
+            GROUP BY F02_TYPE_ID, FACILITY_02
+            UNION
+            SELECT F03_TYPE_ID FAC_TYPE_ID, FACILITY_03 FAC_ID
+            FROM XDV_NET_PATH_TT
+            GROUP BY F03_TYPE_ID, FACILITY_03
+            UNION
+            SELECT F04_TYPE_ID FAC_TYPE_ID, FACILITY_04 FAC_ID
+            FROM XDV_NET_PATH_TT
+            GROUP BY F04_TYPE_ID, FACILITY_04
+            UNION
+            SELECT F10_TYPE_ID FAC_TYPE_ID, FACILITY_10 FAC_ID
+            FROM XDV_NET_PATH_TT
+            GROUP BY F10_TYPE_ID, FACILITY_10
+            ) XDR
+            LEFT OUTER JOIN XDV_NET_FACILITY_T FAC
+            ON (XDR.FAC_ID = FAC.FACILITY_ID AND
+            XDR.FAC_TYPE_ID = FAC.NFTID AND
+            FAC.OBSOLETE_DATE IS NULL
+            )
+        WHERE FAC.ID IS NULL;
+
+    TYPE rc IS RECORD (
+        ID            XDV_NET_FACILITY_T.ID%TYPE,
+        NFTIDSI       XDV_NET_FACILITY_T.NFTID%TYPE,
+        FACILITY_ID   XDV_NET_FACILITY_T.FACILITY_ID%TYPE,
+        FACILITY_NAME XDV_NET_FACILITY_T.FACILITY_NAME%TYPE,
+        CREATE_DATE   XDV_NET_FACILITY_T.CREATE_DATE%TYPE,
+        CREATE_SOURCE XDV_NET_FACILITY_T.CREATE_SOURCE%TYPE,
+        LOAD_SEQ_NBR  XDV_NET_FACILITY_T.LOAD_SEQ_NBR%TYPE
+        );
+
+    TYPE TABLE_ID   IS TABLE OF rc;
+    v_table_id      TABLE_ID    := NULL;
+    n_rows          PLS_INTEGER := 5000;
+BEGIN
+    l_start_time     := DBMS_UTILITY.get_time;
+    l_start_cpu_time := DBMS_UTILITY.get_cpu_time;
+    xdv_logger_proxy_pkg.info(a_log_section => pc_pkg_log_section, a_log_msg => 'populate facility from ggt for load_seq_nbr=' || a_msg.load_id);
+
+
+    l_row_count := extract_new_paths(
+        a_job_type => a_msg.job_type,
+        a_path_type => a_msg.job_id, -- path_type
+        a_load_seq_nbr => a_msg.load_id -- load_seq_nbr
+        );
+    IF l_row_count > 0 THEN
+        OPEN CURS;
+        LOOP
+            FETCH CURS BULK COLLECT INTO v_table_id limit n_rows;
+            EXIT WHEN v_table_id.COUNT = 0;
+            FORALL i IN v_table_id.FIRST .. v_table_id.LAST
+            INSERT /* APPEND */
+            INTO (select
+                      ID,
+                      NFTID,
+                      FACILITY_ID,
+                      FACILITY_NAME,
+                      CREATE_DATE,
+                      CREATE_SOURCE,
+                      LOAD_SEQ_NBR
+                  from XDV_NET_FACILITY_T)
+            values v_table_id(i);
+            commit;
+            l_row_count := l_row_count + v_table_id.COUNT;
+            --		   xdv_logger_proxy_pkg.info(a_log_section => pc_pkg_log_section, a_log_msg => 'XDV_NET_FACILITY_T - '||l_row_count);
+        END LOOP;
+        CLOSE CURS;
+        xdv_logger_proxy_pkg.info(a_log_section => pc_pkg_log_section, a_log_msg => 'XDV__NET_FACILITY_T - ' || l_row_count);
+
+        EXECUTE IMMEDIATE 'TRUNCATE TABLE XDV_NET_PATH_TT';
+    END IF;
+    xdv_logger_proxy_pkg.info(a_log_section => pc_pkg_log_section, a_log_msg => l_row_count || ' rows loaded into facility table for load_seq_nbr[' || a_msg.load_id || '] from ' || a_msg.sender_id || '. Elapsed time: ' || ((DBMS_UTILITY.get_time - l_start_time) / 100) || ' second(s) out of which CPU time ' || ((DBMS_UTILITY.get_cpu_time - l_start_cpu_time) / 100) || ' second(s).');
+
+    IF l_row_count > 0 THEN
+        xdv_int_job_control_pkg.update_ref_tab_lsn(a_msg.load_id, lc_ref_tab);
+    ELSE
+        jdjd := '333';
+    END IF;
+END populate_facility_from_pth;
+/
+
+BEGIN
+    -- Display the first 5 names to show they're messed up
+    uuu     := '333';
+    ieioeoe := 8938 + 383;
+    IF IN_BOOKING_REF IS NULL
+    THEN
+        -- not correct indent!
+        RETURN NULL;
+    END IF;
+    FOR REC IN (
+            SELECT TICKETNUMBER
+            FROM TICKETING_EVENTS
+            WHERE BOOKINGREF = IN_BOOKING_REF)
+    LOOP
+        IF (NOT TICKET_NUMBERS IS NULL) THEN
+            TICKET_NUMBERS := TICKET_NUMBERS || ', ';
+        END IF;
+        TICKET_NUMBERS := TICKET_NUMBERS || REC.TICKETNUMBER;
+    END LOOP;
+    --DECLARE
+    --kkk     varchar2(45);
+    BEGIN
+        uuu     := '333';
+        ieioeoe := 8938 + 383;
+        DECLARE
+            kkk     varchar2(45);
+        BEGIN
+            uuu := '333';
+            DECLARE
+                kkk     varchar2(45);
+            BEGIN
+                uuu := '333';
+                delete from abc;
+                ieioeoe := 8938 + 383;
+            END;
+            ieioeoe := 8938 + 383;
+        END;
+    END;
+
+    RETURN TICKET_NUMBERS;
+END;
+/

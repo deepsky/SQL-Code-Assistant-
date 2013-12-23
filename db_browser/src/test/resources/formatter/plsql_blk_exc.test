@@ -1,0 +1,209 @@
+CREATE OR REPLACE PROCEDURE myproc IS
+
+BEGIN
+NULL;
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+ NULL;
+  WHEN ZERO_DIVIDE THEN
+NULL;
+WHEN OTHERS THEN
+    NULL;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE trap_errcode IS
+
+ecode    NUMBER(38);
+thisproc CONSTANT VARCHAR2(50) := 'trap_errmesg';
+
+BEGIN
+  NULL;
+  RAISE too_many_rows;
+EXCEPTION
+WHEN OTHERS THEN
+    ecode := SQLCODE;
+    dbms_output.put_line(thisproc || ' - ' || ecode);
+END trap_errcode;
+/
+
+DECLARE
+ emesg VARCHAR2(250);
+BEGIN
+  NULL;
+  RAISE too_many_rows;
+EXCEPTION  WHEN OTHERS THEN
+emesg := SQLERRM;
+  dbms_output.put_line(emesg);
+END trap_errmesg;
+/
+
+CREATE OR REPLACE PROCEDURE invcur_exception IS
+ CURSOR x_cur is
+ SELECT *
+ FROM all_tables;
+
+ x_rec x_cur%rowtype;
+BEGIN
+  LOOP
+    -- note the cursor was not opened before the FETCH
+    FETCH x_cur INTO x_rec;
+    EXIT WHEN x_cur%notfound;
+
+    NULL;
+  END LOOP;
+EXCEPTION
+  WHEN INVALID_CURSOR THEN
+    dbms_output.put_line('Whoops!');
+  WHEN OTHERS THEN
+    dbms_output.put_line('Some Other Problem');
+END invcur_exception;
+/
+
+CREATE OR REPLACE PROCEDURE raise_demo (inval NUMBER) IS
+  evenno EXCEPTION;
+  oddno  EXCEPTION;
+BEGIN
+  IF MOD(inval, 2) = 1 THEN
+    RAISE oddno;
+  ELSE
+    RAISE evenno;
+  END IF;  EXCEPTION
+  WHEN evenno THEN
+    dbms_output.put_line(TO_CHAR(inval) || ' is even');
+  WHEN oddno THEN
+    dbms_output.put_line(TO_CHAR(inval) || ' is odd');
+END raise_demo;
+/
+
+
+DECLARE evenno EXCEPTION;
+  oddno EXCEPTION;
+BEGIN
+    DECLARE    BEGIN
+        BEGIN            NULL;
+        END;
+        DECLARE
+        BEGIN
+            NULL;
+        END;
+    END;
+    IF MOD(inval, 2) = 1 THEN
+        RAISE oddno;
+    ELSE
+        RAISE evenno;
+    END IF;EXCEPTION    WHEN
+    evenno THEN        dbms_output.put_line(TO_CHAR(inval) || ' is even');
+    WHEN
+    oddno
+    THEN         dbms_output.put_line(TO_CHAR(inval) || ' is odd');
+END raise_demo;
+/
+-----
+CREATE OR REPLACE PROCEDURE myproc
+IS
+BEGIN
+    NULL;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        NULL;
+    WHEN ZERO_DIVIDE THEN
+        NULL;
+    WHEN OTHERS THEN
+        NULL;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE trap_errcode
+IS
+    ecode                    NUMBER(38);
+    thisproc        CONSTANT VARCHAR2(50) := 'trap_errmesg';
+BEGIN
+    NULL;
+    RAISE too_many_rows;
+EXCEPTION
+    WHEN OTHERS THEN
+        ecode := SQLCODE;
+        dbms_output.put_line(thisproc || ' - ' || ecode);
+END trap_errcode;
+/
+
+DECLARE
+    emesg   VARCHAR2(250);
+BEGIN
+    NULL;
+    RAISE too_many_rows;
+EXCEPTION
+    WHEN OTHERS THEN
+        emesg := SQLERRM;
+        dbms_output.put_line(emesg);
+END trap_errmesg;
+/
+
+CREATE OR REPLACE PROCEDURE invcur_exception
+IS
+    CURSOR x_cur is
+        SELECT *
+        FROM all_tables;
+
+    x_rec   x_cur%rowtype;
+BEGIN
+    LOOP
+        -- note the cursor was not opened before the FETCH
+        FETCH x_cur INTO x_rec;
+        EXIT WHEN x_cur%notfound;
+        NULL;
+    END LOOP;
+EXCEPTION
+    WHEN INVALID_CURSOR THEN
+        dbms_output.put_line('Whoops!');
+    WHEN OTHERS THEN
+        dbms_output.put_line('Some Other Problem');
+END invcur_exception;
+/
+
+CREATE OR REPLACE PROCEDURE raise_demo (inval NUMBER)
+IS
+    evenno EXCEPTION;
+    oddno EXCEPTION;
+BEGIN
+    IF MOD(inval, 2) = 1 THEN
+        RAISE oddno;
+    ELSE
+        RAISE evenno;
+    END IF;
+EXCEPTION
+    WHEN evenno THEN
+        dbms_output.put_line(TO_CHAR(inval) || ' is even');
+    WHEN oddno THEN
+        dbms_output.put_line(TO_CHAR(inval) || ' is odd');
+END raise_demo;
+/
+
+
+DECLARE
+    evenno EXCEPTION;
+    oddno EXCEPTION;
+BEGIN
+    DECLARE
+    BEGIN
+        BEGIN
+            NULL;
+        END;
+        DECLARE
+        BEGIN
+            NULL;
+        END;
+    END;
+    IF MOD(inval, 2) = 1 THEN
+        RAISE oddno;
+    ELSE
+        RAISE evenno;
+    END IF;
+EXCEPTION
+    WHEN evenno THEN
+        dbms_output.put_line(TO_CHAR(inval) || ' is even');
+    WHEN oddno THEN
+        dbms_output.put_line(TO_CHAR(inval) || ' is odd');
+END raise_demo;
+/

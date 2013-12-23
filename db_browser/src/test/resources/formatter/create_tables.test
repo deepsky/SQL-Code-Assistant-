@@ -1,0 +1,395 @@
+create table employees_demo (
+    employee_id     NUMBER(6),
+    first_name      VARCHAR2(20),
+    last_name       VARCHAR2(25) constraint emp_last_name_nn_demo not null,
+    email           VARCHAR2(25) constraint emp_email_nn_demo not null,
+    phone_number    VARCHAR2(20),
+    hire_date       DATE default sysdate constraint emp_hire_date_nn_demo not null,
+    job_id          VARCHAR2(10) constraint emp_job_nn_demo not null,
+    salary          NUMBER(8, 2) constraint emp_salary_nn_demo not null,
+    commission_pct  NUMBER(2, 2),
+    manager_id     NUMBER(6),
+    department_id   NUMBER(4),
+  dn           VARCHAR2(300),
+    constraint
+    emp_salary_min_demo check (salary > 0),
+    constraint
+    emp_email_uk_demo unique (email)
+);
+CREATE TABLE EMPLOYEES_DEMO (
+    EMPLOYEE_ID  NUMBER(6),
+    FIRST_NAME    VARCHAR2( 20 ),
+    LAST_NAME       VARCHAR2(25) CONSTRAINT    EMP_LAST_NAME_NN_DEMO NOT NULL,
+    EMAIL           VARCHAR2(25) CONSTRAINT EMP_EMAIL_NN_DEMO NOT NULL,
+    PHONE_NUMBER    VARCHAR2(20),
+    HIRE_DATE       DATE DEFAULT SYSDATE CONSTRAINT EMP_HIRE_DATE_NN_DEMO NOT NULL,
+    JOB_ID          VARCHAR2(10) CONSTRAINT EMP_JOB_NN_DEMO NOT NULL,
+    SALARY          NUMBER(8, 2) CONSTRAINT EMP_SALARY_NN_DEMO NOT NULL,
+    COMMISSION_PCT  NUMBER(2, 2),
+    MANAGER_ID      NUMBER(6),
+    DEPARTMENT_ID   NUMBER(4),
+    DN              VARCHAR2(300),
+    CONSTRAINT EMP_SALARY_MIN_DEMO
+        CHECK (SALARY > 0),
+    CONSTRAINT
+    EMP_EMAIL_UK_DEMO
+    UNIQUE (EMAIL)
+)
+
+TABLESPACE EXAMPLE
+STORAGE (
+    INITIAL 6144
+    NEXT 6144
+    MINEXTENTS 1
+    MAXEXTENTS 5
+);CREATE GLOBAL TEMPORARY TABLE TODAY_SALES
+ON COMMIT PRESERVE ROWS
+AS SELECT *
+   FROM orders
+   WHERE ORDER_DATE = SYSDATE;
+
+CREATE TABLE DEPT_80
+PARALLEL
+AS SELECT *
+   FROM employees
+   WHERE DEPARTMENT_ID = 80;
+CREATE TABLE DEPT_80
+AS SELECT *
+ FROM employees
+ WHERE DEPARTMENT_ID = 80;
+CREATE TABLE DEPARTMENTS_DEMO (
+  DEPARTMENT_ID   NUMBER(4)
+  ,
+  DEPARTMENT_NAME VARCHAR2(30) CONSTRAINT DEPT_NAME_NN NOT NULL,
+ MANAGER_ID      NUMBER(6)
+ ,
+    LOCATION_ID     NUMBER(4)
+    ,
+    DN              VARCHAR2(300)
+);
+
+CREATE TABLE PRINT_MEDIA (
+    PRODUCT_ID              NUMBER(6),
+    AD_ID                   NUMBER(6),
+    AD_COMPOSITE            BLOB,
+    AD_SOURCETEXT           CLOB,
+    AD_FINALTEXT            CLOB,
+    AD_FLTEXTN              NCLOB NOT NULL,
+    AD_TEXTDOCS_NTAB        TEXTDOC_TAB  NULL,
+    AD_PHOTO                BLOB   NULL,
+    AD_GRAPHIC              BFILE  NOT NULL,
+    AD_HEADER               ADHEADER_TYP NOT NULL
+) NESTED TABLE ad_textdocs_ntab STORE
+AS textdocs_nestedtab;
+CREATE TABLE PRINT_MEDIA_NEW (
+    PRODUCT_ID              NUMBER(6),
+    AD_ID                   NUMBER(6),
+    AD_COMPOSITE            BLOB,
+    AD_SOURCETEXT           CLOB,
+    AD_FINALTEXT            CLOB,
+    AD_FLTEXTN              NCLOB,
+    AD_TEXTDOCS_NTAB        TEXTDOC_TAB,
+    AD_PHOTO                BLOB,
+    AD_GRAPHIC              BFILE,
+    AD_HEADER               ADHEADER_TYP,
+    PRESS_RELEASE           LONG
+)
+NESTED TABLE ad_textdocs_ntab STORE AS textdocs_nestedtab_new
+LOB (
+ad_sourcetext, ad_finaltext
+) STORE AS (
+TABLESPACE EXAMPLE
+STORAGE (
+    INITIAL 6144 NEXT 6144
+)
+CHUNK 4000
+NOCACHE LOGGING
+);
+CREATE TABLE COUNTRIES_DEMO (
+    COUNTRY_ID      CHAR(2)
+    CONSTRAINT COUNTRY_ID_NN_DEMO NOT NULL,
+    COUNTRY_NAME    VARCHAR2(40),
+    CURRENCY_NAME   VARCHAR2(25),
+    CURRENCY_SYMBOL VARCHAR2(3),
+    REGION          VARCHAR2(15),
+    CONSTRAINT COUNTRY_C_ID_PK_DEMO
+        PRIMARY KEY (COUNTRY_ID)
+)
+ORGANIZATION INDEX
+INCLUDING country_name
+PCTTHRESHOLD 2
+STORAGE
+(
+    INITIAL 4K
+    NEXT 2K
+    PCTINCREASE 0 MINEXTENTS 1
+    MAXEXTENTS 1
+)
+OVERFLOW
+STORAGE
+(
+    INITIAL 4K
+    NEXT 2K
+    PCTINCREASE 0
+    MINEXTENTS 1
+    MAXEXTENTS 1
+);
+
+
+
+
+CREATE TABLE DEPT_EXTERNAL (
+    DEPTNO      NUMBER(6),
+    DNAME       VARCHAR2(20),
+    LOC         VARCHAR2(25)
+)
+ORGANIZATION EXTERNAL
+(
+    TYPE
+    oracle_loader
+    DEFAULT DIRECTORY
+    admin
+    ACCESS
+    PARAMETERS
+    (
+        RECORDS DELIMITED BY newline
+        BADFILE
+        'ulcase1.bad'
+        DISCARDFILE
+        'ulcase1.dis'
+        LOGFILE 'ulcase1.log'
+        SKIP 20
+        FIELDS TERMINATED BY "," OPTIONALLY ENCLOSED BY '"' (
+            deptno
+            INTEGER EXTERNAL(6),
+            dname CHAR(20),
+            loc
+            CHAR(25)
+        )
+    )
+    LOCATION ('ulcase1.ctl')
+)
+REJECT LIMIT UNLIMITED;
+
+
+
+
+CREATE TABLE "PLN"."A345" (
+    "ID"    NUMBER,
+    "TEXT"  VARCHAR2(45) NOT NULL ENABLE,
+    PRIMARY KEY ("ID") USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS
+        STORAGE (
+            INITIAL
+            65536
+            NEXT
+            1048576
+            MINEXTENTS
+            1
+            MAXEXTENTS
+            2147483645
+            PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT
+            CELL_FLASH_CACHE
+            DEFAULT
+        )
+        TABLESPACE "USERS" ENABLE
+) SEGMENT CREATION IMMEDIATE
+PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+STORAGE (
+    INITIAL 65536 NEXT 1048576
+    MINEXTENTS 1 MAXEXTENTS 2147483645
+    PCTINCREASE 0
+    FREELISTS 1
+    FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT
+);
+----------------------------------------
+create table employees_demo (
+    employee_id     NUMBER(6),
+    first_name      VARCHAR2(20),
+    last_name       VARCHAR2(25) constraint emp_last_name_nn_demo not null,
+    email           VARCHAR2(25) constraint emp_email_nn_demo not null,
+    phone_number    VARCHAR2(20),
+    hire_date       DATE default sysdate constraint emp_hire_date_nn_demo not null,
+    job_id          VARCHAR2(10) constraint emp_job_nn_demo not null,
+    salary          NUMBER(8, 2) constraint emp_salary_nn_demo not null,
+    commission_pct  NUMBER(2, 2),
+    manager_id      NUMBER(6),
+    department_id   NUMBER(4),
+    dn              VARCHAR2(300),
+    constraint
+        emp_salary_min_demo check (salary > 0),
+    constraint emp_email_uk_demo unique (email)
+);
+
+CREATE TABLE EMPLOYEES_DEMO (
+    EMPLOYEE_ID     NUMBER(6),
+    FIRST_NAME      VARCHAR2(20),
+    LAST_NAME       VARCHAR2(25) CONSTRAINT EMP_LAST_NAME_NN_DEMO NOT NULL,
+    EMAIL           VARCHAR2(25) CONSTRAINT EMP_EMAIL_NN_DEMO NOT NULL,
+    PHONE_NUMBER    VARCHAR2(20),
+    HIRE_DATE       DATE DEFAULT SYSDATE CONSTRAINT EMP_HIRE_DATE_NN_DEMO NOT NULL,
+    JOB_ID          VARCHAR2(10) CONSTRAINT EMP_JOB_NN_DEMO NOT NULL,
+    SALARY          NUMBER(8, 2) CONSTRAINT EMP_SALARY_NN_DEMO NOT NULL,
+    COMMISSION_PCT  NUMBER(2, 2),
+    MANAGER_ID      NUMBER(6),
+    DEPARTMENT_ID   NUMBER(4),
+    DN              VARCHAR2(300),
+    CONSTRAINT EMP_SALARY_MIN_DEMO
+        CHECK (SALARY > 0),
+    CONSTRAINT EMP_EMAIL_UK_DEMO UNIQUE (EMAIL)
+)
+TABLESPACE EXAMPLE
+STORAGE (
+    INITIAL 6144
+    NEXT 6144
+    MINEXTENTS 1
+    MAXEXTENTS 5
+);
+
+CREATE GLOBAL TEMPORARY TABLE TODAY_SALES
+ON COMMIT PRESERVE ROWS
+AS SELECT *
+   FROM orders
+   WHERE ORDER_DATE = SYSDATE;
+
+CREATE TABLE DEPT_80
+PARALLEL
+AS SELECT *
+   FROM employees
+   WHERE DEPARTMENT_ID = 80;
+
+CREATE TABLE DEPT_80
+AS SELECT *
+   FROM employees
+   WHERE DEPARTMENT_ID = 80;
+
+CREATE TABLE DEPARTMENTS_DEMO (
+    DEPARTMENT_ID   NUMBER(4),
+    DEPARTMENT_NAME VARCHAR2(30) CONSTRAINT DEPT_NAME_NN NOT NULL,
+    MANAGER_ID      NUMBER(6),
+    LOCATION_ID     NUMBER(4),
+    DN              VARCHAR2(300)
+);
+
+CREATE TABLE PRINT_MEDIA (
+    PRODUCT_ID              NUMBER(6),
+    AD_ID                   NUMBER(6),
+    AD_COMPOSITE            BLOB,
+    AD_SOURCETEXT           CLOB,
+    AD_FINALTEXT            CLOB,
+    AD_FLTEXTN              NCLOB        NOT NULL,
+    AD_TEXTDOCS_NTAB        TEXTDOC_TAB  NULL,
+    AD_PHOTO                BLOB         NULL,
+    AD_GRAPHIC              BFILE        NOT NULL,
+    AD_HEADER               ADHEADER_TYP NOT NULL
+) NESTED TABLE ad_textdocs_ntab STORE
+AS textdocs_nestedtab;
+
+CREATE TABLE PRINT_MEDIA_NEW (
+    PRODUCT_ID              NUMBER(6),
+    AD_ID                   NUMBER(6),
+    AD_COMPOSITE            BLOB,
+    AD_SOURCETEXT           CLOB,
+    AD_FINALTEXT            CLOB,
+    AD_FLTEXTN              NCLOB,
+    AD_TEXTDOCS_NTAB        TEXTDOC_TAB,
+    AD_PHOTO                BLOB,
+    AD_GRAPHIC              BFILE,
+    AD_HEADER               ADHEADER_TYP,
+    PRESS_RELEASE           LONG
+)
+NESTED TABLE ad_textdocs_ntab STORE AS textdocs_nestedtab_new
+LOB (
+ad_sourcetext, ad_finaltext
+) STORE AS (
+TABLESPACE EXAMPLE
+STORAGE (
+    INITIAL 6144 NEXT 6144
+)
+CHUNK 4000
+NOCACHE LOGGING
+);
+
+CREATE TABLE COUNTRIES_DEMO (
+    COUNTRY_ID      CHAR(2) CONSTRAINT COUNTRY_ID_NN_DEMO NOT NULL,
+    COUNTRY_NAME    VARCHAR2(40),
+    CURRENCY_NAME   VARCHAR2(25),
+    CURRENCY_SYMBOL VARCHAR2(3),
+    REGION          VARCHAR2(15),
+    CONSTRAINT COUNTRY_C_ID_PK_DEMO
+        PRIMARY KEY (COUNTRY_ID)
+)
+ORGANIZATION INDEX
+INCLUDING country_name
+PCTTHRESHOLD 2
+STORAGE
+(
+    INITIAL 4K
+    NEXT 2K
+    PCTINCREASE 0 MINEXTENTS 1
+    MAXEXTENTS 1
+)
+OVERFLOW
+STORAGE
+(
+    INITIAL 4K
+    NEXT 2K
+    PCTINCREASE 0
+    MINEXTENTS 1
+    MAXEXTENTS 1
+);
+
+
+
+CREATE TABLE DEPT_EXTERNAL (
+    DEPTNO  NUMBER(6),
+    DNAME   VARCHAR2(20),
+    LOC     VARCHAR2(25)
+)
+ORGANIZATION EXTERNAL
+(
+    TYPE
+    oracle_loader
+    DEFAULT DIRECTORY
+    admin
+    ACCESS
+    PARAMETERS
+    (
+        RECORDS DELIMITED BY newline
+        BADFILE 'ulcase1.bad'
+        DISCARDFILE 'ulcase1.dis'
+        LOGFILE 'ulcase1.log'
+        SKIP 20
+        FIELDS TERMINATED BY "," OPTIONALLY ENCLOSED BY '"' (
+            deptno INTEGER EXTERNAL(6),
+            dname CHAR(20),
+            loc CHAR(25)
+        )
+    )
+    LOCATION ('ulcase1.ctl')
+)
+REJECT LIMIT UNLIMITED;
+
+
+
+CREATE TABLE "PLN"."A345" (
+    "ID"    NUMBER,
+    "TEXT"  VARCHAR2(45) NOT NULL ENABLE,
+    PRIMARY KEY ("ID") USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS
+        STORAGE (
+            INITIAL 65536
+            NEXT 1048576
+            MINEXTENTS 1
+            MAXEXTENTS 2147483645
+            PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT
+            CELL_FLASH_CACHE DEFAULT
+        )
+        TABLESPACE "USERS" ENABLE
+) SEGMENT CREATION IMMEDIATE
+PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+STORAGE (
+    INITIAL 65536 NEXT 1048576
+    MINEXTENTS 1 MAXEXTENTS 2147483645
+    PCTINCREASE 0
+    FREELISTS 1
+    FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT
+);

@@ -1,0 +1,25 @@
+BEGIN
+    UPDATE employee_temp
+
+
+    SET
+        ( first_name, last_name ) =
+                (SELECT first_name, last_name
+FROM employees
+WHERE employee_id = employee_temp.employee_id
+                );
+    dbms_output.put_line('*** UPDATED ' || SQL%ROWCOUNT || ' ROWS. ***');
+END;
+/
+-----
+BEGIN
+    UPDATE employee_temp
+    SET
+        (first_name, last_name) =
+                (SELECT first_name, last_name
+                 FROM employees
+                 WHERE employee_id = employee_temp.employee_id
+                );
+    dbms_output.put_line('*** UPDATED ' || SQL%ROWCOUNT || ' ROWS. ***');
+END;
+/

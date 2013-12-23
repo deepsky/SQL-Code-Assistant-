@@ -1,0 +1,61 @@
+CREATE OR REPLACE PACKAGE test_pkg
+IS
+
+    -- $Id: xdv_data_flow_control_pkg.pks,v 1.21 2009/01/22 04:51:42 rtarczal Exp $
+/*=========================*/
+/*======= Constants =======*/
+/*=========================*/
+
+    pc_pkg_name CONSTANT VARCHAR2(64) := 'xdv_data_flow_control_pkg';
+    pc_pkg_log_section CONSTANT VARCHAR2(64) := 'xdv_data_flow_control';
+
+    pc_pkg_cfg_section CONSTANT VARCHAR2(64) := 'data_flow_control';
+    pc_job_name_body CONSTANT VARCHAR2(50) := '_DF';
+    pc_sch_name_body CONSTANT VARCHAR2(50) := '_DF';
+
+
+    pc_schedule_name CONSTANT VARCHAR2(50) := 'XDV_GEN_DATA_FLOW_SCH';
+    -- varrays
+TYPE tv_number_list   IS VARRAY(20) OF NUMBER;
+TYPE load_dde_id_set_t IS TABLE  OF PLS_INTEGER  INDEX BY PLS_INTEGER;
+    TYPE ta_str64      IS TABLE  OF VARCHAR2(64) INDEX BY PLS_INTEGER;
+    TYPE tv_str64  IS VARRAY(43) OF VARCHAR2(64);
+    TYPE tv_number  IS VARRAY(43) OF NUMBER;
+
+ pc_transfer_delay CONSTANT NUMBER := 5;
+ pc_transfer_span CONSTANT NUMBER := 180;
+ pc_test_phase_time NUMBER := 10;
+
+END test_pkg;
+    /
+-----
+CREATE OR REPLACE PACKAGE test_pkg
+IS
+
+    -- $Id: xdv_data_flow_control_pkg.pks,v 1.21 2009/01/22 04:51:42 rtarczal Exp $
+    /*=========================*/
+    /*======= Constants =======*/
+    /*=========================*/
+
+    pc_pkg_name             CONSTANT VARCHAR2(64) := 'xdv_data_flow_control_pkg';
+    pc_pkg_log_section      CONSTANT VARCHAR2(64) := 'xdv_data_flow_control';
+
+    pc_pkg_cfg_section      CONSTANT VARCHAR2(64) := 'data_flow_control';
+    pc_job_name_body        CONSTANT VARCHAR2(50) := '_DF';
+    pc_sch_name_body        CONSTANT VARCHAR2(50) := '_DF';
+
+
+    pc_schedule_name        CONSTANT VARCHAR2(50) := 'XDV_GEN_DATA_FLOW_SCH';
+    -- varrays
+    TYPE tv_number_list     IS VARRAY(20) OF NUMBER;
+    TYPE load_dde_id_set_t  IS TABLE      OF PLS_INTEGER  INDEX BY PLS_INTEGER;
+    TYPE ta_str64           IS TABLE      OF VARCHAR2(64) INDEX BY PLS_INTEGER;
+    TYPE tv_str64           IS VARRAY(43) OF VARCHAR2(64);
+    TYPE tv_number          IS VARRAY(43) OF NUMBER;
+
+    pc_transfer_delay       CONSTANT NUMBER := 5;
+    pc_transfer_span        CONSTANT NUMBER := 180;
+    pc_test_phase_time               NUMBER := 10;
+
+END test_pkg;
+/

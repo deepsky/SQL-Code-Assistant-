@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.deepsky.gui.ExportSettings">
+  <grid id="cbd77" binding="contentPane" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="10" left="10" bottom="10" right="10"/>
+    <constraints>
+      <xy x="48" y="54" width="436" height="263"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="e3588" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="e9370" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none" title="Target"/>
+            <children>
+              <component id="68c17" class="javax.swing.JRadioButton" binding="clipboardRadioButton" default-binding="true">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <iconTextGap value="4"/>
+                  <margin top="2" left="2" bottom="2" right="3"/>
+                  <selected value="true"/>
+                  <text value="Clipboard"/>
+                </properties>
+              </component>
+              <grid id="9b944" layout-manager="BorderLayout" hgap="3" vgap="0">
+                <constraints border-constraint="South"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="e604b" class="javax.swing.JRadioButton" binding="fileRadioButton" default-binding="true">
+                    <constraints border-constraint="West"/>
+                    <properties>
+                      <horizontalAlignment value="2"/>
+                      <preferredSize width="74" height="22"/>
+                      <text value="File"/>
+                    </properties>
+                  </component>
+                  <component id="1c646" class="javax.swing.JTextField" binding="fileNameTextField">
+                    <constraints border-constraint="Center"/>
+                    <properties>
+                      <enabled value="false"/>
+                      <margin top="1" left="1" bottom="1" right="1"/>
+                      <minimumSize width="160" height="20"/>
+                      <preferredSize width="160" height="20"/>
+                    </properties>
+                  </component>
+                  <component id="b3c84" class="javax.swing.JButton" binding="button1" default-binding="true">
+                    <constraints border-constraint="East"/>
+                    <properties>
+                      <enabled value="false"/>
+                      <horizontalAlignment value="0"/>
+                      <margin top="3" left="10" bottom="3" right="10"/>
+                      <text value="..."/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <component id="949fc" class="javax.swing.JCheckBox" binding="encloseColumnInDoubleCheckBox" default-binding="true">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <selected value="false"/>
+              <text value="Enclose column in double quotes"/>
+            </properties>
+          </component>
+          <component id="c0d5d" class="javax.swing.JCheckBox" binding="saveColumnHeadersCheckBox" default-binding="true">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <selected value="true"/>
+              <text value="Save column headers"/>
+            </properties>
+          </component>
+          <grid id="30f2" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="13f96" class="javax.swing.JLabel">
+                <constraints/>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <maximumSize width="120" height="14"/>
+                  <minimumSize width="120" height="14"/>
+                  <preferredSize width="120" height="14"/>
+                  <text value="Delimiter symbol: "/>
+                </properties>
+              </component>
+              <component id="45144" class="javax.swing.JComboBox" binding="delimiterSymbol" custom-create="true">
+                <constraints/>
+                <properties>
+                  <editable value="false"/>
+                  <maximumSize width="110" height="22"/>
+                  <minimumSize width="110" height="22"/>
+                  <model>
+                    <item value="Comma"/>
+                    <item value="Semicolon"/>
+                    <item value="Tabulation"/>
+                  </model>
+                  <preferredSize width="110" height="22"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="67633" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="f7b21" class="javax.swing.JRadioButton" binding="saveALLRowsButton">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <selected value="true"/>
+                  <text value="Save ALL Rows"/>
+                </properties>
+              </component>
+              <component id="22256" class="javax.swing.JRadioButton" binding="saveSelectedIntervalButton">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Save selected interval"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+    </children>
+  </grid>
+  <buttonGroups>
+    <group name="buttonGroup1">
+      <member id="e604b"/>
+      <member id="68c17"/>
+    </group>
+    <group name="buttonGroup2">
+      <member id="f7b21"/>
+      <member id="22256"/>
+    </group>
+  </buttonGroups>
+</form>

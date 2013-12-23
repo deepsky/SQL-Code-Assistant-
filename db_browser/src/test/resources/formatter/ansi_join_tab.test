@@ -1,0 +1,78 @@
+SELECT
+             NVL(AT_.EXT_ID, 351)                                                                                                               AS TAT_ID,
+             NVL(ACT.EXT_ID, - 1)                                                                                                               AS TAC_ID,
+             NVL(CA.ID, - 1)                                                                                                                    AS TRC_ID,
+             NVL(ST.EXT_ID, - 1)                                                                                                                AS TRS_ID,
+             - 1                                                                                                                                AS TRQ_ID,
+             (EXTRACT (HOUR FROM EXT.DURATION_) * 3600 + EXTRACT (MINUTE FROM EXT.DURATION_) * 60 + EXTRACT (SECOND FROM EXT.DURATION_)) * 1000 AS DURATION,
+             EXT.IMEI                                                                                                                           AS IMEI,
+             NVL(TRIM (EXT.GSM_SUBSCIBER_NUMBER), - 1)                                                                                          AS MSISDN,
+             NVL(TRIM (EXT.GSM_SUBSCRIBER_IMSI), - 1)                                                                                           AS IMSI,
+             EXT.END_CELL_ID                                                                                                                    AS TO_PATH,
+             EXT.PSTN_ROUTE                                                                                                                     AS FROM_PATH,
+             trim (EXT.LAC)                                                                                                                     AS FROM_ORIGINATOR,
+             EXT.START_CELL_ID                                                                                                                  AS CELL_IDENTITY,
+             EXT.MSC_ID                                                                                                                         AS MSC_ID,
+             ((FROM_TZ(CALL_DATE
+                 + NUMTODSINTERVAL(EXTRACT (HOUR FROM DISCONNECT_TIME), 'HOUR')
+                 + NUMTODSINTERVAL(EXTRACT (MINUTE FROM DISCONNECT_TIME), 'MINUTE')
+                 + NUMTODSINTERVAL(EXTRACT (SECOND FROM DISCONNECT_TIME), 'SECOND'), TZ) AT TIME ZONE 'GMT') - C_Y1970)
+             DAY ( 6 ) TO SECOND ( 0 )                                                                                                          AS TIME_INTERVAL,
+             EXT.ANSWER_TIME                                                                                                                    AS ANSWER_TIME,
+             EXT.DURATION_                                                                                                                      AS CALL_DURATION,
+             EXT.DISCONNECT_TIME                                                                                                                AS DISCONNECT_TIME,
+             10 ||
+             to_char(EXT.CALL_DATE, 'MMDD') ||
+             to_char(EXT.ANSWER_TIME, 'HH24MISS') ||
+             substr(trim (EXT.GSM_SUBSCIBER_NUMBER), length(trim (EXT.GSM_SUBSCIBER_NUMBER)) - 2) ||
+             substr(trim (EXT.CALL_SEQUENCE_NUMBER), length(trim (EXT.CALL_SEQUENCE_NUMBER)) - 4)
+                                                                                                                                                AS INT_SESSION_ID
+         FROM
+             XDV_SINGTEL_AMA_CS_ET EXT LEFT JOIN XDV_SINGTEL_AMACS_APP_TYPE_DT AT_
+         ON EXT.SERVICE_TYPE = AT_.SERVICE_TYPE
+         LEFT JOIN XDV_SINGTEL_AMACS_ACT_DT ACT
+         ON EXT.TRAFFIC_CLASS = ACT.TRAFFIC_CLASS
+         LEFT JOIN XDV_SINGTEL_AMACS_STATUS_DT ST
+         ON EXT.CALL_SETUP_RESULT_CODE = ST.CALL_SETUP_RES_CODE
+         LEFT JOIN XDV_TRN_CAUSES_DT CA
+         ON (EXT.TERMINATING_REASON = CA.PRIMARY_CAUSE_ID AND CA.INTERFACE = 'AMACS')
+-----
+SELECT
+    NVL(AT_.EXT_ID, 351)                                                                                                               AS TAT_ID,
+    NVL(ACT.EXT_ID, -1)                                                                                                                AS TAC_ID,
+    NVL(CA.ID, -1)                                                                                                                     AS TRC_ID,
+    NVL(ST.EXT_ID, -1)                                                                                                                 AS TRS_ID,
+    -1                                                                                                                                 AS TRQ_ID,
+    (EXTRACT (HOUR FROM EXT.DURATION_) * 3600 + EXTRACT (MINUTE FROM EXT.DURATION_) * 60 + EXTRACT (SECOND FROM EXT.DURATION_)) * 1000 AS DURATION,
+    EXT.IMEI                                                                                                                           AS IMEI,
+    NVL(TRIM (EXT.GSM_SUBSCIBER_NUMBER), -1)                                                                                           AS MSISDN,
+    NVL(TRIM (EXT.GSM_SUBSCRIBER_IMSI), -1)                                                                                            AS IMSI,
+    EXT.END_CELL_ID                                                                                                                    AS TO_PATH,
+    EXT.PSTN_ROUTE                                                                                                                     AS FROM_PATH,
+    trim (EXT.LAC)                                                                                                                     AS FROM_ORIGINATOR,
+    EXT.START_CELL_ID                                                                                                                  AS CELL_IDENTITY,
+    EXT.MSC_ID                                                                                                                         AS MSC_ID,
+    ((FROM_TZ(CALL_DATE
+        + NUMTODSINTERVAL(EXTRACT (HOUR FROM DISCONNECT_TIME), 'HOUR')
+        + NUMTODSINTERVAL(EXTRACT (MINUTE FROM DISCONNECT_TIME), 'MINUTE')
+        + NUMTODSINTERVAL(EXTRACT (SECOND FROM DISCONNECT_TIME), 'SECOND'), TZ) AT TIME ZONE 'GMT') - C_Y1970)
+    DAY ( 6 ) TO SECOND ( 0 )                                                                                                          AS TIME_INTERVAL,
+    EXT.ANSWER_TIME                                                                                                                    AS ANSWER_TIME,
+    EXT.DURATION_                                                                                                                      AS CALL_DURATION,
+    EXT.DISCONNECT_TIME                                                                                                                AS DISCONNECT_TIME,
+    10 ||
+    to_char(EXT.CALL_DATE, 'MMDD') ||
+    to_char(EXT.ANSWER_TIME, 'HH24MISS') ||
+    substr(trim (EXT.GSM_SUBSCIBER_NUMBER), length(trim (EXT.GSM_SUBSCIBER_NUMBER)) - 2) ||
+    substr(trim (EXT.CALL_SEQUENCE_NUMBER), length(trim (EXT.CALL_SEQUENCE_NUMBER)) - 4)
+                                                                                                                                       AS INT_SESSION_ID
+FROM
+    XDV_SINGTEL_AMA_CS_ET EXT
+    LEFT JOIN XDV_SINGTEL_AMACS_APP_TYPE_DT AT_
+    ON EXT.SERVICE_TYPE = AT_.SERVICE_TYPE
+    LEFT JOIN XDV_SINGTEL_AMACS_ACT_DT ACT
+    ON EXT.TRAFFIC_CLASS = ACT.TRAFFIC_CLASS
+    LEFT JOIN XDV_SINGTEL_AMACS_STATUS_DT ST
+    ON EXT.CALL_SETUP_RESULT_CODE = ST.CALL_SETUP_RES_CODE
+    LEFT JOIN XDV_TRN_CAUSES_DT CA
+    ON (EXT.TERMINATING_REASON = CA.PRIMARY_CAUSE_ID AND CA.INTERFACE = 'AMACS')

@@ -1,0 +1,49 @@
+CREATE OR
+REPLACE
+TRIGGER audit_sal
+AFTER UPDATE
+OF salary
+ON employees
+FOR EACH
+ROW
+DECLARE
+    PRAGMA
+    AUTONOMOUS_TRANSACTION;
+BEGIN
+    -- bind variables are used here for values
+    INSERT INTO emp_audit VALUES ( : old
+    .employee_id, SYSDATE,
+    : new
+    .
+    salary, : old.salary );
+    COMMIT;
+END;
+/
+CREATE OR REPLACE TRIGGER xdv_dev_grp_mobile_stat_ins_tr BEFORE INSERT OR UPDATE ON xdv_dev_grp_mobile_station_it
+DECLARE    l_fake  NUMBER;
+BEGIN    SELECT XDV_GRP_LSN_SEQ.NEXTVAL INTO l_fake    FROM DUAL;
+END;
+/
+-----
+CREATE OR REPLACE TRIGGER audit_sal
+AFTER UPDATE OF salary ON employees
+FOR EACH ROW
+DECLARE
+    PRAGMA AUTONOMOUS_TRANSACTION;
+BEGIN
+    -- bind variables are used here for values
+    INSERT INTO emp_audit VALUES (:old.employee_id, SYSDATE,
+    :new.
+    salary, :old.salary);
+    COMMIT;
+END;
+/
+
+CREATE OR REPLACE TRIGGER xdv_dev_grp_mobile_stat_ins_tr
+BEFORE INSERT OR UPDATE ON xdv_dev_grp_mobile_station_it
+DECLARE
+    l_fake  NUMBER;
+BEGIN
+    SELECT XDV_GRP_LSN_SEQ.NEXTVAL INTO l_fake FROM DUAL;
+END;
+/

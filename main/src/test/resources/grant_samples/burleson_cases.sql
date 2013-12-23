@@ -1,0 +1,21 @@
+-- Granting System level privileges
+
+grant CREATE INDEX to Newpractice;
+
+GRANT CREATE ANY INDEX TO Robert;
+
+GRANT CREATE ANY INDEX, SELECT ANY TABLE TO Robert;
+
+GRANT CREATE ANY INDEX TO Robert WITH ADMIN OPTION;
+
+REVOKE CREATE ANY INDEX FROM Robert;
+
+REVOKE ALL PRIVILEGES FROM Robert;
+
+
+-- Granting Object Level Privileges
+GRANT SELECT ON emp TO tom;
+
+GRANT SELECT ON emp TO scott WITH GRANT OPTION
+
+REVOKE SELECT on emp FROM scott;

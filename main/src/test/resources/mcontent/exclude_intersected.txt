@@ -1,0 +1,9 @@
+Root: /home/sky/sqlcode_assistant/sql_assistant_v13/tools
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/surefire-reports
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/classes
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/test-classes
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/classes/maven-status
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/classes/test-classes/surefire
+Excluded folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/target/maven-archiver
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/src
+Source folder: /home/sky/sqlcode_assistant/sql_assistant_v13/tools/sql

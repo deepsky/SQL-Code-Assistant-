@@ -1,0 +1,20 @@
+create table "ABC" (
+    Id      number,
+    "Name"    varchar2(33)
+)
+RENAME TABLE
+old_table TO abc;
+RENAME TABLE
+"old_table" TO "abc";
+RENAME TABLE "Old_table" TO abc;
+-----
+create table "ABC" (
+    ID      number,
+    "Name"  varchar2(33)
+)
+
+RENAME TABLE OLD_TABLE TO ABC;
+
+RENAME TABLE "old_table" TO "abc";
+
+RENAME TABLE "Old_table" TO ABC;

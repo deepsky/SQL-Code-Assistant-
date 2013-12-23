@@ -1,6 +1,0 @@
-#Thu Feb 11 16:58:57 EET 2010
-com.deepsky.lang.plsql.castor.mapping.Function=com.deepsky.lang.plsql.castor.mapping.descriptors.FunctionDescriptor
-com.deepsky.lang.plsql.castor.mapping.FunctionType=com.deepsky.lang.plsql.castor.mapping.descriptors.FunctionTypeDescriptor
-com.deepsky.lang.plsql.castor.mapping.ArgumentType=com.deepsky.lang.plsql.castor.mapping.descriptors.ArgumentTypeDescriptor
-com.deepsky.lang.plsql.castor.mapping.Arg=com.deepsky.lang.plsql.castor.mapping.descriptors.ArgDescriptor
-com.deepsky.lang.plsql.castor.mapping.FunctionList=com.deepsky.lang.plsql.castor.mapping.descriptors.FunctionListDescriptor

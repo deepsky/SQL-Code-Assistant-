@@ -1,0 +1,11 @@
+FUNCTION FUNC1 RETURN INTEGER IS  l_load_id                INTEGER;   l_load_st_dt             DATE;
+ BEGIN NULL; END   ; /
+-----
+FUNCTION FUNC1 RETURN INTEGER
+IS
+    l_load_id       INTEGER;
+    l_load_st_dt    DATE;
+BEGIN
+    NULL;
+END;
+/

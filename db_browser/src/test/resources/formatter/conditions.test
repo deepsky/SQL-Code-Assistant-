@@ -1,0 +1,53 @@
+FUNCTION G2 (i_status IN NUMBER) RETURN NUMBER
+IS
+BEGIN
+    IF
+ i_status = Xsl_Metric_Const_Pkg.status_received
+OR i_status = Xsl_Metric_Const_Pkg.status_estimated OR
+        i_status = Xsl_Metric_Const_Pkg.status_miscalculated OR
+    i_status = Xsl_Metric_Const_Pkg.status_extrapolated
+    THEN
+        RETURN 1;
+    END IF;
+    select *
+    from dual
+    where i_status = Xsl_Metric_Const_Pkg.status_received    AND
+i_status = Xsl_Metric_Const_Pkg.status_estimated OR
+      i_status = Xsl_Metric_Const_Pkg.status_miscalculated OR
+        i_status = Xsl_Metric_Const_Pkg.status_estimated OR
+        i_status = Xsl_Metric_Const_Pkg.status_miscalculated OR
+  i_status = Xsl_Metric_Const_Pkg.status_extrapolate AND
+    (i_status = Xsl_Metric_Const_Pkg.status_received OR
+        i_status = Xsl_Metric_Const_Pkg.status_estimated OR
+        i_status = Xsl_Metric_Const_Pkg.status_miscalculated OR
+        i_status =         Xsl_Metric_Const_Pkg.status_extrapolated  )
+        ;
+    RETURN 0;
+END G2;   /
+-----
+FUNCTION G2 (i_status IN NUMBER) RETURN NUMBER
+IS
+BEGIN
+    IF
+        i_status = Xsl_Metric_Const_Pkg.status_received
+        OR i_status = Xsl_Metric_Const_Pkg.status_estimated OR
+        i_status = Xsl_Metric_Const_Pkg.status_miscalculated OR
+        i_status = Xsl_Metric_Const_Pkg.status_extrapolated
+    THEN
+        RETURN 1;
+    END IF;
+    select *
+    from dual
+    where i_status = Xsl_Metric_Const_Pkg.status_received AND
+        i_status = Xsl_Metric_Const_Pkg.status_estimated OR
+        i_status = Xsl_Metric_Const_Pkg.status_miscalculated OR
+        i_status = Xsl_Metric_Const_Pkg.status_estimated OR
+        i_status = Xsl_Metric_Const_Pkg.status_miscalculated OR
+        i_status = Xsl_Metric_Const_Pkg.status_extrapolate AND
+        (i_status = Xsl_Metric_Const_Pkg.status_received OR
+        i_status = Xsl_Metric_Const_Pkg.status_estimated OR
+        i_status = Xsl_Metric_Const_Pkg.status_miscalculated OR
+        i_status = Xsl_Metric_Const_Pkg.status_extrapolated);
+    RETURN 0;
+END G2;
+/
