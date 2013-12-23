@@ -6,7 +6,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="IDEA IC-129.17" jdkType="IDEA JDK" />
+    <orderEntry type="jdk" jdkName="IDEA IC-129.1135" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="parser" scope="RUNTIME" />
     <orderEntry type="module" module-name="antl_patch" scope="RUNTIME" />
@@ -16,7 +16,6 @@
     <orderEntry type="module" module-name="main" scope="RUNTIME" />
     <orderEntry type="module" module-name="resolver" />
     <orderEntry type="module" module-name="result_panel" />
-    <orderEntry type="module" module-name="spec_src" />
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>

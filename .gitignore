@@ -28,9 +28,9 @@ main/target
 parser/target
 resolver/target
 result_panel/target
-spec_src/target
 tools/target
-
+target
+tools/PLSqlParserAdoptedExt.java
 
 build_dir
 

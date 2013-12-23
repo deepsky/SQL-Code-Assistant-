@@ -5,7 +5,7 @@
     <property name="build.dir" value="./build_dir"/>
     <property name="bundle.dir" value="./out"/>
     <property name="bundle.name" value="sql-assistant"/>
-    <property name="plugin.ver" value="1.4.6.12"/>
+    <property name="plugin.ver" value="1.4.9.12"/>
 
     <target name="build_plugin" description="Build PL/SQL plugin sources">
 
@@ -32,7 +32,6 @@
             <fileset dir="parser/target/classes" includes="*/**/*.class"/>
             <fileset dir="resolver/target/classes" includes="*/**/*.class"/>
             <fileset dir="result_panel/target/classes" includes="*/**/*.class"/>
-            <fileset dir="spec_src/target/classes" includes="*/**/*.class"/>
 
             <fileset dir="plugin_runner" includes="META-INF/*.xml"/>
         </jar>

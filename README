@@ -27,15 +27,44 @@ Feature list:
 - Database Schema Browsing
 - Connection management
 
-Supported version IntelliJ IDEA 10.5
+Supported version IntelliJ IDEA 12  (ver. 13 is coming soon)
 
-BUILD AND RUN
 
-Instructions can be found in the SqlAssistantPlugin folder according to the version IDEA 
-(10 and 11 versions only are suported at the moment) 
+HOW TO BUILD
 
-	sqlassistant-plugin10/SqlAssistantPlugin/readme.txt
-	sqlassistant-plugin11/SqlAssistantPlugin/readme.txt
+1. Make sure you have set up maven locally
+
+2. Compile project from command line
+mvn -Ddebug1=true clean install
+
+At the end it should display success:
+...
+
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] ------------------------------------------------------------------------
+[INFO] Unnamed - sql-assistant:sql-assistant:pom:1.12.1-SNAPSHOT  SUCCESS [3.277s]
+[INFO] Unnamed - sql-assistant:antl_patch:jar:1.12.1-SNAPSHOT  SUCCESS [4.983s]
+[INFO] Unnamed - sql-assistant:commons:jar:1.12.1-SNAPSHOT ... SUCCESS [3.962s]
+[INFO] Unnamed - sql-assistant:tools:jar:1.12.1-SNAPSHOT ..... SUCCESS [5.403s]
+[INFO] Unnamed - sql-assistant:parser:jar:1.12.1-SNAPSHOT .... SUCCESS [2.512s]
+[INFO] Unnamed - sql-assistant:resolver:jar:1.12.1-SNAPSHOT .. SUCCESS [0.351s]
+[INFO] Unnamed - sql-assistant:database:jar:1.12.1-SNAPSHOT .. SUCCESS [1.247s]
+[INFO] Unnamed - sql-assistant:result_panel:jar:1.12.1-SNAPSHOT  SUCCESS [2.601s]
+[INFO] Unnamed - sql-assistant:main:jar:1.12.1-SNAPSHOT ...... SUCCESS [40.677s]
+[INFO] Unnamed - sql-assistant:db_browser:jar:1.12.1-SNAPSHOT  SUCCESS [4.604s]
+[INFO] ------------------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1 minute 10 seconds
+[INFO] Finished at: Mon Dec 23 22:00:49 EET 2013
+[INFO] Final Memory: 60M/377M
+[INFO] ------------------------------------------------------------------------
+
+
+3. Open project in IntelliJ IDEA, in the ANT Build Tool window call "build_plugin" then "bundle_plugin".
+Resulting sql_assisnant.zip file ready for installation can be found under "out" directory
 
 
 AUTHOR
