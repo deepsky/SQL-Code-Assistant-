@@ -263,8 +263,10 @@ public class ComplContributor extends CompletionContributor {
     }
 
     public void beforeCompletion(@NotNull final CompletionInitializationContext context) {
-        context.setFileCopyPatcher(Constants.IDENT_PATCHER);
+//        context.setFileCopyPatcher(Constants.IDENT_PATCHER);
 //        context.setDummyIdentifier(Constants.COMPL_IDENTIFIER);
+
+        Constants.IDENT_PATCHER.patch();
     }
 
     private PsiElement getExecCtx() {

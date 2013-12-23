@@ -5,31 +5,31 @@
     <parent>
         <artifactId>sql-assistant</artifactId>
         <groupId>sql-assistant</groupId>
-        <version>1.12.1-SNAPSHOT</version>
+        <version>1.13-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>db_browser</artifactId>
-    <version>1.12.1-SNAPSHOT</version>
+    <version>1.13.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>sql-assistant</groupId>
             <artifactId>commons</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
+            <version>1.13.1-SNAPSHOT</version>
             <!--<type>jar</type>-->
             <!--<classifier>sources</classifier>-->
         </dependency>
         <dependency>
             <groupId>sql-assistant</groupId>
             <artifactId>main</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
+            <version>1.13.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>sql-assistant</groupId>
             <artifactId>parser</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
+            <version>1.13.2-SNAPSHOT</version>
             <!--<type>jar</type>-->
             <!--<classifier>sources</classifier>-->
         </dependency>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>sql-assistant</groupId>
             <artifactId>resolver</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
+            <version>1.13.2-SNAPSHOT</version>
             <!--<type>jar</type>-->
             <!--<classifier>sources</classifier>-->
         </dependency>
@@ -48,7 +48,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.4</version>
+                <version>2.16</version>
                 <configuration>
                     <excludes>
                         <exclude>**/PlSqlFormatterTest.java</exclude>
@@ -58,7 +58,20 @@
                         <exclude>**/Select_BaseCompletionTest.java</exclude>
                         <exclude>**/CtrlStmt_BaseCompletionTest.java</exclude>
                     </excludes>
+
+                    <systemPropertyVariables>
+                        <idea.platform.prefix>Idea</idea.platform.prefix>
+                        <idea.plugins.path>/home/sky/.IdeaIC13/system/plugins-sandbox/plugins</idea.plugins.path>
+                        <idea.home.path>/home/sky/.IdeaIC13/system/plugins-sandbox/test</idea.home.path>
+                        <jbdt.test.fixture>com.intellij.designer.dt.IJTestFixture</jbdt.test.fixture>
+                        <com.intellij></com.intellij>
+                    </systemPropertyVariables>
+                    <additionalClasspathElements>
+                        <!--<additionalClasspathElement>path/to/additional/resources</additionalClasspathElement>-->
+                        <!--<additionalClasspathElement>${idea.home}/lib/resources.jar</additionalClasspathElement>-->
+                    </additionalClasspathElements>
                 </configuration>
+
             </plugin>
         </plugins>
     </build>

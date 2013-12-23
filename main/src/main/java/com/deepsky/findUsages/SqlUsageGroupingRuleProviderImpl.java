@@ -54,7 +54,7 @@ public class SqlUsageGroupingRuleProviderImpl implements UsageGroupingRuleProvid
     @NotNull
     public UsageGroupingRule[] getActiveRules(Project project) {
         List<UsageGroupingRule> rules = new ArrayList<UsageGroupingRule>();
-        rules.add(new NonCodeUsageGroupingRule());
+        rules.add(new NonCodeUsageGroupingRule(project));
 
         if (UsageViewSettings.getInstance().GROUP_BY_USAGE_TYPE) {
             rules.add(new UsageTypeGroupingRule());

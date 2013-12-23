@@ -26,7 +26,7 @@
 package com.deepsky.lang.plsql.completion;
 
 import com.intellij.codeInsight.completion.CompletionInitializationContext;
-import com.intellij.codeInsight.completion.DummyIdentifierPatcher;
+//import com.intellij.codeInsight.completion.DummyIdentifierPatcher;
 
 public interface Constants {
 

@@ -34,6 +34,7 @@ import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy;
 import com.intellij.openapi.vfs.*;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.Function;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
@@ -325,6 +326,11 @@ public class LocalFSChangeTracker extends GenericThreadService {
 
         public void moduleRemoved(Project project, Module module) {
 //            processInternal(new Module[]{module}, FSTrackHelper.REMOVE_CONTENT);
+        }
+
+        @Override
+        public void modulesRenamed(Project project, List<Module> modules, Function<Module, String> moduleStringFunction) {
+
         }
 
         public void modulesRenamed(Project project, List<Module> modules) {

@@ -136,9 +136,12 @@ public class PlSqlTypedHandler extends TypedHandlerDelegate {
         }
 
 
-        if (oldPhase instanceof CompletionPhase.CommittingDocuments && ((CompletionPhase.CommittingDocuments) oldPhase).restartCompletion()) {
+        if (oldPhase instanceof CompletionPhase.CommittingDocuments && ((CompletionPhase.CommittingDocuments) oldPhase).isRestartingCompletion()) {
             return Result.STOP;
         }
+//        if (oldPhase instanceof CompletionPhase.CommittingDocuments && ((CompletionPhase.CommittingDocuments) oldPhase).restartCompletion()) {
+//            return Result.STOP;
+//        }
 
         LookupImpl lookup = (LookupImpl) LookupManager.getActiveLookup(editor);
         if (lookup != null) {

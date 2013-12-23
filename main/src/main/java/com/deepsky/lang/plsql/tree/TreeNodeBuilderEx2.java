@@ -191,6 +191,12 @@ public class TreeNodeBuilderEx2 implements PsiBuilder {
         return 0;
     }
 
+    @Override
+    public int rawTokenIndex() {
+        // TODO  idea 13
+        return 0;
+    }
+
 
     @Nullable
     public String getTokenText() {

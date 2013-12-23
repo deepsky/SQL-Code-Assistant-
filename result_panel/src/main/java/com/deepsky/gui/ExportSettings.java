@@ -204,7 +204,7 @@ public class ExportSettings extends DialogWrapper { //extends JDialog {
         return saveColumnHeadersCheckBox.isSelected();
     }
 
-    public ExportSettings(Project project, boolean intervalSelected) {
+    public ExportSettings(final Project project, boolean intervalSelected) {
         super(project, false);
         $$$setupUI$$$();
         this.setTitle("Export Settings");
@@ -218,7 +218,7 @@ public class ExportSettings extends DialogWrapper { //extends JDialog {
         button1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
-                VirtualFile[] files = FileChooser.chooseFiles(contentPane, descriptor);
+                VirtualFile[] files = FileChooser.chooseFiles(descriptor, contentPane, project, null);
                 if (files.length != 0) {
                     fileNameTextField.setText(files[0].getPath());
                 }

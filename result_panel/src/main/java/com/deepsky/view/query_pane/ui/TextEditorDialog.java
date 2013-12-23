@@ -109,7 +109,7 @@ public class TextEditorDialog extends DialogWrapper {
         loadFromFileBttn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, false, false, false, false);
-                FileChooserDialog dialog = FileChooserFactory.getInstance().createFileChooser(descriptor, project);
+                FileChooserDialog dialog = FileChooserFactory.getInstance().createFileChooser(descriptor, project, null);
                 // todo -- use selected directory previously as a start directory
                 VirtualFile[] chosen = dialog.choose(null, project);
                 if (chosen.length == 1) {

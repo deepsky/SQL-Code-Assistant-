@@ -28,6 +28,7 @@ package com.deepsky.navigation.impl;
 
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.database.ora.DbUrlUtil;
+import com.deepsky.lang.common.PlSqlFileType;
 import com.deepsky.lang.common.PluginKeys2;
 import com.deepsky.lang.plsql.indexMan.IndexBulkChangeListener;
 import com.deepsky.lang.plsql.resolver.ContextPath;
@@ -561,6 +562,10 @@ public class NameLookupServiceImpl implements NameLookupService {
                 return false; //true;
             } else if (method.getName().equals("getIcon")) {
                 return itemP.getIcon(true);
+            } else if (method.getName().equals("getLanguage")) {
+                return PlSqlFileType.PLSQL_LANGUAGE;
+            } else {
+                log.error("Handler not found for: " + method);
             }
 
             return null;

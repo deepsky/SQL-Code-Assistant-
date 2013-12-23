@@ -35,16 +35,16 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="antl_patch" target="1.6" />
-      <module name="commons" target="1.6" />
-      <module name="database" target="1.6" />
-      <module name="db_browser" target="1.6" />
-      <module name="main" target="1.6" />
-      <module name="parser" target="1.6" />
-      <module name="resolver" target="1.6" />
-      <module name="result_panel" target="1.6" />
+      <module name="antl_patch" target="1.7" />
+      <module name="commons" target="1.7" />
+      <module name="database" target="1.7" />
+      <module name="db_browser" target="1.7" />
+      <module name="main" target="1.7" />
+      <module name="parser" target="1.7" />
+      <module name="resolver" target="1.7" />
+      <module name="result_panel" target="1.7" />
       <module name="spec_src" target="1.6" />
-      <module name="sql-assistant" target="1.6" />
+      <module name="sql-assistant" target="1.7" />
       <module name="tools" target="1.5" />
     </bytecodeTargetLevel>
   </component>

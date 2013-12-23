@@ -25,22 +25,27 @@
 
 package com.deepsky.lang.plsql.completion;
 
-import com.intellij.codeInsight.completion.DummyIdentifierPatcher;
+//import com.intellij.codeInsight.completion.DummyIdentifierPatcher;
 import com.intellij.codeInsight.completion.OffsetMap;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
-public class DummyIdentifierPatcherExt extends DummyIdentifierPatcher {
+public class DummyIdentifierPatcherExt { //extends DummyIdentifierPatcher {
 
     private volatile boolean wasPatched = false;
 
     public DummyIdentifierPatcherExt(String dummyIdentifier) {
-        super(dummyIdentifier);
+//        super(dummyIdentifier);
     }
 
     public void patchFileCopy(@NotNull PsiFile fileCopy, @NotNull Document document, @NotNull OffsetMap map) {
-        super.patchFileCopy(fileCopy, document, map);
+//        super.patchFileCopy(fileCopy, document, map);
+        wasPatched = true;
+    }
+
+    public void patch() {
+//        super.patchFileCopy(fileCopy, document, map);
         wasPatched = true;
     }
 

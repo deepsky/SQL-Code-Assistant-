@@ -133,6 +133,12 @@ public class DummyFileViewProvider implements FileViewProvider {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @NotNull
+    @Override
+    public PsiFile getStubBindingRoot() {
+        return null;
+    }
+
     public boolean isLockedByPsiOperations() {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }

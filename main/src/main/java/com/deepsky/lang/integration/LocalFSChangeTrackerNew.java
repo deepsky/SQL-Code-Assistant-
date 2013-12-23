@@ -35,6 +35,7 @@ import com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy;
 import com.intellij.openapi.vfs.*;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.util.Function;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
@@ -317,6 +318,11 @@ public class LocalFSChangeTrackerNew extends GenericThreadService {
 
         public void moduleRemoved(Project project, Module module) {
             // todo -- implement me
+        }
+
+        @Override
+        public void modulesRenamed(Project project, List<Module> modules, Function<Module, String> moduleStringFunction) {
+
         }
 
         public void modulesRenamed(Project project, List<Module> modules) {

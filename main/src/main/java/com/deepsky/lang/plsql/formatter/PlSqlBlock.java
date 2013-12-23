@@ -39,7 +39,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.util.containers.CollectionFactory;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +61,7 @@ public class PlSqlBlock extends AbstractBlock {
             CommonCodeStyleSettings plsqlSettings,
             PlSqlCodeStyleSettings customSettings) {
 
-        this(node, wrap, indent, alignment, plsqlSettings, customSettings, CollectionFactory.<PsiElement, Alignment>hashMap());
+        this(node, wrap, indent, alignment, plsqlSettings, customSettings, ContainerUtil.<PsiElement, Alignment>newHashMap());//<PsiElement, Alignment>hashMap());
     }
 
     public PlSqlBlock(

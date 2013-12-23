@@ -28,6 +28,7 @@ package com.deepsky.gui;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -56,7 +57,8 @@ public class SQLAssistantConfigForm {
             public void actionPerformed(ActionEvent e) {
                 FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
 
-                VirtualFile[] files = FileChooser.chooseFiles(getRootComponent(), descriptor);
+                Project project = null; // TODO - fix me
+                VirtualFile[] files = FileChooser.chooseFiles(descriptor, getRootComponent(), project, null);
                 if (files.length != 0 && files[0].getExtension().equalsIgnoreCase("jar")) {
                     try {
                         String jarPath = files[0].getPath();

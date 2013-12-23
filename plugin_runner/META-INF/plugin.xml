@@ -65,15 +65,17 @@
     Latest changes:
     <ul>
         <li>NPE and Validation exception fixes</li>
+        <li>DB Connection Editor dialog</li>
         <li>[KNOWN ISSUE] Case-sensitive table names, column names, etc are not supported for now</li>
         <li>[KNOWN ISSUE] Initial indexing of numerous SQL files (1k and more) may take time</li>
+        <li>[KNOWN ISSUE] Quick Object Lookup does not distinguish between objects with the same name but located in different files</li>
      </ul>
     <br>
 
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.4.9.12</version>
+    <version>1.4.9.13</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
@@ -82,7 +84,7 @@
 
     <change-notes><![CDATA[<html>
        <ul>
-            <li><b>1.4.9.12</b>
+            <li><b>1.4.9.13</b>
                  <ul>
                     - [FIX] NPE in Structure View in case of invalid file<br>
                     - [FIX] Validation exception fixes<br>
@@ -185,7 +187,7 @@
             </li>
         </ul>
     </html>]]></change-notes>
-    <idea-version since-build="120.1" until-build="129.1999"/>
+    <idea-version since-build="133.100" until-build="133.999"/>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 
@@ -197,7 +199,7 @@
 
         <annotator language="PlSql" implementationClass="com.deepsky.lang.validation.SyntaxHighlightAnnotator"/>
         <syntaxHighlighter key="PlSql" implementationClass="com.deepsky.lang.plsql.highlighter.PlSqlHighlighterAnn"/>
-        <elementsToHighlightFilter  implementation="com.deepsky.lang.plsql.highlighter.PlSqlElementHighlightFilter"/>
+        <!--<elementsToHighlightFilter  implementation="com.deepsky.lang.plsql.highlighter.PlSqlElementHighlightFilter"/>-->
 
         <lang.psiStructureViewFactory language="PlSql" implementationClass="com.deepsky.lang.common.PlSqlStructureViewFactory"/>
         <lang.foldingBuilder language="PlSql" implementationClass="com.deepsky.lang.plsql.folding.PlSqlCodeFoldingBuilder"/>
