@@ -60,7 +60,7 @@ public class ConnectionPersistStorage {
                 // skip
                 active = e.value();
             } else {
-                ConnectionInfo ci = string2cInfo(e.value());
+                ConnectionInfo ci = string2cInfo(e.value(), factory);
                 if(ci != null){
                     url2cinfo.put(e.key(), ci);
                 } else {
@@ -139,7 +139,7 @@ public class ConnectionPersistStorage {
                         + ((cinfo.lastLoginTime() == null) ? "" : "*" + cinfo.lastLoginTime().getTime());
     }
 
-    private ConnectionInfo string2cInfo(String serialized) {
+    public static ConnectionInfo string2cInfo(String serialized, ConnectionInfoFactory factory) {
         try {
             String[] parts = serialized.split("\\*");
             switch (parts.length) {
