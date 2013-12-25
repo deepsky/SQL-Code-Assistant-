@@ -202,7 +202,27 @@ public class LocalFSChangeTracker extends GenericThreadService {
                 }
 
                 indexFile(psi, listener);
+            } else {
+                // TODO - move file indexing in background thread (runInternal)
+                long ms0 = System.currentTimeMillis();
+                String content = StringUtils.file2string(new File(filePath));
+                MarkupGeneratorEx2 generator = new MarkupGeneratorEx2(virtualFile);
+                ASTNode root = generator.parse(content);
+                psi = (PsiFile) root.getPsi();
+                if(psi != null){
+                    int cacheSizeBefore = 0;
+                    long ms = System.currentTimeMillis();
+                    fsIndexer.indexPlSqlFile((PlSqlElement) psi, listener);
+                    int sizeAfter = 0;
+                    int added = sizeAfter - cacheSizeBefore;
+                    long ms2 = System.currentTimeMillis();
+                    long parsingTime = ms2- ms0;
+                    log.debug("[Indexing] time (ms): " + (ms2 - ms) + " \t[Parsing] time (ms): " + parsingTime + " \t[Indexes] " + added + "(" + sizeAfter + ")" + "\t[File] " + filePath);
+                } else {
+                    log.info("ERROR [File] " + filePath + " Could not parse");
+                }
             }
+
         } catch (Throwable e) {
             fsIndexer.setFileTimestamp(filePath, virtualFile.getTimeStamp(), virtualFile.getModificationStamp());
             log.info("ERROR [File] " + filePath + " Could not build index");
