@@ -364,7 +364,7 @@ public class ConnectionSettings4 {
             throw new ValidationException(passwordField1, "Password must be specified");
         } else if (!userName.getText().matches("[A-Za-z0-9\\_\\.\\-\\$!]+")) {
             throw new ValidationException(userName, "User Name contains not permissible characters");
-        } else if (!passwordField1.getText().matches("[A-Za-z0-9\\_\\.\\-\\$!]+")) {
+        } else if (!passwordField1.getText().matches("[A-Za-z0-9\\_\\.\\-\\$!#]+")) {
             throw new ValidationException(passwordField1, "Password contains not permissible characters");
         }
 
