@@ -27,7 +27,6 @@ package com.deepsky.view.schema_pane.tree;
 
 import com.deepsky.database.*;
 import com.deepsky.database.ora.DbUrl;
-import com.deepsky.gui2.ConnectionSettings3;
 import com.deepsky.gui2.ConnectionSettingsDialog;
 import com.deepsky.lang.common.PluginKeys;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
@@ -36,7 +35,6 @@ import com.deepsky.view.utils.ProgressIndicatorHelper;
 import com.deepsky.view.utils.TestConnectionProgressIndicator;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -98,7 +96,6 @@ public class ConnectionElementImpl extends DefaultComboBoxModel
         DbUrl[] dbUrls = manager.getDbUrlList();
 
         ConnectionSettingsDialog settings = new ConnectionSettingsDialog(project, dbUrls);
-//        ConnectionSettings3 settings = new ConnectionSettings3(project, dbUrls);
         settings.show();
 
         if (settings.isOK()) {
@@ -170,12 +167,6 @@ public class ConnectionElementImpl extends DefaultComboBoxModel
         ConnectionInfo ci = findCInfo((String) getSelectedItem());
         if (ci != null) {
             final DbUrl url = ci.getUrl();
-/*
-            ConnectionSettings2 settings = new ConnectionSettings2(project,
-                    url,
-                    ci.refreshPeriod(), ci.loginOnStart(), ci.repaireFailedConnection());
-*/
-//            ConnectionSettings3 settings = new ConnectionSettings3(project,
             ConnectionSettingsDialog settings = new ConnectionSettingsDialog(project,
                     url,
                     ci.refreshPeriod(), ci.loginOnStart(), ci.repaireFailedConnection());

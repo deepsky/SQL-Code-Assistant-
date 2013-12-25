@@ -34,11 +34,26 @@ public class DbUrlUtilTest {
     public void test_parseSID() {
         DbUrl url1 = new DbUrlSID("test", "pwd", "localhost", "1521", "ORA1");
         Assert.assertEquals(url1, DbUrlUtil.parse(url1.serialize()));
+
+        url1 = new DbUrlSID("test", "pwd#", "localhost", "1521", "ORA1");
+        Assert.assertEquals(url1, DbUrlUtil.parse(url1.serialize()));
+
+        url1 = new DbUrlSID("test", "pwd#a", "localhost", "1521", "ORA1");
+        Assert.assertEquals(url1, DbUrlUtil.parse(url1.serialize()));
+
+        url1 = new DbUrlSID("test", "pwd##", "localhost", "1521", "ORA1");
+        Assert.assertEquals(url1, DbUrlUtil.parse(url1.serialize()));
     }
 
     @Test
     public void test_parseSERVICE_NAME() {
         DbUrl url1 = new DbUrlServiceName("test", "test", "localhost", "1521", "ORA1");
+        Assert.assertEquals(url1, DbUrlUtil.parse(url1.serialize()));
+
+        url1 = new DbUrlServiceName("test", "te#st", "localhost", "1521", "ORA1");
+        Assert.assertEquals(url1, DbUrlUtil.parse(url1.serialize()));
+
+        url1 = new DbUrlServiceName("test", "te#s#t#", "localhost", "1521", "ORA1");
         Assert.assertEquals(url1, DbUrlUtil.parse(url1.serialize()));
     }
 
