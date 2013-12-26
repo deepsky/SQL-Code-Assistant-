@@ -467,14 +467,10 @@ public class NameLookupServiceImpl implements NameLookupService {
     }
 
     private String buildKey(DbUrl dbUrl, String type) {
-//        return (dbUrl.getFullUrl() + "|" + type).toLowerCase();
-//        return (dbUrl.getAlias() + "|" + type).toLowerCase();
         return (dbUrl.serialize() + "|" + type).toLowerCase();
     }
 
     private String[] findKeysMatchTo(DbUrl dbUrl) {
-//        String url = dbUrl.getKey().toLowerCase();
-//        String url = dbUrl.getAlias().toLowerCase();
         String url = dbUrl.serialize().toLowerCase();
         List<String> findings = new ArrayList<String>();
         for (String key : key2names.keySet()) {
@@ -530,7 +526,6 @@ public class NameLookupServiceImpl implements NameLookupService {
                 // source from local FS
                 return project.getName();
             }
-//            return dbUrl.serialize();
             return dbUrl.getAlias();
         }
 
@@ -545,6 +540,10 @@ public class NameLookupServiceImpl implements NameLookupService {
                 return method.invoke(this, args);
             } else if (clazz.getName().equals(NavigationItemEx.class.getName())) {
                 return method.invoke(this, args);
+            } else if (method.getName().equals("hashCode")) {
+                return this.hashCode();
+            } else if (method.getName().equals("equals") && args.length == 1) {
+                return this.equals(args[0]);
             } else if (clazz.getName().equals(Object.class.getName())) {
                 return method.invoke(this, args);
             }
@@ -569,6 +568,18 @@ public class NameLookupServiceImpl implements NameLookupService {
             }
 
             return null;
+        }
+
+        public int hashCode(){
+            return (ctxPath + dbUrl.toString()).hashCode();
+        }
+
+        public boolean equals(Object o){
+            if(o instanceof Proxy && Proxy.getInvocationHandler(o) instanceof NavigationItemProxy){
+                NavigationItemProxy p = (NavigationItemProxy) Proxy.getInvocationHandler(o);
+                return p.dbUrl.toString().equals(dbUrl.toString()) && p.ctxPath.equals(ctxPath);
+            }
+            return false;
         }
     }
 }
