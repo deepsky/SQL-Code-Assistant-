@@ -324,6 +324,19 @@ public abstract class AbstractHighlightingVisitor extends PlSqlElementVisitor {
         annotate(name, name.getNode().getElementType());
     }
 
+    final static TokenSet QUOTED_STR = TokenSet.create(PlSqlTokenTypes.QUOTED_STR);
+
+    public void visitStringLiteral(StringLiteral literal) {
+        ASTNode[] quoted = literal.getNode().getChildren(QUOTED_STR);
+        for(int i=0; i<quoted.length-1; i++){
+            if(quoted[i].getTreeNext() != quoted[i+1]){
+                // String literal looks not correct
+                annotate(literal, literal.getNode().getElementType());
+                break;
+            }
+        }
+    }
+
     public void visitTableRef(TableRef name) {
         ResolveDescriptor rDesc = name.resolveLight();
         if (rDesc == null) {

@@ -46,10 +46,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SyntaxHighlightAnnotator extends AbstractHighlightingVisitor implements Annotator {
 
-//    public void visitErrorTokenWrapper(ErrorTokenWrapper node) {
-////        annotate(node, PlSqlElementTypes.ERROR_TOKEN_A);
-//    }
-
 
     protected void annotate(PsiElement node, final IElementType elementType) {
         if (elementType == PlSqlElementTypes.GENERIC_REF) {
@@ -102,6 +98,8 @@ public class SyntaxHighlightAnnotator extends AbstractHighlightingVisitor implem
                         "Unexpected token: " +
                                 ((text.length() > 40) ? text.substring(0, 40) + " ..." : text));
             }
+        } else if (elementType == PlSqlElementTypes.STRING_LITERAL) {
+            myHolder.createErrorAnnotation(node, "Quoted Strings should be concatenated with || operator");
         }
     }
 
