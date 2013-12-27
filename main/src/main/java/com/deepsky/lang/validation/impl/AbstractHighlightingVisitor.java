@@ -328,7 +328,7 @@ public abstract class AbstractHighlightingVisitor extends PlSqlElementVisitor {
 
     public void visitStringLiteral(StringLiteral literal) {
         ASTNode[] quoted = literal.getNode().getChildren(QUOTED_STR);
-        for(int i=1; i<quoted.length-1; i++){
+        for(int i=0; i<quoted.length-1; i++){
             if(quoted[i].getTreeNext() != quoted[i+1]){
                 // String literal looks not correct
                 annotate(literal, literal.getNode().getElementType());
