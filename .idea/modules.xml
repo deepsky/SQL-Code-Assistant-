@@ -9,7 +9,6 @@
       <module fileurl="file://$PROJECT_DIR$/main/main.iml" filepath="$PROJECT_DIR$/main/main.iml" />
       <module fileurl="file://$PROJECT_DIR$/parser/parser.iml" filepath="$PROJECT_DIR$/parser/parser.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugin_runner/plugin_runner.iml" filepath="$PROJECT_DIR$/plugin_runner/plugin_runner.iml" />
-      <module fileurl="file://$PROJECT_DIR$/resolver/resolver.iml" filepath="$PROJECT_DIR$/resolver/resolver.iml" />
       <module fileurl="file://$PROJECT_DIR$/result_panel/result_panel.iml" filepath="$PROJECT_DIR$/result_panel/result_panel.iml" />
       <module fileurl="file://$PROJECT_DIR$/sql-assistant.iml" filepath="$PROJECT_DIR$/sql-assistant.iml" />
       <module fileurl="file://$PROJECT_DIR$/tools/tools.iml" filepath="$PROJECT_DIR$/tools/tools.iml" />

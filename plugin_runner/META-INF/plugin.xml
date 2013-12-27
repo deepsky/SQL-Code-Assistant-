@@ -64,6 +64,7 @@
     <br>
     Latest changes:
     <ul>
+        <li>[NEW] Highlight errors in string literal</li>
         <li>NPE and Validation exception fixes</li>
         <li>[KNOWN ISSUE] Case-sensitive table names, column names, etc are not supported for now</li>
         <li>[KNOWN ISSUE] Initial indexing of numerous SQL files (1k and more) may take time</li>
@@ -84,8 +85,10 @@
        <ul>
             <li><b>1.4.9.12</b>
                  <ul>
+                    - [NEW] Highlight errors in string literal<br>
+                    - [FIX] SQL files were not indexed on changes in Settings<br>
                     - [FIX] NPE in Structure View in case of invalid file<br>
-                    - [FIX] Validation exception fixes<br>
+                    - [FIX] Validation fixes<br>
                  </ul>
             </li>
             <li><b>1.4.8.12</b>

@@ -31,7 +31,6 @@
     <orderEntry type="module" module-name="database" />
     <orderEntry type="module" module-name="parser" />
     <orderEntry type="module" module-name="tools" />
-    <orderEntry type="module" module-name="resolver" />
     <orderEntry type="library" name="Maven: com.joestelmach:natty:0.4-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.2" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2" level="project" />

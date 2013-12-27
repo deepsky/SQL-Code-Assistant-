@@ -28,7 +28,6 @@
         <module name="db_browser" />
         <module name="main" />
         <module name="parser" />
-        <module name="resolver" />
         <module name="result_panel" />
         <module name="spec_src" />
         <module name="tools" />
@@ -41,7 +40,7 @@
       <module name="db_browser" target="1.6" />
       <module name="main" target="1.6" />
       <module name="parser" target="1.6" />
-      <module name="resolver" target="1.6" />
+      <module name="resolver" target="1.7" />
       <module name="result_panel" target="1.6" />
       <module name="spec_src" target="1.6" />
       <module name="sql-assistant" target="1.6" />
