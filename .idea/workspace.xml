@@ -1,64 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="54de04b7-488f-4a63-9926-f47ea7ea238b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__antlr_antlr_2_7_7.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_joestelmach_natty_0_4_SNAPSHOT.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_collections_commons_collections_3_2_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_antlr_antlr_runtime_3_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_antlr_stringtemplate_3_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_groovy_groovy_2_0_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_groovy_groovy_test_2_0_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_mockito_mockito_core_1_8_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_objenesis_objenesis_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_4_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_analysis_4_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_commons_4_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_tree_4_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_util_4_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/db_browser/src/main/java/com/intellij/ide/plugins/PluginManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/db_browser/yy.txt" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/db_browser/src/main/java/com/intellij/openapi/command/WriteCommandAction.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/com/intellij/openapi/command/WriteCommandAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/result_panel/src/main/java/com/deepsky/view/query_pane/ui/BinaryEditorDialog.java" afterPath="$PROJECT_DIR$/result_panel/src/main/java/com/deepsky/view/query_pane/ui/BinaryEditorDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/ComplContributor.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/ComplContributor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/Constants.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/Constants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/tree/DummyFileViewProvider.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/tree/DummyFileViewProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/DummyIdentifierPatcherExt.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/DummyIdentifierPatcherExt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/result_panel/src/main/java/com/deepsky/gui/ExportSettings.java" afterPath="$PROJECT_DIR$/result_panel/src/main/java/com/deepsky/gui/ExportSettings.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/LocalFSChangeTracker.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/LocalFSChangeTracker.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/LocalFSChangeTrackerNew.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/LocalFSChangeTrackerNew.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/impl/NameLookupServiceImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/impl/NameLookupServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlock.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlock.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/gui/SQLAssistantConfigForm.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/gui/SQLAssistantConfigForm.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/findUsages/SqlUsageGroupingRuleProviderImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/findUsages/SqlUsageGroupingRuleProviderImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/SyntaxHighlightAnnotator.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/SyntaxHighlightAnnotator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/tnsnames/tree/TNSNodeBuilder.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/tnsnames/tree/TNSNodeBuilder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/result_panel/src/main/java/com/deepsky/view/query_pane/ui/TextEditorDialog.java" afterPath="$PROJECT_DIR$/result_panel/src/main/java/com/deepsky/view/query_pane/ui/TextEditorDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/tree/TreeNodeBuilderEx2.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/tree/TreeNodeBuilderEx2.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/antl_patch/antl_patch.iml" afterPath="$PROJECT_DIR$/antl_patch/antl_patch.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/commons/commons.iml" afterPath="$PROJECT_DIR$/commons/commons.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/database.iml" afterPath="$PROJECT_DIR$/database/database.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/db_browser.iml" afterPath="$PROJECT_DIR$/db_browser/db_browser.iml" />
+    <list default="true" id="54de04b7-488f-4a63-9926-f47ea7ea238b" name="Default" comment="Fix Quick Object Lookup (13 ver specific)&#10;">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/main.iml" afterPath="$PROJECT_DIR$/main/main.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/parser.iml" afterPath="$PROJECT_DIR$/parser/parser.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" afterPath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugin_runner/plugin_runner.iml" afterPath="$PROJECT_DIR$/plugin_runner/plugin_runner.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/antl_patch/pom.xml" afterPath="$PROJECT_DIR$/antl_patch/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/commons/pom.xml" afterPath="$PROJECT_DIR$/commons/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/pom.xml" afterPath="$PROJECT_DIR$/database/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/pom.xml" afterPath="$PROJECT_DIR$/db_browser/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/pom.xml" afterPath="$PROJECT_DIR$/main/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/pom.xml" afterPath="$PROJECT_DIR$/parser/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resolver/pom.xml" afterPath="$PROJECT_DIR$/resolver/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/result_panel/pom.xml" afterPath="$PROJECT_DIR$/result_panel/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resolver/resolver.iml" afterPath="$PROJECT_DIR$/resolver/resolver.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/result_panel/result_panel.iml" afterPath="$PROJECT_DIR$/result_panel/result_panel.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql-assistant.iml" afterPath="$PROJECT_DIR$/sql-assistant.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tools/tools.iml" afterPath="$PROJECT_DIR$/tools/tools.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="sql-assistant.iws" />
@@ -114,6 +61,23 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="jar://$APPLICATION_HOME_DIR$/lib/trove4j_src.jar!/core/src/gnu/trove/THashMap.java" line="165" class="gnu.trove.THashMap" package="gnu.trove">
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="true" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="false" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&quot;key: &quot; + key + &quot;\tindex: &quot; + index&#13;&#13;JAVA" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -123,64 +87,49 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="build.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/build.xml">
+      <file leaf-file-name="PlSqlElement.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PlSqlElement.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="44" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="1365">
+            <state line="30" column="17" selection-start="1523" selection-end="1523" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
+              <folding>
+                <element signature="e#0#1682#0" expanded="false" />
+                <element signature="imports" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="plugin.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="66" column="48" selection-start="3677" selection-end="3677" vertical-scroll-proportion="0.0" vertical-offset="855" max-vertical-offset="6165">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="build.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/parser/build.properties">
+      <file leaf-file-name="README" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="150">
+            <state line="39" column="61" selection-start="1522" selection-end="1522" vertical-scroll-proportion="0.104166664" vertical-offset="525" max-vertical-offset="1155">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name="SyntaxHighlightAnnotator.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/SyntaxHighlightAnnotator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="32" selection-start="563" selection-end="563" vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="645">
+            <state line="46" column="13" selection-start="2293" selection-end="2293" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2025">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
+      <file leaf-file-name="AbstractHighlightingVisitor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/impl/AbstractHighlightingVisitor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="163" column="31" selection-start="6380" selection-end="6380" vertical-scroll-proportion="0.0" vertical-offset="2296" max-vertical-offset="2895">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/commons/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="8" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="1020">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PlSqlTypedHandler.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="186" column="0" selection-start="7616" selection-end="7616" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2190">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WriteCommandAction.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/db_browser/src/test/java/com/intellij/openapi/command/WriteCommandAction.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="41" selection-start="1333" selection-end="1333" vertical-scroll-proportion="0.4525862" vertical-offset="0" max-vertical-offset="2160">
+            <state line="330" column="19" selection-start="13434" selection-end="13434" vertical-scroll-proportion="0.0" vertical-offset="4081" max-vertical-offset="5220">
               <folding />
             </state>
           </provider>
@@ -207,11 +156,16 @@
         <option value="$PROJECT_DIR$/database/pom.xml" />
         <option value="$PROJECT_DIR$/antl_patch/pom.xml" />
         <option value="$PROJECT_DIR$/README" />
-        <option value="$PROJECT_DIR$/build.xml" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
         <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java" />
+        <option value="$PROJECT_DIR$/build.xml" />
+        <option value="$PROJECT_DIR$/main/src/test/resources/table_definitions/airport1.sql" />
+        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/LocalFSChangeTracker.java" />
+        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/GotoDbObjectModel.java" />
+        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/impl/NameLookupServiceImpl.java" />
+        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/impl/AbstractHighlightingVisitor.java" />
+        <option value="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
       </list>
     </option>
   </component>
@@ -257,10 +211,9 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1" />
-    <option name="y" value="-4" />
-    <option name="width" value="1282" />
-    <option name="height" value="725" />
+    <option name="y" value="24" />
+    <option name="width" value="1280" />
+    <option name="height" value="696" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -273,7 +226,7 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="2" />
+    <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
@@ -288,6 +241,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -317,6 +271,38 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="tools" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-code-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test_area" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IDEA11_SQL2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-code-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test_area" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -404,247 +390,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="db_browser" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="db_browser" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="db_browser" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="db_browser" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="intellij" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="command" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="db_browser" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="intellij" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="db_browser" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="db_browser" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="db_browser" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="database" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="commons" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -664,19 +410,18 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$APPLICATION_HOME_DIR$/lib/trove4j_src.jar!/" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -686,6 +431,10 @@
     <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/db_browser/src/test/java/com/intellij" />
+    <property name="FullScreen" value="false" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -705,6 +454,19 @@
       <option name="SHMEM_ADDRESS" value="javadebug" />
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
@@ -732,19 +494,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -786,6 +535,12 @@
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <log_file path="$USER_HOME$/.IdeaIC12/system/plugins-sandbox/system/log/idea.log" checked="false" skipped="true" show_all="false" alias="IDEA LOG" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
     <list size="1">
@@ -798,7 +553,8 @@
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="SqlCodeAssistantSettings">
-    <option name="dbBrowserSelectedConnection" value="sql-assistant" />
+    <option name="dbBrowserSelectedConnection" value="sitaMCOEaDmin@itravelorc.cgeukipxmndq.us-east-1.rds.amazonaws.com:1521:ORCL" />
+    <option name="dbBrowserSplitDividerLocation" value="169" />
   </component>
   <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
     <option name="USER" value="" />
@@ -823,11 +579,36 @@
       <created>1387824108377</created>
       <updated>1387824108377</updated>
     </task>
+    <task id="LOCAL-00001" summary="Highlight errored string literals&#10;">
+      <created>1388127506919</created>
+      <updated>1388127506919</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="-4" width="1282" height="725" extended-state="6" />
-    <editor active="false" />
+    <frame x="0" y="24" width="1280" height="696" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -836,23 +617,23 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47840533" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24878837" sideWeight="0.515" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43521595" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.51495016" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34087238" sideWeight="0.7033333" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4053156" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24959612" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34652665" sideWeight="0.7033333" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2786753" sideWeight="0.7033333" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32875606" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22051696" sideWeight="0.7033333" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -864,9 +645,13 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
+    <MESSAGE value="Highlight errored string literals&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Highlight errored string literals&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -891,235 +676,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="44" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="1365">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/parser/build.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="150">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="32" selection-start="563" selection-end="563" vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="645">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="163" column="31" selection-start="6380" selection-end="6380" vertical-scroll-proportion="0.0" vertical-offset="2445" max-vertical-offset="2895">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6180">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/commons/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="8" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="1020">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="53" selection-start="1509" selection-end="1509" vertical-scroll-proportion="0.0" vertical-offset="420" max-vertical-offset="2835">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="44" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="1365">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/parser/build.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="150">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="32" selection-start="563" selection-end="563" vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="645">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="163" column="31" selection-start="6380" selection-end="6380" vertical-scroll-proportion="0.0" vertical-offset="2445" max-vertical-offset="2895">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6180">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/commons/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="8" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="1020">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="53" selection-start="1509" selection-end="1509" vertical-scroll-proportion="0.0" vertical-offset="420" max-vertical-offset="2835">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="44" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1365">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/parser/build.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="150">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="32" selection-start="563" selection-end="563" vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="645">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6180">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/commons/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="8" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="1020">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="53" selection-start="1509" selection-end="1509" vertical-scroll-proportion="0.0" vertical-offset="420" max-vertical-offset="2835">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="44" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="1365">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/parser/build.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="150">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="32" selection-start="563" selection-end="563" vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="645">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6180">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/commons/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="8" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="1020">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="53" selection-start="1509" selection-end="1509" vertical-scroll-proportion="0.0" vertical-offset="420" max-vertical-offset="2835">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/parser/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db_browser/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="52" selection-start="622" selection-end="622" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/antl_patch/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="4" selection-start="504" selection-end="504" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="44" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="0" selection-start="2981" selection-end="2981" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/commons/src/test/java/JCraft/UserAuthPubKey.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="19" column="13" selection-start="565" selection-end="565" vertical-scroll-proportion="0.7044199" vertical-offset="0" max-vertical-offset="0" />
@@ -1132,49 +688,282 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/commons/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="8" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
+        <state line="7" column="8" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/parser/build.properties">
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
+        <state line="186" column="0" selection-start="7616" selection-end="7616" vertical-scroll-proportion="0.84375" vertical-offset="1614" max-vertical-offset="2190" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="80" selection-start="1355" selection-end="1355" vertical-scroll-proportion="0.234375" vertical-offset="360" max-vertical-offset="1365" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/java/com/intellij/openapi/command/WriteCommandAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="41" selection-start="1333" selection-end="1333" vertical-scroll-proportion="-0.7291667" vertical-offset="525" max-vertical-offset="2160" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="32" selection-start="563" selection-end="563" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
+        <state line="32" column="32" selection-start="563" selection-end="563" vertical-scroll-proportion="0.7135417" vertical-offset="69" max-vertical-offset="645" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/parser/build.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/test/resources/table_definitions/airport1.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="43" selection-start="469" selection-end="469" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="735" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/PlSqlFileChangeTracker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="13" selection-start="2362" selection-end="2362" vertical-scroll-proportion="-1.09375" vertical-offset="720" max-vertical-offset="2040" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/MContent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="70" selection-start="1956" selection-end="1956" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="3660" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/resolver/factory/PlSqlElementLocator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="130" column="0" selection-start="5398" selection-end="5398" vertical-scroll-proportion="0.0" vertical-offset="1251" max-vertical-offset="5565" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/LocalFSChangeTracker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="314" column="0" selection-start="14317" selection-end="14317" vertical-scroll-proportion="0.0" vertical-offset="750" max-vertical-offset="8805" />
+      </provider>
+    </entry>
+    <entry file="jar:///usr/local/java/jdk1.7.0_07/src.zip!/java/util/Arrays.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="658" column="0" selection-start="29582" selection-end="29582" vertical-scroll-proportion="0.0" vertical-offset="9435" max-vertical-offset="54840" />
+      </provider>
+    </entry>
+    <entry file="jar:///usr/local/java/jdk1.7.0_07/src.zip!/java/util/Collections.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="216" column="0" selection-start="10002" selection-end="10002" vertical-scroll-proportion="0.0" vertical-offset="2760" max-vertical-offset="59310" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-impl/src/com/intellij/ide/actions/GotoActionAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="45" selection-start="3256" selection-end="3256" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1440" />
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/trove4j.jar!/gnu/trove/THashMap.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="105" selection-start="317" selection-end="317" vertical-scroll-proportion="0.0990991" vertical-offset="65" max-vertical-offset="2715" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/NavigationItemEx.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="49" selection-start="1550" selection-end="1550" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/GotoDbObjectModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="60" selection-start="2367" selection-end="2367" vertical-scroll-proportion="0.041666668" vertical-offset="90" max-vertical-offset="2100" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-api/src/com/intellij/psi/WeighingComparable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="0" selection-start="2089" selection-end="2089" vertical-scroll-proportion="0.18714556" vertical-offset="516" max-vertical-offset="1305" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-impl/src/com/intellij/psi/util/proximity/SameDirectoryWeigher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="0" selection-start="1030" selection-end="1030" vertical-scroll-proportion="0.0" vertical-offset="13" max-vertical-offset="600" />
+      </provider>
+    </entry>
+    <entry file="jar:///usr/local/java/jdk1.7.0_07/src.zip!/java/util/TimSort.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="172" column="0" selection-start="6100" selection-end="6100" vertical-scroll-proportion="-0.6193896" vertical-offset="2580" max-vertical-offset="13665" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/result_panel/src/main/java/com/deepsky/view/query_pane/OpenResultPanelAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="30" selection-start="1440" selection-end="1440" vertical-scroll-proportion="0.26666668" vertical-offset="0" max-vertical-offset="450" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="163" column="31" selection-start="6380" selection-end="6380" vertical-scroll-proportion="0.24390244" vertical-offset="2385" max-vertical-offset="2895" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/core-api/src/com/intellij/pom/Navigatable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="17" selection-start="645" selection-end="645" vertical-scroll-proportion="0.08108108" vertical-offset="0" max-vertical-offset="555" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/core-api/src/com/intellij/navigation/NavigationItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="47" selection-start="763" selection-end="763" vertical-scroll-proportion="0.13513513" vertical-offset="0" max-vertical-offset="555" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/java/java-psi-impl/src/com/intellij/psi/impl/light/LightClass.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="13" selection-start="869" selection-end="869" vertical-scroll-proportion="0.21621622" vertical-offset="0" max-vertical-offset="555" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/core-impl/src/com/intellij/psi/impl/light/LightElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="22" selection-start="1065" selection-end="1065" vertical-scroll-proportion="0.16216215" vertical-offset="0" max-vertical-offset="2760" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/java/java-psi-impl/src/com/intellij/psi/impl/light/AbstractLightClass.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="51" selection-start="1315" selection-end="1315" vertical-scroll-proportion="0.13513513" vertical-offset="0" max-vertical-offset="5055" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/core-api/src/com/intellij/psi/PsiElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="78" selection-start="627" selection-end="627" vertical-scroll-proportion="0.054054055" vertical-offset="0" max-vertical-offset="7275" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-impl/src/com/intellij/ide/util/gotoByName/ChooseByNameBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1530" column="0" selection-start="53454" selection-end="53454" vertical-scroll-proportion="0.33031675" vertical-offset="20057" max-vertical-offset="23745" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-impl/src/com/intellij/psi/util/proximity/PsiProximityComparator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="73" column="108" selection-start="3108" selection-end="3108" vertical-scroll-proportion="-2.6778846" vertical-offset="1052" max-vertical-offset="1260" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/PlSqlElementBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="13" selection-start="2248" selection-end="2248" vertical-scroll-proportion="0.4338843" vertical-offset="0" max-vertical-offset="1230" />
+      </provider>
+    </entry>
+    <entry file="jar:///usr/local/java/jdk1.7.0_07/src.zip!/java/util/Map.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="199" column="6" selection-start="9031" selection-end="9031" vertical-scroll-proportion="0.33333334" vertical-offset="2448" max-vertical-offset="6915" />
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/trove4j_src.jar!/core/src/gnu/trove/TObjectHashingStrategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="6" selection-start="909" selection-end="909" vertical-scroll-proportion="0.40104166" vertical-offset="189" max-vertical-offset="765" />
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/trove4j_src.jar!/core/src/gnu/trove/THashMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="365" column="0" selection-start="11304" selection-end="11304" vertical-scroll-proportion="0.0" vertical-offset="5065" max-vertical-offset="11700">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/trove4j_src.jar!/core/src/gnu/trove/TObjectHash.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="301" column="0" selection-start="9933" selection-end="9933" vertical-scroll-proportion="0.0" vertical-offset="4171" max-vertical-offset="4845">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-impl/src/com/intellij/ide/util/gotoByName/DefaultChooseByNameItemProvider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="116" column="0" selection-start="5008" selection-end="5008" vertical-scroll-proportion="0.0" vertical-offset="1021" max-vertical-offset="5400">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/SysSchemaIndexProvider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="27" selection-start="3109" selection-end="3109" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="3660">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/indexMan/Indexer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="17" selection-start="1431" selection-end="1431" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/database/impl/ConnectionManagerImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="617" column="0" selection-start="22466" selection-end="22466" vertical-scroll-proportion="0.58018017" vertical-offset="8063" max-vertical-offset="10155">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/indexMan/FSIndexer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="37" selection-start="2205" selection-end="2205" vertical-scroll-proportion="0.1891892" vertical-offset="0" max-vertical-offset="2100">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/database/DbSchemaIndexer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="184" column="0" selection-start="7272" selection-end="7272" vertical-scroll-proportion="0.32118055" vertical-offset="1735" max-vertical-offset="6225">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/common/PlSqlSupportLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="28" selection-start="2657" selection-end="2657" vertical-scroll-proportion="0.7135417" vertical-offset="9" max-vertical-offset="735">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/impl/DbSchemaIndex.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="466" column="43" selection-start="19168" selection-end="19168" vertical-scroll-proportion="0.25399646" vertical-offset="5932" max-vertical-offset="6495">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/impl/NameLookupServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="559" column="73" selection-start="23414" selection-end="23414" vertical-scroll-proportion="0.20659722" vertical-offset="6076" max-vertical-offset="6675">
+          <folding>
+            <element signature="method#parsePackageIndex#0;class#NameLookupServiceImpl#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PlSqlElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="17" selection-start="1523" selection-end="1523" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
+          <folding>
+            <element signature="e#0#1682#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/SyntaxHighlightAnnotator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="13" selection-start="2293" selection-end="2293" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2025">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/impl/AbstractHighlightingVisitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="330" column="19" selection-start="13434" selection-end="13434" vertical-scroll-proportion="0.0" vertical-offset="4081" max-vertical-offset="5220">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="54" selection-start="4225" selection-end="4225" vertical-scroll-proportion="0.22058824" vertical-offset="1035" max-vertical-offset="6180">
+        <state line="66" column="48" selection-start="3677" selection-end="3677" vertical-scroll-proportion="0.0" vertical-offset="855" max-vertical-offset="6165">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/README">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="163" column="31" selection-start="6380" selection-end="6380" vertical-scroll-proportion="0.0" vertical-offset="2296" max-vertical-offset="2895">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="186" column="0" selection-start="7616" selection-end="7616" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2190">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db_browser/src/test/java/com/intellij/openapi/command/WriteCommandAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="41" selection-start="1333" selection-end="1333" vertical-scroll-proportion="0.4525862" vertical-offset="0" max-vertical-offset="2160">
+        <state line="39" column="61" selection-start="1522" selection-end="1522" vertical-scroll-proportion="0.104166664" vertical-offset="525" max-vertical-offset="1155">
           <folding />
         </state>
       </provider>
@@ -1219,7 +1008,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>1.7</last-edited>
+          <last-edited>IDEA IC-133.193</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1231,7 +1020,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>tools</last-edited>
+          <last-edited>sql-assistant</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

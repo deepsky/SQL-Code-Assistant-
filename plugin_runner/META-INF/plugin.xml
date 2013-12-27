@@ -64,8 +64,6 @@
     <br>
     Latest changes:
     <ul>
-        <li>NPE and Validation exception fixes</li>
-        <li>DB Connection Editor dialog</li>
         <li>[KNOWN ISSUE] Case-sensitive table names, column names, etc are not supported for now</li>
         <li>[KNOWN ISSUE] Initial indexing of numerous SQL files (1k and more) may take time</li>
         <li>[KNOWN ISSUE] Quick Object Lookup does not distinguish between objects with the same name but located in different files</li>
@@ -86,6 +84,7 @@
        <ul>
             <li><b>1.4.9.13</b>
                  <ul>
+                    - [NEW] Highlight errored string literals<br>
                     - [FIX] NPE in Structure View in case of invalid file<br>
                     - [FIX] Validation exception fixes<br>
                  </ul>

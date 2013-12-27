@@ -5,7 +5,7 @@
     <property name="build.dir" value="./build_dir"/>
     <property name="bundle.dir" value="./out"/>
     <property name="bundle.name" value="sql-assistant"/>
-    <property name="plugin.ver" value="1.4.9.12"/>
+    <property name="plugin.ver" value="1.4.9.13"/>
 
     <target name="build_plugin" description="Build PL/SQL plugin sources">
 

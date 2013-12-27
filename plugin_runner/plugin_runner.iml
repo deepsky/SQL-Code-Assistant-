@@ -16,7 +16,6 @@
     <orderEntry type="module" module-name="main" scope="RUNTIME" />
     <orderEntry type="module" module-name="resolver" />
     <orderEntry type="module" module-name="result_panel" />
-    <orderEntry type="module" module-name="spec_src" />
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
