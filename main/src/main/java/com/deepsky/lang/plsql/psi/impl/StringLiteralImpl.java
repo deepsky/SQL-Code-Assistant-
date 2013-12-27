@@ -25,10 +25,12 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.StringLiteral;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.types.Varchar2Type;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class StringLiteralImpl extends PlSqlElementBase implements StringLiteral {
@@ -45,4 +47,13 @@ public class StringLiteralImpl extends PlSqlElementBase implements StringLiteral
     public String valueToString() {
         return getText();
     }
+
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof PlSqlElementVisitor) {
+            ((PlSqlElementVisitor) visitor).visitStringLiteral(this);
+        } else {
+            super.accept(visitor);
+        }
+    }
+
 }

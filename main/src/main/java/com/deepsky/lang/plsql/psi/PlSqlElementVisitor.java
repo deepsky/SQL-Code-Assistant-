@@ -26,15 +26,13 @@
 package com.deepsky.lang.plsql.psi;
 
 import com.deepsky.lang.common.PlSqlFile;
-import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
-import com.deepsky.lang.plsql.psi.ctrl.*;
+import com.deepsky.lang.plsql.psi.ctrl.CommitStatement;
+import com.deepsky.lang.plsql.psi.ctrl.GrantCommand;
+import com.deepsky.lang.plsql.psi.ctrl.RevokeCommand;
+import com.deepsky.lang.plsql.psi.ctrl.RollbackStatement;
 import com.deepsky.lang.plsql.psi.ddl.*;
-import com.deepsky.lang.plsql.psi.impl.*;
-import com.deepsky.lang.plsql.psi.impl.ctrl.GrantCommandImpl;
-import com.deepsky.lang.plsql.psi.impl.ctrl.RevokeCommandImpl;
-import com.deepsky.lang.plsql.psi.impl.ddl.AlterIndexImpl;
-import com.deepsky.lang.plsql.psi.impl.ddl.RenameTableImpl;
-import com.deepsky.lang.plsql.psi.impl.names.*;
+import com.deepsky.lang.plsql.psi.impl.ColumnDefinitionForAlterImpl;
+import com.deepsky.lang.plsql.psi.impl.SqlPlusPromptRem;
 import com.deepsky.lang.plsql.psi.internal.CreateViewColumnDefInternal;
 import com.deepsky.lang.plsql.psi.names.*;
 import com.deepsky.lang.plsql.psi.ref.*;
@@ -502,7 +500,7 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     public void visitRecordItemName(RecordItemName recordItemName) {
     }
 
-    public void visitUniqueConstraint(UniqueConstraint  constraint) {
+    public void visitUniqueConstraint(UniqueConstraint constraint) {
         visitElement(constraint);
     }
 
@@ -538,5 +536,9 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
 
     public void visitRevokeCommand(RevokeCommand command) {
         visitElement(command);
+    }
+
+    public void visitStringLiteral(StringLiteral literal) {
+        visitElement(literal);
     }
 }
