@@ -26,12 +26,6 @@
         </dependency>
 
         <dependency>
-            <groupId>sql-assistant</groupId>
-            <artifactId>resolver</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.joestelmach</groupId>
             <artifactId>natty</artifactId>
             <version>0.4-SNAPSHOT</version>

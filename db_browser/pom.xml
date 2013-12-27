@@ -34,14 +34,7 @@
             <!--<classifier>sources</classifier>-->
         </dependency>
 
-        <dependency>
-            <groupId>sql-assistant</groupId>
-            <artifactId>resolver</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
-            <!--<type>jar</type>-->
-            <!--<classifier>sources</classifier>-->
-        </dependency>
-    </dependencies>
+     </dependencies>
 
     <build>
         <plugins>

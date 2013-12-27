@@ -9,6 +9,7 @@
 
     <target name="build_plugin" description="Build PL/SQL plugin sources">
 
+        <mkdir dir="${build.dir}"/>
         <delete>
             <fileset dir="${build.dir}">
                 <include name="**/*"/>
@@ -30,7 +31,6 @@
             <fileset dir="commons/target/classes" includes="*.xml"/>
 
             <fileset dir="parser/target/classes" includes="*/**/*.class"/>
-            <fileset dir="resolver/target/classes" includes="*/**/*.class"/>
             <fileset dir="result_panel/target/classes" includes="*/**/*.class"/>
 
             <fileset dir="plugin_runner" includes="META-INF/*.xml"/>

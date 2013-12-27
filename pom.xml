@@ -21,7 +21,6 @@
         <module>parser</module>
         <module>db_browser</module>
         <module>result_panel</module>
-        <module>resolver</module>
         <module>tools</module>
     </modules>
 
