@@ -1,4 +1,4 @@
-package com.deepsky.view.query_pane.util;
+package au.com.bytecode.opencsv;
 
 /**
  Copyright 2005 Bytecode Pty Ltd.
