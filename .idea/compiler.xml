@@ -22,21 +22,33 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="annotationProcessors" />
+        <module name="annotations" />
         <module name="antl_patch" />
         <module name="commons" />
         <module name="database" />
         <module name="db_browser" />
         <module name="main" />
         <module name="parser" />
-        <module name="resolver" />
         <module name="result_panel" />
         <module name="spec_src" />
         <module name="tools" />
       </profile>
+      <profile default="false" name="Annotation profile for completion" enabled="true">
+        <sourceOutputDir name="target/generated-sources/apt" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processor name="com.deepsky.lang.plsql.completion.syntaxTreePath.annotations.processors.SyntaxTreePathProcessor" />
+        <processorPath useClasspath="true" />
+        <module name="completion" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="annotationProcessors" target="1.7" />
+      <module name="annotations" target="1.7" />
       <module name="antl_patch" target="1.7" />
       <module name="commons" target="1.7" />
+      <module name="completion" target="1.7" />
       <module name="database" target="1.7" />
       <module name="db_browser" target="1.7" />
       <module name="main" target="1.7" />

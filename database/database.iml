@@ -22,8 +22,124 @@
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: com.jcraft:jsch:0.1.50" level="project" />
     <orderEntry type="module" module-name="parser" />
-    <orderEntry type="library" name="Maven: sql-assistant:tools:1.13.1-SNAPSHOT" level="project" />
-    <orderEntry type="module" module-name="resolver" />
+    <orderEntry type="module" module-name="tools" />
+    <orderEntry type="module-library">
+      <library name="Maven: com.intellij:openapi:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/openapi.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.intellij:idea:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/idea.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.intellij:idea_rt:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/idea_rt.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.intellij:openapi.extensions:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/extensions.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: org.jetbrains:annotations:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/annotations.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: org.jetbrains:ui:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/util.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.intellij:uiDesigner:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/forms_rt.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: gnu:trove:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/trove4j.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: org:picocontainer:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/picocontainer.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: org:jdom:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/jdom.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.intellij:resources_en:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/resources_en.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.intellij:resources:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/resources.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.intellij:ide:1.5.0">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/bootstrap.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

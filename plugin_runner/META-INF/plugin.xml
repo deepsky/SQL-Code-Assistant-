@@ -186,7 +186,7 @@
             </li>
         </ul>
     </html>]]></change-notes>
-    <idea-version since-build="133.100" until-build="133.999"/>
+    <idea-version since-build="133.100" until-build="133.*"/>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 

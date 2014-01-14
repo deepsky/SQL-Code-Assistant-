@@ -2,10 +2,127 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="54de04b7-488f-4a63-9926-f47ea7ea238b" name="Default" comment="Fix Quick Object Lookup (13 ver specific)&#10;">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotations/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/Author.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/legacy/structures/BST.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/legacy/structures/BSTTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotations/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/BeanInfo.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/processors/BeanInfoProcessor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGenerator.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGeneratorRunner.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGeneratorVisitor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessorBase.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotations/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/Complexity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotations/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/ComplexityLevel.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/processors/ComplexityProcessor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/DoubleDotNode.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/DoubleSlashNode.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/EOFException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/GenericProcessor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/InvalidLexerStateException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/legacy/structures/Node.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/RootNode.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/SimpleAnnotationsTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/SingleSlashNode.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/SlashNode.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/StringNode.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/SyntaxTreePathParserTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/processors/SyntaxTreePathProcessor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/TNode.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/TNodePrinterVisitor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/TNodeVisitor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePath.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/TreePathContext.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathIterator.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathIteratorImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/UpdateStmtProcessor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/WriterAdopter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/annotationProcessors.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/resources/beaninfo.vm" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/pom.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/resources/velocity.properties" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__sql_assistant_tools_1_13_1_SNAPSHOT.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePath.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/resolver/pom.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/resolver/resolver.iml" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/main/antlr/SyntaxTreePath.g" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/antlr/SyntaxTreePath.g" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/CC_BaseProcessor.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/CC_BaseProcessor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/ComplContributor.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/ComplContributor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/ElementarySyntaxGuesser.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/ElementarySyntaxGuesser.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/ObjectReferenceDispatcher.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/ObjectReferenceDispatcher.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/PlSqlElementProxy.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/PlSqlElementProxy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/PlSqlElementProxyFactory.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/PlSqlElementProxyFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/SqlCompletionWeigher.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/SqlCompletionWeigher.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/SyntaxNotCompleteException.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/SyntaxNotCompleteException.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/syntax_chains.txt" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/syntax_chains.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/utils/VariantProcessor.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/utils/VariantProcessor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/AbstractCompletionTest.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/AbstractCompletionTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/SyntaxErrorResolverTest.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/SyntaxErrorResolverTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/processors/CC_DDLProcessor.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/SelectStmtProcessor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/processors/ComplProcessor.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/processors/ComplProcessor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/Context.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/Context.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/ObjectTree.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/ObjectTree.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/PathProcessor.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/PathProcessor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/PathWorker.groovy" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/PathWorker.groovy" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/Step.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/Step.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/SyntaxTreeLookupService.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/SyntaxTreeLookupService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/SyntaxTreePath.java" afterPath="$PROJECT_DIR$/annotations/src/main/java/com/deepsky/lang/plsql/completion/SyntaxTreePath.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/SyntaxTreePathNode.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/SyntaxTreePathNode.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/SyntaxTreePathWrap.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/SyntaxTreePathWrap.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/SyntaxTreePathWrapper.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/SyntaxTreePathWrapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/Visitor.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/Visitor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/SyntaxTreePathLexerTest.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/SyntaxTreePathLexerTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/ObjectTreeParser.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/ObjectTreeParser.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/PatternElement.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/PatternElement.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/PatternProcessor.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/PatternProcessor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/STPPattern.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/STPPattern.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/STPPatternParser.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/STPPatternParser.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/SyntaxTreeProcessor.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/SyntaxTreeProcessor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/Test1.groovy" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/Test1.groovy" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathBuilder.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathBuilder.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathImpl.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathUtil.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathImplTest.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/parser/StxParseException.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/legacy/parser/StxParseException.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/parser/StxPathParser.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/legacy/parser/StxPathParser.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/parser/StxPathParserTest.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/legacy/parser/StxPathParserTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/steps/ASTNodeStep.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/legacy/steps/ASTNodeStep.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/steps/AllNodesStep.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/legacy/steps/AllNodesStep.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/steps/PsiElementStep.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/legacy/steps/PsiElementStep.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/lang/parser/plsql/ANTLRType2AdoptedType.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/lang/parser/plsql/ANTLRType2AdoptedType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSql2TokenTypes.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSql2TokenTypes.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSql2TokenTypes.txt" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSql2TokenTypes.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSql2TokenTypes.txt" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSql2TokenTypes.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlParserAdopted.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlParserAdopted.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSqlTokenTypes.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSqlTokenTypes.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlTokenTypes.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlTokenTypes.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSqlTokenTypes.txt" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSqlTokenTypes.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlTokenTypes.txt" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlTokenTypes.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/integration/lexer/generated/PlSqlBaseTokenTypes.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/integration/lexer/generated/PlSqlBaseTokenTypes.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/integration/lexer/generated/PlSqlTokenTypesMapping.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/integration/lexer/generated/PlSqlTokenTypesMapping.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/SymbolTable.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/SymbolTable.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/antl_patch/antl_patch.iml" afterPath="$PROJECT_DIR$/antl_patch/antl_patch.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/commons/commons.iml" afterPath="$PROJECT_DIR$/commons/commons.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/database.iml" afterPath="$PROJECT_DIR$/database/database.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/db_browser.iml" afterPath="$PROJECT_DIR$/db_browser/db_browser.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/main.iml" afterPath="$PROJECT_DIR$/main/main.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/parser.iml" afterPath="$PROJECT_DIR$/parser/parser.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/grammars/plsql_lexer.g" afterPath="$PROJECT_DIR$/parser/src/main/grammars/plsql_lexer.g" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" afterPath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugin_runner/plugin_runner.iml" afterPath="$PROJECT_DIR$/plugin_runner/plugin_runner.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/antl_patch/pom.xml" afterPath="$PROJECT_DIR$/antl_patch/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/commons/pom.xml" afterPath="$PROJECT_DIR$/commons/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/pom.xml" afterPath="$PROJECT_DIR$/database/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/pom.xml" afterPath="$PROJECT_DIR$/db_browser/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/pom.xml" afterPath="$PROJECT_DIR$/main/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/pom.xml" afterPath="$PROJECT_DIR$/parser/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/result_panel/pom.xml" afterPath="$PROJECT_DIR$/result_panel/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tools/pom.xml" afterPath="$PROJECT_DIR$/tools/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/result_panel/result_panel.iml" afterPath="$PROJECT_DIR$/result_panel/result_panel.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql-assistant.iml" afterPath="$PROJECT_DIR$/sql-assistant.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tools/tools.iml" afterPath="$PROJECT_DIR$/tools/tools.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="sql-assistant.iws" />
@@ -78,6 +195,25 @@
         <option name="LOG_MESSAGE" value="&quot;key: &quot; + key + &quot;\tindex: &quot; + index&#13;&#13;JAVA" />
       </breakpoint>
     </line_breakpoints>
+    <exception_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint class_name="java.lang.NullPointerException" package_name="java.lang">
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </exception_breakpoints>
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -87,49 +223,86 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="PlSqlElement.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PlSqlElement.java">
+      <file leaf-file-name="SyntaxTreePathParserTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/SyntaxTreePathParserTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="17" selection-start="1523" selection-end="1523" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
+            <state line="3" column="34" selection-start="138" selection-end="138" vertical-scroll-proportion="0.0" vertical-offset="3195" max-vertical-offset="5550">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CompletionProcessor2.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/completion/target/generated-sources/apt/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessor2.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="119" column="0" selection-start="4139" selection-end="4139" vertical-scroll-proportion="0.0" vertical-offset="1110" max-vertical-offset="43110">
               <folding>
-                <element signature="e#0#1682#0" expanded="false" />
-                <element signature="imports" expanded="false" />
+                <marker date="1389647044834" expanded="true" signature="78715:78783" placeholder="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="plugin.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
+      <file leaf-file-name="SelectStmtProcessor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/SelectStmtProcessor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="66" column="48" selection-start="3677" selection-end="3677" vertical-scroll-proportion="0.0" vertical-offset="855" max-vertical-offset="6165">
+            <state line="10" column="4" selection-start="270" selection-end="270" vertical-scroll-proportion="0.0" vertical-offset="45" max-vertical-offset="1815">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="UpdateStmtProcessor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/UpdateStmtProcessor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="11" column="4" selection-start="299" selection-end="299" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GenericProcessor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/GenericProcessor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="11" column="0" selection-start="268" selection-end="268" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CodeGeneratorRunner.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGeneratorRunner.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="54" column="69" selection-start="2908" selection-end="2908" vertical-scroll-proportion="0.0" vertical-offset="564" max-vertical-offset="1140">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SyntaxTreePathProcessor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/processors/SyntaxTreePathProcessor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="37" column="30" selection-start="1486" selection-end="1486" vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="1170">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="39" column="61" selection-start="1522" selection-end="1522" vertical-scroll-proportion="0.104166664" vertical-offset="525" max-vertical-offset="1155">
+            <state line="18" column="32" selection-start="906" selection-end="906" vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="1155">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SyntaxHighlightAnnotator.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/SyntaxHighlightAnnotator.java">
+      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/main/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="46" column="13" selection-start="2293" selection-end="2293" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2025">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AbstractHighlightingVisitor.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/impl/AbstractHighlightingVisitor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="330" column="19" selection-start="13434" selection-end="13434" vertical-scroll-proportion="0.0" vertical-offset="4081" max-vertical-offset="5220">
+            <state line="66" column="0" selection-start="2232" selection-end="2232" vertical-scroll-proportion="0.27027026" vertical-offset="840" max-vertical-offset="1395">
               <folding />
             </state>
           </provider>
@@ -153,19 +326,57 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/InvalidLexerStateException.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathIterator.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/ParserContext.java" />
+        <option value="$PROJECT_DIR$/parser/src/main/grammars/plsql_parser.g" />
+        <option value="$PROJECT_DIR$/parser/src/main/grammars/plsql_lexer.g" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathIteratorImpl.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/MethodCall.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CallMetaInfo.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/TNode.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/StringNode.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/SyntaxTreePathParserTest.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGeneratorVisitor.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessor.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/TreePathContext.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessorBase.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/RootNode.java" />
+        <option value="$PROJECT_DIR$/main/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGeneratorRunner.java" />
+        <option value="$PROJECT_DIR$/annotations/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/pom.xml" />
+        <option value="$PROJECT_DIR$/result_panel/pom.xml" />
+        <option value="$PROJECT_DIR$/db_browser/pom.xml" />
+        <option value="$PROJECT_DIR$/parser/pom.xml" />
         <option value="$PROJECT_DIR$/database/pom.xml" />
         <option value="$PROJECT_DIR$/antl_patch/pom.xml" />
-        <option value="$PROJECT_DIR$/README" />
-        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/commons/pom.xml" />
+        <option value="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/AbstractCompletionTest.java" />
+        <option value="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/SyntaxErrorResolverTest.java" />
+        <option value="$PROJECT_DIR$/annotations/src/main/java/com/deepsky/lang/plsql/completion/SyntaxTreePath.java" />
+        <option value="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/processors/BeanInfoProcessor.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java" />
-        <option value="$PROJECT_DIR$/build.xml" />
-        <option value="$PROJECT_DIR$/main/src/test/resources/table_definitions/airport1.sql" />
-        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/LocalFSChangeTracker.java" />
-        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/GotoDbObjectModel.java" />
-        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/impl/NameLookupServiceImpl.java" />
-        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/impl/AbstractHighlightingVisitor.java" />
-        <option value="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
+        <option value="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/processors/CC_DDLProcessor.java" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/CC_DDLProcessor.java" />
+        <option value="$PROJECT_DIR$/annotationProcessors/pom.xml" />
+        <option value="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGenerator.java" />
+        <option value="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/WriterAdopter.java" />
+        <option value="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/TNodePrinterVisitor.java" />
+        <option value="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/RootNode.java" />
+        <option value="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessor.java" />
+        <option value="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessorOld.java" />
+        <option value="$PROJECT_DIR$/completion/pom.xml" />
+        <option value="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/processors/ComplProcessor.java" />
+        <option value="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/processors/SyntaxTreePathProcessor.java" />
+        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/KeywordLookupElement.java" />
+        <option value="$PROJECT_DIR$/completion/target/generated-sources/apt/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessor2.java" />
+        <option value="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGeneratorVisitor.java" />
+        <option value="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGeneratorRunner.java" />
+        <option value="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/SyntaxTreePathParserTest.java" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/UpdateStmtProcessor.java" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/GenericProcessor.java" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/SelectStmtProcessor.java" />
+        <option value="$PROJECT_DIR$/main/pom.xml" />
       </list>
     </option>
   </component>
@@ -174,6 +385,11 @@
       <MavenImportingSettings>
         <option name="importAutomatically" value="true" />
       </MavenImportingSettings>
+    </option>
+    <option name="enabledProfiles">
+      <list>
+        <option value="build_by_maven" />
+      </list>
     </option>
   </component>
   <component name="MavenProjectNavigator">
@@ -190,7 +406,31 @@
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="commons" />
+          <option name="myItemId" value="main" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="main" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Lifecycle" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$LifecycleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="completion" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
@@ -204,8 +444,66 @@
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="commons" />
+          <option name="myItemId" value="completion" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="completion" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Lifecycle" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$LifecycleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="annotations" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="annotationProcessors" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="annotationProcessors" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Lifecycle" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$LifecycleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Profiles" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProfilesNode" />
         </PATH_ELEMENT>
       </PATH>
     </treeState>
@@ -226,7 +524,7 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="0" />
+    <option name="STATE" value="2" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
@@ -270,7 +568,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="tools" />
+              <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -284,11 +582,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="test_area" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="IDEA11_SQL2" />
+              <option name="myItemId" value="completion" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -302,7 +596,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="test_area" />
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="target" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -316,7 +614,19 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="result_panel" />
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="target" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="generated-sources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apt" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -330,7 +640,15 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resolver" />
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="target" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="generated-sources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -344,7 +662,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="plugin_runner" />
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -358,25 +680,15 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="plugin_runner" />
+              <option name="myItemId" value="completion" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="META-INF" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="parser" />
+              <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -390,7 +702,23 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="database" />
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -404,7 +732,247 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="antl_patch" />
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="utils" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-code-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotations" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-code-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="processors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-code-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotationProcessors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-code-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotationProcessors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-code-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotationProcessors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-code-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotationProcessors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="syntaxTreePath" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-code-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotationProcessors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="syntaxTreePath" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="generated" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-code-assistant" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotationProcessors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="syntaxTreePath" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="processors" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -415,14 +983,14 @@
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
+    <property name="options.lastSelected" value="preferences.pluginManager" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$APPLICATION_HOME_DIR$/lib/trove4j_src.jar!/" />
-    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/annotationProcessors/src/main" />
+    <property name="project.structure.side.proportion" value="0.35978836" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
@@ -430,22 +998,181 @@
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="last_directory_selection" value="$PROJECT_DIR$/db_browser/src/test/java/com/intellij" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic" />
     <property name="FullScreen" value="false" />
     <property name="dynamic.classpath" value="false" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="OverrideImplement.overriding.sorted" value="false" />
+    <property name="LayoutCode.rearrangeEntriesJava" value="false" />
+    <property name="SearchEverywhereHistory" value="&#10;sd" />
+    <property name="LayoutCode.rearrangeEntriesXML" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.deepsky.lang.plsql.completion.syntaxTreePath.logic" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/annotationProcessors/src/main" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="com.intellij.openapi.command" />
+      <recent name="com.deepsky.lang.plsql.completion.syntaxTreePath.logic" />
+      <recent name="com.deepsky.lang.plsql.completion.syntaxTreePath.generated" />
+      <recent name="com.deepsky.lang.plsql.completion.processors" />
+      <recent name="com.deepsky.lang.plsql.completion" />
+      <recent name="com.deepsky.lang.plsql.completion.syntaxTreePath" />
     </key>
   </component>
-  <component name="RunManager" selected="Plugin.sql-assistant">
+  <component name="RunManager" selected="JUnit.SyntaxTreePathParserTest">
+    <configuration default="false" name="CodeGeneratorRunner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.deepsky.lang.plsql.completion.syntaxTreePath.generated.CodeGeneratorRunner" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="annotationProcessors" />
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="SyntaxTreePathParserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="completion" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="com.deepsky.lang.plsql.completion.syntaxTreePath.generated" />
+      <option name="MAIN_CLASS_NAME" value="com.deepsky.lang.plsql.completion.syntaxTreePath.generated.SyntaxTreePathParserTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="SyntaxTreePathParserTest.test2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="main" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="com.deepsky.lang.plsql.completion.syntaxTreePath.generated" />
+      <option name="MAIN_CLASS_NAME" value="com.deepsky.lang.plsql.completion.syntaxTreePath.generated.SyntaxTreePathParserTest" />
+      <option name="METHOD_NAME" value="test2" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="SyntaxTreePathParserTest.test_select_351" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="main" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="com.deepsky.lang.plsql.completion.syntaxTreePath.generated" />
+      <option name="MAIN_CLASS_NAME" value="com.deepsky.lang.plsql.completion.syntaxTreePath.generated.SyntaxTreePathParserTest" />
+      <option name="METHOD_NAME" value="test_select_351" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="SyntaxTreePathParserTest.test_select_367" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="completion" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="com.deepsky.lang.plsql.completion.syntaxTreePath.generated" />
+      <option name="MAIN_CLASS_NAME" value="com.deepsky.lang.plsql.completion.syntaxTreePath.generated.SyntaxTreePathParserTest" />
+      <option name="METHOD_NAME" value="test_select_367" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin" singleton="true">
       <module name="plugin_runner" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
       <option name="PROGRAM_PARAMETERS" />
+      <method />
+    </configuration>
+    <configuration default="true" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list />
+            </option>
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
       <method />
     </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
@@ -530,6 +1257,32 @@
       <patterns />
       <method />
     </configuration>
+    <configuration default="false" name="TreePathImplTest" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
+      <module name="annotations" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.deepsky.lang.plsql.completion.syntaxTreePath.logic" />
+      <option name="MAIN_CLASS_NAME" value="com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePathImplTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
     <configuration default="false" name="sql-assistant" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
       <module name="plugin_runner" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
@@ -543,9 +1296,24 @@
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="Plugin.sql-assistant" />
+    <list size="7">
+      <item index="0" class="java.lang.String" itemvalue="Application.CodeGeneratorRunner" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.TreePathImplTest" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.SyntaxTreePathParserTest" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.SyntaxTreePathParserTest.test2" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.SyntaxTreePathParserTest.test_select_351" />
+      <item index="5" class="java.lang.String" itemvalue="Plugin.sql-assistant" />
+      <item index="6" class="java.lang.String" itemvalue="JUnit.SyntaxTreePathParserTest.test_select_367" />
     </list>
+    <recent_temporary>
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="JUnit.SyntaxTreePathParserTest" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.SyntaxTreePathParserTest.test_select_367" />
+        <item index="2" class="java.lang.String" itemvalue="Application.CodeGeneratorRunner" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.SyntaxTreePathParserTest.test_select_351" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.SyntaxTreePathParserTest.test2" />
+      </list>
+    </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
       <Port>5050</Port>
@@ -553,8 +1321,8 @@
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="SqlCodeAssistantSettings">
-    <option name="dbBrowserSelectedConnection" value="sitaMCOEaDmin@itravelorc.cgeukipxmndq.us-east-1.rds.amazonaws.com:1521:ORCL" />
-    <option name="dbBrowserSplitDividerLocation" value="169" />
+    <option name="dbBrowserSelectedConnection" value="sql-assistant" />
+    <option name="dbBrowserSplitDividerLocation" value="187" />
   </component>
   <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
     <option name="USER" value="" />
@@ -611,30 +1379,33 @@
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47840533" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.71428573" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24878837" sideWeight="0.515" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43521595" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3820598" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4053156" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5780731" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24959612" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34652665" sideWeight="0.7033333" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2584814" sideWeight="0.7033333" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32875606" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22051696" sideWeight="0.7033333" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23667206" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29725364" sideWeight="0.7033333" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5780731" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.vm" />
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USERS">
@@ -654,7 +1425,11 @@
     <option name="LAST_COMMIT_MESSAGE" value="Highlight errored string literals&#10;" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+    </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -664,7 +1439,6 @@
         <filter targetName="build_plugin" isVisible="true" />
         <filter targetName="bundle_plugin" isVisible="true" />
       </targetFilters>
-      <treeView value="false" />
       <expanded value="true" />
     </buildFile>
     <buildFile url="file://$PROJECT_DIR$/parser/build.xml">
@@ -672,298 +1446,374 @@
         <filter targetName="build_plsql_parser" isVisible="false" />
         <filter targetName="build_tnsnames_parser" isVisible="false" />
       </targetFilters>
+      <treeView value="false" />
       <expanded value="true" />
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/commons/src/test/java/JCraft/UserAuthPubKey.java">
+    <entry file="file://$PROJECT_DIR$/annotations/src/main/java/com/deepsky/lang/plsql/completion/SyntaxTreePath.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="13" selection-start="565" selection-end="565" vertical-scroll-proportion="0.7044199" vertical-offset="0" max-vertical-offset="0" />
+        <state line="10" column="32" selection-start="305" selection-end="319" vertical-scroll-proportion="0.1891892" vertical-offset="0" max-vertical-offset="555">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/idea-IC-129.713/lib/jsch-0.1.49.jar!/com/jcraft/jsch/JSch.class">
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/core-api/src/com/intellij/psi/FileViewProvider.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="27" selection-start="475" selection-end="475" vertical-scroll-proportion="0.4558011" vertical-offset="0" max-vertical-offset="0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/commons/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="8" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/editor/actions/PlSqlTypedHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="186" column="0" selection-start="7616" selection-end="7616" vertical-scroll-proportion="0.84375" vertical-offset="1614" max-vertical-offset="2190" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="80" selection-start="1355" selection-end="1355" vertical-scroll-proportion="0.234375" vertical-offset="360" max-vertical-offset="1365" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db_browser/src/test/java/com/intellij/openapi/command/WriteCommandAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="41" selection-start="1333" selection-end="1333" vertical-scroll-proportion="-0.7291667" vertical-offset="525" max-vertical-offset="2160" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="32" selection-start="563" selection-end="563" vertical-scroll-proportion="0.7135417" vertical-offset="69" max-vertical-offset="645" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/parser/build.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/test/resources/table_definitions/airport1.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="43" selection-start="469" selection-end="469" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="735" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/PlSqlFileChangeTracker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="13" selection-start="2362" selection-end="2362" vertical-scroll-proportion="-1.09375" vertical-offset="720" max-vertical-offset="2040" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/MContent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="70" selection-start="1956" selection-end="1956" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="3660" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/resolver/factory/PlSqlElementLocator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="130" column="0" selection-start="5398" selection-end="5398" vertical-scroll-proportion="0.0" vertical-offset="1251" max-vertical-offset="5565" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/LocalFSChangeTracker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="314" column="0" selection-start="14317" selection-end="14317" vertical-scroll-proportion="0.0" vertical-offset="750" max-vertical-offset="8805" />
-      </provider>
-    </entry>
-    <entry file="jar:///usr/local/java/jdk1.7.0_07/src.zip!/java/util/Arrays.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="658" column="0" selection-start="29582" selection-end="29582" vertical-scroll-proportion="0.0" vertical-offset="9435" max-vertical-offset="54840" />
-      </provider>
-    </entry>
-    <entry file="jar:///usr/local/java/jdk1.7.0_07/src.zip!/java/util/Collections.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="216" column="0" selection-start="10002" selection-end="10002" vertical-scroll-proportion="0.0" vertical-offset="2760" max-vertical-offset="59310" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-impl/src/com/intellij/ide/actions/GotoActionAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="45" selection-start="3256" selection-end="3256" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1440" />
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/trove4j.jar!/gnu/trove/THashMap.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="105" selection-start="317" selection-end="317" vertical-scroll-proportion="0.0990991" vertical-offset="65" max-vertical-offset="2715" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/NavigationItemEx.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="49" selection-start="1550" selection-end="1550" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/GotoDbObjectModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="60" selection-start="2367" selection-end="2367" vertical-scroll-proportion="0.041666668" vertical-offset="90" max-vertical-offset="2100" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-api/src/com/intellij/psi/WeighingComparable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="0" selection-start="2089" selection-end="2089" vertical-scroll-proportion="0.18714556" vertical-offset="516" max-vertical-offset="1305" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-impl/src/com/intellij/psi/util/proximity/SameDirectoryWeigher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="0" selection-start="1030" selection-end="1030" vertical-scroll-proportion="0.0" vertical-offset="13" max-vertical-offset="600" />
-      </provider>
-    </entry>
-    <entry file="jar:///usr/local/java/jdk1.7.0_07/src.zip!/java/util/TimSort.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="172" column="0" selection-start="6100" selection-end="6100" vertical-scroll-proportion="-0.6193896" vertical-offset="2580" max-vertical-offset="13665" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/result_panel/src/main/java/com/deepsky/view/query_pane/OpenResultPanelAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="30" selection-start="1440" selection-end="1440" vertical-scroll-proportion="0.26666668" vertical-offset="0" max-vertical-offset="450" />
+        <state line="104" column="10" selection-start="2830" selection-end="2830" vertical-scroll-proportion="0.3939394" vertical-offset="1152" max-vertical-offset="1350">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="163" column="31" selection-start="6380" selection-end="6380" vertical-scroll-proportion="0.24390244" vertical-offset="2385" max-vertical-offset="2895" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/core-api/src/com/intellij/pom/Navigatable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="17" selection-start="645" selection-end="645" vertical-scroll-proportion="0.08108108" vertical-offset="0" max-vertical-offset="555" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/core-api/src/com/intellij/navigation/NavigationItem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="47" selection-start="763" selection-end="763" vertical-scroll-proportion="0.13513513" vertical-offset="0" max-vertical-offset="555" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/java/java-psi-impl/src/com/intellij/psi/impl/light/LightClass.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="13" selection-start="869" selection-end="869" vertical-scroll-proportion="0.21621622" vertical-offset="0" max-vertical-offset="555" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/core-impl/src/com/intellij/psi/impl/light/LightElement.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="22" selection-start="1065" selection-end="1065" vertical-scroll-proportion="0.16216215" vertical-offset="0" max-vertical-offset="2760" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/java/java-psi-impl/src/com/intellij/psi/impl/light/AbstractLightClass.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="51" selection-start="1315" selection-end="1315" vertical-scroll-proportion="0.13513513" vertical-offset="0" max-vertical-offset="5055" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/core-api/src/com/intellij/psi/PsiElement.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="78" selection-start="627" selection-end="627" vertical-scroll-proportion="0.054054055" vertical-offset="0" max-vertical-offset="7275" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-impl/src/com/intellij/ide/util/gotoByName/ChooseByNameBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1530" column="0" selection-start="53454" selection-end="53454" vertical-scroll-proportion="0.33031675" vertical-offset="20057" max-vertical-offset="23745" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-impl/src/com/intellij/psi/util/proximity/PsiProximityComparator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="73" column="108" selection-start="3108" selection-end="3108" vertical-scroll-proportion="-2.6778846" vertical-offset="1052" max-vertical-offset="1260" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/PlSqlElementBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="13" selection-start="2248" selection-end="2248" vertical-scroll-proportion="0.4338843" vertical-offset="0" max-vertical-offset="1230" />
-      </provider>
-    </entry>
-    <entry file="jar:///usr/local/java/jdk1.7.0_07/src.zip!/java/util/Map.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="199" column="6" selection-start="9031" selection-end="9031" vertical-scroll-proportion="0.33333334" vertical-offset="2448" max-vertical-offset="6915" />
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/trove4j_src.jar!/core/src/gnu/trove/TObjectHashingStrategy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="6" selection-start="909" selection-end="909" vertical-scroll-proportion="0.40104166" vertical-offset="189" max-vertical-offset="765" />
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/trove4j_src.jar!/core/src/gnu/trove/THashMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="365" column="0" selection-start="11304" selection-end="11304" vertical-scroll-proportion="0.0" vertical-offset="5065" max-vertical-offset="11700">
+        <state line="142" column="23" selection-start="5682" selection-end="5682" vertical-scroll-proportion="0.92804426" vertical-offset="1627" max-vertical-offset="2925">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/trove4j_src.jar!/core/src/gnu/trove/TObjectHash.java">
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/tree/DummyFileViewProvider.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="301" column="0" selection-start="9933" selection-end="9933" vertical-scroll-proportion="0.0" vertical-offset="4171" max-vertical-offset="4845">
+        <state line="132" column="37" selection-start="5282" selection-end="5282" vertical-scroll-proportion="0.13513513" vertical-offset="1410" max-vertical-offset="1965">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-impl/src/com/intellij/ide/util/gotoByName/DefaultChooseByNameItemProvider.java">
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-api/src/com/intellij/codeInsight/lookup/LookupElement.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="116" column="0" selection-start="5008" selection-end="5008" vertical-scroll-proportion="0.0" vertical-offset="1021" max-vertical-offset="5400">
+        <state line="38" column="41" selection-start="1565" selection-end="1565" vertical-scroll-proportion="0.14583333" vertical-offset="126" max-vertical-offset="1500">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/SysSchemaIndexProvider.java">
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/VariantsProvider.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="27" selection-start="3109" selection-end="3109" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="3660">
+        <state line="43" column="11" selection-start="1842" selection-end="1842" vertical-scroll-proportion="0.119791664" vertical-offset="126" max-vertical-offset="1080">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/indexMan/Indexer.java">
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/ElementarySyntaxGuesser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="17" selection-start="1431" selection-end="1431" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
+        <state line="46" column="34" selection-start="1542" selection-end="1542" vertical-scroll-proportion="0.42708334" vertical-offset="354" max-vertical-offset="930">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/database/impl/ConnectionManagerImpl.java">
+    <entry file="file://$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/CC_BaseProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="617" column="0" selection-start="22466" selection-end="22466" vertical-scroll-proportion="0.58018017" vertical-offset="8063" max-vertical-offset="10155">
+        <state line="8" column="22" selection-start="174" selection-end="174" vertical-scroll-proportion="0.13020833" vertical-offset="0" max-vertical-offset="576">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/indexMan/FSIndexer.java">
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/processors/ComplexityProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="37" selection-start="2205" selection-end="2205" vertical-scroll-proportion="0.1891892" vertical-offset="0" max-vertical-offset="2100">
+        <state line="33" column="0" selection-start="1381" selection-end="1722" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/database/DbSchemaIndexer.java">
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/SingleSlashNode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="184" column="0" selection-start="7272" selection-end="7272" vertical-scroll-proportion="0.32118055" vertical-offset="1735" max-vertical-offset="6225">
+        <state line="4" column="13" selection-start="112" selection-end="112" vertical-scroll-proportion="0.11235955" vertical-offset="0" max-vertical-offset="570">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/common/PlSqlSupportLoader.java">
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/DoubleDotNode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="28" selection-start="2657" selection-end="2657" vertical-scroll-proportion="0.7135417" vertical-offset="9" max-vertical-offset="735">
+        <state line="4" column="13" selection-start="112" selection-end="112" vertical-scroll-proportion="0.10810811" vertical-offset="0" max-vertical-offset="570">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/impl/DbSchemaIndex.java">
+    <entry file="file://$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CTemplate.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="466" column="43" selection-start="19168" selection-end="19168" vertical-scroll-proportion="0.25399646" vertical-offset="5932" max-vertical-offset="6495">
+        <state line="35" column="22" selection-start="1080" selection-end="1080" vertical-scroll-proportion="0.32072073" vertical-offset="242" max-vertical-offset="6930">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/navigation/impl/NameLookupServiceImpl.java">
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/DoubleSlashNode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="559" column="73" selection-start="23414" selection-end="23414" vertical-scroll-proportion="0.20659722" vertical-offset="6076" max-vertical-offset="6675">
+        <state line="4" column="13" selection-start="112" selection-end="112" vertical-scroll-proportion="0.104166664" vertical-offset="0" max-vertical-offset="576">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathImplTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="356" column="75" selection-start="15400" selection-end="15453" vertical-scroll-proportion="0.69982237" vertical-offset="4781" max-vertical-offset="7455">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/antlr/SyntaxTreePath.g">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2460">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/result_panel/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="22" selection-start="385" selection-end="385" vertical-scroll-proportion="0.0" vertical-offset="157" max-vertical-offset="795">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="30" selection-start="987" selection-end="987" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1005">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathIterator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="17" selection-start="82" selection-end="82" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="315">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/EOFException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="77" selection-start="101" selection-end="101" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="195">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="13" selection-start="189" selection-end="189" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="945">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="17" selection-start="117" selection-end="117" vertical-scroll-proportion="0.10810811" vertical-offset="0" max-vertical-offset="555">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/InvalidLexerStateException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="13" selection-start="78" selection-end="78" vertical-scroll-proportion="0.056179777" vertical-offset="0" max-vertical-offset="534">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathIteratorImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="66" column="61" selection-start="1784" selection-end="1784" vertical-scroll-proportion="0.12432432" vertical-offset="846" max-vertical-offset="2550">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePathUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="40" selection-start="105" selection-end="105" vertical-scroll-proportion="0.054054055" vertical-offset="0" max-vertical-offset="3840">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/logic/TreePath.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="17" selection-start="168" selection-end="168" vertical-scroll-proportion="0.104166664" vertical-offset="0" max-vertical-offset="576">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/local/java/jdk1.7.0_07/src.zip!/java/io/PrintWriter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="736" column="33" selection-start="24139" selection-end="24161" vertical-scroll-proportion="0.33333334" vertical-offset="10435" max-vertical-offset="15660">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/WriterAdopter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="0" selection-start="176" selection-end="176" vertical-scroll-proportion="0.16216215" vertical-offset="0" max-vertical-offset="555">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/TNodePrinterVisitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="44" selection-start="395" selection-end="395" vertical-scroll-proportion="0.27027026" vertical-offset="0" max-vertical-offset="2085">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/structures/RootNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="23" selection-start="183" selection-end="183" vertical-scroll-proportion="0.16216215" vertical-offset="0" max-vertical-offset="555">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/processors/BeanInfoProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="102" selection-start="834" selection-end="834" vertical-scroll-proportion="0.11342155" vertical-offset="0" max-vertical-offset="1500">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="131" column="53" selection-start="4766" selection-end="4766" vertical-scroll-proportion="-1.8" vertical-offset="2964" max-vertical-offset="3540">
           <folding>
-            <element signature="method#parsePackageIndex#0;class#NameLookupServiceImpl#0" expanded="false" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PlSqlElement.java">
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessorBase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="17" selection-start="1523" selection-end="1523" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
+        <state line="62" column="77" selection-start="1943" selection-end="1969" vertical-scroll-proportion="-0.43243244" vertical-offset="1170" max-vertical-offset="3060">
           <folding>
-            <element signature="e#0#1682#0" expanded="false" />
             <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/SyntaxHighlightAnnotator.java">
+    <entry file="file://$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessorOld.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="13" selection-start="2293" selection-end="2293" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2025">
+        <state line="11" column="27" selection-start="533" selection-end="533" vertical-scroll-proportion="0.13837638" vertical-offset="0" max-vertical-offset="45555">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/impl/AbstractHighlightingVisitor.java">
+    <entry file="file://$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/processors/ComplProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="330" column="19" selection-start="13434" selection-end="13434" vertical-scroll-proportion="0.0" vertical-offset="4081" max-vertical-offset="5220">
+        <state line="69" column="6" selection-start="2216" selection-end="2216" vertical-scroll-proportion="1.3449477" vertical-offset="649" max-vertical-offset="1230">
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="47" selection-start="1469" selection-end="1469" vertical-scroll-proportion="0.0" vertical-offset="444" max-vertical-offset="1200">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-api/src/com/intellij/codeInsight/lookup/LookupElementBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="66" column="48" selection-start="3677" selection-end="3677" vertical-scroll-proportion="0.0" vertical-offset="855" max-vertical-offset="6165">
+        <state line="157" column="48" selection-start="6059" selection-end="6078" vertical-scroll-proportion="0.0" vertical-offset="1735" max-vertical-offset="5235">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/KeywordLookupElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="51" selection-start="1943" selection-end="1943" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="390">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Idea_src/idea_jetbrains.org/platform/lang-api/src/com/intellij/codeInsight/completion/CompletionResultSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="47" selection-start="2759" selection-end="2759" vertical-scroll-proportion="0.09009009" vertical-offset="850" max-vertical-offset="1770">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/ComplContributor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="256" column="41" selection-start="13499" selection-end="13499" vertical-scroll-proportion="2.5872092" vertical-offset="1575" max-vertical-offset="7290">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGeneratorVisitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="336" column="0" selection-start="12820" selection-end="12820" vertical-scroll-proportion="0.0" vertical-offset="4658" max-vertical-offset="10515">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/utils/VariantProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="13" selection-start="2353" selection-end="2353" vertical-scroll-proportion="0.0" vertical-offset="3690" max-vertical-offset="9135">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/SyntaxTreePathParserTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="34" selection-start="138" selection-end="138" vertical-scroll-proportion="0.0" vertical-offset="3195" max-vertical-offset="5550">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/UpdateStmtProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="4" selection-start="299" selection-end="299" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/GenericProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="0" selection-start="268" selection-end="268" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/target/generated-sources/apt/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessor2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="119" column="0" selection-start="4139" selection-end="4139" vertical-scroll-proportion="0.0" vertical-offset="1110" max-vertical-offset="43110">
+          <folding>
+            <marker date="1389647044834" expanded="true" signature="78715:78783" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/SelectStmtProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="4" selection-start="270" selection-end="270" vertical-scroll-proportion="0.0" vertical-offset="45" max-vertical-offset="1815">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CodeGeneratorRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="69" selection-start="2908" selection-end="2908" vertical-scroll-proportion="0.0" vertical-offset="564" max-vertical-offset="1140">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/annotations/processors/SyntaxTreePathProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="30" selection-start="1486" selection-end="1486" vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="1170">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/main.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2550">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="61" selection-start="1522" selection-end="1522" vertical-scroll-proportion="0.104166664" vertical-offset="525" max-vertical-offset="1155">
+        <state line="18" column="32" selection-start="906" selection-end="906" vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="1155">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="66" column="0" selection-start="2232" selection-end="2232" vertical-scroll-proportion="0.27027026" vertical-offset="840" max-vertical-offset="1395">
           <folding />
         </state>
       </provider>
@@ -977,7 +1827,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.35978836" />
               </list>
             </option>
           </splitter-proportions>
@@ -1000,7 +1850,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.35978836" />
               </list>
             </option>
           </splitter-proportions>
@@ -1012,7 +1862,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.35978836" />
               </list>
             </option>
           </splitter-proportions>
@@ -1020,11 +1870,12 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>sql-assistant</last-edited>
+          <last-edited>completion</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.35978836" />
+                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
@@ -1044,11 +1895,11 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>Maven: antlr:antlr:2.7.5-patched</last-edited>
+          <last-edited>Maven: commons-logging:commons-logging:1.1.1</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.35978836" />
               </list>
             </option>
           </splitter-proportions>
