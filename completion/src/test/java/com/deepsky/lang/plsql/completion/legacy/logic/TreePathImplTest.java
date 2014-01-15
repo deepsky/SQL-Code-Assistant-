@@ -1,8 +1,8 @@
-package com.deepsky.lang.plsql.completion.syntaxTreePath.logic;
+package com.deepsky.lang.plsql.completion.legacy.logic;
 
 import antlr.TokenStreamException;
 import com.deepsky.lang.plsql.completion.AbstractCompletionTest;
-import org.junit.Test;
+import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 
 import java.util.ArrayList;
 import java.util.List;

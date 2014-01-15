@@ -1,7 +1,6 @@
-package com.deepsky.lang.plsql.completion.syntaxTreePath;
+package com.deepsky.lang.plsql.completion.legacy;
 
 import com.intellij.lang.ASTNode;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;

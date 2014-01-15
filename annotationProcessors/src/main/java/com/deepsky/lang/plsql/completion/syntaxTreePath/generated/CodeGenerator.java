@@ -24,7 +24,7 @@ public class CodeGenerator {
         this.className = className;
     }
 
-    public void buildTree(String text) throws RecognitionException, TokenStreamException {
+    public void buildTree(String className, String methodName, String text) throws RecognitionException, TokenStreamException {
         AST ast = parse(text);
 
         pairs = new ArrayList<NamePosPair>();
@@ -45,6 +45,9 @@ public class CodeGenerator {
         if(!duplicateFound){
             node.setMetaInfoRef(masterNode.pairMap.size());
             masterNode.pairMap.add(pairs);
+            masterNode.classMethodPair.add(new String[]{
+                    className==null? "": className,
+                    methodName==null? "": methodName});
         }
     }
 
@@ -164,6 +167,7 @@ public class CodeGenerator {
     private class MyRootNode extends RootNode {
 
         List<List<NamePosPair>> pairMap = new ArrayList<List<NamePosPair>>();
+        List<String[]> classMethodPair = new ArrayList<String[]>();
 
         @Override
         public String getProcessorClassName() {
@@ -205,7 +209,18 @@ public class CodeGenerator {
 
         @Override
         public String[] getParameterClassList(int pathIndex) {
+            // TODO - implement me
             return new String[0];
+        }
+
+        @Override
+        public String getClassFor(int pathIndex) {
+            return classMethodPair.get(pathIndex)[0];
+        }
+
+        @Override
+        public String getMethodFor(int pathIndex) {
+            return classMethodPair.get(pathIndex)[1];
         }
     }
 

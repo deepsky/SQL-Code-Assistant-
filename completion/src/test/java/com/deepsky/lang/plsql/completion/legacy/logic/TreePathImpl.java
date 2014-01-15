@@ -1,6 +1,7 @@
-package com.deepsky.lang.plsql.completion.syntaxTreePath.logic;
+package com.deepsky.lang.plsql.completion.legacy.logic;
 
 
+import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 import com.intellij.lang.ASTNode;
 
 import java.util.Iterator;

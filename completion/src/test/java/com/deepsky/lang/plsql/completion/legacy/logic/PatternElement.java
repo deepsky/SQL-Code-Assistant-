@@ -1,4 +1,4 @@
-package com.deepsky.lang.plsql.completion.syntaxTreePath.logic;
+package com.deepsky.lang.plsql.completion.legacy.logic;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package com.deepsky.lang.plsql.completion.syntaxTreePath;
+package com.deepsky.lang.plsql.completion.legacy;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;

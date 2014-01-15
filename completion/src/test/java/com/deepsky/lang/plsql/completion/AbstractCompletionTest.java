@@ -1,6 +1,9 @@
 package com.deepsky.lang.plsql.completion;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.plsql.completion.legacy.logic.ObjectTreeParser;
+import com.deepsky.lang.plsql.completion.legacy.logic.TreePathBuilder;
+import com.deepsky.lang.plsql.completion.legacy.logic.TreePathImpl;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.*;
 import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
 import com.deepsky.utils.StringUtils;

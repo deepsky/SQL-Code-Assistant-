@@ -1,4 +1,4 @@
-package com.deepsky.lang.plsql.completion.syntaxTreePath;
+package com.deepsky.lang.plsql.completion.legacy;
 
 public class Context {
     public void pathCompleted() {

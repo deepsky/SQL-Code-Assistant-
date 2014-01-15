@@ -4,12 +4,6 @@ import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 
 public class SelectStmtProcessor {
 
-    @SyntaxTreePath("/#ERROR_TOKEN_A/1#C_MARKER")
-    public void process$Start() {
-        // TODO - implement me
-    }
-
-
 
     @SyntaxTreePath("/#ERROR_TOKEN_A/#SELECT #ASTERISK 1#C_MARKER")
     public void process$SelectAsterisk() {

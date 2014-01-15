@@ -124,10 +124,9 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         // Generate completion method handler List
         writer.println("\t// Completion method handler List");
         writer.println("\tstatic final String[][] classPlusMethodList = new String[][]{");
-//        for(String path: root.getCollectedTreePathList()){
-//            // TODO .. writer.println("\t\t\"" + path + "\",");
-//            // example: {"abc.fft.MyClass", "method1"}
-//        }
+        for(int i =0; i<pathListSize; i++){
+            writer.println("\t\t{\"" + root.getClassFor(i) +"\", \"" + root.getMethodFor(i) + "\"},");
+        }
         writer.println("\t};");
         writer.println();
 
@@ -491,6 +490,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
             } else {
 
                 final int[] endType = {-1};
+                final String[] methodName1 = {parentMethodName};
                 final StringNode[] last = {null};
                 iterateOverSequence(node, new SequenceProcessor() {
                     @Override
@@ -505,11 +505,13 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                                 writer.println(prefix + "\t\tm1.setASTNode((ASTNode)o, " + ((StringNode)cur).isDollar() + ");");
                                 writer.println(prefix + "\t}");
 
+                                methodName1[0] = methodName1[0] + "_" + cur.getName();
                                 endType[0] = 1;
                                 last[0] = (StringNode) cur;
                                 return cur.getChildren().size() == 0 ? null : cur.getChildren().get(0);
                             } else if (cur.getChildren().size() > 1) {
-                                writer.println(prefix + "\tif (" + generateCondition(false, (StringNode) cur) + ") {");
+                                writer.println(prefix + "\to = peek();");
+                                writer.println(prefix + "\tif (" + generateCondition(true, (StringNode) cur) + ") {");
                                 String methodName1 = parentMethodName + "_" + cur.getName();
                                 writer.println(prefix + "\t\tif (" + methodName1 + "(context)){");
                                 writer.println(prefix + "\t\t\treturn true;");
@@ -519,7 +521,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                             }
 
                         } else {
-                            generateString_Call(cur, prefix + "\t", parentMethodName, node2MethodName);
+                            generateString_Call(cur, prefix + "\t", methodName1[0], node2MethodName);
                         }
                         endType[0] = -1;
                         return null;

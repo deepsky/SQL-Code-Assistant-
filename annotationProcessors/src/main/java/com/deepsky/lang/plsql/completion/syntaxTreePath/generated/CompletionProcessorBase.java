@@ -101,13 +101,10 @@ public abstract class CompletionProcessorBase {
         }
     }
 
-
     protected abstract String getTreePath(int index);
     protected abstract String[] getClassPlusMethod(int index);
     protected abstract String[] getMethodParamClasses(int index);
     protected abstract int[] getMethodParamIndexes(int index);
-
-
 
     // -----------------------------
 
@@ -129,9 +126,24 @@ public abstract class CompletionProcessorBase {
         }
 
         @Override
-        public CallMetaInfo buildCall() {
-            // TODO implement me
-            return null;
+        public CallMetaInfo getMeta() {
+            return new CallMetaInfo(){
+
+                @Override
+                public String getClassName() {
+                    return CompletionProcessorBase.this.getClassPlusMethod(metaInfoRef)[0];
+                }
+
+                @Override
+                public String getMethodName() {
+                    return CompletionProcessorBase.this.getClassPlusMethod(metaInfoRef)[1];
+                }
+
+                @Override
+                public String[] getArgTypes() {
+                    return new String[0];
+                }
+            };
         }
 
         @Override

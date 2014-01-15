@@ -1,4 +1,4 @@
-package com.deepsky.lang.plsql.completion.syntaxTreePath;
+package com.deepsky.lang.plsql.completion.legacy;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
@@ -8,7 +8,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 

@@ -25,4 +25,8 @@ public abstract class RootNode extends TNode {
     public abstract int[] getParameterIndexList(int pathIndex);
 
     public abstract String[] getParameterClassList(int pathIndex);
+
+    public abstract String getClassFor(int pathIndex);
+
+    public abstract String getMethodFor(int pathIndex);
 }

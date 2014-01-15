@@ -1,4 +1,4 @@
-package com.deepsky.lang.plsql.completion.syntaxTreePath.logic;
+package com.deepsky.lang.plsql.completion.legacy.logic;
 
 import antlr.Token;
 import antlr.TokenStreamException;

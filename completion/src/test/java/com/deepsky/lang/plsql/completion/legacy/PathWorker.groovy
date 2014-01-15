@@ -1,4 +1,4 @@
-package com.deepsky.lang.plsql.completion.syntaxTreePath
+package com.deepsky.lang.plsql.completion.legacy
 
 class PathWorker extends GroovyTestCase {
 

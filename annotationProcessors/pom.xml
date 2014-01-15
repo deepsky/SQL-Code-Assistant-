@@ -28,6 +28,12 @@
             <version>1.13.2-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>sql-assistant</groupId>
+            <artifactId>commons</artifactId>
+            <version>1.13.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
 

@@ -16,7 +16,7 @@ public interface TreePathContext {
         void setASTNode(ASTNode node, boolean isPsi);
     }
 
-    CallMetaInfo buildCall();
+    CallMetaInfo getMeta();
 
     void setMetaInfoRef(int ref);
 
