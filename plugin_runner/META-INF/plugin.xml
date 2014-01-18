@@ -236,7 +236,7 @@
         <typedHandler implementation="com.deepsky.lang.plsql.editor.actions.PlSqlTypedHandler"/>
         <quoteHandler fileType="PlSql" className="com.deepsky.lang.plsql.editor.actions.PlSqlQuoteHandler"/>
 
-        <completion.contributor language="PlSql" implementationClass="com.deepsky.lang.plsql.completion.ComplContributor"/>
+        <completion.contributor language="PlSql" implementationClass="com.deepsky.lang.plsql.completion.MyCompletionContributor"/>
         <weigher key="completion" implementationClass="com.deepsky.lang.plsql.completion.SqlCompletionWeigher" id="plsqlWeigher" order="before stats" />
 
         <codeInsight.parameterInfo language="PlSql"

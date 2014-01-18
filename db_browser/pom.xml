@@ -34,6 +34,18 @@
             <!--<classifier>sources</classifier>-->
         </dependency>
 
+        <dependency>
+            <groupId>sql-assistant</groupId>
+            <artifactId>completion</artifactId>
+            <version>1.12.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>sql-assistant</groupId>
+            <artifactId>annotations</artifactId>
+            <version>1.12.1-SNAPSHOT</version>
+        </dependency>
+
      </dependencies>
 
     <build>

@@ -1,0 +1,120 @@
+package ${packageName};
+
+import java.beans.MethodDescriptor;
+import java.beans.ParameterDescriptor;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+
+public class ${className}BeanInfo
+    extends java.beans.SimpleBeanInfo {
+
+    /**
+     * Gets the bean class object.
+     *
+     * @return the bean class
+     */
+    public static Class getBeanClass() {
+
+        return ${packageName}.${className}.class;
+    }
+
+    /**
+     * Gets the bean class name.
+     *
+     * @return the bean class name
+     */
+    public static String getBeanClassName() {
+
+        return "${packageName}.${className}";
+    }
+
+    /**
+     * Finds the right method by comparing name & number of parameters in the class
+     * method list.
+     *
+     * @param classObject the class object
+     * @param methodName the method name
+     * @param parameterCount the number of parameters
+     *
+     * @return the method if found, <code>null</code> otherwise
+     */
+    public static Method findMethod(Class classObject, String methodName, int parameterCount) {
+
+        try {
+            // since this method attempts to find a method by getting all
+            // methods from the class, this method should only be called if
+            // getMethod cannot find the method
+            Method[] methods = classObject.getMethods();
+            for (Method method : methods) {
+                if (method.getParameterTypes().length == parameterCount
+                    && method.getName().equals(methodName)) {
+                    return method;
+                }
+            }
+        } catch (Throwable t) {
+            return null;
+        }
+        return null;
+    }
+#foreach($field in $fields)
+
+    /**
+     * Returns the ${field.simpleName} property descriptor.
+     *
+     * @return the property descriptor
+     */
+    public PropertyDescriptor ${field.simpleName}PropertyDescriptor() {
+
+        PropertyDescriptor theDescriptor = null;
+        return theDescriptor;
+    }
+#end
+#foreach($method in $methods)
+
+    /**
+     * Returns the ${method.simpleName}() method descriptor.
+     *
+     * @return the method descriptor
+     */
+    public MethodDescriptor ${method.simpleName}MethodDescriptor() {
+
+        MethodDescriptor descriptor = null;
+
+        Method method = null;
+        try {
+            // finds the method using getMethod with parameter types
+            // TODO parameterize parameter types
+            Class[] parameterTypes = {java.beans.PropertyChangeListener.class};
+            method = getBeanClass().getMethod("${method.simpleName}", parameterTypes);
+
+        } catch (Throwable t) {
+            // alternative: use findMethod
+            // TODO parameterize number of parameters
+            method = findMethod(getBeanClass(), "${method.simpleName}", 1);
+        }
+
+        try {
+            // creates the method descriptor with parameter descriptors
+            // TODO parameterize parameter descriptors
+            ParameterDescriptor parameterDescriptor1 = new ParameterDescriptor();
+            parameterDescriptor1.setName("listener");
+            parameterDescriptor1.setDisplayName("listener");
+            ParameterDescriptor[] parameterDescriptors = {parameterDescriptor1};
+            descriptor = new MethodDescriptor(method, parameterDescriptors);
+
+        } catch (Throwable t) {
+            // alternative: create a plain method descriptor
+            descriptor = new MethodDescriptor(method);
+        }
+
+        // TODO parameterize descriptor properties
+        descriptor.setDisplayName("${method.simpleName}(java.beans.PropertyChangeListener)");
+        descriptor.setShortDescription("Adds a property change listener.");
+        descriptor.setExpert(false);
+        descriptor.setHidden(false);
+        descriptor.setValue("preferred", false);
+
+        return descriptor;
+    }
+#end
+}

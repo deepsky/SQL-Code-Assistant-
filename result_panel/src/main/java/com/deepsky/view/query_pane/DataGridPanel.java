@@ -36,7 +36,7 @@ import com.deepsky.view.Icons;
 import com.deepsky.view.query_pane.grid.EditableGrid;
 import com.deepsky.view.query_pane.grid.ImmutableGrid;
 import com.deepsky.view.query_pane.grid.PopupListener;
-import com.deepsky.view.query_pane.util.CSVWriter;
+import au.com.bytecode.opencsv.CSVWriter;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;

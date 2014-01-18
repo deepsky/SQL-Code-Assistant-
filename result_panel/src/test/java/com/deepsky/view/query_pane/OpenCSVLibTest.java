@@ -1,6 +1,6 @@
 package com.deepsky.view.query_pane;
 
-import com.deepsky.view.query_pane.util.CSVWriter;
+import au.com.bytecode.opencsv.CSVWriter;
 import junit.framework.TestCase;
 
 import java.io.IOException;

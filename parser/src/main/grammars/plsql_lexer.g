@@ -24,6 +24,8 @@ options {
 }
 
 tokens {
+    C_MARKER; // Completion marker is a helper identifier for caret position - IntelliJIdeaRulezz
+
     BAD_ML_COMMENT;
     BAD_CHARACTER;
     BAD_CHAR_LITERAL;

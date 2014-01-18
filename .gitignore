@@ -31,6 +31,9 @@ result_panel/target
 tools/target
 target
 tools/PLSqlParserAdoptedExt.java
+annotationProcessors/target
+annotations/target
+completion/target
 
 build_dir
 
