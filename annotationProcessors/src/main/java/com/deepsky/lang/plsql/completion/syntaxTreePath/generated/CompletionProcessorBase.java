@@ -24,8 +24,7 @@
 package com.deepsky.lang.plsql.completion.syntaxTreePath.generated;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
-import com.deepsky.lang.plsql.completion.syntaxTreePath.generator.CallMetaInfo;
-import com.deepsky.lang.plsql.completion.syntaxTreePath.generator.TreePathContext;
+import com.deepsky.lang.plsql.completion.syntaxTreePath.generator.*;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.*;
 import com.intellij.lang.ASTNode;
 
@@ -34,6 +33,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 
+// TODO should be removed out of annotationProcessor
 public abstract class CompletionProcessorBase {
 
     private TreePath treePath;
@@ -128,7 +128,7 @@ public abstract class CompletionProcessorBase {
 
     protected abstract String getTreePath(int index);
     protected abstract String[] getClassPlusMethod(int index);
-    protected abstract String[] getMethodParamClasses(int index);
+    protected abstract Class[] getMethodParamClasses(int index);
     protected abstract int[] getMethodParamIndexes(int index);
 
     // -----------------------------
@@ -165,8 +165,8 @@ public abstract class CompletionProcessorBase {
                 }
 
                 @Override
-                public String[] getArgTypes() {
-                    return new String[0];
+                public Class[] getArgTypes() {
+                    return CompletionProcessorBase.this.getMethodParamClasses(metaInfoRef);
                 }
             };
         }

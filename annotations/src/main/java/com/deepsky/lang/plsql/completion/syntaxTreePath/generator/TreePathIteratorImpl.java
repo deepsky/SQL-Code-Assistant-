@@ -21,10 +21,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.completion.syntaxTreePath.logic;
+package com.deepsky.lang.plsql.completion.syntaxTreePath.generator;
 
 
-import com.deepsky.lang.plsql.completion.syntaxTreePath.generator.SlashNode;
+import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 import com.intellij.lang.ASTNode;
 
 import java.util.ArrayList;

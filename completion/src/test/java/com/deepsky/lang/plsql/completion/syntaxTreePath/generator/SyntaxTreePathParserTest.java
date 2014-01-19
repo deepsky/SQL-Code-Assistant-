@@ -5,6 +5,7 @@ import antlr.TokenStreamException;
 import com.deepsky.lang.plsql.completion.AbstractCompletionTest;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generated.CompletionProcessor2;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
+import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.intellij.lang.ASTNode;
 
@@ -185,9 +186,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. #EXPR_COLUMN // #SUBQUERY / .. SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. 1#TABLE_ALIAS / #TABLE_REF / #C_MARKER", context.getTreePath());
-        assertEquals(1, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof ASTNode);
+        assertEquals("// .. #EXPR_COLUMN // #SUBQUERY / .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. 2#TABLE_ALIAS / #TABLE_REF / #C_MARKER", context.getTreePath());
+        assertEquals(2, context.getHandlerParameters().length);
+        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
     }
 
     public void test_select_367() throws TokenStreamException, RecognitionException {
@@ -270,9 +271,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. SelectStatement / .. 1#TABLE_REFERENCE_LIST_FROM .. 2#ORDER_CLAUSE / .. #SORTED_DEF / #VAR_REF // #C_MARKER", context.getTreePath());
+        assertEquals("// .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM .. 2#ORDER_CLAUSE / .. #SORTED_DEF / #VAR_REF // #C_MARKER", context.getTreePath());
         assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof ASTNode);
+        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
         assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
     }
 
@@ -283,7 +284,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. SelectStatement / .. 1#TABLE_REFERENCE_LIST_FROM .. 2#ERROR_TOKEN_A / #GROUP #C_MARKER", context.getTreePath());
+        assertEquals("// .. 1$SelectStatement / .. 1#TABLE_REFERENCE_LIST_FROM .. #ERROR_TOKEN_A / #GROUP #C_MARKER", context.getTreePath());
         assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
         assertEquals("process$SelectGroupBy2", context.getMeta().getMethodName());
     }
@@ -294,7 +295,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. SelectStatement / .. 1#TABLE_REFERENCE_LIST_FROM .. 2#GROUP_CLAUSE / .. #VAR_REF // #C_MARKER", context.getTreePath());
+        assertEquals("// .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM .. 2#GROUP_CLAUSE / .. #VAR_REF // #C_MARKER", context.getTreePath());
         assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
         assertEquals("process$SelectGroupBy", context.getMeta().getMethodName());
     }
@@ -320,9 +321,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. SelectStatement / .. 1#TABLE_REFERENCE_LIST_FROM .. 2#GROUP_CLAUSE / .. #VAR_REF // #C_MARKER", context.getTreePath());
+        assertEquals("// .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM .. 2#GROUP_CLAUSE / .. #VAR_REF // #C_MARKER", context.getTreePath());
         assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof ASTNode);
+        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
         assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
         assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
         assertEquals("process$SelectGroupBy", context.getMeta().getMethodName());
@@ -334,9 +335,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. SelectStatement / .. 1#TABLE_REFERENCE_LIST_FROM .. 2#GROUP_CLAUSE / .. #VAR_REF // #C_MARKER", context.getTreePath());
+        assertEquals("// .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM .. 2#GROUP_CLAUSE / .. #VAR_REF // #C_MARKER", context.getTreePath());
         assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof ASTNode);
+        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
         assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
         assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
         assertEquals("process$SelectGroupBy", context.getMeta().getMethodName());
@@ -421,9 +422,11 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#EXPR_COLUMN / #VAR_REF / #NAME_FRAGMENT / #C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
+        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#EXPR_COLUMN / #VAR_REF / .. 3$NameFragmentRef / #C_MARKER", context.getTreePath());
+        assertEquals(3, context.getHandlerParameters().length);
         assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
+        assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
+        assertTrue(context.getHandlerParameters()[2] instanceof NameFragmentRef);
         assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
         assertEquals("process$SelectVarRef", context.getMeta().getMethodName());
     }

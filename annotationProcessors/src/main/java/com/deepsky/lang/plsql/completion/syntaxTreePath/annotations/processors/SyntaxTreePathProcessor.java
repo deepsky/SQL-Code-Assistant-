@@ -35,10 +35,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
@@ -50,8 +47,8 @@ import java.util.*;
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class SyntaxTreePathProcessor extends AbstractProcessor {
 
+    // Class name to Method + Syntax TreePath mappings
     Map<String, List<String[]>> u1 = new HashMap<String, List<String[]>>();
-
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -66,29 +63,33 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
                 ExecutableElement exeElement = (ExecutableElement) e;
                 SyntaxTreePath treePath = exeElement.getAnnotation(SyntaxTreePath.class);
 
-//                try {
-//                    codeGen.buildTree(treePath.value());
-//                } catch (RecognitionException e1) {
-//                    e1.printStackTrace();
-//                } catch (TokenStreamException e1) {
-//                    e1.printStackTrace();
-//                }
-
-
                 List<String[]> lu = u1.get(exeElement.getEnclosingElement().toString());
                 if (lu == null) {
                     lu = new ArrayList<String[]>();
                     u1.put(exeElement.getEnclosingElement().toString(), lu);
                 }
 
-                String[] pair = new String[]{
-                        exeElement.getSimpleName().toString(),
-                        treePath.value()
-                };
-                lu.add(pair);
+//                String[] pair = new String[]{
+//                        exeElement.getSimpleName().toString(),
+//                        treePath.value()
+//                };
 
-                String message = "annotation found in " + exeElement.getSimpleName()
-                        + " with path " + treePath.value();
+                List<? extends VariableElement> params = exeElement.getParameters();
+                String[] meth_path_params = new String[2+params.size()];
+                meth_path_params[0] = exeElement.getSimpleName().toString();
+                meth_path_params[1] = treePath.value();
+
+                for(int i=0; i<params.size(); i++){
+                    String paramName = params.get(i).getSimpleName().toString();
+                    String clazzName = params.get(i).asType().toString();
+
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Parameter:  " + paramName + " Class: " + clazzName);
+                    meth_path_params[i+2] = clazzName;
+                }
+
+                lu.add(meth_path_params);
+
+                String message = "annotation found in " + exeElement.getSimpleName() + " with path " + treePath.value();
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, message);
                 System.err.println("[SyntaxTreePathProcessor] " + message);
                 System.err.println("[SyntaxTreePathProcessor] enclosingElem: " + exeElement.getEnclosingElement());
@@ -96,20 +97,16 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
         }
 
         if (!looped) {
-
             String fqPkgName = "com.deepsky.lang.plsql.completion.syntaxTreePath.generated";
             String fqClassName = fqPkgName + ".CompletionProcessor2";
 
             System.err.println("[SyntaxTreePathProcessor] Complete processing");
 
             saveAnnotations(fqPkgName, u1);
-
             CodeGenerator codeGen = new CodeGenerator("CompletionProcessor2");
 
             try {
                 JavaFileObject jfo = processingEnv.getFiler().createSourceFile(fqClassName);
-
-
                 loadAnnotations(new File(jfo.toUri()).getParent(), codeGen);
 
                 processingEnv.getMessager().printMessage(
@@ -119,17 +116,12 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
                 Writer writer = jfo.openWriter();
 
                 codeGen.generate(writer);
-                processingEnv.getMessager().printMessage(
-                        Diagnostic.Kind.NOTE,
-                        "applying velocity template: " + "Hello");
-
                 writer.write("\n");
                 writer.close();
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
         return true;
     }
@@ -150,7 +142,7 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
                         }
                         try {
                             String className = f.getName().replaceFirst("\\.txt$", "");
-                            codeGen.buildTree(className, row[0], row[1]);
+                            codeGen.buildTree(className, row);
                         } catch (RecognitionException e1) {
                             e1.printStackTrace();
                         } catch (TokenStreamException e1) {
@@ -170,19 +162,18 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
 
 
     private void saveAnnotations(String pkgName, Map<String, List<String[]>> annots) {
-
         for (Map.Entry<String, List<String[]>> e : annots.entrySet()) {
             try {
                 FileObject fObject = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, pkgName, e.getKey() + ".txt");
                 Writer w = fObject.openWriter();
-//                Writer w = new FileWriter(new File(fObject.toUri()));
                 CSVWriter writer = new CSVWriter(w, ',', '"');
 
                 for (String[] methodAnnotPair : e.getValue()) {
-                    writer.writeNext(new String[]{
-                            methodAnnotPair[0],
-                            methodAnnotPair[1]
-                    });
+                    writer.writeNext(methodAnnotPair);
+//                    writer.writeNext(new String[]{
+//                            (String) methodAnnotPair[0],
+//                            (String) methodAnnotPair[1]
+//                    });
                 }
 
                 writer.close();
@@ -191,6 +182,5 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
                 e1.printStackTrace();
             }
         }
-
     }
 }

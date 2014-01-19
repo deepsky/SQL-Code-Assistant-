@@ -51,6 +51,26 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
         assertSelectFieldLookup(myItems, "id", "text");
     }
 
+    public void testSelect$where2() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "id", "text");
+    }
+
+    public void testSelect$where3() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "id", "text");
+    }
+
+    public void testSelect$where4() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "id", "text");
+    }
+
+    public void testSelect$where5() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "id", "text");
+    }
+
     public void testSelect$from_table() throws Exception {
         configureByFile(getFilePath());
         assertLookup(myItems, "tab", "tba", "tbb");

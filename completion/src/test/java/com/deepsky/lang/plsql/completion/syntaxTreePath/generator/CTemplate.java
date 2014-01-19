@@ -3,7 +3,6 @@ package com.deepsky.lang.plsql.completion.syntaxTreePath.generator;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
-import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.EOFException;
 import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.intellij.lang.ASTNode;
 

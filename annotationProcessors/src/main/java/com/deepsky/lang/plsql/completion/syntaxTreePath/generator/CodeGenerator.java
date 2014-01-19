@@ -78,6 +78,42 @@ public class CodeGenerator {
         }
     }
 
+
+    public void buildTree(String className, String[] args) throws RecognitionException, TokenStreamException {
+//        System.err.println("Parse: [" + args[1] + "] method: " + args[0]);
+        AST ast = parse(args[1]);
+
+        pairs = new ArrayList<NamePosPair>();
+        StringNode node = parseStartRule(ast);
+
+        // Check added tree on duplication
+        boolean duplicateFound = false;
+        String purePath = buildTreePath(pairs, false);
+        for(List<NamePosPair> p: masterNode.pairMap){
+            if(purePath.equals(buildTreePath(p, false))){
+                // Duplicate found!
+                // TODO - report error
+                duplicateFound = true;
+                break;
+            }
+        }
+
+        if(!duplicateFound){
+            node.setMetaInfoRef(masterNode.pairMap.size());
+            masterNode.pairMap.add(pairs);
+            masterNode.classMethodPair.add(new String[]{
+                    className==null? "": className,
+                    args[0]==null? "": args[0]});
+
+            // Save parameters for the method above
+            String[] methodParams = new String[args.length-2];
+            for(int i = 2; i<args.length; i++){
+                methodParams[i-2] = args[i];
+            }
+            masterNode.methodParamTypes.add(methodParams);
+        }
+    }
+
     private AST parse(String text) throws TokenStreamException, RecognitionException {
         Reader r = new StringReader(text);
         SyntaxTreePathLexer lexer = new SyntaxTreePathLexer(r);
@@ -195,6 +231,7 @@ public class CodeGenerator {
 
         List<List<NamePosPair>> pairMap = new ArrayList<List<NamePosPair>>();
         List<String[]> classMethodPair = new ArrayList<String[]>();
+        List<String[]> methodParamTypes = new ArrayList<String[]>();
 
         @Override
         public String getProcessorClassName() {
@@ -236,8 +273,7 @@ public class CodeGenerator {
 
         @Override
         public String[] getParameterClassList(int pathIndex) {
-            // TODO - implement me
-            return new String[0];
+            return methodParamTypes.get(pathIndex);
         }
 
         @Override

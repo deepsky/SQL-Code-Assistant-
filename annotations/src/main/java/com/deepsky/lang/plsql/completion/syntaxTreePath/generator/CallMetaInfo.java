@@ -21,10 +21,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.completion.syntaxTreePath.logic;
+package com.deepsky.lang.plsql.completion.syntaxTreePath.generator;
 
-/**
- * Created by sky on 1/4/14.
- */
-public class EOFException extends Exception {
+public interface CallMetaInfo {
+
+    String getClassName();
+    String getMethodName();
+
+    Class[] getArgTypes();
 }

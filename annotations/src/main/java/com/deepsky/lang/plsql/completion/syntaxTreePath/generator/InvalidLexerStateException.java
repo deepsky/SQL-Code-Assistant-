@@ -23,8 +23,5 @@
 
 package com.deepsky.lang.plsql.completion.syntaxTreePath.generator;
 
-/**
- * TODO - implement me
- */
-public class SlashNode {
+public class InvalidLexerStateException extends RuntimeException {
 }

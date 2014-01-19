@@ -23,10 +23,8 @@
 
 package com.deepsky.lang.plsql.completion.syntaxTreePath.generator;
 
-public interface CallMetaInfo {
-
-    String getClassName();
-    String getMethodName();
-
-    String[] getArgTypes();
+/**
+ * Created by sky on 1/4/14.
+ */
+public class EOFException extends Exception {
 }

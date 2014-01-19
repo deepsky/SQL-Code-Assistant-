@@ -33,6 +33,9 @@
             <fileset dir="parser/target/classes" includes="*/**/*.class"/>
             <fileset dir="result_panel/target/classes" includes="*/**/*.class"/>
 
+            <fileset dir="annotations/target/classes" includes="*/**/*.class"/>
+            <fileset dir="completion/target/classes" includes="*/**/*.class"/>
+
             <fileset dir="plugin_runner" includes="META-INF/*.xml"/>
         </jar>
 

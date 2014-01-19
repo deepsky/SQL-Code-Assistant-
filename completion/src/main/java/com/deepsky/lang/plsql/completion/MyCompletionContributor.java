@@ -23,12 +23,17 @@
 
 package com.deepsky.lang.plsql.completion;
 
+import com.deepsky.database.ora.DbUrl;
+import com.deepsky.lang.common.PlSqlFile;
+import com.deepsky.lang.common.PluginKeys2;
 import com.deepsky.lang.plsql.completion.logic.ASTTreeAdapter;
 import com.deepsky.lang.plsql.completion.processors.C_Context;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generated.CompletionProcessor2;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generator.CallMetaInfo;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generator.TreePathContext;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
+import com.deepsky.lang.plsql.sqlIndex.AbstractSchema;
+import com.deepsky.utils.StringUtils;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
@@ -72,7 +77,6 @@ public class MyCompletionContributor extends CompletionContributor {
         }
 
         final ASTNode nodeToComplete = parameters.getPosition().getNode();
-//        print(root, 0);
 
         TreePath path = ASTTreeAdapter.recovery2(nodeToComplete);
         System.out.println(path.printPath());
@@ -85,56 +89,61 @@ public class MyCompletionContributor extends CompletionContributor {
             CallMetaInfo metaInfo = context.getMeta();
             System.out.println("Path: " + context.getTreePath());
 
-            CompletionCaller caller = buildInvoker(metaInfo);
-            C_Context cContext = new C_Context() {
-                @Override
-                public String getLookup() {
-                    return "";
-                }
+            final String lookupStr = stripText(StringUtils.discloseDoubleQuotes(nodeToComplete.getText()));
+            final VariantsProvider provider = chooseSearchDomain((PlSqlFile) nodeToComplete.getPsi().getContainingFile());
 
-                @Override
-                public CompletionResultSet getResultSet() {
-                    return result;
-                }
-            };
+            CompletionCaller caller = null;
+            try {
+                caller = buildInvoker(metaInfo);
+                C_Context cContext = new C_Context() {
+                    @Override
+                    public String getLookup() {
+                        return lookupStr;
+                    }
 
-//            Object[] args = new Object[1+context.getHandlerParameters().length];
-//            System.arraycopy(context.getHandlerParameters(), 0, args, 1, context.getHandlerParameters().length);
-//            args[0] = cContext;
-//            caller.call(args);
+                    @Override
+                    public CompletionResultSet getResultSet() {
+                        return result;
+                    }
 
-            super.fillCompletionVariants(parameters, result);
+                    @Override
+                    public VariantsProvider getProvider() {
+                        return provider;
+                    }
+                };
+
+                Object[] args = new Object[1 + context.getHandlerParameters().length];
+                System.arraycopy(context.getHandlerParameters(), 0, args, 1, context.getHandlerParameters().length);
+                args[0] = cContext;
+                caller.call(args);
+
+                super.fillCompletionVariants(parameters, result);
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (InstantiationException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
         }
 
     }
 
 
-    private CompletionCaller buildInvoker(CallMetaInfo metaInfo) {
+    private CompletionCaller buildInvoker(CallMetaInfo metaInfo) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException {
         String className = metaInfo.getClassName();
         String methodName = metaInfo.getMethodName();
-        String[] argTypes = metaInfo.getArgTypes();
+        Class[] callArgTypes = metaInfo.getArgTypes();
 
-        // TODO convert arg type to classes
+        Class clazz = Class.forName(className);
 
-        try {
-            Class clazz = Class.forName(className);
+        Method m = clazz.getDeclaredMethod(methodName, callArgTypes);
+        Object targetHandler = clazz.newInstance();
 
-            Method m = clazz.getDeclaredMethod(methodName, new Class[0] /* todo */);
-            Object targetHandler = clazz.newInstance();
-
-            return new CompletionCaller(targetHandler, m);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-
-        // TODO - implement me
-        return null;
+        return new CompletionCaller(targetHandler, m);
     }
 
 
@@ -143,7 +152,7 @@ public class MyCompletionContributor extends CompletionContributor {
         Object targetObject;
         Method handler;
 
-        public CompletionCaller(Object targetObject, Method handler){
+        public CompletionCaller(Object targetObject, Method handler) {
             this.targetObject = targetObject;
             this.handler = handler;
         }
@@ -156,8 +165,35 @@ public class MyCompletionContributor extends CompletionContributor {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
             }
             return false;
         }
     }
+
+    private VariantsProvider chooseSearchDomain(PlSqlFile plsqlFile) {
+        DbUrl dbUrl = plsqlFile.getDbUrl();
+        AbstractSchema i = PluginKeys2.SQL_INDEX_MAN.getData(plsqlFile.getProject()).getIndex(dbUrl, 0);
+        return (i != null) ? i.getVariantsProvider() : null;
+    }
+
+
+    public static String stripText(String text) {
+        if(text == null){
+            return null;
+        }
+        int idx = text.indexOf(Constants.COMPL_IDENTIFIER); //IntellijIdeaRulezzz);
+        if (idx >= 0) {
+            if (idx == 0) {
+                return "";
+            } else {
+                return text.substring(0, idx);
+            }
+
+        } else {
+            return text;
+        }
+    }
+
 }

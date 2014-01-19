@@ -64,8 +64,7 @@
     <br>
     Latest changes:
     <ul>
-        <li>[NEW] Highlight errors in string literal</li>
-        <li>NPE and Validation exception fixes</li>
+        <li>Large refactoring in code completion</li>
         <li>[KNOWN ISSUE] Case-sensitive table names, column names, etc are not supported for now</li>
         <li>[KNOWN ISSUE] Initial indexing of numerous SQL files (1k and more) may take time</li>
      </ul>
@@ -74,7 +73,7 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.4.9.12</version>
+    <version>1.5.0.12</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
@@ -83,6 +82,11 @@
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.5.0.12</b>
+                 <ul>
+                    - [NEW] Completion for key words<br>
+                 </ul>
+            </li>
             <li><b>1.4.9.12</b>
                  <ul>
                     - [NEW] Highlight errors in string literal<br>
@@ -237,6 +241,7 @@
         <quoteHandler fileType="PlSql" className="com.deepsky.lang.plsql.editor.actions.PlSqlQuoteHandler"/>
 
         <completion.contributor language="PlSql" implementationClass="com.deepsky.lang.plsql.completion.MyCompletionContributor"/>
+        <!--<completion.contributor language="PlSql" implementationClass="com.deepsky.lang.plsql.completion.ComplContributor"/>-->
         <weigher key="completion" implementationClass="com.deepsky.lang.plsql.completion.SqlCompletionWeigher" id="plsqlWeigher" order="before stats" />
 
         <codeInsight.parameterInfo language="PlSql"

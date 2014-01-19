@@ -104,7 +104,7 @@ public class CodeGeneratorRunner {
 
         CodeGenerator treeBuilder = new CodeGenerator("CompletionProcessor3");
         for (String text : testSet) {
-            treeBuilder.buildTree("", "", text);
+            treeBuilder.buildTree("", new String[]{"", text, "com.intellij.lang.ASTNode", "com.deepsky.lang.plsql.completion.processors.C_Context"});
         }
 
 
