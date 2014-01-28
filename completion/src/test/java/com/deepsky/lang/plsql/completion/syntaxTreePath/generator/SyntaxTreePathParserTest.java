@@ -186,7 +186,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. #EXPR_COLUMN // #SUBQUERY / .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. 2#TABLE_ALIAS / #TABLE_REF / #C_MARKER", context.getTreePath());
+        assertEquals("// .. #EXPR_COLUMN / #SUBQUERY_EXPR // .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. 2#TABLE_ALIAS / #TABLE_REF / #C_MARKER", context.getTreePath());
         assertEquals(2, context.getHandlerParameters().length);
         assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
     }
@@ -271,10 +271,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM .. 2#ORDER_CLAUSE / .. #SORTED_DEF / #VAR_REF // #C_MARKER", context.getTreePath());
+        assertEquals("// .. 1$SelectStatement / .. #ORDER_CLAUSE / .. #SORTED_DEF / #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getTreePath());
         assertEquals(2, context.getHandlerParameters().length);
         assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
-        assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
+        assertTrue(context.getHandlerParameters()[1] instanceof NameFragmentRef);
     }
 
 
@@ -295,7 +295,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM .. 2#GROUP_CLAUSE / .. #VAR_REF // #C_MARKER", context.getTreePath());
+        assertEquals("// .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getTreePath());
         assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
         assertEquals("process$SelectGroupBy", context.getMeta().getMethodName());
     }
@@ -321,10 +321,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM .. 2#GROUP_CLAUSE / .. #VAR_REF // #C_MARKER", context.getTreePath());
+        assertEquals("// .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getTreePath());
         assertEquals(2, context.getHandlerParameters().length);
         assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
-        assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
+        assertTrue(context.getHandlerParameters()[1] instanceof NameFragmentRef);
         assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
         assertEquals("process$SelectGroupBy", context.getMeta().getMethodName());
     }
@@ -335,10 +335,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM .. 2#GROUP_CLAUSE / .. #VAR_REF // #C_MARKER", context.getTreePath());
+        assertEquals("// .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getTreePath());
         assertEquals(2, context.getHandlerParameters().length);
         assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
-        assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
+        assertTrue(context.getHandlerParameters()[1] instanceof NameFragmentRef);
         assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
         assertEquals("process$SelectGroupBy", context.getMeta().getMethodName());
     }

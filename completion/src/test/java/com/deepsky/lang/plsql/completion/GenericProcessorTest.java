@@ -163,10 +163,10 @@ public class GenericProcessorTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ #ERROR_TOKEN_A / 1#C_MARKER", context.getTreePath());
+        assertEquals("/ .. #ERROR_TOKEN_A / #CREATE #SEQUENCE 1#SEQUENCE_NAME .. #C_MARKER", context.getTreePath());
         assertEquals(1, context.getHandlerParameters().length);
         assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getMeta().getClassName());
-        assertEquals("process$Start", context.getMeta().getMethodName());
+        assertEquals("process$Start6", context.getMeta().getMethodName());
     }
 
     public void test4_20() throws TokenStreamException, RecognitionException {

@@ -384,7 +384,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         String nodeMethodName = methodStack.peek();
         writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
         writer.println("\tTreePathContext.Marker m = context.createMarker(\"/\");");
-        writer.println("\tint lexerState = -1;");
+        writer.println("\tint lexerState;");
         writer.println("\ttry {");
         writer.println("\t\tconsume(SlashNode.class);");
         writer.println("\t\tASTNode n = peek(ASTNode.class);");
@@ -457,17 +457,17 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         String nodeMethodName = methodStack.peek();
         writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
         writer.println("\tTreePathContext.Marker m = context.createMarker(\""+ buildMarkerName(node) + "\");");
-        writer.println("\tint lexerState = -1;");
-        writer.println("\tObject o = null;");
+        writer.println("\tint lexerState;");
+        writer.println("\tObject o;");
         writer.println("\ttry {");
         writer.println("\t\tm.setASTNode(next(ASTNode.class), "+ node.isDollar() + ");  // Consume " + node.getName());
 
         Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
         if(node.getChildren().size() == 0){
-            writer.println("\t\t// TODO - implement hit");
-            writer.println("\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName(node) + "\");");
-            writer.println("\t\tm1.setASTNode((ASTNode)o, " + node.isDollar() + ");");
+//            writer.println("\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName(node) + "\");");
+//            writer.println("\t\tm1.setASTNode((ASTNode)o, " + node.isDollar() + ");");
             writer.println("\t\tcontext.setMetaInfoRef(" + node.getMetaInfoRef() + ");");
+            writer.println("\t\t// TODO - implement hit");
             writer.println("\t\treturn true;");
         } else {
             sortChildren(node);

@@ -32,6 +32,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.List;
 
 // TODO should be removed out of annotationProcessor
 public abstract class CompletionProcessorBase {
@@ -135,6 +136,8 @@ public abstract class CompletionProcessorBase {
 
     protected class TreePathContextImpl implements TreePathContext {
 
+        List<PathList> chains = new ArrayList<PathList>();
+
         private MyArray<MarkerImpl> markerList = new MyArray<MarkerImpl>();
         private int metaInfoRef;
 
@@ -174,6 +177,15 @@ public abstract class CompletionProcessorBase {
         @Override
         public void setMetaInfoRef(int ref) {
             this.metaInfoRef = ref;
+            chains.add(copy(markerList, metaInfoRef));
+        }
+
+        private PathList copy(MyArray<MarkerImpl> markerList, int metaInfoRef) {
+            PathList chain = new PathList(metaInfoRef);
+            for(MarkerImpl m: markerList){
+                chain.add(new PathElement(m.element, m.node, m.isPsi));
+            }
+            return chain;
         }
 
         @Override
@@ -226,12 +238,41 @@ public abstract class CompletionProcessorBase {
                 this.node = node;
                 this.isPsi = isPsi;
             }
+
         }
 
-        private  class MyArray<T> extends ArrayList<T> {
-            public void removeAfter(int index){
-                removeRange(index, size());
-            }
+
+    }
+
+
+    class PathList {
+        private List<PathElement> pathElementList = new ArrayList<PathElement>();
+        private int metaInfoRef;
+
+        public PathList(int ref){
+            this.metaInfoRef = ref;
+        }
+
+        void add(PathElement e){
+            pathElementList.add(e);
+        }
+    }
+
+    class PathElement {
+        private String element;
+        private ASTNode node;
+        private boolean isPsi;
+
+        public PathElement(String element, ASTNode node, boolean isPsi){
+            this.element = element;
+            this.node = node;
+            this.isPsi = isPsi;
+        }
+    }
+
+    private  class MyArray<T> extends ArrayList<T> {
+        public void removeAfter(int index){
+            removeRange(index, size());
         }
     }
 }
