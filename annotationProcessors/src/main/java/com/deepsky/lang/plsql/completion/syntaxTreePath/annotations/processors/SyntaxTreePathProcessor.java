@@ -48,7 +48,8 @@ import java.util.*;
 public class SyntaxTreePathProcessor extends AbstractProcessor {
 
     // Class name to Method + Syntax TreePath mappings
-    Map<String, List<String[]>> u1 = new HashMap<String, List<String[]>>();
+    Map<String, List<String[]>> clazz2Method_Path = new HashMap<String, List<String[]>>();
+    Map<String, String> clazz2ClazzPath = new HashMap<String, String>();
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -63,16 +64,11 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
                 ExecutableElement exeElement = (ExecutableElement) e;
                 SyntaxTreePath treePath = exeElement.getAnnotation(SyntaxTreePath.class);
 
-                List<String[]> lu = u1.get(exeElement.getEnclosingElement().toString());
+                List<String[]> lu = clazz2Method_Path.get(exeElement.getEnclosingElement().toString());
                 if (lu == null) {
                     lu = new ArrayList<String[]>();
-                    u1.put(exeElement.getEnclosingElement().toString(), lu);
+                    clazz2Method_Path.put(exeElement.getEnclosingElement().toString(), lu);
                 }
-
-//                String[] pair = new String[]{
-//                        exeElement.getSimpleName().toString(),
-//                        treePath.value()
-//                };
 
                 List<? extends VariableElement> params = exeElement.getParameters();
                 String[] meth_path_params = new String[2+params.size()];
@@ -93,6 +89,19 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, message);
                 System.err.println("[SyntaxTreePathProcessor] " + message);
                 System.err.println("[SyntaxTreePathProcessor] enclosingElem: " + exeElement.getEnclosingElement());
+            } else if (e.getKind() == ElementKind.CLASS) {
+                TypeElement classElement = (TypeElement) e;
+                SyntaxTreePath treePath = classElement.getAnnotation(SyntaxTreePath.class);
+
+                clazz2ClazzPath.put(classElement.getQualifiedName().toString(), treePath.value());
+                processingEnv.getMessager().printMessage(
+                        Diagnostic.Kind.NOTE,
+                        "annotated class: " + classElement.getQualifiedName() + " Annot: " + treePath.value(), e);
+
+                String fqClassName = classElement.getQualifiedName().toString();
+                String className = classElement.getSimpleName().toString();
+                PackageElement packageElement = (PackageElement) classElement.getEnclosingElement();
+                String packageName = packageElement.getQualifiedName().toString();
             }
         }
 
@@ -102,7 +111,7 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
 
             System.err.println("[SyntaxTreePathProcessor] Complete processing");
 
-            saveAnnotations(fqPkgName, u1);
+            saveAnnotations(fqPkgName, clazz2ClazzPath, clazz2Method_Path);
             CodeGenerator codeGen = new CodeGenerator("CompletionProcessor2");
 
             try {
@@ -161,19 +170,18 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
     }
 
 
-    private void saveAnnotations(String pkgName, Map<String, List<String[]>> annots) {
+    private void saveAnnotations(String pkgName, Map<String, String> clazz2ClazzPath, Map<String, List<String[]>> annots) {
         for (Map.Entry<String, List<String[]>> e : annots.entrySet()) {
             try {
                 FileObject fObject = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, pkgName, e.getKey() + ".txt");
                 Writer w = fObject.openWriter();
                 CSVWriter writer = new CSVWriter(w, ',', '"');
 
+                String prefix = clazz2ClazzPath.get(e.getKey());
                 for (String[] methodAnnotPair : e.getValue()) {
-                    writer.writeNext(methodAnnotPair);
-//                    writer.writeNext(new String[]{
-//                            (String) methodAnnotPair[0],
-//                            (String) methodAnnotPair[1]
-//                    });
+                    String[] m = Arrays.copyOf(methodAnnotPair, methodAnnotPair.length);
+                    m[1] = (prefix==null? "": prefix) + m[1];
+                    writer.writeNext(m);
                 }
 
                 writer.close();

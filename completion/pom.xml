@@ -63,6 +63,7 @@
                             <processors>
                                 <!-- list of processors to use -->
                                 <processor>com.deepsky.lang.plsql.completion.syntaxTreePath.annotations.processors.SyntaxTreePathProcessor</processor>
+                                <!--<processor>com.deepsky.lang.plsql.completion.syntaxTreePath.annotations.processors.BeanInfoProcessor</processor>-->
                             </processors>
                             <!-- source output directory -->
                             <!--<outputDirectory>src/main/generated</outputDirectory>-->

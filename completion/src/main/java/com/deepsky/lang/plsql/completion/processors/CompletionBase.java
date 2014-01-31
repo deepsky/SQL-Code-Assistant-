@@ -23,56 +23,23 @@
 
 package com.deepsky.lang.plsql.completion.processors;
 
-import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.SelectStatement;
-import com.deepsky.lang.plsql.psi.TableAlias;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.lang.ASTNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SyntaxTreePath("/..#DELETE_COMMAND")
-public class DeleteStmtProcessor extends CompletionBase {
+public class CompletionBase {
 
-    @SyntaxTreePath("/#DELETE #FROM 1#TABLE_ALIAS/#TABLE_REF #ALIAS_NAME//#C_MARKER")
-    public void process$DeleteAliasName(C_Context context, ASTNode node) {
-        // TODO - implement me
-    }
-
-    @SyntaxTreePath("/#DELETE #FROM #TABLE_ALIAS/#TABLE_REF/#C_MARKER")
-    public void process$DeleteTabRef(C_Context ctx) {
+    protected void collectColumns(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
+        final NameFragmentRef prev = nameRef.getPrevFragment();
+        final String prevText = prev != null ? prev.getText() : null;
 
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-        }
-    }
+        provider.collectColumnVariants(select, prevText);
 
-    @SyntaxTreePath("/#DELETE #FROM 1$TableAlias #WHERE_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$DeleteWhere(C_Context ctx, TableAlias t, NameFragmentRef nameRef) {
-        VariantsProvider provider = ctx.getProvider();
-        provider.collectColumnNames(t, ctx.getLookup(), false);
-        // TODO - handle case when column with table alias
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.takeCollectedLookups());
-
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-        }
-    }
-
-    @SyntaxTreePath("/#DELETE #FROM 1$TableAlias #WHERE_CONDITION//..#SUBQUERY_EXPR//..2$SelectStatement/..#WHERE_CONDITION//..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$DeleteWithSubquey(C_Context ctx, TableAlias t, SelectStatement select, NameFragmentRef ref) {
-        collectColumns(ctx, select, ref);
-        VariantsProvider provider = ctx.getProvider();
-        provider.collectColumnNames(t, ctx.getLookup(), false);
-
-        // TODO - filter out columns already existing in column list
         final List<LookupElement> variants = new ArrayList<LookupElement>();
         variants.addAll(provider.takeCollectedLookups());
 

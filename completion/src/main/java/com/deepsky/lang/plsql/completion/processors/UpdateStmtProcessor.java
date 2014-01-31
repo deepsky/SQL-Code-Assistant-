@@ -24,28 +24,136 @@
 package com.deepsky.lang.plsql.completion.processors;
 
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
+import com.deepsky.lang.plsql.completion.VariantsProvider;
+import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
+import com.deepsky.lang.plsql.psi.NameFragmentRef;
+import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.deepsky.lang.plsql.psi.TableAlias;
+import com.intellij.codeInsight.lookup.LookupElement;
 
-public class UpdateStmtProcessor {
+import java.util.ArrayList;
+import java.util.List;
 
-    @SyntaxTreePath("/#UPDATE_COMMAND//#UPDATE #TABLE_ALIAS/1#TABLE_REF #ALIAS_NAME//#C_MARKER")
-    public void process$UpdateTabAlias() {
-        // TODO - implement me
+@SyntaxTreePath("/..#UPDATE_COMMAND")
+public class UpdateStmtProcessor extends CompletionBase {
+
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#UPDATE #TABLE_ALIAS/#TABLE_REF #ALIAS_NAME//#C_MARKER")
+    public void process$UpdateTabAlias(C_Context ctx) {
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("set"));
     }
 
-    @SyntaxTreePath("/#UPDATE_COMMAND//#UPDATE #TABLE_ALIAS/1#TABLE_REF/#C_MARKER")
-    public void process$UpdateTabRef() {
-        // TODO - implement me
+    @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET #ERROR_TOKEN_A/#COLUMN_SPEC ..#COMMA #C_MARKER")
+    public void process$UpdateTabRef(C_Context ctx, TableAlias t) {
+        VariantsProvider provider = ctx.getProvider();
+        provider.collectColumnNames(t, ctx.getLookup(), false);
+
+        // TODO - filter out columns already existing in column list
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.takeCollectedLookups());
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
     }
 
-    @SyntaxTreePath("/#UPDATE_COMMAND//#UPDATE #TABLE_ALIAS #SET #ERROR_TOKEN_A/#C_MARKER")
-    public void process$UpdateColumnName() {
-        // TODO - implement me
+
+    @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET #COLUMN_SPEC/#NAME_FRAGMENT/#C_MARKER")
+    public void process$UpdateColumn(C_Context ctx, TableAlias t) {
+        VariantsProvider provider = ctx.getProvider();
+        provider.collectColumnNames(t, ctx.getLookup(), false);
+
+        // TODO - filter out columns already existing in column list
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.takeCollectedLookups());
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
     }
 
-    @SyntaxTreePath("/#UPDATE_COMMAND//#UPDATE 1#TABLE_ALIAS #SET .. 2#COLUMN_SPEC #EQ #VAR_REF//#C_MARKER")
-    public void process$UpdateColumnVar() {
-        // TODO - implement me
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#UPDATE #TABLE_ALIAS/#TABLE_REF/#C_MARKER")
+    public void process$UpdateColumnName(C_Context ctx) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+    @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET #ERROR_TOKEN_A/#C_MARKER")
+    public void process$UpdateColumnVar(C_Context ctx, TableAlias t) {
+        VariantsProvider provider = ctx.getProvider();
+        provider.collectColumnNames(t, ctx.getLookup(), false);
+
+        // TODO - filter out columns already existing in column list
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.takeCollectedLookups());
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+    @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$UpdateColumnVar2(C_Context ctx, TableAlias t) {
+    }
+
+    @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET ..#WHERE_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$UpdateWhereVar(C_Context ctx, TableAlias t, NameFragmentRef nameRef) {
+        VariantsProvider provider = ctx.getProvider();
+        provider.collectColumnNames(t, ctx.getLookup(), false);
+
+        // TODO - filter out columns already existing in column list
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.takeCollectedLookups());
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
     }
 
 
+    @SyntaxTreePath("//#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #ARITHMETIC_EXPR//..$SelectStatement/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
+    public void process$UpdateAssignment1(C_Context ctx, TableAlias t) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+    @SyntaxTreePath("//#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #ARITHMETIC_EXPR//..2$SelectStatement/..#WHERE_CONDITION/..#RELATION_CONDITION/..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$UpdateAssignment2(C_Context ctx, TableAlias t, SelectStatement select, NameFragmentRef ref) {
+        collectColumns(ctx, select, ref);
+        VariantsProvider provider = ctx.getProvider();
+        provider.collectColumnNames(t, ctx.getLookup(), false);
+
+        // TODO - filter out columns already existing in column list
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.takeCollectedLookups());
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+
+    @SyntaxTreePath("//#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #SUBQUERY_EXPR//..2$SelectStatement/..#EXPR_COLUMN/..#FUNCTION_CALL/..#CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$UpdateAssignment3(C_Context ctx, TableAlias t, SelectStatement select, NameFragmentRef ref) {
+        collectColumns(ctx, select, ref);
+        VariantsProvider provider = ctx.getProvider();
+        provider.collectColumnNames(t, ctx.getLookup(), false);
+
+        // TODO - filter out columns already existing in column list
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.takeCollectedLookups());
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
 }

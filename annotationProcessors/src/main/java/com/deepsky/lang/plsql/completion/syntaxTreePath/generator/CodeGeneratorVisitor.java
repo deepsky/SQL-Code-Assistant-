@@ -464,8 +464,6 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
         Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
         if(node.getChildren().size() == 0){
-//            writer.println("\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName(node) + "\");");
-//            writer.println("\t\tm1.setASTNode((ASTNode)o, " + node.isDollar() + ");");
             writer.println("\t\tcontext.setMetaInfoRef(" + node.getMetaInfoRef() + ");");
             writer.println("\t\t// TODO - implement hit");
             writer.println("\t\treturn true;");

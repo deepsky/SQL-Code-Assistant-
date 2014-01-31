@@ -25,50 +25,17 @@ package com.deepsky.lang.plsql.completion.processors;
 
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
-import com.deepsky.lang.plsql.psi.NameFragmentRef;
-import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.deepsky.lang.plsql.psi.ColumnSpec;
 import com.deepsky.lang.plsql.psi.TableAlias;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.lang.ASTNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SyntaxTreePath("/..#DELETE_COMMAND")
-public class DeleteStmtProcessor extends CompletionBase {
+public class InsertStmtProcessor {
 
-    @SyntaxTreePath("/#DELETE #FROM 1#TABLE_ALIAS/#TABLE_REF #ALIAS_NAME//#C_MARKER")
-    public void process$DeleteAliasName(C_Context context, ASTNode node) {
-        // TODO - implement me
-    }
-
-    @SyntaxTreePath("/#DELETE #FROM #TABLE_ALIAS/#TABLE_REF/#C_MARKER")
-    public void process$DeleteTabRef(C_Context ctx) {
-        VariantsProvider provider = ctx.getProvider();
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
-
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-        }
-    }
-
-    @SyntaxTreePath("/#DELETE #FROM 1$TableAlias #WHERE_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$DeleteWhere(C_Context ctx, TableAlias t, NameFragmentRef nameRef) {
-        VariantsProvider provider = ctx.getProvider();
-        provider.collectColumnNames(t, ctx.getLookup(), false);
-        // TODO - handle case when column with table alias
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.takeCollectedLookups());
-
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-        }
-    }
-
-    @SyntaxTreePath("/#DELETE #FROM 1$TableAlias #WHERE_CONDITION//..#SUBQUERY_EXPR//..2$SelectStatement/..#WHERE_CONDITION//..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$DeleteWithSubquey(C_Context ctx, TableAlias t, SelectStatement select, NameFragmentRef ref) {
-        collectColumns(ctx, select, ref);
+    @SyntaxTreePath("/..#INSERT_COMMAND/#INSERT #INTO 1$TableAlias #COLUMN_SPEC_LIST/..2$ColumnSpec/..#NAME_FRAGMENT/#C_MARKER")
+    public void insertColumnName(C_Context ctx, TableAlias t, ColumnSpec nameRef) {
         VariantsProvider provider = ctx.getProvider();
         provider.collectColumnNames(t, ctx.getLookup(), false);
 

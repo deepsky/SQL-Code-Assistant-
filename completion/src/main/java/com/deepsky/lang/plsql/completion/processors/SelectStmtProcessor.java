@@ -35,7 +35,8 @@ import com.intellij.psi.PsiElement;
 
 import java.util.*;
 
-public class SelectStmtProcessor {
+@SyntaxTreePath("/..1$SelectStatement")
+public class SelectStmtProcessor extends CompletionBase {
 
     // Set of aggregate functions
     private final static Set<String> AGGR_FUNC_NAMES = new HashSet<String>(
@@ -45,40 +46,9 @@ public class SelectStmtProcessor {
     );
 
 
-    @SyntaxTreePath("/#ERROR_TOKEN_A/#SELECT #ASTERISK 1#C_MARKER")
-    public void process$SelectAsterisk() {
-        // TODO - implement me
-    }
 
-
-    @SyntaxTreePath("/#ERROR_TOKEN_A/#SELECT #C_MARKER")
-    public void process$Select() {
-        // TODO - implement me
-    }
-
-    @SyntaxTreePath("/#ERROR_TOKEN_A/#SELECT #IDENTIFIER #C_MARKER")
-    public void process$SelectIdent() {
-        // TODO - implement me
-    }
-
-    @SyntaxTreePath("// ..#ERROR_TOKEN_A/#SELECT ..#EXPR_COLUMN #COMMA #ERROR_TOKEN_A/#C_MARKER")
-    public void process$SelectExpr() {
-        // TODO - implement me
-    }
-
-    @SyntaxTreePath("//#SELECT .. 1#EXPR_COLUMN 2#C_MARKER")
-    public void process$SelectColumnMarker() {
-        // TODO - implement me
-    }
-
-    @SyntaxTreePath("//#SELECT .. 1#EXPR_COLUMN #AS 2#C_MARKER")
-    public void process$SelectColumnAsMarker() {
-        // TODO - implement me
-    }
-
-    @SyntaxTreePath("//..SelectStatement/ ..#TABLE_REFERENCE_LIST_FROM/ ..1#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
-    public void process$SelectFromTab(C_Context ctx, ASTNode tabAlias) {
-
+    @SyntaxTreePath("/ ..#TABLE_REFERENCE_LIST_FROM/ ..#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
+    public void process$SelectFromTab(C_Context ctx, SelectStatement select) {
         VariantsProvider provider = ctx.getProvider();
         final List<LookupElement> variants = new ArrayList<LookupElement>();
         variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
@@ -89,13 +59,18 @@ public class SelectStmtProcessor {
         }
     }
 
-    @SyntaxTreePath("//..1$SelectStatement/#SELECT ..2#EXPR_COLUMN/#PARENTHESIZED_EXPR/ ..#VAR_REF//#C_MARKER")
+    @SyntaxTreePath("/#SELECT ..2#EXPR_COLUMN/#PARENTHESIZED_EXPR/ ..#VAR_REF//#C_MARKER")
     public void process$SelectParenExpr() {
         // TODO - implement me
     }
 
+    // select * from (select a, <caret>)
+    @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY/ ..#ERROR_TOKEN_A/#SELECT ..#EXPR_COLUMN #COMMA #ERROR_TOKEN_A/#C_MARKER")
+    public void process$SelectFromSubqueryError() {
+        // TODO - implement me
+    }
 
-    @SyntaxTreePath("/..1$SelectStatement/#SELECT ..2#EXPR_COLUMN/#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/#SELECT ..2#EXPR_COLUMN/#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$SelectVarRef(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
         final NameFragmentRef prev = nameRef.getPrevFragment();
@@ -115,8 +90,8 @@ public class SelectStmtProcessor {
     }
 
 
-    @SyntaxTreePath("//..1#EXPR_COLUMN/#SUBQUERY_EXPR//..2$SelectStatement/..#EXPR_COLUMN/#FUNCTION_CALL//..#CALL_ARGUMENT/#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectSubqueryExpr(C_Context ctx, ASTNode expr, SelectStatement select, NameFragmentRef nameRef) {
+    @SyntaxTreePath("/..1#EXPR_COLUMN/#SUBQUERY_EXPR//..2$SelectStatement/..#EXPR_COLUMN/#FUNCTION_CALL//..#CALL_ARGUMENT/#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectSubqueryExpr(C_Context ctx, SelectStatement select0, ASTNode expr, SelectStatement select, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
         final NameFragmentRef prev = nameRef.getPrevFragment();
         final String prevText = prev != null ? prev.getText() : null;
@@ -138,39 +113,51 @@ public class SelectStmtProcessor {
         }
     }
 
-    @SyntaxTreePath("//..1$SelectStatement/ ..#TABLE_REFERENCE_LIST_FROM/ ..#TABLE_ALIAS/2#TABLE_REF #ALIAS_NAME//3#C_MARKER")
-    public void process$SelectFromTabAlias() {
-        // TODO - implement me
+    @SyntaxTreePath("//..#FROM_SUBQUERY//..#TABLE_REFERENCE_LIST_FROM/ ..#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
+    public void process$SelectFromTabAlias(C_Context ctx, SelectStatement select) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
+        variants.addAll(provider.collectViewNameVariants(ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
     }
 
-    @SyntaxTreePath("//SelectStatement/#SELECT ..1#ERROR_TOKEN_A/#SUBQUERY_EXPR//#OPEN_PAREN #SELECT #C_MARKER")
+    @SyntaxTreePath("/#SELECT ..2#ERROR_TOKEN_A/#SUBQUERY_EXPR//#OPEN_PAREN #SELECT #C_MARKER")
     public void process$SelectSubquery() {
         // TODO - implement me
     }
 
-    @SyntaxTreePath("//#SELECT ..1#ERROR_TOKEN_A/#SUBQUERY_EXPR//#OPEN_PAREN #SELECT #C_MARKER")
+    @SyntaxTreePath("/#SELECT ..2#ERROR_TOKEN_A/#SUBQUERY_EXPR//#OPEN_PAREN #SELECT #C_MARKER")
     public void process$SelectSubquery2() {
         // TODO - implement me
     }
 
-    @SyntaxTreePath("//SelectStatement/#SELECT ..1#ERROR_TOKEN_A/#SUBQUERY_EXPR//#OPEN_PAREN #SELECT #C_MARKER")
+    @SyntaxTreePath("/#SELECT ..2#ERROR_TOKEN_A/#SUBQUERY_EXPR//#OPEN_PAREN #SELECT #C_MARKER")
     public void process$SelectFromSubquery() {
         // TODO - implement me
     }
 
-    @SyntaxTreePath("//SelectStatement/ ..#EXPR_COLUMN/ ..#ALIAS_NAME/#ALIAS_IDENT/1#C_MARKER")
+    @SyntaxTreePath("/ ..#EXPR_COLUMN/ ..#ALIAS_NAME/#ALIAS_IDENT/2#C_MARKER")
     public void process$SelectColumnAlias() {
         // TODO - implement me
     }
 
-    @SyntaxTreePath("//..SelectStatement/ ..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY/#SUBQUERY/#OPEN_PAREN #ERROR_TOKEN_A/1#C_MARKER")
+    @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
+    public void process$SelectTabAliasName() {
+        // TODO - implement me
+    }
+
+    @SyntaxTreePath("/ ..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY/#SUBQUERY/#OPEN_PAREN #ERROR_TOKEN_A/2#C_MARKER")
     public void process$SelectFromSubquery2() {
         // TODO - implement me
     }
 
 
-    @SyntaxTreePath("// ..#EXPR_COLUMN/#SUBQUERY_EXPR// ..1$SelectStatement/ ..#TABLE_REFERENCE_LIST_FROM/ ..2#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
-    public void process$SelectFromSubquery3(C_Context ctx, SelectStatement select, ASTNode tabAlias) {
+    @SyntaxTreePath("/ ..#EXPR_COLUMN/#SUBQUERY_EXPR// ..1$SelectStatement/ ..#TABLE_REFERENCE_LIST_FROM/ ..2#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
+    public void process$SelectFromSubquery3(C_Context ctx, SelectStatement select0, SelectStatement select, ASTNode tabAlias) {
         VariantsProvider provider = ctx.getProvider();
         final List<LookupElement> variants = new ArrayList<LookupElement>();
         variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
@@ -182,8 +169,8 @@ public class SelectStmtProcessor {
     }
 
 
-    @SyntaxTreePath("//..1$FromClause//..#FROM_SUBQUERY/..#SUBQUERY/..2$SelectStatement/..#EXPR_COLUMN/#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectFromSubquery4(C_Context ctx, FromClause from, SelectStatement select, NameFragmentRef ref) {
+    @SyntaxTreePath("/..1$FromClause//..#FROM_SUBQUERY/..#SUBQUERY/..2$SelectStatement/..#EXPR_COLUMN/#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectFromSubquery4(C_Context ctx, SelectStatement select0, FromClause from, SelectStatement select, NameFragmentRef ref) {
         VariantsProvider provider = ctx.getProvider();
         final NameFragmentRef prev = ref.getPrevFragment();
         final String prevText = prev != null ? prev.getText() : null;
@@ -209,7 +196,7 @@ public class SelectStmtProcessor {
         }
     }
 
-    @SyntaxTreePath("//..SelectStatement/ ..1#TABLE_REFERENCE_LIST_FROM ..2#ERROR_TOKEN_A/#ORDER #C_MARKER")
+    @SyntaxTreePath("/ ..2#TABLE_REFERENCE_LIST_FROM ..3#ERROR_TOKEN_A/#ORDER #C_MARKER")
     public void process$SelectOrderBy() {
         // TODO - implement me
     }
@@ -255,7 +242,7 @@ public class SelectStmtProcessor {
     }
 
 
-    @SyntaxTreePath("//..1$SelectStatement/..#ORDER_CLAUSE/..#SORTED_DEF/#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..#ORDER_CLAUSE/..#SORTED_DEF/#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$SelectOrderBy2(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
         final NameFragmentRef prev = nameRef.getPrevFragment();
@@ -344,7 +331,7 @@ public class SelectStmtProcessor {
 
     }
 
-    @SyntaxTreePath("//..1$SelectStatement/..#GROUP_CLAUSE/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..#GROUP_CLAUSE/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$SelectGroupBy(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
         final NameFragmentRef prev = nameRef.getPrevFragment();
@@ -363,7 +350,7 @@ public class SelectStmtProcessor {
     }
 
 
-    @SyntaxTreePath("//..1$SelectStatement/..#GROUP_CLAUSE/..#FUNCTION_CALL//..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..#GROUP_CLAUSE/..#FUNCTION_CALL//..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$SelectGroupByFunc(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
         final NameFragmentRef prev = nameRef.getPrevFragment();
@@ -402,76 +389,47 @@ public class SelectStmtProcessor {
 
     }
 
-    @SyntaxTreePath("//..1$SelectStatement/..1#TABLE_REFERENCE_LIST_FROM ..#ERROR_TOKEN_A/#GROUP #C_MARKER")
+    @SyntaxTreePath("/..1#TABLE_REFERENCE_LIST_FROM ..#ERROR_TOKEN_A/#GROUP #C_MARKER")
     public void process$SelectGroupBy2(C_Context ctx, SelectStatement select) {
         // TODO - implement me
     }
 
-    @SyntaxTreePath("//..SelectStatement/..1#WHERE_CONDITION ..2#ERROR_TOKEN_A/#GROUP #C_MARKER")
+    @SyntaxTreePath("/..2#WHERE_CONDITION ..3#ERROR_TOKEN_A/#GROUP #C_MARKER")
     public void process$SelectWhere() {
         // TODO - implement me
     }
 
-    @SyntaxTreePath("//..1$SelectStatement/..#WHERE_CONDITION//..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..#WHERE_CONDITION//..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$SelectWhere1(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
         collectColumns(ctx, select, nameRef);
-//        VariantsProvider provider = ctx.getProvider();
-//        final NameFragmentRef prev = nameRef.getPrevFragment();
-//        final String prevText = prev != null ? prev.getText() : null;
-//
-//        provider.collectColumnVariants(select, prevText);
-//
-//        final List<LookupElement> variants = new ArrayList<LookupElement>();
-//        variants.addAll(provider.takeCollectedLookups());
-//
-//        for (LookupElement elem : variants) {
-//            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-//        }
     }
 
-    @SyntaxTreePath("//..1$SelectStatement/..#WHERE_CONDITION//..#RELATION_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..#WHERE_CONDITION//..#RELATION_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$SelectWhere2(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
         collectColumns(ctx, select, nameRef);
-//        VariantsProvider provider = ctx.getProvider();
-//        final NameFragmentRef prev = nameRef.getPrevFragment();
-//        final String prevText = prev != null ? prev.getText() : null;
-//
-//        provider.collectColumnVariants(select, prevText);
-//
-//        final List<LookupElement> variants = new ArrayList<LookupElement>();
-//        variants.addAll(provider.takeCollectedLookups());
-//
-//        for (LookupElement elem : variants) {
-//            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-//        }
     }
 
-    @SyntaxTreePath("//..1$SelectStatement/..#WHERE_CONDITION//..#LIKE_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..#WHERE_CONDITION//..#LIKE_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$SelectWhere3(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
         collectColumns(ctx, select, nameRef);
-//        VariantsProvider provider = ctx.getProvider();
-//        final NameFragmentRef prev = nameRef.getPrevFragment();
-//        final String prevText = prev != null ? prev.getText() : null;
-//
-//        provider.collectColumnVariants(select, prevText);
-//
-//        final List<LookupElement> variants = new ArrayList<LookupElement>();
-//        variants.addAll(provider.takeCollectedLookups());
-//
-//        for (LookupElement elem : variants) {
-//            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-//        }
+
     }
 
 
-    @SyntaxTreePath("//..1$SelectStatement/ ..2#TABLE_REFERENCE_LIST_FROM #WHERE_CONDITION/..#EXISTS_EXPR/..#SUBQUERY/..3$SelectStatement/#SELECT ..#EXPR_COLUMN/#VAR_REF/..4$NameFragmentRef/#C_MARKER")
-    public void process$SelectExistsExpr(C_Context ctx, SelectStatement select, ASTNode expr, SelectStatement subquery, NameFragmentRef nameRef) {
-        // TODO - implement me
-        int h = 1;
+    @SyntaxTreePath("/..#WHERE_CONDITION/..#EXISTS_EXPR//..$SelectStatement/#SELECT ..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/..#TABLE_REF/#C_MARKER")
+    public void process$SelectExistsTab(C_Context ctx, SelectStatement select) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
+        variants.addAll(provider.collectViewNameVariants(ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
     }
 
-    @SyntaxTreePath("//..1$SelectStatement/ ..#WHERE_CONDITION/..#EXISTS_EXPR/..#SUBQUERY/..3$SelectStatement/#SELECT ..#WHERE_CONDITION// ..#VAR_REF/..4$NameFragmentRef/#C_MARKER")
-    public void process$SelectWhereSubquery(C_Context ctx, SelectStatement select, SelectStatement subquery, NameFragmentRef nameRef) {
+    @SyntaxTreePath("/..#WHERE_CONDITION/..#EXISTS_EXPR//..2$SelectStatement/..#WHERE_CONDITION/..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectExistsExpr(C_Context ctx, SelectStatement select, SelectStatement subquery, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
         final NameFragmentRef prev = nameRef.getPrevFragment();
         final String prevText = prev != null ? prev.getText() : null;
@@ -487,37 +445,15 @@ public class SelectStmtProcessor {
         }
     }
 
-    @SyntaxTreePath("//1$SelectStatement 2#C_MARKER")
-    public void process$SelectAppender(C_Context ctx, SelectStatement select) {
-        // TODO - implement me
-    }
-
-    @SyntaxTreePath("//..1$SelectStatement/..#EXPR_COLUMN/#LAG_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#QUERY_PARTITION_CLAUSE/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$LagFunc(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
-        collectColumns(ctx, select, nameRef);
-    }
-
-    @SyntaxTreePath("//..1$SelectStatement/..#EXPR_COLUMN/#LAG_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$LagFuncArg(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
-        collectColumns(ctx, select, nameRef);
-    }
-
-    @SyntaxTreePath("//..1$SelectStatement/..#EXPR_COLUMN/#LEAD_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#QUERY_PARTITION_CLAUSE/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$LeadFunc(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
-        collectColumns(ctx, select, nameRef);
-    }
-
-    @SyntaxTreePath("//..1$SelectStatement/..#EXPR_COLUMN/#LEAD_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#ORDER_CLAUSE/..#SORTED_DEF/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$LeadFuncOrder(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
-        collectColumns(ctx, select, nameRef);
-    }
-
-    private void collectColumns(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
+/*
+    @SyntaxTreePath("/..#WHERE_CONDITION/..#EXISTS_EXPR/..#SUBQUERY/..2$SelectStatement/..#WHERE_CONDITION// ..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectWhereSubquery(C_Context ctx, SelectStatement select, SelectStatement subquery, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
         final NameFragmentRef prev = nameRef.getPrevFragment();
         final String prevText = prev != null ? prev.getText() : null;
 
         provider.collectColumnVariants(select, prevText);
+        provider.collectColumnVariants(subquery, prevText);
 
         final List<LookupElement> variants = new ArrayList<LookupElement>();
         variants.addAll(provider.takeCollectedLookups());
@@ -526,20 +462,42 @@ public class SelectStmtProcessor {
             ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
         }
     }
+*/
+
+    @SyntaxTreePath("/..#EXPR_COLUMN/#LAG_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#QUERY_PARTITION_CLAUSE/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$LagFunc(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
+        collectColumns(ctx, select, nameRef);
+    }
+
+    @SyntaxTreePath("/..#EXPR_COLUMN/#LAG_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$LagFuncArg(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
+        collectColumns(ctx, select, nameRef);
+    }
+
+    @SyntaxTreePath("/..#EXPR_COLUMN/#LEAD_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#QUERY_PARTITION_CLAUSE/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$LeadFunc(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
+        collectColumns(ctx, select, nameRef);
+    }
+
+    @SyntaxTreePath("/..#EXPR_COLUMN/#LEAD_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#ORDER_CLAUSE/..#SORTED_DEF/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$LeadFuncOrder(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
+        collectColumns(ctx, select, nameRef);
+    }
+
 
     // CASE WHEN EXPR
-    @SyntaxTreePath("//..1$SelectStatement/ ..#EXPR_COLUMN/#CASE_EXPRESSION_SRCH/..#RELATION_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/ ..#EXPR_COLUMN/#CASE_EXPRESSION_SRCH/..#RELATION_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$CaseSearchExpr(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
         collectColumns(ctx, select, nameRef);
     }
 
-    @SyntaxTreePath("//..1$SelectStatement/ ..#EXPR_COLUMN/#CASE_EXPRESSION_SRCH/..#RELATION_CONDITION//..#FUNCTION_CALL/..#CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/ ..#EXPR_COLUMN/#CASE_EXPRESSION_SRCH/..#RELATION_CONDITION//..#FUNCTION_CALL/..#CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$CaseSearchExprFuncCall(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
         collectColumns(ctx, select, nameRef);
     }
 
     // ANSI FROM STATEMENT
-    @SyntaxTreePath("//..1$SelectStatement/ ..#TABLE_REFERENCE_LIST_FROM/..#ANSI_JOIN_TAB_SPEC/..#ANSI_JOIN_TAB_CONDITION//..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/ ..#TABLE_REFERENCE_LIST_FROM/..#ANSI_JOIN_TAB_SPEC/..#ANSI_JOIN_TAB_CONDITION//..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$AnsiFrom(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
         collectColumns(ctx, select, nameRef);
     }
