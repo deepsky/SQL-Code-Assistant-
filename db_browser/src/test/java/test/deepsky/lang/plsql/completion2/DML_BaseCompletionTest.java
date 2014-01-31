@@ -108,7 +108,7 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
 
     public void testInsert$insert01() throws Exception {
         configureByFile(getFilePath());
-        assertLookup(myItems, "into");
+        assertLookup(myItems, "into", "values");
     }
 
     public void testInsert$insert1() throws Exception {
