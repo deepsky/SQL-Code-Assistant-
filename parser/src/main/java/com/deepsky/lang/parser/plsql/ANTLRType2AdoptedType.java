@@ -207,7 +207,6 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.CURRENT_OF_CLAUSE] = PLSqlTypesAdopted.CURRENT_OF_CLAUSE;
 		type2etype[PLSqlTokenTypes.DATATYPE_PARAM_INFO] = PLSqlTypesAdopted.DATATYPE_PARAM_INFO;
 		type2etype[PLSqlTokenTypes.ROWNUM] = PLSqlTypesAdopted.ROWNUM;
-		type2etype[PLSqlTokenTypes.COMMENT] = PLSqlTypesAdopted.COMMENT;
 		type2etype[PLSqlTokenTypes.EXEC_NAME_REF] = PLSqlTypesAdopted.EXEC_NAME_REF;
 		type2etype[PLSqlTokenTypes.TABLE_REF_WITH_LINK] = PLSqlTypesAdopted.TABLE_REF_WITH_LINK;
 		type2etype[PLSqlTokenTypes.COLUMN_CHECK_CONSTRAINT] = PLSqlTypesAdopted.COLUMN_CHECK_CONSTRAINT;
@@ -235,6 +234,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.VIEW_NAME_DDL] = PLSqlTypesAdopted.VIEW_NAME_DDL;
 		type2etype[PLSqlTokenTypes.MERGE_WHEN_COMMAND] = PLSqlTypesAdopted.MERGE_WHEN_COMMAND;
 		type2etype[PLSqlTokenTypes.TABLE_REFERENCE_LIST_FROM] = PLSqlTypesAdopted.TABLE_REFERENCE_LIST_FROM;
+		type2etype[PLSqlTokenTypes.COMMENT_STMT] = PLSqlTypesAdopted.COMMENT_STMT;
 		type2etype[PLSqlTokenTypes.ALTER_TRIGGER] = PLSqlTypesAdopted.ALTER_TRIGGER;
 		type2etype[PLSqlTokenTypes.SQLPLUS_SET] = PLSqlTypesAdopted.SQLPLUS_SET;
 		type2etype[PLSqlTokenTypes.ALTER_TABLE] = PLSqlTypesAdopted.ALTER_TABLE;

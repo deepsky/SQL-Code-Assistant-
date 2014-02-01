@@ -24,9 +24,17 @@
 package com.deepsky.lang.plsql.completion.processors;
 
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
+import com.deepsky.lang.plsql.completion.VariantsProvider;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
+import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
+import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
 
-public class DDLProcessor {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class DDLProcessor extends CompletionBase {
 
     @SyntaxTreePath("/..#CREATE_SEQUENCE/#CREATE #ERROR_TOKEN_A/#SEQUENCE 1#IDENTIFIER #C_MARKER")
     public void process$Sequence(C_Context context, ASTNode node) {
@@ -37,4 +45,71 @@ public class DDLProcessor {
     public void process$Table(C_Context context, ASTNode node) {
         // TODO - implement me
     }
+
+    @SyntaxTreePath("/..1#TABLE_DEF/#CREATE #TABLE ..#PK_SPEC//..#OWNER_COLUMN_NAME_LIST/..2$ColumnNameRef/#C_MARKER")
+    public void process$TablePKSpec(C_Context ctx, ASTNode node, ColumnNameRef ref) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectColumnNameRef(ref, ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+    @SyntaxTreePath("/..1#TABLE_DEF/#CREATE #TABLE ..#FK_SPEC//..#OWNER_COLUMN_NAME_LIST/..2$ColumnNameRef/#C_MARKER")
+    public void process$TableFKSpec(C_Context ctx, ASTNode node, ColumnNameRef ref) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectColumnNameRef(ref, ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+
+    @SyntaxTreePath("/..1$TableDefinition/#CREATE #TABLE ..#FK_SPEC/..#FOREIGN ..#REFERENCES #TABLE_REF/#C_MARKER")
+    public void process$TableFKSpecRefTab(C_Context ctx, TableDefinition tab) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
+
+        // Filter out a table which is a context of the FK specification
+        final String tableName = tab.getTableName();
+        Iterator<LookupElement> ite = variants.iterator();
+        while (ite.hasNext()) {
+            LookupElement e = ite.next();
+            if (e.getLookupString().equalsIgnoreCase(tableName)) {
+                ite.remove();
+            }
+        }
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+    @SyntaxTreePath("/..1#TABLE_DEF/#CREATE #TABLE ..#PARTITION_SPEC/#RANGE_PARTITION/..2$ColumnNameRef/#C_MARKER")
+    public void process$TablePartByRange(C_Context ctx, ASTNode node, ColumnNameRef ref) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectColumnNameRef(ref, ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+
+    @SyntaxTreePath("/..1#RENAME_TABLE/#RENAME #TABLE #ERROR_TOKEN_A/#C_MARKER")
+    public void process$RenameTable(C_Context context, ASTNode node) {
+        collectTableNames(context);
+    }
+
+    // rename table t1 to t2, <caret>
+    @SyntaxTreePath("/..1#RENAME_TABLE/#RENAME #TABLE ..#TABLE_NAME_DDL #COMMA #ERROR_TOKEN_A/#C_MARKER")
+    public void process$RenameTable2(C_Context context, ASTNode node) {
+        collectTableNames(context);
+    }
+
 }

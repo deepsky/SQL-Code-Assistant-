@@ -27,9 +27,9 @@ import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
 import com.deepsky.lang.plsql.psi.ColumnSpec;
-import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.deepsky.lang.plsql.psi.TableAlias;
+import com.deepsky.utils.StringUtils;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
 
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SyntaxTreePath("/..#ERROR_TOKEN_A")
-public class GenericProcessor {
+public class GenericProcessor extends CompletionBase {
 
     @SyntaxTreePath("/1#C_MARKER")
     public void process$Start(C_Context context, ASTNode node) {
@@ -160,5 +160,27 @@ public class GenericProcessor {
         // TODO - implement me
     }
 
+
+    @SyntaxTreePath("/#COMMENT #ON #TABLE #C_MARKER")
+    public void process$CommentOnTable(C_Context ctx) {
+        collectTableNames(ctx);
+    }
+
+    @SyntaxTreePath("/#COMMENT #ON #COLUMN #TABLE_REF/#C_MARKER")
+    public void process$CommentOnColumn(C_Context ctx) {
+        collectTableNames(ctx);
+    }
+
+    @SyntaxTreePath("/#COMMENT #ON #COLUMN 1#TABLE_REF #DOT #COLUMN_NAME_REF/#C_MARKER")
+    public void process$CommentOnColumn2(C_Context ctx, ASTNode tableRef) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+
+        String tableName = StringUtils.discloseDoubleQuotes(tableRef.getText());
+        variants.addAll(provider.collectColumnNames(tableName, ctx.getLookup()));
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
 }
 

@@ -101,6 +101,8 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         writer.println("import com.deepsky.lang.parser.plsql.PlSqlElementTypes;");
         writer.println("import com.intellij.lang.ASTNode;");
         writer.println("import com.deepsky.lang.plsql.psi.*;");
+        writer.println("import com.deepsky.lang.plsql.psi.ddl.*;");
+        writer.println("import com.deepsky.lang.plsql.psi.names.*;");
         writer.println("import com.deepsky.lang.common.PlSqlTokenTypes;");
         writer.println();
         writer.println("public class " + root.getProcessorClassName() + " extends CompletionProcessorBase {");

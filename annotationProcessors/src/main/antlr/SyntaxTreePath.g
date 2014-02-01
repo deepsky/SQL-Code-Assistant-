@@ -66,7 +66,7 @@ inner:
     ;
 
 symbol:
-    ((NUMBER)? (SHARP|DOLLAR))? IDENTIFIER
+    (EXCL)? ((NUMBER)? (SHARP|DOLLAR))? IDENTIFIER
     { #symbol = #([SYMBOL, "SYMBOL" ], #symbol);}
     ;
 
@@ -113,6 +113,7 @@ DOUBLE_SLASH : "//" ;
 EQ : '=' ;
 DOUBLEDOT: ".." ;
 VERTBAR : '|' ;
+EXCL : '!' ;
 
 
 

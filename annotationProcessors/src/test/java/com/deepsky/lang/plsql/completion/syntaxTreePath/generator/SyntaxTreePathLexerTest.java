@@ -123,6 +123,119 @@ public class SyntaxTreePathLexerTest {
         assertEquals(SyntaxTreePathTokenTypes.EOF, lexer.nextToken().getType());
     }
 
+    @Test
+    public void test_40() throws TokenStreamException {
+
+        String test = "/!1#Hello";
+        Reader r = new StringReader(test);
+        SyntaxTreePathLexer lexer = new SyntaxTreePathLexer(r);
+
+        Token t = lexer.nextToken();
+        assertEquals("/", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.SLASH, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("!", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.EXCL, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("1", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.NUMBER, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("#", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.SHARP, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("Hello", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.IDENTIFIER, t.getType());
+
+        assertEquals(SyntaxTreePathTokenTypes.EOF, lexer.nextToken().getType());
+    }
+
+    @Test
+    public void test_41() throws TokenStreamException {
+
+        String test = "/!#Hello";
+        Reader r = new StringReader(test);
+        SyntaxTreePathLexer lexer = new SyntaxTreePathLexer(r);
+
+        Token t = lexer.nextToken();
+        assertEquals("/", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.SLASH, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("!", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.EXCL, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("#", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.SHARP, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("Hello", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.IDENTIFIER, t.getType());
+
+        assertEquals(SyntaxTreePathTokenTypes.EOF, lexer.nextToken().getType());
+    }
+
+
+    @Test
+    public void test_42() throws TokenStreamException {
+
+        String test = "/!Hello";
+        Reader r = new StringReader(test);
+        SyntaxTreePathLexer lexer = new SyntaxTreePathLexer(r);
+
+        Token t = lexer.nextToken();
+        assertEquals("/", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.SLASH, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("!", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.EXCL, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("Hello", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.IDENTIFIER, t.getType());
+
+        assertEquals(SyntaxTreePathTokenTypes.EOF, lexer.nextToken().getType());
+    }
+
+    @Test
+    public void test_43() throws TokenStreamException {
+
+        String test = "/Hello ..!#World";
+        Reader r = new StringReader(test);
+        SyntaxTreePathLexer lexer = new SyntaxTreePathLexer(r);
+
+        Token t = lexer.nextToken();
+        assertEquals("/", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.SLASH, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("Hello", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.IDENTIFIER, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("..", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.DOUBLEDOT, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("!", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.EXCL, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("#", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.SHARP, t.getType());
+
+
+        t = lexer.nextToken();
+        assertEquals("World", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.IDENTIFIER, t.getType());
+
+        assertEquals(SyntaxTreePathTokenTypes.EOF, lexer.nextToken().getType());
+    }
 
     @Test
     public void test_5() throws TokenStreamException {

@@ -26,12 +26,13 @@ package com.deepsky.lang.plsql.completion.processors;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.deepsky.lang.plsql.psi.TableAlias;
 import com.intellij.codeInsight.lookup.LookupElement;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompletionBase {
+public abstract class CompletionBase {
 
     protected void collectColumns(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
@@ -48,4 +49,38 @@ public class CompletionBase {
         }
     }
 
+
+    protected void collectColumns(C_Context ctx, TableAlias tableName, boolean forceUsingTableAlias) {
+        VariantsProvider provider = ctx.getProvider();
+        provider.collectColumnNames(tableName, ctx.getLookup(), forceUsingTableAlias);
+
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.takeCollectedLookups());
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+
+    protected  void collectTableNames(C_Context ctx){
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+    protected  void collectTableViewNames(C_Context ctx){
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
+        variants.addAll(provider.collectViewNameVariants(ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
 }

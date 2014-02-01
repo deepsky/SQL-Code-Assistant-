@@ -534,7 +534,7 @@ public class PlSqlParserDefinition implements ParserDefinition {
             case PLSqlTokenTypes.ALTER_TABLE:
                 return new AlterTableImpl(node);
 
-            case PLSqlTokenTypes.COMMENT:
+            case PLSqlTokenTypes.COMMENT_STMT:
                 return new CommentImpl(node);
             case PLSqlTokenTypes.RANGE_PARTITION:
                 return new RangePartitionImpl(node);

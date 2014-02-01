@@ -205,7 +205,7 @@ tokens {
     ALTER_TABLE; ALTER_GENERIC; ALTER_TABLE_CONSTRAINT;
 
     CREATE_TEMP_TABLE;
-    COMMENT; COMMENT_STR;
+    COMMENT_STMT; COMMENT_STR;
     CREATE_INDEX;
     INSERT_INTO_SUBQUERY_COMMAND;
 
@@ -535,7 +535,7 @@ comment:
         ("table"! (schema_name DOT)? table_ref "is"! comment_string)
         | ("column"! table_ref DOT column_name_ref "is"! comment_string)
      ) (SEMI)?
-    {  __markRule(COMMENT);}
+    {  __markRule(COMMENT_STMT);}
     ;
 
 comment_string:

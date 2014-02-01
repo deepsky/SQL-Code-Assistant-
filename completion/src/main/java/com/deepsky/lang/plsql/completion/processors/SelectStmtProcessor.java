@@ -65,7 +65,7 @@ public class SelectStmtProcessor extends CompletionBase {
     }
 
     // select * from (select a, <caret>)
-    @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY/ ..#ERROR_TOKEN_A/#SELECT ..#EXPR_COLUMN #COMMA #ERROR_TOKEN_A/#C_MARKER")
+    @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY// ..#ERROR_TOKEN_A/#SELECT ..#EXPR_COLUMN #COMMA #ERROR_TOKEN_A/#C_MARKER")
     public void process$SelectFromSubqueryError() {
         // TODO - implement me
     }
@@ -412,7 +412,6 @@ public class SelectStmtProcessor extends CompletionBase {
     @SyntaxTreePath("/..#WHERE_CONDITION//..#LIKE_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$SelectWhere3(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
         collectColumns(ctx, select, nameRef);
-
     }
 
 
@@ -484,6 +483,10 @@ public class SelectStmtProcessor extends CompletionBase {
         collectColumns(ctx, select, nameRef);
     }
 
+    @SyntaxTreePath("//..#FROM_SUBQUERY//..2$SelectStatement/..#ORDER_CLAUSE/..#SORTED_DEF/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$NestedOrderBy(C_Context ctx, SelectStatement select0, SelectStatement select,NameFragmentRef nameRef) {
+        collectColumns(ctx, select, nameRef);
+    }
 
     // CASE WHEN EXPR
     @SyntaxTreePath("/ ..#EXPR_COLUMN/#CASE_EXPRESSION_SRCH/..#RELATION_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")

@@ -2763,7 +2763,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			
 			}
 			if ( inputState.guessing==0 ) {
-				__markRule(COMMENT);
+				__markRule(COMMENT_STMT);
 			}
 		}
 		catch (RecognitionException ex) {
@@ -33284,7 +33284,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		"ALTER_GENERIC",
 		"ALTER_TABLE_CONSTRAINT",
 		"CREATE_TEMP_TABLE",
-		"COMMENT",
+		"COMMENT_STMT",
 		"COMMENT_STR",
 		"CREATE_INDEX",
 		"INSERT_INTO_SUBQUERY_COMMAND",

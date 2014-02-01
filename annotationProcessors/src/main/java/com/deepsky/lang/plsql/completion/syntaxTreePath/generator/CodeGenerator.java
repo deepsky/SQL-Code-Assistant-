@@ -172,6 +172,7 @@ public class CodeGenerator {
         String ident = null;
         int pos = -1;
         boolean isDollar = true;
+        boolean isExcl = false;
         while (cur != null) {
             if (cur.getType() == SyntaxTreePathTokenTypes.NUMBER) {
                 pos = Integer.parseInt(cur.getText());
@@ -181,11 +182,13 @@ public class CodeGenerator {
                 isDollar = true;
             } else if (cur.getType() == SyntaxTreePathTokenTypes.IDENTIFIER) {
                 ident = cur.getText();
+            } else if (cur.getType() == SyntaxTreePathTokenTypes.EXCL) {
+                isExcl = true;
             }
             cur = cur.getNextSibling();
         }
 
-        pairs.add(new NamePosPair(ident, pos, isDollar));
+        pairs.add(new NamePosPair(ident, pos, isDollar, isExcl));
         return tnode.findOrAdd(isDollar, pos, ident);
     }
 
@@ -291,11 +294,13 @@ public class CodeGenerator {
         String name;
         int pos;
         boolean isDollar;
+        boolean isExcl;
 
-        public NamePosPair(String ident, int pos, boolean isDollar) {
+        public NamePosPair(String ident, int pos, boolean isDollar, boolean isExcl) {
             this.name = ident;
             this.pos = pos;
             this.isDollar = isDollar;
+            this.isExcl = isExcl;
         }
 
         public NamePosPair(String ident) {

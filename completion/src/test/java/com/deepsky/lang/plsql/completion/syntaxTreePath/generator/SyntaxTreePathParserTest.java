@@ -218,7 +218,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("// .. #ERROR_TOKEN_A / #SELECT .. #EXPR_COLUMN #COMMA #ERROR_TOKEN_A / #C_MARKER", context.getTreePath());
+        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #FROM_SUBQUERY // .. #ERROR_TOKEN_A / #SELECT .. #EXPR_COLUMN #COMMA #ERROR_TOKEN_A / #C_MARKER", context.getTreePath());
     }
 
     public void test_select_38() throws TokenStreamException, RecognitionException {
