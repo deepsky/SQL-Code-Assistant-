@@ -2,8 +2,9 @@ package com.deepsky.lang.plsql.completion;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.completion.legacy.logic.ObjectTreeParser;
-import com.deepsky.lang.plsql.completion.legacy.logic.TreePathBuilder;
-import com.deepsky.lang.plsql.completion.legacy.logic.TreePathImpl;
+import com.deepsky.lang.plsql.completion.logic.ASTTreeAdapter;
+import com.deepsky.lang.plsql.completion.logic.TreePathBuilder;
+import com.deepsky.lang.plsql.completion.logic.TreePathImpl;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.*;
 import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
 import com.deepsky.utils.StringUtils;
@@ -26,7 +27,7 @@ public abstract class AbstractCompletionTest extends TestCase { //PlSqlParser_Ab
     // --------------------------------------------------------------------------------------------------
     // --------------------------------------------------------------------------------------------------
     // --------------------------------------------------------------------------------------------------
-    private TreePath recovery22(ASTNode marker) {
+    private TreePath recovery(ASTNode marker) {
         TreePathBuilderImpl pathBuilder = new TreePathBuilderImpl();
         return ObjectTreeParser.parse(marker, pathBuilder);
     }
@@ -82,7 +83,7 @@ public abstract class AbstractCompletionTest extends TestCase { //PlSqlParser_Ab
 
         System.out.println("###  Restored tree:");
 //        TreePath path = recovery22(marker);
-        TreePath path = recovery2(marker);
+        TreePath path = ASTTreeAdapter.recovery2(marker);
         System.out.println(path.printPath());
 
 //        System.out.println("###  Original tree:");

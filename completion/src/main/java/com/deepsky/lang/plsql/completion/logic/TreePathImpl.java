@@ -1,4 +1,4 @@
-package com.deepsky.lang.plsql.completion.legacy.logic;
+package com.deepsky.lang.plsql.completion.logic;
 
 
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;

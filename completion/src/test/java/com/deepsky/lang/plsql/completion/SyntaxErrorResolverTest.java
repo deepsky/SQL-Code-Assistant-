@@ -4,7 +4,7 @@ package com.deepsky.lang.plsql.completion;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.completion.legacy.logic.ObjectTreeParser;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
-import com.deepsky.lang.plsql.completion.legacy.logic.TreePathBuilder;
+import com.deepsky.lang.plsql.completion.logic.TreePathBuilder;
 import com.intellij.lang.ASTNode;
 //import test.deepsky.lang.plsql.PlSqlParser_AbstractTest;
 

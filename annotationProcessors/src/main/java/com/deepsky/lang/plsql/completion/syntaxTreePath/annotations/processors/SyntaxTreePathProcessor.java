@@ -151,8 +151,8 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
         for (Map.Entry<String, List<String[]>> e : annots.entrySet()) {
             try {
                 FileObject fObject = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, pkgName, e.getKey() + ".txt");
-
-                Writer w = new FileWriter(new File(fObject.toUri()));
+                Writer w = fObject.openWriter();
+//                Writer w = new FileWriter(new File(fObject.toUri()));
                 CSVWriter writer = new CSVWriter(w, ',', '"');
 
                 for (String[] methodAnnotPair : e.getValue()) {

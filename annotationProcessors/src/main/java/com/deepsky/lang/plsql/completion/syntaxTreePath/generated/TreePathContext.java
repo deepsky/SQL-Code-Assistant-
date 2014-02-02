@@ -20,5 +20,5 @@ public interface TreePathContext {
 
     void setMetaInfoRef(int ref);
 
-    Object[] getMethodHandlerParameters();
+    Object[] getHandlerParameters();
 }

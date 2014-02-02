@@ -152,7 +152,7 @@ public abstract class CompletionProcessorBase {
         }
 
         @Override
-        public Object[] getMethodHandlerParameters() {
+        public Object[] getHandlerParameters() {
             int[] indices = CompletionProcessorBase.this.getMethodParamIndexes(metaInfoRef);
             if(indices.length == 0)
                 return new Object[0];
