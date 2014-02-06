@@ -62,6 +62,7 @@
                         <exclude>**/PLSQL_BaseCompletionTest.java</exclude>
                         <exclude>**/Select_BaseCompletionTest.java</exclude>
                         <exclude>**/CtrlStmt_BaseCompletionTest.java</exclude>
+                        <exclude>**/GenericCompletionTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

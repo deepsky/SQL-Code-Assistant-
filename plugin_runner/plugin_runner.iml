@@ -14,9 +14,9 @@
     <orderEntry type="module" module-name="database" scope="RUNTIME" />
     <orderEntry type="module" module-name="db_browser" scope="RUNTIME" />
     <orderEntry type="module" module-name="main" scope="RUNTIME" />
-    <orderEntry type="module" module-name="result_panel" />
-    <orderEntry type="module" module-name="annotations" />
-    <orderEntry type="module" module-name="completion" />
+    <orderEntry type="module" module-name="result_panel" scope="RUNTIME" />
+    <orderEntry type="module" module-name="annotations" scope="RUNTIME" />
+    <orderEntry type="module" module-name="completion" scope="RUNTIME" />
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>

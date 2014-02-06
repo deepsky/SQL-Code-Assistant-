@@ -25,27 +25,52 @@ package com.deepsky.lang.plsql.completion.processors;
 
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
+import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
 import com.deepsky.lang.plsql.psi.ColumnSpec;
+import com.deepsky.lang.plsql.psi.NameFragmentRef;
+import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.deepsky.lang.plsql.psi.TableAlias;
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.lang.ASTNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InsertStmtProcessor {
+@SyntaxTreePath("/..1#INSERT_COMMAND")
+public class InsertStmtProcessor extends CompletionBase {
 
-    @SyntaxTreePath("/..#INSERT_COMMAND/#INSERT #INTO 1$TableAlias #COLUMN_SPEC_LIST/..2$ColumnSpec/..#NAME_FRAGMENT/#C_MARKER")
-    public void insertColumnName(C_Context ctx, TableAlias t, ColumnSpec nameRef) {
-        VariantsProvider provider = ctx.getProvider();
-        provider.collectColumnNames(t, ctx.getLookup(), false);
+    @SyntaxTreePath("/#INSERT #INTO 1$TableAlias #COLUMN_SPEC_LIST/..2$ColumnSpec/..#NAME_FRAGMENT/#C_MARKER")
+    public void insertColumnName(C_Context ctx, ASTNode root, TableAlias t, ColumnSpec nameRef) {
+        collectColumns(ctx, t, false);
+    }
 
-        // TODO - filter out columns already existing in column list
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.takeCollectedLookups());
+    @SyntaxTreePath("/..#INTO 1$TableAlias #COLUMN_SPEC_LIST/..2$ColumnSpec/..#NAME_FRAGMENT/#C_MARKER")
+    public void insertInto(C_Context ctx, ASTNode root, TableAlias t, ColumnSpec nameRef) {
+        collectColumns(ctx, t, false);
+    }
 
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+    @SyntaxTreePath("/..#INTO #TABLE_ALIAS ..$SelectStatement/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
+    public void insertIntoFromSelect(C_Context ctx, ASTNode root) {
+        collectTableViewNames(ctx);
+    }
+
+    @SyntaxTreePath("/..#INTO #TABLE_ALIAS ..2$SelectStatement/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/..#ALIAS_NAME//3#C_MARKER")
+    public void insertIntoFromSelect2(C_Context ctx, ASTNode root, SelectStatement select, ASTNode marker) {
+        if(marker.getTextRange().getEndOffset() == root.getTextRange().getEndOffset()){
+            // Marker is the last element of the statement
+            ctx.addElement(KeywordLookupElement.create("where"));
+            completeStart(ctx);
+        } else {
+            // Marker is in the middle of the statement
+            // Check whether WHERE clause exists
+            if(select.getWhereCondition() == null)
+                ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("where"));
         }
+    }
+
+    @SyntaxTreePath("/..#INTO #TABLE_ALIAS ..2$SelectStatement/..#WHERE_CONDITION//..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void insertIntoFromSelectVarRef(C_Context ctx, ASTNode root, SelectStatement select, NameFragmentRef nameRef) {
+        collectColumns(ctx, select, nameRef);
     }
 
 }

@@ -236,8 +236,8 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / .. #ALIAS_NAME / #ALIAS_IDENT / #C_MARKER", context.getTreePath());
-        assertEquals(1, context.getHandlerParameters().length);
+        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / .. #ALIAS_NAME / #ALIAS_IDENT / 2#C_MARKER", context.getTreePath());
+        assertEquals(2, context.getHandlerParameters().length);
         assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
     }
 
@@ -426,6 +426,45 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
     }
 
 
+    public void test5_1() throws TokenStreamException, RecognitionException {
+        TreePath path = parseScript1("select 1 from dual; create table abc( id number); insert <caret> ");
+        CompletionProcessor2 proc = new CompletionProcessor2(path);
+        assertTrue(proc.process());
+
+        TreePathContext context = proc.getContext();
+
+        assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #C_MARKER", context.getTreePath());
+        assertEquals(0, context.getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getMeta().getClassName());
+        assertEquals("process$InsertInto", context.getMeta().getMethodName());
+    }
+
+    public void test5_2() throws TokenStreamException, RecognitionException {
+        TreePath path = parseScript1("select 1 from dual; create table abc( id number); insert into <caret> ");
+        CompletionProcessor2 proc = new CompletionProcessor2(path);
+        assertTrue(proc.process());
+
+        TreePathContext context = proc.getContext();
+
+        assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #INTO TableAlias / #TABLE_REF / #C_MARKER", context.getTreePath());
+        assertEquals(0, context.getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getMeta().getClassName());
+        assertEquals("process$InsertIntoTab", context.getMeta().getMethodName());
+    }
+
+
+    public void test5_3() throws TokenStreamException, RecognitionException {
+        TreePath path = parseScript1("select 1 from dual; create table abc( id number); insert into tab <caret> ");
+        CompletionProcessor2 proc = new CompletionProcessor2(path);
+        assertTrue(proc.process());
+
+        TreePathContext context = proc.getContext();
+
+        assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #INTO 1$TableAlias / .. #ALIAS_NAME / #ALIAS_IDENT / #C_MARKER", context.getTreePath());
+        assertEquals(1, context.getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getMeta().getClassName());
+        assertEquals("process$InsertIntoTab3", context.getMeta().getMethodName());
+    }
 
     protected String offset(int offset) {
         StringBuilder b = new StringBuilder();

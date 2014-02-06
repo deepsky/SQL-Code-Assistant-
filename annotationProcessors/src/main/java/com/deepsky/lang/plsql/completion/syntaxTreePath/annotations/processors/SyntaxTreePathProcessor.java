@@ -151,7 +151,7 @@ public class SyntaxTreePathProcessor extends AbstractProcessor {
                         }
                         try {
                             String className = f.getName().replaceFirst("\\.txt$", "");
-                            codeGen.buildTree(className, row);
+                            codeGen.addPath(className, row);
                         } catch (RecognitionException e1) {
                             e1.printStackTrace();
                         } catch (TokenStreamException e1) {

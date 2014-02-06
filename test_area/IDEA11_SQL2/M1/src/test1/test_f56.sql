@@ -270,6 +270,7 @@ AS -- package body
         PRAGMA AUTONOMOUS_TRANSACTION;
         new_sal NUMBER(8, 2);
     BEGIN
+
         UPDATE employees SET salary = salary + sal_raise WHERE employee_id = emp_id
         ;
         COMMIT;
@@ -277,9 +278,11 @@ AS -- package body
         FROM employees
         WHERE employee_id = emp_id;
 
-        RETURN new_sal;
+
+        RETURN ;
     END raise_salary
         ;
+
 
 END emp_actions;
 /

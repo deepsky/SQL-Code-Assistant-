@@ -24,6 +24,11 @@
 package com.deepsky.lang.plsql.completion.processors;
 
 import com.deepsky.lang.plsql.completion.VariantsProvider;
+import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.UpdateLookupElement;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.deepsky.lang.plsql.psi.TableAlias;
@@ -83,4 +88,21 @@ public abstract class CompletionBase {
             ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
         }
     }
+
+    protected void completeStart(C_Context ctx) {
+//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("select"));
+//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("insert"));
+//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("update"));
+//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("delete"));
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(SelectLookupElement.create());
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(SelectLookupElement.createSelectFromSelect());
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(InsertLookupElement.create());
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(UpdateLookupElement.create());
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(DeleteLookupElement.create());
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("create"));
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("drop"));
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("alter"));
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("comment"));
+    }
+
 }

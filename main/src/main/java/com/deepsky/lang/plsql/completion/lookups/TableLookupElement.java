@@ -38,8 +38,8 @@ public class TableLookupElement <T extends LookupElement> extends LookupElementD
 
     public static TableLookupElement create(String name, Icon icon){
         LookupElement e = LookupElementBuilder.create(name)
-                            .setIcon(icon)
-                            .setCaseSensitive(false);
+                            .withIcon(icon)
+                            .withCaseSensitivity(false);
 
         return new TableLookupElement<LookupElement>(e);
     }

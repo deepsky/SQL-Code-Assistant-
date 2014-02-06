@@ -46,13 +46,25 @@ public class CodeGenerator {
     private List<NamePosPair> pairs = null;
     private String className;
 
+    /**
+     * @param className class name of the completion path processor
+     */
     public CodeGenerator(String className){
         this.className = className;
     }
 
-    public void buildTree(String className, String methodName, String text) throws RecognitionException, TokenStreamException {
-        System.err.println("Parse: [" + text + "] method: " + methodName);
-        AST ast = parse(text);
+
+    /**
+     * Add syntax tree path to the storage
+     * @param path      syntax tree path
+     * @param className     class where path is defined
+     * @param methodName    method the path is applied for
+     * @param args          method arguments (class names)
+     * @throws RecognitionException
+     * @throws TokenStreamException
+     */
+    private void addPath(String path, String className, String methodName, String[] args) throws RecognitionException, TokenStreamException {
+        AST ast = parse(path);
 
         pairs = new ArrayList<NamePosPair>();
         StringNode node = parseStartRule(ast);
@@ -75,44 +87,22 @@ public class CodeGenerator {
             masterNode.classMethodPair.add(new String[]{
                     className==null? "": className,
                     methodName==null? "": methodName});
-        }
-    }
-
-
-    public void buildTree(String className, String[] args) throws RecognitionException, TokenStreamException {
-//        System.err.println("Parse: [" + args[1] + "] method: " + args[0]);
-        AST ast = parse(args[1]);
-
-        pairs = new ArrayList<NamePosPair>();
-        StringNode node = parseStartRule(ast);
-
-        // Check added tree on duplication
-        boolean duplicateFound = false;
-        String purePath = buildTreePath(pairs, false);
-        for(List<NamePosPair> p: masterNode.pairMap){
-            if(purePath.equals(buildTreePath(p, false))){
-                // Duplicate found!
-                // TODO - report error
-                duplicateFound = true;
-                break;
-            }
-        }
-
-        if(!duplicateFound){
-            node.setMetaInfoRef(masterNode.pairMap.size());
-            masterNode.pairMap.add(pairs);
-            masterNode.classMethodPair.add(new String[]{
-                    className==null? "": className,
-                    args[0]==null? "": args[0]});
 
             // Save parameters for the method above
-            String[] methodParams = new String[args.length-2];
-            for(int i = 2; i<args.length; i++){
-                methodParams[i-2] = args[i];
+            String[] methodParams = new String[args.length];
+            for(int i = 0; i<args.length; i++){
+                methodParams[i] = args[i];
             }
             masterNode.methodParamTypes.add(methodParams);
         }
     }
+
+    public void addPath(String className, String[] args) throws RecognitionException, TokenStreamException {
+        String[] methodArgs = new String[args.length -2];
+        System.arraycopy(args, 2, methodArgs, 0, args.length-2);
+        addPath(args[1], className, args[0], methodArgs);
+    }
+
 
     private AST parse(String text) throws TokenStreamException, RecognitionException {
         Reader r = new StringReader(text);
@@ -197,23 +187,23 @@ public class CodeGenerator {
         StringBuilder sb = new StringBuilder();
         for(NamePosPair pair: p){
             if(withPrefix){
-                if(pair.pos == -2)
-                    sb.append(pair.name).append(" ");
-                else if(pair.pos == -1){
+                if(pair.isExcl){
+                    sb.append("!");
+                }
+                if(pair.pos == -2){
+                    // do nothing
+                } else if(pair.pos == -1){
                     if(!pair.isDollar){
                         sb.append("#");
                     }
-                    sb.append(pair.name).append(" ");
-                }
-                else {
+                } else {
                     if(!pair.isDollar){
                         sb.append(pair.pos).append("#");
                     } else {
                         sb.append(pair.pos).append("$");
                     }
-
-                    sb.append(pair.name).append(" ");
                 }
+                sb.append(pair.name).append(" ");
 
             } else {
                 sb.append(pair.name).append(" ");

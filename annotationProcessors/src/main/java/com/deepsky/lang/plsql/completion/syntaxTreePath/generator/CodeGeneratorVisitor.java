@@ -627,7 +627,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
     private void generateMethodComment(TNode node) {
         writer.println("/*");
-        node.accept(new TNodePrinterVisitor(writer));
+        node.accept(new TNodePrintVisitor(writer));
         writer.println("\n */");
     }
 
@@ -643,7 +643,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
             if (equals) {
                 return "o instanceof ASTNode && ((ASTNode)o).getPsi() instanceof " + node.getName();
             } else {
-                return "o instanceof ASTNode && !(((ASTNode)o).getPsi() instanceof " + node.getName() + ")";
+                return "!(o instanceof ASTNode) || !(((ASTNode)o).getPsi() instanceof " + node.getName() + ")";
             }
         } else {
             StringBuilder sb = new StringBuilder();

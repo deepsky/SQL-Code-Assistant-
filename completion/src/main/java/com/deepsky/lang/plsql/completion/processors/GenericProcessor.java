@@ -26,9 +26,13 @@ package com.deepsky.lang.plsql.completion.processors;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.CommentLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.psi.ColumnSpec;
+import com.deepsky.lang.plsql.psi.ColumnSpecList;
 import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.deepsky.lang.plsql.psi.TableAlias;
+import com.deepsky.lang.plsql.psi.ddl.AlterTable;
 import com.deepsky.utils.StringUtils;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
@@ -40,24 +44,24 @@ import java.util.List;
 public class GenericProcessor extends CompletionBase {
 
     @SyntaxTreePath("/1#C_MARKER")
-    public void process$Start(C_Context context, ASTNode node) {
-        // TODO - implement me
+    public void process$Start(C_Context ctx, ASTNode node) {
+        completeStart(ctx);
     }
 
 
     @SyntaxTreePath("/..#SEMI #C_MARKER")
-    public void process$Start3(C_Context context, ASTNode node) {
+    public void process$Start3(C_Context context) {
         // TODO - implement me
     }
 
-    @SyntaxTreePath("/..#ALTER_TABLE #C_MARKER")
-    public void process$Start4(C_Context context, ASTNode node) {
+    @SyntaxTreePath("/..1$AlterTable #C_MARKER")
+    public void process$Start4(C_Context context, AlterTable node) {
         // TODO - implement me
     }
 
     @SyntaxTreePath("/#DELETE #FROM 1#TABLE_ALIAS ..#WHERE_CONDITION #C_MARKER")
     public void process$Start5(C_Context context, ASTNode node) {
-        // TODO - implement me
+        completeStart(context);
     }
 
     @SyntaxTreePath("/#CREATE #SEQUENCE 1#SEQUENCE_NAME .. #C_MARKER")
@@ -69,22 +73,48 @@ public class GenericProcessor extends CompletionBase {
     @SyntaxTreePath("/#INSERT #C_MARKER")
     public void process$InsertInto(C_Context ctx) {
         ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("into"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("values"));
     }
 
     // INSERT related
-    @SyntaxTreePath("/#INSERT #INTO #TABLE_ALIAS/#TABLE_REF/#C_MARKER")
+    @SyntaxTreePath("/#INSERT #INTO $TableAlias/#TABLE_REF/#C_MARKER")
     public void process$InsertIntoTab(C_Context ctx) {
-        VariantsProvider provider = ctx.getProvider();
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
-
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-        }
+        collectTableNames(ctx);
     }
 
-    @SyntaxTreePath("/#INSERT #INTO 1$TableAlias #COLUMN_SPEC_LIST/..2$ColumnSpec/..#NAME_FRAGMENT/#C_MARKER")
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#INSERT #INTO $TableAlias/#TABLE_REF/#C_MARKER")
+    public void process$InsertIntoTab2(C_Context ctx) {
+        collectTableNames(ctx);
+    }
+
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#UPDATE $TableAlias/#TABLE_REF/#C_MARKER")
+    public void process$UpdateTab(C_Context ctx) {
+        collectTableNames(ctx);
+    }
+
+    // insert into tab <caret>
+    @SyntaxTreePath("/#INSERT #INTO 1$TableAlias/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
+    public void process$InsertIntoTab3(C_Context ctx, TableAlias tableAlias) {
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(
+                InsertLookupElement.createInsertIntoTab(ctx.getProvider(), tableAlias.getTableName()));
+    }
+
+    // insert into tab <caret>
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#INSERT #INTO 1$TableAlias/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
+    public void process$InsertIntoTab4(C_Context ctx, TableAlias ta) {
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(
+                InsertLookupElement.createInsertIntoTabColumnList(ctx.getProvider(), ta.getTableName()));
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(
+                InsertLookupElement.createInsertIntoTab(ctx.getProvider(), ta.getTableName()));
+    }
+
+
+    // insert into tab <caret>
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#INSERT #INTO 1$TableAlias $ColumnSpecList/..$ColumnSpec/..#NAME_FRAGMENT/#C_MARKER")
+    public void process$InsertIntoTabColumn(C_Context ctx, TableAlias ta) {
+        collectColumns(ctx, ta, false);
+    }
+
+    @SyntaxTreePath("/#INSERT #INTO 1$TableAlias $ColumnSpecList/..2$ColumnSpec/..#NAME_FRAGMENT/#C_MARKER")
     public void process$InsertColumnName(C_Context ctx, TableAlias t, ColumnSpec nameRef) {
         VariantsProvider provider = ctx.getProvider();
         provider.collectColumnNames(t, ctx.getLookup(), false);
@@ -98,10 +128,11 @@ public class GenericProcessor extends CompletionBase {
         }
     }
 
-    @SyntaxTreePath("/#INSERT #INTO ..#COLUMN_SPEC_LIST #C_MARKER")
-    public void process$InsertValues(C_Context ctx) {
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("select"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("values"));
+    @SyntaxTreePath("/#INSERT #INTO 1$TableAlias 2$ColumnSpecList #C_MARKER")
+    public void process$InsertValues(C_Context ctx,TableAlias ta, ColumnSpecList list) {
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(InsertLookupElement.createInsertFromSelect(ta.getTableName(), list));
+//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("select"));
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("values", true));
     }
 
     @SyntaxTreePath("/#SELECT #ASTERISK 1#C_MARKER")
@@ -160,6 +191,15 @@ public class GenericProcessor extends CompletionBase {
         // TODO - implement me
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     COMMENT
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @SyntaxTreePath("/#COMMENT #C_MARKER")
+    public void process$Comment(C_Context ctx) {
+        ctx.addElement(CommentLookupElement.createOnColumn());
+        ctx.addElement(CommentLookupElement.createOnTable());
+    }
 
     @SyntaxTreePath("/#COMMENT #ON #TABLE #C_MARKER")
     public void process$CommentOnTable(C_Context ctx) {
@@ -171,6 +211,22 @@ public class GenericProcessor extends CompletionBase {
         collectTableNames(ctx);
     }
 
+    @SyntaxTreePath("/#COMMENT #ON #COLUMN 1#TABLE_REF #DOT 2#COLUMN_NAME_REF #C_MARKER")
+    public void process$CommentOnColumnTail(C_Context ctx, ASTNode tabRef, ASTNode columnRef) {
+        ctx.addElement(CommentLookupElement.createTail(tabRef.getText(), columnRef.getText()));
+    }
+
+    @SyntaxTreePath("/#COMMENT #ON #TABLE 1#TABLE_REF #C_MARKER")
+    public void process$CommentOnTableTail(C_Context ctx, ASTNode tabRef) {
+        ctx.addElement(CommentLookupElement.createTail(tabRef.getText(), null));
+    }
+
+    @SyntaxTreePath("/#COMMENT #ON #TABLE 1#IDENTIFIER #C_MARKER")
+    public void process$CommentOnTableTail2(C_Context ctx, ASTNode tabRef) {
+        ctx.addElement(CommentLookupElement.createTail(tabRef.getText(), null));
+    }
+
+    // COMMENT ON COLUMN XSL_RPT_PARAM_T.ID IS 'Unique ID for each record created in this table.'
     @SyntaxTreePath("/#COMMENT #ON #COLUMN 1#TABLE_REF #DOT #COLUMN_NAME_REF/#C_MARKER")
     public void process$CommentOnColumn2(C_Context ctx, ASTNode tableRef) {
         VariantsProvider provider = ctx.getProvider();
@@ -181,6 +237,47 @@ public class GenericProcessor extends CompletionBase {
         for (LookupElement elem : variants) {
             ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
         }
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     UPDATE
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND #C_MARKER")
+    public void process$UpdateStart(C_Context ctx) {
+        completeStart(ctx);
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("where"));
+        // TODO implement more case
+    }
+
+    @SyntaxTreePath("/#INSERT_COMMAND #C_MARKER")
+    public void process$InsertStart(C_Context ctx) {
+        completeStart(ctx);
+    }
+
+
+    @SyntaxTreePath("/#DROP #TABLE #IDENTIFIER #C_MARKER")
+    public void process$DropTableStart(C_Context ctx) {
+        completeStart(ctx);
+        // TODO implement more case
+    }
+
+    @SyntaxTreePath("/#DROP #VIEW #IDENTIFIER #C_MARKER")
+    public void process$DropViewStart(C_Context ctx) {
+        completeStart(ctx);
+        // TODO implement more case
+    }
+
+    @SyntaxTreePath("/#DROP #SEQUENCE #IDENTIFIER #C_MARKER")
+    public void process$DropSeqStart(C_Context ctx) {
+        completeStart(ctx);
+        // TODO implement more case
+    }
+
+    @SyntaxTreePath("/#DROP #INDEX #IDENTIFIER #C_MARKER")
+    public void process$DropIndexStart(C_Context ctx) {
+        completeStart(ctx);
+        // TODO implement more case
     }
 }
 

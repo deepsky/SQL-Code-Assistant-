@@ -97,7 +97,7 @@ public class UpdateStmtProcessor extends CompletionBase {
     }
 
     @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$UpdateColumnVar2(C_Context ctx, TableAlias t) {
+    public void process$UpdateColumnVar2(C_Context ctx, TableAlias t, NameFragmentRef nameRef) {
     }
 
     @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET ..#WHERE_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")

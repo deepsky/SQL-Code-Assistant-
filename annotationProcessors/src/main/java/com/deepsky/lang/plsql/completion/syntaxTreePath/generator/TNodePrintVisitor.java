@@ -28,12 +28,12 @@ import com.deepsky.lang.plsql.completion.syntaxTreePath.structures.*;
 import java.util.Stack;
 
 
-public class TNodePrinterVisitor implements TNodeVisitor {
+public class TNodePrintVisitor implements TNodeVisitor {
     WriterAdapter writer;
     int offset = 0;
     Stack<Boolean> lfStack = new Stack<Boolean>();
 
-    public TNodePrinterVisitor(WriterAdapter writer){
+    public TNodePrintVisitor(WriterAdapter writer){
         this.writer = writer;
         lfStack.push(false);
     }

@@ -35,6 +35,7 @@ import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 import com.deepsky.lang.plsql.sqlIndex.AbstractSchema;
 import com.deepsky.utils.StringUtils;
 import com.intellij.codeInsight.completion.*;
+import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
@@ -97,18 +98,17 @@ public class MyCompletionContributor extends CompletionContributor {
                 caller = buildInvoker(metaInfo);
                 C_Context cContext = new C_Context() {
                     @Override
-                    public String getLookup() {
-                        return lookupStr;
-                    }
+                    public String getLookup() {return lookupStr;}
 
                     @Override
-                    public CompletionResultSet getResultSet() {
-                        return result;
-                    }
+                    public CompletionResultSet getResultSet() {return result;}
 
                     @Override
-                    public VariantsProvider getProvider() {
-                        return provider;
+                    public VariantsProvider getProvider() {return provider;}
+
+                    @Override
+                    public void addElement(@NotNull LookupElement element) {
+                        result.withPrefixMatcher(lookupStr).addElement(element);
                     }
                 };
 

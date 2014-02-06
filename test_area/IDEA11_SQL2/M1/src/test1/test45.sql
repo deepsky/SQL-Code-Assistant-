@@ -1,3 +1,7 @@
+create package BD as
+
+end;
+
 create table y
 (
     d BLOB,

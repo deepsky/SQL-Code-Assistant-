@@ -26,6 +26,7 @@ package com.deepsky.lang.plsql.completion.processors;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.GenericLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.validation.ValidationException;
@@ -33,6 +34,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 
+import java.lang.reflect.Proxy;
 import java.util.*;
 
 @SyntaxTreePath("/..1$SelectStatement")
@@ -145,9 +147,23 @@ public class SelectStmtProcessor extends CompletionBase {
         // TODO - implement me
     }
 
-    @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
-    public void process$SelectTabAliasName() {
-        // TODO - implement me
+    @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/..#ALIAS_NAME/#ALIAS_IDENT/2#C_MARKER")
+    public void process$SelectTabAliasName(C_Context ctx, SelectStatement select, ASTNode caret) {
+
+        final int end = select.getNode().getLastChildNode().getTextRange().getEndOffset();
+        final ASTNode lastLeaf = select.getNode().findLeafElementAt(end-1);
+        if( lastLeaf == caret){
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("select"));
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("insert"));
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("update"));
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("delete"));
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("create"));
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("drop"));
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("alter"));
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("comment"));
+        } else {
+            // TODO - implement me
+        }
     }
 
     @SyntaxTreePath("/ ..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY/#SUBQUERY/#OPEN_PAREN #ERROR_TOKEN_A/2#C_MARKER")

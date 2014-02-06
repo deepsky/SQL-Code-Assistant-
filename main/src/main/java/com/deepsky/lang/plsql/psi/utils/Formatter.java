@@ -32,6 +32,8 @@ import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.ExecutableDescriptor;
 
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class Formatter {
 
@@ -543,5 +545,20 @@ public class Formatter {
         }
 
         return bld.length()>0? "(" + bld.toString() + ")": "";
+    }
+
+    public static String formatColumnSpecList(List<String> columns, int maxLength) {
+        StringBuilder b = new StringBuilder();
+        for(int i=0; i<columns.size(); i++){
+            b.append(columns.get(i));
+            if(i < columns.size()-1){
+                b.append(",");
+                if(b.length() + columns.get(i+1).length() > maxLength){
+                    b.append("..");
+                    break;
+                }
+            }
+        }
+        return b.toString();
     }
 }

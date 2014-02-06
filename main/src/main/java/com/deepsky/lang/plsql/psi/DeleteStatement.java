@@ -26,8 +26,12 @@
 package com.deepsky.lang.plsql.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface DeleteStatement extends Statement {
     @NotNull
     TableAlias getTargetTable();
+
+    @Nullable
+    WhereCondition getWhereCondition();
 }

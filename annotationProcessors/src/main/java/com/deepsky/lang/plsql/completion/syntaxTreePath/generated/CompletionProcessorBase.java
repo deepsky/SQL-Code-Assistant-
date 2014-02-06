@@ -199,7 +199,17 @@ public abstract class CompletionProcessorBase {
                 for(int i = 0; i<markerList.size() && indexPos < indices.length; i++){
                     if(i == indices[indexPos]){
                         MarkerImpl m = markerList.get(i);
-                        out[indexPos] = m.isPsi? m.node.getPsi(): m.node;
+                        ASTNode target = m.node;
+                        if(i == markerList.size() -1){
+                            // Process the C_MARKER case, C_MARKER is a wrapper for the real object
+                            if(m.element.equalsIgnoreCase("#C_MARKER")){
+                                InvocationHandler h = Proxy.getInvocationHandler(m.node);
+                                if(h instanceof ASTNodeProxy){
+                                    target = ((ASTNodeProxy)h).target;
+                                }
+                            }
+                        }
+                        out[indexPos] = m.isPsi? target.getPsi(): target;
                         indexPos++;
                     }
                 }

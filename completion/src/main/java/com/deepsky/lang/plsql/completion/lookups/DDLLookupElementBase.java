@@ -21,17 +21,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.completion.processors;
+package com.deepsky.lang.plsql.completion.lookups;
 
-import com.deepsky.lang.plsql.completion.VariantsProvider;
-import com.intellij.codeInsight.completion.CompletionResultSet;
+import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.codeInsight.lookup.LookupElementDecorator;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiDocumentManager;
 
-public interface C_Context {
-    String getLookup();
-    CompletionResultSet getResultSet();
+public abstract class DDLLookupElementBase<T extends LookupElement> extends LookupElementDecorator<T> {
+    protected DDLLookupElementBase(T delegate) {
+        super(delegate);
+    }
 
-    VariantsProvider getProvider();
-    void addElement(@NotNull LookupElement element);
+    public static void emulateInsertion(LookupElement item, int offset, InsertionContext context) {
+        final Editor editor = context.getEditor();
+        final Document document = editor.getDocument();
+        final String lookupString = item.getLookupString();
+
+        document.insertString(offset, lookupString);
+        editor.getCaretModel().moveToOffset(context.getTailOffset());
+        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+    }
+
 }
