@@ -30,11 +30,13 @@ public class StringNode extends TNode {
     private boolean isDollar = true;
     private int pos =-1;
     private int metaInfoRef;
+    private boolean negative;
 
-    public StringNode(boolean isDollar, int pos, String name){
+    public StringNode(boolean isDollar, int pos, String name, boolean negative){
         super(name);
         this.isDollar = isDollar;
         this.pos = pos;
+        this.negative = negative;
     }
 
     public StringNode(String name){
@@ -80,5 +82,9 @@ public class StringNode extends TNode {
 
     public int getMetaInfoRef() {
         return metaInfoRef;
+    }
+
+    public boolean isNegative() {
+        return negative;
     }
 }

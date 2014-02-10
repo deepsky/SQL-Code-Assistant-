@@ -84,7 +84,7 @@ public class ASTTreeAdapter {
     private static void recoveryDown(ASTNode node, TreePathBuilder nodeProcessor) {
         ASTNode prev = node;
         while (prev != null) {
-            if (prev.getElementType() != PlSqlTokenTypes.WS) {
+            if (prev.getElementType() != PlSqlTokenTypes.WS && prev.getElementType() != PlSqlTokenTypes.LF && prev.getElementType() != TokenType.WHITE_SPACE) {
                 nodeProcessor.addNode(prev);
             }
             prev = prev.getTreePrev();

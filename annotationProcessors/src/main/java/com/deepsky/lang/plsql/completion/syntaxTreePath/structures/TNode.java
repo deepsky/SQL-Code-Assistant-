@@ -116,20 +116,20 @@ public abstract class TNode {
         return node;
     }
 
-    public TNode findOrAdd(boolean isDollar, int pos, String ident) {
+    public TNode findOrAdd(boolean isDollar, int pos, String ident, boolean isNegative) {
         for(TNode child: children){
             if(child.name.equals(ident) && child instanceof StringNode){
                 StringNode sNode = (StringNode) child;
                 if((sNode.isDollar() && isDollar) || (!sNode.isDollar() && !isDollar)){
-                    return child;
+                    if((sNode.isNegative() && isNegative) || (!sNode.isNegative() && !isNegative))
+                        return child;
                 } else {
                     // TODO different nodes with same name!!! Report error
                 }
-
             }
         }
 
-        TNode node = new StringNode(isDollar, pos, ident);
+        TNode node = new StringNode(isDollar, pos, ident, isNegative);
         children.add(node);
         return node;
     }

@@ -25,6 +25,7 @@ package com.deepsky.lang.plsql.completion.processors;
 
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
 import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
@@ -32,12 +33,24 @@ import com.deepsky.lang.plsql.completion.lookups.dml.UpdateLookupElement;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.deepsky.lang.plsql.psi.TableAlias;
+import com.intellij.codeInsight.completion.InsertHandler;
+import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiDocumentManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class CompletionBase {
+
+    protected boolean is2ndLatest(@NotNull ASTNode root, @NotNull ASTNode child){
+        return child.getTextRange().getEndOffset() == root.getTextRange().getEndOffset();
+    }
+
 
     protected void collectColumns(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
@@ -63,7 +76,7 @@ public abstract class CompletionBase {
         variants.addAll(provider.takeCollectedLookups());
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
@@ -72,6 +85,26 @@ public abstract class CompletionBase {
         VariantsProvider provider = ctx.getProvider();
         final List<LookupElement> variants = new ArrayList<LookupElement>();
         variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+    protected  void collectTableNamesFinalize(C_Context ctx){
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectTableNameVariants(ctx.getLookup(), new InsertHandler<LookupElement>() {
+            @Override
+            public void handleInsert(InsertionContext context, LookupElement item) {
+                final Editor editor = context.getEditor();
+                String prefix = item.getLookupString() + ";";
+                editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                editor.getCaretModel().moveToOffset(context.getTailOffset());
+                final Document document = editor.getDocument();
+                PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+            }
+        }));
 
         for (LookupElement elem : variants) {
             ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);

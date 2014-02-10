@@ -81,4 +81,21 @@ public class KeywordLookupElement  <T extends LookupElement> extends LookupEleme
 
         return new KeywordLookupElement<LookupElement>(e);
     }
+
+    public static KeywordLookupElement create(final String name, boolean isBold, InsertHandler<LookupElement> insertHandler ){
+
+        LookupElement e;
+        if(insertHandler != null){
+            e = LookupElementBuilder.create(name)
+                    .withCaseSensitivity(false)
+                    .withBoldness(isBold)
+                    .withInsertHandler(insertHandler);
+        } else {
+            e = LookupElementBuilder.create(name)
+                    .withCaseSensitivity(false)
+                    .withBoldness(isBold);
+        }
+
+        return new KeywordLookupElement<LookupElement>(e);
+    }
 }

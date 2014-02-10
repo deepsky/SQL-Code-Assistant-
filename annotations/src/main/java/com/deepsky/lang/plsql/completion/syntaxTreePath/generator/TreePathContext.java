@@ -27,21 +27,23 @@ import com.intellij.lang.ASTNode;
 
 public interface TreePathContext {
 
-    String getTreePath();
-
     Marker createMarker(String token);
+    void setMetaInfoRef(int ref);
 
     interface Marker {
-
         void rollbackTo();
         void discard();
-
         void setASTNode(ASTNode node, boolean isPsi);
     }
 
-    CallMetaInfo getMeta();
 
-    void setMetaInfoRef(int ref);
+    CallDesc getDesc(int index);
+    int options();
 
-    Object[] getHandlerParameters();
+    interface CallDesc {
+        String getTreePath();
+        CallMetaInfo getMeta();
+        Object[] getHandlerParameters();
+    }
+
 }

@@ -131,7 +131,7 @@ public class TNodePrintVisitor implements TNodeVisitor {
         } else {
             writer.print(" ");
         }
-        writer.print(node.getName());
+        writer.print((node.isNegative()? "!": "") + node.getName());
 
         if (node.getChildren().size() == 1) {
             lfStack.push(false);

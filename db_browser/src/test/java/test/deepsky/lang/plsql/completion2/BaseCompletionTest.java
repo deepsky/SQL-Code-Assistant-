@@ -99,11 +99,13 @@ public abstract class BaseCompletionTest extends LightFixtureCompletionTestCase 
     private String[] selectFieldLookuLookupElementsToString(LookupElement[] elements) {
         String[] out = new String[elements.length];
         for (int i = 0; i < elements.length; i++) {
-            //LookupElementPresentation p = new LookupElementPresentation();
-            String name = ((SelectFieldLookupElement)elements[i]).getSuggestedName(); //renderElement(p);
-            String prefix = ((SelectFieldLookupElement)elements[i]).getSuggestedQualifyName();
-
-            out[i] =(prefix!=null? (prefix + "." + name): name).toLowerCase(); //  (p.getTailText() + "|" + p.getItemText()).toLowerCase();
+            if(elements[i] instanceof SelectFieldLookupElement){
+                String name = ((SelectFieldLookupElement) elements[i]).getSuggestedName();
+                String prefix = ((SelectFieldLookupElement) elements[i]).getSuggestedQualifyName();
+                out[i] = (prefix != null ? (prefix + "." + name) : name).toLowerCase();
+            } else {
+                out[i] = elements[i].getLookupString();
+            }
         }
         return out;
     }

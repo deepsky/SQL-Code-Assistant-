@@ -25,6 +25,9 @@ package com.deepsky.lang.plsql.completion.lookups.dml;
 
 
 import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
+import com.deepsky.lang.plsql.psi.ColumnSpec;
+import com.deepsky.lang.plsql.psi.ColumnSpecList;
+import com.deepsky.lang.plsql.psi.utils.Formatter;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -33,6 +36,11 @@ import com.intellij.codeInsight.lookup.LookupElementDecorator;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiDocumentManager;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class UpdateLookupElement<T extends LookupElement> extends LookupElementDecorator<T> {
@@ -70,6 +78,83 @@ public class UpdateLookupElement<T extends LookupElement> extends LookupElementD
                 .withStrikeoutness(false);
 
         return new UpdateLookupElement<LookupElement>(e);
+    }
+
+    public static LookupElement createSubqueryEq(@NotNull String table, @Nullable ColumnSpec[] cs) {
+        String columns = "..."; // we don't know column name by default
+        if(cs != null){
+            StringBuilder b = new StringBuilder();
+            for(int i = 0 ; i<cs.length; i++){
+                b.append(cs[i].getColumnNameRef());
+                if(i != cs.length -1){
+                    b.append(",");
+                }
+            }
+            columns = b.toString();
+        }
+        LookupElement e = LookupElementBuilder.create("=")
+                .withPresentableText("update "+table+" set ("+ columns + ") = (select ... from <table>)")
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "= (select * from );";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset() - 2);
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new UpdateLookupElement<LookupElement>(e);
+    }
+
+    public static LookupElement createSubqueryParen(@NotNull String table, @Nullable ColumnSpec[] cs) {
+        String columns = "..."; // we don't know column name by default
+        if(cs != null){
+            StringBuilder b = new StringBuilder();
+            for(int i = 0 ; i<cs.length; i++){
+                b.append(cs[i].getColumnNameRef());
+                if(i != cs.length -1){
+                    b.append(",");
+                }
+            }
+            columns = b.toString();
+        }
+        LookupElement e = LookupElementBuilder.create("(")
+                .withPresentableText("update "+table+" set ("+ columns + ") = (select ... from <table>)")
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "() =";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset() - 3);
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new UpdateLookupElement<LookupElement>(e);
+    }
+
+    public static String buildColumnSpecList(ColumnSpecList list, int maxSize){
+        List<String> columns = new ArrayList<String>();
+        for(ColumnSpec column: list.getColumns()){
+            columns.add(column.getText());
+        }
+        String columnList = Formatter.formatColumnSpecList(columns, maxSize);
+        return columnList.length() == 0? "..": columnList;
     }
 
 }

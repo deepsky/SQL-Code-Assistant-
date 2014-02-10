@@ -39,11 +39,11 @@ public class DeleteStmtProcessorTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. 1#DELETE_COMMAND / #DELETE #FROM 2#TABLE_ALIAS / #TABLE_REF #ALIAS_NAME // 3#C_MARKER", context.getTreePath());
-        assertEquals(3, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof ASTNode);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.DeleteStmtProcessor", context.getMeta().getClassName());
-        assertEquals("process$DeleteAliasName", context.getMeta().getMethodName());
+        assertEquals("/ .. 1#DELETE_COMMAND / #DELETE #FROM TableAlias / #TABLE_REF #ALIAS_NAME // 2#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.DeleteStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$DeleteAliasName", context.getDesc(0).getMeta().getMethodName());
     }
 
 }

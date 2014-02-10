@@ -212,6 +212,11 @@ public class SelectStmtProcessor extends CompletionBase {
         }
     }
 
+    @SyntaxTreePath("//..#SUBQUERY_CONDITION/..#SUBQUERY/..2$SelectStatement/..#EXPR_COLUMN//#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectWhereSubqueryCondition(C_Context ctx, SelectStatement s0, SelectStatement select, NameFragmentRef ref) {
+        collectColumns(ctx, select, ref);
+    }
+
     @SyntaxTreePath("/ ..2#TABLE_REFERENCE_LIST_FROM ..3#ERROR_TOKEN_A/#ORDER #C_MARKER")
     public void process$SelectOrderBy() {
         // TODO - implement me

@@ -39,8 +39,8 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
     Stack<String> methodStack = new Stack<String>();
 
 
-    public CodeGeneratorVisitor(){
-        this.writer = new WriterAdapter(){
+    public CodeGeneratorVisitor() {
+        this.writer = new WriterAdapter() {
             @Override
             public void println(String x) {
                 System.out.println(x);
@@ -59,7 +59,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
     }
 
-    public CodeGeneratorVisitor(final Writer writer){
+    public CodeGeneratorVisitor(final Writer writer) {
         this.writer = new WriterAdapter() {
             @Override
             public void println(String x) {
@@ -111,7 +111,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         int pathListSize = root.getTreePathListSize();
         // Generate Path List
         writer.println("\tstatic final String[] pathList = new String[]{");
-        for(int i =0; i<pathListSize; i++){
+        for (int i = 0; i < pathListSize; i++) {
             writer.println("\t\t\"" + root.getTreePath(i) + "\",");
         }
         writer.println("\t};");
@@ -119,10 +119,10 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
         // Generate Argument index List
         writer.println("\tstatic final int[][] parameterIndexList = new int[][]{");
-        for(int i =0; i<pathListSize; i++){
+        for (int i = 0; i < pathListSize; i++) {
             int[] indices = root.getParameterIndexList(i);
             writer.print("\t\t{");
-            for(int j =0; j<indices.length; j++){
+            for (int j = 0; j < indices.length; j++) {
                 writer.print(indices[j] + ",");
             }
             writer.println("},");
@@ -133,9 +133,9 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         // Generate Argument Class List
         writer.println("\t// A parameter list of the completion method handler");
         writer.println("\tstatic final Class[][] parameterClassList = new Class[][]{");
-        for(int i =0; i<pathListSize; i++){
+        for (int i = 0; i < pathListSize; i++) {
             writer.print("\t\t{");
-            for(String clazz: root.getParameterClassList(i)) {
+            for (String clazz : root.getParameterClassList(i)) {
                 writer.print(clazz + ".class");
                 writer.print(",");
             }
@@ -147,8 +147,8 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         // Generate completion method handler List
         writer.println("\t// Completion method handler List");
         writer.println("\tstatic final String[][] classPlusMethodList = new String[][]{");
-        for(int i =0; i<pathListSize; i++){
-            writer.println("\t\t{\"" + root.getClassFor(i) +"\", \"" + root.getMethodFor(i) + "\"},");
+        for (int i = 0; i < pathListSize; i++) {
+            writer.println("\t\t{\"" + root.getClassFor(i) + "\", \"" + root.getMethodFor(i) + "\"},");
         }
         writer.println("\t};");
         writer.println();
@@ -191,6 +191,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
         writer.println("public boolean process() throws InvalidLexerStateException, ClassCastException {");
         writer.println("\tcontext = new TreePathContextImpl();");
+        writer.println("\tlong ms = System.currentTimeMillis();");
         writer.println("\ttry {");
         writer.println("\t\tObject o = peek();");
         writer.println("\t\tif (!(o instanceof SlashNode))");
@@ -222,7 +223,11 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
             node2MethodName.put(dSlash, "processDS");
         }
 
+        writer.println(prefix + "return context.options() > 0;");
         writer.println("\t} catch (EOFException ignored) {");
+        writer.println("\t} finally {");
+        writer.println("\tlong ms1 = System.currentTimeMillis();");
+        writer.println("\tSystem.out.println(\"Time spent: \" + (ms1-ms));");
         writer.println("\t}");
         writer.println("\treturn false;");
         writer.println("}");
@@ -286,15 +291,28 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
     private String generateDD_Call(TNode node, final String prefix, final String parentMethodName, final Map<TNode, String> node2MethodName) {
         String methodName = null;
         if (node instanceof StringNode) {
-            writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
-            writer.println(prefix + "\tint lexerState = saveState();");
-            methodName = parentMethodName + "_" + node.getName();
-            writer.println(prefix + "\tif (" + methodName + "(context)){");
-            writer.println(prefix + "\t\treturn true;");
-            writer.println(prefix + "\t}");
-            writer.println(prefix + "\tsetState(lexerState);");
-            writer.println(prefix + "}");
 
+            StringNode stringNode = (StringNode) node;
+            if (stringNode.isNegative()) {
+                writer.println(prefix + "if (" + generateConditionForSS(false, (StringNode) node) + ") {");
+                writer.println(prefix + "\t// Negative case");
+                writer.println(prefix + "\tint lexerState = saveState();");
+                methodName = parentMethodName + "_1_" + node.getName();
+                writer.println(prefix + "\tif (" + methodName + "(context)){");
+                writer.println(prefix + "\t\treturn true;");
+                writer.println(prefix + "\t}");
+                writer.println(prefix + "\tsetState(lexerState);");
+                writer.println(prefix + "}");
+            } else {
+                writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
+                writer.println(prefix + "\tint lexerState = saveState();");
+                methodName = parentMethodName + "_" + node.getName();
+                writer.println(prefix + "\tif (" + methodName + "(context)){");
+                writer.println(prefix + "\t\treturn true;");
+                writer.println(prefix + "\t}");
+                writer.println(prefix + "\tsetState(lexerState);");
+                writer.println(prefix + "}");
+            }
             node2MethodName.put(node, methodName);
         }
 
@@ -355,10 +373,10 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
                 writer.println(prefix + "\tASTNode n1 = next(ASTNode.class);");
                 writer.println(prefix + "\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) node) + "\");");
-                writer.println(prefix + "\tm1.setASTNode(n1, "+ ((StringNode) node).isDollar() + ");");
+                writer.println(prefix + "\tm1.setASTNode(n1, " + ((StringNode) node).isDollar() + ");");
                 writer.println(prefix + "\t// TODO - implement hit");
                 writer.println(prefix + "\tcontext.setMetaInfoRef(" + ((StringNode) node).getMetaInfoRef() + ");");
-                writer.println(prefix + "\treturn true;");
+                writer.println(prefix + "\treturn false;");
                 writer.println(prefix + "}");
             } else {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
@@ -430,10 +448,10 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
                 writer.println(prefix + "\tASTNode n1 = next(ASTNode.class);");
                 writer.println(prefix + "\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) node) + "\");");
-                writer.println(prefix + "\tm1.setASTNode(n1, "+ ((StringNode) node).isDollar() + ");");
+                writer.println(prefix + "\tm1.setASTNode(n1, " + ((StringNode) node).isDollar() + ");");
                 writer.println(prefix + "\t// TODO - implement hit");
                 writer.println(prefix + "\tcontext.setMetaInfoRef(" + ((StringNode) node).getMetaInfoRef() + ");");
-                writer.println(prefix + "\treturn true;");
+                writer.println(prefix + "\treturn false;");
                 writer.println(prefix + "}");
             } else {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
@@ -458,17 +476,17 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
         String nodeMethodName = methodStack.peek();
         writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
-        writer.println("\tTreePathContext.Marker m = context.createMarker(\""+ buildMarkerName(node) + "\");");
+        writer.println("\tTreePathContext.Marker m = context.createMarker(\"" + buildMarkerName(node) + "\");");
         writer.println("\tint lexerState;");
         writer.println("\tObject o;");
         writer.println("\ttry {");
-        writer.println("\t\tm.setASTNode(next(ASTNode.class), "+ node.isDollar() + ");  // Consume " + node.getName());
+        writer.println("\t\tm.setASTNode(next(ASTNode.class), " + node.isDollar() + ");  // Consume " + node.getName());
 
         Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
-        if(node.getChildren().size() == 0){
+        if (node.getChildren().size() == 0) {
             writer.println("\t\tcontext.setMetaInfoRef(" + node.getMetaInfoRef() + ");");
             writer.println("\t\t// TODO - implement hit");
-            writer.println("\t\treturn true;");
+            writer.println("\t\treturn false;");
         } else {
             sortChildren(node);
             for (TNode n : node.getChildren()) {
@@ -490,21 +508,21 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         }
     }
 
-    void sortChildren(StringNode node){
+    void sortChildren(StringNode node) {
         Collections.sort(node.getChildren(), new Comparator<TNode>() {
             @Override
             public int compare(TNode o1, TNode o2) {
                 int o1_int = 0;
-                if(o1 instanceof StringNode) o1_int = 1;
-                else if(o1 instanceof DoubleDotNode) o1_int = 2;
-                else if(o1 instanceof SingleSlashNode) o1_int = 3;
-                else if(o1 instanceof DoubleSlashNode) o1_int = 4;
+                if (o1 instanceof StringNode) o1_int = 1;
+                else if (o1 instanceof DoubleDotNode) o1_int = 2;
+                else if (o1 instanceof SingleSlashNode) o1_int = 3;
+                else if (o1 instanceof DoubleSlashNode) o1_int = 4;
 
                 int o2_int = 0;
-                if(o2 instanceof StringNode) o2_int = 1;
-                else if(o2 instanceof DoubleDotNode) o2_int = 2;
-                else if(o2 instanceof SingleSlashNode) o2_int = 3;
-                else if(o2 instanceof DoubleSlashNode) o2_int = 4;
+                if (o2 instanceof StringNode) o2_int = 1;
+                else if (o2 instanceof DoubleDotNode) o2_int = 2;
+                else if (o2 instanceof SingleSlashNode) o2_int = 3;
+                else if (o2 instanceof DoubleSlashNode) o2_int = 4;
 
                 return o1_int - o2_int;
             }
@@ -533,9 +551,9 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 writer.println(prefix + "\tif (" + generateCondition(true, (StringNode) node) + ") {");
                 writer.println(prefix + "\t\t// TODO - implement hit");
                 writer.println(prefix + "\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) node) + "\");");
-                writer.println(prefix + "\t\tm1.setASTNode((ASTNode)o, " + ((StringNode)node).isDollar() + ");");
+                writer.println(prefix + "\t\tm1.setASTNode((ASTNode)o, " + ((StringNode) node).isDollar() + ");");
                 writer.println(prefix + "\t\tcontext.setMetaInfoRef(" + ((StringNode) node).getMetaInfoRef() + ");");
-                writer.println(prefix + "\t\treturn true;");
+                writer.println(prefix + "\t\treturn false;");
                 writer.println(prefix + "\t} else ");
                 writer.println(prefix + "\t\tbreak;");
             } else {
@@ -553,7 +571,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                                 writer.println(prefix + "\t\tbreak;");
                                 writer.println(prefix + "\t} else {");
                                 writer.println(prefix + "\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) cur) + "\");");
-                                writer.println(prefix + "\t\tm1.setASTNode((ASTNode)o, " + ((StringNode)cur).isDollar() + ");");
+                                writer.println(prefix + "\t\tm1.setASTNode((ASTNode)o, " + ((StringNode) cur).isDollar() + ");");
                                 writer.println(prefix + "\t}");
 
                                 methodName1[0] = methodName1[0] + "_" + cur.getName();
@@ -582,7 +600,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 if (endType[0] == 1) {
                     writer.println(prefix + "\t// TODO - implement hit");
                     writer.println(prefix + "\tcontext.setMetaInfoRef(" + last[0].getMetaInfoRef() + ");");
-                    writer.println(prefix + "\treturn true;");
+                    writer.println(prefix + "\treturn false;");
                 }
             }
             writer.println(prefix + "} while(false);");
@@ -751,7 +769,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
     }
 
 
-    private String buildMarkerName(StringNode node){
+    private String buildMarkerName(StringNode node) {
         if (node.isDollar()) {
             return node.getName();
         } else {

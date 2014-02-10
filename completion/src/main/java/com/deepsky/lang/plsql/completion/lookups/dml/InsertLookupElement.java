@@ -147,24 +147,24 @@ in a background thread and should not affect editor responsiveness.
 
 
     public static LookupElement createInsertIntoTab(VariantsProvider provider, final String tableName) {
-        LookupElement e = LookupElementBuilder.create("")
+        LookupElement e = LookupElementBuilder.create("values")
                 .withPresentableText("insert into " + tableName + " values ()")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = " values ()";
+                        String prefix = "values ();";
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
                         final Document document = editor.getDocument();
                         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        editor.getCaretModel().moveToOffset(context.getTailOffset()-2);
+//                        int startOffset = context.getStartOffset();
+//                        CodeStyleManager.getInstance(context.getProject()).reformatText(context.getFile(),
+//                                startOffset,
+//                                startOffset + prefix.length() + 1);
 
-                        int startOffset = context.getStartOffset();
-                        CodeStyleManager.getInstance(context.getProject()).reformatText(context.getFile(),
-                                startOffset,
-                                startOffset + prefix.length() + 1);
-
-                        LookupUtils.scheduleAutoPopup(editor, context);
+//                        LookupUtils.scheduleAutoPopup(editor, context);
                     }
                 })
                 .withStrikeoutness(false);
@@ -175,14 +175,14 @@ in a background thread and should not affect editor responsiveness.
 
     public static LookupElement createInsertIntoTabColumnList(VariantsProvider provider, String tableName) {
         String columnList = buildColumnSpecList(provider.collectColumnNames(tableName, ""), 40);
-        LookupElement e = LookupElementBuilder.create("")
+        LookupElement e = LookupElementBuilder.create("(")
                 .withPresentableText("insert into " + tableName + " (" + columnList + ") ..")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = " () ";
+                        String prefix = "() ";
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
                         final Document document = editor.getDocument();
                         editor.getCaretModel().moveToOffset(context.getTailOffset()-2);
@@ -205,7 +205,7 @@ in a background thread and should not affect editor responsiveness.
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = " select * from ";
+                        String prefix = "select * from ";
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
                         final Document document = editor.getDocument();
                         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
@@ -228,7 +228,7 @@ in a background thread and should not affect editor responsiveness.
         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
     }
 
-    static String buildColumnSpecList(ColumnSpecList list, int maxSize){
+    public static String buildColumnSpecList(ColumnSpecList list, int maxSize){
         List<String> columns = new ArrayList<String>();
         for(ColumnSpec column: list.getColumns()){
             columns.add(column.getText());
@@ -237,7 +237,7 @@ in a background thread and should not affect editor responsiveness.
         return columnList.length() == 0? "..": columnList;
     }
 
-    static String buildColumnSpecList(List<LookupElement> list, int maxSize){
+    public static String buildColumnSpecList(List<LookupElement> list, int maxSize){
         List<String> columns = new ArrayList<String>();
         for(LookupElement e: list){
             columns.add(((SelectFieldLookupElement)e).getSuggestedName());

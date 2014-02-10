@@ -23,19 +23,30 @@
 
 package com.deepsky.lang.plsql.completion.processors;
 
+
+import com.deepsky.lang.PsiUtil;
+import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
+import com.deepsky.lang.plsql.completion.lookups.CommonFunctionLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.CommentLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
 import com.deepsky.lang.plsql.psi.ColumnSpec;
 import com.deepsky.lang.plsql.psi.ColumnSpecList;
 import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.deepsky.lang.plsql.psi.TableAlias;
 import com.deepsky.lang.plsql.psi.ddl.AlterTable;
 import com.deepsky.utils.StringUtils;
+import com.intellij.codeInsight.completion.InsertHandler;
+import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiDocumentManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +61,8 @@ public class GenericProcessor extends CompletionBase {
 
 
     @SyntaxTreePath("/..#SEMI #C_MARKER")
-    public void process$Start3(C_Context context) {
-        // TODO - implement me
+    public void process$Start3(C_Context ctx) {
+        completeStart(ctx);
     }
 
     @SyntaxTreePath("/..1$AlterTable #C_MARKER")
@@ -59,9 +70,15 @@ public class GenericProcessor extends CompletionBase {
         // TODO - implement me
     }
 
-    @SyntaxTreePath("/#DELETE #FROM 1#TABLE_ALIAS ..#WHERE_CONDITION #C_MARKER")
-    public void process$Start5(C_Context context, ASTNode node) {
-        completeStart(context);
+    @SyntaxTreePath("/#DELETE #FROM #TABLE_ALIAS #WHERE_CONDITION 1#C_MARKER")
+    public void process$Start5(C_Context ctx, ASTNode node) {
+        if (is2ndLatest(node.getTreeParent(), node)) {
+            completeStart(ctx);
+        } else {
+            ctx.addElement(KeywordLookupElement.create("exists"));
+            ctx.addElement(KeywordLookupElement.create("or"));
+            ctx.addElement(KeywordLookupElement.create("and"));
+        }
     }
 
     @SyntaxTreePath("/#CREATE #SEQUENCE 1#SEQUENCE_NAME .. #C_MARKER")
@@ -69,86 +86,34 @@ public class GenericProcessor extends CompletionBase {
         // TODO - implement me
     }
 
-    // INSERT related
-    @SyntaxTreePath("/#INSERT #C_MARKER")
-    public void process$InsertInto(C_Context ctx) {
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("into"));
-    }
 
-    // INSERT related
-    @SyntaxTreePath("/#INSERT #INTO $TableAlias/#TABLE_REF/#C_MARKER")
-    public void process$InsertIntoTab(C_Context ctx) {
-        collectTableNames(ctx);
-    }
-
-    @SyntaxTreePath("/#ERROR_TOKEN_A/#INSERT #INTO $TableAlias/#TABLE_REF/#C_MARKER")
-    public void process$InsertIntoTab2(C_Context ctx) {
-        collectTableNames(ctx);
-    }
-
-    @SyntaxTreePath("/#ERROR_TOKEN_A/#UPDATE $TableAlias/#TABLE_REF/#C_MARKER")
-    public void process$UpdateTab(C_Context ctx) {
-        collectTableNames(ctx);
-    }
-
-    // insert into tab <caret>
-    @SyntaxTreePath("/#INSERT #INTO 1$TableAlias/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
-    public void process$InsertIntoTab3(C_Context ctx, TableAlias tableAlias) {
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(
-                InsertLookupElement.createInsertIntoTab(ctx.getProvider(), tableAlias.getTableName()));
-    }
-
-    // insert into tab <caret>
-    @SyntaxTreePath("/#ERROR_TOKEN_A/#INSERT #INTO 1$TableAlias/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
-    public void process$InsertIntoTab4(C_Context ctx, TableAlias ta) {
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(
-                InsertLookupElement.createInsertIntoTabColumnList(ctx.getProvider(), ta.getTableName()));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(
-                InsertLookupElement.createInsertIntoTab(ctx.getProvider(), ta.getTableName()));
-    }
-
-
-    // insert into tab <caret>
-    @SyntaxTreePath("/#ERROR_TOKEN_A/#INSERT #INTO 1$TableAlias $ColumnSpecList/..$ColumnSpec/..#NAME_FRAGMENT/#C_MARKER")
-    public void process$InsertIntoTabColumn(C_Context ctx, TableAlias ta) {
-        collectColumns(ctx, ta, false);
-    }
-
-    @SyntaxTreePath("/#INSERT #INTO 1$TableAlias $ColumnSpecList/..2$ColumnSpec/..#NAME_FRAGMENT/#C_MARKER")
-    public void process$InsertColumnName(C_Context ctx, TableAlias t, ColumnSpec nameRef) {
-        VariantsProvider provider = ctx.getProvider();
-        provider.collectColumnNames(t, ctx.getLookup(), false);
-
-        // TODO - filter out columns already existing in column list
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.takeCollectedLookups());
-
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-        }
-    }
-
-    @SyntaxTreePath("/#INSERT #INTO 1$TableAlias 2$ColumnSpecList #C_MARKER")
-    public void process$InsertValues(C_Context ctx,TableAlias ta, ColumnSpecList list) {
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(InsertLookupElement.createInsertFromSelect(ta.getTableName(), list));
-//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("select"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("values", true));
-    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     SELECT
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @SyntaxTreePath("/#SELECT #ASTERISK 1#C_MARKER")
-    public void process$SelectAsterisk() {
-        // TODO - implement me
+    public void process$SelectAsterisk(C_Context ctx, ASTNode marker) {
+        ctx.addElement(KeywordLookupElement.create("from"));
     }
 
-
-    @SyntaxTreePath("/#SELECT #C_MARKER")
-    public void process$Select() {
-        // TODO - implement me
+    @SyntaxTreePath("/#SELECT 1#C_MARKER")
+    public void process$Select(C_Context ctx, ASTNode marker) {
+        ctx.addElement(CommonFunctionLookupElement.createCount());
     }
 
-    @SyntaxTreePath("/#SELECT #IDENTIFIER #C_MARKER")
-    public void process$SelectIdent() {
-        // TODO - implement me
+    @SyntaxTreePath("/#SELECT 1#IDENTIFIER 2#C_MARKER")
+    public void process$SelectIdent(C_Context ctx, ASTNode ident, ASTNode marker) {
+        ctx.addElement(KeywordLookupElement.create("from"));
+    }
+
+    @SyntaxTreePath("/#SELECT #EXPR_COLUMN/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
+    public void process$SelectIdent2(C_Context ctx) {
+        ctx.addElement(KeywordLookupElement.create("from"));
+    }
+
+    @SyntaxTreePath("/#SELECT ..#EXPR_COLUMN #COMMA 1#ERROR_TOKEN_A/#IDENTIFIER #C_MARKER")
+    public void process$SelectIdent3(C_Context ctx, ASTNode error) {
+        ctx.addElement(KeywordLookupElement.create("from"));
     }
 
     // select (select 1-2 from dual) asd, (select <caret>) t
@@ -189,6 +154,11 @@ public class GenericProcessor extends CompletionBase {
     @SyntaxTreePath("/1$SelectStatement #C_MARKER")
     public void process$SelectAppender(C_Context ctx, SelectStatement select) {
         // TODO - implement me
+    }
+
+    @SyntaxTreePath("//..#EXISTS_EXPR/#EXISTS #ERROR_TOKEN_A/#C_MARKER")
+    public void process$ExistsExpr(C_Context ctx) {
+        ctx.addElement(SelectLookupElement.createSubquery());
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -243,19 +213,125 @@ public class GenericProcessor extends CompletionBase {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///     UPDATE
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND #C_MARKER")
-    public void process$UpdateStart(C_Context ctx) {
-        completeStart(ctx);
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("where"));
-        // TODO implement more case
+
+    @SyntaxTreePath("/1#SIMPLE_UPDATE_COMMAND #C_MARKER")
+    public void process$UpdateStart(C_Context ctx, ASTNode update) {
+        // TODO -- too complex , subject to review
+        ASTNode last = update.getLastChildNode();
+        if (last.getElementType() == PlSqlElementTypes.ERROR_TOKEN_A) {
+            // Try to identify details of the errored node
+            ASTNode prev = PsiUtil.prevVisibleSibling(last);
+            if (prev != null && prev.getElementType() == PlSqlTokenTypes.KEYWORD_SET) {
+                if (last.getChildren(null).length == 1) {
+                    if (last.getChildren(null)[0].getElementType() == PlSqlTokenTypes.IDENTIFIER) {
+                        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("="));
+                    }
+                }
+            }
+        } else {
+            completeStart(ctx);
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("where"));
+        }
     }
+
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#UPDATE $TableAlias/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
+    public void process$UpdateTabSet(C_Context ctx) {
+        ctx.addElement(KeywordLookupElement.create("set"));
+    }
+
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#UPDATE $TableAlias/#TABLE_REF/#C_MARKER")
+    public void process$UpdateTab(C_Context ctx) {
+        collectTableNames(ctx);
+    }
+
+    @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE $TableAlias/#TABLE_REF/#C_MARKER")
+    public void process$UpdateTab2(C_Context ctx) {
+        collectTableNames(ctx);
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     INSERT
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @SyntaxTreePath("/#INSERT_COMMAND #C_MARKER")
     public void process$InsertStart(C_Context ctx) {
         completeStart(ctx);
     }
 
+    // INSERT related
+    @SyntaxTreePath("/#INSERT #C_MARKER")
+    public void process$InsertInto(C_Context ctx) {
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("into"));
+    }
 
+    // INSERT related
+    @SyntaxTreePath("/#INSERT #INTO $TableAlias/#TABLE_REF/#C_MARKER")
+    public void process$InsertIntoTab(C_Context ctx) {
+        collectTableNames(ctx);
+    }
+
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#INSERT #INTO $TableAlias/#TABLE_REF/#C_MARKER")
+    public void process$InsertIntoTab2(C_Context ctx) {
+        collectTableNames(ctx);
+    }
+
+
+    // insert into tab <caret>
+    @SyntaxTreePath("/#INSERT #INTO 1$TableAlias/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
+    public void process$InsertIntoTab3(C_Context ctx, TableAlias tableAlias) {
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(
+                InsertLookupElement.createInsertIntoTab(ctx.getProvider(), tableAlias.getTableName()));
+    }
+
+    // insert into tab <caret>
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#INSERT #INTO 1$TableAlias/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
+    public void process$InsertIntoTab4(C_Context ctx, TableAlias ta) {
+        ctx.addElement(InsertLookupElement.createInsertIntoTabColumnList(ctx.getProvider(), ta.getTableName()));
+        ctx.addElement(InsertLookupElement.createInsertIntoTab(ctx.getProvider(), ta.getTableName()));
+    }
+
+
+    // insert into tab <caret>
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#INSERT #INTO 1$TableAlias $ColumnSpecList/..$ColumnSpec/..#NAME_FRAGMENT/#C_MARKER")
+    public void process$InsertIntoTabColumn(C_Context ctx, TableAlias ta) {
+        collectColumns(ctx, ta, false);
+    }
+
+    @SyntaxTreePath("/#INSERT #INTO 1$TableAlias $ColumnSpecList/..2$ColumnSpec/..#NAME_FRAGMENT/#C_MARKER")
+    public void process$InsertColumnName(C_Context ctx, TableAlias t, ColumnSpec nameRef) {
+        VariantsProvider provider = ctx.getProvider();
+        provider.collectColumnNames(t, ctx.getLookup(), false);
+
+        // TODO - filter out columns already existing in column list
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.takeCollectedLookups());
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+    @SyntaxTreePath("/#INSERT #INTO 1$TableAlias 2$ColumnSpecList #C_MARKER")
+    public void process$InsertValues(C_Context ctx, TableAlias ta, ColumnSpecList list) {
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(InsertLookupElement.createInsertFromSelect(ta.getTableName(), list));
+        ctx.addElement(KeywordLookupElement.create("values", true, new InsertHandler<LookupElement>() {
+            @Override
+            public void handleInsert(InsertionContext context, LookupElement item) {
+                final Editor editor = context.getEditor();
+                String prefix = "values ();";
+                editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                editor.getCaretModel().moveToOffset(context.getTailOffset() - 2);
+                final Document document = editor.getDocument();
+                PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+            }
+        }));
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     INSERT
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @SyntaxTreePath("/#DROP #TABLE #IDENTIFIER #C_MARKER")
     public void process$DropTableStart(C_Context ctx) {
         completeStart(ctx);

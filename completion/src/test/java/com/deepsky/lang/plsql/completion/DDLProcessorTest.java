@@ -40,11 +40,11 @@ public class DDLProcessorTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. 1#TABLE_DEF / #CREATE #ERROR_TOKEN_A / #TABLE 2#TABLE_NAME_DDL #OPEN_PAREN .. #COLUMN_DEF #CLOSE_PAREN #C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof ASTNode);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.DDLProcessor", context.getMeta().getClassName());
-        assertEquals("process$Table", context.getMeta().getMethodName());
+        assertEquals("/ .. 1#TABLE_DEF / #CREATE #ERROR_TOKEN_A / #TABLE 2#TABLE_NAME_DDL #OPEN_PAREN .. #COLUMN_DEF #CLOSE_PAREN #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.DDLProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$Table", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test4_18() throws TokenStreamException, RecognitionException {
@@ -54,11 +54,11 @@ public class DDLProcessorTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. 1#TABLE_DEF / #CREATE #ERROR_TOKEN_A / #TABLE 2#TABLE_NAME_DDL #OPEN_PAREN .. #COLUMN_DEF #CLOSE_PAREN #C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof ASTNode);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.DDLProcessor", context.getMeta().getClassName());
-        assertEquals("process$Table", context.getMeta().getMethodName());
+        assertEquals("/ .. 1#TABLE_DEF / #CREATE #ERROR_TOKEN_A / #TABLE 2#TABLE_NAME_DDL #OPEN_PAREN .. #COLUMN_DEF #CLOSE_PAREN #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.DDLProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$Table", context.getDesc(0).getMeta().getMethodName());
     }
 
 
@@ -69,11 +69,11 @@ public class DDLProcessorTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. #CREATE_SEQUENCE / #CREATE #ERROR_TOKEN_A / #SEQUENCE 1#IDENTIFIER #C_MARKER", context.getTreePath());
-        assertEquals(1, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof ASTNode);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.DDLProcessor", context.getMeta().getClassName());
-        assertEquals("process$Sequence", context.getMeta().getMethodName());
+        assertEquals("/ .. #CREATE_SEQUENCE / #CREATE #ERROR_TOKEN_A / #SEQUENCE 1#IDENTIFIER #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.DDLProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$Sequence", context.getDesc(0).getMeta().getMethodName());
     }
 
 }

@@ -141,10 +141,6 @@ public abstract class CompletionProcessorBase {
         private MyArray<MarkerImpl> markerList = new MyArray<MarkerImpl>();
         private int metaInfoRef;
 
-        @Override
-        public String getTreePath() {
-            return CompletionProcessorBase.this.getTreePath(metaInfoRef);
-        }
 
         @Override
         public Marker createMarker(String token) {
@@ -153,31 +149,78 @@ public abstract class CompletionProcessorBase {
             return m;
         }
 
-        @Override
-        public CallMetaInfo getMeta() {
-            return new CallMetaInfo(){
-
-                @Override
-                public String getClassName() {
-                    return CompletionProcessorBase.this.getClassPlusMethod(metaInfoRef)[0];
-                }
-
-                @Override
-                public String getMethodName() {
-                    return CompletionProcessorBase.this.getClassPlusMethod(metaInfoRef)[1];
-                }
-
-                @Override
-                public Class[] getArgTypes() {
-                    return CompletionProcessorBase.this.getMethodParamClasses(metaInfoRef);
-                }
-            };
-        }
 
         @Override
         public void setMetaInfoRef(int ref) {
             this.metaInfoRef = ref;
             chains.add(copy(markerList, metaInfoRef));
+        }
+
+        @Override
+        public CallDesc getDesc(int index) {
+            final PathList pList =  chains.get(index);
+            return new CallDesc() {
+                @Override
+                public String getTreePath() {
+                    return CompletionProcessorBase.this.getTreePath(pList.metaInfoRef);
+                }
+
+                @Override
+                public CallMetaInfo getMeta() {
+                    return new CallMetaInfo(){
+                        @Override
+                        public String getClassName() {
+
+                            return CompletionProcessorBase.this.getClassPlusMethod(pList.metaInfoRef)[0];
+                        }
+
+                        @Override
+                        public String getMethodName() {
+                            return CompletionProcessorBase.this.getClassPlusMethod(pList.metaInfoRef)[1];
+                        }
+
+                        @Override
+                        public Class[] getArgTypes() {
+                            return CompletionProcessorBase.this.getMethodParamClasses(pList.metaInfoRef);
+                        }
+                    };
+                }
+
+                @Override
+                public Object[] getHandlerParameters() {
+                    int[] indices = CompletionProcessorBase.this.getMethodParamIndexes(pList.metaInfoRef);
+                    if(indices.length == 0)
+                        return new Object[0];
+                    else {
+                        Object[] out = new Object[indices.length];
+                        int indexPos = 0;
+                        for(int i = 0; i<pList.pathElementList.size() && indexPos < indices.length; i++){
+                            if(i == indices[indexPos]){
+                                PathElement m = pList.pathElementList.get(i);
+                                ASTNode target = m.node;
+                                if(i == pList.pathElementList.size() -1){
+                                    // Process the C_MARKER case, C_MARKER is a wrapper for the real object
+                                    if(m.element.equals("#C_MARKER")){
+                                        InvocationHandler h = Proxy.getInvocationHandler(m.node);
+                                        if(h instanceof ASTNodeProxy){
+                                            target = ((ASTNodeProxy)h).target;
+                                        }
+                                    }
+                                }
+                                out[indexPos] = m.isPsi? target.getPsi(): target;
+                                indexPos++;
+                            }
+                        }
+
+                        return out;
+                    }
+                }
+            };
+        }
+
+        @Override
+        public int options() {
+            return chains.size();
         }
 
         private PathList copy(MyArray<MarkerImpl> markerList, int metaInfoRef) {
@@ -187,37 +230,6 @@ public abstract class CompletionProcessorBase {
             }
             return chain;
         }
-
-        @Override
-        public Object[] getHandlerParameters() {
-            int[] indices = CompletionProcessorBase.this.getMethodParamIndexes(metaInfoRef);
-            if(indices.length == 0)
-                return new Object[0];
-            else {
-                Object[] out = new Object[indices.length];
-                int indexPos = 0;
-                for(int i = 0; i<markerList.size() && indexPos < indices.length; i++){
-                    if(i == indices[indexPos]){
-                        MarkerImpl m = markerList.get(i);
-                        ASTNode target = m.node;
-                        if(i == markerList.size() -1){
-                            // Process the C_MARKER case, C_MARKER is a wrapper for the real object
-                            if(m.element.equalsIgnoreCase("#C_MARKER")){
-                                InvocationHandler h = Proxy.getInvocationHandler(m.node);
-                                if(h instanceof ASTNodeProxy){
-                                    target = ((ASTNodeProxy)h).target;
-                                }
-                            }
-                        }
-                        out[indexPos] = m.isPsi? target.getPsi(): target;
-                        indexPos++;
-                    }
-                }
-
-                return out;
-            }
-        }
-
 
         private class MarkerImpl implements Marker {
 
@@ -248,10 +260,7 @@ public abstract class CompletionProcessorBase {
                 this.node = node;
                 this.isPsi = isPsi;
             }
-
         }
-
-
     }
 
 

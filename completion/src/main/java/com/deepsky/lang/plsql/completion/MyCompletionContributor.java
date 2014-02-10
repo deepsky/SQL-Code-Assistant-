@@ -87,46 +87,48 @@ public class MyCompletionContributor extends CompletionContributor {
         if (proc.process()) {
             // Great! Path found
             TreePathContext context = proc.getContext();
-            CallMetaInfo metaInfo = context.getMeta();
-            System.out.println("Path: " + context.getTreePath());
+            for(int i =0; i<context.options(); i++){
+                CallMetaInfo metaInfo = context.getDesc(i).getMeta();
+                System.out.println("Path: " + context.getDesc(i).getTreePath());
 
-            final String lookupStr = stripText(StringUtils.discloseDoubleQuotes(nodeToComplete.getText()));
-            final VariantsProvider provider = chooseSearchDomain((PlSqlFile) nodeToComplete.getPsi().getContainingFile());
+                final String lookupStr = stripText(StringUtils.discloseDoubleQuotes(nodeToComplete.getText()));
+                final VariantsProvider provider = chooseSearchDomain((PlSqlFile) nodeToComplete.getPsi().getContainingFile());
 
-            CompletionCaller caller = null;
-            try {
-                caller = buildInvoker(metaInfo);
-                C_Context cContext = new C_Context() {
-                    @Override
-                    public String getLookup() {return lookupStr;}
+                CompletionCaller caller = null;
+                try {
+                    caller = buildInvoker(metaInfo);
+                    C_Context cContext = new C_Context() {
+                        @Override
+                        public String getLookup() {return lookupStr;}
 
-                    @Override
-                    public CompletionResultSet getResultSet() {return result;}
+                        @Override
+                        public CompletionResultSet getResultSet() {return result;}
 
-                    @Override
-                    public VariantsProvider getProvider() {return provider;}
+                        @Override
+                        public VariantsProvider getProvider() {return provider;}
 
-                    @Override
-                    public void addElement(@NotNull LookupElement element) {
-                        result.withPrefixMatcher(lookupStr).addElement(element);
-                    }
-                };
+                        @Override
+                        public void addElement(@NotNull LookupElement element) {
+                            result.withPrefixMatcher(lookupStr).addElement(element);
+                        }
+                    };
 
-                Object[] args = new Object[1 + context.getHandlerParameters().length];
-                System.arraycopy(context.getHandlerParameters(), 0, args, 1, context.getHandlerParameters().length);
-                args[0] = cContext;
-                caller.call(args);
+                    Object[] args = new Object[1 + context.getDesc(i).getHandlerParameters().length];
+                    System.arraycopy(context.getDesc(i).getHandlerParameters(), 0, args, 1, context.getDesc(i).getHandlerParameters().length);
+                    args[0] = cContext;
+                    caller.call(args);
 
-                super.fillCompletionVariants(parameters, result);
+                    super.fillCompletionVariants(parameters, result);
 
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (InstantiationException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (InstantiationException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
             }
         }
 

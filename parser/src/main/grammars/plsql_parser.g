@@ -1505,7 +1505,7 @@ mv_log_physical_props:
 
 mv_log_with_param:
     ("primary" "key")
-    |("object" "id")
+// TODO conficted with possible IDENTIFIER:    |("object" "id")
     |"rowid"
     |"sequence"
     ;
@@ -3766,7 +3766,7 @@ identifier2:
     | "body"
     | "escape"
     | "reverse"
-    | "exists"
+//    | "exists"
     | "delete"
     | "trim"
     | "decode"
@@ -4083,7 +4083,7 @@ identifier2:
     | "demand"
     | "prebuilt"
     | "reduced"
-    | "id"
+//    | "id"
     | "without"
     | "resource"
     | "become"
@@ -4111,7 +4111,7 @@ variable_name :
     | "body"
     | "escape"
     | "reverse"
-    | "exists"
+//    | "exists"
     | "delete"
     | "trim"
     | "decode"
@@ -4433,7 +4433,7 @@ variable_name :
     | "demand"
     | "prebuilt"
     | "reduced"
-    | "id"
+//    | "id"
     | "without"
     | "resource"
     | "become"

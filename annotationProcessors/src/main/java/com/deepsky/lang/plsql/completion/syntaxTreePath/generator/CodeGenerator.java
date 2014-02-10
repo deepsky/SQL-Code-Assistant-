@@ -179,17 +179,17 @@ public class CodeGenerator {
         }
 
         pairs.add(new NamePosPair(ident, pos, isDollar, isExcl));
-        return tnode.findOrAdd(isDollar, pos, ident);
+        return tnode.findOrAdd(isDollar, pos, ident, isExcl);
     }
 
 
     private String buildTreePath(List<NamePosPair> p, boolean withPrefix){
         StringBuilder sb = new StringBuilder();
         for(NamePosPair pair: p){
+            if(pair.isExcl){
+                sb.append("!");
+            }
             if(withPrefix){
-                if(pair.isExcl){
-                    sb.append("!");
-                }
                 if(pair.pos == -2){
                     // do nothing
                 } else if(pair.pos == -1){

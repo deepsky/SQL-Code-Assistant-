@@ -252,4 +252,35 @@ in a background thread and should not affect editor responsiveness.
         }
     }
 
+    public static LookupElement createSubquery() {
+        LookupElement e = LookupElementBuilder.create("(select")
+//                .withTailText(it.getTail(), true)
+//                .withTypeText(it.getType())
+//                .withIcon(it.getIcon())
+                .withPresentableText("(select .. from <table>)")
+                .withCaseSensitivity(false)
+                .withStrikeoutness(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "(select * from  )";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+
+                        final Document document = editor.getDocument();
+                        editor.getCaretModel().moveToOffset(context.getTailOffset()-1);
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+
+//                        int startOffset = context.getStartOffset();
+//                        CodeStyleManager.getInstance(context.getProject()).reformatText(context.getFile(),
+//                                startOffset,
+//                                startOffset + prefix.length() + 1);
+
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                });
+
+        return new SelectLookupElement<LookupElement>(e);
+    }
+
 }

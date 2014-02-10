@@ -26,6 +26,9 @@ package com.deepsky.lang.plsql.completion.processors;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.UpdateLookupElement;
+import com.deepsky.lang.plsql.psi.ColumnSpecList;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.deepsky.lang.plsql.psi.TableAlias;
@@ -73,27 +76,13 @@ public class UpdateStmtProcessor extends CompletionBase {
 
     @SyntaxTreePath("/#ERROR_TOKEN_A/#UPDATE #TABLE_ALIAS/#TABLE_REF/#C_MARKER")
     public void process$UpdateColumnName(C_Context ctx) {
-        VariantsProvider provider = ctx.getProvider();
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
-
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-        }
+        collectTableNames(ctx);
     }
 
     @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET #ERROR_TOKEN_A/#C_MARKER")
     public void process$UpdateColumnVar(C_Context ctx, TableAlias t) {
-        VariantsProvider provider = ctx.getProvider();
-        provider.collectColumnNames(t, ctx.getLookup(), false);
-
-        // TODO - filter out columns already existing in column list
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.takeCollectedLookups());
-
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-        }
+        collectColumns(ctx, t, false);
+        ctx.addElement(UpdateLookupElement.createSubqueryParen(t.getTableName(), null));
     }
 
     @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #VAR_REF/..2$NameFragmentRef/#C_MARKER")
@@ -102,28 +91,14 @@ public class UpdateStmtProcessor extends CompletionBase {
 
     @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET ..#WHERE_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$UpdateWhereVar(C_Context ctx, TableAlias t, NameFragmentRef nameRef) {
-        VariantsProvider provider = ctx.getProvider();
-        provider.collectColumnNames(t, ctx.getLookup(), false);
-
-        // TODO - filter out columns already existing in column list
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.takeCollectedLookups());
-
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-        }
+        collectColumns(ctx, t, false);
+        ctx.addElement(KeywordLookupElement.create("exists"));
     }
 
 
     @SyntaxTreePath("//#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #ARITHMETIC_EXPR//..$SelectStatement/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
     public void process$UpdateAssignment1(C_Context ctx, TableAlias t) {
-        VariantsProvider provider = ctx.getProvider();
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
-
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-        }
+        collectTableNames(ctx);
     }
 
     @SyntaxTreePath("//#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #ARITHMETIC_EXPR//..2$SelectStatement/..#WHERE_CONDITION/..#RELATION_CONDITION/..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
@@ -137,7 +112,7 @@ public class UpdateStmtProcessor extends CompletionBase {
         variants.addAll(provider.takeCollectedLookups());
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
@@ -145,15 +120,28 @@ public class UpdateStmtProcessor extends CompletionBase {
     @SyntaxTreePath("//#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #SUBQUERY_EXPR//..2$SelectStatement/..#EXPR_COLUMN/..#FUNCTION_CALL/..#CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$UpdateAssignment3(C_Context ctx, TableAlias t, SelectStatement select, NameFragmentRef ref) {
         collectColumns(ctx, select, ref);
-        VariantsProvider provider = ctx.getProvider();
-        provider.collectColumnNames(t, ctx.getLookup(), false);
+        collectColumns(ctx, t, false);
+    }
 
-        // TODO - filter out columns already existing in column list
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.takeCollectedLookups());
+    @SyntaxTreePath("//#UPDATE 1$TableAlias #SET #ERROR_TOKEN_A/2$ColumnSpecList #C_MARKER")
+    public void process$UpdateSubquery(C_Context ctx, TableAlias t, ColumnSpecList list) {
+        ctx.addElement(UpdateLookupElement.createSubqueryEq(t.getTableName(), list.getColumns()));
+    }
 
-        for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
-        }
+    @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET #ERROR_TOKEN_A/2$ColumnSpecList/..#COLUMN_SPEC/#NAME_FRAGMENT/#C_MARKER")
+    public void process$UpdateSubquery2(C_Context ctx, TableAlias t, ColumnSpecList list) {
+        collectColumns(ctx, t, false);
+        // TODO do column filtering
+    }
+
+    @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET 2$ColumnSpecList/..#COLUMN_SPEC/#NAME_FRAGMENT/#C_MARKER")
+    public void process$UpdateSubquery3(C_Context ctx, TableAlias t, ColumnSpecList list) {
+        collectColumns(ctx, t, false);
+        // TODO do column filtering
+    }
+
+    @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET 2$ColumnSpecList #EQ #SUBQUERY/#OPEN_PAREN #ERROR_TOKEN_A/#C_MARKER")
+    public void process$UpdateSubquery4(C_Context ctx, TableAlias t, ColumnSpecList list) {
+        ctx.addElement(SelectLookupElement.create());
     }
 }

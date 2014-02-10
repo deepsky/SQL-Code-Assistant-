@@ -25,6 +25,8 @@
 
 package com.deepsky.lang.plsql.completion.lookups;
 
+import com.intellij.codeInsight.completion.InsertHandler;
+import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
@@ -44,4 +46,20 @@ public class TableLookupElement <T extends LookupElement> extends LookupElementD
         return new TableLookupElement<LookupElement>(e);
     }
 
+    public static TableLookupElement create(String name, Icon icon, InsertHandler<LookupElement> insertHandler){
+
+        LookupElement e;
+        if(insertHandler != null){
+            e = LookupElementBuilder.create(name)
+                    .withIcon(icon)
+                    .withInsertHandler(insertHandler)
+                    .withCaseSensitivity(false);
+        } else {
+            e = LookupElementBuilder.create(name)
+                    .withIcon(icon)
+                    .withCaseSensitivity(false);
+        }
+
+        return new TableLookupElement<LookupElement>(e);
+    }
 }

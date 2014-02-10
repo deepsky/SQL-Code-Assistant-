@@ -1,0 +1,50 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Unnamed - sql-assistant:annotationProcessors:jar:1.12.1-SNAPSHOT
+[INFO]    task-segment: [clean, install]
+[INFO] ------------------------------------------------------------------------
+[INFO] [clean:clean {execution: default-clean}]
+[INFO] Deleting file set: /home/sky/GitHub/code-assistant-linux-v12/annotationProcessors/target (included: [**], excluded: [])
+[INFO] [antlr:generate {execution: default}]
+[INFO] performing grammar generation [SyntaxTreePath.g]
+[INFO] [resources:resources {execution: default-resources}]
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] Copying 2 resources
+[INFO] Copying 1 resource
+[INFO] [compiler:compile {execution: default-compile}]
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+[INFO] Compiling 19 source files to /home/sky/GitHub/code-assistant-linux-v12/annotationProcessors/target/classes
+[WARNING] /home/sky/GitHub/code-assistant-linux-v12/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessorBase.java: /home/sky/GitHub/code-assistant-linux-v12/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessorBase.java uses unchecked or unsafe operations.
+[WARNING] /home/sky/GitHub/code-assistant-linux-v12/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessorBase.java: Recompile with -Xlint:unchecked for details.
+[INFO] [resources:testResources {execution: default-testResources}]
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/sky/GitHub/code-assistant-linux-v12/annotationProcessors/src/test/resources
+[INFO] [compiler:testCompile {execution: default-testCompile}]
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+[INFO] Compiling 3 source files to /home/sky/GitHub/code-assistant-linux-v12/annotationProcessors/target/test-classes
+[INFO] [surefire:test {execution: default-test}]
+[INFO] Surefire report directory: /home/sky/GitHub/code-assistant-linux-v12/annotationProcessors/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.deepsky.lang.plsql.completion.syntaxTreePath.generator.SyntaxTreePathLexerTest
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 sec
+
+Results :
+
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] [jar:jar {execution: default-jar}]
+[INFO] Building jar: /home/sky/GitHub/code-assistant-linux-v12/annotationProcessors/target/annotationProcessors-1.12.1-SNAPSHOT.jar
+[INFO] [install:install {execution: default-install}]
+[INFO] Installing /home/sky/GitHub/code-assistant-linux-v12/annotationProcessors/target/annotationProcessors-1.12.1-SNAPSHOT.jar to /home/sky/.m2/repository/sql-assistant/annotationProcessors/1.12.1-SNAPSHOT/annotationProcessors-1.12.1-SNAPSHOT.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 6 seconds
+[INFO] Finished at: Sat Feb 08 21:08:00 EET 2014
+[INFO] Final Memory: 37M/294M
+[INFO] ------------------------------------------------------------------------

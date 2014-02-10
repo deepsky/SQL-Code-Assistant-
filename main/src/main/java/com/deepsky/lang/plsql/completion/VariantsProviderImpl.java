@@ -43,6 +43,7 @@ import com.deepsky.lang.plsql.sqlIndex.ResolveHelper;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
 import com.deepsky.view.Icons;
+import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
 import com.intellij.lang.ASTNode;
@@ -76,6 +77,21 @@ public class VariantsProviderImpl implements VariantsProvider {
 
         return out;
     }
+
+    public List<LookupElement> collectTableNameVariants(String lookupString, InsertHandler<LookupElement> insertHandler) {
+        ContextItem[] findings = nameProvider.findTopLevelItems(new int[]{ContextPath.TABLE_DEF}, null);
+        List<LookupElement> out = new ArrayList<LookupElement>();
+        for (ContextItem item : findings) {
+            String name = ContextPathUtil.extractLastCtxName(item.getCtxPath());
+            if (name.toLowerCase().startsWith(lookupString.toLowerCase())) {
+                // todo - apply appropriate icon for item - view, table, synonym
+                out.add(TableLookupElement.create(name, Icons.TABLE, insertHandler));
+            }
+        }
+
+        return out;
+    }
+
 
     public List<LookupElement> collectViewNameVariants(String lookupString) {
         ContextItem[] findings = nameProvider.findTopLevelItems(new int[]{ContextPath.VIEW_DEF}, null);

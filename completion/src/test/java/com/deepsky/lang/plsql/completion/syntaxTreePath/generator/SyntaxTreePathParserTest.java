@@ -19,11 +19,11 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT #ASTERISK 1#C_MARKER", context.getTreePath());
-        assertEquals(1, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof ASTNode);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getMeta().getClassName());
-        assertEquals("process$SelectAsterisk", context.getMeta().getMethodName());
+        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT #ASTERISK 1#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$SelectAsterisk", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test_select_31() throws TokenStreamException, RecognitionException {
@@ -32,8 +32,8 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT #C_MARKER", context.getTreePath());
-        assertEquals(0, context.getHandlerParameters().length);
+        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT 1#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
     }
 
     public void test_select_32() throws TokenStreamException, RecognitionException {
@@ -42,8 +42,8 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT #IDENTIFIER #C_MARKER", context.getTreePath());
-        assertEquals(0, context.getHandlerParameters().length);
+        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT 1#IDENTIFIER 2#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
     }
 
     public void test_select_33() throws TokenStreamException, RecognitionException {
@@ -52,9 +52,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT .. 1#EXPR_COLUMN #COMMA #ERROR_TOKEN_A / 2#C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        CallMetaInfo call = context.getMeta();
+        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT .. 1#EXPR_COLUMN #COMMA #ERROR_TOKEN_A / 2#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        CallMetaInfo call = context.getDesc(0).getMeta();
 
     }
 
@@ -64,9 +64,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #EXPR_COLUMN / .. #ALIAS_NAME / #ALIAS_IDENT / 2#C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
+        assertEquals("/ .. 1$SelectStatement / .. #EXPR_COLUMN / .. #ALIAS_NAME / #ALIAS_IDENT / 2#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[1] instanceof ASTNode);
     }
 
 
@@ -76,7 +76,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT .. 1#EXPR_COLUMN 2#C_MARKER", context.getTreePath());
+        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT .. 1#EXPR_COLUMN 2#C_MARKER", context.getDesc(0).getTreePath());
     }
 
     public void test_select_351() throws TokenStreamException, RecognitionException {
@@ -85,9 +85,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / #TABLE_REF / #C_MARKER", context.getTreePath());
-        assertEquals(1, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
+        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / #TABLE_REF / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
     }
 
     public void test_select_36() throws TokenStreamException, RecognitionException {
@@ -96,9 +96,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #EXPR_COLUMN / .. #ALIAS_NAME / #ALIAS_IDENT / 2#C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
+        assertEquals("/ .. 1$SelectStatement / .. #EXPR_COLUMN / .. #ALIAS_NAME / #ALIAS_IDENT / 2#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[1] instanceof ASTNode);
     }
 
     public void test_select_361() throws TokenStreamException, RecognitionException {
@@ -107,9 +107,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#ERROR_TOKEN_A / #SUBQUERY_EXPR // #OPEN_PAREN #SELECT #C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
+        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#ERROR_TOKEN_A / #SUBQUERY_EXPR // #OPEN_PAREN #SELECT #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[1] instanceof ASTNode);
     }
 
     public void test_select_3611() throws TokenStreamException, RecognitionException {
@@ -118,10 +118,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#EXPR_COLUMN / #PARENTHESIZED_EXPR / .. #VAR_REF // #C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
-        assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
+        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#EXPR_COLUMN / #PARENTHESIZED_EXPR / .. #VAR_REF // #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
+        assertTrue(context.getDesc(0).getHandlerParameters()[1] instanceof ASTNode);
     }
 
     public void test_select_3612() throws TokenStreamException, RecognitionException {
@@ -130,8 +130,8 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #FROM_SUBQUERY / #SUBQUERY / #OPEN_PAREN #ERROR_TOKEN_A / 2#C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
+        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #FROM_SUBQUERY / #SUBQUERY / #OPEN_PAREN #ERROR_TOKEN_A / 2#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
     }
 
     public void test_select_3613() throws TokenStreamException, RecognitionException {
@@ -140,7 +140,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #FROM_SUBQUERY / #SUBQUERY / #OPEN_PAREN #ERROR_TOKEN_A / 2#C_MARKER", context.getTreePath());
+        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #FROM_SUBQUERY / #SUBQUERY / #OPEN_PAREN #ERROR_TOKEN_A / 2#C_MARKER", context.getDesc(0).getTreePath());
     }
 
     public void test_select_362() throws TokenStreamException, RecognitionException {
@@ -149,7 +149,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#ERROR_TOKEN_A / #SUBQUERY_EXPR // #OPEN_PAREN #SELECT #C_MARKER", context.getTreePath());
+        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#ERROR_TOKEN_A / #SUBQUERY_EXPR // #OPEN_PAREN #SELECT #C_MARKER", context.getDesc(0).getTreePath());
     }
 
     public void test_select_363() throws TokenStreamException, RecognitionException {
@@ -158,7 +158,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#ERROR_TOKEN_A / #SUBQUERY_EXPR // #OPEN_PAREN #SELECT #C_MARKER", context.getTreePath());
+        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#ERROR_TOKEN_A / #SUBQUERY_EXPR // #OPEN_PAREN #SELECT #C_MARKER", context.getDesc(0).getTreePath());
     }
 
     public void test_select_364() throws TokenStreamException, RecognitionException {
@@ -167,7 +167,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#ERROR_TOKEN_A / #SUBQUERY_EXPR // #OPEN_PAREN #SELECT #C_MARKER", context.getTreePath());
+        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#ERROR_TOKEN_A / #SUBQUERY_EXPR // #OPEN_PAREN #SELECT #C_MARKER", context.getDesc(0).getTreePath());
     }
 
     public void test_select_365() throws TokenStreamException, RecognitionException {
@@ -176,7 +176,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT .. #EXPR_COLUMN #COMMA #ERROR_TOKEN_A / .. #SUBQUERY_EXPR // #OPEN_PAREN #SELECT #C_MARKER", context.getTreePath());
+        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT .. #EXPR_COLUMN #COMMA #ERROR_TOKEN_A / .. #SUBQUERY_EXPR // #OPEN_PAREN #SELECT #C_MARKER", context.getDesc(0).getTreePath());
     }
 
 
@@ -186,9 +186,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT .. #COMMA #EXPR_COLUMN / .. #SUBQUERY_EXPR // #OPEN_PAREN 2$SelectStatement / .. FromClause / .. #TABLE_ALIAS / .. #TABLE_REF / #C_MARKER", context.getTreePath());
-        assertEquals(1, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
+        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT .. #COMMA #EXPR_COLUMN / .. #SUBQUERY_EXPR // #OPEN_PAREN 2$SelectStatement / .. FromClause / .. #TABLE_ALIAS / .. #TABLE_REF / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
     }
 
     public void test_select_367() throws TokenStreamException, RecognitionException {
@@ -197,8 +197,8 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A // .. FromClause .. #ERROR_TOKEN_A / #ORDER #C_MARKER", context.getTreePath());
-        assertEquals(0, context.getHandlerParameters().length);
+        assertEquals("/ .. #ERROR_TOKEN_A // .. FromClause .. #ERROR_TOKEN_A / #ORDER #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(0, context.getDesc(0).getHandlerParameters().length);
     }
 
     public void test_select_368() throws TokenStreamException, RecognitionException {
@@ -207,9 +207,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A / 1$SelectStatement #C_MARKER", context.getTreePath());
-        assertEquals(1, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
+        assertEquals("/ .. #ERROR_TOKEN_A / 1$SelectStatement #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
     }
 
     public void test_select_37() throws TokenStreamException, RecognitionException {
@@ -218,7 +218,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #FROM_SUBQUERY // .. #ERROR_TOKEN_A / #SELECT .. #EXPR_COLUMN #COMMA #ERROR_TOKEN_A / #C_MARKER", context.getTreePath());
+        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #FROM_SUBQUERY // .. #ERROR_TOKEN_A / #SELECT .. #EXPR_COLUMN #COMMA #ERROR_TOKEN_A / #C_MARKER", context.getDesc(0).getTreePath());
     }
 
     public void test_select_38() throws TokenStreamException, RecognitionException {
@@ -227,7 +227,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT .. 1#EXPR_COLUMN #COMMA #ERROR_TOKEN_A / 2#C_MARKER", context.getTreePath());
+        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT .. 1#EXPR_COLUMN #COMMA #ERROR_TOKEN_A / 2#C_MARKER", context.getDesc(0).getTreePath());
     }
 
     public void test_select_39() throws TokenStreamException, RecognitionException {
@@ -236,9 +236,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / .. #ALIAS_NAME / #ALIAS_IDENT / 2#C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
+        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / .. #ALIAS_NAME / #ALIAS_IDENT / 2#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
     }
 
     public void test_select_391() throws TokenStreamException, RecognitionException {
@@ -247,7 +247,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. 2#TABLE_REFERENCE_LIST_FROM .. 3#ERROR_TOKEN_A / #ORDER #C_MARKER", context.getTreePath());
+        assertEquals("/ .. 1$SelectStatement / .. 2#TABLE_REFERENCE_LIST_FROM .. 3#ERROR_TOKEN_A / #ORDER #C_MARKER", context.getDesc(0).getTreePath());
     }
 
 
@@ -257,7 +257,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. 2#TABLE_REFERENCE_LIST_FROM .. 3#ERROR_TOKEN_A / #ORDER #C_MARKER", context.getTreePath());
+        assertEquals("/ .. 1$SelectStatement / .. 2#TABLE_REFERENCE_LIST_FROM .. 3#ERROR_TOKEN_A / #ORDER #C_MARKER", context.getDesc(0).getTreePath());
     }
 
     public void test_select_393() throws TokenStreamException, RecognitionException {
@@ -266,10 +266,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #ORDER_CLAUSE / .. #SORTED_DEF / #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
-        assertTrue(context.getHandlerParameters()[1] instanceof NameFragmentRef);
+        assertEquals("/ .. 1$SelectStatement / .. #ORDER_CLAUSE / .. #SORTED_DEF / #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
+        assertTrue(context.getDesc(0).getHandlerParameters()[1] instanceof NameFragmentRef);
     }
 
 
@@ -279,9 +279,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. 1#TABLE_REFERENCE_LIST_FROM .. #ERROR_TOKEN_A / #GROUP #C_MARKER", context.getTreePath());
-        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
-        assertEquals("process$SelectGroupBy2", context.getMeta().getMethodName());
+        assertEquals("/ .. 1$SelectStatement / .. 1#TABLE_REFERENCE_LIST_FROM .. #ERROR_TOKEN_A / #GROUP #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$SelectGroupBy2", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test_select_395() throws TokenStreamException, RecognitionException {
@@ -290,9 +290,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getTreePath());
-        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
-        assertEquals("process$SelectGroupBy", context.getMeta().getMethodName());
+        assertEquals("/ .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$SelectGroupBy", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test_select_396() throws TokenStreamException, RecognitionException {
@@ -301,11 +301,11 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A / 1$SelectStatement #C_MARKER", context.getTreePath());
-        assertEquals(1, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getMeta().getClassName());
-        assertEquals("process$SelectAppender", context.getMeta().getMethodName());
+        assertEquals("/ .. #ERROR_TOKEN_A / 1$SelectStatement #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$SelectAppender", context.getDesc(0).getMeta().getMethodName());
     }
 
 
@@ -315,12 +315,12 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
-        assertTrue(context.getHandlerParameters()[1] instanceof NameFragmentRef);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
-        assertEquals("process$SelectGroupBy", context.getMeta().getMethodName());
+        assertEquals("/ .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
+        assertTrue(context.getDesc(0).getHandlerParameters()[1] instanceof NameFragmentRef);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$SelectGroupBy", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test_select_398() throws TokenStreamException, RecognitionException {
@@ -329,12 +329,12 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
-        assertTrue(context.getHandlerParameters()[1] instanceof NameFragmentRef);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
-        assertEquals("process$SelectGroupBy", context.getMeta().getMethodName());
+        assertEquals("/ .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
+        assertTrue(context.getDesc(0).getHandlerParameters()[1] instanceof NameFragmentRef);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$SelectGroupBy", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test_update_1() throws TokenStreamException, RecognitionException {
@@ -343,10 +343,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #UPDATE_COMMAND / #ERROR_TOKEN_A / #UPDATE #TABLE_ALIAS / #TABLE_REF / #C_MARKER", context.getTreePath());
-        assertEquals(0, context.getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.UpdateStmtProcessor", context.getMeta().getClassName());
-        assertEquals("process$UpdateColumnName", context.getMeta().getMethodName());
+        assertEquals("/ .. #UPDATE_COMMAND / #ERROR_TOKEN_A / #UPDATE #TABLE_ALIAS / #TABLE_REF / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(0, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.UpdateStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$UpdateColumnName", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test_update_11() throws TokenStreamException, RecognitionException {
@@ -355,10 +355,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #UPDATE_COMMAND / #ERROR_TOKEN_A / #UPDATE #TABLE_ALIAS / #TABLE_REF #ALIAS_NAME // #C_MARKER", context.getTreePath());
-        assertEquals(0, context.getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.UpdateStmtProcessor", context.getMeta().getClassName());
-        assertEquals("process$UpdateTabAlias", context.getMeta().getMethodName());
+        assertEquals("/ .. #UPDATE_COMMAND / #ERROR_TOKEN_A / #UPDATE #TABLE_ALIAS / #TABLE_REF #ALIAS_NAME // #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(0, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.UpdateStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$UpdateTabAlias", context.getDesc(0).getMeta().getMethodName());
     }
 
 
@@ -368,10 +368,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #UPDATE_COMMAND / #SIMPLE_UPDATE_COMMAND / #UPDATE 1$TableAlias #SET #ERROR_TOKEN_A / #C_MARKER", context.getTreePath());
-        assertEquals(1, context.getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.UpdateStmtProcessor", context.getMeta().getClassName());
-        assertEquals("process$UpdateColumnVar", context.getMeta().getMethodName());
+        assertEquals("/ .. #UPDATE_COMMAND / #SIMPLE_UPDATE_COMMAND / #UPDATE 1$TableAlias #SET #ERROR_TOKEN_A / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.UpdateStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$UpdateColumnVar", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test_update_13() throws TokenStreamException, RecognitionException {
@@ -380,10 +380,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #UPDATE_COMMAND / #SIMPLE_UPDATE_COMMAND / #UPDATE 1$TableAlias #SET .. #COLUMN_SPEC #EQ #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getTreePath());
-        assertEquals(2, context.getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.UpdateStmtProcessor", context.getMeta().getClassName());
-        assertEquals("process$UpdateColumnVar2", context.getMeta().getMethodName());
+        assertEquals("/ .. #UPDATE_COMMAND / #SIMPLE_UPDATE_COMMAND / #UPDATE 1$TableAlias #SET .. #COLUMN_SPEC #EQ #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.UpdateStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$UpdateColumnVar2", context.getDesc(0).getMeta().getMethodName());
     }
 
 
@@ -395,10 +395,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. #ERROR_TOKEN_A / .. #SEMI #C_MARKER", context.getTreePath());
-        assertEquals(0, context.getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getMeta().getClassName());
-        assertEquals("process$Start3", context.getMeta().getMethodName());
+        assertEquals("/ .. #ERROR_TOKEN_A / .. #SEMI #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(0, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$Start3", context.getDesc(0).getMeta().getMethodName());
     }
 
 
@@ -416,13 +416,13 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#EXPR_COLUMN / #VAR_REF / .. 3$NameFragmentRef / #C_MARKER", context.getTreePath());
-        assertEquals(3, context.getHandlerParameters().length);
-        assertTrue(context.getHandlerParameters()[0] instanceof SelectStatement);
-        assertTrue(context.getHandlerParameters()[1] instanceof ASTNode);
-        assertTrue(context.getHandlerParameters()[2] instanceof NameFragmentRef);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getMeta().getClassName());
-        assertEquals("process$SelectVarRef", context.getMeta().getMethodName());
+        assertEquals("/ .. 1$SelectStatement / #SELECT .. 2#EXPR_COLUMN / #VAR_REF / .. 3$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(3, context.getDesc(0).getHandlerParameters().length);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
+        assertTrue(context.getDesc(0).getHandlerParameters()[1] instanceof ASTNode);
+        assertTrue(context.getDesc(0).getHandlerParameters()[2] instanceof NameFragmentRef);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$SelectVarRef", context.getDesc(0).getMeta().getMethodName());
     }
 
 
@@ -433,10 +433,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #C_MARKER", context.getTreePath());
-        assertEquals(0, context.getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getMeta().getClassName());
-        assertEquals("process$InsertInto", context.getMeta().getMethodName());
+        assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(0, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$InsertInto", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test5_2() throws TokenStreamException, RecognitionException {
@@ -446,10 +446,10 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #INTO TableAlias / #TABLE_REF / #C_MARKER", context.getTreePath());
-        assertEquals(0, context.getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getMeta().getClassName());
-        assertEquals("process$InsertIntoTab", context.getMeta().getMethodName());
+        assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #INTO TableAlias / #TABLE_REF / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(0, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$InsertIntoTab", context.getDesc(0).getMeta().getMethodName());
     }
 
 
@@ -460,10 +460,40 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #INTO 1$TableAlias / .. #ALIAS_NAME / #ALIAS_IDENT / #C_MARKER", context.getTreePath());
-        assertEquals(1, context.getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getMeta().getClassName());
-        assertEquals("process$InsertIntoTab3", context.getMeta().getMethodName());
+        assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #INTO 1$TableAlias / .. #ALIAS_NAME / #ALIAS_IDENT / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$InsertIntoTab3", context.getDesc(0).getMeta().getMethodName());
+    }
+
+
+    public void test6_1() throws TokenStreamException, RecognitionException {
+        TreePath path = parseScript1("select 1 from dual; create table abc( id number); delete from tab where <caret> ");
+        CompletionProcessor2 proc = new CompletionProcessor2(path);
+        assertTrue(proc.process());
+
+        TreePathContext context = proc.getContext();
+
+        assertEquals("/ .. 1#DELETE_COMMAND / #DELETE #FROM 2$TableAlias #WHERE_CONDITION // .. #VAR_REF / .. 3$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(3, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.DeleteStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$DeleteWhere", context.getDesc(0).getMeta().getMethodName());
+    }
+
+
+    public void test6_2() throws TokenStreamException, RecognitionException {
+        TreePath path = parseScript1("/* hello */\n delete from tab where exists (select * from atab where <caret> ");
+        CompletionProcessor2 proc = new CompletionProcessor2(path);
+        assertTrue(proc.process());
+
+        TreePathContext context = proc.getContext();
+
+        assertEquals("/ .. 1#DELETE_COMMAND / #DELETE #FROM 2$TableAlias #WHERE_CONDITION // .. #EXISTS_EXPR // .. 3$SelectStatement / .. #WHERE_CONDITION // .. #VAR_REF / .. 4$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(4, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("com.deepsky.lang.plsql.completion.processors.DeleteStmtProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$DeleteWithSubquey", context.getDesc(0).getMeta().getMethodName());
+
+        assertEquals("/ .. 1#DELETE_COMMAND / #DELETE #FROM 2$TableAlias #WHERE_CONDITION // .. #VAR_REF / .. 3$NameFragmentRef / #C_MARKER", context.getDesc(1).getTreePath());
     }
 
     protected String offset(int offset) {
