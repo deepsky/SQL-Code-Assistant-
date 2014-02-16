@@ -199,15 +199,16 @@ in a background thread and should not affect editor responsiveness.
     public static LookupElement createInsertFromSelect(String tableName, ColumnSpecList list) {
         String columnList = buildColumnSpecList(list, 40);
         LookupElement e = LookupElementBuilder.create("select")
-                .withPresentableText("insert into " + tableName + " (" + columnList + ") select .. from <table>")
+                .withPresentableText("select .. from <table>")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = "select * from ";
+                        String prefix = "select * from ;";
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
                         final Document document = editor.getDocument();
+                        editor.getCaretModel().moveToOffset(context.getTailOffset()-1);
                         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
                         LookupUtils.scheduleAutoPopup(editor, context);
                     }

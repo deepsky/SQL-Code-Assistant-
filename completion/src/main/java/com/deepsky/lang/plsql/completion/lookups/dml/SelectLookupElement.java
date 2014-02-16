@@ -52,7 +52,7 @@ public class SelectLookupElement<T extends LookupElement> extends LookupElementD
         super(delegate);
     }
 
-    public static SelectLookupElement create() {//} String table_alias, final VariantsProviderImpl.ColumnElement it, boolean forceUsingTableAlias) {
+    public static SelectLookupElement create() {
         LookupElement e = LookupElementBuilder.create("select")//it.getName())
 //                .withTailText(it.getTail(), true)
 //                .withTypeText(it.getType())
@@ -75,10 +75,10 @@ public class SelectLookupElement<T extends LookupElement> extends LookupElementD
                         editor.getCaretModel().moveToOffset(context.getTailOffset());
                         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
 
-                        int startOffset = context.getStartOffset();
-                        CodeStyleManager.getInstance(context.getProject()).reformatText(context.getFile(),
-                                startOffset,
-                                startOffset + prefix.length() + 1);
+//                        int startOffset = context.getStartOffset();
+//                        CodeStyleManager.getInstance(context.getProject()).reformatText(context.getFile(),
+//                                startOffset,
+//                                startOffset + prefix.length() + 1);
 
                         LookupUtils.scheduleAutoPopup(editor, context);
                     }
@@ -100,7 +100,7 @@ public class SelectLookupElement<T extends LookupElement> extends LookupElementD
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = "select *\nfrom (select * from  )"; //it.getQualifyName(); //forceUsingTableAlias);
+                        String prefix = "select *\nfrom (select * from  );"; //it.getQualifyName(); //forceUsingTableAlias);
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
 
 //                        LookupElement item = TableLookupElement.create("", Icons.TABLE);
@@ -108,7 +108,7 @@ public class SelectLookupElement<T extends LookupElement> extends LookupElementD
 //                        final String lookupString = item.getLookupString();
 //
 //                        document.insertString(context.getTailOffset(), lookupString);
-                        editor.getCaretModel().moveToOffset(context.getTailOffset()-1);
+                        editor.getCaretModel().moveToOffset(context.getTailOffset()-2);
                         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
 
                         int startOffset = context.getStartOffset();
@@ -252,7 +252,9 @@ in a background thread and should not affect editor responsiveness.
         }
     }
 
-    public static LookupElement createSubquery() {
+
+    public static LookupElement createSubquery(final boolean finalize) {
+
         LookupElement e = LookupElementBuilder.create("(select")
 //                .withTailText(it.getTail(), true)
 //                .withTypeText(it.getType())
@@ -264,11 +266,11 @@ in a background thread and should not affect editor responsiveness.
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = "(select * from  )";
+                        String prefix = "(select * from  )" + (finalize?";": "");
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
 
                         final Document document = editor.getDocument();
-                        editor.getCaretModel().moveToOffset(context.getTailOffset()-1);
+                        editor.getCaretModel().moveToOffset(context.getTailOffset()-(1+(finalize?1:0)));
                         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
 
 //                        int startOffset = context.getStartOffset();
@@ -283,4 +285,8 @@ in a background thread and should not affect editor responsiveness.
         return new SelectLookupElement<LookupElement>(e);
     }
 
+
+    public static LookupElement createSubquery() {
+        return  SelectLookupElement.createSubquery(false);
+    }
 }

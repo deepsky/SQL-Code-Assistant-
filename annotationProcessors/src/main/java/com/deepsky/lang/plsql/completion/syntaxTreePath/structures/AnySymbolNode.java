@@ -23,16 +23,36 @@
 
 package com.deepsky.lang.plsql.completion.syntaxTreePath.structures;
 
-public interface TNodeVisitor {
-    void visitRoot(RootNode root);
+import java.io.PrintStream;
 
-    void visitDD(DoubleDotNode doubleDotNode);
+public class AnySymbolNode extends TNode {
 
-    void visitDS(DoubleSlashNode doubleSlashNode);
+    public AnySymbolNode(int pos){
+        super("ANY");
+    }
 
-    void visitSS(SingleSlashNode singleSlashNode);
+    @Override
+    public void printOut(int offset, PrintStream writer) {
+        if(getChildren().size() == 1){
+            writer.print(offset(offset));
+            writer.print(getName());
+            writer.print("\t");
+            getChildren().get(0).printOut(0, writer);
+        } else if(getChildren().size() > 1){
+            writer.print(offset(offset));
+            writer.println(getName());
+            for(TNode child: getChildren()){
+                child.printOut(offset+4, writer);
+                writer.println();
+            }
+        } else {
+            writer.print(offset(offset));
+            writer.print(getName());
+        }
+    }
 
-    void visitStringNode(StringNode stringNode);
-
-    void visitAnySymbolNode(AnySymbolNode anySymbolNode);
+    @Override
+    public void accept(TNodeVisitor visitor) {
+        visitor.visitAnySymbolNode(this);
+    }
 }

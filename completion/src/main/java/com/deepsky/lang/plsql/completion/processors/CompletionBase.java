@@ -23,16 +23,16 @@
 
 package com.deepsky.lang.plsql.completion.processors;
 
+import com.deepsky.generated.plsql.PLSqlTokenTypes;
+import com.deepsky.lang.PsiUtil;
+import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
 import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.UpdateLookupElement;
-import com.deepsky.lang.plsql.psi.NameFragmentRef;
-import com.deepsky.lang.plsql.psi.SelectStatement;
-import com.deepsky.lang.plsql.psi.TableAlias;
+import com.deepsky.lang.plsql.psi.*;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -40,15 +40,71 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public abstract class CompletionBase {
 
+    // Set of aggregate functions
+    private final static Set<String> AGGR_FUNC_NAMES = new HashSet<String>(
+            Arrays.asList(new String[]{
+                    // TODO -- add more AGGR functions
+                    "MAX", "MIN", "COUNT", "SUM", "AVG", "COLLECT", "FIRST", "LAST", "GROUP_ID", "MEDIAN"})
+    );
+
+
+    /**
+     * Is the specified expression an aggregate function
+     *
+     * @param expression expr to test
+     * @return true if it is an aggregate like MIN, MAX, etc
+     */
+    protected boolean isExprAggrFunction(Expression expression) {
+        if(expression instanceof Callable){
+            final String name = ((Callable)expression).getFunctionName();
+            return AGGR_FUNC_NAMES.contains(name.toUpperCase());
+        }
+        return false;
+    }
+
+    protected void addIfMatch(String reference, List<LookupElement> source, List<LookupElement> out) {
+        for (LookupElement e : source) {
+            if (e.getLookupString().equalsIgnoreCase(reference.replaceAll(" ", ""))) {
+                out.add(e);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Trivial compare expressions
+     *
+     * @param expr
+     * @param expressions
+     * @return
+     */
+    protected boolean checkExpr(Expression expr, Expression[] expressions) {
+        final String exprTest = expr.getText().replaceAll("[\n\t ]", "");
+        for(Expression e: expressions){
+            return exprTest.equalsIgnoreCase(e.getText().replaceAll("[\n\t ]", ""));
+        }
+
+        return false;
+    }
+
+
+
+
+
     protected boolean is2ndLatest(@NotNull ASTNode root, @NotNull ASTNode child){
-        return child.getTextRange().getEndOffset() == root.getTextRange().getEndOffset();
+        if(child.getTextRange().getEndOffset() == root.getTextRange().getEndOffset()){
+            // Looks like child is the latest element,to make sure check against SEMI
+            PsiElement next = PsiUtil.nextNonWSLeaf(child.getPsi());
+            return !(next != null && next.getNode().getElementType() == PlSqlTokenTypes.SEMI);
+        }
+        return false;
     }
 
 
@@ -79,7 +135,6 @@ public abstract class CompletionBase {
             ctx.addElement(elem);
         }
     }
-
 
     protected  void collectTableNames(C_Context ctx){
         VariantsProvider provider = ctx.getProvider();

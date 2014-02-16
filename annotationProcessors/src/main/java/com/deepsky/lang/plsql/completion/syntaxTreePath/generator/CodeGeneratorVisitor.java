@@ -291,28 +291,38 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
     private String generateDD_Call(TNode node, final String prefix, final String parentMethodName, final Map<TNode, String> node2MethodName) {
         String methodName = null;
         if (node instanceof StringNode) {
-
             StringNode stringNode = (StringNode) node;
             if (stringNode.isNegative()) {
                 writer.println(prefix + "if (" + generateConditionForSS(false, (StringNode) node) + ") {");
                 writer.println(prefix + "\t// Negative case");
-                writer.println(prefix + "\tint lexerState = saveState();");
+                writer.println(prefix + "\tint lexerState4 = saveState();");
                 methodName = parentMethodName + "_1_" + node.getName();
                 writer.println(prefix + "\tif (" + methodName + "(context)){");
                 writer.println(prefix + "\t\treturn true;");
                 writer.println(prefix + "\t}");
-                writer.println(prefix + "\tsetState(lexerState);");
+                writer.println(prefix + "\tsetState(lexerState4);");
                 writer.println(prefix + "}");
             } else {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
-                writer.println(prefix + "\tint lexerState = saveState();");
+                writer.println(prefix + "\tint lexerState4 = saveState();");
                 methodName = parentMethodName + "_" + node.getName();
                 writer.println(prefix + "\tif (" + methodName + "(context)){");
                 writer.println(prefix + "\t\treturn true;");
                 writer.println(prefix + "\t}");
-                writer.println(prefix + "\tsetState(lexerState);");
+                writer.println(prefix + "\tsetState(lexerState4);");
                 writer.println(prefix + "}");
             }
+            node2MethodName.put(node, methodName);
+        } else if (node instanceof AnySymbolNode){
+            writer.println(prefix + "{");
+            writer.println(prefix + "\tint lexerState4 = saveState();");
+            methodName = parentMethodName + "_" + node.getName();
+            writer.println(prefix + "\tif (" + methodName + "(context)){");
+            writer.println(prefix + "\t\treturn true;");
+            writer.println(prefix + "\t}");
+            writer.println(prefix + "\tsetState(lexerState4);");
+            writer.println(prefix + "}");
+
             node2MethodName.put(node, methodName);
         }
 
@@ -380,16 +390,28 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 writer.println(prefix + "}");
             } else {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
-                writer.println(prefix + "\tint lexerState = saveState();");
+                writer.println(prefix + "\tint lexerState3 = saveState();");
                 methodName = parentMethodName + "_" + node.getName();
                 writer.println(prefix + "\tif (" + methodName + "(context)){");
                 writer.println(prefix + "\t\treturn true;");
                 writer.println(prefix + "\t}");
-                writer.println(prefix + "\tsetState(lexerState);");
+                writer.println(prefix + "\tsetState(lexerState3);");
                 writer.println(prefix + "}");
 
                 node2MethodName.put(node, methodName);
             }
+        } else if (node instanceof AnySymbolNode) {
+            // AnySymbolNode node
+            writer.println(prefix + "{");
+            writer.println(prefix + "\tint lexerState3 = saveState();");
+            methodName = parentMethodName + "_" + node.getName();
+            writer.println(prefix + "\tif (" + methodName + "(context)){");
+            writer.println(prefix + "\t\treturn true;");
+            writer.println(prefix + "\t}");
+            writer.println(prefix + "\tsetState(lexerState3);");
+            writer.println(prefix + "}");
+
+            node2MethodName.put(node, methodName);
         } else {
             System.err.println("No correct token 1!");
         }
@@ -455,14 +477,24 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 writer.println(prefix + "}");
             } else {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
-                writer.println(prefix + "\tlexerState = saveState();");
+                writer.println(prefix + "\tint lexerState2 = saveState();");
                 methodName = parentMethodName + "_" + node.getName();
                 writer.println(prefix + "\tif (" + methodName + "(context)){");
                 writer.println(prefix + "\t\treturn true;");
                 writer.println(prefix + "\t}");
-                writer.println(prefix + "\tsetState(lexerState);");
+                writer.println(prefix + "\tsetState(lexerState2);");
                 writer.println(prefix + "}");
             }
+        } else if (node instanceof AnySymbolNode) {
+            // AnySymbolNode node
+                writer.println(prefix + "{");
+                writer.println(prefix + "\tint lexerState2 = saveState();");
+                methodName = parentMethodName + "_" + node.getName();
+                writer.println(prefix + "\tif (" + methodName + "(context)){");
+                writer.println(prefix + "\t\treturn true;");
+                writer.println(prefix + "\t}");
+                writer.println(prefix + "\tsetState(lexerState2);");
+                writer.println(prefix + "}");
         } else {
             System.err.println("No correct token 2!");
         }
@@ -471,7 +503,6 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
     @Override
     public void visitStringNode(StringNode node) {
-
         generateMethodComment(node);
 
         String nodeMethodName = methodStack.peek();
@@ -610,6 +641,153 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         } else if (node instanceof DoubleSlashNode) {
             writer.println(prefix + "o = peek();");
             writer.println(prefix + "if (o instanceof SlashNode) {");
+            writer.println(prefix + "\tint lexerState1 = saveState();");
+            methodName = parentMethodName + "_DS";
+            writer.println(prefix + "\tif (" + methodName + "(context)){");
+            writer.println(prefix + "\t\treturn true;");
+            writer.println(prefix + "\t}");
+            writer.println(prefix + "\tsetState(lexerState1);");
+            writer.println(prefix + "}");
+
+            node2MethodName.put(node, methodName);
+        } else if (node instanceof SingleSlashNode) {
+            writer.println(prefix + "o = peek();");
+            writer.println(prefix + "if (o instanceof SlashNode) {");
+            writer.println(prefix + "\tint lexerState1 = saveState();");
+            methodName = parentMethodName + "_SS";
+            writer.println(prefix + "\tif (" + methodName + "(context)){");
+            writer.println(prefix + "\t\treturn true;");
+            writer.println(prefix + "\t}");
+            writer.println(prefix + "\tsetState(lexerState1);");
+            writer.println(prefix + "}");
+
+            node2MethodName.put(node, methodName);
+        }
+
+        return methodName;
+    }
+
+
+    @Override
+    public void visitAnySymbolNode(AnySymbolNode anySymbolNode) {
+        generateMethodComment(anySymbolNode);
+
+        String nodeMethodName = methodStack.peek();
+        writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
+        writer.println("\tTreePathContext.Marker m = context.createMarker(\"ANY\");");
+        writer.println("\tint lexerState;");
+        writer.println("\tObject o;");
+        writer.println("\ttry {");
+        writer.println("\t\tm.setASTNode(next(ASTNode.class), false);  // Consume ANY node");
+
+        Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
+        if (anySymbolNode.getChildren().size() == 0) {
+//            writer.println("\t\tcontext.setMetaInfoRef(" + node.getMetaInfoRef() + ");");
+//            writer.println("\t\t// TODO - implement hit");
+//            writer.println("\t\treturn false;");
+            writer.println("\t\treturn @@@@@;");
+        } else {
+// TODO            sortChildren(node);
+            for (TNode n : anySymbolNode.getChildren()) {
+                generateString_Call(n, "\t\t", nodeMethodName, node2MethodName);
+            }
+        }
+
+        writer.println("\t} catch (EOFException ignored) {");
+        writer.println("\t}");
+        writer.println("\tm.discard();");
+        writer.println("\treturn false;");
+        writer.println("}");
+        writer.println();
+
+        for (Map.Entry<TNode, String> e : node2MethodName.entrySet()) {
+            methodStack.push(e.getValue());
+            e.getKey().accept(this);
+            methodStack.pop();
+        }
+    }
+
+    private String generateAnySymbol_Call(TNode node, final String prefix, final String parentMethodName, final Map<TNode, String> node2MethodName) {
+        String methodName = null;
+        if (node instanceof DoubleDotNode) {
+            writer.println(prefix + "{");
+            writer.println(prefix + "lexerState = saveState();");
+            methodName = parentMethodName + "_DD";
+            writer.println(prefix + "if (" + methodName + "(context)){");
+            writer.println(prefix + "\treturn true;");
+            writer.println(prefix + "}");
+            writer.println(prefix + "setState(lexerState);");
+            writer.println(prefix + "}");
+
+            node2MethodName.put(node, methodName);
+        } else if (node instanceof StringNode) {
+            writer.println(prefix + "lexerState = saveState();");
+            writer.println(prefix + "do {");
+
+            if (node.getChildren().size() == 0) {
+                writer.println(prefix + "\to = next();");
+                writer.println(prefix + "\tif (" + generateCondition(true, (StringNode) node) + ") {");
+                writer.println(prefix + "\t\t// TODO - implement hit");
+                writer.println(prefix + "\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) node) + "\");");
+                writer.println(prefix + "\t\tm1.setASTNode((ASTNode)o, " + ((StringNode) node).isDollar() + ");");
+                writer.println(prefix + "\t\tcontext.setMetaInfoRef(" + ((StringNode) node).getMetaInfoRef() + ");");
+                writer.println(prefix + "\t\treturn false;");
+                writer.println(prefix + "\t} else ");
+                writer.println(prefix + "\t\tbreak;");
+            } else {
+
+                final int[] endType = {-1};
+                final String[] methodName1 = {parentMethodName};
+                final StringNode[] last = {null};
+                iterateOverSequence(node, new SequenceProcessor() {
+                    @Override
+                    public TNode process(TNode cur) {
+                        if (cur instanceof StringNode) {
+                            if (cur.getChildren().size() <= 1) {
+                                writer.println(prefix + "\to = next();");
+                                writer.println(prefix + "\tif (" + generateCondition(false, (StringNode) cur) + ") {");
+                                writer.println(prefix + "\t\tbreak;");
+                                writer.println(prefix + "\t} else {");
+                                writer.println(prefix + "\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) cur) + "\");");
+                                writer.println(prefix + "\t\tm1.setASTNode((ASTNode)o, " + ((StringNode) cur).isDollar() + ");");
+                                writer.println(prefix + "\t}");
+
+                                methodName1[0] = methodName1[0] + "_" + cur.getName();
+                                endType[0] = 1;
+                                last[0] = (StringNode) cur;
+                                return cur.getChildren().size() == 0 ? null : cur.getChildren().get(0);
+                            } else if (cur.getChildren().size() > 1) {
+                                writer.println(prefix + "\to = peek();");
+                                writer.println(prefix + "\tif (" + generateCondition(true, (StringNode) cur) + ") {");
+                                String methodName1 = parentMethodName + "_" + cur.getName();
+                                writer.println(prefix + "\t\tif (" + methodName1 + "(context)){");
+                                writer.println(prefix + "\t\t\treturn true;");
+                                writer.println(prefix + "\t\t}");
+                                writer.println(prefix + "\t}");
+                                node2MethodName.put(cur, methodName1);
+                            }
+
+                        } else {
+                            generateString_Call(cur, prefix + "\t", methodName1[0], node2MethodName);
+                        }
+                        endType[0] = -1;
+                        return null;
+                    }
+                });
+
+                if (endType[0] == 1) {
+                    writer.println(prefix + "\t// TODO - implement hit");
+                    writer.println(prefix + "\tcontext.setMetaInfoRef(" + last[0].getMetaInfoRef() + ");");
+                    writer.println(prefix + "\treturn false;");
+                }
+            }
+            writer.println(prefix + "} while(false);");
+            writer.println(prefix + "setState(lexerState);");
+            writer.println(prefix + "m.rollbackTo();");
+
+        } else if (node instanceof DoubleSlashNode) {
+            writer.println(prefix + "o = peek();");
+            writer.println(prefix + "if (o instanceof SlashNode) {");
             writer.println(prefix + "\tlexerState = saveState();");
             methodName = parentMethodName + "_DS";
             writer.println(prefix + "\tif (" + methodName + "(context)){");
@@ -635,6 +813,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
         return methodName;
     }
+
 
     private void iterateOverSequence(TNode node, SequenceProcessor processor) {
         TNode cur = node;

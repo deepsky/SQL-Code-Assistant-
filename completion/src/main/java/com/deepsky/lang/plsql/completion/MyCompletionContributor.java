@@ -50,27 +50,6 @@ public class MyCompletionContributor extends CompletionContributor {
 //        context.setDummyIdentifier(Constants.COMPL_IDENTIFIER);
     }
 
-//    void print(ASTNode parent, int indent) {
-//        System.out.println(putIndent(indent) + parent.getElementType());
-//        ASTNode cur = parent.getFirstChildNode();
-//        while (cur != null) {
-//            if (cur.getElementType() != PlSqlTokenTypes.WS) {
-//                print(cur, indent + 1);
-//            }
-//            cur = cur.getTreeNext();
-//        }
-//    }
-//
-//
-//    String putIndent(int indent) {
-//        StringBuilder b = new StringBuilder(indent);
-//        for (int i = 0; i < indent * 2; i++) {
-//            b.append(' ');
-//        }
-//        return b.toString();
-//    }
-
-
     @Override
     public void fillCompletionVariants(CompletionParameters parameters, final CompletionResultSet result) {
         if (parameters.getCompletionType() != CompletionType.BASIC) {
@@ -90,6 +69,7 @@ public class MyCompletionContributor extends CompletionContributor {
             for(int i =0; i<context.options(); i++){
                 CallMetaInfo metaInfo = context.getDesc(i).getMeta();
                 System.out.println("Path: " + context.getDesc(i).getTreePath());
+                System.out.println("Method: " + metaInfo.getMethodName() + " Class: " + metaInfo.getClassName());
 
                 final String lookupStr = stripText(StringUtils.discloseDoubleQuotes(nodeToComplete.getText()));
                 final VariantsProvider provider = chooseSearchDomain((PlSqlFile) nodeToComplete.getPsi().getContainingFile());
@@ -112,6 +92,27 @@ public class MyCompletionContributor extends CompletionContributor {
                             result.withPrefixMatcher(lookupStr).addElement(element);
                         }
                     };
+                                      //    void print(ASTNode parent, int indent) {
+//        System.out.println(putIndent(indent) + parent.getElementType());
+//        ASTNode cur = parent.getFirstChildNode();
+//        while (cur != null) {
+//            if (cur.getElementType() != PlSqlTokenTypes.WS) {
+//                print(cur, indent + 1);
+//            }
+//            cur = cur.getTreeNext();
+//        }
+//    }
+//
+//
+//    String putIndent(int indent) {
+//        StringBuilder b = new StringBuilder(indent);
+//        for (int i = 0; i < indent * 2; i++) {
+//            b.append(' ');
+//        }
+//        return b.toString();
+//    }
+
+
 
                     Object[] args = new Object[1 + context.getDesc(i).getHandlerParameters().length];
                     System.arraycopy(context.getDesc(i).getHandlerParameters(), 0, args, 1, context.getDesc(i).getHandlerParameters().length);

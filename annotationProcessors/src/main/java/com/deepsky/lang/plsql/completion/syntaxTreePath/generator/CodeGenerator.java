@@ -142,12 +142,16 @@ public class CodeGenerator {
         while (node != null) {
             if (node.getType() == SyntaxTreePathTokenTypes.SYMBOL) {
                 currentNode = parseSymbol(currentNode, node);
+            } else if (node.getType() == SyntaxTreePathTokenTypes.ANY_SYMBOL) {
+                currentNode = parseAnySymbol(currentNode, node);
             } else {
                 //SyntaxTreePathTokenTypes.LEFT_OPEN
                 AST cur = node.getFirstChild();
                 currentNode = currentNode.findOrAddDoubleDot();
                 pairs.add(new NamePosPair(".."));
-                currentNode = parseSymbol(currentNode, cur.getNextSibling());
+//                currentNode = parseSymbol(currentNode, cur.getNextSibling());
+                currentNode = parseInner(currentNode, cur.getNextSibling());
+                //node = node.getFirstChild();
             }
 
             node = node.getNextSibling();
@@ -155,6 +159,21 @@ public class CodeGenerator {
         return currentNode;
     }
 
+
+    private TNode parseAnySymbol(TNode tnode, AST node) {
+        AST cur = node.getFirstChild();
+
+        int pos = -1;
+        while (cur != null) {
+            if (cur.getType() == SyntaxTreePathTokenTypes.NUMBER) {
+                pos = Integer.parseInt(cur.getText());
+            }
+            cur = cur.getNextSibling();
+        }
+
+        pairs.add(new NamePosPair("ANY", pos));
+        return tnode.findOrAddAnySymbol(pos);
+    }
 
     private TNode parseSymbol(TNode tnode, AST node) {
         AST cur = node.getFirstChild();
@@ -291,6 +310,11 @@ public class CodeGenerator {
             this.pos = pos;
             this.isDollar = isDollar;
             this.isExcl = isExcl;
+        }
+
+        public NamePosPair(String ident, int pos) {
+            this.name = ident;
+            this.pos = pos;
         }
 
         public NamePosPair(String ident) {

@@ -118,18 +118,35 @@ public abstract class TNode {
 
     public TNode findOrAdd(boolean isDollar, int pos, String ident, boolean isNegative) {
         for(TNode child: children){
-            if(child.name.equals(ident) && child instanceof StringNode){
-                StringNode sNode = (StringNode) child;
-                if((sNode.isDollar() && isDollar) || (!sNode.isDollar() && !isDollar)){
-                    if((sNode.isNegative() && isNegative) || (!sNode.isNegative() && !isNegative))
-                        return child;
+            if(child instanceof StringNode){
+                if(child.name.equals(ident)){
+                    StringNode sNode = (StringNode) child;
+                    if((sNode.isDollar() && isDollar) || (!sNode.isDollar() && !isDollar)){
+                        if((sNode.isNegative() && isNegative) || (!sNode.isNegative() && !isNegative))
+                            return child;
+                    } else {
+                        // TODO different nodes with same name!!! Report error
+                    }
                 } else {
-                    // TODO different nodes with same name!!! Report error
+                    // TODO check the case #TABLE_REF and $TableRef i.e. ASTNode element type against PSI element
                 }
             }
         }
 
         TNode node = new StringNode(isDollar, pos, ident, isNegative);
+        children.add(node);
+        return node;
+    }
+
+
+    public TNode findOrAddAnySymbol(int pos) {
+        for(TNode child: children){
+            if(child instanceof AnySymbolNode){
+                return child;
+            }
+        }
+
+        TNode node = new AnySymbolNode(pos);
         children.add(node);
         return node;
     }

@@ -22,7 +22,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertEquals("/ .. #ERROR_TOKEN_A / #SELECT #ASTERISK 1#C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
         assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$SelectAsterisk", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -85,9 +85,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / #TABLE_REF / #C_MARKER", context.getDesc(0).getTreePath());
-        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
-        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
+        assertEquals("/ .. #ANY // .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / #TABLE_REF / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(0, context.getDesc(0).getHandlerParameters().length);
+//        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
     }
 
     public void test_select_36() throws TokenStreamException, RecognitionException {
@@ -186,9 +186,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A / #SELECT .. #COMMA #EXPR_COLUMN / .. #SUBQUERY_EXPR // #OPEN_PAREN 2$SelectStatement / .. FromClause / .. #TABLE_ALIAS / .. #TABLE_REF / #C_MARKER", context.getDesc(0).getTreePath());
-        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
-        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
+        assertEquals("/ .. #ANY // .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / #TABLE_REF / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(0, context.getDesc(0).getHandlerParameters().length);
+//        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
     }
 
     public void test_select_367() throws TokenStreamException, RecognitionException {
@@ -197,7 +197,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. #ERROR_TOKEN_A // .. FromClause .. #ERROR_TOKEN_A / #ORDER #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("/ .. #ANY // #SELECT .. #TABLE_REFERENCE_LIST_FROM .. #ERROR_TOKEN_A / #ORDER #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(0, context.getDesc(0).getHandlerParameters().length);
     }
 
@@ -247,7 +247,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. 2#TABLE_REFERENCE_LIST_FROM .. 3#ERROR_TOKEN_A / #ORDER #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("/ .. #ANY // #SELECT .. #TABLE_REFERENCE_LIST_FROM .. #ERROR_TOKEN_A / #ORDER #C_MARKER", context.getDesc(0).getTreePath());
     }
 
 
@@ -257,7 +257,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. 2#TABLE_REFERENCE_LIST_FROM .. 3#ERROR_TOKEN_A / #ORDER #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("/ .. #ANY // #SELECT .. #TABLE_REFERENCE_LIST_FROM .. #ERROR_TOKEN_A / #ORDER #C_MARKER", context.getDesc(0).getTreePath());
     }
 
     public void test_select_393() throws TokenStreamException, RecognitionException {
@@ -266,9 +266,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #ORDER_CLAUSE / .. #SORTED_DEF / #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("/ .. #ANY // #SELECT .. 1#ORDER_CLAUSE / .. #SORTED_DEF / #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(2, context.getDesc(0).getHandlerParameters().length);
-        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
         assertTrue(context.getDesc(0).getHandlerParameters()[1] instanceof NameFragmentRef);
     }
 
@@ -279,9 +279,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. 1#TABLE_REFERENCE_LIST_FROM .. #ERROR_TOKEN_A / #GROUP #C_MARKER", context.getDesc(0).getTreePath());
-        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getDesc(0).getMeta().getClassName());
-        assertEquals("process$SelectGroupBy2", context.getDesc(0).getMeta().getMethodName());
+        assertEquals("/ .. #ANY // #SELECT .. #TABLE_REFERENCE_LIST_FROM .. #ERROR_TOKEN_A / #GROUP #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$GroupBy", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test_select_395() throws TokenStreamException, RecognitionException {
@@ -290,9 +290,9 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
-        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getDesc(0).getMeta().getClassName());
-        assertEquals("process$SelectGroupBy", context.getDesc(0).getMeta().getMethodName());
+        assertEquals("/ .. #ANY // #SELECT .. 1#GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$GroupByVar", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test_select_396() throws TokenStreamException, RecognitionException {
@@ -304,7 +304,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertEquals("/ .. #ERROR_TOKEN_A / 1$SelectStatement #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
         assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$SelectAppender", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -315,12 +315,12 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("/ .. #ANY // #SELECT .. 1#GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(2, context.getDesc(0).getHandlerParameters().length);
-        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
         assertTrue(context.getDesc(0).getHandlerParameters()[1] instanceof NameFragmentRef);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getDesc(0).getMeta().getClassName());
-        assertEquals("process$SelectGroupBy", context.getDesc(0).getMeta().getMethodName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$GroupByVar", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test_select_398() throws TokenStreamException, RecognitionException {
@@ -329,12 +329,12 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1$SelectStatement / .. #GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("/ .. #ANY // #SELECT .. 1#GROUP_CLAUSE / .. #VAR_REF / .. 2$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(2, context.getDesc(0).getHandlerParameters().length);
-        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
+        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
         assertTrue(context.getDesc(0).getHandlerParameters()[1] instanceof NameFragmentRef);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.SelectStmtProcessor", context.getDesc(0).getMeta().getClassName());
-        assertEquals("process$SelectGroupBy", context.getDesc(0).getMeta().getMethodName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("process$GroupByVar", context.getDesc(0).getMeta().getMethodName());
     }
 
     public void test_update_1() throws TokenStreamException, RecognitionException {
@@ -397,7 +397,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / .. #SEMI #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(0, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start3", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -435,7 +435,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(0, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$InsertInto", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -448,7 +448,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #INTO TableAlias / #TABLE_REF / #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(0, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$InsertIntoTab", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -462,7 +462,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / #INSERT #INTO 1$TableAlias / .. #ALIAS_NAME / #ALIAS_IDENT / #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$InsertIntoTab3", context.getDesc(0).getMeta().getMethodName());
     }
 

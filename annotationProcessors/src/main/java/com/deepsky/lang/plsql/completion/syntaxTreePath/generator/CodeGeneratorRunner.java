@@ -74,8 +74,9 @@ public class CodeGeneratorRunner {
 */
 
     static final String[] testSet = new String[]{
-            "/#DELETE #FROM 2$TableAlias #WHERE_CONDITION//..!#SUBQUERY_EXPR//..#VAR_REF/..3$NameFragmentRef/#C_MARKER",
-            "/#DELETE #FROM 2$TableAlias #WHERE_CONDITION//..#SUBQUERY_EXPR//..3$SelectStatement/..#WHERE_CONDITION//..#VAR_REF/..4$NameFragmentRef/#C_MARKER",
+//            "/#DELETE #FROM 2$TableAlias #WHERE_CONDITION//..!#SUBQUERY_EXPR//..#VAR_REF/..3$NameFragmentRef/#C_MARKER",
+//            "/#DELETE #FROM 2$TableAlias #WHERE_CONDITION//..#SUBQUERY_EXPR//..3$SelectStatement/..#WHERE_CONDITION//..#VAR_REF/..4$NameFragmentRef/#C_MARKER",
+            "/..1ANY//..2#VAR_REF/..4$NameFragmentRef/#C_MARKER",
     };
 
 

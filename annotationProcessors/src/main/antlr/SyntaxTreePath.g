@@ -40,7 +40,7 @@ options {
 tokens {
     START_RULE;
     STARTER_ONE; STARTER_TWO;
-    SYMBOL;
+    SYMBOL; ANY_SYMBOL;
     LEFT_OPEN;
 }
 
@@ -66,7 +66,9 @@ inner:
     ;
 
 symbol:
-    (EXCL)? ((NUMBER)? (SHARP|DOLLAR))? IDENTIFIER
+    ((NUMBER)? "ANY") => ((NUMBER)? "ANY")
+    { #symbol = #([ANY_SYMBOL, "ANY_SYMBOL" ], #symbol);}
+    | ((EXCL)? ((NUMBER)? (SHARP|DOLLAR))? IDENTIFIER)
     { #symbol = #([SYMBOL, "SYMBOL" ], #symbol);}
     ;
 

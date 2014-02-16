@@ -28,6 +28,7 @@ package com.deepsky.lang.integration;
 import com.deepsky.lang.common.PlSqlFileType;
 import com.intellij.openapi.fileTypes.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
@@ -70,28 +71,33 @@ public class FSContentTracker {
     static boolean processFilesRecursively(@NotNull VirtualFile root, @NotNull Processor<VirtualFile> processor) {
         if (!processor.process(root)) return false;
 
-        if (root.isDirectory()) {
-            final LinkedList<VirtualFile[]> queue = new LinkedList<VirtualFile[]>();
-            queue.add(root.getChildren());
+        try {
+            if (root.isDirectory()) {
+                final LinkedList<VirtualFile[]> queue = new LinkedList<VirtualFile[]>();
+                queue.add(root.getChildren());
 
-            do {
-                final VirtualFile[] files = queue.removeFirst();
+                do {
+                    final VirtualFile[] files = queue.removeFirst();
 
-                for (VirtualFile file : files) {
-                    if (!processor.process(file)) {
-                        continue;
-                    } else if (file.isDirectory()) {
-                        try {
-                            VirtualFile[] children = file.getChildren();
-                            queue.add(children);
-                        } catch (Throwable e) {
-                            // VirtualFile could be invalid, so skip processing its children
+                    for (VirtualFile file : files) {
+                        if (!processor.process(file)) {
+                            continue;
+                        } else if (file.isDirectory()) {
+                            try {
+                                VirtualFile[] children = file.getChildren();
+                                queue.add(children);
+                            } catch (Throwable e) {
+                                // VirtualFile could be invalid, so skip processing its children
+                            }
                         }
                     }
-                }
-            } while (!queue.isEmpty());
-        }
+                } while (!queue.isEmpty());
+            }
 
+        } catch (InvalidVirtualFileAccessException e) {
+            // TODO save error in the log
+            System.err.println(e.getMessage());
+        }
         return true;
     }
 

@@ -30,7 +30,7 @@ import com.deepsky.lang.plsql.completion.syntaxTreePath.generator.TreePathContex
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 import com.intellij.lang.ASTNode;
 
-public class GenericProcessorTest extends AbstractCompletionTest {
+public class ErrorNodeProcessorTest extends AbstractCompletionTest {
 
 
     public void test4_210() throws TokenStreamException, RecognitionException {
@@ -42,11 +42,9 @@ public class GenericProcessorTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / #DELETE #FROM #TABLE_ALIAS #WHERE_CONDITION 1#C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start5", context.getDesc(0).getMeta().getMethodName());
     }
-
-
 
 
     public void test2() throws TokenStreamException, RecognitionException {
@@ -59,7 +57,7 @@ public class GenericProcessorTest extends AbstractCompletionTest {
         assertEquals("/ .. #ERROR_TOKEN_A / 1#C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
         assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -72,7 +70,7 @@ public class GenericProcessorTest extends AbstractCompletionTest {
         assertEquals("/ .. #ERROR_TOKEN_A / 1#C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
         assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -85,7 +83,7 @@ public class GenericProcessorTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / 1#C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -99,7 +97,7 @@ public class GenericProcessorTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / .. #SEMI #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(0, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start3", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -112,7 +110,7 @@ public class GenericProcessorTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / 1#C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -125,7 +123,7 @@ public class GenericProcessorTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / .. #SEMI #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(0, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start3", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -138,7 +136,7 @@ public class GenericProcessorTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / 1#C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -152,7 +150,7 @@ public class GenericProcessorTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / .. #SEMI #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(0, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start3", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -165,7 +163,7 @@ public class GenericProcessorTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / #CREATE #SEQUENCE 1#SEQUENCE_NAME .. #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start6", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -178,7 +176,7 @@ public class GenericProcessorTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / .. 1$AlterTable #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start4", context.getDesc(0).getMeta().getMethodName());
     }
 
@@ -192,7 +190,7 @@ public class GenericProcessorTest extends AbstractCompletionTest {
 
         assertEquals("/ .. #ERROR_TOKEN_A / .. 1$AlterTable #C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(1, context.getDesc(0).getHandlerParameters().length);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.GenericProcessor", context.getDesc(0).getMeta().getClassName());
+        assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start4", context.getDesc(0).getMeta().getMethodName());
     }
 

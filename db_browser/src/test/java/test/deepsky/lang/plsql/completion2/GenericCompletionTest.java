@@ -23,7 +23,8 @@
 
 package test.deepsky.lang.plsql.completion2;
 
-public class GenericCompletionTest  extends BaseCompletionTest {
+public class GenericCompletionTest extends BaseCompletionTest {
+
     @Override
     public String getPath() {
         return "completion";
@@ -33,6 +34,10 @@ public class GenericCompletionTest  extends BaseCompletionTest {
         configureByText("<caret>");
         assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select","select",  "update");
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////// SELECT
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void test_start12() throws Exception {
         configureByText("select c<caret>");
@@ -66,7 +71,7 @@ public class GenericCompletionTest  extends BaseCompletionTest {
 
     public void test_start1() throws Exception {
         configureByText("select * from tab <caret>");
-        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "update", "order", "group", "where");
     }
 
     public void test_start2() throws Exception {
@@ -79,6 +84,76 @@ public class GenericCompletionTest  extends BaseCompletionTest {
         configureByText("select * from dual update tab set a = 7 where is = 1 <caret>");
         assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "select", "update", "where");
     }
+
+
+    public void test_select_1() throws Exception {
+        configureByText("select * from dual <caret>");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "update", "where", "order", "group");
+    }
+
+    public void test_select_2() throws Exception {
+        configureByText("create table tab (a integer); select * from tab where <caret>");
+        assertLookup(myItems, "a", "exists");
+    }
+
+    public void test_select_21() throws Exception {
+        configureByText("create table tab (a integer, b varchar2(1)); select * from tab where a = 1 or <caret>");
+        assertLookup(myItems, "a", "b", "exists");
+    }
+
+    public void test_select_22() throws Exception {
+        configureByText("create table tab (a integer, b varchar2(1)); select * from tab where (a = 1) or <caret>");
+        assertLookup(myItems, "a", "b", "exists");
+    }
+
+    public void test_select_23() throws Exception {
+        configureByText("create table tab (a integer, b varchar2(1)); select * from tab where (a = 1) or <caret>");
+        assertLookup(myItems, "a", "b", "exists");
+    }
+
+    public void test_select_24() throws Exception {
+        configureByText("create table tab (a integer, b varchar2(1)); select * from tab where b like '%2' or <caret>");
+        assertLookup(myItems, "a", "b", "exists");
+    }
+
+    public void test_select_3() throws Exception {
+        configureByText("create table tab (a integer); select * from tab where a <caret>");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "select", "update", "order by", "group by");
+    }
+
+    public void test_select_4() throws Exception {
+        configureByText("create table tab (a integer); select * from tab order <caret>");
+        assertLookup(myItems, "by");
+    }
+
+    public void test_select_41() throws Exception {
+        configureByText("create table tab (a integer); select * from tab order by <caret>");
+        assertLookup(myItems, "a");
+    }
+
+    public void test_select_5() throws Exception {
+        configureByText("create table tab (a integer); select * from tab group <caret>");
+        assertLookup(myItems, "by");
+    }
+
+    public void test_select_51() throws Exception {
+        configureByText("create table tab (a integer); select * from tab group by <caret>");
+        assertLookup(myItems, "a");
+    }
+
+    public void test_select_6() throws Exception {
+        configureByText("create table tab (a integer); select * from tab where exists <caret>");
+        assertLookup(myItems, "(select");
+    }
+
+    public void test_select_61() throws Exception {
+        configureByText("create table tab (a integer); select * from (select * from tab where exists <caret>)");
+        assertLookup(myItems, "(select");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////// DELETE
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void test_start6() throws Exception {
         configureByText("delete from tab  <caret>");
@@ -123,6 +198,21 @@ public class GenericCompletionTest  extends BaseCompletionTest {
     public void test_start_3() throws Exception {
         configureByText("insert into tab values(1, 2); <caret>");
         assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "select", "update");
+    }
+
+    public void test_start_31() throws Exception {
+        configureByText("insert into tab (id, text) select * from tab <caret>");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "select", "update", "group", "order", "where");
+    }
+
+    public void test_start_32() throws Exception {
+        configureByText("insert into tab (id, text) select * from tab <caret>;");
+        assertLookup(myItems, "where", "group", "order");
+    }
+
+    public void test_start_33() throws Exception {
+        configureByText("insert into tab (id, text) select * from tab where id < 2 <caret>;");
+        assertLookup(myItems, "group", "order");
     }
 
     public void test_start_4() throws Exception {
@@ -230,6 +320,11 @@ public class GenericCompletionTest  extends BaseCompletionTest {
 
     public void test_update_9() throws Exception {
         configureByText("create table tab1 (id number, text varchar2(10)); update tab1 set (<caret>) = ");
+        assertLookup(myItems, "id", "text");
+    }
+
+    public void test_update_91() throws Exception {
+        configureByText("update tab1 set (<caret>) = ; create table tab1 (id number, text varchar2(10)); ");
         assertLookup(myItems, "id", "text");
     }
 

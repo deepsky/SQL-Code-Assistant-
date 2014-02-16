@@ -96,10 +96,10 @@ public class UpdateStmtProcessor extends CompletionBase {
     }
 
 
-    @SyntaxTreePath("//#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #ARITHMETIC_EXPR//..$SelectStatement/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
-    public void process$UpdateAssignment1(C_Context ctx, TableAlias t) {
-        collectTableNames(ctx);
-    }
+//    @SyntaxTreePath("//#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #ARITHMETIC_EXPR//..$SelectStatement/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
+//    public void process$UpdateAssignment1(C_Context ctx, TableAlias t) {
+//        collectTableNames(ctx);
+//    }
 
     @SyntaxTreePath("//#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #ARITHMETIC_EXPR//..2$SelectStatement/..#WHERE_CONDITION/..#RELATION_CONDITION/..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$UpdateAssignment2(C_Context ctx, TableAlias t, SelectStatement select, NameFragmentRef ref) {
@@ -129,19 +129,29 @@ public class UpdateStmtProcessor extends CompletionBase {
     }
 
     @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET #ERROR_TOKEN_A/2$ColumnSpecList/..#COLUMN_SPEC/#NAME_FRAGMENT/#C_MARKER")
-    public void process$UpdateSubquery2(C_Context ctx, TableAlias t, ColumnSpecList list) {
+    public void process$SubqueryUpdate2(C_Context ctx, TableAlias t, ColumnSpecList list) {
         collectColumns(ctx, t, false);
         // TODO do column filtering
     }
 
     @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET 2$ColumnSpecList/..#COLUMN_SPEC/#NAME_FRAGMENT/#C_MARKER")
-    public void process$UpdateSubquery3(C_Context ctx, TableAlias t, ColumnSpecList list) {
+    public void process$SubqueryUpdate3(C_Context ctx, TableAlias t, ColumnSpecList list) {
         collectColumns(ctx, t, false);
         // TODO do column filtering
     }
 
     @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET 2$ColumnSpecList #EQ #SUBQUERY/#OPEN_PAREN #ERROR_TOKEN_A/#C_MARKER")
-    public void process$UpdateSubquery4(C_Context ctx, TableAlias t, ColumnSpecList list) {
+    public void process$SubqueryUpdate4(C_Context ctx, TableAlias t, ColumnSpecList list) {
         ctx.addElement(SelectLookupElement.create());
     }
+
+    @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET 2$ColumnSpecList #EQ #ERROR_TOKEN_A/#C_MARKER")
+    public void process$SubqueryUpdate5(C_Context ctx, TableAlias t, ColumnSpecList list) {
+        ctx.addElement(SelectLookupElement.createSubquery());
+    }
+
+//    @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET 2$ColumnSpecList #EQ #SUBQUERY/..#SELECT_EXPRESSION/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
+//    public void process$SubqueryUpdate6(C_Context ctx, TableAlias t, ColumnSpecList list) {
+//        collectTableViewNames(ctx);
+//    }
 }

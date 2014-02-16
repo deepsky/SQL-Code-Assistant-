@@ -148,6 +148,31 @@ public class TNodePrintVisitor implements TNodeVisitor {
         }
     }
 
+    @Override
+    public void visitAnySymbolNode(AnySymbolNode node) {
+        if (lfStack.peek()) {
+            writer.println();
+            writer.print(offset(offset));
+        } else {
+            writer.print(" ");
+        }
+        writer.print(node.getName());
+
+        if (node.getChildren().size() == 1) {
+            lfStack.push(false);
+            node.getChildren().get(0).accept(this);
+            lfStack.pop();
+        } else if (node.getChildren().size() > 1) {
+            offset+=4;
+            for(TNode n: node.getChildren()){
+                lfStack.push(true);
+                n.accept(this);
+                lfStack.pop();
+            }
+            offset-=4;
+        }
+    }
+
     protected String offset(int offset) {
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < offset; i++)
