@@ -40,7 +40,9 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class BaseCompletionTest extends LightFixtureCompletionTestCase {
 
@@ -79,6 +81,31 @@ public abstract class BaseCompletionTest extends LightFixtureCompletionTestCase 
         assertEquals(Arrays.toString(text).toLowerCase(), Arrays.toString(lookups).toLowerCase());
     }
 
+    static String[] funcs = new String[]{
+            "abs", "add_months", "avg", "bfilename", "bitand", "bitor", "cast", "chr", "count",
+            "decode", "deleting", "empty_blob", "empty_clob", "extract", "floor", "from_tz",
+            "greatest", "inserting", "instr", "instr", "instr", "lag", "lead", "least", "length",
+            "lower", "lpad", "lpad", "ltrim", "ltrim", "max", "min", "mod", "numtodsinterval", "numtoyminterval",
+            "nvl", "nvl2", "rawtohex", "regexp_substr", "replace", "round", "round", "round", "round", "rpad",
+            "rpad", "sign", "substr", "substr", "sum", "sys_extract_utc", "to_char", "to_char", "to_date",
+            "to_date", "to_dsinterval", "to_number", "to_number", "to_timestamp", "translate", "trim", "trunc", "trunc",
+            "trunc", "updating", "upper", "userenv"
+    };
+
+    public void assertLookupFilterOutFunc(LookupElement[] elements, String... text) {
+
+        Arrays.sort(funcs);
+        Arrays.sort(text);
+        String[] lookups = lookupElementsToPlainString(elements, new Filter(){
+            @Override
+            public boolean doFilterOut(String text) {
+                return Arrays.binarySearch(funcs, text)>=0;
+            }
+        });
+        Arrays.sort(lookups);
+        assertEquals(Arrays.toString(text).toLowerCase(), Arrays.toString(lookups).toLowerCase());
+    }
+
     public void assertSelectFieldLookup(LookupElement[] elements, String... text) {
 
         Arrays.sort(text);
@@ -88,12 +115,27 @@ public abstract class BaseCompletionTest extends LightFixtureCompletionTestCase 
         assertEquals(Arrays.toString(text).toLowerCase(), Arrays.toString(lookups).toLowerCase());
     }
 
+    interface Filter {
+        boolean doFilterOut(String text);
+    }
+
     private String[] lookupElementsToPlainString(LookupElement[] elements) {
-        String[] out = new String[elements.length];
-        for (int i = 0; i < elements.length; i++) {
+        String[] out = new String[elements != null?elements.length: 0];
+        for (int i = 0; elements != null && i < elements.length; i++) {
             out[i] = elements[i].getLookupString();
         }
         return out;
+    }
+
+    private String[] lookupElementsToPlainString(LookupElement[] elements, Filter filter) {
+        List<String> out = new ArrayList<String>();
+        for (int i = 0; elements != null && i < elements.length; i++) {
+            String lookup = elements[i].getLookupString();
+            if(!filter.doFilterOut(lookup)){
+                out.add(lookup);
+            }
+        }
+        return out.toArray(new String[out.size()]);
     }
 
     private String[] selectFieldLookuLookupElementsToString(LookupElement[] elements) {

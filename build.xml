@@ -5,7 +5,7 @@
     <property name="build.dir" value="./build_dir"/>
     <property name="bundle.dir" value="./out"/>
     <property name="bundle.name" value="sql-assistant"/>
-    <property name="plugin.ver" value="1.4.9.12"/>
+    <property name="plugin.ver" value="1.5.3.12"/>
 
     <target name="build_plugin" description="Build PL/SQL plugin sources">
 
@@ -35,6 +35,7 @@
 
             <fileset dir="annotations/target/classes" includes="*/**/*.class"/>
             <fileset dir="completion/target/classes" includes="*/**/*.class"/>
+            <fileset dir="annotationProcessors/target/classes" includes="*/**/*.class"/>
 
             <fileset dir="plugin_runner" includes="META-INF/*.xml"/>
         </jar>
@@ -84,5 +85,102 @@
             <zipfileset dir="${bundle.dir}" includes="${bundle.name}/**/*"/>
         </zip>
     </target>
+
+
+    <property name="base.dir" value="."/>
+    <property name="build.dir" value="${base.dir}/build"/>
+    <property name="unzip.dir" value="${base.dir}/unzip"/>
+    <property name="sys.dest" value="${base.dir}/sysdest"/>
+
+    <!--<property name="lib.dir" value="../lib"/>-->
+    <property name="help.dir" value="../../help"/>
+    <property name="shared.dir" value="../../shared"/>
+    <property name="shared.root.dir" value="${shared.dir}/root"/>
+    <property name="shared.lib.dir" value="${shared.dir}/lib"/>
+    <property name="shared.resources.dir" value="${shared.root.dir}/resources"/>
+
+    <property name="shared.src.dir" value="${shared.dir}/root/src"/>
+    <property name="grammars.dir" value="${shared.dir}/root/grammars"/>
+    <property name="db_browser.test.classes.dir" value="${base.dir}/db_browser/target/test-classes"/>
+    <property name="commons.test.classes.dir" value="${base.dir}/commons/target/test-classes"/>
+    <property name="commons.classes.dir" value="${base.dir}/commons/target/classes"/>
+    <property name="main.classes.dir" value="${base.dir}/main/target/classes"/>
+
+    <property name="idea.lib.dir" value="/home/sky/idea-IC-129.1328/lib"/>
+
+    <path id="module.classpath">
+        <pathelement location="${idea.lib.dir}/annotations.jar"/>
+        <pathelement location="${idea.lib.dir}/picocontainer.jar"/>
+        <pathelement location="${idea.lib.dir}/openapi.jar"/>
+        <pathelement location="${idea.lib.dir}/idea.jar"/>
+        <pathelement location="${idea.lib.dir}/idea_rt.jar"/>
+        <pathelement location="${idea.lib.dir}/util.jar"/>
+        <pathelement location="${idea.lib.dir}/extensions.jar"/>
+        <pathelement location="${idea.lib.dir}/trove4j.jar"/>
+        <pathelement location="${idea.lib.dir}/javac2.jar"/>
+
+        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/commons-collections.jar"/>
+        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/log4j-1.2.9.jar"/>
+        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/junit-3.8.1.jar"/>
+        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/antlr-2.7.6.jar"/>
+        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/natty-0.4-SNAPSHOT.jar"/>
+
+        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/ojdbc5.jar"/>
+    </path>
+
+
+    <target name="JUnit tests" description="Run JUnit on classes">
+        <!--
+                <copy todir="${build.dir}/test-classes">
+                    <fileset dir="${shared.resources.dir}">
+                        <include name="dml/*"/>
+                        <include name="udt/*"/>
+                        <include name="cond/*"/>
+                        <include name="exttab_definitions/*"/>
+                        <include name="functions/*"/>
+                        <include name="procedures/*"/>
+                        <include name="table_definitions/*"/>
+                        <include name="triggers/*"/>
+                        <include name="view_definitions/*"/>
+                        <include name="plsql_pkg/*"/>
+                    </fileset>
+                </copy>
+        -->
+
+        <junit printsummary="yes" fork="yes">
+            <classpath>
+                <pathelement location="${db_browser.test.classes.dir}"/>
+                <pathelement location="${commons.test.classes.dir}"/>
+
+                <pathelement location="${main.classes.dir}"/>
+                <pathelement location="${commons.classes.dir}"/>
+                <!--<pathelement location="${build.dir}/test-classes"/>-->
+                <!--<pathelement location="${build.dir}/lib/sql-assistant-${plugin.ver}.jar"/>-->
+                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
+                <!--<pathelement path="${java.class.path}"/>-->
+                <path refid="module.classpath"/>
+            </classpath>
+
+            <formatter type="plain"/>
+            <!--<test name="test.deepsky.lang.plsql.completion2.GenericCompletionTest"/>-->
+
+            <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_ConditionTest"/>
+            <!--
+                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_DMLTest"/>
+                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_ExtTableTest"/>
+                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_FunctionTest"/>
+                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_PlSqlTest"/>
+                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_ProcedureTest"/>
+                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_TableTest"/>
+                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_TriggerTest"/>
+                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_TypesTest"/>
+                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_ViewTest"/>
+                        <test name="test.deepsky.lang.plsql.psi.utils.FormatterTest"/>
+                        <test name="test.deepsky.lang.common.PlSqlLexerTTest"/>
+            -->
+
+        </junit>
+    </target>
+
 
 </project>

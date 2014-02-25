@@ -29,10 +29,7 @@ import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
-import com.deepsky.lang.plsql.completion.lookups.CommonFunctionLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.GroupByLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.OrderByLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.*;
 import com.deepsky.lang.plsql.completion.lookups.dml.CommentLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
@@ -156,30 +153,49 @@ public class ErrorNodeProcessor extends CompletionBase {
 
     // select asd, t from a order by c1 <caret>
     // select pop from tab1 group by pop <caret>
-    @SyntaxTreePath("/1$SelectStatement #C_MARKER")
-    public void process$SelectAppender(C_Context ctx, SelectStatement select) {
+    @SyntaxTreePath("/1$SelectStatement 2#C_MARKER")
+    public void process$SelectAppender(C_Context ctx, SelectStatement select, ASTNode marker) {
         ASTNode last = select.getNode().getLastChildNode();
-        if (last.getElementType() == PlSqlTokenTypes.SEMI) {
+        ASTNode next = PsiUtil.nextVisibleSibling(marker);
+        if(next != null && next.getElementType() == PlSqlTokenTypes.SEMI){
+            if (last.getElementType() == PlSqlElementTypes.TABLE_REFERENCE_LIST_FROM) {
+                // select * from ...
+                ctx.addElement(KeywordLookupElement.create("where"));
+                ctx.addElement(OrderByLookupElement.create());
+                ctx.addElement(GroupByLookupElement.create());
+            } else if (last.getElementType() == PlSqlElementTypes.WHERE_CONDITION) {
+                // select * from ... where...
+                ctx.addElement(OrderByLookupElement.create());
+                ctx.addElement(GroupByLookupElement.create());
+            } else if (last.getElementType() == PlSqlElementTypes.ORDER_CLAUSE) {
+                // select * from ... order by ..
+            } else if (last.getElementType() == PlSqlElementTypes.GROUP_CLAUSE) {
+                // select * from ... group by ..
+                ctx.addElement(OrderByLookupElement.create());
+                ctx.addElement(GroupByLookupElement.createHaving());
+            }
+        } else if (last.getElementType() == PlSqlTokenTypes.SEMI) {
             // select * from ...;
             completeStart(ctx);
         } else if (last.getElementType() == PlSqlElementTypes.TABLE_REFERENCE_LIST_FROM) {
             // select * from ...
             completeStart(ctx);
             ctx.addElement(KeywordLookupElement.create("where"));
-            ctx.addElement(KeywordLookupElement.create("order by"));
-            ctx.addElement(KeywordLookupElement.create("group by"));
+            ctx.addElement(OrderByLookupElement.create());
+            ctx.addElement(GroupByLookupElement.create());
         } else if (last.getElementType() == PlSqlElementTypes.WHERE_CONDITION) {
             // select * from ... where...
             completeStart(ctx);
-            ctx.addElement(KeywordLookupElement.create("order by"));
-            ctx.addElement(KeywordLookupElement.create("group by"));
+            ctx.addElement(OrderByLookupElement.create());
+            ctx.addElement(GroupByLookupElement.create());
         } else if (last.getElementType() == PlSqlElementTypes.ORDER_CLAUSE) {
             // select * from ... order by ..
             completeStart(ctx);
         } else if (last.getElementType() == PlSqlElementTypes.GROUP_CLAUSE) {
             // select * from ... group by ..
             completeStart(ctx);
-            ctx.addElement(KeywordLookupElement.create("order by"));
+            ctx.addElement(OrderByLookupElement.create());
+            ctx.addElement(GroupByLookupElement.createHaving());
         }
     }
 
@@ -198,6 +214,12 @@ public class ErrorNodeProcessor extends CompletionBase {
         ctx.addElement(CommentLookupElement.createOnTable());
     }
 
+    @SyntaxTreePath("/#COMMENT #ON #C_MARKER")
+    public void process$CommentOn(C_Context ctx) {
+        ctx.addElement(CommentLookupElement.createColumn());
+        ctx.addElement(CommentLookupElement.createTable());
+    }
+
     @SyntaxTreePath("/#COMMENT #ON #TABLE #C_MARKER")
     public void process$CommentOnTable(C_Context ctx) {
         collectTableNames(ctx);
@@ -205,7 +227,18 @@ public class ErrorNodeProcessor extends CompletionBase {
 
     @SyntaxTreePath("/#COMMENT #ON #COLUMN #TABLE_REF/#C_MARKER")
     public void process$CommentOnColumn(C_Context ctx) {
-        collectTableNames(ctx);
+        collectTableNames(ctx,new InsertHandler<LookupElement>() {
+            @Override
+            public void handleInsert(InsertionContext context, LookupElement item) {
+                final Editor editor = context.getEditor();
+                String prefix = item.getLookupString() + ".";
+                editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                editor.getCaretModel().moveToOffset(context.getTailOffset());
+                final Document document = editor.getDocument();
+                PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                LookupUtils.scheduleAutoPopup(editor, context);
+            }
+        });
     }
 
     @SyntaxTreePath("/#COMMENT #ON #COLUMN 1#TABLE_REF #DOT 2#COLUMN_NAME_REF #C_MARKER")
@@ -280,7 +313,12 @@ public class ErrorNodeProcessor extends CompletionBase {
     public void process$SubqueryUpdate(C_Context ctx, TableAlias t, ColumnSpecList l) {
         collectColumns(ctx, t, false);
         // TODO - filter out columns using ColumnSpecList
+    }
 
+    @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET 2$ColumnSpecList/..#COLUMN_SPEC/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SubqueryUpdate2(C_Context ctx, TableAlias t, ColumnSpecList l) {
+        collectColumns(ctx, t, false);
+        // TODO - filter out columns using ColumnSpecList
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////

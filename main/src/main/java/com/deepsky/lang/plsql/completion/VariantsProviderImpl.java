@@ -1006,60 +1006,9 @@ public class VariantsProviderImpl implements VariantsProvider {
     }
 
 
-/*
-    private List<ColumnElement> collectColumnsForSubquery(final String ctx, String tabl_alias) {
-        final Map<String, ColumnElement> out = new HashMap<String, ColumnElement>();
-        String value = nameProvider.getContextPathValue(ctx);
-        if (value != null && value.length() > 0) {
-            // populate output list with the columns, if collision on columns found - strike it out
-            final String tableAliasFull = (tabl_alias != null) ? tabl_alias.toLowerCase() : null;
-            ResolveUtil.processSubqueryValue(value, new ResolveUtil.SubqueryFieldProcessor() {
-                public void processColumnField(String value1, boolean isAliasName) {
-                    String[] pair = value1.split("\\.");
-                    String name = pair[pair.length - 1].toLowerCase();
-                    String lookupName = name + (tableAliasFull != null ? tableAliasFull : "");
-                    ColumnElement item = out.get(lookupName);
-                    if (item == null) {
-                        out.put(lookupName, new ColumnElement(name, tableAliasFull, null, null));
-                    } else {
-                        item.setStrikeout(true);
-                    }
-                }
-
-                public void processAsterisk(String tableAlias) {
-                    final List<ColumnElement> columns = new ArrayList<ColumnElement>();
-                    ContextItem[] from = nameProvider.findLocalCtxItems(ctx, new int[]{ContextPath.SELECT_EXPR, ContextPath.SELECT_EXPR_UNION});
-                    for (final ContextItem ci : from) {
-                        ResolveUtil.iterateOverTables(tableAlias, ci.getValue(), new ResolveUtil.FromTabProcessor() {
-                            public void processSubquery(String _ctx, String table_alias, boolean isColumnPrefixedWithTabAlias) {
-                                List<ColumnElement> list = collectColumnsForSubquery(_ctx, table_alias);
-                                addWithMarking(columns, list);
-                            }
-
-                            public void processTable(String table_name, String table_alias, boolean isColumnPrefixedWithTabAlias) {
-                                ResolveDescriptor rhlp = resolver.resolveTableRef(table_name);
-                                if (rhlp != null) {
-                                    List<ColumnElement> list = collectColumnsForTable(rhlp, table_name, table_alias, isColumnPrefixedWithTabAlias);
-                                    addWithMarking(columns, list);
-                                }
-                            }
-                        });
-                    }
-
-                    for (int i = 0; i < columns.size(); i++) {
-                        out.put("$123" + (i + 1), columns.get(i));
-                    }
-                }
-            });
-        }
-
-        return new ArrayList<ColumnElement>(out.values());
-    }
-*/
 
     interface ColumnHandler {
-        void subqueryColumnFound(String columnRef, boolean isColumnAlias);
-
+        void subqueryColumnFound(String columnRef, boolean isColumnAlias, String subqueryAlias);
         void tableFound(String tableName, @Nullable String tableAlias);
     }
 
@@ -1068,7 +1017,7 @@ public class VariantsProviderImpl implements VariantsProvider {
             try {
                 if (t instanceof FromSubquery) {
                     if (alias == null || alias.equalsIgnoreCase(t.getAlias())) {
-                        processColumnsForSubquery(((FromSubquery) t).getSubquery(), ch);
+                        processColumnsForSubquery(((FromSubquery) t).getSubquery(), ((FromSubquery) t).getAlias(), ch);
                     }
                 } else if (t instanceof TableAlias) {
                     if (alias == null || alias.equalsIgnoreCase(t.getAlias()) || alias.equalsIgnoreCase(((TableAlias) t).getTableName())) {
@@ -1081,20 +1030,20 @@ public class VariantsProviderImpl implements VariantsProvider {
         }
     }
 
-    private void processColumnsForSubquery(Subquery subquery, ColumnHandler ch) {
+    private void processColumnsForSubquery(Subquery subquery, String subqueryAlias, ColumnHandler ch) {
         final SelectStatement s2 = subquery.getSelectStatement();
         for (final SelectFieldCommon f : s2.getSelectFieldList()) {
             if (f instanceof SelectFieldExpr) {
                 final SelectFieldExpr fexpr = (SelectFieldExpr) f;
                 final String alias = fexpr.getAlias();
                 if (alias != null) {
-                    ch.subqueryColumnFound(alias, true);
+                    ch.subqueryColumnFound(alias, true, subqueryAlias);
                 } else {
                     // check whether expression looks like <alias>.<column> or <column>
                     final ASTNode varRef = fexpr.getNode().findChildByType(PlSqlElementTypes.VAR_REF);
                     if (varRef != null) {
                         // TODO -- review, taking the all var_ref might be not quite correct
-                        ch.subqueryColumnFound(varRef.getText(), false);
+                        ch.subqueryColumnFound(varRef.getText(), false, subqueryAlias);
                     }
                 }
             } else if (f instanceof SelectFieldIdentAsterisk) {
@@ -1106,7 +1055,7 @@ public class VariantsProviderImpl implements VariantsProvider {
                             if (t instanceof TableAlias) {
                                 ch.tableFound(((TableAlias) t).getTableName(), _tAlias);
                             } else if (t instanceof FromSubquery) {
-                                processColumnsForSubquery(((FromSubquery) t).getSubquery(), ch);
+                                processColumnsForSubquery(((FromSubquery) t).getSubquery(), ((FromSubquery) t).getAlias(), ch);
                             }
                         }
                     } else if (t instanceof TableAlias && ((TableAlias) t).getTableName().equalsIgnoreCase(tableAlias)) {
@@ -1148,9 +1097,9 @@ public class VariantsProviderImpl implements VariantsProvider {
     public void collectColumnVariants(SelectStatement select, final String alias) {
         final List<ColumnElement> columns = new ArrayList<ColumnElement>();
         iterateTablesAndSubqueries(select, alias, new ColumnHandler() {
-            public void subqueryColumnFound(String columnRef, boolean isColumnAlias) {
+            public void subqueryColumnFound(String columnRef, boolean isColumnAlias, String subqueryAlias) {
                 List<ColumnElement> list = new ArrayList<ColumnElement>();
-                list.add(new ColumnElement(columnRef, alias, null, null));
+                list.add(new ColumnElement(columnRef, subqueryAlias, null, null));
                 columns.addAll(list);
 //                addWithMarking(columns, list);
 //                addWithMarking(columns1, list);
@@ -1178,173 +1127,6 @@ public class VariantsProviderImpl implements VariantsProvider {
     public List<LookupElement> collectVariableVariants(PlSqlBlock context, String prefix) {
         return null; // TODO -- implement me
     }
-
-/*
-    public List<LookupElement> collectColumnVariants(String ctxPath, String alias, boolean searchUp) {
-        final List<ColumnElement> columns = new ArrayList<ColumnElement>();
-
-        // temp map to speed up the column collecting
-        final Map<String, ResolveDescriptor> tabname2resdesc = new HashMap<String, ResolveDescriptor>(); //
-
-        ContextPathUtil.CtxPathBackIterator ite2 = new ContextPathUtil.CtxPathBackIterator(ctxPath);
-        boolean keepIterating = true;
-        // Try to resolve in the target context then climb up
-        while (keepIterating && ite2.next()) {
-            switch (ite2.getType()) {
-                default:
-                    keepIterating = false;
-                case ContextPath.SUBQUERY:
-                    continue;
-                case ContextPath.INSERT_STMT:
-                case ContextPath.DELETE_STMT:
-                case ContextPath.UPDATE_STMT:
-                case ContextPath.SELECT_EXPR:
-                    break;
-            }
-
-            String path = ite2.getPath();
-            String value = nameProvider.getContextPathValue(path);
-            t1(alias, value, new FindingsProcessor() {
-                public void processSubqueryColumn(String ctx, String value1, String tableAliasFull) {
-                    String[] pair = value1.split("\\.");
-                    String name = pair[pair.length - 1].toLowerCase();
-                    String lookupName = name + (tableAliasFull != null ? tableAliasFull : "");
-//                        ColumnElement item = out.get(lookupName);
-//                        if (item == null) {
-//                            out.put(lookupName, new ColumnElement(name, tableAliasFull, null, null));
-//                        } else {
-//                            item.setStrikeout(true);
-//                        }
-
-                    List<ColumnElement> list = new ArrayList<ColumnElement>();
-                    list.add(new ColumnElement(name, tableAliasFull, null, null));
-                    addWithMarking(columns, list);
-                }
-
-                public void processTable(String table_name, String table_alias, boolean isColumnPrefixedWithTabAlias) {
-                    ResolveDescriptor rhlp = tabname2resdesc.get(table_name.toLowerCase());
-                    if (rhlp == null) {
-                        rhlp = resolver.resolveTableRef(table_name);
-                        tabname2resdesc.put(table_name.toLowerCase(), rhlp);
-                    }
-                    if (rhlp != null) {
-                        List<ColumnElement> list = collectColumnsForTable(rhlp, table_name, table_alias, isColumnPrefixedWithTabAlias);
-                        addWithMarking(columns, list);
-                    }
-                }
-
-                public String getContextPathValue(String ctxPath) {
-                    return nameProvider.getContextPathValue(ctxPath);
-                }
-
-                public void iterateOverChildrenInContext(String ctx, int[] ctxTypes, ContextIterator iterator) {
-                    ContextItem[] from = nameProvider.findLocalCtxItems(ctx, ctxTypes);
-                    for (ContextItem ci : from) {
-                        iterator.processEntry(ci.getCtxPath(), ci.getValue());
-                    }
-                }
-            });
-
-*/
-/*
-                ResolveUtil.iterateOverTables(alias, value, new ResolveUtil.FromTabProcessor() {
-                    public void processSubquery(String ctx, String table_alias, boolean isColumnPrefixedWithTabAlias) {
-                        List<ColumnElement> list = collectColumnsForSubquery(ctx, table_alias);
-                        addWithMarking(columns, list);
-                    }
-
-                    public void processTable(String table_name, String table_alias, boolean isColumnPrefixedWithTabAlias) {
-                        ResolveDescriptor rhlp = tabname2resdesc.get(table_name.toLowerCase());
-                        if (rhlp == null) {
-                            rhlp = resolver.resolveTableRef(table_name);
-                            tabname2resdesc.put(table_name.toLowerCase(), rhlp);
-                        }
-                        if (rhlp != null) {
-                            List<ColumnElement> list = collectColumnsForTable(rhlp, table_name, table_alias, isColumnPrefixedWithTabAlias);
-                            addWithMarking(columns, list);
-                        }
-                    }
-                });
-*//*
-
-
-            if (!searchUp) {
-                // Don't search in parent contexts
-                break;
-            }
-        }
-
-        LookupElement[] out = new LookupElement[columns.size()];
-        for (int i = 0; i < columns.size(); i++) {
-            ColumnElement it = columns.get(i);
-            out[i] = SelectFieldLookupElement.create(alias, it);
-        }
-
-        return Arrays.asList(out);
-    }
-*/
-
-
-/*
-    interface FindingsProcessor {
-        void processSubqueryColumn(String ctx, String value, String tableAliasFull);
-
-        void processTable(String table_name, String table_alias, boolean isColumnPrefixedWithTabAlias);
-
-        String getContextPathValue(String ctxPath);
-
-        void iterateOverChildrenInContext(String ctx, int[] ctxTypes, ContextIterator iterator);
-    }
-
-    interface ContextIterator {
-        void processEntry(String ctx, String value);
-    }
-
-    void t1(@Nullable String alias, @Nullable String value, final @NotNull FindingsProcessor processor) {
-        ResolveUtil.iterateOverTables(alias, value, new ResolveUtil.FromTabProcessor() {
-            public void processSubquery(String ctx, String table_alias, boolean isColumnPrefixedWithTabAlias) {
-                iterateOverSubquery(ctx, table_alias, processor);
-            }
-
-            public void processTable(String table_name, String table_alias, boolean isColumnPrefixedWithTabAlias) {
-                processor.processTable(table_name, table_alias, isColumnPrefixedWithTabAlias);
-            }
-        });
-    }
-*/
-
-
-/*
-    private void iterateOverSubquery(final String ctx, String tabl_alias, final FindingsProcessor processor) {
-        final String value = processor.getContextPathValue(ctx);
-        if (value != null && value.length() > 0) {
-            // populate output list with the columns, if collision on columns found - strike it out
-            final String tableAliasFull = (tabl_alias != null) ? tabl_alias.toLowerCase() : null;
-            ResolveUtil.processSubqueryValue(value, new ResolveUtil.SubqueryFieldProcessor() {
-                public void processColumnField(String value1, boolean isAliasName) {
-                    processor.processSubqueryColumn(ctx, value1, tableAliasFull);
-                }
-
-                public void processAsterisk(final String tableAlias) {
-                    processor.iterateOverChildrenInContext(ctx, new int[]{ContextPath.SELECT_EXPR, ContextPath.SELECT_EXPR_UNION},
-                            new ContextIterator() {
-                                public void processEntry(String ctx, String value) {
-                                    ResolveUtil.iterateOverTables(tableAlias, value, new ResolveUtil.FromTabProcessor() {
-                                        public void processSubquery(String _ctx, String table_alias, boolean isColumnPrefixedWithTabAlias) {
-                                            iterateOverSubquery(_ctx, table_alias, processor);
-                                        }
-
-                                        public void processTable(String table_name, String table_alias, boolean isColumnPrefixedWithTabAlias) {
-                                            processor.processTable(table_name, table_alias, isColumnPrefixedWithTabAlias);
-                                        }
-                                    });
-                                }
-                            });
-                }
-            });
-        }
-    }
-*/
 
 
     private List<ColumnElement> collectColumnsForTable(@NotNull ResolveDescriptor rhlp, String table_name, @Nullable String table_alias) {
@@ -1410,11 +1192,6 @@ public class VariantsProviderImpl implements VariantsProvider {
             super(name);
             this.icon = icon;
             this.type = type;
-//            if (isColumnPrefixedWithTAlias) {
-//                this.tail = "(" + tableName + ")";
-//            } else {
-//                this.tail = "(" + tableName + (tableAlias != null ? " " + tableAlias : "") + ")";
-//            }
             this.tail = "(" + tableName + (tableAlias != null ? " " + tableAlias : "") + ")";
             this.tableName = tableName;
             this.tableAlias = tableAlias == null ? "" : tableAlias;

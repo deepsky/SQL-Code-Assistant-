@@ -79,7 +79,7 @@ public class SelectStmtProcessor extends CompletionBase {
     }
 
 
-    @SyntaxTreePath("/..1#EXPR_COLUMN/#SUBQUERY_EXPR//..2$SelectStatement/..#EXPR_COLUMN/#FUNCTION_CALL//..#CALL_ARGUMENT/#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..1#EXPR_COLUMN/#SUBQUERY_EXPR//..2$SelectStatement/..#EXPR_COLUMN/#FUNCTION_CALL//..#CALL_ARGUMENT/..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$SelectSubqueryExpr(C_Context ctx, SelectStatement select0, ASTNode expr, SelectStatement select, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
         final NameFragmentRef prev = nameRef.getPrevFragment();
@@ -125,8 +125,9 @@ public class SelectStmtProcessor extends CompletionBase {
     @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/..#ALIAS_NAME/#ALIAS_IDENT/2#C_MARKER")
     public void process$SelectTabAliasName(C_Context ctx, SelectStatement select, ASTNode caret) {
 
+        final int start = select.getNode().getLastChildNode().getTextRange().getStartOffset();
         final int end = select.getNode().getLastChildNode().getTextRange().getEndOffset();
-        final ASTNode lastLeaf = select.getNode().findLeafElementAt(end-1);
+        final ASTNode lastLeaf = select.getNode().findLeafElementAt(end-start);
         if( lastLeaf == caret){
             ctx.addElement(SelectLookupElement.create());
             ctx.addElement(InsertLookupElement.create());
@@ -147,34 +148,6 @@ public class SelectStmtProcessor extends CompletionBase {
     @SyntaxTreePath("/ ..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY/#SUBQUERY/#OPEN_PAREN #ERROR_TOKEN_A/2#C_MARKER")
     public void process$SelectFromSubquery2() {
         // TODO - implement me
-    }
-
-
-    @SyntaxTreePath("/..1$FromClause//..#FROM_SUBQUERY/..#SUBQUERY/..2$SelectStatement/..#EXPR_COLUMN/#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectFromSubquery4(C_Context ctx, SelectStatement select0, FromClause from, SelectStatement select, NameFragmentRef ref) {
-        VariantsProvider provider = ctx.getProvider();
-        final NameFragmentRef prev = ref.getPrevFragment();
-        final String prevText = prev != null ? prev.getText() : null;
-
-        provider.collectColumnVariants(select, prevText);
-
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-
-        // Collect columns in super query
-        PsiElement parent = from.getParent();
-        if(parent instanceof SelectStatement){
-            SelectStatement parentSelect = (SelectStatement) parent;
-            provider.collectColumnVariants(parentSelect, prevText);
-        }
-
-        variants.addAll(provider.takeCollectedLookups());
-
-        // Collect Sequence
-        variants.addAll(provider.collectSequenceVariants(prevText, ctx.getLookup()));
-
-        for (LookupElement elem : variants) {
-            ctx.addElement(elem);
-        }
     }
 
     @SyntaxTreePath("//..#SUBQUERY_CONDITION/..#SUBQUERY/..2$SelectStatement/..#EXPR_COLUMN//#VAR_REF/..3$NameFragmentRef/#C_MARKER")

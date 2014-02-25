@@ -146,6 +146,16 @@ public abstract class CompletionBase {
         }
     }
 
+    protected  void collectTableNames(@NotNull C_Context ctx, @NotNull InsertHandler<LookupElement> insertHandler){
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectTableNameVariants(ctx.getLookup(), insertHandler));
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
     protected  void collectTableNamesFinalize(C_Context ctx){
         VariantsProvider provider = ctx.getProvider();
         final List<LookupElement> variants = new ArrayList<LookupElement>();
@@ -178,12 +188,8 @@ public abstract class CompletionBase {
     }
 
     protected void completeStart(C_Context ctx) {
-//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("select"));
-//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("insert"));
-//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("update"));
-//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("delete"));
         ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(SelectLookupElement.create());
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(SelectLookupElement.createSelectFromSelect());
+//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(SelectLookupElement.createSelectFromSelect());
         ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(InsertLookupElement.create());
         ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(UpdateLookupElement.create());
         ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(DeleteLookupElement.create());

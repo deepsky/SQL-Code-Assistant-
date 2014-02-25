@@ -41,6 +41,7 @@ public class GroupByLookupElement<T extends LookupElement> extends LookupElement
         LookupElement e = LookupElementBuilder.create("group")
                 .withPresentableText("group by ...")
                 .withCaseSensitivity(false)
+                .withBoldness(true)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
@@ -63,11 +64,36 @@ public class GroupByLookupElement<T extends LookupElement> extends LookupElement
         LookupElement e = LookupElementBuilder.create("by")
                 .withPresentableText("group by ...")
                 .withCaseSensitivity(false)
+                .withBoldness(true)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
                         String prefix = "by ";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset());
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new GroupByLookupElement<LookupElement>(e);
+    }
+
+
+    public static LookupElement createHaving() {
+        LookupElement e = LookupElementBuilder.create("having")
+                .withPresentableText("having ...")
+                .withCaseSensitivity(false)
+                .withBoldness(true)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "having ";
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
                         final Document document = editor.getDocument();
 

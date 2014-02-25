@@ -51,8 +51,8 @@ public class InsertLookupElement<T extends LookupElement> extends LookupElementD
         super(delegate);
     }
 
-    public static InsertLookupElement create() {//} String table_alias, final VariantsProviderImpl.ColumnElement it, boolean forceUsingTableAlias) {
-        LookupElement e = LookupElementBuilder.create("insert")//it.getName())
+    public static InsertLookupElement create() {
+        LookupElement e = LookupElementBuilder.create("insert")
 //                .withTailText(it.getTail(), true)
 //                .withTypeText(it.getType())
 //                .withIcon(it.getIcon())
@@ -148,7 +148,7 @@ in a background thread and should not affect editor responsiveness.
 
     public static LookupElement createInsertIntoTab(VariantsProvider provider, final String tableName) {
         LookupElement e = LookupElementBuilder.create("values")
-                .withPresentableText("insert into " + tableName + " values ()")
+                .withPresentableText("insert into " + tableName + " values (..)")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
@@ -199,6 +199,7 @@ in a background thread and should not affect editor responsiveness.
     public static LookupElement createInsertFromSelect(String tableName, ColumnSpecList list) {
         String columnList = buildColumnSpecList(list, 40);
         LookupElement e = LookupElementBuilder.create("select")
+                .withTailText(" (insert with subquery)", true)
                 .withPresentableText("select .. from <table>")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {

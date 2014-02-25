@@ -46,9 +46,10 @@ public class GenericProcessor extends CompletionBase {
         ctx.addElement(SelectLookupElement.createSubquery(is2ndLatest(parent, marker)));
     }
 
-    @SyntaxTreePath("/..ANY//..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
-    public void process$TableViewNames(C_Context ctx) {
+    @SyntaxTreePath("/..1ANY//..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/2#C_MARKER")
+    public void process$TableViewNames(C_Context ctx, ASTNode parent, ASTNode marker) {
         collectTableViewNames(ctx);
+        ctx.addElement(SelectLookupElement.createSubquery(is2ndLatest(parent, marker)));
     }
 
 
@@ -92,9 +93,9 @@ public class GenericProcessor extends CompletionBase {
         final String prevText = prev != null ? prev.getText() : null;
 
         final List<LookupElement> variants = new ArrayList<LookupElement>();
-        if (prev == null && ctx.getLookup().length() > 0) {
-            variants.addAll(provider.collectSystemFuncCall(ctx.getLookup()));
-        }
+//        if (prev == null && ctx.getLookup().length() > 0) {
+        variants.addAll(provider.collectSystemFuncCall(ctx.getLookup()));
+//        }
 
         provider.collectColumnVariants( select, prevText);
         variants.addAll(provider.takeCollectedLookups());
@@ -123,19 +124,73 @@ public class GenericProcessor extends CompletionBase {
 
     }
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#ORDER_CLAUSE/..#SORTED_DEF/#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..ANY//#SELECT ..1#ORDER_CLAUSE/..#SORTED_DEF/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$SelectOrderBy2(C_Context ctx, ASTNode orderClause, NameFragmentRef nameRef) {
+        _processSelectOrderBy2(ctx, orderClause, nameRef);
+    }
+
+
+    @SyntaxTreePath("/..ANY//#SELECT ..1#ORDER_CLAUSE/..#SORTED_DEF/..2$FunctionCall//..#CALL_ARGUMENT/..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectOrderByFuncCall(C_Context ctx, ASTNode orderClause, FunctionCall call, NameFragmentRef nameRef) {
+        _processSelectOrderBy2(ctx, orderClause, nameRef);
+
+/*
+TODO
+        VariantsProvider provider = ctx.getProvider();
+        final NameFragmentRef prev = ref.getPrevFragment();
+        final String prevText = prev != null ? prev.getText() : null;
+
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+//        if (prev == null && ctx.getLookup().length() > 0) {
+        variants.addAll(provider.collectSystemFuncCall(ctx.getLookup()));
+//        }
+
+        provider.collectColumnVariants( select, prevText);
+        variants.addAll(provider.takeCollectedLookups());
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+*/
+
+    }
+
+
+    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN/#LEAD_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#ORDER_CLAUSE/..#SORTED_DEF/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$LeadFuncOrder(C_Context ctx, ASTNode expr, NameFragmentRef nameRef) {
+        SelectStatement select = (SelectStatement) expr.getTreeParent().getPsi();
+        collectColumns(ctx, select, nameRef);
+    }
+
+
+    @SyntaxTreePath("/..ANY//..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY/..#SUBQUERY/..1$SelectStatement/..#EXPR_COLUMN//..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$SelectFromSubquery4(C_Context ctx, SelectStatement select, NameFragmentRef ref) {
+        VariantsProvider provider = ctx.getProvider();
+        final NameFragmentRef prev = ref.getPrevFragment();
+        final String prevText = prev != null ? prev.getText() : null;
+
+        provider.collectColumnVariants(select, prevText);
+
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.takeCollectedLookups());
+
+        // Collect Sequence
+        variants.addAll(provider.collectSequenceVariants(prevText, ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+    }
+
+
+    private void _processSelectOrderBy2(C_Context ctx, ASTNode orderClause, NameFragmentRef nameRef) {
         SelectStatement select = (SelectStatement) orderClause.getTreeParent().getPsi();
         VariantsProvider provider = ctx.getProvider();
         final NameFragmentRef prev = nameRef.getPrevFragment();
         final String prevText = prev != null ? prev.getText() : null;
 
         final List<LookupElement> variants = new ArrayList<LookupElement>();
-        if (prev == null && ctx.getLookup().length() > 0) {
-            variants.addAll(provider.collectSystemFuncCall(ctx.getLookup()));
-        }
-
         provider.collectColumnVariants(select, prevText);
+        variants.addAll(provider.collectSystemFuncCall(ctx.getLookup()));
         variants.addAll(provider.takeCollectedLookups());
 
         final GroupByClause groupBy = select.getGroupByClause();
@@ -213,11 +268,6 @@ public class GenericProcessor extends CompletionBase {
 
     }
 
-
-    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN/#LEAD_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#ORDER_CLAUSE/..#SORTED_DEF/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$LeadFuncOrder(C_Context ctx, ASTNode expr, NameFragmentRef nameRef) {
-        SelectStatement select = (SelectStatement) expr.getTreeParent().getPsi();
-        collectColumns(ctx, select, nameRef);
-    }
-
 }
+
+

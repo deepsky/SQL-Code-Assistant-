@@ -2132,6 +2132,7 @@ default1:
 
 parameter_name :
     identifier2
+    | "comment"
     {  __markRule(PARAMETER_NAME);}
     ;
 
@@ -3761,7 +3762,7 @@ identifier2:
     | "commit"
     | "rollback"
     | "savepoint"
-    | "comment"   // TODO - not allowed in column but allowed as a func/proc argument name
+//    | "comment"   // TODO - not allowed in column but allowed as a func/proc argument name
     | "charset"
     | "body"
     | "escape"

@@ -73,7 +73,7 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.5.1.12</version>
+    <version>1.5.3.12</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
@@ -82,7 +82,7 @@
 
     <change-notes><![CDATA[<html>
        <ul>
-            <li><b>1.5.1.12</b>
+            <li><b>1.5.3.12</b>
                  <ul>
                     - [NEW] Huge refactoring of completion (implemented base cases for now)<br>
                  </ul>

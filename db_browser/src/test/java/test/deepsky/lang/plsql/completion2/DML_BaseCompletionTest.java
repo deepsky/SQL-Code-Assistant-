@@ -79,7 +79,7 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
 
     public void testUpdate$correlated_update2() throws Exception {
         configureByFile(getFilePath());
-        assertLookup(myItems, "events", "venues");
+        assertLookup(myItems, "(select", "events", "venues");
     }
 
     public void testUpdate$correlated_update3() throws Exception {

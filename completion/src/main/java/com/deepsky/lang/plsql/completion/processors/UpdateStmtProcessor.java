@@ -147,11 +147,11 @@ public class UpdateStmtProcessor extends CompletionBase {
 
     @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET 2$ColumnSpecList #EQ #ERROR_TOKEN_A/#C_MARKER")
     public void process$SubqueryUpdate5(C_Context ctx, TableAlias t, ColumnSpecList list) {
-        ctx.addElement(SelectLookupElement.createSubquery());
+        ctx.addElement(SelectLookupElement.createSubquery(true));
     }
 
-//    @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET 2$ColumnSpecList #EQ #SUBQUERY/..#SELECT_EXPRESSION/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/#C_MARKER")
-//    public void process$SubqueryUpdate6(C_Context ctx, TableAlias t, ColumnSpecList list) {
-//        collectTableViewNames(ctx);
-//    }
+    @SyntaxTreePath("/#SUBQUERY_UPDATE_COMMAND/#UPDATE $TableAlias #SET $ColumnSpecList #EQ #SUBQUERY/..1$SelectStatement/#SELECT ..#EXPR_COLUMN/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$SubqueryUpdate6(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
+        collectColumns(ctx, select, nameRef);
+    }
 }

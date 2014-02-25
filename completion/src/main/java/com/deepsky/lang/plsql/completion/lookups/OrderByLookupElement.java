@@ -41,6 +41,7 @@ public class OrderByLookupElement<T extends LookupElement> extends LookupElement
         LookupElement e = LookupElementBuilder.create("order")
                 .withPresentableText("order by ...")
                 .withCaseSensitivity(false)
+                .withBoldness(true)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
@@ -62,6 +63,7 @@ public class OrderByLookupElement<T extends LookupElement> extends LookupElement
     public static OrderByLookupElement createBy() {
         LookupElement e = LookupElementBuilder.create("by")
                 .withPresentableText("order by ...")
+                .withBoldness(true)
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override

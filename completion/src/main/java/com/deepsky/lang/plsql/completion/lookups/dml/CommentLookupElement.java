@@ -23,7 +23,6 @@
 
 package com.deepsky.lang.plsql.completion.lookups.dml;
 
-
 import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
@@ -65,8 +64,32 @@ public class CommentLookupElement<T extends LookupElement> extends LookupElement
         return new CommentLookupElement<LookupElement>(e);
     }
 
+
+    public static CommentLookupElement createTable() {
+        LookupElement e = LookupElementBuilder.create("table")
+                .withPresentableText("comment on table <table> is 'THIS IS A COMMENT'")
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "table ";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset());
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new CommentLookupElement<LookupElement>(e);
+    }
+
     public static CommentLookupElement createOnColumn() {
-        LookupElement e = LookupElementBuilder.create("on table")
+        LookupElement e = LookupElementBuilder.create("on column")
                 .withPresentableText("comment on column <table>.<column> is 'THIS IS A COMMENT'")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
@@ -88,6 +111,28 @@ public class CommentLookupElement<T extends LookupElement> extends LookupElement
         return new CommentLookupElement<LookupElement>(e);
     }
 
+    public static CommentLookupElement createColumn() {
+        LookupElement e = LookupElementBuilder.create("column")
+                .withPresentableText("comment on column <table>.<column> is 'THIS IS A COMMENT'")
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "column ";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset());
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new CommentLookupElement<LookupElement>(e);
+    }
 
     public static LookupElement createTail(String tableName, String columnName) {
         String presentation = buildPresentation(tableName, columnName);

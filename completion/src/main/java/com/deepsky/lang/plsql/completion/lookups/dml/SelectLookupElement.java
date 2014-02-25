@@ -266,7 +266,7 @@ in a background thread and should not affect editor responsiveness.
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = "(select * from  )" + (finalize?";": "");
+                        String prefix = "(select * from )" + (finalize?";": "");
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
 
                         final Document document = editor.getDocument();
