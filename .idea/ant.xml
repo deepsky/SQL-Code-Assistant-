@@ -2,7 +2,6 @@
 <project version="4">
   <component name="AntConfiguration">
     <buildFile url="file://$PROJECT_DIR$/build.xml">
-      <antCommandLine value="-verbose" />
       <customJdkName value="IDEA IC-129.1135" />
     </buildFile>
     <buildFile url="file://$PROJECT_DIR$/parser/build.xml" />

@@ -128,7 +128,7 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_select_3() throws Exception {
         configureByText("create table tab (a integer); select * from tab where a <caret>");
-        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "update", "order", "group");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "update", "order", "group", "or", "and", "like");
     }
 
     public void test_select_4() throws Exception {
@@ -191,9 +191,52 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_select_74() throws Exception {
         configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
+                "from tab1 where exists (select * from tab1 <caret>);\n");
+        assertLookupFilterOutFunc(myItems, "where", "order", "group");
+    }
+
+    public void test_select_75() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
+                "from tab1 where exists (select * from tab1 <caret> where 1<>2);\n");
+        assertEquals(0, myItems.length);
+    }
+
+    public void test_select_8() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
                 "    from tab1 e\n" +
                 " group by e.a, to_char(<caret>); )");
         assertLookupFilterOutFunc(myItems, "text", "a");
+    }
+
+
+    public void test_select_9() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
+                "from bookingevents where channel li<caret>");
+        assertLookupFilterOutFunc(myItems, "like");
+    }
+
+    public void test_select_91() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
+                "from bookingevents where channel = 0 o<caret>");
+        assertLookupFilterOutFunc(myItems, "comment", "drop", "or", "order", "group");
+    }
+
+    public void test_select_92() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
+                "from bookingevents where (channel = 2) a<caret>");
+        assertLookupFilterOutFunc(myItems, "alter", "and", "create", "update");
+    }
+
+    public void test_select_93() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
+                "from bookingevents where channel < 2 a<caret>");
+        assertLookupFilterOutFunc(myItems, "alter", "and", "create", "update");
+    }
+
+    public void test_select_94() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
+                "from bookingevents where channel = 2 and (airline > 4 and event_date bet<caret>)" );
+        assertLookupFilterOutFunc(myItems, "between");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -414,7 +457,7 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_comment_1() throws Exception {
         configureByText("create table tab1 (id number, text varchar2(10)); comm<caret> ");
-        assertLookup(myItems, "tab2");
+        assertLookup(myItems, "comment");
     }
 
     public void test_comment_11() throws Exception {

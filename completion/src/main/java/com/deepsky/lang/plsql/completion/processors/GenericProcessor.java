@@ -27,6 +27,7 @@ import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.GenericLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.GroupByLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.OrderByLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
 import com.deepsky.lang.plsql.psi.*;
@@ -52,6 +53,10 @@ public class GenericProcessor extends CompletionBase {
         ctx.addElement(SelectLookupElement.createSubquery(is2ndLatest(parent, marker)));
     }
 
+    @SyntaxTreePath("/..ANY//..#SUBQUERY/..#SELECT_EXPRESSION/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/..#ALIAS_NAME//#C_MARKER")
+    public void process$TableAlias(C_Context ctx) {
+        ctx.addElement(KeywordLookupElement.create("where"));
+    }
 
     @SyntaxTreePath("/..ANY//#SELECT ..#TABLE_REFERENCE_LIST_FROM ..#ERROR_TOKEN_A/#GROUP #C_MARKER")
     public void process$GroupBy(C_Context ctx) {
@@ -178,6 +183,15 @@ TODO
 
         for (LookupElement elem : variants) {
             ctx.addElement(elem);
+        }
+    }
+
+    @SyntaxTreePath("/..ANY//..1#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY/..#SUBQUERY/..2$SelectStatement/..#WHERE_CONDITION//..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$FromWhere(C_Context ctx, ASTNode from, SelectStatement select, NameFragmentRef ref) {
+        collectColumns(ctx, select, ref);
+        FromClause fromClause = (FromClause) from.getPsi();
+        if(fromClause.getParent() instanceof SelectStatement){
+            collectColumns(ctx, select, null);
         }
     }
 

@@ -67,7 +67,6 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     @Override
     public RunResult<T> execute() {
         final RunResult<T> result = new RunResult<T>(this);
-        System.out.println("I AM HERE !!!!!!!!!! --------------------");
         try {
             Runnable runnable = new Runnable() {
                 @Override
@@ -116,11 +115,11 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         // is put into undo queue
         final RunResult[] results = {result};
 
-        System.out.println("CommandProcessor.getInstance() " + CommandProcessor.getInstance());
-        System.out.println("getProject() " + getProject());
-        System.out.println("getCommandName() " + getCommandName());
-        System.out.println("getUndoConfirmationPolicy() " + getUndoConfirmationPolicy());
-        System.out.println("getGroupID() " + getGroupID());
+//        System.out.println("CommandProcessor.getInstance() " + CommandProcessor.getInstance());
+//        System.out.println("getProject() " + getProject());
+//        System.out.println("getCommandName() " + getCommandName());
+//        System.out.println("getUndoConfirmationPolicy() " + getUndoConfirmationPolicy());
+//        System.out.println("getGroupID() " + getGroupID());
 
         CommandProcessor.getInstance().executeCommand(getProject(), new Runnable() {
             @Override

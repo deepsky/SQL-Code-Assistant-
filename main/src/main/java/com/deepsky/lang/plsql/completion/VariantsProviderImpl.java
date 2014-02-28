@@ -1101,8 +1101,6 @@ public class VariantsProviderImpl implements VariantsProvider {
                 List<ColumnElement> list = new ArrayList<ColumnElement>();
                 list.add(new ColumnElement(columnRef, subqueryAlias, null, null));
                 columns.addAll(list);
-//                addWithMarking(columns, list);
-//                addWithMarking(columns1, list);
             }
 
             public void tableFound(String table_name, @Nullable String table_alias) {
@@ -1110,8 +1108,6 @@ public class VariantsProviderImpl implements VariantsProvider {
                 if (rhlp != null) {
                     List<ColumnElement> list = collectColumnsForTable(rhlp, table_name, table_alias);
                     columns.addAll(list);
-//                    addWithMarking(columns, list);
-//                    addWithMarking(columns1, list);
                 }
             }
         });

@@ -125,9 +125,9 @@ public class SelectStmtProcessor extends CompletionBase {
     @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/..#ALIAS_NAME/#ALIAS_IDENT/2#C_MARKER")
     public void process$SelectTabAliasName(C_Context ctx, SelectStatement select, ASTNode caret) {
 
-        final int start = select.getNode().getLastChildNode().getTextRange().getStartOffset();
+        final int start = select.getNode().getFirstChildNode().getTextRange().getStartOffset();
         final int end = select.getNode().getLastChildNode().getTextRange().getEndOffset();
-        final ASTNode lastLeaf = select.getNode().findLeafElementAt(end-start);
+        final ASTNode lastLeaf = select.getNode().findLeafElementAt(end-start-1);
         if( lastLeaf == caret){
             ctx.addElement(SelectLookupElement.create());
             ctx.addElement(InsertLookupElement.create());

@@ -42,6 +42,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -108,9 +109,9 @@ public abstract class CompletionBase {
     }
 
 
-    protected void collectColumns(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
+    protected void collectColumns(@NotNull C_Context ctx, @NotNull SelectStatement select, @Nullable NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
-        final NameFragmentRef prev = nameRef.getPrevFragment();
+        final NameFragmentRef prev = nameRef != null? nameRef.getPrevFragment(): null;
         final String prevText = prev != null ? prev.getText() : null;
 
         provider.collectColumnVariants(select, prevText);
@@ -122,7 +123,6 @@ public abstract class CompletionBase {
             ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
         }
     }
-
 
     protected void collectColumns(C_Context ctx, TableAlias tableName, boolean forceUsingTableAlias) {
         VariantsProvider provider = ctx.getProvider();

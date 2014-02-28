@@ -62,8 +62,8 @@ public class ErrorNodeProcessor extends CompletionBase {
     }
 
     @SyntaxTreePath("/..1$AlterTable #C_MARKER")
-    public void process$Start4(C_Context context, AlterTable node) {
-        // TODO - implement me
+    public void process$Start4(C_Context ctx, AlterTable node) {
+        completeStart(ctx);
     }
 
     @SyntaxTreePath("/#DELETE #FROM #TABLE_ALIAS #WHERE_CONDITION 1#C_MARKER")
@@ -78,9 +78,8 @@ public class ErrorNodeProcessor extends CompletionBase {
     }
 
     @SyntaxTreePath("/#CREATE #SEQUENCE 1#SEQUENCE_NAME .. #C_MARKER")
-    public void process$Start6(C_Context context, ASTNode node) {
-        // TODO - implement me
-    }
+    public void process$Start6(C_Context ctx, ASTNode node) {
+        completeStart(ctx);    }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,6 +173,8 @@ public class ErrorNodeProcessor extends CompletionBase {
                 ctx.addElement(OrderByLookupElement.create());
                 ctx.addElement(GroupByLookupElement.createHaving());
             }
+        } else if (next != null && next.getElementType() == PlSqlTokenTypes.KEYWORD_GROUP) {
+        } else if (next != null && next.getElementType() == PlSqlTokenTypes.KEYWORD_ORDER) {
         } else if (last.getElementType() == PlSqlTokenTypes.SEMI) {
             // select * from ...;
             completeStart(ctx);
@@ -188,6 +189,9 @@ public class ErrorNodeProcessor extends CompletionBase {
             completeStart(ctx);
             ctx.addElement(OrderByLookupElement.create());
             ctx.addElement(GroupByLookupElement.create());
+            ctx.addElement(KeywordLookupElement.create("or"));
+            ctx.addElement(KeywordLookupElement.create("and"));
+            ctx.addElement(KeywordLookupElement.create("like"));
         } else if (last.getElementType() == PlSqlElementTypes.ORDER_CLAUSE) {
             // select * from ... order by ..
             completeStart(ctx);

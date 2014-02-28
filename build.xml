@@ -2,10 +2,39 @@
 
 <project name="Sql Code Assistant Plugin builder" default="">
 
-    <property name="build.dir" value="./build_dir"/>
+    <property name="idea.lib.dir" value="/home/sky/idea-IC-129.1328/lib"/>
+    <property name="idea.platform.prefix" value="Idea"/>
+    <property name="idea.home.path" value="/home/sky/.IdeaIC12/system/plugins-sandbox/test"/>
+    <property name="idea.plugins.path" value="/home/sky/.IdeaIC12/system/plugins-sandbox/plugins"/>
+
+    <property name="base.dir" value="."/>
+
     <property name="bundle.dir" value="./out"/>
     <property name="bundle.name" value="sql-assistant"/>
-    <property name="plugin.ver" value="1.5.3.12"/>
+    <property name="plugin.ver" value="1.5.4.12"/>
+
+    <property name="build.dir" value="${base.dir}/build"/>
+    <property name="unzip.dir" value="${base.dir}/unzip"/>
+    <property name="sys.dest" value="${base.dir}/sysdest"/>
+
+    <property name="help.dir" value="../../help"/>
+    <property name="root.dir" value="."/>
+    <property name="root.lib.dir" value="${root.dir}/lib"/>
+
+    <property name="db_browser.test.classes.dir" value="${base.dir}/db_browser/target/test-classes"/>
+    <property name="commons.test.classes.dir" value="${base.dir}/commons/target/test-classes"/>
+    <property name="completion.test.classes.dir" value="${base.dir}/completion/target/test-classes"/>
+
+    <property name="antl_patch.classes.dir" value="${base.dir}/antl_patch/target/classes"/>
+    <property name="completion.classes.dir" value="${base.dir}/completion/target/classes"/>
+    <property name="annotations.classes.dir" value="${base.dir}/annotations/target/classes"/>
+    <property name="commons.classes.dir" value="${base.dir}/commons/target/classes"/>
+    <property name="main.classes.dir" value="${base.dir}/main/target/classes"/>
+    <property name="parser.classes.dir" value="${base.dir}/parser/target/classes"/>
+    <property name="annotationProcessors.classes.dir" value="${base.dir}/annotationProcessors/target/classes"/>
+    <property name="database.classes.dir" value="${base.dir}/database/target/classes"/>
+    <property name="db_browser.classes.dir" value="${base.dir}/db_browser/target/classes"/>
+    <property name="plugin_runner.dir" value="${base.dir}/plugin_runner"/>
 
     <target name="build_plugin" description="Build PL/SQL plugin sources">
 
@@ -23,23 +52,17 @@
                 <exclude name="icons/Thumbs.db"/>
             </fileset>
             <fileset dir="antl_patch/target/classes" includes="*/**/*.class"/>
-
             <fileset dir="database/target/classes" includes="*/**/*.class"/>
             <fileset dir="db_browser/target/classes" includes="*/**/*.class"/>
-
             <fileset dir="commons/target/classes" includes="*/**/*.class"/>
             <fileset dir="commons/target/classes" includes="*.xml"/>
-
             <fileset dir="parser/target/classes" includes="*/**/*.class"/>
             <fileset dir="result_panel/target/classes" includes="*/**/*.class"/>
-
             <fileset dir="annotations/target/classes" includes="*/**/*.class"/>
             <fileset dir="completion/target/classes" includes="*/**/*.class"/>
             <fileset dir="annotationProcessors/target/classes" includes="*/**/*.class"/>
-
             <fileset dir="plugin_runner" includes="META-INF/*.xml"/>
         </jar>
-
     </target>
 
     <target name="bundle_plugin" description="Bundle PL/SQL plugin libs">
@@ -86,28 +109,6 @@
         </zip>
     </target>
 
-
-    <property name="base.dir" value="."/>
-    <property name="build.dir" value="${base.dir}/build"/>
-    <property name="unzip.dir" value="${base.dir}/unzip"/>
-    <property name="sys.dest" value="${base.dir}/sysdest"/>
-
-    <!--<property name="lib.dir" value="../lib"/>-->
-    <property name="help.dir" value="../../help"/>
-    <property name="shared.dir" value="../../shared"/>
-    <property name="shared.root.dir" value="${shared.dir}/root"/>
-    <property name="shared.lib.dir" value="${shared.dir}/lib"/>
-    <property name="shared.resources.dir" value="${shared.root.dir}/resources"/>
-
-    <property name="shared.src.dir" value="${shared.dir}/root/src"/>
-    <property name="grammars.dir" value="${shared.dir}/root/grammars"/>
-    <property name="db_browser.test.classes.dir" value="${base.dir}/db_browser/target/test-classes"/>
-    <property name="commons.test.classes.dir" value="${base.dir}/commons/target/test-classes"/>
-    <property name="commons.classes.dir" value="${base.dir}/commons/target/classes"/>
-    <property name="main.classes.dir" value="${base.dir}/main/target/classes"/>
-
-    <property name="idea.lib.dir" value="/home/sky/idea-IC-129.1328/lib"/>
-
     <path id="module.classpath">
         <pathelement location="${idea.lib.dir}/annotations.jar"/>
         <pathelement location="${idea.lib.dir}/picocontainer.jar"/>
@@ -118,66 +119,74 @@
         <pathelement location="${idea.lib.dir}/extensions.jar"/>
         <pathelement location="${idea.lib.dir}/trove4j.jar"/>
         <pathelement location="${idea.lib.dir}/javac2.jar"/>
+        <pathelement location="${idea.lib.dir}/resources.jar"/>
+        <pathelement location="${idea.lib.dir}/resources_en.jar"/>
+        <pathelement location="${idea.lib.dir}/cglib-2.2.2.jar"/>
+        <pathelement location="${idea.lib.dir}/asm.jar"/>
+        <pathelement location="${idea.lib.dir}/sanselan-0.98-snapshot.jar"/>
+        <pathelement location="${idea.lib.dir}/nanoxml-2.2.3.jar"/>
+        <pathelement location="${idea.lib.dir}/rngom-20051226-patched.jar"/>
+        <pathelement location="${idea.lib.dir}/jing.jar"/>
+        <pathelement location="${idea.lib.dir}/oromatcher.jar"/>
+        <pathelement location="${idea.lib.dir}/commons-logging-1.1.1.jar"/>
 
-        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/commons-collections.jar"/>
-        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/log4j-1.2.9.jar"/>
-        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/junit-3.8.1.jar"/>
-        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/antlr-2.7.6.jar"/>
-        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/natty-0.4-SNAPSHOT.jar"/>
+        <pathelement location="${idea.lib.dir}/boot.jar"/>
+        <pathelement location="${idea.lib.dir}/bootstrap.jar"/>
+        <pathelement location="${idea.lib.dir}/nanoxml-2.2.3.jar"/>
+        <pathelement location="${idea.lib.dir}/asm-commons.jar"/>
+        <pathelement location="${idea.lib.dir}/jdom.jar"/>
+        <pathelement location="${idea.lib.dir}/annotations.jar"/>
+        <pathelement location="${idea.lib.dir}/forms_rt.jar"/>
+        <pathelement location="${idea.lib.dir}/automaton.jar"/>
+        <pathelement location="${idea.lib.dir}/junit-4.10.jar"/>
 
-        <pathelement location="/home/sky/sqlcode_assistant/sql_assistant/lib/ojdbc5.jar"/>
+        <pathelement location="${root.lib.dir}/commons-collections-3.2.1.jar"/>
+        <pathelement location="${root.lib.dir}/log4j-1.2.9.jar"/>
+        <pathelement location="${root.lib.dir}/natty-0.4-SNAPSHOT.jar"/>
+        <pathelement location="${root.lib.dir}/castor-1.2.jar"/>
+        <pathelement location="${root.lib.dir}/antlr-2.7.5-patched.jar"/>
+        <!--<pathelement location="${root.lib.dir}/const_jjar.zip"/>-->
+
+        <pathelement location="${root.lib.dir}/ojdbc5.jar"/>
     </path>
 
 
     <target name="JUnit tests" description="Run JUnit on classes">
-        <!--
-                <copy todir="${build.dir}/test-classes">
-                    <fileset dir="${shared.resources.dir}">
-                        <include name="dml/*"/>
-                        <include name="udt/*"/>
-                        <include name="cond/*"/>
-                        <include name="exttab_definitions/*"/>
-                        <include name="functions/*"/>
-                        <include name="procedures/*"/>
-                        <include name="table_definitions/*"/>
-                        <include name="triggers/*"/>
-                        <include name="view_definitions/*"/>
-                        <include name="plsql_pkg/*"/>
-                    </fileset>
-                </copy>
-        -->
 
         <junit printsummary="yes" fork="yes">
+<!--
+            <jvmarg value="-Xdebug" />
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5433" />
+-->
+
+            <sysproperty key="idea.platform.prefix" value="${idea.platform.prefix}"/>
+            <sysproperty key="idea.home.path" value="${idea.home.path}"/>
+            <sysproperty key="idea.plugins.path" value="${idea.plugins.path}"/>
+
             <classpath>
                 <pathelement location="${db_browser.test.classes.dir}"/>
                 <pathelement location="${commons.test.classes.dir}"/>
+                <pathelement location="${completion.test.classes.dir}"/>
 
                 <pathelement location="${main.classes.dir}"/>
+                <pathelement location="${parser.classes.dir}"/>
                 <pathelement location="${commons.classes.dir}"/>
-                <!--<pathelement location="${build.dir}/test-classes"/>-->
-                <!--<pathelement location="${build.dir}/lib/sql-assistant-${plugin.ver}.jar"/>-->
-                <pathelement location="${shared.lib.dir}/antlr-2.7.5.jar"/>
-                <!--<pathelement path="${java.class.path}"/>-->
+                <pathelement location="${completion.classes.dir}"/>
+                <pathelement location="${annotations.classes.dir}"/>
+                <pathelement location="${antl_patch.classes.dir}"/>
+                <pathelement location="${annotationProcessors.classes.dir}"/>
+                <pathelement location="${database.classes.dir}"/>
+                <pathelement location="${db_browser.classes.dir}"/>
+                <pathelement location="${plugin_runner.dir}"/>
+
                 <path refid="module.classpath"/>
             </classpath>
 
             <formatter type="plain"/>
-            <!--<test name="test.deepsky.lang.plsql.completion2.GenericCompletionTest"/>-->
-
-            <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_ConditionTest"/>
-            <!--
-                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_DMLTest"/>
-                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_ExtTableTest"/>
-                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_FunctionTest"/>
-                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_PlSqlTest"/>
-                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_ProcedureTest"/>
-                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_TableTest"/>
-                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_TriggerTest"/>
-                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_TypesTest"/>
-                        <test name="test.deepsky.lang.plsql.struct.parser.PlSqlASTParser_ViewTest"/>
-                        <test name="test.deepsky.lang.plsql.psi.utils.FormatterTest"/>
-                        <test name="test.deepsky.lang.common.PlSqlLexerTTest"/>
-            -->
+            <test name="test.deepsky.lang.plsql.completion2.GenericCompletionTest" />
+            <test name="test.deepsky.lang.plsql.completion2.Select_BaseCompletionTest" />
+            <test name="test.deepsky.lang.plsql.completion2.DML_BaseCompletionTest" />
+            <test name="test.deepsky.lang.plsql.completion2.DDL_BaseCompletionTest" />
 
         </junit>
     </target>
