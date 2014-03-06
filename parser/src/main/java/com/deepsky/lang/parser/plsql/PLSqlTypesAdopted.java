@@ -207,7 +207,6 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType CURRENT_OF_CLAUSE = new PlSqlElementType("CURRENT_OF_CLAUSE", PLSqlTokenTypes.CURRENT_OF_CLAUSE);
 	PlSqlElementType DATATYPE_PARAM_INFO = new PlSqlElementType("DATATYPE_PARAM_INFO", PLSqlTokenTypes.DATATYPE_PARAM_INFO);
 	PlSqlElementType ROWNUM = new PlSqlElementType("ROWNUM", PLSqlTokenTypes.ROWNUM);
-	PlSqlElementType COMMENT = new PlSqlElementType("COMMENT", PLSqlTokenTypes.COMMENT);
 	PlSqlElementType EXEC_NAME_REF = new PlSqlElementType("EXEC_NAME_REF", PLSqlTokenTypes.EXEC_NAME_REF);
 	PlSqlElementType TABLE_REF_WITH_LINK = new PlSqlElementType("TABLE_REF_WITH_LINK", PLSqlTokenTypes.TABLE_REF_WITH_LINK);
 	PlSqlElementType COLUMN_CHECK_CONSTRAINT = new PlSqlElementType("COLUMN_CHECK_CONSTRAINT", PLSqlTokenTypes.COLUMN_CHECK_CONSTRAINT);
@@ -235,6 +234,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType VIEW_NAME_DDL = new PlSqlElementType("VIEW_NAME_DDL", PLSqlTokenTypes.VIEW_NAME_DDL);
 	PlSqlElementType MERGE_WHEN_COMMAND = new PlSqlElementType("MERGE_WHEN_COMMAND", PLSqlTokenTypes.MERGE_WHEN_COMMAND);
 	PlSqlElementType TABLE_REFERENCE_LIST_FROM = new PlSqlElementType("TABLE_REFERENCE_LIST_FROM", PLSqlTokenTypes.TABLE_REFERENCE_LIST_FROM);
+	PlSqlElementType COMMENT_STMT = new PlSqlElementType("COMMENT_STMT", PLSqlTokenTypes.COMMENT_STMT);
 	PlSqlElementType ALTER_TRIGGER = new PlSqlElementType("ALTER_TRIGGER", PLSqlTokenTypes.ALTER_TRIGGER);
 	PlSqlElementType SQLPLUS_SET = new PlSqlElementType("SQLPLUS_SET", PLSqlTokenTypes.SQLPLUS_SET);
 	PlSqlElementType ALTER_TABLE = new PlSqlElementType("ALTER_TABLE", PLSqlTokenTypes.ALTER_TABLE);

@@ -79,4 +79,16 @@ public class PLSQL_BaseCompletionTest  extends BaseCompletionTest {
         configureByFile(getFilePath());
         assertLookup(myItems, "rowtype", "type");
     }
+
+    // CURSOR
+    public void testSelect$cursor_in_anonymous_blk() throws Exception {
+        configureByFile(getFilePath());
+        assertLookup(myItems, "id", "text");
+    }
+
+    public void testSelect$cursor_in_anonymous_blk1() throws Exception {
+        configureByFile(getFilePath());
+        assertLookup(myItems, "id", "first_name", "last_name");
+    }
+
 }

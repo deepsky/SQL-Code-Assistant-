@@ -30,38 +30,6 @@
     <br>
     <b><font color="red">NOTE:</font> Put SQL and PL/SQL files under some of source roots to have them indexed by the plugin.</b>
     <br>
-    <br>
-    <b>HOW TO SETUP PUBLIC KEY AUTH FOR CONNECTION VIA SSH TUNNEL</b>
-    <br>
-    For example you want to connect to the database on DB-ONE host which is not accessible directly from your host (SMITH).
-    The standard way to resolve this issue is to use SSH tunnel via an intermediate or "jump" host which can access DB-ONE host.
-    But you want to have database connection procedure to be as simple as possible without having to enter password on SSH authentication.
-    To have this solved you have to use Public Key Authentication and below you can find an example how
-    to generate Public/Private Key pair and setup Public Key Auth on the host jump.
-    <br><br>
-    #1. Create Public/Private Key pair<br>
-    $ ssh-keygen -t rsa<br>
-    Generating public/private rsa key pair.<br>
-    Enter file in which to save the key (/home/user/.ssh/id_rsa): <use default or enter new location><br>
-    Enter passphrase (empty to have no passphrase):<br>
-    Enter same passphrase again:<br>
-    Your identification has been saved in /home/username/.ssh/id_rsa.<br>
-    Your public key has been saved in /home/username/.ssh/id_rsa.pub.<br>
-    The key fingerprint is:<br>
-    ab:f9:23:a6:f0:db:ce:64:59:dd:98:b9:be:7c:57:6f username@smith<br>
-    <br>
-    #2. Create .ssh folder on jump server, if it already exists, skip this step<br>
-    ssh b@jump mkdir -p .ssh<br>
-    b@jump's password:<br>
-    <br>
-    #3. Append username's new public key to b@jump:.ssh/authorized_keys<br>
-    cat .ssh/id_rsa.pub | ssh b@jump 'cat >> .ssh/authorized_keys'<br>
-    <br>
-    #4. Specify private key (/home/username/.ssh/id_rsa) in the Connection Setting dialog to enable
-    Public Key Authentication for connection via SSH tunnel.<br>
-    <br>
-    See more details on setting up Public Key Auth here: http://www.linuxproblem.org/art_9.html
-    <br>
     Latest changes:
     <ul>
         <li>[KNOWN ISSUE] Case-sensitive table names, column names, etc are not supported for now</li>
@@ -73,7 +41,7 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.4.9.13</version>
+    <version>1.5.6.13</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
@@ -82,6 +50,11 @@
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.5.6.13</b>
+                 <ul>
+                    - [NEW] Refactoring of completion (implemented base cases for now)<br>
+                 </ul>
+            </li>
             <li><b>1.4.9.13</b>
                  <ul>
                     - [NEW] Highlight errored string literals<br>
@@ -234,7 +207,7 @@
         <typedHandler implementation="com.deepsky.lang.plsql.editor.actions.PlSqlTypedHandler"/>
         <quoteHandler fileType="PlSql" className="com.deepsky.lang.plsql.editor.actions.PlSqlQuoteHandler"/>
 
-        <completion.contributor language="PlSql" implementationClass="com.deepsky.lang.plsql.completion.ComplContributor"/>
+        <completion.contributor language="PlSql" implementationClass="com.deepsky.lang.plsql.completion.MyCompletionContributor"/>
         <weigher key="completion" implementationClass="com.deepsky.lang.plsql.completion.SqlCompletionWeigher" id="plsqlWeigher" order="before stats" />
 
         <codeInsight.parameterInfo language="PlSql"
@@ -317,10 +290,12 @@
                     text="Parameter Info" description="Parameter Info">
                 <keyboard-shortcut keymap="$default" first-keystroke="ctrl P"/>
             </action>
+<!--
             <action id="com.deepsky.navigation.ImportData" class="com.deepsky.actions.ImportDataAction"
                     text="Import Data" description="Import Data from CSV file">
                 <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift I"/>
             </action>
+-->
             <!--
                         <action id="com.deepsky.navigation.showParameterInfo.1" class="com.deepsky.actions.ShowParameterInfoFake"
                                 text="Parameter Info" description="Parameter Info">

@@ -30,9 +30,11 @@ import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.DeleteStatement;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.TableAlias;
+import com.deepsky.lang.plsql.psi.WhereCondition;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class DeleteStatementImpl extends PlSqlElementBase implements DeleteStatement {
 
@@ -56,6 +58,16 @@ public class DeleteStatementImpl extends PlSqlElementBase implements DeleteState
         }
 
         throw new SyntaxTreeCorruptedException();
+    }
+
+    @Nullable
+    public WhereCondition getWhereCondition() {
+        final ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.WHERE_CONDITION);
+        if (node != null) {
+            return (WhereCondition) node.getPsi();
+        } else {
+            return null;
+        }
     }
 
 }

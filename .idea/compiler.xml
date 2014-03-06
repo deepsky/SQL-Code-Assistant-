@@ -34,7 +34,7 @@
         <module name="spec_src" />
         <module name="tools" />
       </profile>
-      <profile default="false" name="Annotation profile for completion" enabled="true">
+      <profile default="false" name="Annotation profile for completion" enabled="false">
         <sourceOutputDir name="target/generated-sources/apt" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />

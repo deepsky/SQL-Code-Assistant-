@@ -39,7 +39,7 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
 
     public void testUpdate$update1() throws Exception {
         configureByFile(getFilePath());
-        assertLookup(myItems, "id", "text");
+        assertLookup(myItems, "id", "text", "(");
     }
 
     public void testUpdate$update2() throws Exception {
@@ -54,7 +54,7 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
 
     public void testUpdate$update01() throws Exception {
         configureByFile(getFilePath());
-        assertLookup(myItems, "id", "text");
+        assertLookup(myItems, "id", "text", "(");
     }
 
     public void testUpdate$update02() throws Exception {
@@ -69,7 +69,7 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
 
     public void testUpdate$update21() throws Exception {
         configureByFile(getFilePath());
-        assertLookup(myItems, "id", "text");
+        assertLookup(myItems, "id", "text", "exists");
     }
 
     public void testUpdate$correlated_update() throws Exception {
@@ -79,7 +79,7 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
 
     public void testUpdate$correlated_update2() throws Exception {
         configureByFile(getFilePath());
-        assertLookup(myItems, "events", "venues");
+        assertLookup(myItems, "(select", "events", "venues");
     }
 
     public void testUpdate$correlated_update3() throws Exception {
@@ -145,7 +145,7 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
     // DELETE
     public void testDelete$correlated_subquery_delete() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "a.deptno", "a.id", "a.sal");
+        assertSelectFieldLookup(myItems, "a.deptno", "a.id", "a.sal", "exists");
     }
 
     public void testDelete$delete0() throws Exception {
@@ -155,7 +155,7 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
 
     public void testDelete$delete1() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "p.id", "p.text");
+        assertSelectFieldLookup(myItems, "exists", "p.id", "p.text");
     }
 
 }

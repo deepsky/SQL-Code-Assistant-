@@ -1,15 +1,13 @@
 /*
- * Copyright (c) 2009,2010 Serhiy Kulyk
+ * Copyright (c) 2009,2014 Serhiy Kulyk
  * All rights reserved.
- *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
- *     1. Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     2. Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
+ *      1. Redistributions of source code must retain the above copyright
+ *        notice, this list of conditions and the following disclaimer.
+ *      2. Redistributions in binary form must reproduce the above copyright
+ *        notice, this list of conditions and the following disclaimer in the
+ *        documentation and/or other materials provided with the distribution.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -266,7 +264,7 @@ public class ComplContributor extends CompletionContributor {
 //        context.setFileCopyPatcher(Constants.IDENT_PATCHER);
 //        context.setDummyIdentifier(Constants.COMPL_IDENTIFIER);
 
-        Constants.IDENT_PATCHER.patch();
+        //TODO Constants.IDENT_PATCHER.patch();
     }
 
     private PsiElement getExecCtx() {

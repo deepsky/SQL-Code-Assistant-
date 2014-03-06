@@ -31,6 +31,7 @@ import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 public class InsertStatementImpl extends PlSqlElementBase implements InsertStatement {
@@ -76,7 +77,10 @@ public class InsertStatementImpl extends PlSqlElementBase implements InsertState
     }
 
     public SelectStatement getSubquery() {
-        // TODO
+        ASTNode[] values = getNode().getChildren(TokenSet.create(PLSqlTypesAdopted.SELECT_EXPRESSION, PLSqlTypesAdopted.SELECT_EXPRESSION_UNION));
+        if (values != null && values.length == 1) {
+            return (SelectStatement) values[0].getPsi();
+        }
         return null;
     }
 

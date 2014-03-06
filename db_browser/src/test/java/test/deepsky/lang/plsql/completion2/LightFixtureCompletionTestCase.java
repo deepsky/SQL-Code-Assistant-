@@ -25,6 +25,7 @@
 
 package test.deepsky.lang.plsql.completion2;
 
+import com.deepsky.lang.common.PlSqlFileType;
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupManager;
@@ -59,6 +60,11 @@ public abstract class LightFixtureCompletionTestCase extends LightCodeInsightFix
 
     protected void configureByFile(String path) {
         myFixture.configureFromExistingVirtualFile(myFixture.copyFileToProject(path, com.intellij.openapi.util.text.StringUtil.getShortName(path, '/')));
+        complete();
+    }
+
+    protected void configureByText(String text) {
+        myFixture.configureByText(PlSqlFileType.FILE_TYPE, text);
         complete();
     }
 

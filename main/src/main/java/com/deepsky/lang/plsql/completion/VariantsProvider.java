@@ -28,6 +28,7 @@ package com.deepsky.lang.plsql.completion;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
 import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
+import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,6 +45,8 @@ public interface VariantsProvider {
     List<LookupElement> collectTypeNameVariants(String ctxPath, String lookupString);
 
     List<LookupElement> collectTableNameVariants(String lookupString);
+    List<LookupElement> collectTableNameVariants(String lookupString, InsertHandler<LookupElement> insertHandler);
+
     List<LookupElement> collectViewNameVariants(String lookupString);
 
     List<LookupElement> collectNamesInContext(ResolveDescriptor desc, String lookUpStr);

@@ -88,6 +88,27 @@ public class PsiUtil {
         return null;
     }
 
+    public static ASTNode nextNonWSLeaf(final ASTNode start) {
+        if (start != null) {
+            final ASTNode[] out = {null};
+            ASTNode prev = start.getTreeNext();
+            if (prev != null) {
+                if (!iterateOverVisibleLeafsInternal(
+                        prev,
+                        new PsiElementHandler() {
+                            public boolean handle(PsiElement e) {
+                                out[0] = e.getNode();
+                                return false;
+                            }
+                        }, false)) {
+                    return out[0];
+                }
+            }
+            return nextNonWSLeaf(start.getTreeParent());
+        }
+        return null;
+    }
+
     public static ASTNode getVisibleChildByPos(@NotNull ASTNode parent, int position) {
         ASTNode next = parent.getFirstChildNode();
         int index = 0;
@@ -275,6 +296,28 @@ public class PsiUtil {
                 }
             }
             prev = previous ? prev.getPrevSibling() : prev.getNextSibling()
+            ;
+        }
+        return true;
+    }
+
+    private static boolean iterateOverVisibleLeafsInternal(ASTNode prev, PsiElementHandler visitor, boolean previous) {
+        while (prev != null) {
+            ASTNode last = previous ? prev.getLastChildNode() : prev.getFirstChildNode();
+            if (last == null) {
+                if (PlSqlTokenTypes.WS_TOKENS.contains(prev.getElementType())) {
+                    // ignore WS, LF, comments
+                } else {
+                    if (!visitor.handle(prev.getPsi())) {
+                        return false;
+                    }
+                }
+            } else {
+                if (!iterateOverVisibleLeafsInternal(last, visitor, previous)) {
+                    return false;
+                }
+            }
+            prev = previous ? prev.getTreePrev() : prev.getTreeNext()
             ;
         }
         return true;

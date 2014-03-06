@@ -22,7 +22,7 @@ import java.util.Properties;
 import java.util.Set;
 
 
-@SupportedAnnotationTypes("example.annotations.beaninfo.BeanInfo")
+@SupportedAnnotationTypes("com.deepsky.lang.plsql.completion.syntaxTreePath.annotations.BeanInfo")
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class BeanInfoProcessor extends AbstractProcessor {
     @Override

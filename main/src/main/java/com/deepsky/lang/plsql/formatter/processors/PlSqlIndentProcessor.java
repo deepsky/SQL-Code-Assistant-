@@ -446,7 +446,7 @@ public class PlSqlIndentProcessor {
         if (childType == PlSqlTokenTypes.SEMI) {
             if (parentType == PlSqlElementTypes.PLSQL_BLOCK
                     || parentType == PlSqlElementTypes.TRUNCATE_TABLE
-                    || parentType == PlSqlElementTypes.COMMENT
+                    || parentType == PlSqlElementTypes.COMMENT_STMT
                     || parentType == PlSqlElementTypes.VARIABLE_DECLARATION
                     || parentType == PlSqlElementTypes.AUTONOMOUS_TRN_PRAGMA
                     || parentType == PlSqlElementTypes.TRUNCATE_TABLE

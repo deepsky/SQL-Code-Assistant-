@@ -4,6 +4,7 @@ import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.TokenType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +84,7 @@ public class ASTTreeAdapter {
     private static void recoveryDown(ASTNode node, TreePathBuilder nodeProcessor) {
         ASTNode prev = node;
         while (prev != null) {
-            if (prev.getElementType() != PlSqlTokenTypes.WS) {
+            if (prev.getElementType() != PlSqlTokenTypes.WS && prev.getElementType() != PlSqlTokenTypes.LF && prev.getElementType() != TokenType.WHITE_SPACE) {
                 nodeProcessor.addNode(prev);
             }
             prev = prev.getTreePrev();
@@ -126,7 +127,7 @@ public class ASTTreeAdapter {
     private static void recovery2(ASTNode node, TreePathBuilder nodeProcessor) {
         ASTNode prev = node;
         while (prev != null) {
-            if (prev.getElementType() != PlSqlTokenTypes.WS) {
+            if (prev.getElementType() != PlSqlTokenTypes.WS && prev.getElementType() != PlSqlTokenTypes.LF && prev.getElementType() != TokenType.WHITE_SPACE) {
                 if (prev.getElementType() == PlSqlElementTypes.ERROR_TOKEN_A) {
                     recoveryDown(prev.getLastChildNode(), nodeProcessor);
                 } else {
@@ -144,7 +145,7 @@ public class ASTTreeAdapter {
     private static void recovery21(ASTNode node, TreePathBuilder nodeProcessor) {
         ASTNode prev = node;
         while (prev != null) {
-            if (prev.getElementType() != PlSqlTokenTypes.WS) {
+            if (prev.getElementType() != PlSqlTokenTypes.WS && prev.getElementType() != PlSqlTokenTypes.LF && prev.getElementType() != TokenType.WHITE_SPACE) {
                 nodeProcessor.addNode(prev);
             }
             prev = prev.getTreePrev();

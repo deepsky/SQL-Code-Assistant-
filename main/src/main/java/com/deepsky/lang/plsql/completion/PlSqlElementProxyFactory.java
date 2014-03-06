@@ -99,9 +99,9 @@ public class PlSqlElementProxyFactory {
     private static List<Composite> packed = new ArrayList<Composite>();
 
     static {
-        packed.add(new Composite(PlSqlElementTypes.COMMENT, PlSqlElementTypes.TABLE_REF, commentTable));
-        packed.add(new Composite(PlSqlElementTypes.COMMENT, PlSqlElementTypes.TABLE_REF, commentColumn));
-        packed.add(new Composite(PlSqlElementTypes.COMMENT, PlSqlElementTypes.COLUMN_NAME_REF, commentColumn2));
+        packed.add(new Composite(PlSqlElementTypes.COMMENT_STMT, PlSqlElementTypes.TABLE_REF, commentTable));
+        packed.add(new Composite(PlSqlElementTypes.COMMENT_STMT, PlSqlElementTypes.TABLE_REF, commentColumn));
+        packed.add(new Composite(PlSqlElementTypes.COMMENT_STMT, PlSqlElementTypes.COLUMN_NAME_REF, commentColumn2));
         packed.add(new Composite(PlSqlElementTypes.UPDATE_COMMAND, PlSqlElementTypes.TABLE_REF, update));
         packed.add(new Composite(PlSqlElementTypes.UPDATE_COMMAND, PlSqlElementTypes.COLUMN_NAME_REF, update2));
         packed.add(new Composite(PlSqlElementTypes.UPDATE_COMMAND, PlSqlTokenTypes.KEYWORD_SET, update21));
@@ -273,7 +273,7 @@ public class PlSqlElementProxyFactory {
 
                     if (it.addNode(_prev)) {
                         final PlSqlElementProxy proxy = it.getProxy();
-                        if (proxy.getElementType() == PlSqlElementTypes.COMMENT) {
+                        if (proxy.getElementType() == PlSqlElementTypes.COMMENT_STMT) {
                             processor.processComment(proxy);
                         } else if (proxy.getElementType() == PlSqlElementTypes.UPDATE_COMMAND) {
                             processor.processUpdateCommand(proxy);

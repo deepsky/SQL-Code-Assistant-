@@ -359,7 +359,7 @@ public class ResolveUtil {
             // generic case
             // TODO -- not correct, multiple refs FIXME
             callback.process(parent);
-        } else if (ietype == PLSqlTypesAdopted.COMMENT) {
+        } else if (ietype == PLSqlTypesAdopted.COMMENT_STMT) {
             Comment comment = (Comment) parent;
             callback.process(comment);
         } else if (ietype == PLSqlTypesAdopted.COLUMN_FK_SPEC) {

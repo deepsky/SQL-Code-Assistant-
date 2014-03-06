@@ -205,7 +205,7 @@ tokens {
     ALTER_TABLE; ALTER_GENERIC; ALTER_TABLE_CONSTRAINT;
 
     CREATE_TEMP_TABLE;
-    COMMENT; COMMENT_STR;
+    COMMENT_STMT; COMMENT_STR;
     CREATE_INDEX;
     INSERT_INTO_SUBQUERY_COMMAND;
 
@@ -535,7 +535,7 @@ comment:
         ("table"! (schema_name DOT)? table_ref "is"! comment_string)
         | ("column"! table_ref DOT column_name_ref "is"! comment_string)
      ) (SEMI)?
-    { #comment = #([COMMENT, "COMMENT" ], #comment);}
+    { #comment = #([COMMENT_STMT, "COMMENT_STMT" ], #comment);}
     ;
 
 comment_string:
@@ -1505,7 +1505,7 @@ mv_log_physical_props:
 
 mv_log_with_param:
     ("primary" "key")
-    |("object" "id")
+// TODO conficted with possible IDENTIFIER:    |("object" "id")
     |"rowid"
     |"sequence"
     ;
@@ -2132,6 +2132,7 @@ default1:
 
 parameter_name :
     identifier2
+    | "comment"
     { #parameter_name = #([PARAMETER_NAME, "PARAMETER_NAME" ], #parameter_name);}
     ;
 
@@ -3761,12 +3762,12 @@ identifier2:
     | "commit"
     | "rollback"
     | "savepoint"
-    | "comment"   // TODO - not allowed in column but allowed as a func/proc argument name
+//    | "comment"   // TODO - not allowed in column but allowed as a func/proc argument name
     | "charset"
     | "body"
     | "escape"
     | "reverse"
-    | "exists"
+//    | "exists"
     | "delete"
     | "trim"
     | "decode"
@@ -4083,7 +4084,7 @@ identifier2:
     | "demand"
     | "prebuilt"
     | "reduced"
-    | "id"
+//    | "id"
     | "without"
     | "resource"
     | "become"
@@ -4111,7 +4112,7 @@ variable_name :
     | "body"
     | "escape"
     | "reverse"
-    | "exists"
+//    | "exists"
     | "delete"
     | "trim"
     | "decode"
@@ -4433,7 +4434,7 @@ variable_name :
     | "demand"
     | "prebuilt"
     | "reduced"
-    | "id"
+//    | "id"
     | "without"
     | "resource"
     | "become"
