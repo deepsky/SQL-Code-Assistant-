@@ -122,6 +122,7 @@ public class SelectStmtProcessor extends CompletionBase {
         // TODO - implement me
     }
 
+/*
     @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/..#ALIAS_NAME/#ALIAS_IDENT/2#C_MARKER")
     public void process$SelectTabAliasName(C_Context ctx, SelectStatement select, ASTNode caret) {
 
@@ -144,6 +145,7 @@ public class SelectStmtProcessor extends CompletionBase {
             // TODO - implement me
         }
     }
+*/
 
     @SyntaxTreePath("/ ..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY/#SUBQUERY/#OPEN_PAREN #ERROR_TOKEN_A/2#C_MARKER")
     public void process$SelectFromSubquery2() {

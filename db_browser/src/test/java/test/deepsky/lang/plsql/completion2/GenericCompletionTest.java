@@ -239,6 +239,41 @@ public class GenericCompletionTest extends BaseCompletionTest {
         assertLookupFilterOutFunc(myItems, "between");
     }
 
+    public void test_select_A() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30)); select * <caret>\n" +
+                "    tab1\n" +
+                "where success = 0\n" +
+                "order by eventdatetime desc");
+        assertLookupFilterOutFunc(myItems, "from");
+    }
+
+    public void test_select_A1() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
+                "from tab1\n" +
+                "<caret>\n" +
+                "order by eventdatetime desc");
+        assertLookupFilterOutFunc(myItems, "where", "group");
+    }
+
+    public void test_select_A2() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
+                "from tab1\n" +
+                "<caret>\n" +
+                "group by eventdatetime");
+        assertLookupFilterOutFunc(myItems, "where");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////// CREATE TABLE
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void test_create_table_1() throws Exception {
+        configureByText("create table paymentevents_01_02 as\n" +
+                "select * from paymentevents\n" +
+                "<caret>");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "group", "order", "insert", "select", "update", "where");
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// DELETE
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

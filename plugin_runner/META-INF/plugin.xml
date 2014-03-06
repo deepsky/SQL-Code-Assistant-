@@ -31,18 +31,19 @@
     <b><font color="red">NOTE:</font> Put SQL and PL/SQL files under some of source roots to have them indexed by the plugin.</b>
     <br>
     <br>
-    Latest changes:
+    The latest changes:
     <ul>
         <li>Large refactoring in code completion</li>
         <li>[KNOWN ISSUE] Case-sensitive table names, column names, etc are not supported for now</li>
         <li>[KNOWN ISSUE] Initial indexing of numerous SQL files (1k and more) may take time</li>
      </ul>
     <br>
+    Version 1.5.6.12<br><br>
 
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.5.5.12</version>
+    <version>1.5.6.12</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
@@ -50,7 +51,7 @@
 
     <change-notes><![CDATA[<html>
        <ul>
-            <li><b>1.5.5.12</b>
+            <li><b>1.5.6.12</b>
                  <ul>
                     - [NEW] Refactoring of completion (implemented base cases for now)<br>
                  </ul>

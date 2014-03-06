@@ -23,13 +23,18 @@
 
 package com.deepsky.lang.plsql.completion.processors;
 
+import com.deepsky.lang.PsiUtil;
+import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.GenericLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.GroupByLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.OrderByLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.UpdateLookupElement;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.validation.ValidationException;
@@ -47,15 +52,52 @@ public class GenericProcessor extends CompletionBase {
         ctx.addElement(SelectLookupElement.createSubquery(is2ndLatest(parent, marker)));
     }
 
+    @SyntaxTreePath("/..1ANY//..2#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF #ALIAS_NAME/#ALIAS_IDENT/3#C_MARKER")
+    public void process$FromTail(C_Context ctx, ASTNode parent, ASTNode from, ASTNode caret) {
+        SelectStatement select = (SelectStatement) from.getTreeParent().getPsi();
+        if(select != null){
+            final OrderByClause orderBy = select.getOrderByClause();
+            final GroupByClause groupBy = select.getGroupByClause();
+            final WhereCondition where = select.getWhereCondition();
+
+            if(where == null){
+                ctx.addElement(KeywordLookupElement.create("where"));
+            }
+            if(groupBy == null && where == null){
+                ctx.addElement(GroupByLookupElement.create());
+            }
+            if(orderBy == null && groupBy == null && where == null){
+                ctx.addElement(OrderByLookupElement.create());
+            }
+        }
+
+        final int start = parent.getFirstChildNode().getTextRange().getStartOffset();
+        final int end = parent.getLastChildNode().getTextRange().getEndOffset();
+        final ASTNode lastLeaf = parent.findLeafElementAt(end-start-1);
+        if( lastLeaf == caret){
+            ASTNode next = PsiUtil.nextNonWSLeaf(caret);
+            if(next != null && next.getElementType() == PlSqlTokenTypes.SEMI){
+                // Caret inside the statement, for example:  "... <caret> ;"
+            } else {
+                ctx.addElement(SelectLookupElement.create());
+                ctx.addElement(InsertLookupElement.create());
+                ctx.addElement(UpdateLookupElement.create());
+                ctx.addElement(DeleteLookupElement.create());
+                ctx.addElement(KeywordLookupElement.create("create"));
+                ctx.addElement(KeywordLookupElement.create("drop"));
+                ctx.addElement(KeywordLookupElement.create("alter"));
+                ctx.addElement(KeywordLookupElement.create("comment"));
+            }
+        } else {
+            // TODO - implement me
+        }
+    }
+
+
     @SyntaxTreePath("/..1ANY//..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/2#C_MARKER")
     public void process$TableViewNames(C_Context ctx, ASTNode parent, ASTNode marker) {
         collectTableViewNames(ctx);
         ctx.addElement(SelectLookupElement.createSubquery(is2ndLatest(parent, marker)));
-    }
-
-    @SyntaxTreePath("/..ANY//..#SUBQUERY/..#SELECT_EXPRESSION/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/..#ALIAS_NAME//#C_MARKER")
-    public void process$TableAlias(C_Context ctx) {
-        ctx.addElement(KeywordLookupElement.create("where"));
     }
 
     @SyntaxTreePath("/..ANY//#SELECT ..#TABLE_REFERENCE_LIST_FROM ..#ERROR_TOKEN_A/#GROUP #C_MARKER")

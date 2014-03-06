@@ -91,6 +91,11 @@ public class ErrorNodeProcessor extends CompletionBase {
         ctx.addElement(KeywordLookupElement.create("from"));
     }
 
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#SELECT #ASTERISK_COLUMN 1#C_MARKER")
+    public void process$SelectAsteriskColumn(C_Context ctx, ASTNode marker) {
+        ctx.addElement(KeywordLookupElement.create("from"));
+    }
+
     @SyntaxTreePath("/#ERROR_TOKEN_A/#SELECT ..#EXPR_COLUMN/#COUNT_FUNC #ALIAS_NAME/#ALIAS_IDENT/1#C_MARKER")
     public void process$SelectCount(C_Context ctx, ASTNode marker) {
         ctx.addElement(KeywordLookupElement.create("from"));
