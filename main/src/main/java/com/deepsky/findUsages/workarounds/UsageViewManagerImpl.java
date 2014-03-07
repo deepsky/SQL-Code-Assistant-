@@ -97,7 +97,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                        final UsageViewStateListener listener) {
     final AtomicReference<UsageView2Impl> usageView = new AtomicReference<UsageView2Impl>();
 
-    final FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation();
+    final FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation(presentation);
     processPresentation.setShowNotFoundMessage(showNotFoundMessage);
     processPresentation.setShowPanelIfOnlyOneUsage(showPanelIfOnlyOneUsage);
 

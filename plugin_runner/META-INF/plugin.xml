@@ -41,7 +41,7 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.5.6.13</version>
+    <version>1.5.7.13</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
@@ -50,7 +50,7 @@
 
     <change-notes><![CDATA[<html>
        <ul>
-            <li><b>1.5.6.13</b>
+            <li><b>1.5.7.13</b>
                  <ul>
                     - [NEW] Refactoring of completion (implemented base cases for now)<br>
                  </ul>
@@ -159,7 +159,7 @@
             </li>
         </ul>
     </html>]]></change-notes>
-    <idea-version since-build="133.100" until-build="133.*"/>
+    <idea-version since-build="134.100" until-build="134.*"/>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 

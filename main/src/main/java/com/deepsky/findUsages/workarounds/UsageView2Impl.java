@@ -248,7 +248,7 @@ public class UsageView2Impl implements UsageView, UsageModelTracker.UsageModelTr
             Splitter splitter = new Splitter(false, UsageViewSettings.getInstance().PREVIEW_USAGES_SPLITTER_PROPORTIONS);
 // collisions with RubyMine           splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myTree));
             splitter.setFirstComponent(new JScrollPaneEe(myTree));
-            myUsagePreviewPanel = new UsagePreviewPanel(myProject);
+            myUsagePreviewPanel = new UsagePreviewPanel(myProject, myPresentation);
             Disposer.register(this, myUsagePreviewPanel);
             splitter.setSecondComponent(myUsagePreviewPanel);
             myCentralPanel.add(splitter, BorderLayout.CENTER);
