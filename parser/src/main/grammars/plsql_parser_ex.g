@@ -2260,7 +2260,9 @@ function_declaration :
 //        ( OPEN_PAREN! (argument_list)? CLOSE_PAREN! )?
         ( argument_list )?
     )
-    "return"! return_type (character_set)? ("pipelined")? ("parallel_enable")? ("using" identifier2)? ("deterministic")?
+    "return"! return_type (character_set)? ("pipelined")?
+        ("parallel_enable")? ("using" identifier2)? ("deterministic")?
+        ("result_cache" ("relies_on" OPEN_PAREN identifier2 (COMMA identifier2)* CLOSE_PAREN)? )?
     ;
 
 procedure_declaration :
@@ -2668,7 +2670,6 @@ plsql_expression
 base_expression:
       ("sqlcode") => "sqlcode"
         {  __markRule(SQLCODE_SYSVAR);}
-//      | ("sqlerrm") => ("sqlerrm" (OPEN_PAREN! base_expression CLOSE_PAREN!)? )
       | ("sqlerrm") => ("sqlerrm" (OPEN_PAREN! numeric_literal CLOSE_PAREN!)? )
         {  __markRule(SQLERRM_SYSVAR);}
       | ( "cast" OPEN_PAREN) => ( cast_function )
@@ -4089,6 +4090,7 @@ identifier2:
     | "resource"
     | "become"
     | "admin"
+    | "member"
     )
     ;
 
