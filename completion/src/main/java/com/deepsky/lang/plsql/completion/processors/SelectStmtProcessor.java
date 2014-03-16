@@ -169,6 +169,14 @@ public class SelectStmtProcessor extends CompletionBase {
                 ctx.addElement(KeywordLookupElement.create("exists"));
             }
         }
+
+        if(nameRef.getPrevFragment() == null && expr.getTreeParent().getElementType() == PlSqlElementTypes.RELATION_CONDITION){
+            // Possible case: column1 < sysdate/systimestamp/dbtimezone/current_timestamp
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+            ctx.addElement(KeywordLookupElement.create("current_timestamp"));
+        }
     }
 
     @SyntaxTreePath("/..#WHERE_CONDITION//..#RELATION_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")

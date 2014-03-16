@@ -27,6 +27,7 @@ import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generator.*;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.*;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.tree.IElementType;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -56,7 +57,7 @@ public abstract class CompletionProcessorBase {
 
     private class ASTNodeProxy implements InvocationHandler {
 
-        ASTNode target;
+        final ASTNode target;
         public ASTNodeProxy(ASTNode target) {
             this.target = target;
         }
@@ -64,7 +65,8 @@ public abstract class CompletionProcessorBase {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if(method.getName().equals("getElementType") && (args == null || args.length == 0)){
-                return PlSqlTokenTypes.C_MARKER;
+                final IElementType type = target.getElementType();
+                return type == PlSqlTokenTypes.DOUBLE_QUOTED_STRING? type: PlSqlTokenTypes.C_MARKER;
             }
             return method.invoke(target, args);
         }

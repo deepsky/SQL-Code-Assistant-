@@ -85,7 +85,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1#ANY // .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / #TABLE_REF / 2#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("/ .. 1#ANY // #SELECT .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / #TABLE_REF / 2#C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(2, context.getDesc(0).getHandlerParameters().length);
 //        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
     }
@@ -186,7 +186,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1#ANY // .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / #TABLE_REF / 2#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("/ .. 1#ANY // #SELECT .. #TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / #TABLE_REF / 2#C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(2, context.getDesc(0).getHandlerParameters().length);
 //        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof SelectStatement);
     }
@@ -236,7 +236,7 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
         assertTrue(proc.process());
 
         TreePathContext context = proc.getContext();
-        assertEquals("/ .. 1#ANY // .. 2#TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / #TABLE_REF #ALIAS_NAME / #ALIAS_IDENT / 3#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals("/ .. 1#ANY // #SELECT .. 2#TABLE_REFERENCE_LIST_FROM / .. #TABLE_ALIAS / #TABLE_REF #ALIAS_NAME / #ALIAS_IDENT / 3#C_MARKER", context.getDesc(0).getTreePath());
         assertEquals(3, context.getDesc(0).getHandlerParameters().length);
         assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
     }

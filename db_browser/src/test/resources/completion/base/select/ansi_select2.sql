@@ -9,4 +9,4 @@ create table child (
 );
 
 select *
-from parent join child on parent.id = child.<caret>
+from parent right outer join child on parent.id = child.<caret>

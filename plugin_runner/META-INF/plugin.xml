@@ -38,12 +38,12 @@
         <li>[KNOWN ISSUE] Initial indexing of numerous SQL files (1k and more) may take time</li>
      </ul>
     <br>
-    Version 1.5.6.12<br><br>
+    Version 1.5.8.12<br><br>
 
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.5.6.12</version>
+    <version>1.5.8.129</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
@@ -51,6 +51,13 @@
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.5.8.129</b>
+                 <ul>
+                    - [NEW] More support on completion: SELECT JOIN, etc<br>
+                    - [NEW] Parsing RESULT_CACHE construction<br>
+                    - [FIX] "member" can be a name of table/view<br>
+                 </ul>
+            </li>
             <li><b>1.5.6.12</b>
                  <ul>
                     - [NEW] Refactoring of completion (implemented base cases for now)<br>

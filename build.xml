@@ -5,13 +5,13 @@
     <property name="idea.lib.dir" value="/home/sky/idea-IC-129.1328/lib"/>
     <property name="idea.platform.prefix" value="Idea"/>
     <property name="idea.home.path" value="/home/sky/.IdeaIC12/system/plugins-sandbox/test"/>
-    <property name="idea.plugins.path" value="/home/sky/.IdeaIC12/system/plugins-sandbox/plugins"/>
+    <property name="idea.plugins.path" value="plugin_runner"/>
 
     <property name="base.dir" value="."/>
 
     <property name="bundle.dir" value="./out"/>
     <property name="bundle.name" value="sql-assistant"/>
-    <property name="plugin.ver" value="1.5.6.12"/>
+    <property name="plugin.ver" value="1.5.8.129"/>
 
     <property name="build.dir" value="${base.dir}/build"/>
     <property name="unzip.dir" value="${base.dir}/unzip"/>

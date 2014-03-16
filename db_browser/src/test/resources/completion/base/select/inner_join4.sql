@@ -13,5 +13,4 @@ CREATE TABLE orders
 
 SELECT suppliers.supplier_id, suppliers.supplier_name, orders.order_date
 FROM suppliers
-    INNER JOIN orders
-    ON <caret>
+    <caret>

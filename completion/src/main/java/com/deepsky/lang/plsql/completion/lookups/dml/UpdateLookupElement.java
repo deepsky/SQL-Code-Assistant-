@@ -30,6 +30,7 @@ import com.deepsky.lang.plsql.psi.ColumnSpecList;
 import com.deepsky.lang.plsql.psi.utils.Formatter;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
+import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
@@ -77,7 +78,9 @@ public class UpdateLookupElement<T extends LookupElement> extends LookupElementD
                 })
                 .withStrikeoutness(false);
 
-        return new UpdateLookupElement<LookupElement>(e);
+        return new UpdateLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 1)
+        );
     }
 
     public static LookupElement createSubqueryEq(@NotNull String table, @Nullable ColumnSpec[] cs) {
@@ -111,7 +114,8 @@ public class UpdateLookupElement<T extends LookupElement> extends LookupElementD
                 })
                 .withStrikeoutness(false);
 
-        return new UpdateLookupElement<LookupElement>(e);
+        return new UpdateLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 1));
     }
 
     public static LookupElement createSubqueryParen(@NotNull String table, @Nullable ColumnSpec[] cs) {
@@ -145,7 +149,8 @@ public class UpdateLookupElement<T extends LookupElement> extends LookupElementD
                 })
                 .withStrikeoutness(false);
 
-        return new UpdateLookupElement<LookupElement>(e);
+        return new UpdateLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 1));
     }
 
     public static String buildColumnSpecList(ColumnSpecList list, int maxSize){

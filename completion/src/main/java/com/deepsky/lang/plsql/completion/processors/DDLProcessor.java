@@ -26,6 +26,8 @@ package com.deepsky.lang.plsql.completion.processors;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
+import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -37,22 +39,23 @@ import java.util.List;
 
 public class DDLProcessor extends CompletionBase {
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     CREATE SEQUENCE
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @SyntaxTreePath("/..#CREATE_SEQUENCE/#CREATE #ERROR_TOKEN_A/#SEQUENCE 1#IDENTIFIER #C_MARKER")
     public void process$Sequence(C_Context context, ASTNode node) {
         // TODO - implement me
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     CREATE TABLE
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     @SyntaxTreePath("/..1#TABLE_DEF/#CREATE #ERROR_TOKEN_A/#TABLE 2#TABLE_NAME_DDL #OPEN_PAREN .. #COLUMN_DEF #CLOSE_PAREN #C_MARKER")
     public void process$Table(C_Context ctx, ASTNode node, ASTNode node2) {
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("select"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("insert"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("update"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("delete"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("create"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("drop"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("alter"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("comment"));
-
+        completeStart(ctx);
         // TODO - implement more cases
     }
 
@@ -110,6 +113,19 @@ public class DDLProcessor extends CompletionBase {
         }
     }
 
+    @SyntaxTreePath("/..1#TABLE_DEF/#CREATE #TABLE ..#COLUMN_DEF/#COLUMN_NAME_DDL #TYPE_NAME_REF/2$NameFragmentRef/#C_MARKER")
+    public void process$TableTypeName(C_Context ctx, ASTNode node, NameFragmentRef ref) {
+        VariantsProvider provider = ctx.getProvider();
+        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup());
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     RENAME TABLE
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @SyntaxTreePath("/..1#RENAME_TABLE/#RENAME #TABLE #ERROR_TOKEN_A/#C_MARKER")
     public void process$RenameTable(C_Context context, ASTNode node) {

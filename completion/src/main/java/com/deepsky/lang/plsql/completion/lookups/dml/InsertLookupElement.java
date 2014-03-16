@@ -33,6 +33,7 @@ import com.deepsky.lang.plsql.psi.utils.Formatter;
 import com.deepsky.view.Icons;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
+import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
@@ -86,7 +87,8 @@ public class InsertLookupElement<T extends LookupElement> extends LookupElementD
                 })
                 .withStrikeoutness(false); //it.isStrikeout());
 
-        return new InsertLookupElement<LookupElement>(e);
+        return new InsertLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 1));
     }
 
 

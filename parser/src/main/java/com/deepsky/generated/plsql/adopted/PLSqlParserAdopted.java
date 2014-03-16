@@ -1998,10 +1998,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_insert);
 			match(LITERAL_into);
 			{
-			boolean synPredMatched1810 = false;
+			boolean synPredMatched1813 = false;
 			if (((_tokenSet_30.member(LA(1))))) {
-				int _m1810 = mark();
-				synPredMatched1810 = true;
+				int _m1813 = mark();
+				synPredMatched1813 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -2009,12 +2009,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched1810 = false;
+					synPredMatched1813 = false;
 				}
-				rewind(_m1810);
+				rewind(_m1813);
 				inputState.guessing--;
 			}
-			if ( synPredMatched1810 ) {
+			if ( synPredMatched1813 ) {
 				table_alias();
 				{
 				if ((LA(1)==OPEN_PAREN) && (_tokenSet_31.member(LA(2))) && (LA(3)==DOT||LA(3)==COMMA||LA(3)==CLOSE_PAREN)) {
@@ -6288,6 +6288,21 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			case LITERAL_right:
 			{
 				match(LITERAL_right);
+				break;
+			}
+			case LITERAL_inner:
+			{
+				match(LITERAL_inner);
+				break;
+			}
+			case LITERAL_full:
+			{
+				match(LITERAL_full);
+				break;
+			}
+			case LITERAL_join:
+			{
+				match(LITERAL_join);
 				break;
 			}
 			case LITERAL_type:
@@ -22669,14 +22684,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_into);
 			variable_ref();
 			{
-			_loop1860:
+			_loop1863:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					variable_ref();
 				}
 				else {
-					break _loop1860;
+					break _loop1863;
 				}
 				
 			} while (true);
@@ -26065,10 +26080,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		
 		try {      // for error handling
-			boolean synPredMatched1782 = false;
+			boolean synPredMatched1785 = false;
 			if (((LA(1)==OPEN_PAREN) && (LA(2)==OPEN_PAREN||LA(2)==LITERAL_select) && (_tokenSet_27.member(LA(3))))) {
-				int _m1782 = mark();
-				synPredMatched1782 = true;
+				int _m1785 = mark();
+				synPredMatched1785 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -26077,12 +26092,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched1782 = false;
+					synPredMatched1785 = false;
 				}
-				rewind(_m1782);
+				rewind(_m1785);
 				inputState.guessing--;
 			}
-			if ( synPredMatched1782 ) {
+			if ( synPredMatched1785 ) {
 				subquery();
 			}
 			else if ((LA(1)==OPEN_PAREN) && (_tokenSet_86.member(LA(2))) && (_tokenSet_282.member(LA(3)))) {
@@ -26713,14 +26728,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_by);
 			sorted_def();
 			{
-			_loop1794:
+			_loop1797:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					sorted_def();
 				}
 				else {
-					break _loop1794;
+					break _loop1797;
 				}
 				
 			} while (true);
@@ -29048,7 +29063,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			_loop1714:
 			do {
 				boolean synPredMatched1711 = false;
-				if (((_tokenSet_317.member(LA(1))) && (_tokenSet_318.member(LA(2))) && (_tokenSet_319.member(LA(3))))) {
+				if ((((LA(1) >= LITERAL_left && LA(1) <= LITERAL_full)) && (LA(2)==LITERAL_outer||LA(2)==LITERAL_join) && (_tokenSet_317.member(LA(3))))) {
 					int _m1711 = mark();
 					synPredMatched1711 = true;
 					inputState.guessing++;
@@ -29068,16 +29083,6 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						case LITERAL_inner:
 						{
 							match(LITERAL_inner);
-							break;
-						}
-						case LITERAL_outer:
-						{
-							match(LITERAL_outer);
-							break;
-						}
-						case LITERAL_join:
-						{
-							match(LITERAL_join);
 							break;
 						}
 						case LITERAL_full:
@@ -29112,7 +29117,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						partition_name();
 						match(CLOSE_PAREN);
 					}
-					else if ((_tokenSet_320.member(LA(1)))) {
+					else if ((_tokenSet_318.member(LA(1)))) {
 					}
 					else {
 						throw new NoViableAltException(LT(1), getFilename());
@@ -29136,7 +29141,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_321);
+				recover(ex,_tokenSet_319);
 			} else {
 			  throw ex;
 			}
@@ -29201,14 +29206,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_by);
 			plsql_expression();
 			{
-			_loop1790:
+			_loop1793:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					plsql_expression();
 				}
 				else {
-					break _loop1790;
+					break _loop1793;
 				}
 				
 			} while (true);
@@ -29250,20 +29255,20 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(LITERAL_of);
 				column_name_ref();
 				{
-				_loop1803:
+				_loop1806:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						column_name_ref();
 					}
 					else {
-						break _loop1803;
+						break _loop1806;
 					}
 					
 				} while (true);
 				}
 			}
-			else if ((_tokenSet_322.member(LA(1)))) {
+			else if ((_tokenSet_320.member(LA(1)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -29323,7 +29328,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_323);
+				recover(ex,_tokenSet_321);
 			} else {
 			  throw ex;
 			}
@@ -29368,7 +29373,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			catch (RecognitionException ex) {
 				if (inputState.guessing==0) {
 					reportError(ex);
-					recover(ex,_tokenSet_324);
+					recover(ex,_tokenSet_322);
 				} else {
 				  throw ex;
 				}
@@ -29384,7 +29389,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			if ((_tokenSet_35.member(LA(1)))) {
 				alias();
 			}
-			else if ((_tokenSet_324.member(LA(1)))) {
+			else if ((_tokenSet_322.member(LA(1)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -29398,7 +29403,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_324);
+				recover(ex,_tokenSet_322);
 			} else {
 			  throw ex;
 			}
@@ -29428,7 +29433,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_325);
+				recover(ex,_tokenSet_323);
 			} else {
 			  throw ex;
 			}
@@ -29662,7 +29667,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				schema_name();
 				match(DOT);
 			}
-			else if ((LA(1)==IDENTIFIER||LA(1)==DOUBLE_QUOTED_STRING) && (_tokenSet_326.member(LA(2)))) {
+			else if ((LA(1)==IDENTIFIER||LA(1)==DOUBLE_QUOTED_STRING) && (_tokenSet_324.member(LA(2)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -29764,10 +29769,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			{
 				table_func();
 				{
-				if ((_tokenSet_35.member(LA(1))) && (_tokenSet_327.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+				if ((_tokenSet_35.member(LA(1))) && (_tokenSet_325.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 					alias();
 				}
-				else if ((_tokenSet_327.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+				else if ((_tokenSet_325.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 				}
 				else {
 					throw new NoViableAltException(LT(1), getFilename());
@@ -29785,10 +29790,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				break;
 			}
 			default:
-				boolean synPredMatched1748 = false;
+				boolean synPredMatched1751 = false;
 				if (((LA(1)==LITERAL_the) && (LA(2)==OPEN_PAREN) && (LA(3)==OPEN_PAREN||LA(3)==LITERAL_select))) {
-					int _m1748 = mark();
-					synPredMatched1748 = true;
+					int _m1751 = mark();
+					synPredMatched1751 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -29796,18 +29801,18 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched1748 = false;
+						synPredMatched1751 = false;
 					}
-					rewind(_m1748);
+					rewind(_m1751);
 					inputState.guessing--;
 				}
-				if ( synPredMatched1748 ) {
+				if ( synPredMatched1751 ) {
 					the_proc();
 					{
-					if ((_tokenSet_35.member(LA(1))) && (_tokenSet_327.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+					if ((_tokenSet_35.member(LA(1))) && (_tokenSet_325.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 						alias();
 					}
-					else if ((_tokenSet_327.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+					else if ((_tokenSet_325.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 					}
 					else {
 						throw new NoViableAltException(LT(1), getFilename());
@@ -29815,7 +29820,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					
 					}
 				}
-				else if ((_tokenSet_30.member(LA(1))) && (_tokenSet_328.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+				else if ((_tokenSet_30.member(LA(1))) && (_tokenSet_326.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 					{
 					table_alias();
 					{
@@ -29825,7 +29830,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						partition_name();
 						match(CLOSE_PAREN);
 					}
-					else if ((_tokenSet_327.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+					else if ((_tokenSet_325.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 					}
 					else {
 						throw new NoViableAltException(LT(1), getFilename());
@@ -29842,7 +29847,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_327);
+				recover(ex,_tokenSet_325);
 			} else {
 			  throw ex;
 			}
@@ -29908,10 +29913,6 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				}
 				break;
 			}
-			case LITERAL_join:
-			{
-				break;
-			}
 			default:
 			{
 				throw new NoViableAltException(LT(1), getFilename());
@@ -29924,7 +29925,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			if ((LA(1)==LITERAL_on)) {
 				ansi_condition();
 			}
-			else if ((_tokenSet_320.member(LA(1)))) {
+			else if ((_tokenSet_318.member(LA(1)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -29938,7 +29939,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_320);
+				recover(ex,_tokenSet_318);
 			} else {
 			  throw ex;
 			}
@@ -29989,7 +29990,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_329);
+				recover(ex,_tokenSet_327);
 			} else {
 			  throw ex;
 			}
@@ -30019,7 +30020,1694 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_325);
+				recover(ex,_tokenSet_323);
+			} else {
+			  throw ex;
+			}
+		}
+	}
+	
+	public void correlation_name() throws RecognitionException, TokenStreamException {
+		
+		
+		try {      // for error handling
+			correlation_name_ident();
+			if ( inputState.guessing==0 ) {
+				__markRule(ALIAS_NAME);
+			}
+		}
+		catch (RecognitionException ex) {
+			if (inputState.guessing==0) {
+				reportError(ex);
+				recover(ex,_tokenSet_328);
+			} else {
+			  throw ex;
+			}
+		}
+	}
+	
+	public void correlation_name_ident() throws RecognitionException, TokenStreamException {
+		
+		
+		try {      // for error handling
+			{
+			if ((_tokenSet_329.member(LA(1)))) {
+				identifier_alias();
+			}
+			else if ((LA(1)==LITERAL_timestamp)) {
+				match(LITERAL_timestamp);
+			}
+			else {
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			
+			}
+			if ( inputState.guessing==0 ) {
+				__markRule(ALIAS_IDENT);
+			}
+		}
+		catch (RecognitionException ex) {
+			if (inputState.guessing==0) {
+				reportError(ex);
+				recover(ex,_tokenSet_328);
+			} else {
+			  throw ex;
+			}
+		}
+	}
+	
+	public void identifier_alias() throws RecognitionException, TokenStreamException {
+		
+		
+		try {      // for error handling
+			{
+			switch ( LA(1)) {
+			case IDENTIFIER:
+			{
+				match(IDENTIFIER);
+				break;
+			}
+			case DOUBLE_QUOTED_STRING:
+			{
+				match(DOUBLE_QUOTED_STRING);
+				break;
+			}
+			case LITERAL_join:
+			{
+				match(LITERAL_join);
+				break;
+			}
+			case LITERAL_type:
+			{
+				match(LITERAL_type);
+				break;
+			}
+			case LITERAL_count:
+			{
+				match(LITERAL_count);
+				break;
+			}
+			case LITERAL_open:
+			{
+				match(LITERAL_open);
+				break;
+			}
+			case LITERAL_exec:
+			{
+				match(LITERAL_exec);
+				break;
+			}
+			case LITERAL_execute:
+			{
+				match(LITERAL_execute);
+				break;
+			}
+			case LITERAL_dbtimezone:
+			{
+				match(LITERAL_dbtimezone);
+				break;
+			}
+			case LITERAL_commit:
+			{
+				match(LITERAL_commit);
+				break;
+			}
+			case LITERAL_rollback:
+			{
+				match(LITERAL_rollback);
+				break;
+			}
+			case LITERAL_savepoint:
+			{
+				match(LITERAL_savepoint);
+				break;
+			}
+			case LITERAL_charset:
+			{
+				match(LITERAL_charset);
+				break;
+			}
+			case LITERAL_body:
+			{
+				match(LITERAL_body);
+				break;
+			}
+			case LITERAL_escape:
+			{
+				match(LITERAL_escape);
+				break;
+			}
+			case LITERAL_reverse:
+			{
+				match(LITERAL_reverse);
+				break;
+			}
+			case LITERAL_delete:
+			{
+				match(LITERAL_delete);
+				break;
+			}
+			case LITERAL_trim:
+			{
+				match(LITERAL_trim);
+				break;
+			}
+			case LITERAL_decode:
+			{
+				match(LITERAL_decode);
+				break;
+			}
+			case LITERAL_flush:
+			{
+				match(LITERAL_flush);
+				break;
+			}
+			case LITERAL_interval:
+			{
+				match(LITERAL_interval);
+				break;
+			}
+			case LITERAL_transaction:
+			{
+				match(LITERAL_transaction);
+				break;
+			}
+			case LITERAL_session:
+			{
+				match(LITERAL_session);
+				break;
+			}
+			case LITERAL_close:
+			{
+				match(LITERAL_close);
+				break;
+			}
+			case LITERAL_read:
+			{
+				match(LITERAL_read);
+				break;
+			}
+			case LITERAL_write:
+			{
+				match(LITERAL_write);
+				break;
+			}
+			case LITERAL_only:
+			{
+				match(LITERAL_only);
+				break;
+			}
+			case LITERAL_normal:
+			{
+				match(LITERAL_normal);
+				break;
+			}
+			case LITERAL_immediate:
+			{
+				match(LITERAL_immediate);
+				break;
+			}
+			case LITERAL_replace:
+			{
+				match(LITERAL_replace);
+				break;
+			}
+			case LITERAL_sid:
+			{
+				match(LITERAL_sid);
+				break;
+			}
+			case LITERAL_local:
+			{
+				match(LITERAL_local);
+				break;
+			}
+			case LITERAL_time:
+			{
+				match(LITERAL_time);
+				break;
+			}
+			case LITERAL_name:
+			{
+				match(LITERAL_name);
+				break;
+			}
+			case LITERAL_package:
+			{
+				match(LITERAL_package);
+				break;
+			}
+			case LITERAL_ref:
+			{
+				match(LITERAL_ref);
+				break;
+			}
+			case LITERAL_byte:
+			{
+				match(LITERAL_byte);
+				break;
+			}
+			case LITERAL_interface:
+			{
+				match(LITERAL_interface);
+				break;
+			}
+			case LITERAL_extract:
+			{
+				match(LITERAL_extract);
+				break;
+			}
+			case LITERAL_next:
+			{
+				match(LITERAL_next);
+				break;
+			}
+			case LITERAL_col:
+			{
+				match(LITERAL_col);
+				break;
+			}
+			case LITERAL_found:
+			{
+				match(LITERAL_found);
+				break;
+			}
+			case LITERAL_notfound:
+			{
+				match(LITERAL_notfound);
+				break;
+			}
+			case LITERAL_rowcount:
+			{
+				match(LITERAL_rowcount);
+				break;
+			}
+			case LITERAL_isopen:
+			{
+				match(LITERAL_isopen);
+				break;
+			}
+			case LITERAL_bulk_rowcount:
+			{
+				match(LITERAL_bulk_rowcount);
+				break;
+			}
+			case LITERAL_bulk_exceptions:
+			{
+				match(LITERAL_bulk_exceptions);
+				break;
+			}
+			case LITERAL_nocache:
+			{
+				match(LITERAL_nocache);
+				break;
+			}
+			case LITERAL_cache:
+			{
+				match(LITERAL_cache);
+				break;
+			}
+			case LITERAL_compress:
+			{
+				match(LITERAL_compress);
+				break;
+			}
+			case LITERAL_deterministic:
+			{
+				match(LITERAL_deterministic);
+				break;
+			}
+			case LITERAL_degree:
+			{
+				match(LITERAL_degree);
+				break;
+			}
+			case LITERAL_instances:
+			{
+				match(LITERAL_instances);
+				break;
+			}
+			case LITERAL_range:
+			{
+				match(LITERAL_range);
+				break;
+			}
+			case LITERAL_parallel:
+			{
+				match(LITERAL_parallel);
+				break;
+			}
+			case LITERAL_noparallel:
+			{
+				match(LITERAL_noparallel);
+				break;
+			}
+			case LITERAL_year:
+			{
+				match(LITERAL_year);
+				break;
+			}
+			case LITERAL_month:
+			{
+				match(LITERAL_month);
+				break;
+			}
+			case LITERAL_day:
+			{
+				match(LITERAL_day);
+				break;
+			}
+			case LITERAL_row:
+			{
+				match(LITERAL_row);
+				break;
+			}
+			case LITERAL_buffer_pool:
+			{
+				match(LITERAL_buffer_pool);
+				break;
+			}
+			case LITERAL_system:
+			{
+				match(LITERAL_system);
+				break;
+			}
+			case LITERAL_managed:
+			{
+				match(LITERAL_managed);
+				break;
+			}
+			case LITERAL_error_code:
+			{
+				match(LITERAL_error_code);
+				break;
+			}
+			case LITERAL_error_index:
+			{
+				match(LITERAL_error_index);
+				break;
+			}
+			case LITERAL_temporary:
+			{
+				match(LITERAL_temporary);
+				break;
+			}
+			case LITERAL_aggregate:
+			{
+				match(LITERAL_aggregate);
+				break;
+			}
+			case LITERAL_current:
+			{
+				match(LITERAL_current);
+				break;
+			}
+			case LITERAL_sqlcode:
+			{
+				match(LITERAL_sqlcode);
+				break;
+			}
+			case LITERAL_sqlerrm:
+			{
+				match(LITERAL_sqlerrm);
+				break;
+			}
+			case LITERAL_force:
+			{
+				match(LITERAL_force);
+				break;
+			}
+			case LITERAL_cascade:
+			{
+				match(LITERAL_cascade);
+				break;
+			}
+			case LITERAL_constraints:
+			{
+				match(LITERAL_constraints);
+				break;
+			}
+			case LITERAL_purge:
+			{
+				match(LITERAL_purge);
+				break;
+			}
+			case LITERAL_validate:
+			{
+				match(LITERAL_validate);
+				break;
+			}
+			case LITERAL_nextval:
+			{
+				match(LITERAL_nextval);
+				break;
+			}
+			case LITERAL_currval:
+			{
+				match(LITERAL_currval);
+				break;
+			}
+			case LITERAL_rows:
+			{
+				match(LITERAL_rows);
+				break;
+			}
+			case LITERAL_records:
+			{
+				match(LITERAL_records);
+				break;
+			}
+			case LITERAL_parameters:
+			{
+				match(LITERAL_parameters);
+				break;
+			}
+			case LITERAL_access:
+			{
+				match(LITERAL_access);
+				break;
+			}
+			case LITERAL_newline:
+			{
+				match(LITERAL_newline);
+				break;
+			}
+			case LITERAL_delimited:
+			{
+				match(LITERAL_delimited);
+				break;
+			}
+			case LITERAL_fixed:
+			{
+				match(LITERAL_fixed);
+				break;
+			}
+			case LITERAL_characterset:
+			{
+				match(LITERAL_characterset);
+				break;
+			}
+			case LITERAL_big:
+			{
+				match(LITERAL_big);
+				break;
+			}
+			case LITERAL_little:
+			{
+				match(LITERAL_little);
+				break;
+			}
+			case LITERAL_endian:
+			{
+				match(LITERAL_endian);
+				break;
+			}
+			case LITERAL_mark:
+			{
+				match(LITERAL_mark);
+				break;
+			}
+			case LITERAL_nocheck:
+			{
+				match(LITERAL_nocheck);
+				break;
+			}
+			case LITERAL_string:
+			{
+				match(LITERAL_string);
+				break;
+			}
+			case LITERAL_sizes:
+			{
+				match(LITERAL_sizes);
+				break;
+			}
+			case LITERAL_bytes:
+			{
+				match(LITERAL_bytes);
+				break;
+			}
+			case LITERAL_load:
+			{
+				match(LITERAL_load);
+				break;
+			}
+			case LITERAL_nobadfile:
+			{
+				match(LITERAL_nobadfile);
+				break;
+			}
+			case LITERAL_badfile:
+			{
+				match(LITERAL_badfile);
+				break;
+			}
+			case LITERAL_nodiscardfile:
+			{
+				match(LITERAL_nodiscardfile);
+				break;
+			}
+			case LITERAL_discardfile:
+			{
+				match(LITERAL_discardfile);
+				break;
+			}
+			case LITERAL_nologfile:
+			{
+				match(LITERAL_nologfile);
+				break;
+			}
+			case LITERAL_logfile:
+			{
+				match(LITERAL_logfile);
+				break;
+			}
+			case LITERAL_readsize:
+			{
+				match(LITERAL_readsize);
+				break;
+			}
+			case LITERAL_skip:
+			{
+				match(LITERAL_skip);
+				break;
+			}
+			case LITERAL_data_cache:
+			{
+				match(LITERAL_data_cache);
+				break;
+			}
+			case LITERAL_fields:
+			{
+				match(LITERAL_fields);
+				break;
+			}
+			case LITERAL_missing:
+			{
+				match(LITERAL_missing);
+				break;
+			}
+			case LITERAL_field:
+			{
+				match(LITERAL_field);
+				break;
+			}
+			case LITERAL_reject:
+			{
+				match(LITERAL_reject);
+				break;
+			}
+			case LITERAL_with:
+			{
+				match(LITERAL_with);
+				break;
+			}
+			case LITERAL_lrtrim:
+			{
+				match(LITERAL_lrtrim);
+				break;
+			}
+			case LITERAL_notrim:
+			{
+				match(LITERAL_notrim);
+				break;
+			}
+			case LITERAL_ltrim:
+			{
+				match(LITERAL_ltrim);
+				break;
+			}
+			case LITERAL_rtrim:
+			{
+				match(LITERAL_rtrim);
+				break;
+			}
+			case LITERAL_ldtrim:
+			{
+				match(LITERAL_ldtrim);
+				break;
+			}
+			case LITERAL_position:
+			{
+				match(LITERAL_position);
+				break;
+			}
+			case LITERAL_enclosed:
+			{
+				match(LITERAL_enclosed);
+				break;
+			}
+			case LITERAL_date_format:
+			{
+				match(LITERAL_date_format);
+				break;
+			}
+			case LITERAL_varraw:
+			{
+				match(LITERAL_varraw);
+				break;
+			}
+			case LITERAL_varcharc:
+			{
+				match(LITERAL_varcharc);
+				break;
+			}
+			case LITERAL_varrawc:
+			{
+				match(LITERAL_varrawc);
+				break;
+			}
+			case LITERAL_oracle_number:
+			{
+				match(LITERAL_oracle_number);
+				break;
+			}
+			case LITERAL_oracle_date:
+			{
+				match(LITERAL_oracle_date);
+				break;
+			}
+			case LITERAL_counted:
+			{
+				match(LITERAL_counted);
+				break;
+			}
+			case LITERAL_external:
+			{
+				match(LITERAL_external);
+				break;
+			}
+			case LITERAL_zoned:
+			{
+				match(LITERAL_zoned);
+				break;
+			}
+			case LITERAL_unsigned:
+			{
+				match(LITERAL_unsigned);
+				break;
+			}
+			case LITERAL_location:
+			{
+				match(LITERAL_location);
+				break;
+			}
+			case LITERAL_limit:
+			{
+				match(LITERAL_limit);
+				break;
+			}
+			case LITERAL_unlimited:
+			{
+				match(LITERAL_unlimited);
+				break;
+			}
+			case LITERAL_concat:
+			{
+				match(LITERAL_concat);
+				break;
+			}
+			case LITERAL_clob:
+			{
+				match(LITERAL_clob);
+				break;
+			}
+			case LITERAL_nclob:
+			{
+				match(LITERAL_nclob);
+				break;
+			}
+			case LITERAL_blob:
+			{
+				match(LITERAL_blob);
+				break;
+			}
+			case LITERAL_bfile:
+			{
+				match(LITERAL_bfile);
+				break;
+			}
+			case LITERAL_lobfile:
+			{
+				match(LITERAL_lobfile);
+				break;
+			}
+			case LITERAL_float:
+			{
+				match(LITERAL_float);
+				break;
+			}
+			case LITERAL_preprocessor:
+			{
+				match(LITERAL_preprocessor);
+				break;
+			}
+			case LITERAL_compression:
+			{
+				match(LITERAL_compression);
+				break;
+			}
+			case LITERAL_enabled:
+			{
+				match(LITERAL_enabled);
+				break;
+			}
+			case LITERAL_disabled:
+			{
+				match(LITERAL_disabled);
+				break;
+			}
+			case LITERAL_encryption:
+			{
+				match(LITERAL_encryption);
+				break;
+			}
+			case LITERAL_encrypt:
+			{
+				match(LITERAL_encrypt);
+				break;
+			}
+			case LITERAL_action:
+			{
+				match(LITERAL_action);
+				break;
+			}
+			case LITERAL_version:
+			{
+				match(LITERAL_version);
+				break;
+			}
+			case LITERAL_compatible:
+			{
+				match(LITERAL_compatible);
+				break;
+			}
+			case LITERAL_data:
+			{
+				match(LITERAL_data);
+				break;
+			}
+			case LITERAL_no:
+			{
+				match(LITERAL_no);
+				break;
+			}
+			case LITERAL_initrans:
+			{
+				match(LITERAL_initrans);
+				break;
+			}
+			case LITERAL_maxtrans:
+			{
+				match(LITERAL_maxtrans);
+				break;
+			}
+			case LITERAL_logging:
+			{
+				match(LITERAL_logging);
+				break;
+			}
+			case LITERAL_nologging:
+			{
+				match(LITERAL_nologging);
+				break;
+			}
+			case LITERAL_quit:
+			{
+				match(LITERAL_quit);
+				break;
+			}
+			case LITERAL_spool:
+			{
+				match(LITERAL_spool);
+				break;
+			}
+			case LITERAL_def:
+			{
+				match(LITERAL_def);
+				break;
+			}
+			case LITERAL_define:
+			{
+				match(LITERAL_define);
+				break;
+			}
+			case LITERAL_novalidate:
+			{
+				match(LITERAL_novalidate);
+				break;
+			}
+			case LITERAL_heap:
+			{
+				match(LITERAL_heap);
+				break;
+			}
+			case LITERAL_freelists:
+			{
+				match(LITERAL_freelists);
+				break;
+			}
+			case LITERAL_freelist:
+			{
+				match(LITERAL_freelist);
+				break;
+			}
+			case LITERAL_organization:
+			{
+				match(LITERAL_organization);
+				break;
+			}
+			case LITERAL_rely:
+			{
+				match(LITERAL_rely);
+				break;
+			}
+			case LITERAL_at:
+			{
+				match(LITERAL_at);
+				break;
+			}
+			case LITERAL_off:
+			{
+				match(LITERAL_off);
+				break;
+			}
+			case LITERAL_enable:
+			{
+				match(LITERAL_enable);
+				break;
+			}
+			case LITERAL_disable:
+			{
+				match(LITERAL_disable);
+				break;
+			}
+			case LITERAL_sql:
+			{
+				match(LITERAL_sql);
+				break;
+			}
+			case LITERAL_before:
+			{
+				match(LITERAL_before);
+				break;
+			}
+			case LITERAL_after:
+			{
+				match(LITERAL_after);
+				break;
+			}
+			case LITERAL_directory:
+			{
+				match(LITERAL_directory);
+				break;
+			}
+			case LITERAL_mask:
+			{
+				match(LITERAL_mask);
+				break;
+			}
+			case LITERAL_terminated:
+			{
+				match(LITERAL_terminated);
+				break;
+			}
+			case LITERAL_whitespace:
+			{
+				match(LITERAL_whitespace);
+				break;
+			}
+			case LITERAL_optionally:
+			{
+				match(LITERAL_optionally);
+				break;
+			}
+			case LITERAL_option:
+			{
+				match(LITERAL_option);
+				break;
+			}
+			case LITERAL_hierarchy:
+			{
+				match(LITERAL_hierarchy);
+				break;
+			}
+			case LITERAL_debug:
+			{
+				match(LITERAL_debug);
+				break;
+			}
+			case LITERAL_operations:
+			{
+				match(LITERAL_operations);
+				break;
+			}
+			case LITERAL_startup:
+			{
+				match(LITERAL_startup);
+				break;
+			}
+			case LITERAL_shutdown:
+			{
+				match(LITERAL_shutdown);
+				break;
+			}
+			case LITERAL_servererror:
+			{
+				match(LITERAL_servererror);
+				break;
+			}
+			case LITERAL_logon:
+			{
+				match(LITERAL_logon);
+				break;
+			}
+			case LITERAL_logoff:
+			{
+				match(LITERAL_logoff);
+				break;
+			}
+			case LITERAL_associate:
+			{
+				match(LITERAL_associate);
+				break;
+			}
+			case LITERAL_statistics:
+			{
+				match(LITERAL_statistics);
+				break;
+			}
+			case LITERAL_audit:
+			{
+				match(LITERAL_audit);
+				break;
+			}
+			case LITERAL_noaudit:
+			{
+				match(LITERAL_noaudit);
+				break;
+			}
+			case LITERAL_ddl:
+			{
+				match(LITERAL_ddl);
+				break;
+			}
+			case LITERAL_diassociate:
+			{
+				match(LITERAL_diassociate);
+				break;
+			}
+			case LITERAL_truncate:
+			{
+				match(LITERAL_truncate);
+				break;
+			}
+			case LITERAL_new:
+			{
+				match(LITERAL_new);
+				break;
+			}
+			case LITERAL_old:
+			{
+				match(LITERAL_old);
+				break;
+			}
+			case LITERAL_schema:
+			{
+				match(LITERAL_schema);
+				break;
+			}
+			case LITERAL_hash:
+			{
+				match(LITERAL_hash);
+				break;
+			}
+			case LITERAL_precision:
+			{
+				match(LITERAL_precision);
+				break;
+			}
+			case LITERAL_key:
+			{
+				match(LITERAL_key);
+				break;
+			}
+			case LITERAL_monitoring:
+			{
+				match(LITERAL_monitoring);
+				break;
+			}
+			case LITERAL_collect:
+			{
+				match(LITERAL_collect);
+				break;
+			}
+			case LITERAL_nulls:
+			{
+				match(LITERAL_nulls);
+				break;
+			}
+			case LITERAL_first:
+			{
+				match(LITERAL_first);
+				break;
+			}
+			case LITERAL_last:
+			{
+				match(LITERAL_last);
+				break;
+			}
+			case LITERAL_timezone:
+			{
+				match(LITERAL_timezone);
+				break;
+			}
+			case LITERAL_language:
+			{
+				match(LITERAL_language);
+				break;
+			}
+			case LITERAL_java:
+			{
+				match(LITERAL_java);
+				break;
+			}
+			case LITERAL_store:
+			{
+				match(LITERAL_store);
+				break;
+			}
+			case LITERAL_nested:
+			{
+				match(LITERAL_nested);
+				break;
+			}
+			case LITERAL_library:
+			{
+				match(LITERAL_library);
+				break;
+			}
+			case LITERAL_role:
+			{
+				match(LITERAL_role);
+				break;
+			}
+			case LITERAL_online:
+			{
+				match(LITERAL_online);
+				break;
+			}
+			case LITERAL_offline:
+			{
+				match(LITERAL_offline);
+				break;
+			}
+			case LITERAL_compute:
+			{
+				match(LITERAL_compute);
+				break;
+			}
+			case LITERAL_continue:
+			{
+				match(LITERAL_continue);
+				break;
+			}
+			case LITERAL_var:
+			{
+				match(LITERAL_var);
+				break;
+			}
+			case LITERAL_variable:
+			{
+				match(LITERAL_variable);
+				break;
+			}
+			case LITERAL_none:
+			{
+				match(LITERAL_none);
+				break;
+			}
+			case LITERAL_oserror:
+			{
+				match(LITERAL_oserror);
+				break;
+			}
+			case LITERAL_sqlerror:
+			{
+				match(LITERAL_sqlerror);
+				break;
+			}
+			case LITERAL_whenever:
+			{
+				match(LITERAL_whenever);
+				break;
+			}
+			case LITERAL_the:
+			{
+				match(LITERAL_the);
+				break;
+			}
+			case LITERAL_identified:
+			{
+				match(LITERAL_identified);
+				break;
+			}
+			case LITERAL_link:
+			{
+				match(LITERAL_link);
+				break;
+			}
+			case LITERAL_by:
+			{
+				match(LITERAL_by);
+				break;
+			}
+			case LITERAL_noorder:
+			{
+				match(LITERAL_noorder);
+				break;
+			}
+			case LITERAL_maxvalue:
+			{
+				match(LITERAL_maxvalue);
+				break;
+			}
+			case LITERAL_minvalue:
+			{
+				match(LITERAL_minvalue);
+				break;
+			}
+			case LITERAL_increment:
+			{
+				match(LITERAL_increment);
+				break;
+			}
+			case LITERAL_cycle:
+			{
+				match(LITERAL_cycle);
+				break;
+			}
+			case LITERAL_nocycle:
+			{
+				match(LITERAL_nocycle);
+				break;
+			}
+			case LITERAL_pctthreshold:
+			{
+				match(LITERAL_pctthreshold);
+				break;
+			}
+			case LITERAL_including:
+			{
+				match(LITERAL_including);
+				break;
+			}
+			case LITERAL_repheader:
+			{
+				match(LITERAL_repheader);
+				break;
+			}
+			case LITERAL_repfooter:
+			{
+				match(LITERAL_repfooter);
+				break;
+			}
+			case LITERAL_serveroutput:
+			{
+				match(LITERAL_serveroutput);
+				break;
+			}
+			case LITERAL_groups:
+			{
+				match(LITERAL_groups);
+				break;
+			}
+			case LITERAL_wait:
+			{
+				match(LITERAL_wait);
+				break;
+			}
+			case LITERAL_indices:
+			{
+				match(LITERAL_indices);
+				break;
+			}
+			case LITERAL_subtype:
+			{
+				match(LITERAL_subtype);
+				break;
+			}
+			case LITERAL_tablespace:
+			{
+				match(LITERAL_tablespace);
+				break;
+			}
+			case LITERAL_optimal:
+			{
+				match(LITERAL_optimal);
+				break;
+			}
+			case LITERAL_keep:
+			{
+				match(LITERAL_keep);
+				break;
+			}
+			case LITERAL_sequence:
+			{
+				match(LITERAL_sequence);
+				break;
+			}
+			case LITERAL_under:
+			{
+				match(LITERAL_under);
+				break;
+			}
+			case LITERAL_final:
+			{
+				match(LITERAL_final);
+				break;
+			}
+			case LITERAL_timezone_hour:
+			{
+				match(LITERAL_timezone_hour);
+				break;
+			}
+			case LITERAL_timezone_minute:
+			{
+				match(LITERAL_timezone_minute);
+				break;
+			}
+			case LITERAL_timezone_region:
+			{
+				match(LITERAL_timezone_region);
+				break;
+			}
+			case LITERAL_timezone_abbr:
+			{
+				match(LITERAL_timezone_abbr);
+				break;
+			}
+			case LITERAL_hour:
+			{
+				match(LITERAL_hour);
+				break;
+			}
+			case LITERAL_minute:
+			{
+				match(LITERAL_minute);
+				break;
+			}
+			case LITERAL_second:
+			{
+				match(LITERAL_second);
+				break;
+			}
+			case LITERAL_cost:
+			{
+				match(LITERAL_cost);
+				break;
+			}
+			case LITERAL_selectivity:
+			{
+				match(LITERAL_selectivity);
+				break;
+			}
+			case LITERAL_functions:
+			{
+				match(LITERAL_functions);
+				break;
+			}
+			case LITERAL_packages:
+			{
+				match(LITERAL_packages);
+				break;
+			}
+			case LITERAL_types:
+			{
+				match(LITERAL_types);
+				break;
+			}
+			case LITERAL_indexes:
+			{
+				match(LITERAL_indexes);
+				break;
+			}
+			case LITERAL_indextypes:
+			{
+				match(LITERAL_indextypes);
+				break;
+			}
+			case LITERAL_transforms:
+			{
+				match(LITERAL_transforms);
+				break;
+			}
+			case LITERAL_host:
+			{
+				match(LITERAL_host);
+				break;
+			}
+			case LITERAL_multiset:
+			{
+				match(LITERAL_multiset);
+				break;
+			}
+			case LITERAL_lag:
+			{
+				match(LITERAL_lag);
+				break;
+			}
+			case LITERAL_lead:
+			{
+				match(LITERAL_lead);
+				break;
+			}
+			case LITERAL_datafile:
+			{
+				match(LITERAL_datafile);
+				break;
+			}
+			case LITERAL_add:
+			{
+				match(LITERAL_add);
+				break;
+			}
+			case LITERAL_reuse:
+			{
+				match(LITERAL_reuse);
+				break;
+			}
+			case LITERAL_size:
+			{
+				match(LITERAL_size);
+				break;
+			}
+			case LITERAL_maxsize:
+			{
+				match(LITERAL_maxsize);
+				break;
+			}
+			case LITERAL_bigfile:
+			{
+				match(LITERAL_bigfile);
+				break;
+			}
+			case LITERAL_smallfile:
+			{
+				match(LITERAL_smallfile);
+				break;
+			}
+			case LITERAL_extent:
+			{
+				match(LITERAL_extent);
+				break;
+			}
+			case LITERAL_management:
+			{
+				match(LITERAL_management);
+				break;
+			}
+			case LITERAL_dictionary:
+			{
+				match(LITERAL_dictionary);
+				break;
+			}
+			case LITERAL_uniform:
+			{
+				match(LITERAL_uniform);
+				break;
+			}
+			case LITERAL_retention:
+			{
+				match(LITERAL_retention);
+				break;
+			}
+			case LITERAL_guarantee:
+			{
+				match(LITERAL_guarantee);
+				break;
+			}
+			case LITERAL_noguarantee:
+			{
+				match(LITERAL_noguarantee);
+				break;
+			}
+			case LITERAL_tempfile:
+			{
+				match(LITERAL_tempfile);
+				break;
+			}
+			case LITERAL_contents:
+			{
+				match(LITERAL_contents);
+				break;
+			}
+			case LITERAL_datafiles:
+			{
+				match(LITERAL_datafiles);
+				break;
+			}
+			case LITERAL_backup:
+			{
+				match(LITERAL_backup);
+				break;
+			}
+			case LITERAL_coalesce:
+			{
+				match(LITERAL_coalesce);
+				break;
+			}
+			case LITERAL_permanent:
+			{
+				match(LITERAL_permanent);
+				break;
+			}
+			case LITERAL_pctversion:
+			{
+				match(LITERAL_pctversion);
+				break;
+			}
+			case LITERAL_freepools:
+			{
+				match(LITERAL_freepools);
+				break;
+			}
+			case LITERAL_chunk:
+			{
+				match(LITERAL_chunk);
+				break;
+			}
+			case LITERAL_reads:
+			{
+				match(LITERAL_reads);
+				break;
+			}
+			case LITERAL_storage:
+			{
+				match(LITERAL_storage);
+				break;
+			}
+			case LITERAL_locator:
+			{
+				match(LITERAL_locator);
+				break;
+			}
+			case LITERAL_value:
+			{
+				match(LITERAL_value);
+				break;
+			}
+			case LITERAL_cluster:
+			{
+				match(LITERAL_cluster);
+				break;
+			}
+			case LITERAL_deferred:
+			{
+				match(LITERAL_deferred);
+				break;
+			}
+			case LITERAL_creation:
+			{
+				match(LITERAL_creation);
+				break;
+			}
+			case LITERAL_segment:
+			{
+				match(LITERAL_segment);
+				break;
+			}
+			case LITERAL_flash_cache:
+			{
+				match(LITERAL_flash_cache);
+				break;
+			}
+			case LITERAL_cell_flash_cache:
+			{
+				match(LITERAL_cell_flash_cache);
+				break;
+			}
+			case LITERAL_cast:
+			{
+				match(LITERAL_cast);
+				break;
+			}
+			case LITERAL_initial:
+			{
+				match(LITERAL_initial);
+				break;
+			}
+			case LITERAL_minextents:
+			{
+				match(LITERAL_minextents);
+				break;
+			}
+			case LITERAL_maxextents:
+			{
+				match(LITERAL_maxextents);
+				break;
+			}
+			case LITERAL_pctincrease:
+			{
+				match(LITERAL_pctincrease);
+				break;
+			}
+			case LITERAL_overflow:
+			{
+				match(LITERAL_overflow);
+				break;
+			}
+			case LITERAL_quota:
+			{
+				match(LITERAL_quota);
+				break;
+			}
+			case LITERAL_profile:
+			{
+				match(LITERAL_profile);
+				break;
+			}
+			case LITERAL_password:
+			{
+				match(LITERAL_password);
+				break;
+			}
+			case LITERAL_expire:
+			{
+				match(LITERAL_expire);
+				break;
+			}
+			case LITERAL_account:
+			{
+				match(LITERAL_account);
+				break;
+			}
+			case LITERAL_lock:
+			{
+				match(LITERAL_lock);
+				break;
+			}
+			case LITERAL_unlock:
+			{
+				match(LITERAL_unlock);
+				break;
+			}
+			case LITERAL_privileges:
+			{
+				match(LITERAL_privileges);
+				break;
+			}
+			case LITERAL_unusable:
+			{
+				match(LITERAL_unusable);
+				break;
+			}
+			case LITERAL_rebuild:
+			{
+				match(LITERAL_rebuild);
+				break;
+			}
+			case LITERAL_materialized:
+			{
+				match(LITERAL_materialized);
+				break;
+			}
+			case LITERAL_log:
+			{
+				match(LITERAL_log);
+				break;
+			}
+			case LITERAL_query:
+			{
+				match(LITERAL_query);
+				break;
+			}
+			case LITERAL_rewrite:
+			{
+				match(LITERAL_rewrite);
+				break;
+			}
+			case LITERAL_fast:
+			{
+				match(LITERAL_fast);
+				break;
+			}
+			case LITERAL_complete:
+			{
+				match(LITERAL_complete);
+				break;
+			}
+			case LITERAL_demand:
+			{
+				match(LITERAL_demand);
+				break;
+			}
+			case LITERAL_prebuilt:
+			{
+				match(LITERAL_prebuilt);
+				break;
+			}
+			case LITERAL_reduced:
+			{
+				match(LITERAL_reduced);
+				break;
+			}
+			case LITERAL_without:
+			{
+				match(LITERAL_without);
+				break;
+			}
+			case LITERAL_resource:
+			{
+				match(LITERAL_resource);
+				break;
+			}
+			case LITERAL_become:
+			{
+				match(LITERAL_become);
+				break;
+			}
+			case LITERAL_admin:
+			{
+				match(LITERAL_admin);
+				break;
+			}
+			case LITERAL_member:
+			{
+				match(LITERAL_member);
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			}
+			}
+		}
+		catch (RecognitionException ex) {
+			if (inputState.guessing==0) {
+				reportError(ex);
+				recover(ex,_tokenSet_328);
 			} else {
 			  throw ex;
 			}
@@ -30040,22 +31728,22 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				cast_function();
 			}
 			else {
-				boolean synPredMatched1768 = false;
+				boolean synPredMatched1771 = false;
 				if (((_tokenSet_11.member(LA(1))) && (LA(2)==DOT||LA(2)==CLOSE_PAREN) && (_tokenSet_330.member(LA(3))))) {
-					int _m1768 = mark();
-					synPredMatched1768 = true;
+					int _m1771 = mark();
+					synPredMatched1771 = true;
 					inputState.guessing++;
 					try {
 						{
 						{
-						_loop1767:
+						_loop1770:
 						do {
 							if ((_tokenSet_11.member(LA(1))) && (LA(2)==DOT) && (_tokenSet_11.member(LA(3)))) {
 								name_fragment();
 								match(DOT);
 							}
 							else {
-								break _loop1767;
+								break _loop1770;
 							}
 							
 						} while (true);
@@ -30065,21 +31753,21 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched1768 = false;
+						synPredMatched1771 = false;
 					}
-					rewind(_m1768);
+					rewind(_m1771);
 					inputState.guessing--;
 				}
-				if ( synPredMatched1768 ) {
+				if ( synPredMatched1771 ) {
 					{
-					_loop1770:
+					_loop1773:
 					do {
 						if ((_tokenSet_11.member(LA(1))) && (LA(2)==DOT)) {
 							name_fragment();
 							match(DOT);
 						}
 						else {
-							break _loop1770;
+							break _loop1773;
 						}
 						
 					} while (true);
@@ -30129,10 +31817,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			subquery();
 			{
-			if ((_tokenSet_35.member(LA(1))) && (_tokenSet_327.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+			if ((_tokenSet_35.member(LA(1))) && (_tokenSet_325.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 				alias();
 			}
-			else if ((_tokenSet_327.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+			else if ((_tokenSet_325.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -30146,7 +31834,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_327);
+				recover(ex,_tokenSet_325);
 			} else {
 			  throw ex;
 			}
@@ -30159,10 +31847,10 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			table_spec();
 			{
-			if ((_tokenSet_35.member(LA(1))) && (_tokenSet_331.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
-				alias();
+			if ((_tokenSet_331.member(LA(1))) && (_tokenSet_328.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+				correlation_name();
 			}
-			else if ((_tokenSet_331.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
+			else if ((_tokenSet_328.member(LA(1))) && (_tokenSet_3.member(LA(2))) && (_tokenSet_3.member(LA(3)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -30176,7 +31864,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_331);
+				recover(ex,_tokenSet_328);
 			} else {
 			  throw ex;
 			}
@@ -30254,7 +31942,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				recover(ex,_tokenSet_320);
+				recover(ex,_tokenSet_318);
 			} else {
 			  throw ex;
 			}
@@ -30429,14 +32117,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			column_spec();
 			{
-			_loop1820:
+			_loop1823:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					column_spec();
 				}
 				else {
-					break _loop1820;
+					break _loop1823;
 				}
 				
 			} while (true);
@@ -30461,14 +32149,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			_loop1865:
+			_loop1868:
 			do {
 				if ((_tokenSet_11.member(LA(1))) && (LA(2)==DOT)) {
 					name_fragment();
 					match(DOT);
 				}
 				else {
-					break _loop1865;
+					break _loop1868;
 				}
 				
 			} while (true);
@@ -30533,14 +32221,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			column_spec();
 			{
-			_loop1823:
+			_loop1826:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					column_spec();
 				}
 				else {
-					break _loop1823;
+					break _loop1826;
 				}
 				
 			} while (true);
@@ -30594,7 +32282,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(EQ);
 				plsql_expression();
 				{
-				_loop1833:
+				_loop1836:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
@@ -30603,7 +32291,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						plsql_expression();
 					}
 					else {
-						break _loop1833;
+						break _loop1836;
 					}
 					
 				} while (true);
@@ -30719,7 +32407,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(EQ);
 			plsql_expression();
 			{
-			_loop1844:
+			_loop1847:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
@@ -30728,7 +32416,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					plsql_expression();
 				}
 				else {
-					break _loop1844;
+					break _loop1847;
 				}
 				
 			} while (true);
@@ -30957,7 +32645,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			
 			}
 			{
-			_loop2022:
+			_loop2025:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
@@ -30975,7 +32663,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 					}
 				}
 				else {
-					break _loop2022;
+					break _loop2025;
 				}
 				
 			} while (true);
@@ -31270,13 +32958,13 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(LITERAL_records);
 			rec_format();
 			{
-			_loop1910:
+			_loop1913:
 			do {
 				if ((_tokenSet_347.member(LA(1)))) {
 					rec_format_spec();
 				}
 				else {
-					break _loop1910;
+					break _loop1913;
 				}
 				
 			} while (true);
@@ -31437,14 +33125,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 			match(OPEN_PAREN);
 			transform();
 			{
-			_loop1944:
+			_loop1947:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					transform();
 				}
 				else {
-					break _loop1944;
+					break _loop1947;
 				}
 				
 			} while (true);
@@ -32006,14 +33694,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		try {      // for error handling
 			field_spec();
 			{
-			_loop1976:
+			_loop1979:
 			do {
 				if ((LA(1)==COMMA)) {
 					match(COMMA);
 					field_spec();
 				}
 				else {
-					break _loop1976;
+					break _loop1979;
 				}
 				
 			} while (true);
@@ -32075,7 +33763,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				}
 				}
 				{
-				_loop1951:
+				_loop1954:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
@@ -32100,7 +33788,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					else {
-						break _loop1951;
+						break _loop1954;
 					}
 					
 				} while (true);
@@ -32137,7 +33825,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				}
 				}
 				{
-				_loop1958:
+				_loop1961:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
@@ -32165,7 +33853,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 						}
 					}
 					else {
-						break _loop1958;
+						break _loop1961;
 					}
 					
 				} while (true);
@@ -32240,14 +33928,14 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 				match(OPEN_PAREN);
 				identifier2();
 				{
-				_loop1963:
+				_loop1966:
 				do {
 					if ((LA(1)==COMMA)) {
 						match(COMMA);
 						identifier2();
 					}
 					else {
-						break _loop1963;
+						break _loop1966;
 					}
 					
 				} while (true);
@@ -33876,13 +35564,13 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		"\"left\"",
 		"\"right\"",
 		"\"inner\"",
-		"\"outer\"",
-		"\"join\"",
 		"\"full\"",
 		"\"where\"",
 		"\"current_timestamp\"",
 		"\"rownum\"",
 		"\"the\"",
+		"\"outer\"",
+		"\"join\"",
 		"\"having\"",
 		"\"nulls\"",
 		"\"first\"",
@@ -33986,7 +35674,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616299655653754305L;
 		data[11]=2162862113645657623L;
 		data[12]=9155721182339649315L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34030,7 +35718,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=8705326730480450101L;
 		data[11]=2162862113482076688L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34045,7 +35733,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34071,7 +35759,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34106,7 +35794,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640720642996789L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34121,7 +35809,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34136,7 +35824,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34172,7 +35860,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562574763809L;
-		data[13]=-570070224799421L;
+		data[13]=-570070234236605L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34187,7 +35875,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2305842734277066744L;
 		data[12]=9011465256735330083L;
-		data[13]=-570034789222077L;
+		data[13]=-570034791646909L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34202,7 +35890,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562574763809L;
-		data[13]=-570070224799421L;
+		data[13]=-570070234236605L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34225,7 +35913,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562574763809L;
-		data[13]=-570070224799421L;
+		data[13]=-570070234236605L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34240,7 +35928,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2305842734142845944L;
 		data[12]=8939407662697383715L;
-		data[13]=-570069148960445L;
+		data[13]=-570069151385277L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34255,7 +35943,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562574763809L;
-		data[13]=-570070224799421L;
+		data[13]=-570070234236605L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34270,7 +35958,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2305842734310621072L;
 		data[12]=9011464157221408547L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34285,7 +35973,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120706524770993611L;
 		data[11]=2305842734277066260L;
 		data[12]=9047705159986827043L;
-		data[13]=-570034789221949L;
+		data[13]=-570034791646781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34300,7 +35988,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562578958113L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34315,7 +36003,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939478031439464225L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34330,7 +36018,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939618768930178849L;
-		data[13]=-570070222702109L;
+		data[13]=-570070225126941L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34345,7 +36033,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34360,7 +36048,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34375,7 +36063,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731324801713611L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34390,7 +36078,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113637269008L;
 		data[12]=9155791551043981091L;
-		data[13]=-570030494254621L;
+		data[13]=-570030496679453L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34405,7 +36093,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34420,7 +36108,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640720642996789L;
 		data[11]=2162862113482076688L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34435,7 +36123,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731324801713611L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34450,7 +36138,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030500546237L;
+		data[13]=-570030498252477L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34465,7 +36153,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662693189409L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34500,7 +36188,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4985616136725857739L;
 		data[11]=2162862113482076688L;
 		data[12]=8939406563183462177L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34578,7 +36266,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34593,7 +36281,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34608,7 +36296,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562578958113L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34667,7 +36355,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113482076688L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34707,7 +36395,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731247492302211L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030498645665L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34760,7 +36448,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939547300067313441L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34793,7 +36481,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2162862113645657620L;
 		data[12]=9155721182339653411L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34808,7 +36496,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030232110753L;
+		data[13]=-570030229816993L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34823,7 +36511,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616299655653754305L;
 		data[11]=2162862113645657620L;
 		data[12]=9155721182339653411L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34838,7 +36526,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2162862113645657620L;
 		data[12]=9155721182339649315L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35184371957743L;
 		return data;
 	}
@@ -34865,7 +36553,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2305842734071542288L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34888,7 +36576,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2234919724863454740L;
 		data[12]=9155720082827562875L;
-		data[13]=-570030477673985L;
+		data[13]=-570030480164353L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34903,7 +36591,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129696140429624779L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34918,7 +36606,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2234919707683585556L;
 		data[12]=9155720082827562875L;
-		data[13]=-570030477673985L;
+		data[13]=-570030480164353L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34933,7 +36621,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2234919707683585556L;
 		data[12]=9155720082827562875L;
-		data[13]=-570030477673985L;
+		data[13]=-570030480164353L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34948,7 +36636,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34963,7 +36651,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -34978,7 +36666,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35006,7 +36694,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35021,7 +36709,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113645657616L;
 		data[12]=9155720082785619747L;
-		data[13]=-570030498645665L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35036,7 +36724,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563183462177L;
-		data[13]=-570069155251901L;
+		data[13]=-570069152958141L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35051,7 +36739,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662691092257L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35066,7 +36754,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662697383713L;
-		data[13]=-570069148960445L;
+		data[13]=-570069151385277L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35081,7 +36769,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563183462177L;
-		data[13]=-570069155251901L;
+		data[13]=-570069152958141L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35096,7 +36784,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662691092257L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35111,7 +36799,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303297786021249L;
 		data[11]=9223371761943313940L;
 		data[12]=9155721182339653499L;
-		data[13]=-570030207141377L;
+		data[13]=-570030211204609L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35126,7 +36814,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2162862113645657620L;
 		data[12]=9155721182339649315L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35141,7 +36829,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662693189409L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35156,7 +36844,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8970932860084782881L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35171,7 +36859,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939478031435269921L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35201,7 +36889,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2162862113645657620L;
 		data[12]=9155721182339649315L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35216,7 +36904,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662739588897L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35231,7 +36919,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724125546972619L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35246,7 +36934,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2162862113645657620L;
 		data[12]=9155721182339649315L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35261,7 +36949,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731324801713611L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35276,7 +36964,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113482076688L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35291,7 +36979,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2234919711978552852L;
 		data[12]=9155720082827562875L;
-		data[13]=-570030477673985L;
+		data[13]=-570030480164353L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35306,7 +36994,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35321,7 +37009,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662693189409L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35336,7 +37024,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2162862113645657620L;
 		data[12]=9155721182341746467L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35351,7 +37039,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2162862113645657620L;
 		data[12]=9155720082827562787L;
-		data[13]=-570030477673985L;
+		data[13]=-570030480164353L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35374,7 +37062,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113482076688L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35400,7 +37088,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562574763809L;
-		data[13]=-570070224799421L;
+		data[13]=-570070234236605L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35415,7 +37103,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35430,7 +37118,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113620491792L;
 		data[12]=9011604894709767969L;
-		data[13]=-570034795513373L;
+		data[13]=-570034793219613L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35445,7 +37133,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120706524770993611L;
 		data[11]=4468705122850962964L;
 		data[12]=9191820348062691107L;
-		data[13]=-570034789221949L;
+		data[13]=-570034791646781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35460,7 +37148,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113620491792L;
 		data[12]=9011604894709767969L;
-		data[13]=-570034795513373L;
+		data[13]=-570034793219613L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35475,7 +37163,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35490,7 +37178,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35650,7 +37338,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4625324447094539713L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35665,7 +37353,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35680,7 +37368,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35776,7 +37464,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35855,7 +37543,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030500546237L;
+		data[13]=-570030498252477L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35899,7 +37587,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4625324447094539713L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35914,7 +37602,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129727605360035265L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -35979,7 +37667,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779009L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36007,7 +37695,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779009L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36042,7 +37730,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36057,7 +37745,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36101,7 +37789,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779009L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36154,7 +37842,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36169,7 +37857,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36193,7 +37881,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129727605360035267L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36208,7 +37896,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731247492302283L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36232,7 +37920,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36247,7 +37935,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2305842734293843472L;
 		data[12]=9155580444811185955L;
-		data[13]=-570034789222077L;
+		data[13]=-570034791646909L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36262,7 +37950,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36284,7 +37972,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113637269008L;
 		data[12]=9155580444811185955L;
-		data[13]=-570034789222077L;
+		data[13]=-570034791646909L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36299,7 +37987,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36314,7 +38002,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36329,7 +38017,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093644422904805941L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36353,7 +38041,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129727605360035275L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36368,7 +38056,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129727605360035275L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36410,7 +38098,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779009L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36434,7 +38122,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562578958113L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36513,7 +38201,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562574763809L;
-		data[13]=-570070224799421L;
+		data[13]=-570070234236605L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36528,7 +38216,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120864854445393359L;
 		data[11]=2162862113414963216L;
 		data[12]=8939406562574763809L;
-		data[13]=-570070224799421L;
+		data[13]=-570070234236605L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36543,7 +38231,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2305842734071542544L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36564,7 +38252,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562574763809L;
-		data[13]=-570070224799421L;
+		data[13]=-570070234236605L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36585,7 +38273,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113620491792L;
 		data[12]=9011464157221408545L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36610,7 +38298,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2305842734071542288L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36635,7 +38323,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2305842734071542288L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36660,7 +38348,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120671340398904779L;
 		data[11]=2162862113414967828L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070224799421L;
+		data[13]=-570070225651389L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36675,7 +38363,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562574763809L;
-		data[13]=-570070224799421L;
+		data[13]=-570070234236605L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36690,7 +38378,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562574763809L;
-		data[13]=-570070224799421L;
+		data[13]=-570070234236605L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36705,7 +38393,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2162862113645657620L;
 		data[12]=9155720082827824931L;
-		data[13]=-570030477673985L;
+		data[13]=-570030480164353L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36728,7 +38416,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36743,7 +38431,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562578958113L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36758,7 +38446,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2234919707452891668L;
 		data[12]=8939406562578958201L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36780,7 +38468,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113620491792L;
 		data[12]=9011464157221408545L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36795,7 +38483,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36818,7 +38506,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113620491792L;
 		data[12]=9011465256735330081L;
-		data[13]=-570034789222077L;
+		data[13]=-570034791646909L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36833,7 +38521,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120706524770993611L;
 		data[11]=2162862113620491796L;
 		data[12]=9047705160029032227L;
-		data[13]=-570034789221949L;
+		data[13]=-570034791646781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36848,7 +38536,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939547300667623201L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36858,12 +38546,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[0]=468378764571705344L;
 		data[6]=-155639055898378240L;
 		data[7]=8142200262796669147L;
-		data[8]=-154248390318752145L;
+		data[8]=-154248390318752153L;
 		data[9]=-533712855937060883L;
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030499497661L;
+		data[13]=-570030497990333L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36878,7 +38566,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9191608142316228387L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36893,7 +38581,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120706524770993611L;
 		data[11]=2162862113637269012L;
 		data[12]=9191820348062682915L;
-		data[13]=-570034789221949L;
+		data[13]=-570034791646781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36908,7 +38596,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9191608142316228387L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36931,7 +38619,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36946,7 +38634,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36976,7 +38664,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993565L;
+		data[13]=-570070226699805L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -36991,7 +38679,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=4468705122850962960L;
 		data[12]=9155580444811185955L;
-		data[13]=-570034789221917L;
+		data[13]=-570034791646749L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37006,7 +38694,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662697645857L;
-		data[13]=-570070222702109L;
+		data[13]=-570070225126941L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37021,7 +38709,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=4611685743507537424L;
 		data[12]=9187176010989162275L;
-		data[13]=-570034789221917L;
+		data[13]=-570034791646749L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37036,7 +38724,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662697645857L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37051,7 +38739,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2305842734293843472L;
 		data[12]=9187176010989162275L;
-		data[13]=-570034789222077L;
+		data[13]=-570034791646909L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37066,7 +38754,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731324801713611L;
 		data[11]=2162862113482076688L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37081,7 +38769,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2234919707683585556L;
 		data[12]=9155721182339653499L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37102,7 +38790,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=9223371761712624144L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37117,7 +38805,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=6917528752498930192L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37142,7 +38830,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120671340398904779L;
 		data[11]=2234919707524198932L;
 		data[12]=8939407662695286561L;
-		data[13]=-570069148960445L;
+		data[13]=-570069151385277L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37157,7 +38845,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=9223371761712624144L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37172,7 +38860,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562578958201L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37187,7 +38875,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37202,7 +38890,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120706524770993611L;
 		data[11]=9223371761712624148L;
 		data[12]=8939406563183462177L;
-		data[13]=-570069151057597L;
+		data[13]=-570069151909565L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37217,7 +38905,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562578958113L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37232,7 +38920,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562578958201L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37247,7 +38935,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562578958193L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37262,7 +38950,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562578958177L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37277,7 +38965,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120847262259348943L;
 		data[11]=2162862113414963732L;
 		data[12]=8939406562578958177L;
-		data[13]=-570069151057597L;
+		data[13]=-570069160494781L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37323,7 +39011,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113482076688L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37338,7 +39026,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37353,7 +39041,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113620491792L;
 		data[12]=9011464157221412641L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37374,7 +39062,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113620491792L;
 		data[12]=9011464157221412641L;
-		data[13]=-570034795513533L;
+		data[13]=-570034793219773L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37389,7 +39077,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662697645857L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37404,7 +39092,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2305842734142845456L;
 		data[12]=8971003228875360033L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37435,7 +39123,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2162862130825526804L;
 		data[12]=9155720082827562787L;
-		data[13]=-570030477673985L;
+		data[13]=-570030480164353L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37450,7 +39138,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2162862388523564564L;
 		data[12]=9155720082827824931L;
-		data[13]=-570030477673985L;
+		data[13]=-570030480164353L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37465,7 +39153,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113645657616L;
 		data[12]=9155720082785619747L;
-		data[13]=-570030498645665L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37480,7 +39168,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113645657616L;
 		data[12]=9155720082785619747L;
-		data[13]=-570030498645665L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37495,7 +39183,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662693189409L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37510,7 +39198,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662697645857L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37525,7 +39213,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113645657616L;
 		data[12]=9155721182341746467L;
-		data[13]=-570030492354209L;
+		data[13]=-570030496417441L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37540,7 +39228,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662691092257L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37555,7 +39243,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113645657616L;
 		data[12]=9155721182299803427L;
-		data[13]=-570030492354209L;
+		data[13]=-570030496417441L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37570,7 +39258,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662699480865L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37585,7 +39273,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37600,7 +39288,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113645657616L;
 		data[12]=9155720082785619747L;
-		data[13]=-570030498645665L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37615,7 +39303,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662724646689L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37630,7 +39318,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662697645857L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37645,7 +39333,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640720642996789L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37660,7 +39348,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505497987L;
 		data[11]=2162862113645657620L;
 		data[12]=9155721182339649315L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37675,7 +39363,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939478031435269921L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37690,7 +39378,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662697645857L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37705,7 +39393,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2305842734302232084L;
 		data[12]=9187316748477517603L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37720,7 +39408,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724125546972619L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37747,7 +39435,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030500546209L;
+		data[13]=-570030498252449L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37762,7 +39450,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939548400227944225L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37800,7 +39488,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-4616303366505498059L;
 		data[11]=2162862113645657620L;
 		data[12]=9155721182339649315L;
-		data[13]=-570030475576833L;
+		data[13]=-570030479640065L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37823,7 +39511,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37846,7 +39534,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731324801713611L;
 		data[11]=2162862113482076688L;
 		data[12]=8939406563183462177L;
-		data[13]=-570070228993725L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37868,7 +39556,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030500546209L;
+		data[13]=-570030498252449L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37883,7 +39571,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030500546209L;
+		data[13]=-570030498252449L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37898,7 +39586,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030500546209L;
+		data[13]=-570030498252449L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37913,7 +39601,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030232110753L;
+		data[13]=-570030229816993L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37928,7 +39616,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939407662691092257L;
-		data[13]=-570070222702269L;
+		data[13]=-570070225127101L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37943,7 +39631,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2162862113486270992L;
 		data[12]=8939548400186001185L;
-		data[13]=-570070222702109L;
+		data[13]=-570070225126941L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -37958,18 +39646,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5120724116957038027L;
 		data[11]=2305842734142845456L;
 		data[12]=8971143966363715361L;
-		data[13]=-570070222702109L;
+		data[13]=-570070225126941L;
 		data[14]=35183835086831L;
 		return data;
 	}
 	public static final BitSet _tokenSet_316 = new BitSet(mk_tokenSet_316());
 	private static final long[] mk_tokenSet_317() {
-		long[] data = new long[28];
-		data[13]=901120L;
-		return data;
-	}
-	public static final BitSet _tokenSet_317 = new BitSet(mk_tokenSet_317());
-	private static final long[] mk_tokenSet_318() {
 		long[] data = new long[30];
 		data[0]=4339138560L;
 		data[6]=-155639052677152768L;
@@ -37979,27 +39661,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=4093640712053062197L;
 		data[11]=2162862113414967824L;
 		data[12]=8939406563179267873L;
-		data[13]=-570070228600509L;
+		data[13]=-570070226699965L;
 		data[14]=35183835086831L;
 		return data;
 	}
-	public static final BitSet _tokenSet_318 = new BitSet(mk_tokenSet_318());
-	private static final long[] mk_tokenSet_319() {
-		long[] data = new long[30];
-		data[0]=468378843021967362L;
-		data[6]=-2516249808470016L;
-		data[7]=8574853690414232571L;
-		data[8]=-154248321599275409L;
-		data[9]=-533712855937060865L;
-		data[10]=-5129731316211779011L;
-		data[11]=2162862113637269008L;
-		data[12]=9155579345297264419L;
-		data[13]=-570030498645665L;
-		data[14]=35183835086831L;
-		return data;
-	}
-	public static final BitSet _tokenSet_319 = new BitSet(mk_tokenSet_319());
-	private static final long[] mk_tokenSet_320() {
+	public static final BitSet _tokenSet_317 = new BitSet(mk_tokenSet_317());
+	private static final long[] mk_tokenSet_318() {
 		long[] data = new long[30];
 		data[0]=468378842484965378L;
 		data[6]=-2516254103437312L;
@@ -38009,12 +39676,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030498645665L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
 		return data;
 	}
-	public static final BitSet _tokenSet_320 = new BitSet(mk_tokenSet_320());
-	private static final long[] mk_tokenSet_321() {
+	public static final BitSet _tokenSet_318 = new BitSet(mk_tokenSet_318());
+	private static final long[] mk_tokenSet_319() {
 		long[] data = new long[30];
 		data[0]=468378841411223554L;
 		data[6]=-2516254103437312L;
@@ -38024,12 +39691,12 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030499497633L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
 		return data;
 	}
-	public static final BitSet _tokenSet_321 = new BitSet(mk_tokenSet_321());
-	private static final long[] mk_tokenSet_322() {
+	public static final BitSet _tokenSet_319 = new BitSet(mk_tokenSet_319());
+	private static final long[] mk_tokenSet_320() {
 		long[] data = new long[30];
 		data[0]=468378841411223554L;
 		data[6]=-2516254103437312L;
@@ -38039,24 +39706,49 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030232110753L;
+		data[13]=-570030229816993L;
 		data[14]=35183835086831L;
 		return data;
 	}
-	public static final BitSet _tokenSet_322 = new BitSet(mk_tokenSet_322());
-	private static final long[] mk_tokenSet_323() {
+	public static final BitSet _tokenSet_320 = new BitSet(mk_tokenSet_320());
+	private static final long[] mk_tokenSet_321() {
 		long[] data = new long[26];
 		data[0]=134217728L;
 		data[7]=32L;
 		data[12]=140737488355328L;
 		return data;
 	}
-	public static final BitSet _tokenSet_323 = new BitSet(mk_tokenSet_323());
-	private static final long[] mk_tokenSet_324() {
+	public static final BitSet _tokenSet_321 = new BitSet(mk_tokenSet_321());
+	private static final long[] mk_tokenSet_322() {
 		long[] data = new long[28];
 		data[0]=1073741824L;
 		data[12]=140737488355328L;
 		data[13]=160L;
+		return data;
+	}
+	public static final BitSet _tokenSet_322 = new BitSet(mk_tokenSet_322());
+	private static final long[] mk_tokenSet_323() {
+		long[] data = new long[30];
+		data[0]=468378842484965378L;
+		data[6]=-2516254103437312L;
+		data[7]=8574853690414232571L;
+		data[8]=-154248321599275417L;
+		data[9]=-533677671564972033L;
+		data[10]=-5129731316211779011L;
+		data[11]=2162862113637269008L;
+		data[12]=9155720082785619747L;
+		data[13]=-570030497990145L;
+		data[14]=35183835086831L;
+		return data;
+	}
+	public static final BitSet _tokenSet_323 = new BitSet(mk_tokenSet_323());
+	private static final long[] mk_tokenSet_324() {
+		long[] data = new long[28];
+		data[7]=144115188075868160L;
+		data[8]=72058006354788352L;
+		data[9]=-4609434218613702656L;
+		data[10]=3L;
+		data[13]=12288L;
 		return data;
 	}
 	public static final BitSet _tokenSet_324 = new BitSet(mk_tokenSet_324());
@@ -38067,27 +39759,17 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[7]=8574853690414232571L;
 		data[8]=-154248321599275417L;
 		data[9]=-533677671564972033L;
-		data[10]=-5129731316211778947L;
+		data[10]=-5129731316211779011L;
 		data[11]=2162862113637269008L;
-		data[12]=9155720082785619747L;
-		data[13]=-570030498645505L;
+		data[12]=9155579345297264419L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
 		return data;
 	}
 	public static final BitSet _tokenSet_325 = new BitSet(mk_tokenSet_325());
 	private static final long[] mk_tokenSet_326() {
-		long[] data = new long[28];
-		data[7]=144115188075868160L;
-		data[8]=72058006354788352L;
-		data[9]=-4609434218613702656L;
-		data[10]=3L;
-		data[13]=12288L;
-		return data;
-	}
-	public static final BitSet _tokenSet_326 = new BitSet(mk_tokenSet_326());
-	private static final long[] mk_tokenSet_327() {
 		long[] data = new long[30];
-		data[0]=468378842484965378L;
+		data[0]=468378843021836290L;
 		data[6]=-2516254103437312L;
 		data[7]=8574853690414232571L;
 		data[8]=-154248321599275417L;
@@ -38095,29 +39777,44 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779011L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030498645665L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
+		return data;
+	}
+	public static final BitSet _tokenSet_326 = new BitSet(mk_tokenSet_326());
+	private static final long[] mk_tokenSet_327() {
+		long[] data = new long[15];
+		data[0]=70368744177664L;
 		return data;
 	}
 	public static final BitSet _tokenSet_327 = new BitSet(mk_tokenSet_327());
 	private static final long[] mk_tokenSet_328() {
 		long[] data = new long[30];
-		data[0]=468378843021836290L;
+		data[0]=468378842484965378L;
 		data[6]=-2516254103437312L;
 		data[7]=8574853690414232571L;
-		data[8]=-154248321599275409L;
+		data[8]=-154248321599275417L;
 		data[9]=-533677671564972033L;
-		data[10]=-5129731316211779011L;
+		data[10]=-5129731316211778947L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030498645665L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
 		return data;
 	}
 	public static final BitSet _tokenSet_328 = new BitSet(mk_tokenSet_328());
 	private static final long[] mk_tokenSet_329() {
-		long[] data = new long[15];
-		data[0]=70368744177664L;
+		long[] data = new long[30];
+		data[0]=41943040L;
+		data[6]=-155639056972120064L;
+		data[7]=8087594048561639579L;
+		data[8]=-172262788828234137L;
+		data[9]=-533712993938444315L;
+		data[10]=4093640712053062197L;
+		data[11]=2162862113414967824L;
+		data[12]=8939406563179267873L;
+		data[13]=-570070226945725L;
+		data[14]=35183835086831L;
 		return data;
 	}
 	public static final BitSet _tokenSet_329 = new BitSet(mk_tokenSet_329());
@@ -38131,22 +39828,22 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779011L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030498645665L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
 		return data;
 	}
 	public static final BitSet _tokenSet_330 = new BitSet(mk_tokenSet_330());
 	private static final long[] mk_tokenSet_331() {
 		long[] data = new long[30];
-		data[0]=468378842484965378L;
-		data[6]=-2516254103437312L;
-		data[7]=8574853690414232571L;
-		data[8]=-154248321599275417L;
-		data[9]=-533677671564972033L;
-		data[10]=-5129731316211778947L;
-		data[11]=2162862113637269008L;
-		data[12]=9155579345297264419L;
-		data[13]=-570030498645665L;
+		data[0]=41943040L;
+		data[6]=-155639056972120064L;
+		data[7]=8087594048561639579L;
+		data[8]=-172262788828234137L;
+		data[9]=-533712993938444315L;
+		data[10]=-5129731324801713611L;
+		data[11]=2162862113414967824L;
+		data[12]=8939406563179267873L;
+		data[13]=-570070226945725L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -38161,7 +39858,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211778947L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030498645665L;
+		data[13]=-570030497990305L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -38176,7 +39873,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030500546209L;
+		data[13]=-570030498252449L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -38191,7 +39888,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030500546209L;
+		data[13]=-570030498252449L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -38214,7 +39911,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570030500546237L;
+		data[13]=-570030498252477L;
 		data[14]=35183835086831L;
 		return data;
 	}
@@ -38235,7 +39932,7 @@ public PLSqlParserAdopted(ParserSharedInputState state) {
 		data[10]=-5129731316211779019L;
 		data[11]=2162862113637269008L;
 		data[12]=9155579345297264419L;
-		data[13]=-570034794464957L;
+		data[13]=-570034792957629L;
 		data[14]=35183835086831L;
 		return data;
 	}

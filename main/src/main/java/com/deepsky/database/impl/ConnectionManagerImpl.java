@@ -616,6 +616,7 @@ public class ConnectionManagerImpl implements ConnectionManager { //}, CacheMana
                 String error = e.getMessage();
                 ind.setErrorMessage(error != null ? error : "Could not establish connection!");
                 ind.setStatus(MyProgressIndicator.ProgressStatus.FAILED);
+                log.error("Could not establish connection", e);
             }
 
             ind.setConnector(null);

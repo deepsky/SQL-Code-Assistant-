@@ -37,19 +37,43 @@ import com.deepsky.utils.StringUtils;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.application.ApplicationManager;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 
-public class MyCompletionContributor extends CompletionContributor {
+public class MyCompletionContributor extends GenericCompletionContributor {
 
-    public void beforeCompletion(@NotNull final CompletionInitializationContext context) {
-        context.setFileCopyPatcher(Constants.IDENT_PATCHER);
-//        context.setDummyIdentifier(Constants.COMPL_IDENTIFIER);
+    /**
+     * Called when the completion is finished quickly, lookup hasn't been shown and gives possibility to autoinsert some item (typically - the only one).
+     */
+    @Nullable
+    public AutoCompletionDecision handleAutoCompletionPossibility(AutoCompletionContext context) {
+        if(ApplicationManager.getApplication().isUnitTestMode()){
+            return AutoCompletionDecision.SHOW_LOOKUP;
+        }
+        return null;
     }
 
+
+    /**
+     * The main contributor method that is supposed to provide completion variants to result, basing on completion parameters.
+     * The default implementation looks for {@link com.intellij.codeInsight.completion.CompletionProvider}s you could register by
+     * invoking {@link #extend(CompletionType, com.intellij.patterns.ElementPattern, CompletionProvider)} from you contributor constructor,
+     * matches the desired completion type and {@link com.intellij.patterns.ElementPattern} with actual ones, and, depending on it, invokes those
+     * completion providers.<p>
+     *
+     * If you want to implement this functionality directly by overriding this method, the following is for you.
+     * Always check that parameters match your situation, and that completion type ({@link CompletionParameters#getCompletionType()}
+     * is of your favourite kind. This method is run outside of read action, so you have to manage this manually
+     * ({@link com.intellij.openapi.application.Application#runReadAction(Runnable)}). Don't take read actions for too long.<p>
+     *
+     * @param parameters
+     * @param result
+     */
     @Override
     public void fillCompletionVariants(CompletionParameters parameters, final CompletionResultSet result) {
         if (parameters.getCompletionType() != CompletionType.BASIC) {

@@ -26,6 +26,7 @@ package com.deepsky.lang.plsql.completion.lookups.dml;
 import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
+import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
@@ -40,7 +41,8 @@ public class DeleteLookupElement<T extends LookupElement> extends LookupElementD
 
     public static DeleteLookupElement create() {
         LookupElement e = LookupElementBuilder.create("delete")
-                .withPresentableText("delete from <table>")
+                .withTailText(" <table>", true)
+                .withPresentableText("delete from")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
@@ -67,7 +69,8 @@ public class DeleteLookupElement<T extends LookupElement> extends LookupElementD
                 })
                 .withStrikeoutness(false); //it.isStrikeout());
 
-        return new DeleteLookupElement<LookupElement>(e);
+        return new DeleteLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 1));
     }
 
 }

@@ -79,7 +79,8 @@ public class ErrorNodeProcessor extends CompletionBase {
 
     @SyntaxTreePath("/#CREATE #SEQUENCE 1#SEQUENCE_NAME .. #C_MARKER")
     public void process$Start6(C_Context ctx, ASTNode node) {
-        completeStart(ctx);    }
+        completeStart(ctx);
+    }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -161,37 +162,45 @@ public class ErrorNodeProcessor extends CompletionBase {
     public void process$SelectAppender(C_Context ctx, SelectStatement select, ASTNode marker) {
         ASTNode last = select.getNode().getLastChildNode();
         ASTNode next = PsiUtil.nextVisibleSibling(marker);
-        if(next != null && next.getElementType() == PlSqlTokenTypes.SEMI){
-            if (last.getElementType() == PlSqlElementTypes.TABLE_REFERENCE_LIST_FROM) {
-                // select * from ...
-                ctx.addElement(KeywordLookupElement.create("where"));
-                ctx.addElement(OrderByLookupElement.create());
-                ctx.addElement(GroupByLookupElement.create());
-            } else if (last.getElementType() == PlSqlElementTypes.WHERE_CONDITION) {
-                // select * from ... where...
-                ctx.addElement(OrderByLookupElement.create());
-                ctx.addElement(GroupByLookupElement.create());
-            } else if (last.getElementType() == PlSqlElementTypes.ORDER_CLAUSE) {
-                // select * from ... order by ..
-            } else if (last.getElementType() == PlSqlElementTypes.GROUP_CLAUSE) {
-                // select * from ... group by ..
-                ctx.addElement(OrderByLookupElement.create());
-                ctx.addElement(GroupByLookupElement.createHaving());
-            }
-        } else if (next != null && next.getElementType() == PlSqlTokenTypes.KEYWORD_GROUP) {
-        } else if (next != null && next.getElementType() == PlSqlTokenTypes.KEYWORD_ORDER) {
-        } else if (last.getElementType() == PlSqlTokenTypes.SEMI) {
-            // select * from ...;
-            completeStart(ctx);
-        } else if (last.getElementType() == PlSqlElementTypes.TABLE_REFERENCE_LIST_FROM) {
+        final boolean isSemiLast = next != null && next.getElementType() == PlSqlTokenTypes.SEMI;
+
+        if (last.getElementType() == PlSqlElementTypes.TABLE_REFERENCE_LIST_FROM) {
             // select * from ...
-            completeStart(ctx);
+            if (!isSemiLast) {
+                completeStart(ctx);
+            }
             ctx.addElement(KeywordLookupElement.create("where"));
             ctx.addElement(OrderByLookupElement.create());
             ctx.addElement(GroupByLookupElement.create());
+
+            // Check against INNER/LEFT/RIGHT/FULL table alias name if existing
+            FromClause from = (FromClause) last.getPsi();
+            GenericTable[] tables = from.getTableList();
+            String tableAlias = tables[tables.length - 1].getAlias();
+            if (tableAlias == null) {
+                ctx.addElement(SelectLookupElement.createInnerJoin(SelectLookupElement.NO_PREFIX, !isSemiLast));
+                ctx.addElement(SelectLookupElement.createLeftJoin(SelectLookupElement.NO_PREFIX, !isSemiLast));
+                ctx.addElement(SelectLookupElement.createRightJoin(SelectLookupElement.NO_PREFIX, !isSemiLast));
+                ctx.addElement(SelectLookupElement.createFullJoin(SelectLookupElement.NO_PREFIX, !isSemiLast));
+//            } else if (tableAlias.equalsIgnoreCase("full")) {
+//                ctx.addElement(SelectLookupElement.createFullJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//                ctx.addElement(SelectLookupElement.createFullOuterJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//            } else if (tableAlias.equalsIgnoreCase("inner")) {
+//                ctx.addElement(SelectLookupElement.createInnerJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//            } else if (tableAlias.equalsIgnoreCase("left")) {
+//                ctx.addElement(SelectLookupElement.createLeftJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//                ctx.addElement(SelectLookupElement.createLeftOuterJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//            } else if (tableAlias.equalsIgnoreCase("right")) {
+//                ctx.addElement(SelectLookupElement.createRightJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//                ctx.addElement(SelectLookupElement.createRightOuterJoin(SelectLookupElement.PREFIX, !isSemiLast));
+            }
+
         } else if (last.getElementType() == PlSqlElementTypes.WHERE_CONDITION) {
             // select * from ... where...
-            completeStart(ctx);
+            if (!isSemiLast) {
+                completeStart(ctx);
+            }
+
             ctx.addElement(OrderByLookupElement.create());
             ctx.addElement(GroupByLookupElement.create());
             ctx.addElement(KeywordLookupElement.create("or"));
@@ -199,14 +208,43 @@ public class ErrorNodeProcessor extends CompletionBase {
             ctx.addElement(KeywordLookupElement.create("like"));
         } else if (last.getElementType() == PlSqlElementTypes.ORDER_CLAUSE) {
             // select * from ... order by ..
-            completeStart(ctx);
+            if (!isSemiLast) {
+                completeStart(ctx);
+            }
         } else if (last.getElementType() == PlSqlElementTypes.GROUP_CLAUSE) {
             // select * from ... group by ..
-            completeStart(ctx);
+            if (!isSemiLast) {
+                completeStart(ctx);
+            }
             ctx.addElement(OrderByLookupElement.create());
             ctx.addElement(GroupByLookupElement.createHaving());
         }
     }
+
+    @SyntaxTreePath("/1$SelectStatement #INNER 2#C_MARKER")
+    public void process$SelectInner(C_Context ctx, SelectStatement select, ASTNode marker) {
+        ctx.addElement(SelectLookupElement.createInnerJoin(SelectLookupElement.PREFIX, false));
+    }
+
+    @SyntaxTreePath("/1$SelectStatement #LEFT 2#C_MARKER")
+    public void process$SelectLeft(C_Context ctx, SelectStatement select, ASTNode marker) {
+        ctx.addElement(SelectLookupElement.createLeftJoin(SelectLookupElement.PREFIX, false));
+        ctx.addElement(SelectLookupElement.createLeftOuterJoin(SelectLookupElement.PREFIX, false));
+    }
+
+    @SyntaxTreePath("/1$SelectStatement #RIGHT 2#C_MARKER")
+    public void process$SelectRight(C_Context ctx, SelectStatement select, ASTNode marker) {
+        ctx.addElement(SelectLookupElement.createRightJoin(SelectLookupElement.PREFIX, false));
+        ctx.addElement(SelectLookupElement.createRightOuterJoin(SelectLookupElement.PREFIX, false));
+    }
+
+    @SyntaxTreePath("/1$SelectStatement #FULL 2#C_MARKER")
+    public void process$SelectFull(C_Context ctx, SelectStatement select, ASTNode marker) {
+        ctx.addElement(SelectLookupElement.createFullJoin(SelectLookupElement.PREFIX, false));
+        ctx.addElement(SelectLookupElement.createFullOuterJoin(SelectLookupElement.PREFIX, false));
+    }
+
+
 
     @SyntaxTreePath("//..#EXISTS_EXPR/#EXISTS #ERROR_TOKEN_A/#C_MARKER")
     public void process$ExistsExpr(C_Context ctx) {
@@ -236,7 +274,7 @@ public class ErrorNodeProcessor extends CompletionBase {
 
     @SyntaxTreePath("/#COMMENT #ON #COLUMN #TABLE_REF/#C_MARKER")
     public void process$CommentOnColumn(C_Context ctx) {
-        collectTableNames(ctx,new InsertHandler<LookupElement>() {
+        collectTableNames(ctx, new InsertHandler<LookupElement>() {
             @Override
             public void handleInsert(InsertionContext context, LookupElement item) {
                 final Editor editor = context.getEditor();

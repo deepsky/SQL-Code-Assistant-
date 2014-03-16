@@ -89,4 +89,11 @@ public class InsertStmtProcessor extends CompletionBase {
     public void insertIntoFromSelectExpr(C_Context ctx, ASTNode root, SelectStatement select, NameFragmentRef nameRef) {
         collectColumns(ctx, select, nameRef);
     }
+
+    // For build 1434
+    @SyntaxTreePath("/#INSERT #INTO #TABLE_ALIAS/#TABLE_REF/#C_MARKER")
+    public void insertInto(C_Context ctx, ASTNode root) {
+        collectTableNames(ctx);
+    }
+
 }

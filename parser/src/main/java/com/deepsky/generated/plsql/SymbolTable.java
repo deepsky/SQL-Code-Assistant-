@@ -73,7 +73,7 @@ public class SymbolTable {
 		keywords.put("restrict_references", 707);
 		keywords.put("partitions", 650);
 		keywords.put("integer", 751);
-		keywords.put("join", 850);
+		keywords.put("join", 855);
 		keywords.put("hour", 807);
 		keywords.put("operator", 430);
 		keywords.put("analyze", 588);
@@ -194,7 +194,7 @@ public class SymbolTable {
 		keywords.put("pctthreshold", 626);
 		keywords.put("build", 698);
 		keywords.put("quit", 494);
-		keywords.put("rownum", 854);
+		keywords.put("rownum", 852);
 		keywords.put("autoextend", 547);
 		keywords.put("zoned", 928);
 		keywords.put("hierarchy", 827);
@@ -216,7 +216,7 @@ public class SymbolTable {
 		keywords.put("location", 938);
 		keywords.put("char", 736);
 		keywords.put("segment", 622);
-		keywords.put("where", 852);
+		keywords.put("where", 850);
 		keywords.put("type", 426);
 		keywords.put("authid", 704);
 		keywords.put("prior", 730);
@@ -472,7 +472,7 @@ public class SymbolTable {
 		keywords.put("unsigned", 927);
 		keywords.put("access", 875);
 		keywords.put("transforms", 914);
-		keywords.put("current_timestamp", 853);
+		keywords.put("current_timestamp", 851);
 		keywords.put("degree", 655);
 		keywords.put("directory", 433);
 		keywords.put("terminated", 918);
@@ -517,19 +517,19 @@ public class SymbolTable {
 		keywords.put("share", 869);
 		keywords.put("quota", 522);
 		keywords.put("order", 577);
-		keywords.put("full", 851);
+		keywords.put("full", 849);
 		keywords.put("ltrim", 923);
 		keywords.put("notfound", 718);
 		keywords.put("with", 440);
 		keywords.put("check", 469);
 		keywords.put("lock", 528);
-		keywords.put("the", 855);
+		keywords.put("the", 853);
 		keywords.put("sqlerror", 482);
 		keywords.put("decimal", 755);
 		keywords.put("begin", 502);
 		keywords.put("blob", 761);
 		keywords.put("nocycle", 573);
-		keywords.put("outer", 849);
+		keywords.put("outer", 854);
 		keywords.put("continue", 485);
 		keywords.put("instead", 596);
 		keywords.put("guarantee", 545);

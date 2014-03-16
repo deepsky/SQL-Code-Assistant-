@@ -27,6 +27,7 @@ package com.deepsky.lang.plsql.completion.lookups;
 
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
+import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
@@ -58,7 +59,8 @@ public class KeywordLookupElement  <T extends LookupElement> extends LookupEleme
                     }
                 });
 
-        return new KeywordLookupElement<LookupElement>(e);
+        return new KeywordLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 3));
     }
 
     public static KeywordLookupElement create(final String name, boolean isBold){
@@ -79,7 +81,8 @@ public class KeywordLookupElement  <T extends LookupElement> extends LookupEleme
                 });
 
 
-        return new KeywordLookupElement<LookupElement>(e);
+        return new KeywordLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 3));
     }
 
     public static KeywordLookupElement create(final String name, boolean isBold, InsertHandler<LookupElement> insertHandler ){
@@ -96,6 +99,7 @@ public class KeywordLookupElement  <T extends LookupElement> extends LookupEleme
                     .withBoldness(isBold);
         }
 
-        return new KeywordLookupElement<LookupElement>(e);
+        return new KeywordLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 3));
     }
 }

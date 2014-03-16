@@ -124,6 +124,28 @@ public abstract class CompletionBase {
         }
     }
 
+    protected void collectColumnsAndSysFunc(@NotNull C_Context ctx, @NotNull SelectStatement select, @Nullable NameFragmentRef nameRef) {
+        VariantsProvider provider = ctx.getProvider();
+        final NameFragmentRef prev = nameRef != null? nameRef.getPrevFragment(): null;
+        final String prevText = prev != null ? prev.getText() : null;
+
+        provider.collectColumnVariants(select, prevText);
+
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.takeCollectedLookups());
+
+        for (LookupElement elem : variants) {
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+        }
+
+        if(prev == null){
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+            ctx.addElement(KeywordLookupElement.create("current_timestamp"));
+        }
+    }
+
     protected void collectColumns(C_Context ctx, TableAlias tableName, boolean forceUsingTableAlias) {
         VariantsProvider provider = ctx.getProvider();
         provider.collectColumnNames(tableName, ctx.getLookup(), forceUsingTableAlias);

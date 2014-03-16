@@ -40,6 +40,7 @@ import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.validation.ValidationException;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +53,11 @@ public class GenericProcessor extends CompletionBase {
         ctx.addElement(SelectLookupElement.createSubquery(is2ndLatest(parent, marker)));
     }
 
-    @SyntaxTreePath("/..1ANY//..2#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF #ALIAS_NAME/#ALIAS_IDENT/3#C_MARKER")
+    @SyntaxTreePath("/..1ANY//#SELECT ..2#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF #ALIAS_NAME/#ALIAS_IDENT/3#C_MARKER")
     public void process$FromTail(C_Context ctx, ASTNode parent, ASTNode from, ASTNode caret) {
-        SelectStatement select = (SelectStatement) from.getTreeParent().getPsi();
+        final SelectStatement select = (SelectStatement) from.getTreeParent().getPsi();
+        final ASTNode next = PsiUtil.nextNonWSLeaf(caret);
+        final boolean isNextSemi = next != null && next.getElementType() == PlSqlTokenTypes.SEMI;
         if(select != null){
             final OrderByClause orderBy = select.getOrderByClause();
             final GroupByClause groupBy = select.getGroupByClause();
@@ -69,14 +72,19 @@ public class GenericProcessor extends CompletionBase {
             if(orderBy == null && groupBy == null && where == null){
                 ctx.addElement(OrderByLookupElement.create());
             }
+
+            final boolean isLast = !(orderBy != null || groupBy != null || where != null) && !isNextSemi;
+            ctx.addElement(SelectLookupElement.createInnerJoin(SelectLookupElement.NO_PREFIX, isLast));
+            ctx.addElement(SelectLookupElement.createLeftJoin(SelectLookupElement.NO_PREFIX, isLast));
+            ctx.addElement(SelectLookupElement.createRightJoin(SelectLookupElement.NO_PREFIX, isLast));
+            ctx.addElement(SelectLookupElement.createFullJoin(SelectLookupElement.NO_PREFIX, isLast));
         }
 
         final int start = parent.getFirstChildNode().getTextRange().getStartOffset();
         final int end = parent.getLastChildNode().getTextRange().getEndOffset();
         final ASTNode lastLeaf = parent.findLeafElementAt(end-start-1);
         if( lastLeaf == caret){
-            ASTNode next = PsiUtil.nextNonWSLeaf(caret);
-            if(next != null && next.getElementType() == PlSqlTokenTypes.SEMI){
+            if(isNextSemi){
                 // Caret inside the statement, for example:  "... <caret> ;"
             } else {
                 ctx.addElement(SelectLookupElement.create());
@@ -94,10 +102,42 @@ public class GenericProcessor extends CompletionBase {
     }
 
 
-    @SyntaxTreePath("/..1ANY//..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/2#C_MARKER")
+    @SyntaxTreePath("/..1ANY//#SELECT ..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF/2#C_MARKER")
     public void process$TableViewNames(C_Context ctx, ASTNode parent, ASTNode marker) {
         collectTableViewNames(ctx);
         ctx.addElement(SelectLookupElement.createSubquery(is2ndLatest(parent, marker)));
+    }
+
+
+    @SyntaxTreePath("/..1ANY//#SELECT ..#TABLE_REFERENCE_LIST_FROM/..#ANSI_JOIN_TAB_SPEC/..#JOIN #TABLE_ALIAS/#TABLE_REF/2#C_MARKER")
+    public void process$AnsiTableViewNames(C_Context ctx, ASTNode parent, ASTNode marker) {
+        collectTableViewNames(ctx);
+    }
+
+    @SyntaxTreePath("/..ANY//#SELECT ..#TABLE_REFERENCE_LIST_FROM/ ..#TABLE_ALIAS #ERROR_TOKEN_A/#INNER #C_MARKER")
+    public void process$AnsiFromInner(C_Context ctx) {
+        ctx.addElement(SelectLookupElement.createInnerJoin(SelectLookupElement.PREFIX, false));
+    }
+
+    @SyntaxTreePath("/..ANY//#SELECT ..#TABLE_REFERENCE_LIST_FROM/ ..#TABLE_ALIAS #ERROR_TOKEN_A/#LEFT #OUTER #C_MARKER")
+    public void process$AnsiFromLeftOuter(C_Context ctx) {
+        ctx.addElement(SelectLookupElement.createLeftOuterJoin(SelectLookupElement.PREFIX_OUTER, false));
+    }
+
+    @SyntaxTreePath("/..ANY//#SELECT ..#TABLE_REFERENCE_LIST_FROM/ ..#TABLE_ALIAS #ERROR_TOKEN_A/#RIGHT #OUTER #C_MARKER")
+    public void process$AnsiFromRightOuter(C_Context ctx) {
+        ctx.addElement(KeywordLookupElement.create("join"));
+    }
+
+    @SyntaxTreePath("/..ANY//#SELECT ..#TABLE_REFERENCE_LIST_FROM/ ..#TABLE_ALIAS #ERROR_TOKEN_A/#FULL #OUTER #C_MARKER")
+    public void process$AnsiFromFullOuter(C_Context ctx) {
+        ctx.addElement(SelectLookupElement.createFullOuterJoin(SelectLookupElement.PREFIX_OUTER, false));
+    }
+
+    @SyntaxTreePath("/..ANY//#SELECT ..#TABLE_REFERENCE_LIST_FROM/ ..#TABLE_ALIAS #ERROR_TOKEN_A/#FULL #C_MARKER")
+    public void process$AnsiFromFull(C_Context ctx) {
+        ctx.addElement(SelectLookupElement.createFullJoin(SelectLookupElement.PREFIX, false));
+        ctx.addElement(SelectLookupElement.createFullOuterJoin(SelectLookupElement.PREFIX, false));
     }
 
     @SyntaxTreePath("/..ANY//#SELECT ..#TABLE_REFERENCE_LIST_FROM ..#ERROR_TOKEN_A/#GROUP #C_MARKER")
@@ -111,6 +151,30 @@ public class GenericProcessor extends CompletionBase {
         ctx.addElement(OrderByLookupElement.createBy());
     }
 
+//    @SyntaxTreePath("/..ANY//#SELECT ..#WHERE_CONDITION/ ..#LOGICAL_EXPR/..#ERROR_TOKEN_A/..#LOGICAL_EXPR #C_MARKER")
+//    public void process$OrderBy(C_Context ctx) {
+//        ctx.addElement(OrderByLookupElement.createBy());
+//    }
+
+    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN/..#ARITHMETIC_EXPR//..#FUNCTION_CALL/..#CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$SelectExprFunc(C_Context ctx, ASTNode exprColumn, NameFragmentRef ref) {
+        PsiElement parent = exprColumn.getTreeParent().getPsi();
+        if(parent instanceof SelectStatement){
+            collectColumnsAndSysFunc(ctx, (SelectStatement) parent,ref );
+        } else {
+            // TODO - handle error case
+        }
+    }
+
+    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN/..#ARITHMETIC_EXPR/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$SelectExpr(C_Context ctx, ASTNode exprColumn, NameFragmentRef ref) {
+        PsiElement parent = exprColumn.getTreeParent().getPsi();
+        if(parent instanceof SelectStatement){
+            collectColumnsAndSysFunc(ctx, (SelectStatement) parent,ref );
+        } else {
+            // TODO - handle error case
+        }
+    }
 
     @SyntaxTreePath("/..ANY//#SELECT ..1#GROUP_CLAUSE/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$GroupByVar(C_Context ctx, ASTNode groupClause, NameFragmentRef ref) {
@@ -132,7 +196,17 @@ public class GenericProcessor extends CompletionBase {
     }
 
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#GROUP_CLAUSE/..#FUNCTION_CALL//..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..ANY//#SELECT ..1#GROUP_CLAUSE//..#ARITHMETIC_EXPR/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$GroupByConcatVar(C_Context ctx, ASTNode groupClause, NameFragmentRef ref) {
+        PsiElement parent = groupClause.getTreeParent().getPsi();
+        if(parent instanceof SelectStatement){
+            collectColumnsAndSysFunc(ctx, (SelectStatement) parent,ref );
+        } else {
+            // TODO - handle error case
+        }
+    }
+
+    @SyntaxTreePath("/..ANY//#SELECT ..1#GROUP_CLAUSE//..#FUNCTION_CALL/..#CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$GroupByFuncCall(C_Context ctx, ASTNode groupClause, NameFragmentRef ref) {
         SelectStatement select = (SelectStatement) groupClause.getTreeParent().getPsi();
         VariantsProvider provider = ctx.getProvider();

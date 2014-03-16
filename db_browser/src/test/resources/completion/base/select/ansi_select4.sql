@@ -10,4 +10,4 @@ create table child (
 
 select id, <caret>
 parent_id
-from parent join child on id = parent_id
+from parent full join child on id = parent_id

@@ -48,22 +48,22 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$where1() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "text");
+        assertSelectFieldLookup(myItems, "id", "text", "current_timestamp", "dbtimezone","sysdate","systimestamp");
     }
 
     public void testSelect$where2() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "text");
+        assertSelectFieldLookup(myItems, "id", "text", "current_timestamp", "dbtimezone","sysdate","systimestamp");
     }
 
     public void testSelect$where3() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "text");
+        assertSelectFieldLookup(myItems, "id", "text", "current_timestamp", "dbtimezone","sysdate","systimestamp");
     }
 
     public void testSelect$where4() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "text");
+        assertSelectFieldLookup(myItems, "id", "text", "current_timestamp", "dbtimezone","sysdate","systimestamp");
     }
 
     public void testSelect$where5() throws Exception {
@@ -375,6 +375,33 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
         configureByFile(getFilePath());
         assertSelectFieldLookup(myItems, "bt", "exists", "id", "location_code", "name", "type");
     }
+
+    public void testSelect$inner_join() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "orders", "suppliers");
+    }
+
+    public void testSelect$inner_join2() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "contact_name","supplier_id","supplier_name");
+    }
+
+    public void testSelect$inner_join3() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "contact_name","order_date","order_name","orders.supplier_id","supplier_name","suppliers.supplier_id");
+    }
+
+    public void testSelect$inner_join4() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "alter","comment","create","delete","drop","full join","group","inner join","insert",
+                "left join","order","right join","select","update","where");
+    }
+
+    public void testSelect$left_outer_join() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "deptno", "id");
+    }
+
 }
 
 
