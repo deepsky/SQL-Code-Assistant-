@@ -34,14 +34,13 @@
     <ul>
         <li>[KNOWN ISSUE] Case-sensitive table names, column names, etc are not supported for now</li>
         <li>[KNOWN ISSUE] Initial indexing of numerous SQL files (1k and more) may take time</li>
-        <li>[KNOWN ISSUE] Quick Object Lookup does not distinguish between objects with the same name but located in different files</li>
      </ul>
     <br>
 
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.5.6.13</version>
+    <version>1.5.8.133</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
@@ -50,6 +49,14 @@
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.5.8.133</b>
+                 <ul>
+                    - [NEW] More support on completion: SELECT JOIN, etc<br>
+                    - [NEW] Parsing RESULT_CACHE construction<br>
+                    - [FIX] "member" can be a name of table/view<br>
+                    - [FIX] Fix "Accessing invalid virtual file" issue<br>
+                 </ul>
+            </li>
             <li><b>1.5.6.13</b>
                  <ul>
                     - [NEW] Refactoring of completion (implemented base cases for now)<br>

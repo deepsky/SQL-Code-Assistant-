@@ -16,7 +16,7 @@
         <dependency>
             <groupId>sql-assistant</groupId>
             <artifactId>antl_patch</artifactId>
-            <version>1.13.1-SNAPSHOT</version>
+            <version>1.12.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>

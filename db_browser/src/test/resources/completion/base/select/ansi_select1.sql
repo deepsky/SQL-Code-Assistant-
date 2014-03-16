@@ -9,4 +9,4 @@ create table child (
 );
 
 select *
-from parent join child on <caret>
+from parent left join child on <caret>

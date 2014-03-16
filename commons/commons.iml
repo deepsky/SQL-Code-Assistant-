@@ -18,7 +18,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="antl_patch" />
+    <orderEntry type="library" name="Maven: sql-assistant:antl_patch:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: antlr:antlr:2.7.5-patched" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.13" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />

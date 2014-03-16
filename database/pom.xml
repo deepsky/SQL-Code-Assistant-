@@ -23,7 +23,7 @@
         <dependency>
             <groupId>sql-assistant</groupId>
             <artifactId>parser</artifactId>
-            <version>1.13.2-SNAPSHOT</version>
+            <version>1.12.1-SNAPSHOT</version>
             <!--<type>jar</type>-->
             <!--<classifier>sources</classifier>-->
         </dependency>

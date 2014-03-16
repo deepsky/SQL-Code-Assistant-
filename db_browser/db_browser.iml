@@ -13,7 +13,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="commons" />
-    <orderEntry type="module" module-name="antl_patch" />
+    <orderEntry type="library" name="Maven: sql-assistant:antl_patch:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.13" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
@@ -25,8 +25,8 @@
     <orderEntry type="module" module-name="main" />
     <orderEntry type="module" module-name="result_panel" />
     <orderEntry type="module" module-name="database" />
-    <orderEntry type="module" module-name="parser" />
-    <orderEntry type="module" module-name="tools" />
+    <orderEntry type="library" name="Maven: sql-assistant:parser:1.12.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: sql-assistant:tools:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.joestelmach:natty:0.4-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.2" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2" level="project" />
@@ -38,9 +38,9 @@
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-commons:4.0" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-util:4.0" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-analysis:4.0" level="project" />
-    <orderEntry type="module" module-name="completion" />
-    <orderEntry type="module" module-name="annotations" />
-    <orderEntry type="module" module-name="annotationProcessors" />
+    <orderEntry type="library" name="Maven: sql-assistant:completion:1.12.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: sql-assistant:annotations:1.13.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: sql-assistant:annotationProcessors:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.intellij:openapi:1.5.0">
         <CLASSES>

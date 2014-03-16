@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 public abstract class LoggerProxy {
 
     public abstract void error(String message);
+    public abstract void error(String message, Throwable e);
     public abstract void warn(String message);
     public abstract void info(String message);
     public abstract void debug(String message);
@@ -60,6 +61,10 @@ public abstract class LoggerProxy {
             logger.error(message);
         }
 
+        public void error(String message, Throwable e){
+            logger.error(message, e);
+        }
+
         public void warn(String message){
             logger.warn(message);
         }
@@ -84,6 +89,11 @@ public abstract class LoggerProxy {
             logger.error(message);
         }
 
+        @Override
+        public void error(String message, Throwable e) {
+            logger.error(message, e);
+        }
+
         public void warn(String message){
             logger.warn(message);
         }
@@ -102,6 +112,10 @@ public abstract class LoggerProxy {
         }
 
         public void error(String message){
+        }
+
+        @Override
+        public void error(String message, Throwable e) {
         }
 
         public void warn(String message){

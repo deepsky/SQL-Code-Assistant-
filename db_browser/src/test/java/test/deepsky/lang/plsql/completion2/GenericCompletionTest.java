@@ -23,6 +23,8 @@
 
 package test.deepsky.lang.plsql.completion2;
 
+import com.intellij.codeInsight.CodeInsightSettings;
+
 public class GenericCompletionTest extends BaseCompletionTest {
 
     @Override
@@ -71,7 +73,9 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_start1() throws Exception {
         configureByText("select * from tab <caret>");
-        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "update", "order", "group", "where");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop",
+                "insert", "select", "update", "order", "group", "where",
+                "full join", "left join", "right join", "inner join");
     }
 
     public void test_start2() throws Exception {
@@ -88,12 +92,16 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_select_1() throws Exception {
         configureByText("select * from dual  \n <caret>");
-        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "update", "where", "order", "group");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert",
+                "select", "update", "where", "order", "group",
+                "full join", "left join", "right join", "inner join");
     }
 
     public void test_select_11() throws Exception {
         configureByText("create sequence seq1; select * from dual  \n <caret>");
-        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "update", "where", "order", "group");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert",
+                "select", "update", "where", "order", "group",
+                "full join", "left join", "right join", "inner join");
     }
 
     public void test_select_12() throws Exception {
@@ -192,13 +200,14 @@ public class GenericCompletionTest extends BaseCompletionTest {
     public void test_select_74() throws Exception {
         configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
                 "from tab1 where exists (select * from tab1 <caret>);\n");
-        assertLookupFilterOutFunc(myItems, "where", "order", "group");
+        assertLookupFilterOutFunc(myItems, "where", "order", "group",
+                "full join", "left join", "right join", "inner join");
     }
 
     public void test_select_75() throws Exception {
         configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
                 "from tab1 where exists (select * from tab1 <caret> where 1<>2);\n");
-        assertEquals(0, myItems.length);
+        assertLookupFilterOutFunc(myItems, "full join", "left join", "right join", "inner join");
     }
 
     public void test_select_8() throws Exception {
@@ -210,6 +219,7 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
 
     public void test_select_9() throws Exception {
+      //  CodeInsightSettings.getInstance().AUTOCOMPLETE_ON_CODE_COMPLETION = false;
         configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
                 "from bookingevents where channel li<caret>");
         assertLookupFilterOutFunc(myItems, "like");
@@ -252,15 +262,115 @@ public class GenericCompletionTest extends BaseCompletionTest {
                 "from tab1\n" +
                 "<caret>\n" +
                 "order by eventdatetime desc");
-        assertLookupFilterOutFunc(myItems, "where", "group");
+        assertLookupFilterOutFunc(myItems, "where", "group",  "full join","inner join","left join","right join");
+    }
+
+    public void test_select_A11() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
+                "from tab1\n" +
+                "inner <caret>\n" +
+                "order by eventdatetime desc");
+        assertLookupFilterOutFunc(myItems, "inner join");
     }
 
     public void test_select_A2() throws Exception {
-        configureByText("create table tab1 (a integer, text varchar2(30)); select *\n" +
+        configureByText("create table tab1 (a integer, text varchar2(30), name varchar2(20)); select *\n" +
                 "from tab1\n" +
                 "<caret>\n" +
                 "group by eventdatetime");
-        assertLookupFilterOutFunc(myItems, "where");
+        assertLookupFilterOutFunc(myItems, "where", "full join","inner join","left join","right join");
+    }
+
+    public void test_select_B1() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30), name varchar2(20)); \n" +
+                "select a\n" +
+                "from tab1\n" +
+                "group by a || <caret>");
+        assertLookupFilterOutFunc(myItems, "a", "text", "name", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
+    }
+
+    public void test_select_B2() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30), name varchar2(20)); \n" +
+                "select a\n" +
+                "from tab1\n" +
+                "group by a || text || <caret>");
+        assertLookupFilterOutFunc(myItems, "a", "text", "name", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
+    }
+
+    public void test_select_B3() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30), name varchar2(20)); \n" +
+                "select a\n" +
+                "from tab1\n" +
+                "group by a || text || to_char(<caret>)");
+        assertLookupFilterOutFunc(myItems, "a", "text", "name");
+    }
+
+
+    public void test_select_B4() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30), name varchar2(20)); \n" +
+                "select a\n" +
+                "from tab1\n" +
+                "group by a || text || substr(to_char(<caret>))");
+        assertLookupFilterOutFunc(myItems, "a",  "text", "name");
+    }
+
+    public void test_select_B5() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30), name varchar2(20)); \n" +
+                "select a || <caret>\n" +
+                "from tab1\n" +
+                "group by a || text || substr(to_char(a), 1)");
+        assertLookupFilterOutFunc(myItems, "a",  "text", "name", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
+    }
+
+    public void test_select_B6() throws Exception {
+        configureByText("create table tab1 (a integer, text varchar2(30), name varchar2(20)); \n" +
+                "select a || substr(to_char(<caret>))\n" +
+                "from tab1\n" +
+                "group by a || text || substr(to_char(a), 1)");
+        assertLookupFilterOutFunc(myItems, "a",  "text", "name", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
+    }
+
+    public void test_select_C1() throws Exception {
+        configureByText("create table tab1 (a integer, event_date timestamp, name varchar2(20)); \n" +
+                "select *\n" +
+                "from tab1\n" +
+                "where event_date < sys<caret>");
+        assertLookupFilterOutFunc(myItems, "sysdate",  "systimestamp");
+    }
+
+    public void test_select_inner_join() throws Exception {
+        configureByText("select * from tab1 inner <caret>");
+        assertLookupFilterOutFunc(myItems, "inner join");
+    }
+
+    public void test_select_left_join() throws Exception {
+        configureByText("select * from tab1 left <caret>");
+        assertLookupFilterOutFunc(myItems, "left join", "left outer join");
+    }
+
+    public void test_select_left_join2() throws Exception {
+        configureByText("select * from tab1 left outer <caret>");
+        assertLookupFilterOutFunc(myItems, "left outer join");
+    }
+
+    public void test_select_right_join() throws Exception {
+        configureByText("select * from tab1 right <caret>");
+        assertLookupFilterOutFunc(myItems, "right join", "right outer join");
+    }
+
+    public void test_select_right_join2() throws Exception {
+        configureByText("select * from tab1 right outer <caret>");
+        assertLookupFilterOutFunc(myItems, "join");
+    }
+
+    public void test_select_full_join() throws Exception {
+        configureByText("select * from tab1 full <caret>");
+        assertLookupFilterOutFunc(myItems, "full join", "full outer join");
+    }
+
+    public void test_select_full_join2() throws Exception {
+        configureByText("select * from tab1 full outer <caret>");
+        assertLookupFilterOutFunc(myItems, "full outer join");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -271,7 +381,9 @@ public class GenericCompletionTest extends BaseCompletionTest {
         configureByText("create table paymentevents_01_02 as\n" +
                 "select * from paymentevents\n" +
                 "<caret>");
-        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "group", "order", "insert", "select", "update", "where");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "group",
+                "order", "insert", "select", "update", "where",
+                "full join", "left join", "right join", "inner join");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -325,12 +437,16 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_start_31() throws Exception {
         configureByText("insert into tab (id, text) select * from tab <caret>");
-        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "update", "group", "order", "where");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert",
+                "select", "update", "group", "order", "where",
+                "full join", "left join", "right join", "inner join");
     }
 
     public void test_start_32() throws Exception {
         configureByText("insert into tab (id, text) select * from tab <caret>;");
-        assertLookup(myItems, "where", "group", "order");
+        assertLookup(myItems, "where", "group", "order" ,
+                "full join", "left join", "right join", "inner join");
+
     }
 
     public void test_start_33() throws Exception {
@@ -507,7 +623,7 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_comment_13() throws Exception {
         configureByText("create table tab1 (id number, text varchar2(10)); comment on col<caret> ");
-        assertLookup(myItems, "on column");
+        assertLookup(myItems, "column");
     }
 
     public void test_comment_131() throws Exception {
@@ -522,7 +638,7 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_comment_14() throws Exception {
         configureByText("create table tab1 (id number, text varchar2(10)); comment on tab<caret> ");
-        assertLookup(myItems, "on table");
+        assertLookup(myItems, "table");
     }
 
     public void test_comment_141() throws Exception {

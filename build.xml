@@ -5,13 +5,13 @@
     <property name="idea.lib.dir" value="/home/sky/idea-IC-133.193/lib"/>
     <property name="idea.platform.prefix" value="Idea"/>
     <property name="idea.home.path" value="/home/sky/.IdeaIC13/system/plugins-sandbox/test"/>
-    <property name="idea.plugins.path" value="/home/sky/.IdeaIC13/system/plugins-sandbox/plugins"/>
+    <property name="idea.plugins.path" value="plugin_runner"/>
 
     <property name="base.dir" value="."/>
 
     <property name="bundle.dir" value="./out"/>
     <property name="bundle.name" value="sql-assistant"/>
-    <property name="plugin.ver" value="1.5.6.13"/>
+    <property name="plugin.ver" value="1.5.8.133"/>
 
     <property name="build.dir" value="${base.dir}/build"/>
     <property name="unzip.dir" value="${base.dir}/unzip"/>
@@ -36,6 +36,14 @@
     <property name="db_browser.classes.dir" value="${base.dir}/db_browser/target/classes"/>
     <property name="plugin_runner.dir" value="${base.dir}/plugin_runner"/>
 
+    <property name="plug-in.m2.repo" value="/home/sky/.m2/repository/sql-assistant"/>
+
+    <property name="annotations.jar" value="${plug-in.m2.repo}/annotations/1.12.1-SNAPSHOT/annotations-1.12.1-SNAPSHOT.jar"/>
+    <property name="annotationProcessors.jar" value="${plug-in.m2.repo}/annotationProcessors/1.12.1-SNAPSHOT/annotationProcessors-1.12.1-SNAPSHOT.jar"/>
+    <property name="completion.jar" value="${plug-in.m2.repo}/completion/1.12.1-SNAPSHOT/completion-1.12.1-SNAPSHOT.jar"/>
+    <property name="antl_patch.jar" value="${plug-in.m2.repo}/antl_patch/1.12.1-SNAPSHOT/antl_patch-1.12.1-SNAPSHOT.jar"/>
+    <property name="parser.jar" value="${plug-in.m2.repo}/parser/1.12.1-SNAPSHOT/parser-1.12.1-SNAPSHOT.jar"/>
+
     <target name="build_plugin" description="Build PL/SQL plugin sources">
 
         <mkdir dir="${build.dir}"/>
@@ -51,16 +59,11 @@
             <fileset dir="main/target/classes">
                 <exclude name="icons/Thumbs.db"/>
             </fileset>
-            <fileset dir="antl_patch/target/classes" includes="*/**/*.class"/>
             <fileset dir="database/target/classes" includes="*/**/*.class"/>
             <fileset dir="db_browser/target/classes" includes="*/**/*.class"/>
             <fileset dir="commons/target/classes" includes="*/**/*.class"/>
             <fileset dir="commons/target/classes" includes="*.xml"/>
-            <fileset dir="parser/target/classes" includes="*/**/*.class"/>
             <fileset dir="result_panel/target/classes" includes="*/**/*.class"/>
-            <fileset dir="annotations/target/classes" includes="*/**/*.class"/>
-            <fileset dir="completion/target/classes" includes="*/**/*.class"/>
-            <fileset dir="annotationProcessors/target/classes" includes="*/**/*.class"/>
             <fileset dir="plugin_runner" includes="META-INF/*.xml"/>
         </jar>
     </target>
@@ -87,6 +90,12 @@
                 <include name="jsch-0.1.50.jar"/>
             </fileset>
         </copy>
+
+        <copy file="${annotations.jar}" todir="${bundle.dir}/${bundle.name}/lib"/>
+        <copy file="${annotationProcessors.jar}" todir="${bundle.dir}/${bundle.name}/lib"/>
+        <copy file="${completion.jar}" todir="${bundle.dir}/${bundle.name}/lib"/>
+        <copy file="${antl_patch.jar}" todir="${bundle.dir}/${bundle.name}/lib"/>
+        <copy file="${parser.jar}" todir="${bundle.dir}/${bundle.name}/lib"/>
 
         <copy todir="${bundle.dir}/${bundle.name}/lib">
             <fileset dir="src/main/resources/licenses">
@@ -148,13 +157,19 @@
         <pathelement location="${idea.lib.dir}/junit-4.10.jar"/>
 
         <pathelement location="${root.lib.dir}/commons-collections-3.2.1.jar"/>
-        <!--<pathelement location="${root.lib.dir}/log4j-1.2.9.jar"/>-->
         <pathelement location="${root.lib.dir}/natty-0.4-SNAPSHOT.jar"/>
         <pathelement location="${root.lib.dir}/castor-1.2.jar"/>
         <pathelement location="${root.lib.dir}/antlr-2.7.5-patched.jar"/>
         <!--<pathelement location="${root.lib.dir}/const_jjar.zip"/>-->
 
         <pathelement location="${root.lib.dir}/ojdbc5.jar"/>
+
+        <pathelement location="${annotations.jar}"/>
+        <pathelement location="${annotationProcessors.jar}"/>
+        <pathelement location="${completion.jar}"/>
+        <pathelement location="${antl_patch.jar}"/>
+        <pathelement location="${parser.jar}"/>
+
     </path>
 
 
@@ -173,15 +188,8 @@
             <classpath>
                 <pathelement location="${db_browser.test.classes.dir}"/>
                 <pathelement location="${commons.test.classes.dir}"/>
-                <pathelement location="${completion.test.classes.dir}"/>
-
-                <pathelement location="${main.classes.dir}"/>
-                <pathelement location="${parser.classes.dir}"/>
                 <pathelement location="${commons.classes.dir}"/>
-                <pathelement location="${completion.classes.dir}"/>
-                <pathelement location="${annotations.classes.dir}"/>
-                <pathelement location="${antl_patch.classes.dir}"/>
-                <pathelement location="${annotationProcessors.classes.dir}"/>
+                <pathelement location="${main.classes.dir}"/>
                 <pathelement location="${database.classes.dir}"/>
                 <pathelement location="${db_browser.classes.dir}"/>
                 <pathelement location="${plugin_runner.dir}"/>

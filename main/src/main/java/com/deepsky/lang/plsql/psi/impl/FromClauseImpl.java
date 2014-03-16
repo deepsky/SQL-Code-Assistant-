@@ -45,19 +45,23 @@ public class FromClauseImpl extends PlSqlElementBase implements FromClause {
         final ASTNode[] nodes = getNode().getChildren(PlSqlElementTypes.SELECT_FROM_CLAUSE);
         final ASTNode[] nodes2 = getNode().getChildren(TokenSet.create(PlSqlElementTypes.ANSI_JOIN_TAB_SPEC));
 
-        int size = nodes.length + ((nodes2 != null) ? nodes2.length : 0);
-        GenericTable[] tabs = new GenericTable[size];
+        final int nodes2Size = nodes2 != null? nodes2.length : 0;
+        GenericTable[] tabs = new GenericTable[nodes.length + nodes2Size];
         int i = 0;
         for (; i < nodes.length; i++) {
             tabs[i] = (GenericTableBase) nodes[i].getPsi();
         }
-        for (int j = 0; i < size; i++, j++) {
+        for (int j = 0; j < nodes2Size; j++) {
             ASTNode[] nodes3 = nodes2[j].getChildren(PlSqlElementTypes.SELECT_FROM_CLAUSE);
-            // only one table expected
-            tabs[i] = (GenericTableBase) nodes3[0].getPsi();
+            if(nodes3 != null && nodes3.length == 1){
+                // only one table expected
+                tabs[i++] = (GenericTableBase) nodes3[0].getPsi();
+            }
         }
 
-        return tabs;
+        GenericTable[] ret = new GenericTable[i];
+        System.arraycopy(tabs, 0, ret, 0, i);
+        return ret;
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
