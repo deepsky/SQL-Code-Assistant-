@@ -301,33 +301,6 @@ in a background thread and should not affect editor responsiveness.
         return createJoin(prefixType, "inner", false, finalize);
     }
 
-//    public static LookupElement createInnerJoin(final boolean finalize) {
-//        LookupElement e = LookupElementBuilder.create("inner join")
-//                .withTailText(" <table>", true)
-//                .withPresentableText("inner join")
-//                .withCaseSensitivity(false)
-//                .withStrikeoutness(false)
-//                .withBoldness(true)
-//                .withInsertHandler(new InsertHandler<LookupElement>() {
-//                    @Override
-//                    public void handleInsert(InsertionContext context, LookupElement item) {
-//                        final Editor editor = context.getEditor();
-//                        String prefix = "inner join " + (finalize ? ";" : "");
-//                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
-//
-//                        final Document document = editor.getDocument();
-//                        editor.getCaretModel().moveToOffset(context.getTailOffset() - (finalize ? 1 : 0));
-//                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
-//                        LookupUtils.scheduleAutoPopup(editor, context);
-//                    }
-//                });
-//
-//        return new SelectLookupElement<LookupElement>(
-//                PrioritizedLookupElement.withGrouping(e, 2)
-//        );
-//    }
-
-
     public static LookupElement createLeftJoin(int prefixType, boolean finalize) {
         return createJoin(prefixType, "left", false, finalize);
     }
@@ -335,33 +308,6 @@ in a background thread and should not affect editor responsiveness.
     public static LookupElement createLeftOuterJoin(int prefixType, boolean finalize) {
         return createJoin(prefixType, "left", true, finalize);
     }
-
-
-//    public static LookupElement createLeftJoin(final boolean finalize) {
-//        LookupElement e = LookupElementBuilder.create("left join")
-//                .withTailText(" <table>")
-//                .withPresentableText("left join")
-//                .withCaseSensitivity(false)
-//                .withStrikeoutness(false)
-//                .withBoldness(true)
-//                .withInsertHandler(new InsertHandler<LookupElement>() {
-//                    @Override
-//                    public void handleInsert(InsertionContext context, LookupElement item) {
-//                        final Editor editor = context.getEditor();
-//                        String prefix = "left join " + (finalize?";": "");
-//                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
-//
-//                        final Document document = editor.getDocument();
-//                        editor.getCaretModel().moveToOffset(context.getTailOffset()-(finalize?1:0));
-//                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
-//                        LookupUtils.scheduleAutoPopup(editor, context);
-//                    }
-//                });
-//
-//        return new SelectLookupElement<LookupElement>(
-//                PrioritizedLookupElement.withGrouping(e, 2)
-//        );
-//    }
 
 
     public static LookupElement createRightJoin(int prefixType, boolean finalize) {
@@ -372,97 +318,17 @@ in a background thread and should not affect editor responsiveness.
         return createJoin(prefixType, "right", true, finalize);
     }
 
-//    public static LookupElement createRightJoin(final boolean finalize) {
-//        LookupElement e = LookupElementBuilder.create("right join")
-//                .withTailText(" <table>")
-//                .withPresentableText("right join")
-//                .withCaseSensitivity(false)
-//                .withStrikeoutness(false)
-//                .withBoldness(true)
-//                .withInsertHandler(new InsertHandler<LookupElement>() {
-//                    @Override
-//                    public void handleInsert(InsertionContext context, LookupElement item) {
-//                        final Editor editor = context.getEditor();
-//                        String prefix = "right join " + (finalize?";": "");
-//                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
-//
-//                        final Document document = editor.getDocument();
-//                        editor.getCaretModel().moveToOffset(context.getTailOffset()-(finalize?1:0));
-//                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
-//                        LookupUtils.scheduleAutoPopup(editor, context);
-//                    }
-//                });
-//
-//        return new SelectLookupElement<LookupElement>(
-//                PrioritizedLookupElement.withGrouping(e, 2)
-//        );
-//    }
-
-
     public final static int NO_PREFIX = 0;
-//    public final static int PREFIX = 3;
-//    public final static int PREFIX_OUTER = 5;
-
     public final static int PREFIX = 6;
     public final static int PREFIX_OUTER = 7;
 
-//    public static LookupElement createFullJoin(final boolean finalize) {
-//        return createJoin(NO_PREFIX, "full", false, finalize);
-//    }
-
     public static LookupElement createFullJoin(int prefixType, final boolean finalize) {
         return createJoin(prefixType, "full", false, finalize);
-//        LookupElement e = LookupElementBuilder.create("full join")
-//                .withTailText(" <table>")
-//                .withPresentableText("full join")
-//                .withCaseSensitivity(false)
-//                .withStrikeoutness(false)
-//                .withBoldness(true)
-//                .withInsertHandler(new InsertHandler<LookupElement>() {
-//                    @Override
-//                    public void handleInsert(InsertionContext context, LookupElement item) {
-//                        final Editor editor = context.getEditor();
-//                        String prefix = buildPrefix(prefixType, "full", null) + " " + (finalize ? ";" : "");
-//                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
-//
-//                        final Document document = editor.getDocument();
-//                        editor.getCaretModel().moveToOffset(context.getTailOffset() - (finalize ? 1 : 0));
-//                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
-//                        LookupUtils.scheduleAutoPopup(editor, context);
-//                    }
-//                });
-//
-//        return new SelectLookupElement<LookupElement>(
-//                PrioritizedLookupElement.withGrouping(e, 2)
-//        );
     }
 
 
     public static LookupElement createFullOuterJoin(final int prefixType, final boolean finalize) {
         return createJoin(prefixType, "full", true, finalize);
-//        LookupElement e = LookupElementBuilder.create("full outer join")
-//                .withTailText(" <table>")
-//                .withPresentableText("full outer join")
-//                .withCaseSensitivity(false)
-//                .withStrikeoutness(false)
-//                .withBoldness(true)
-//                .withInsertHandler(new InsertHandler<LookupElement>() {
-//                    @Override
-//                    public void handleInsert(InsertionContext context, LookupElement item) {
-//                        final Editor editor = context.getEditor();
-//                        String prefix = buildPrefix(prefixType, "full", "outer") + " " + (finalize ? ";" : "");
-//                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
-//
-//                        final Document document = editor.getDocument();
-//                        editor.getCaretModel().moveToOffset(context.getTailOffset() - (finalize ? 1 : 0));
-//                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
-//                        LookupUtils.scheduleAutoPopup(editor, context);
-//                    }
-//                });
-//
-//        return new SelectLookupElement<LookupElement>(
-//                PrioritizedLookupElement.withGrouping(e, 2)
-//        );
     }
 
 
@@ -507,10 +373,4 @@ in a background thread and should not affect editor responsiveness.
         return "";
     }
 
-    private static String buildPresentation(int prefix, String prefixStr){
-        if(prefix == 0){
-            return prefixStr + " join";
-        } else
-        return prefix==0? prefixStr + " join": (prefix%3==0? "full join":(prefix%5==0? "full outer join":""));
-    }
 }

@@ -43,7 +43,7 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.5.8.129</version>
+    <version>1.5.9.129</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
@@ -51,7 +51,7 @@
 
     <change-notes><![CDATA[<html>
        <ul>
-            <li><b>1.5.8.129</b>
+            <li><b>1.5.9.129</b>
                  <ul>
                     - [NEW] More support on completion: SELECT JOIN, etc<br>
                     - [NEW] Parsing RESULT_CACHE construction<br>
@@ -217,7 +217,7 @@
         <quoteHandler fileType="PlSql" className="com.deepsky.lang.plsql.editor.actions.PlSqlQuoteHandler"/>
 
         <completion.contributor language="PlSql" implementationClass="com.deepsky.lang.plsql.completion.MyCompletionContributor"/>
-        <!--<completion.contributor language="PlSql" implementationClass="com.deepsky.lang.plsql.completion.ComplContributor"/>-->
+        <completion.confidence language="PlSql" implementationClass="com.intellij.codeInsight.completion.AlwaysFocusLookup"/>
         <weigher key="completion" implementationClass="com.deepsky.lang.plsql.completion.SqlCompletionWeigher" id="plsqlWeigher" order="before stats" />
 
         <codeInsight.parameterInfo language="PlSql"
