@@ -28,28 +28,38 @@
         <li>Code commenting</li>
     </ul>
     <br>
-    <b><font color="red">NOTE:</font> Put SQL and PL/SQL files under some of source roots to have them indexed by the plugin.</b>
+    <b><font color="red">NOTE:</font></b> <br>
+        <b>1. Put SQL and PL/SQL files under any source root to have them indexed by the plugin.</b><br>
+        2. To avoid interfering Live Templates with the SQL Assistant plug-in (applicable for 134.*-135.*) go to Settings->Live Templates and
+        uncheck <b>"B (Surrounds {})"</b> and <b>"P (Surrounds ())"</b> in <b>"surrounds"</b><br>
     <br>
     Latest changes:
     <ul>
+        <li>[NEW] More support on completion: SELECT JOIN, etc</li>
+        <li>[NEW] Parsing RESULT_CACHE construction</li>
+        <li>[FIX] "member" can be a name of table/view</li>
         <li>[KNOWN ISSUE] Case-sensitive table names, column names, etc are not supported for now</li>
         <li>[KNOWN ISSUE] Initial indexing of numerous SQL files (1k and more) may take time</li>
-        <li>[KNOWN ISSUE] Quick Object Lookup does not distinguish between objects with the same name but located in different files</li>
      </ul>
     <br>
 
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.5.7.13</version>
+    <version>1.5.9.135</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
 
-
-
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.5.9.135</b>
+                 <ul>
+                    - [NEW] More support on completion: SELECT JOIN, etc<br>
+                    - [NEW] Parsing RESULT_CACHE construction<br>
+                    - [FIX] "member" can be a name of table/view<br>
+                 </ul>
+            </li>
             <li><b>1.5.7.13</b>
                  <ul>
                     - [NEW] Refactoring of completion (implemented base cases for now)<br>
@@ -159,7 +169,7 @@
             </li>
         </ul>
     </html>]]></change-notes>
-    <idea-version since-build="134.100" until-build="134.*"/>
+    <idea-version since-build="134.100" until-build="135.*"/>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 
@@ -208,6 +218,7 @@
         <quoteHandler fileType="PlSql" className="com.deepsky.lang.plsql.editor.actions.PlSqlQuoteHandler"/>
 
         <completion.contributor language="PlSql" implementationClass="com.deepsky.lang.plsql.completion.MyCompletionContributor"/>
+        <completion.confidence language="PlSql" implementationClass="com.intellij.codeInsight.completion.AlwaysFocusLookup"/>
         <weigher key="completion" implementationClass="com.deepsky.lang.plsql.completion.SqlCompletionWeigher" id="plsqlWeigher" order="before stats" />
 
         <codeInsight.parameterInfo language="PlSql"

@@ -10,14 +10,11 @@
     </content>
     <orderEntry type="jdk" jdkName="IDEA IC-134.1445" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="parser" scope="RUNTIME" />
-    <orderEntry type="module" module-name="antl_patch" scope="RUNTIME" />
     <orderEntry type="module" module-name="commons" scope="RUNTIME" />
     <orderEntry type="module" module-name="database" scope="RUNTIME" />
     <orderEntry type="module" module-name="db_browser" scope="RUNTIME" />
     <orderEntry type="module" module-name="main" scope="RUNTIME" />
     <orderEntry type="module" module-name="result_panel" scope="RUNTIME" />
-    <orderEntry type="module" module-name="completion" scope="RUNTIME" />
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
@@ -28,8 +25,6 @@
         <jarDirectory url="jar://$MODULE_DIR$/../lib/const_jjar.zip!/" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="annotations" scope="RUNTIME" />
-    <orderEntry type="module" module-name="annotationProcessors" scope="RUNTIME" />
   </component>
 </module>
 

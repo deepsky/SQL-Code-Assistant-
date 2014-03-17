@@ -4,7 +4,6 @@
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
@@ -13,7 +12,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="commons" />
-    <orderEntry type="module" module-name="antl_patch" />
+    <orderEntry type="library" name="Maven: sql-assistant:antl_patch:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.13" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
@@ -25,8 +24,8 @@
     <orderEntry type="module" module-name="main" />
     <orderEntry type="module" module-name="result_panel" />
     <orderEntry type="module" module-name="database" />
-    <orderEntry type="module" module-name="parser" />
-    <orderEntry type="module" module-name="tools" />
+    <orderEntry type="library" name="Maven: sql-assistant:parser:1.12.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: sql-assistant:tools:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.joestelmach:natty:0.4-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.2" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2" level="project" />
@@ -38,13 +37,13 @@
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-commons:4.0" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-util:4.0" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-analysis:4.0" level="project" />
-    <orderEntry type="module" module-name="completion" />
-    <orderEntry type="module" module-name="annotations" />
-    <orderEntry type="module" module-name="annotationProcessors" />
+    <orderEntry type="library" name="Maven: sql-assistant:completion:1.13.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: sql-assistant:annotations:1.12.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: sql-assistant:annotationProcessors:1.13.1-SNAPSHOT" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.intellij:openapi:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/openapi.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/openapi.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -53,7 +52,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.intellij:idea:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/idea.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/idea.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -62,7 +61,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.intellij:idea_rt:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/idea_rt.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/idea_rt.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -71,7 +70,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.intellij:openapi.extensions:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/extensions.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/extensions.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -80,7 +79,7 @@
     <orderEntry type="module-library">
       <library name="Maven: org.jetbrains:annotations:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/annotations.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/annotations.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -89,7 +88,7 @@
     <orderEntry type="module-library">
       <library name="Maven: org.jetbrains:ui:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/util.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/util.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -98,7 +97,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.intellij:uiDesigner:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/forms_rt.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/forms_rt.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -107,7 +106,7 @@
     <orderEntry type="module-library">
       <library name="Maven: gnu:trove:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/trove4j.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/trove4j.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -116,7 +115,7 @@
     <orderEntry type="module-library">
       <library name="Maven: org:picocontainer:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/picocontainer.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/picocontainer.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -125,7 +124,7 @@
     <orderEntry type="module-library">
       <library name="Maven: org:jdom:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/jdom.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/jdom.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -134,7 +133,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.intellij:resources_en:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/resources_en.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/resources_en.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -143,7 +142,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.intellij:resources:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/resources.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/resources.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -152,7 +151,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.intellij:ide:1.5.0">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/bootstrap.jar!/" />
+          <root url="jar://$USER_HOME$/idea-IC-134.1445/lib/bootstrap.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
