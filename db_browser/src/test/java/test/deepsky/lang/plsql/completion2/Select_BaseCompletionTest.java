@@ -99,7 +99,8 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
     public void testSelect$exists1() throws Exception {
         configureByFile(getFilePath());
 //        assertSelectFieldLookup(myItems, "parent_id", "text", "id", "text");
-        assertSelectFieldLookup(myItems, "parent_id", "child.text", "id", "parent.text", "exists");
+        assertSelectFieldLookup(myItems, "parent_id", "child.text", "id", "parent.text", "exists",
+                "current_timestamp","dbtimezone", "sysdate", "systimestamp");
     }
 
     public void testSelect$exists2() throws Exception {
@@ -135,6 +136,11 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
     public void testSelect$complex_relation1() throws Exception {
         configureByFile(getFilePath());
         assertSelectFieldLookup(myItems, "p.id", "p.text1");
+    }
+
+    public void testSelect$complex_relation2() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "p.id", "p.text1", "exists","parent_id", "text");
     }
 
     public void testSelect$group_by() throws Exception {
@@ -363,12 +369,12 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$select_where101() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "bookingreference", "eventtype", "id", "transactionid");
+        assertSelectFieldLookup(myItems, "bookingreference", "eventtype", "id", "transactionid", "exists");
     }
 
     public void testSelect$select_where102() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "bookingreference", "eventtype", "id", "transactionid");
+        assertSelectFieldLookup(myItems, "bookingreference", "eventtype", "id", "transactionid", "exists");
     }
 
     public void testSelect$select_where103() throws Exception {
@@ -400,6 +406,27 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
     public void testSelect$left_outer_join() throws Exception {
         configureByFile(getFilePath());
         assertSelectFieldLookup(myItems, "deptno", "id");
+    }
+
+    public void testSelect$select_100() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "l.name", "l.id", "l.text1");
+    }
+
+    public void testSelect$select_101() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "alter","comment","create","delete","drop","full join","group","inner join","insert",
+                "left join","order","right join","select","update","where");
+    }
+
+    public void testSelect$select_comment1() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "update", "select");
+    }
+
+    public void testSelect$select_comment2() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "comment", "drop", "full join", "group", "inner join", "left join", "right join", "order");
     }
 
 }

@@ -66,7 +66,7 @@ public class DDLProcessor extends CompletionBase {
         variants.addAll(provider.collectColumnNameRef(ref, ctx.getLookup()));
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
@@ -77,7 +77,7 @@ public class DDLProcessor extends CompletionBase {
         variants.addAll(provider.collectColumnNameRef(ref, ctx.getLookup()));
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
@@ -98,7 +98,7 @@ public class DDLProcessor extends CompletionBase {
             }
         }
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
@@ -109,7 +109,7 @@ public class DDLProcessor extends CompletionBase {
         variants.addAll(provider.collectColumnNameRef(ref, ctx.getLookup()));
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
@@ -118,7 +118,7 @@ public class DDLProcessor extends CompletionBase {
         VariantsProvider provider = ctx.getProvider();
         List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup());
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 

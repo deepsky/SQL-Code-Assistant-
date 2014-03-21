@@ -41,69 +41,43 @@ public class SelectFieldLookupElement<T extends LookupElement> extends LookupEle
     private String tableAlias;
     private VariantsProviderImpl.ColumnElement it;
 
-    // TODO - make me configurable
-    private boolean forceUsingTableAlias = true;
-
-    protected SelectFieldLookupElement(T delegate, String leId, String tableAlais, VariantsProviderImpl.ColumnElement it, boolean forceUsingTableAlias) {
+    protected SelectFieldLookupElement(T delegate, String leId, String tableAlais, VariantsProviderImpl.ColumnElement it) {
         super(delegate);
         this.leId = leId;
         this.tableAlias = tableAlais;
         this.it = it;
-        this.forceUsingTableAlias = forceUsingTableAlias;
     }
 
-    public static SelectFieldLookupElement create(String table_alias, final VariantsProviderImpl.ColumnElement it, boolean forceUsingTableAlias) {
+    public static SelectFieldLookupElement create(String table_alias, final VariantsProviderImpl.ColumnElement it) {
         LookupElement e = LookupElementBuilder.create(it.getName())
-                .setTailText(it.getTail(), true)
-                .setTypeText(it.getType())
-                .setIcon(it.getIcon())
-                .setCaseSensitive(false)
-                .setStrikeout(it.isStrikeout());
+                .withTailText(it.getTail(), true)
+                .withTypeText(it.getType())
+                .withIcon(it.getIcon())
+                .withCaseSensitivity(false)
+                .withStrikeoutness(it.isStrikeout());
 
         String _leId = it.getName() + (it.getTail() != null ? it.getTail() : "")
                 + (it.tableAlias!=null? it.tableAlias: "");
-        return new SelectFieldLookupElement<LookupElement>(e, _leId, table_alias, it, forceUsingTableAlias);
-    }
-
-    public static LookupElement create(String table_alias, VariantsProviderImpl.ColumnElement it) {
-        return create(table_alias, it, false);
+        return new SelectFieldLookupElement<LookupElement>(e, _leId, table_alias, it);
     }
 
     public static LookupElement create( VariantsProviderImpl.ColumnElement it) {
-        return create(null, it, false);
+        return create(null, it);
     }
 
     public void handleInsert(InsertionContext context) {
 
         if (tableAlias == null) {
             final Editor editor = context.getEditor();
-            String prefix = it.getQualifyName(); //forceUsingTableAlias);
+            String prefix = it.getQualifyName();
             if(prefix != null){
                 editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix + ".");
                 emulateInsertion(getDelegate(), context.getTailOffset(), context);
             }
-/*
-            if (it.isFullQualifiedColumn() && it.getQualifyName(forceUsingTableAlias) != null) {
-                final Editor editor = context.getEditor();
-                String prefix = it.getQualifyName(forceUsingTableAlias);
-                editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix + ".");
-                emulateInsertion(getDelegate(), context.getTailOffset(), context);
-
-            }
-            if (!it.isFullQualifiedColumn() && it.getQualifyName(forceUsingTableAlias) != null) {
-                final Editor editor = context.getEditor();
-                String prefix = it.getQualifyName(forceUsingTableAlias);
-                editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix + ".");
-                emulateInsertion(getDelegate(), context.getTailOffset(), context);
-            }
-*/
         }
     }
 
-
     public static void emulateInsertion(LookupElement item, int offset, InsertionContext context) {
-        //setOffsets(context, offset, offset);
-
         final Editor editor = context.getEditor();
         final Document document = editor.getDocument();
         final String lookupString = item.getLookupString();
@@ -128,7 +102,7 @@ public class SelectFieldLookupElement<T extends LookupElement> extends LookupEle
     }
 
     public String getSuggestedQualifyName(){
-        return it.getQualifyName();//forceUsingTableAlias);
+        return it.getQualifyName();
     }
 
     public String getSuggestedName(){

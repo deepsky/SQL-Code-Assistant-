@@ -28,6 +28,7 @@ import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
+import com.deepsky.lang.plsql.completion.logic.ASTTreeAdapter;
 import com.deepsky.lang.plsql.completion.lookups.GenericLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.GroupByLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
@@ -54,7 +55,7 @@ public class GenericProcessor extends CompletionBase {
         ctx.addElement(SelectLookupElement.createSubquery(is2ndLatest(parent, marker)));
     }
 
-    @SyntaxTreePath("/..1ANY//#SELECT ..2#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF ..#ALIAS_NAME/#ALIAS_IDENT/3#C_MARKER")
+    @SyntaxTreePath("/..1ANY//#SELECT ..2#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/#TABLE_REF #ALIAS_NAME/#ALIAS_IDENT/3#C_MARKER")
     public void process$FromTail(C_Context ctx, ASTNode parent, ASTNode from, ASTNode caret) {
         final SelectStatement select = (SelectStatement) from.getTreeParent().getPsi();
         final ASTNode next = PsiUtil.nextNonWSLeaf(caret);
@@ -182,11 +183,21 @@ public class GenericProcessor extends CompletionBase {
         ASTNode parent = where.getTreeParent();
         if(parent.getPsi() instanceof SelectStatement){
             if(expr.getChildren(null).length == 1){
+//                ASTNode parent = expr.getTreeParent();
+//                if(parent.getElementType() == PlSqlElementTypes.WHERE_CONDITION){
                     ctx.addElement(KeywordLookupElement.create("exists"));
+//                } else if(parent.getElementType() == PlSqlElementTypes.LOGICAL_EXPR){
+//                    ctx.addElement(KeywordLookupElement.create("exists"));
+//                }
             }
-            SelectStatement select = (SelectStatement) parent.getPsi();
-            collectColumns(ctx, select, nameRef);
         }
+
+        ASTTreeAdapter.recovery(nameRef.getNode(), new TreePathBuilderAbstract() {
+            @Override
+            public void processSelectStatement(SelectStatement select) {
+                collectColumns(ctx, select, nameRef);
+            }
+        });
     }
 
 
@@ -197,9 +208,14 @@ public class GenericProcessor extends CompletionBase {
             if(expr.getChildren(null).length == 1){
                 ctx.addElement(KeywordLookupElement.create("exists"));
             }
-            SelectStatement select = (SelectStatement) parent.getPsi();
-            collectColumns(ctx, select, nameRef);
         }
+
+        ASTTreeAdapter.recovery(nameRef.getNode(), new TreePathBuilderAbstract() {
+            @Override
+            public void processSelectStatement(SelectStatement select) {
+                collectColumns(ctx, select, nameRef);
+            }
+        });
     }
 
 
@@ -214,10 +230,14 @@ public class GenericProcessor extends CompletionBase {
                 ctx.addElement(KeywordLookupElement.create("dbtimezone"));
                 ctx.addElement(KeywordLookupElement.create("current_timestamp"));
             }
-
-            SelectStatement select = (SelectStatement) parent.getPsi();
-            collectColumns(ctx, select, nameRef);
         }
+
+        ASTTreeAdapter.recovery(nameRef.getNode(), new TreePathBuilderAbstract() {
+            @Override
+            public void processSelectStatement(SelectStatement select) {
+                collectColumns(ctx, select, nameRef);
+            }
+        });
     }
 
 
@@ -232,9 +252,14 @@ public class GenericProcessor extends CompletionBase {
                 ctx.addElement(KeywordLookupElement.create("dbtimezone"));
                 ctx.addElement(KeywordLookupElement.create("current_timestamp"));
             }
-            SelectStatement select = (SelectStatement) parent.getPsi();
-            collectColumns(ctx, select, nameRef);
         }
+
+        ASTTreeAdapter.recovery(nameRef.getNode(), new TreePathBuilderAbstract() {
+            @Override
+            public void processSelectStatement(SelectStatement select) {
+                collectColumns(ctx, select, nameRef);
+            }
+        });
     }
 
     @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#RELATION_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
@@ -248,92 +273,16 @@ public class GenericProcessor extends CompletionBase {
                 ctx.addElement(KeywordLookupElement.create("dbtimezone"));
                 ctx.addElement(KeywordLookupElement.create("current_timestamp"));
             }
-
-           SelectStatement select = (SelectStatement) parent.getPsi();
-           collectColumns(ctx, select, nameRef);
         }
-    }
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#EXISTS_EXPR/..#SUBQUERY/..$SelectStatement/..#WHERE_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$SelectExistsExpr(C_Context ctx, ASTNode where, NameFragmentRef nameRef) {
-        ASTNode parent = where.getTreeParent();
-        if(parent.getPsi() instanceof SelectStatement){
-            if(nameRef.getPrevFragment() == null){
-                // Possible case: column1 < sysdate/systimestamp/dbtimezone/current_timestamp
-                ctx.addElement(KeywordLookupElement.create("sysdate"));
-                ctx.addElement(KeywordLookupElement.create("systimestamp"));
-                ctx.addElement(KeywordLookupElement.create("dbtimezone"));
-                ctx.addElement(KeywordLookupElement.create("current_timestamp"));
+        ASTTreeAdapter.recovery(nameRef.getNode(), new TreePathBuilderAbstract() {
+            @Override
+            public void processSelectStatement(SelectStatement select) {
+                collectColumns(ctx, select, nameRef);
             }
-
-            SelectStatement select = (SelectStatement) parent.getPsi();
-            collectColumns(ctx, select, nameRef);
-        }
+        });
     }
 
-
-    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#EXISTS_EXPR/..#SUBQUERY/..$SelectStatement/..#WHERE_CONDITION/..#RELATION_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$SelectExistsExpr2(C_Context ctx, ASTNode where, NameFragmentRef nameRef) {
-        ASTNode parent = where.getTreeParent();
-        if(parent.getPsi() instanceof SelectStatement){
-            if(nameRef.getPrevFragment() == null){
-                // Possible case: column1 < sysdate/systimestamp/dbtimezone/current_timestamp
-                ctx.addElement(KeywordLookupElement.create("sysdate"));
-                ctx.addElement(KeywordLookupElement.create("systimestamp"));
-                ctx.addElement(KeywordLookupElement.create("dbtimezone"));
-                ctx.addElement(KeywordLookupElement.create("current_timestamp"));
-            }
-
-            SelectStatement select = (SelectStatement) parent.getPsi();
-            collectColumns(ctx, select, nameRef);
-        }
-    }
-
-/*
-PLSQL:SELECT_EXPRESSION
-  PLSQL:SELECT
-  PLSQL:ASTERISK_COLUMN
-  PLSQL:TABLE_REFERENCE_LIST_FROM
-  PLSQL:WHERE_CONDITION
-    PLSQL:WHERE
-    PLSQL:SUBQUERY_CONDITION
-      PLSQL:OPEN_PAREN
-      PLSQL:EXPR_LIST
-      PLSQL:CLOSE_PAREN
-      PLSQL:EQ
-      PLSQL:SUBQUERY
-        PLSQL:OPEN_PAREN
-        PLSQL:SELECT_EXPRESSION
-          PLSQL:SELECT
-          PLSQL:EXPR_COLUMN
-            PLSQL:VAR_REF
-              PLSQL:NAME_FRAGMENT
-                PLSQL:IDENTIFIER
-*/
-    @SyntaxTreePath("//..1#SUBQUERY_CONDITION/..#SUBQUERY/..2$SelectStatement/..#EXPR_COLUMN//#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectWhereSubqueryCondition(C_Context ctx, ASTNode subqueryCond, SelectStatement s0, NameFragmentRef ref) {
-        ASTNode parent = subqueryCond.getTreeParent();
-        if(parent.getElementType() == PlSqlElementTypes.WHERE_CONDITION){
-            if(parent.getTreeParent().getPsi() instanceof SelectStatement){
-                collectColumns(ctx, (SelectStatement) parent.getTreeParent().getPsi(), ref);
-            }
-        }
-
-        collectColumns(ctx, s0, ref);
-    }
-
-
-    @SyntaxTreePath("//..1#SUBQUERY_CONDITION/..#SUBQUERY/..2$SelectStatement/..#WHERE_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$SelectWhereSubqueryCondition2(C_Context ctx, ASTNode subqueryCond, SelectStatement s0, NameFragmentRef ref) {
-        ASTNode parent = subqueryCond.getTreeParent();
-        if(parent.getElementType() == PlSqlElementTypes.WHERE_CONDITION){
-            if(parent.getTreeParent().getPsi() instanceof SelectStatement){
-                collectColumns(ctx, (SelectStatement) parent.getTreeParent().getPsi(), ref);
-            }
-        }
-
-        collectColumns(ctx, s0, ref);
-    }
 
     @SyntaxTreePath("/..ANY//#SELECT ..1#GROUP_CLAUSE/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$GroupByVar(C_Context ctx, ASTNode groupClause, NameFragmentRef ref) {
@@ -373,7 +322,9 @@ PLSQL:SELECT_EXPRESSION
         final String prevText = prev != null ? prev.getText() : null;
 
         final List<LookupElement> variants = new ArrayList<LookupElement>();
+//        if (prev == null && ctx.getLookup().length() > 0) {
         variants.addAll(provider.collectSystemFuncCall(ctx.getLookup()));
+//        }
 
         provider.collectColumnVariants( select, prevText);
         variants.addAll(provider.takeCollectedLookups());

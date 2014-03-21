@@ -14,7 +14,8 @@ public class ASTTreeAdapter {
 
     public static TreePath recovery2(ASTNode marker) {
         TreePathBuilderImpl pathBuilder = new TreePathBuilderImpl();
-        return parse2(marker, pathBuilder);
+        recovery2(marker, pathBuilder);
+        return pathBuilder.complete();
     }
 
     private static class TreePathBuilderImpl implements TreePathBuilder {
@@ -53,18 +54,18 @@ public class ASTTreeAdapter {
     }
 
 
-    public static TreePath parse(ASTNode marker, TreePathBuilder pathBuilder) {
-        recovery(marker, pathBuilder);
-        return pathBuilder.complete();
-    }
+//    public static TreePath parse(ASTNode marker, TreePathBuilder pathBuilder) {
+//        recovery(marker, pathBuilder);
+//        return pathBuilder.complete();
+//    }
+//
+//
+//    public static TreePath parse2(ASTNode marker, TreePathBuilder pathBuilder) {
+//        recovery2(marker, pathBuilder);
+//        return pathBuilder.complete();
+//    }
 
-
-    public static TreePath parse2(ASTNode marker, TreePathBuilder pathBuilder) {
-        recovery2(marker, pathBuilder);
-        return pathBuilder.complete();
-    }
-
-    private static void recovery(ASTNode node, TreePathBuilder nodeProcessor) {
+    public static void recovery(ASTNode node, TreePathBuilder nodeProcessor) {
         ASTNode prev = node;
         while (prev != null) {
             if (prev.getElementType() != PlSqlTokenTypes.WS) {

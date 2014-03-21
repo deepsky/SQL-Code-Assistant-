@@ -25,6 +25,7 @@
 package com.deepsky.lang.plsql.completion;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.legacy.logic.ObjectTreeParser;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 import com.deepsky.lang.plsql.completion.logic.TreePathBuilder;
@@ -151,6 +152,12 @@ public class SyntaxErrorResolverTest extends AbstractCompletionTest { //PlSqlPar
     }
 
 
+    public void testUpdate105() throws Exception {
+        String text = "select * from (select 1, 8-4 from <caret>)";
+        parseScript12(text);
+    }
+
+
     void print(ASTNode parent, int indent) {
         System.out.println(putIndent(indent) + parent.getElementType());
         ASTNode cur = parent.getFirstChildNode();
@@ -177,7 +184,6 @@ public class SyntaxErrorResolverTest extends AbstractCompletionTest { //PlSqlPar
     private String recovery22(ASTNode marker) {
         TreePathBuilderImpl pathBuilder = new TreePathBuilderImpl();
         return ObjectTreeParser.parse(marker, pathBuilder).printPath();
-//        return pathBuilder.printPath();
     }
 
     class TreePathBuilderImpl implements TreePathBuilder {
@@ -267,5 +273,43 @@ public class SyntaxErrorResolverTest extends AbstractCompletionTest { //PlSqlPar
         System.out.flush();
     }
 
+
+    private void parseScript12(String text) {
+        System.out.println("---  " + text);
+        text = text.replace(MARKER, "IntellijIdeaRulezzz");
+        ASTNode root = parseString(text);
+        ASTNode marker = root.findLeafElementAt(text.indexOf("IntellijIdeaRulezzz"));
+        print(root, 0);
+
+        System.out.println("###  Restored tree:");
+        TreePathBuilder pathBuilder = new TreePathBuilder(){
+
+            @Override
+            public void addNode(ASTNode prev) {
+                if(prev.getElementType() == PlSqlElementTypes.SELECT_EXPRESSION){
+                    int o = 0;
+                } else if(prev.getElementType() == PlSqlElementTypes.SELECT_EXPRESSION_UNION){
+                    int o = 0;
+                }
+                int h =0;
+            }
+
+            @Override
+            public void goUp() {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public TreePath complete() {
+                return null;
+            }
+        };
+
+        String out = ObjectTreeParser.parse(marker, pathBuilder).printPath();
+//        System.out.println(recovery22(marker));
+//        System.out.println("###  Original tree:");
+//        print(root, 0);
+        System.out.flush();
+    }
 
 }

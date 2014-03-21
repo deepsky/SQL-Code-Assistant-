@@ -26,6 +26,8 @@ package com.deepsky.lang.plsql.completion.processors;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
+import com.deepsky.lang.plsql.completion.logic.ASTTreeAdapter;
+import com.deepsky.lang.plsql.completion.logic.TreePathBuilder;
 import com.deepsky.lang.plsql.completion.lookups.GenericLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.GroupByLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
@@ -34,6 +36,7 @@ import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.UpdateLookupElement;
+import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.validation.ValidationException;
@@ -74,7 +77,7 @@ public class SelectStmtProcessor extends CompletionBase {
         variants.addAll(provider.collectSequenceVariants(prevText, ctx.getLookup()));
 
         for (LookupElement elem : variants) {
-            ctx.addElement(elem);
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
         }
     }
 
@@ -98,7 +101,7 @@ public class SelectStmtProcessor extends CompletionBase {
         variants.addAll(provider.collectSequenceVariants(prevText, ctx.getLookup()));
 
         for (LookupElement elem : variants) {
-            ctx.addElement(elem);
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
         }
     }
 
@@ -122,15 +125,46 @@ public class SelectStmtProcessor extends CompletionBase {
         // TODO - implement me
     }
 
+/*
+    @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#TABLE_ALIAS/..#ALIAS_NAME/#ALIAS_IDENT/2#C_MARKER")
+    public void process$SelectTabAliasName(C_Context ctx, SelectStatement select, ASTNode caret) {
+
+        final int start = select.getNode().getFirstChildNode().getTextRange().getStartOffset();
+        final int end = select.getNode().getLastChildNode().getTextRange().getEndOffset();
+        final ASTNode lastLeaf = select.getNode().findLeafElementAt(end-start-1);
+        if( lastLeaf == caret){
+            ctx.addElement(SelectLookupElement.create());
+            ctx.addElement(InsertLookupElement.create());
+            ctx.addElement(UpdateLookupElement.create());
+            ctx.addElement(DeleteLookupElement.create());
+            ctx.addElement(KeywordLookupElement.create("create"));
+            ctx.addElement(KeywordLookupElement.create("drop"));
+            ctx.addElement(KeywordLookupElement.create("alter"));
+            ctx.addElement(KeywordLookupElement.create("comment"));
+            ctx.addElement(KeywordLookupElement.create("where"));
+            ctx.addElement(OrderByLookupElement.create());
+            ctx.addElement(GroupByLookupElement.create());
+        } else {
+            // TODO - implement me
+        }
+    }
+*/
+
     @SyntaxTreePath("/ ..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY/#SUBQUERY/#OPEN_PAREN #ERROR_TOKEN_A/2#C_MARKER")
     public void process$SelectFromSubquery2() {
         // TODO - implement me
     }
 
-//    @SyntaxTreePath("//..#SUBQUERY_CONDITION/..#SUBQUERY/..2$SelectStatement/..#EXPR_COLUMN//#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-//    public void process$SelectWhereSubqueryCondition(C_Context ctx, SelectStatement s0, SelectStatement select, NameFragmentRef ref) {
-//        collectColumns(ctx, select, ref);
-//    }
+    @SyntaxTreePath("//..#SUBQUERY_CONDITION/..#SUBQUERY/..2$SelectStatement/..#EXPR_COLUMN//#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectWhereSubqueryCondition(final C_Context ctx, SelectStatement s0, SelectStatement s1, final NameFragmentRef ref) {
+
+        ASTTreeAdapter.recovery(ref.getNode(), new TreePathBuilderAbstract() {
+            @Override
+            public void processSelectStatement(SelectStatement select) {
+                collectColumns(ctx, select, ref);
+            }
+        });
+    }
 
 /*
     @SyntaxTreePath("/..#WHERE_CONDITION//..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
@@ -156,10 +190,12 @@ public class SelectStmtProcessor extends CompletionBase {
     }
 */
 
-//    @SyntaxTreePath("/..#WHERE_CONDITION//..#RELATION_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-//    public void process$SelectWhere2(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
-//        collectColumns(ctx, select, nameRef);
-//    }
+/*
+    @SyntaxTreePath("/..#WHERE_CONDITION//..#RELATION_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectWhere2(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
+        collectColumns(ctx, select, nameRef);
+    }
+*/
 
     @SyntaxTreePath("/..#WHERE_CONDITION//..#LIKE_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$SelectWhere3(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
@@ -167,7 +203,6 @@ public class SelectStmtProcessor extends CompletionBase {
     }
 
 
-/*
     @SyntaxTreePath("/..#WHERE_CONDITION/..#EXISTS_EXPR//..2$SelectStatement/..#WHERE_CONDITION/..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$SelectExistsExpr(C_Context ctx, SelectStatement select, SelectStatement subquery, NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
@@ -184,7 +219,6 @@ public class SelectStmtProcessor extends CompletionBase {
             ctx.addElement(elem);
         }
     }
-*/
 
     @SyntaxTreePath("/..#EXPR_COLUMN/#LAG_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#QUERY_PARTITION_CLAUSE/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$LagFunc(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {

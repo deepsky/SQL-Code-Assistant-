@@ -42,7 +42,7 @@ public class UpdateStmtProcessor extends CompletionBase {
 
     @SyntaxTreePath("/#ERROR_TOKEN_A/#UPDATE #TABLE_ALIAS/#TABLE_REF #ALIAS_NAME//#C_MARKER")
     public void process$UpdateTabAlias(C_Context ctx) {
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("set"));
+        ctx.addElement(KeywordLookupElement.create("set"));
     }
 
     @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET #ERROR_TOKEN_A/#COLUMN_SPEC ..#COMMA #C_MARKER")
@@ -55,7 +55,7 @@ public class UpdateStmtProcessor extends CompletionBase {
         variants.addAll(provider.takeCollectedLookups());
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
@@ -70,7 +70,7 @@ public class UpdateStmtProcessor extends CompletionBase {
         variants.addAll(provider.takeCollectedLookups());
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 

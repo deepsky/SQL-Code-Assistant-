@@ -23,15 +23,17 @@
 
 package com.deepsky.lang.plsql.completion.processors;
 
-import com.deepsky.generated.plsql.PLSqlTokenTypes;
 import com.deepsky.lang.PsiUtil;
 import com.deepsky.lang.common.PlSqlTokenTypes;
+import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
+import com.deepsky.lang.plsql.completion.logic.TreePathBuilder;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.UpdateLookupElement;
+import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 import com.deepsky.lang.plsql.psi.*;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
@@ -63,8 +65,8 @@ public abstract class CompletionBase {
      * @return true if it is an aggregate like MIN, MAX, etc
      */
     protected boolean isExprAggrFunction(Expression expression) {
-        if(expression instanceof Callable){
-            final String name = ((Callable)expression).getFunctionName();
+        if (expression instanceof Callable) {
+            final String name = ((Callable) expression).getFunctionName();
             return AGGR_FUNC_NAMES.contains(name.toUpperCase());
         }
         return false;
@@ -88,7 +90,7 @@ public abstract class CompletionBase {
      */
     protected boolean checkExpr(Expression expr, Expression[] expressions) {
         final String exprTest = expr.getText().replaceAll("[\n\t ]", "");
-        for(Expression e: expressions){
+        for (Expression e : expressions) {
             return exprTest.equalsIgnoreCase(e.getText().replaceAll("[\n\t ]", ""));
         }
 
@@ -96,11 +98,8 @@ public abstract class CompletionBase {
     }
 
 
-
-
-
-    protected boolean is2ndLatest(@NotNull ASTNode root, @NotNull ASTNode child){
-        if(child.getTextRange().getEndOffset() == root.getTextRange().getEndOffset()){
+    protected boolean is2ndLatest(@NotNull ASTNode root, @NotNull ASTNode child) {
+        if (child.getTextRange().getEndOffset() == root.getTextRange().getEndOffset()) {
             // Looks like child is the latest element,to make sure check against SEMI
             PsiElement next = PsiUtil.nextNonWSLeaf(child.getPsi());
             return !(next != null && next.getNode().getElementType() == PlSqlTokenTypes.SEMI);
@@ -111,7 +110,7 @@ public abstract class CompletionBase {
 
     protected void collectColumns(@NotNull C_Context ctx, @NotNull SelectStatement select, @Nullable NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
-        final NameFragmentRef prev = nameRef != null? nameRef.getPrevFragment(): null;
+        final NameFragmentRef prev = nameRef != null ? nameRef.getPrevFragment() : null;
         final String prevText = prev != null ? prev.getText() : null;
 
         provider.collectColumnVariants(select, prevText);
@@ -120,13 +119,13 @@ public abstract class CompletionBase {
         variants.addAll(provider.takeCollectedLookups());
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
     protected void collectColumnsAndSysFunc(@NotNull C_Context ctx, @NotNull SelectStatement select, @Nullable NameFragmentRef nameRef) {
         VariantsProvider provider = ctx.getProvider();
-        final NameFragmentRef prev = nameRef != null? nameRef.getPrevFragment(): null;
+        final NameFragmentRef prev = nameRef != null ? nameRef.getPrevFragment() : null;
         final String prevText = prev != null ? prev.getText() : null;
 
         provider.collectColumnVariants(select, prevText);
@@ -135,10 +134,10 @@ public abstract class CompletionBase {
         variants.addAll(provider.takeCollectedLookups());
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
 
-        if(prev == null){
+        if (prev == null) {
             ctx.addElement(KeywordLookupElement.create("sysdate"));
             ctx.addElement(KeywordLookupElement.create("systimestamp"));
             ctx.addElement(KeywordLookupElement.create("dbtimezone"));
@@ -158,27 +157,27 @@ public abstract class CompletionBase {
         }
     }
 
-    protected  void collectTableNames(C_Context ctx){
+    protected void collectTableNames(C_Context ctx) {
         VariantsProvider provider = ctx.getProvider();
         final List<LookupElement> variants = new ArrayList<LookupElement>();
         variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
-    protected  void collectTableNames(@NotNull C_Context ctx, @NotNull InsertHandler<LookupElement> insertHandler){
+    protected void collectTableNames(@NotNull C_Context ctx, @NotNull InsertHandler<LookupElement> insertHandler) {
         VariantsProvider provider = ctx.getProvider();
         final List<LookupElement> variants = new ArrayList<LookupElement>();
         variants.addAll(provider.collectTableNameVariants(ctx.getLookup(), insertHandler));
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
-    protected  void collectTableNamesFinalize(C_Context ctx){
+    protected void collectTableNamesFinalize(C_Context ctx) {
         VariantsProvider provider = ctx.getProvider();
         final List<LookupElement> variants = new ArrayList<LookupElement>();
         variants.addAll(provider.collectTableNameVariants(ctx.getLookup(), new InsertHandler<LookupElement>() {
@@ -194,31 +193,54 @@ public abstract class CompletionBase {
         }));
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
-    protected  void collectTableViewNames(C_Context ctx){
+    protected void collectTableViewNames(C_Context ctx) {
         VariantsProvider provider = ctx.getProvider();
         final List<LookupElement> variants = new ArrayList<LookupElement>();
         variants.addAll(provider.collectTableNameVariants(ctx.getLookup()));
         variants.addAll(provider.collectViewNameVariants(ctx.getLookup()));
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 
     protected void completeStart(C_Context ctx) {
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(SelectLookupElement.create());
-//        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(SelectLookupElement.createSelectFromSelect());
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(InsertLookupElement.create());
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(UpdateLookupElement.create());
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(DeleteLookupElement.create());
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("create"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("drop"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("alter"));
-        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("comment"));
+        ctx.addElement(SelectLookupElement.create());
+//        ctx.addElement(SelectLookupElement.createSelectFromSelect());
+        ctx.addElement(InsertLookupElement.create());
+        ctx.addElement(UpdateLookupElement.create());
+        ctx.addElement(DeleteLookupElement.create());
+        ctx.addElement(KeywordLookupElement.create("create"));
+        ctx.addElement(KeywordLookupElement.create("drop"));
+        ctx.addElement(KeywordLookupElement.create("alter"));
+        ctx.addElement(KeywordLookupElement.create("comment"));
     }
 
+
+    public abstract class TreePathBuilderAbstract implements TreePathBuilder {
+
+        public abstract void processSelectStatement(SelectStatement select);
+
+        @Override
+        final public void addNode(ASTNode prev) {
+            if (prev.getElementType() == PlSqlElementTypes.SELECT_EXPRESSION) {
+                processSelectStatement((SelectStatement) prev.getPsi());
+            } else if (prev.getElementType() == PlSqlElementTypes.SELECT_EXPRESSION_UNION) {
+                processSelectStatement((SelectStatement) prev.getPsi());
+            }
+        }
+
+        @Override
+        final public void goUp() {
+        }
+
+        @Override
+        final public TreePath complete() {
+            return null;
+        }
+    }
 }

@@ -27,6 +27,7 @@ import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PluginKeys2;
 import com.deepsky.lang.plsql.completion.logic.ASTTreeAdapter;
+import com.deepsky.lang.plsql.completion.lookups.SelectFieldLookupElement;
 import com.deepsky.lang.plsql.completion.processors.C_Context;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generated.CompletionProcessor2;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generator.CallMetaInfo;
@@ -43,6 +44,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class MyCompletionContributor extends GenericCompletionContributor {
@@ -52,7 +55,7 @@ public class MyCompletionContributor extends GenericCompletionContributor {
      */
     @Nullable
     public AutoCompletionDecision handleAutoCompletionPossibility(AutoCompletionContext context) {
-        if(ApplicationManager.getApplication().isUnitTestMode()){
+        if (ApplicationManager.getApplication().isUnitTestMode()) {
             return AutoCompletionDecision.SHOW_LOOKUP;
         }
         return null;
@@ -65,7 +68,7 @@ public class MyCompletionContributor extends GenericCompletionContributor {
      * invoking {@link #extend(CompletionType, com.intellij.patterns.ElementPattern, CompletionProvider)} from you contributor constructor,
      * matches the desired completion type and {@link com.intellij.patterns.ElementPattern} with actual ones, and, depending on it, invokes those
      * completion providers.<p>
-     *
+     * <p/>
      * If you want to implement this functionality directly by overriding this method, the following is for you.
      * Always check that parameters match your situation, and that completion type ({@link CompletionParameters#getCompletionType()}
      * is of your favourite kind. This method is run outside of read action, so you have to manage this manually
@@ -90,33 +93,36 @@ public class MyCompletionContributor extends GenericCompletionContributor {
         if (proc.process()) {
             // Great! Path found
             TreePathContext context = proc.getContext();
-            for(int i =0; i<context.options(); i++){
+
+            final Set<LookupElement> lookupElementList = new HashSet<LookupElement>();
+            final String lookupStr = stripText(StringUtils.discloseDoubleQuotes(nodeToComplete.getText()));
+            final VariantsProvider provider = chooseSearchDomain((PlSqlFile) nodeToComplete.getPsi().getContainingFile());
+
+            for (int i = 0; i < context.options(); i++) {
                 CallMetaInfo metaInfo = context.getDesc(i).getMeta();
                 System.out.println("Path: " + context.getDesc(i).getTreePath());
                 System.out.println("Method: " + metaInfo.getMethodName() + " Class: " + metaInfo.getClassName());
-
-                final String lookupStr = stripText(StringUtils.discloseDoubleQuotes(nodeToComplete.getText()));
-                final VariantsProvider provider = chooseSearchDomain((PlSqlFile) nodeToComplete.getPsi().getContainingFile());
 
                 CompletionCaller caller = null;
                 try {
                     caller = buildInvoker(metaInfo);
                     C_Context cContext = new C_Context() {
                         @Override
-                        public String getLookup() {return lookupStr;}
+                        public String getLookup() {
+                            return lookupStr;
+                        }
 
                         @Override
-                        public CompletionResultSet getResultSet() {return result;}
-
-                        @Override
-                        public VariantsProvider getProvider() {return provider;}
+                        public VariantsProvider getProvider() {
+                            return provider;
+                        }
 
                         @Override
                         public void addElement(@NotNull LookupElement element) {
-                            result.withPrefixMatcher(lookupStr).addElement(element);
+                            lookupElementList.add(element);
                         }
                     };
-                                      //    void print(ASTNode parent, int indent) {
+//    void print(ASTNode parent, int indent) {
 //        System.out.println(putIndent(indent) + parent.getElementType());
 //        ASTNode cur = parent.getFirstChildNode();
 //        while (cur != null) {
@@ -136,15 +142,10 @@ public class MyCompletionContributor extends GenericCompletionContributor {
 //        return b.toString();
 //    }
 
-
-
                     Object[] args = new Object[1 + context.getDesc(i).getHandlerParameters().length];
                     System.arraycopy(context.getDesc(i).getHandlerParameters(), 0, args, 1, context.getDesc(i).getHandlerParameters().length);
                     args[0] = cContext;
                     caller.call(args);
-
-                    super.fillCompletionVariants(parameters, result);
-
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 } catch (NoSuchMethodException e) {
@@ -155,8 +156,31 @@ public class MyCompletionContributor extends GenericCompletionContributor {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
             }
-        }
 
+            // Finalize SelectFieldLookupElement elements
+            LookupElement[] elements = lookupElementList.toArray(new LookupElement[lookupElementList.size()]);
+            for (int i2 = 0; i2 < elements.length; i2++) {
+                SelectFieldLookupElement selectField = null;
+                if (elements[i2] instanceof SelectFieldLookupElement) {
+                    selectField = (SelectFieldLookupElement) elements[i2];
+                }
+                for (int j = i2 + 1; j < elements.length; j++) {
+                    if (selectField != null && elements[j] instanceof SelectFieldLookupElement) {
+                        String m = selectField.getSuggestedName();
+                        String n2 = ((SelectFieldLookupElement) elements[j]).getSuggestedName();
+                        if (m.equalsIgnoreCase(n2)) {
+                            selectField.getIt().setFullQualifiedColumn(true);
+                            ((SelectFieldLookupElement) elements[j]).getIt().setFullQualifiedColumn(true);
+                        }
+                    }
+                }
+
+                result.withPrefixMatcher(lookupStr).addElement(elements[i2]);
+            }
+
+            // Feed parent with lookup elements
+            super.fillCompletionVariants(parameters, result);
+        }
     }
 
 
@@ -174,7 +198,7 @@ public class MyCompletionContributor extends GenericCompletionContributor {
     }
 
 
-    class CompletionCaller {
+    private class CompletionCaller {
 
         Object targetObject;
         Method handler;
@@ -207,7 +231,7 @@ public class MyCompletionContributor extends GenericCompletionContributor {
 
 
     public static String stripText(String text) {
-        if(text == null){
+        if (text == null) {
             return null;
         }
         int idx = text.indexOf(Constants.COMPL_IDENTIFIER); //IntellijIdeaRulezzz);

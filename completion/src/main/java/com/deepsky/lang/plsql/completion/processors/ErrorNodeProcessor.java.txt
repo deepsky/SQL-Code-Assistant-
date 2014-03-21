@@ -158,7 +158,7 @@ public class ErrorNodeProcessor extends CompletionBase {
 
     // select asd, t from a order by c1 <caret>
     // select pop from tab1 group by pop <caret>
-    @SyntaxTreePath("/1$SelectStatement ..2#C_MARKER")
+    @SyntaxTreePath("/1$SelectStatement 2#C_MARKER")
     public void process$SelectAppender(C_Context ctx, SelectStatement select, ASTNode marker) {
         ASTNode last = select.getNode().getLastChildNode();
         ASTNode next = PsiUtil.nextVisibleSibling(marker);
@@ -177,10 +177,23 @@ public class ErrorNodeProcessor extends CompletionBase {
             FromClause from = (FromClause) last.getPsi();
             GenericTable[] tables = from.getTableList();
             String tableAlias = tables[tables.length - 1].getAlias();
-                ctx.addElement(SelectLookupElement.createInnerJoin(SelectLookupElement.NO_PREFIX, false));
-                ctx.addElement(SelectLookupElement.createLeftJoin(SelectLookupElement.NO_PREFIX, false));
-                ctx.addElement(SelectLookupElement.createRightJoin(SelectLookupElement.NO_PREFIX, false));
-                ctx.addElement(SelectLookupElement.createFullJoin(SelectLookupElement.NO_PREFIX, false));
+//            if (tableAlias == null) {
+                ctx.addElement(SelectLookupElement.createInnerJoin(SelectLookupElement.NO_PREFIX, !isSemiLast));
+                ctx.addElement(SelectLookupElement.createLeftJoin(SelectLookupElement.NO_PREFIX, !isSemiLast));
+                ctx.addElement(SelectLookupElement.createRightJoin(SelectLookupElement.NO_PREFIX, !isSemiLast));
+                ctx.addElement(SelectLookupElement.createFullJoin(SelectLookupElement.NO_PREFIX, !isSemiLast));
+//            } else if (tableAlias.equalsIgnoreCase("full")) {
+//                ctx.addElement(SelectLookupElement.createFullJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//                ctx.addElement(SelectLookupElement.createFullOuterJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//            } else if (tableAlias.equalsIgnoreCase("inner")) {
+//                ctx.addElement(SelectLookupElement.createInnerJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//            } else if (tableAlias.equalsIgnoreCase("left")) {
+//                ctx.addElement(SelectLookupElement.createLeftJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//                ctx.addElement(SelectLookupElement.createLeftOuterJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//            } else if (tableAlias.equalsIgnoreCase("right")) {
+//                ctx.addElement(SelectLookupElement.createRightJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//                ctx.addElement(SelectLookupElement.createRightOuterJoin(SelectLookupElement.PREFIX, !isSemiLast));
+//            }
 
         } else if (last.getElementType() == PlSqlElementTypes.WHERE_CONDITION) {
             // select * from ... where...
@@ -299,7 +312,7 @@ public class ErrorNodeProcessor extends CompletionBase {
         String tableName = StringUtils.discloseDoubleQuotes(tableRef.getText());
         variants.addAll(provider.collectColumnNames(tableName, ctx.getLookup()));
         for (LookupElement elem : variants) {
-            ctx.addElement(elem);
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
         }
     }
 
@@ -318,13 +331,13 @@ public class ErrorNodeProcessor extends CompletionBase {
             if (prev != null && prev.getElementType() == PlSqlTokenTypes.KEYWORD_SET) {
                 if (last.getChildren(null).length == 1) {
                     if (last.getChildren(null)[0].getElementType() == PlSqlTokenTypes.IDENTIFIER) {
-                        ctx.addElement(KeywordLookupElement.create("="));
+                        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("="));
                     }
                 }
             }
         } else {
             completeStart(ctx);
-            ctx.addElement(KeywordLookupElement.create("where"));
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("where"));
         }
     }
 
@@ -391,7 +404,7 @@ public class ErrorNodeProcessor extends CompletionBase {
     // INSERT related
     @SyntaxTreePath("/#INSERT #C_MARKER")
     public void process$InsertInto(C_Context ctx) {
-        ctx.addElement(KeywordLookupElement.create("into"));
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("into"));
     }
 
     // INSERT related
@@ -409,7 +422,7 @@ public class ErrorNodeProcessor extends CompletionBase {
     // insert into tab <caret>
     @SyntaxTreePath("/#INSERT #INTO 1$TableAlias/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
     public void process$InsertIntoTab3(C_Context ctx, TableAlias tableAlias) {
-        ctx.addElement(
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(
                 InsertLookupElement.createInsertIntoTab(ctx.getProvider(), tableAlias.getTableName()));
     }
 
@@ -437,13 +450,13 @@ public class ErrorNodeProcessor extends CompletionBase {
         variants.addAll(provider.takeCollectedLookups());
 
         for (LookupElement elem : variants) {
-            ctx.addElement(elem);
+            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
         }
     }
 
     @SyntaxTreePath("/#INSERT #INTO 1$TableAlias 2$ColumnSpecList #C_MARKER")
     public void process$InsertValues(C_Context ctx, TableAlias ta, ColumnSpecList list) {
-        ctx.addElement(InsertLookupElement.createInsertFromSelect(ta.getTableName(), list));
+        ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(InsertLookupElement.createInsertFromSelect(ta.getTableName(), list));
         ctx.addElement(KeywordLookupElement.create("values", true, new InsertHandler<LookupElement>() {
             @Override
             public void handleInsert(InsertionContext context, LookupElement item) {

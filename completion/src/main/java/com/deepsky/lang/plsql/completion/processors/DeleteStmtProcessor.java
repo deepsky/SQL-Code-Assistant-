@@ -82,7 +82,7 @@ public class DeleteStmtProcessor extends CompletionBase {
         variants.addAll(provider.takeCollectedLookups());
 
         for (LookupElement elem : variants) {
-            ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(elem);
+            ctx.addElement(elem);
         }
     }
 

@@ -1055,7 +1055,7 @@ public class VariantsProviderImpl implements VariantsProvider {
                             if (t instanceof TableAlias) {
                                 ch.tableFound(((TableAlias) t).getTableName(), _tAlias);
                             } else if (t instanceof FromSubquery) {
-                                processColumnsForSubquery(((FromSubquery) t).getSubquery(), ((FromSubquery) t).getAlias(), ch);
+                                processColumnsForSubquery(((FromSubquery) t).getSubquery(), t.getAlias(), ch);
                             }
                         }
                     } else if (t instanceof TableAlias && ((TableAlias) t).getTableName().equalsIgnoreCase(tableAlias)) {
@@ -1087,7 +1087,7 @@ public class VariantsProviderImpl implements VariantsProvider {
             addWithMarking(columns, list);
             for (ColumnElement it : columns) {
                 if (lookupStr == null || it.getName().startsWith(lookupStr.toLowerCase())) {
-                    columns1.add(SelectFieldLookupElement.create(tab.getAlias(), it, forceUsingTableAlias));
+                    columns1.add(SelectFieldLookupElement.create(tab.getAlias(), it));
                 }
             }
         }

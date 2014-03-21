@@ -172,8 +172,8 @@ public class GenericCompletionTest extends BaseCompletionTest {
     public void test_select_7() throws Exception {
         configureByText("select *\n" +
                 "    from a101, (select * from tab1) a\n" +
-                " <caret>; )");
-        assertLookup(myItems, "where", "order", "group");
+                " <caret>;");
+        assertLookup(myItems, "where", "order", "group", "full join", "inner join", "left join", "right join");
     }
 
     public void test_select_71() throws Exception {

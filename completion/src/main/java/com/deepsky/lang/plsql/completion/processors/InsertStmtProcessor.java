@@ -72,11 +72,11 @@ public class InsertStmtProcessor extends CompletionBase {
             // Marker is in the middle of the statement
             // Check whether WHERE clause exists
             if(select.getWhereCondition() == null)
-                ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(KeywordLookupElement.create("where"));
+                ctx.addElement(KeywordLookupElement.create("where"));
             if (select.getGroupByClause() == null)
-                ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(GroupByLookupElement.create());
+                ctx.addElement(GroupByLookupElement.create());
             if (select.getOrderByClause() == null)
-                ctx.getResultSet().withPrefixMatcher(ctx.getLookup()).addElement(OrderByLookupElement.create());
+                ctx.addElement(OrderByLookupElement.create());
         }
     }
 

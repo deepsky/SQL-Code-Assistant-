@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface C_Context {
     String getLookup();
-    CompletionResultSet getResultSet();
+//    CompletionResultSet getResultSet();
 
     VariantsProvider getProvider();
     void addElement(@NotNull LookupElement element);
