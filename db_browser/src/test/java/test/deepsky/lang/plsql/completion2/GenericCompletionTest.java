@@ -116,22 +116,22 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_select_21() throws Exception {
         configureByText("create table tab (a integer, b varchar2(1)); select * from tab where a = 1 or <caret>");
-        assertLookup(myItems, "a", "b", "exists");
+        assertLookup(myItems, "a", "b", "exists", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
     }
 
     public void test_select_22() throws Exception {
         configureByText("create table tab (a integer, b varchar2(1)); select * from tab where (a = 1) or <caret>");
-        assertLookup(myItems, "a", "b", "exists");
+        assertLookup(myItems, "a", "b", "exists", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
     }
 
     public void test_select_23() throws Exception {
         configureByText("create table tab (a integer, b varchar2(1)); select * from tab where (a = 1) or <caret>");
-        assertLookup(myItems, "a", "b", "exists");
+        assertLookup(myItems, "a", "b", "exists", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
     }
 
     public void test_select_24() throws Exception {
         configureByText("create table tab (a integer, b varchar2(1)); select * from tab where b like '%2' or <caret>");
-        assertLookup(myItems, "a", "b", "exists");
+        assertLookup(myItems, "a", "b", "exists", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
     }
 
     public void test_select_3() throws Exception {

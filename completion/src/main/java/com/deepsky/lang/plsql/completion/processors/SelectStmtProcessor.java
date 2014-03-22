@@ -161,10 +161,10 @@ public class SelectStmtProcessor extends CompletionBase {
 //        collectColumns(ctx, select, nameRef);
 //    }
 
-    @SyntaxTreePath("/..#WHERE_CONDITION//..#LIKE_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectWhere3(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
-        collectColumns(ctx, select, nameRef);
-    }
+//    @SyntaxTreePath("/..#WHERE_CONDITION//..#LIKE_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+//    public void process$SelectWhere3(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
+//        collectColumns(ctx, select, nameRef);
+//    }
 
 
 /*

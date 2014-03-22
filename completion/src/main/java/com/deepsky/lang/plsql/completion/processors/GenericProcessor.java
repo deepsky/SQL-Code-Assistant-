@@ -190,23 +190,51 @@ public class GenericProcessor extends CompletionBase {
     }
 
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#LOGICAL_EXPR/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectLogicVarRef(final C_Context ctx, ASTNode where, ASTNode expr, final NameFragmentRef nameRef) {
+    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..2$Condition/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
+    public void process$SelectLogicVarRef(final C_Context ctx, ASTNode where, Condition condition, ASTNode expr, NameFragmentRef nameRef) {
         ASTNode parent = where.getTreeParent();
         if(parent.getPsi() instanceof SelectStatement){
-            if(expr.getChildren(null).length == 1){
+            if(expr.getChildren(null).length == 1 && condition instanceof LogicalExpression){
                 ctx.addElement(KeywordLookupElement.create("exists"));
             }
+
+            if(nameRef.getPrevFragment() == null){
+                // Possible case: column1 < sysdate/systimestamp/dbtimezone/current_timestamp
+                ctx.addElement(KeywordLookupElement.create("sysdate"));
+                ctx.addElement(KeywordLookupElement.create("systimestamp"));
+                ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+                ctx.addElement(KeywordLookupElement.create("current_timestamp"));
+            }
+
             SelectStatement select = (SelectStatement) parent.getPsi();
             collectColumns(ctx, select, nameRef);
         }
     }
 
+//    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..$Condition/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+//    public void process$SelectWhere2(final C_Context ctx, ASTNode where, ASTNode expr, final NameFragmentRef nameRef) {
+//        ASTNode parent = where.getTreeParent();
+//        if(parent.getPsi() instanceof SelectStatement){
+//            if(nameRef.getPrevFragment() == null){
+//                // Possible case: column1 < sysdate/systimestamp/dbtimezone/current_timestamp
+//                ctx.addElement(KeywordLookupElement.create("sysdate"));
+//                ctx.addElement(KeywordLookupElement.create("systimestamp"));
+//                ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+//                ctx.addElement(KeywordLookupElement.create("current_timestamp"));
+//            }
+//
+//            SelectStatement select = (SelectStatement) parent.getPsi();
+//            collectColumns(ctx, select, nameRef);
+//        }
+//    }
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#LOGICAL_EXPR/..#RELATION_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectLogicRelationVarRef(final C_Context ctx, ASTNode where, ASTNode expr, final NameFragmentRef nameRef) {
+    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..$Condition/..2$Condition/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
+    public void process$SelectLogicRelationVarRef(final C_Context ctx, ASTNode where, Condition condition, ASTNode expr, final NameFragmentRef nameRef) {
         ASTNode parent = where.getTreeParent();
         if(parent.getPsi() instanceof SelectStatement){
+            if(expr.getChildren(null).length == 1 && condition instanceof LogicalExpression){
+                ctx.addElement(KeywordLookupElement.create("exists"));
+            }
             if(nameRef.getPrevFragment() == null){
                 // Possible case: column1 < sysdate/systimestamp/dbtimezone/current_timestamp
                 ctx.addElement(KeywordLookupElement.create("sysdate"));
@@ -221,10 +249,13 @@ public class GenericProcessor extends CompletionBase {
     }
 
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#LOGICAL_EXPR/..#LOGICAL_EXPR/..#RELATION_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectLogic2RelationVarRef(final C_Context ctx, ASTNode where, ASTNode expr, final NameFragmentRef nameRef) {
+    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..$Condition/..$Condition/..2$Condition/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
+    public void process$SelectLogic2RelationVarRef(final C_Context ctx, ASTNode where, Condition condition, ASTNode expr, final NameFragmentRef nameRef) {
         ASTNode parent = where.getTreeParent();
         if(parent.getPsi() instanceof SelectStatement){
+            if(expr.getChildren(null).length == 1 && condition instanceof LogicalExpression){
+                ctx.addElement(KeywordLookupElement.create("exists"));
+            }
             if(nameRef.getPrevFragment() == null){
                 // Possible case: column1 < sysdate/systimestamp/dbtimezone/current_timestamp
                 ctx.addElement(KeywordLookupElement.create("sysdate"));
@@ -237,22 +268,6 @@ public class GenericProcessor extends CompletionBase {
         }
     }
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#RELATION_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectWhere2(final C_Context ctx, ASTNode where, ASTNode expr, final NameFragmentRef nameRef) {
-        ASTNode parent = where.getTreeParent();
-        if(parent.getPsi() instanceof SelectStatement){
-           if(nameRef.getPrevFragment() == null){
-                // Possible case: column1 < sysdate/systimestamp/dbtimezone/current_timestamp
-                ctx.addElement(KeywordLookupElement.create("sysdate"));
-                ctx.addElement(KeywordLookupElement.create("systimestamp"));
-                ctx.addElement(KeywordLookupElement.create("dbtimezone"));
-                ctx.addElement(KeywordLookupElement.create("current_timestamp"));
-            }
-
-           SelectStatement select = (SelectStatement) parent.getPsi();
-           collectColumns(ctx, select, nameRef);
-        }
-    }
 
     @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#EXISTS_EXPR/..#SUBQUERY/..$SelectStatement/..#WHERE_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$SelectExistsExpr(C_Context ctx, ASTNode where, NameFragmentRef nameRef) {
@@ -272,7 +287,7 @@ public class GenericProcessor extends CompletionBase {
     }
 
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#EXISTS_EXPR/..#SUBQUERY/..$SelectStatement/..#WHERE_CONDITION/..#RELATION_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#EXISTS_EXPR/..#SUBQUERY/..$SelectStatement/..#WHERE_CONDITION/..$Condition/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$SelectExistsExpr2(C_Context ctx, ASTNode where, NameFragmentRef nameRef) {
         ASTNode parent = where.getTreeParent();
         if(parent.getPsi() instanceof SelectStatement){

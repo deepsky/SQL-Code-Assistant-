@@ -152,7 +152,7 @@ public class SyntaxErrorResolverTest extends AbstractCompletionTest { //PlSqlPar
     }
 
 
-    public void testUpdate105() throws Exception {
+    public void _testUpdate105() throws Exception {
         String text = "select * from (select 1, 8-4 from <caret>)";
         parseScript12(text);
     }

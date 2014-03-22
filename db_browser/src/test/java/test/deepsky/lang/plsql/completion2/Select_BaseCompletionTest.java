@@ -68,7 +68,7 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$where5() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "text");
+        assertSelectFieldLookup(myItems, "id", "text", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
     }
 
     public void testSelect$from_table() throws Exception {
@@ -429,6 +429,10 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
         assertSelectFieldLookup(myItems, "comment", "drop", "full join", "group", "inner join", "left join", "right join", "order");
     }
 
+    public void testSelect$select_timestamp1() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "sysdate", "systimestamp");
+    }
 }
 
 
