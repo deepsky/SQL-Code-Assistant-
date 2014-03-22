@@ -1094,9 +1094,9 @@ public class VariantsProviderImpl implements VariantsProvider {
     }
 
 
-    public void collectColumnVariants(SelectStatement select, final String alias) {
+    public void collectColumnVariants(SelectStatement select, final String tableCorrelationName) {
         final List<ColumnElement> columns = new ArrayList<ColumnElement>();
-        iterateTablesAndSubqueries(select, alias, new ColumnHandler() {
+        iterateTablesAndSubqueries(select, tableCorrelationName, new ColumnHandler() {
             public void subqueryColumnFound(String columnRef, boolean isColumnAlias, String subqueryAlias) {
                 List<ColumnElement> list = new ArrayList<ColumnElement>();
                 list.add(new ColumnElement(columnRef, subqueryAlias, null, null));
@@ -1114,11 +1114,41 @@ public class VariantsProviderImpl implements VariantsProvider {
 
         for (int i = 0; i < columns.size(); i++) {
             ColumnElement it = columns.get(i);
-            SelectFieldLookupElement e1 = (SelectFieldLookupElement) SelectFieldLookupElement.create(alias, it);
-            columns1.add(e1);
+            columns1.add(SelectFieldLookupElement.create(tableCorrelationName, it));
         }
     }
 
+
+    public List<LookupElement>  collectCorrelationOrTableNames(SelectStatement select, String lookup) {
+        final List<LookupElement> lookupElements = new ArrayList<LookupElement>();
+        if(lookup == null || lookup.length() == 0){
+            return lookupElements;
+        }
+        for (final GenericTable t : select.getFromClause().getTableList()) {
+            try {
+                final String correlationName = t.getAlias();
+                if(correlationName != null && correlationName.toLowerCase().startsWith(lookup.toLowerCase())){
+                    if (t instanceof TableAlias) {
+                        final String tableName = ((TableAlias)t).getTableName();
+                        lookupElements.add(TableLookupElement.createCorrelationName(tableName, correlationName, Icons.TABLE));
+                    } else {
+                        // FromSubquery case
+                        lookupElements.add(TableLookupElement.createSubqueryCorrelationName(correlationName));
+                    }
+                } else if (t instanceof TableAlias) {
+                    final String tableName = ((TableAlias)t).getTableName();
+                    if(tableName.toLowerCase().startsWith(lookup.toLowerCase())){
+                        lookupElements.add(TableLookupElement.createCorrelationName2(tableName, Icons.TABLE));
+                    }
+
+                }
+            } catch (SyntaxTreeCorruptedException ignored) {
+                // do nothing
+            }
+        }
+
+        return lookupElements;
+    }
 
     public List<LookupElement> collectVariableVariants(PlSqlBlock context, String prefix) {
         return null; // TODO -- implement me

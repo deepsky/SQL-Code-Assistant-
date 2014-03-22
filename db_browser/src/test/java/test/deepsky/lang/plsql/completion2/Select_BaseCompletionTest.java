@@ -128,6 +128,11 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
         assertSelectFieldLookup(myItems, "c.parent_id", "c.reflect_id", "c.text");
     }
 
+    public void testSelect$exists4_2() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "p.id", "p.text");
+    }
+
     public void testSelect$complex_relation() throws Exception {
         configureByFile(getFilePath());
         assertSelectFieldLookup(myItems, "p.id", "text", "parent_id", "p.text1");
@@ -432,6 +437,21 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
     public void testSelect$select_timestamp1() throws Exception {
         configureByFile(getFilePath());
         assertSelectFieldLookup(myItems, "sysdate", "systimestamp");
+    }
+
+    public void testSelect$tab_correlation1() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "left", "lright");
+    }
+
+    public void testSelect$tab_correlation2() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "lefttable", "lright");
+    }
+
+    public void testSelect$tab_correlation3() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "jjon");
     }
 }
 

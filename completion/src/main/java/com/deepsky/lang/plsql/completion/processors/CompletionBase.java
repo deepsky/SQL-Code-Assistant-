@@ -113,12 +113,17 @@ public abstract class CompletionBase {
         final NameFragmentRef prev = nameRef != null ? nameRef.getPrevFragment() : null;
         final String prevText = prev != null ? prev.getText() : null;
 
+        // Collect column names
         provider.collectColumnVariants(select, prevText);
-
         final List<LookupElement> variants = new ArrayList<LookupElement>();
         variants.addAll(provider.takeCollectedLookups());
 
         for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+
+        // Collect table names/table correlation names as a prefix of column names
+        for (LookupElement elem : provider.collectCorrelationOrTableNames(select, ctx.getLookup())){
             ctx.addElement(elem);
         }
     }

@@ -92,6 +92,7 @@ public interface VariantsProvider {
 
     // New approach
     void collectColumnVariants(SelectStatement select, final String alias);
+    List<LookupElement>  collectCorrelationOrTableNames(SelectStatement select, String lookup);
     void collectColumnNames(TableAlias tableName, String lookUpStr, boolean forceUsingTableAlias);
 
     List<? extends LookupElement> takeCollectedLookups();
