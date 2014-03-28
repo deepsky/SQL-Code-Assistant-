@@ -201,17 +201,6 @@ public class SelectStmtProcessor extends CompletionBase {
         collectColumns(ctx, select, nameRef);
     }
 
-    // CASE WHEN EXPR
-    @SyntaxTreePath("/ ..#EXPR_COLUMN/#CASE_EXPRESSION_SRCH/..#RELATION_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$CaseSearchExpr(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
-        collectColumns(ctx, select, nameRef);
-    }
-
-    @SyntaxTreePath("/ ..#EXPR_COLUMN/#CASE_EXPRESSION_SRCH/..#RELATION_CONDITION//..#FUNCTION_CALL/..#CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$CaseSearchExprFuncCall(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
-        collectColumns(ctx, select, nameRef);
-    }
-
     // ANSI FROM STATEMENT
     @SyntaxTreePath("/ ..#TABLE_REFERENCE_LIST_FROM/..#ANSI_JOIN_TAB_SPEC/..#ANSI_JOIN_TAB_CONDITION//..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$AnsiFrom(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {

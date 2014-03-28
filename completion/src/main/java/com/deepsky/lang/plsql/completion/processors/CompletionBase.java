@@ -29,12 +29,14 @@ import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.logic.TreePathBuilder;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.ddl.AlterTableLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.UpdateLookupElement;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -162,6 +164,14 @@ public abstract class CompletionBase {
         }
     }
 
+    protected void collectColumns(C_Context ctx, String tableName) {
+        VariantsProvider provider = ctx.getProvider();
+        for (LookupElement elem : provider.collectColumnNames(tableName, ctx.getLookup())) {
+            ctx.addElement(elem);
+        }
+    }
+
+
     protected void collectTableNames(C_Context ctx) {
         VariantsProvider provider = ctx.getProvider();
         final List<LookupElement> variants = new ArrayList<LookupElement>();
@@ -248,4 +258,17 @@ public abstract class CompletionBase {
             return null;
         }
     }
+
+    protected void alterTableRenameConstraint(final C_Context ctx, TableRef tableRef) {
+        VariantsProvider provider = ctx.getProvider();
+        String tableName = tableRef.getTableName();
+
+        provider.collectTableConstraints(tableName, new VariantsProvider.TableConstraintProcessor() {
+            @Override
+            public void process(String constraintName, int constraintType) {
+                ctx.addElement(AlterTableLookupElement.createRenameConstraintName(constraintName, constraintType == VariantsProvider.PK_CONSTRAINT));
+            }
+        });
+    }
+
 }

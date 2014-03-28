@@ -474,8 +474,8 @@ public class SyntaxTreePathParserTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. 1#DELETE_COMMAND / #DELETE #FROM 2$TableAlias #WHERE_CONDITION // .. #VAR_REF / .. 3$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
-        assertEquals(3, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("/ .. 1#DELETE_COMMAND / #DELETE #FROM 2$TableAlias #WHERE_CONDITION / .. 3#VAR_REF / .. 4$NameFragmentRef / #C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(4, context.getDesc(0).getHandlerParameters().length);
         assertEquals("com.deepsky.lang.plsql.completion.processors.DeleteStmtProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$DeleteWhere", context.getDesc(0).getMeta().getMethodName());
     }

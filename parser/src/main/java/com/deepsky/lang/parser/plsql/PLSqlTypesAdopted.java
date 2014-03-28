@@ -23,8 +23,8 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType OBJECT_NAME = new PlSqlElementType("OBJECT_NAME", PLSqlTokenTypes.OBJECT_NAME);
 	PlSqlElementType STRING_LITERAL = new PlSqlElementType("STRING_LITERAL", PLSqlTokenTypes.STRING_LITERAL);
 	PlSqlElementType EXCEPTION_SECTION = new PlSqlElementType("EXCEPTION_SECTION", PLSqlTokenTypes.EXCEPTION_SECTION);
-	PlSqlElementType DROP_SEQUENCE = new PlSqlElementType("DROP_SEQUENCE", PLSqlTokenTypes.DROP_SEQUENCE);
 	PlSqlElementType FORALL_LOOP_SPEC = new PlSqlElementType("FORALL_LOOP_SPEC", PLSqlTokenTypes.FORALL_LOOP_SPEC);
+	PlSqlElementType DROP_SEQUENCE = new PlSqlElementType("DROP_SEQUENCE", PLSqlTokenTypes.DROP_SEQUENCE);
 	PlSqlElementType SYSTIMESTAMP_CONST = new PlSqlElementType("SYSTIMESTAMP_CONST", PLSqlTokenTypes.SYSTIMESTAMP_CONST);
 	PlSqlElementType MEMBER_OF = new PlSqlElementType("MEMBER_OF", PLSqlTokenTypes.MEMBER_OF);
 	PlSqlElementType QUERY_PARTITION_CLAUSE = new PlSqlElementType("QUERY_PARTITION_CLAUSE", PLSqlTokenTypes.QUERY_PARTITION_CLAUSE);
@@ -57,9 +57,9 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType SORTED_DEF = new PlSqlElementType("SORTED_DEF", PLSqlTokenTypes.SORTED_DEF);
 	PlSqlElementType VAR_REF = new PlSqlElementType("VAR_REF", PLSqlTokenTypes.VAR_REF);
 	PlSqlElementType CONDITIONAL_COMPILATION = new PlSqlElementType("CONDITIONAL_COMPILATION", PLSqlTokenTypes.CONDITIONAL_COMPILATION);
+	PlSqlElementType CURSOR_LOOP_SPEC = new PlSqlElementType("CURSOR_LOOP_SPEC", PLSqlTokenTypes.CURSOR_LOOP_SPEC);
 	PlSqlElementType CREATE_USER = new PlSqlElementType("CREATE_USER", PLSqlTokenTypes.CREATE_USER);
 	PlSqlElementType DROP_ROLE = new PlSqlElementType("DROP_ROLE", PLSqlTokenTypes.DROP_ROLE);
-	PlSqlElementType CURSOR_LOOP_SPEC = new PlSqlElementType("CURSOR_LOOP_SPEC", PLSqlTokenTypes.CURSOR_LOOP_SPEC);
 	PlSqlElementType EXPR_COLUMN = new PlSqlElementType("EXPR_COLUMN", PLSqlTokenTypes.EXPR_COLUMN);
 	PlSqlElementType TRIGGER_TARGET = new PlSqlElementType("TRIGGER_TARGET", PLSqlTokenTypes.TRIGGER_TARGET);
 	PlSqlElementType RANK_FUNCTION = new PlSqlElementType("RANK_FUNCTION", PLSqlTokenTypes.RANK_FUNCTION);
@@ -112,12 +112,14 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType GOTO_STATEMENT = new PlSqlElementType("GOTO_STATEMENT", PLSqlTokenTypes.GOTO_STATEMENT);
 	PlSqlElementType SPEC_CALL_ARGUMENT_LIST = new PlSqlElementType("SPEC_CALL_ARGUMENT_LIST", PLSqlTokenTypes.SPEC_CALL_ARGUMENT_LIST);
 	PlSqlElementType FK_SPEC = new PlSqlElementType("FK_SPEC", PLSqlTokenTypes.FK_SPEC);
+	PlSqlElementType ALTER_TABLE_RENAME_COL = new PlSqlElementType("ALTER_TABLE_RENAME_COL", PLSqlTokenTypes.ALTER_TABLE_RENAME_COL);
 	PlSqlElementType BIND_VAR = new PlSqlElementType("BIND_VAR", PLSqlTokenTypes.BIND_VAR);
 	PlSqlElementType SUBQUERY_UPDATE_COMMAND = new PlSqlElementType("SUBQUERY_UPDATE_COMMAND", PLSqlTokenTypes.SUBQUERY_UPDATE_COMMAND);
 	PlSqlElementType INSERT_COMMAND = new PlSqlElementType("INSERT_COMMAND", PLSqlTokenTypes.INSERT_COMMAND);
 	PlSqlElementType LOGICAL_EXPR = new PlSqlElementType("LOGICAL_EXPR", PLSqlTokenTypes.LOGICAL_EXPR);
 	PlSqlElementType SQLPLUS_EXEC = new PlSqlElementType("SQLPLUS_EXEC", PLSqlTokenTypes.SQLPLUS_EXEC);
 	PlSqlElementType SUBQUERY = new PlSqlElementType("SUBQUERY", PLSqlTokenTypes.SUBQUERY);
+	PlSqlElementType ALTER_TABLE_DROP_CONSTR = new PlSqlElementType("ALTER_TABLE_DROP_CONSTR", PLSqlTokenTypes.ALTER_TABLE_DROP_CONSTR);
 	PlSqlElementType ALIAS_NAME = new PlSqlElementType("ALIAS_NAME", PLSqlTokenTypes.ALIAS_NAME);
 	PlSqlElementType CREATE_SYNONYM = new PlSqlElementType("CREATE_SYNONYM", PLSqlTokenTypes.CREATE_SYNONYM);
 	PlSqlElementType REJECT_SPEC = new PlSqlElementType("REJECT_SPEC", PLSqlTokenTypes.REJECT_SPEC);
@@ -214,6 +216,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType FIELD_NAME = new PlSqlElementType("FIELD_NAME", PLSqlTokenTypes.FIELD_NAME);
 	PlSqlElementType RECORD_ITEM = new PlSqlElementType("RECORD_ITEM", PLSqlTokenTypes.RECORD_ITEM);
 	PlSqlElementType OWNER_COLUMN_NAME_LIST = new PlSqlElementType("OWNER_COLUMN_NAME_LIST", PLSqlTokenTypes.OWNER_COLUMN_NAME_LIST);
+	PlSqlElementType ALTER_TABLE_DROP_PK = new PlSqlElementType("ALTER_TABLE_DROP_PK", PLSqlTokenTypes.ALTER_TABLE_DROP_PK);
 	PlSqlElementType TABLE_TYPE_REF = new PlSqlElementType("TABLE_TYPE_REF", PLSqlTokenTypes.TABLE_TYPE_REF);
 	PlSqlElementType DELETE_COMMAND = new PlSqlElementType("DELETE_COMMAND", PLSqlTokenTypes.DELETE_COMMAND);
 	PlSqlElementType COLLECTION_METHOD_NAME = new PlSqlElementType("COLLECTION_METHOD_NAME", PLSqlTokenTypes.COLLECTION_METHOD_NAME);
@@ -237,6 +240,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType COMMENT_STMT = new PlSqlElementType("COMMENT_STMT", PLSqlTokenTypes.COMMENT_STMT);
 	PlSqlElementType ALTER_TRIGGER = new PlSqlElementType("ALTER_TRIGGER", PLSqlTokenTypes.ALTER_TRIGGER);
 	PlSqlElementType SQLPLUS_SET = new PlSqlElementType("SQLPLUS_SET", PLSqlTokenTypes.SQLPLUS_SET);
+	PlSqlElementType ALTER_TABLE_DROP_COL = new PlSqlElementType("ALTER_TABLE_DROP_COL", PLSqlTokenTypes.ALTER_TABLE_DROP_COL);
 	PlSqlElementType ALTER_TABLE = new PlSqlElementType("ALTER_TABLE", PLSqlTokenTypes.ALTER_TABLE);
 	PlSqlElementType COLUMN_DEF = new PlSqlElementType("COLUMN_DEF", PLSqlTokenTypes.COLUMN_DEF);
 	PlSqlElementType COLUMN_NAME_LIST = new PlSqlElementType("COLUMN_NAME_LIST", PLSqlTokenTypes.COLUMN_NAME_LIST);
@@ -253,6 +257,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType INTO_CLAUSE = new PlSqlElementType("INTO_CLAUSE", PLSqlTokenTypes.INTO_CLAUSE);
 	PlSqlElementType INTERVAL_CONST = new PlSqlElementType("INTERVAL_CONST", PLSqlTokenTypes.INTERVAL_CONST);
 	PlSqlElementType ROLLBACK_STATEMENT = new PlSqlElementType("ROLLBACK_STATEMENT", PLSqlTokenTypes.ROLLBACK_STATEMENT);
+	PlSqlElementType ALTER_TABLE_RENAME_CONSTR = new PlSqlElementType("ALTER_TABLE_RENAME_CONSTR", PLSqlTokenTypes.ALTER_TABLE_RENAME_CONSTR);
 	PlSqlElementType STORAGE_PARAM = new PlSqlElementType("STORAGE_PARAM", PLSqlTokenTypes.STORAGE_PARAM);
 	PlSqlElementType RELATION_OP = new PlSqlElementType("RELATION_OP", PLSqlTokenTypes.RELATION_OP);
 	PlSqlElementType CURSOR_NAME = new PlSqlElementType("CURSOR_NAME", PLSqlTokenTypes.CURSOR_NAME);

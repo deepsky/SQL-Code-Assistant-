@@ -25,6 +25,7 @@ package com.deepsky.lang.plsql.completion;
 
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PlSqlFile;
+import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.common.PluginKeys2;
 import com.deepsky.lang.plsql.completion.logic.ASTTreeAdapter;
 import com.deepsky.lang.plsql.completion.lookups.SelectFieldLookupElement;
@@ -246,5 +247,25 @@ public class MyCompletionContributor extends GenericCompletionContributor {
             return text;
         }
     }
+
+    void print(ASTNode parent, int indent) {
+        System.out.println(putIndent(indent) + parent.getElementType());
+        ASTNode cur = parent.getFirstChildNode();
+        while (cur != null) {
+            if (cur.getElementType() != PlSqlTokenTypes.WS) {
+                print(cur, indent + 1);
+            }
+            cur = cur.getTreeNext();
+        }
+    }
+
+    String putIndent(int indent) {
+        StringBuilder b = new StringBuilder(indent);
+        for (int i = 0; i < indent * 2; i++) {
+            b.append(' ');
+        }
+        return b.toString();
+    }
+
 
 }

@@ -62,6 +62,16 @@ public class DDL_BaseCompletionTest  extends BaseCompletionTest {
         assertLookup(myItems, "employees", "employees_temp", "emp_audit", "parent");
     }
 
+    public void testCreateTable$complete_type() throws Exception {
+        configureByFile(getFilePath());
+        assertLookup(myItems, "varchar2");
+    }
+
+    public void testCreateTable$complete_type2() throws Exception {
+        configureByFile(getFilePath());
+        assertLookup(myItems, "varchar2");
+    }
+
     // Not applicable
     public void _testRenameTable$renameTable1() throws Exception {
         configureByFile(getFilePath());

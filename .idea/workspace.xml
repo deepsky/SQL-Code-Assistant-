@@ -2,66 +2,80 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="54de04b7-488f-4a63-9926-f47ea7ea238b" name="Default" comment="Fix typo">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/GenericCompletionContributor.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/left_outer_join.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/ddl/AlterIndexLookupElement.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/AlterStmtProcessor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/ddl/AlterTableLookupElement.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/Alter_BaseCompletionTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/ClassUtil.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_start.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table2.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop2.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_column.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_column2.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_constraint.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_constraint2.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_constraint3.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_pk.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_pk2.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_pk3.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_pk4.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_rename.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_rename_column.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_rename_constraint.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/case_when3.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/case_when4.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/case_when5.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/case_when6.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/ddl/createTable/complete_type.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/ddl/createTable/complete_type2.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/select_systimestamp.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/lang/parser/plsql/ANTLRType2AdoptedType.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/lang/parser/plsql/ANTLRType2AdoptedType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/logic/ASTTreeAdapter.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/logic/ASTTreeAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generator/CodeGeneratorVisitor.java" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generator/CodeGeneratorVisitor.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/CompletionBase.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/CompletionBase.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessorBase.java" afterPath="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessorBase.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/database/impl/ConnectionManagerImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/database/impl/ConnectionManagerImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/DDLProcessor.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/DDLProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/dml/DeleteLookupElement.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/dml/DeleteLookupElement.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/DDL_BaseCompletionTest.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/DDL_BaseCompletionTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/DML_BaseCompletionTest.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/DML_BaseCompletionTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/DeleteStmtProcessor.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/DeleteStmtProcessor.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/ErrorNodeProcessor.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/ErrorNodeProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/FromClauseImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/FromClauseImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/GenericCompletionTest.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/GenericCompletionTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/ErrorNodeProcessorTest.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/ErrorNodeProcessorTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/GenericProcessor.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/GenericProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/dml/InsertLookupElement.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/dml/InsertLookupElement.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/InsertStmtProcessor.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/InsertStmtProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/KeywordLookupElement.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/KeywordLookupElement.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/workarounds/LoggerProxy.java" afterPath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/workarounds/LoggerProxy.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/MyCompletionContributor.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/MyCompletionContributor.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlParserAdopted.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlParserAdopted.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/lang/parser/plsql/PLSqlParserAdoptedExt.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/lang/parser/plsql/PLSqlParserAdoptedExt.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSqlTokenTypes.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSqlTokenTypes.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlTokenTypes.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlTokenTypes.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSqlTokenTypes.txt" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/PLSqlTokenTypes.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlTokenTypes.txt" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/adopted/PLSqlTokenTypes.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/lang/parser/plsql/PLSqlTypesAdopted.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/lang/parser/plsql/PLSqlTypesAdopted.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/integration/lexer/generated/PlSqlBaseTokenTypes.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/integration/lexer/generated/PlSqlBaseTokenTypes.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/integration/lexer/generated/PlSqlTokenTypesMapping.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/integration/lexer/generated/PlSqlTokenTypesMapping.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/dml/SelectLookupElement.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/dml/SelectLookupElement.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/SelectStmtProcessor.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/SelectStmtProcessor.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/Select_BaseCompletionTest.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/Select_BaseCompletionTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/SqlCompletionWeigher.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/SqlCompletionWeigher.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/SymbolTable.java" afterPath="$PROJECT_DIR$/parser/src/main/java/com/deepsky/generated/plsql/SymbolTable.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generator/SyntaxTreePathParserTest.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generator/SyntaxTreePathParserTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/dml/UpdateLookupElement.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/dml/UpdateLookupElement.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/ansi_select0.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/ansi_select0.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/ansi_select1.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/ansi_select1.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/ansi_select2.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/ansi_select2.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/ansi_select3.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/ansi_select3.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/ansi_select4.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/ansi_select4.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/VariantsProvider.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/VariantsProvider.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/VariantsProviderImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/VariantsProviderImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/completion.iml" afterPath="$PROJECT_DIR$/completion/completion.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/inner_join.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/inner_join.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/inner_join2.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/inner_join2.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/inner_join3.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/inner_join3.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/inner_join4.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/inner_join4.sql" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/grammars/plsql_parser.g" afterPath="$PROJECT_DIR$/parser/src/main/grammars/plsql_parser.g" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parser/src/main/grammars/plsql_parser_ex.g" afterPath="$PROJECT_DIR$/parser/src/main/grammars/plsql_parser_ex.g" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" afterPath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/pom.xml" afterPath="$PROJECT_DIR$/db_browser/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_area/IDEA11_SQL2/.idea/workspace.xml" afterPath="$PROJECT_DIR$/test_area/IDEA11_SQL2/.idea/workspace.xml" />
     </list>
     <ignored path="sql-assistant.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394980592852" ignored="false" />
+    <file path="/Dummy.txt" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395903773965" ignored="false" />
     <file path="/README" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1387828340684" ignored="false" />
-    <file path="/a.dummy" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394959061724" ignored="false" />
+    <file path="/a.dummy" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395902410350" ignored="false" />
     <file path="/pom.xml" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391496014898" ignored="false" />
     <file path="$USER_HOME$/sqlcode_assistant/sql-assistant-linux-129.713/build.xml" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1387830013351" ignored="false" />
     <file path="$USER_HOME$/sqlcode_assistant/sql-assistant-linux-129.713/.idea/workspace.xml" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1387830152587" ignored="false" />
     <file path="/.gitignore" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1387830138610" ignored="false" />
-    <file path="/fragment.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394950099572" ignored="false" />
+    <file path="/fragment.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395903773965" ignored="false" />
     <file path="/LocalFSChangeTracker.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1388000147892" ignored="false" />
-    <file path="/plugin.xml" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394690465906" ignored="false" />
+    <file path="/plugin.xml" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395988155440" ignored="false" />
     <file path="/ConnectionPersistStorage.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1388001288925" ignored="false" />
     <file path="/ConnectionPersistStorageTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1388002147216" ignored="false" />
     <file path="/SyntaxHighlightAnnotator.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1388085077574" ignored="false" />
@@ -69,18 +83,18 @@
     <file path="/PlSqlElementVisitor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1388084637870" ignored="false" />
     <file path="/AbstractHighlightingVisitor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1388085854370" ignored="false" />
     <file path="/rr.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1388086244296" ignored="false" />
-    <file path="/build.xml" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1393570025930" ignored="false" />
+    <file path="/build.xml" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395863063587" ignored="false" />
     <file path="/SyntaxTreePathProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391025271776" ignored="false" />
     <file path="/CodeGenerator.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392405771348" ignored="false" />
     <file path="/ComplContributor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1389897692599" ignored="false" />
-    <file path="/SyntaxTreePathParserTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394048637811" ignored="false" />
-    <file path="/MyCompletionContributor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394961899103" ignored="false" />
-    <file path="/SelectStmtProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394691465321" ignored="false" />
+    <file path="/SyntaxTreePathParserTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395499448831" ignored="false" />
+    <file path="/MyCompletionContributor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395772569558" ignored="false" />
+    <file path="/SelectStmtProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395171615794" ignored="false" />
     <file path="/DDLProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394960029272" ignored="false" />
-    <file path="/GenericProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394903724181" ignored="false" />
-    <file path="/CodeGeneratorVisitor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392405968053" ignored="false" />
+    <file path="/GenericProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395727970209" ignored="false" />
+    <file path="/CodeGeneratorVisitor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395810886394" ignored="false" />
     <file path="/DeleteStmtProcessorTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1390055889818" ignored="false" />
-    <file path="/DeleteStmtProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391890632161" ignored="false" />
+    <file path="/DeleteStmtProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395727760208" ignored="false" />
     <file path="/a.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1390056005522" ignored="false" />
     <file path="/WriterAdopter.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1390056750730" ignored="false" />
     <file path="$PROJECT_DIR$/annotationProcessors/target/generated-sources/antlr/com/deepsky/lang/plsql/completion/syntaxTreePath/generator/SyntaxTreePathParser.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1390056879871" ignored="false" />
@@ -98,10 +112,10 @@
     <file path="/InsertStmtProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394973058103" ignored="false" />
     <file path="/UpdateStmtProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392667831737" ignored="false" />
     <file path="/SyntaxTreePath.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1390979144661" ignored="false" />
-    <file path="/CompletionBase.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394691488404" ignored="false" />
+    <file path="/CompletionBase.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395899993358" ignored="false" />
     <file path="/SyntaxTreePath.g" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392404569099" ignored="false" />
     <file path="/SyntaxTreePathLexerTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391152488768" ignored="false" />
-    <file path="/plsql_parser.g" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394951003068" ignored="false" />
+    <file path="/plsql_parser.g" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395572150864" ignored="false" />
     <file path="/PlSqlParserDefinition.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391252756126" ignored="false" />
     <file path="/PlSqlElementProxyFactory.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391253182632" ignored="false" />
     <file path="/PlSqlIndentProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391252852892" ignored="false" />
@@ -109,9 +123,9 @@
     <file path="/LightFixtureCompletionTestCase.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391269285806" ignored="false" />
     <file path="/PLSQL_BaseCompletionTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391269323259" ignored="false" />
     <file path="/GenericCompletionTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394776217251" ignored="false" />
-    <file path="/DDL_BaseCompletionTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391269615681" ignored="false" />
+    <file path="/DDL_BaseCompletionTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395731062974" ignored="false" />
     <file path="/SelectStmtLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391410885185" ignored="false" />
-    <file path="/TableLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391841335571" ignored="false" />
+    <file path="/TableLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395505559294" ignored="false" />
     <file path="/DDLLookupElementBase.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391351246684" ignored="false" />
     <file path="/CreateTableLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391351287082" ignored="false" />
     <file path="/AutoPopupController.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391409926270" ignored="false" />
@@ -120,23 +134,23 @@
     <file path="/Formatter.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391493303112" ignored="false" />
     <file path="/KeywordLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391927928755" ignored="false" />
     <file path="/DeleteLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391541910760" ignored="false" />
-    <file path="/C_Context.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391543247730" ignored="false" />
+    <file path="/C_Context.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395339105883" ignored="false" />
     <file path="/CommentLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391582387491" ignored="false" />
     <file path="/DeleteStatement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391626656695" ignored="false" />
-    <file path="/SelectLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394900622544" ignored="false" />
+    <file path="/SelectLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394993730474" ignored="false" />
     <file path="/TNode.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392400359075" ignored="false" />
     <file path="/StringNode.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391718595860" ignored="false" />
     <file path="/TNodePrintVisitor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392401265940" ignored="false" />
     <file path="/SimpleCompileTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391754849168" ignored="false" />
-    <file path="/test1.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394970879624" ignored="false" />
+    <file path="/test1.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395381890219" ignored="false" />
     <file path="/TreePathContext.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391887611262" ignored="false" />
     <file path="/UpdateLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1391975015843" ignored="false" />
-    <file path="/InsertLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392707234629" ignored="false" />
+    <file path="/InsertLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395505096643" ignored="false" />
     <file path="/BaseCompletionTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1393225130317" ignored="false" />
     <file path="/CommonFunctionLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392060452721" ignored="false" />
     <file path="/FSContentTracker.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392103218473" ignored="false" />
     <file path="/errors.txt" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392707058375" ignored="false" />
-    <file path="/Select_BaseCompletionTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394951984425" ignored="false" />
+    <file path="/Select_BaseCompletionTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395727478594" ignored="false" />
     <file path="/view_all_errors.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392187956328" ignored="false" />
     <file path="/all_apply_error.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392187980798" ignored="false" />
     <file path="/OrderByLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1393222221001" ignored="false" />
@@ -146,18 +160,18 @@
     <file path="/select_from_view11.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392358025187" ignored="false" />
     <file path="/AnySymbolNode.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392399894350" ignored="false" />
     <file path="/TNodeVisitor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392399899468" ignored="false" />
-    <file path="/ErrorNodeProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394954466711" ignored="false" />
+    <file path="/ErrorNodeProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395984852741" ignored="false" />
     <file path="/InsertStatementImpl.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392565995909" ignored="false" />
     <file path="/GroupByLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1393222149287" ignored="false" />
     <file path="/expr_inSubquery.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392705020221" ignored="false" />
-    <file path="/VariantsProviderImpl.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1392709098573" ignored="false" />
+    <file path="/VariantsProviderImpl.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395903240942" ignored="false" />
     <file path="/select_where101.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1393525432941" ignored="false" />
     <file path="/select_where102.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1393526849605" ignored="false" />
     <file path="/select_where103.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1393526863172" ignored="false" />
-    <file path="/PsiUtil.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394045500535" ignored="false" />
+    <file path="/PsiUtil.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395899098095" ignored="false" />
     <file path="/CodeInsightTestFixtureImpl.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394687754793" ignored="false" />
     <file path="/samples.txt" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394694710365" ignored="false" />
-    <file path="/bugs.txt" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394970864510" ignored="false" />
+    <file path="/bugs.txt" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395731340648" ignored="false" />
     <file path="/inner_join.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394694985619" ignored="false" />
     <file path="/inner_join2.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394695018708" ignored="false" />
     <file path="/inner_join3.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394695048551" ignored="false" />
@@ -177,6 +191,43 @@
     <file path="/ansi_select4.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394950317122" ignored="false" />
     <file path="/left_outer_join.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394952128229" ignored="false" />
     <file path="/GenericCompletionContributor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1394961877064" ignored="false" />
+    <file path="/select_100.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395084567969" ignored="false" />
+    <file path="/select_101.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395084732803" ignored="false" />
+    <file path="/SyntaxErrorResolverTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395499885804" ignored="false" />
+    <file path="/ASTTreeAdapter.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395690545491" ignored="false" />
+    <file path="/select_cases.txt" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395297422842" ignored="false" />
+    <file path="/complex_relation2.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395298429995" ignored="false" />
+    <file path="/SelectFieldLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395380890061" ignored="false" />
+    <file path="/select_comment1.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395382568612" ignored="false" />
+    <file path="/select_comment2.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395382636956" ignored="false" />
+    <file path="/exists4_2.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395501344546" ignored="false" />
+    <file path="/tab_correlation1.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395505734580" ignored="false" />
+    <file path="/tab_correlation3.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395505884598" ignored="false" />
+    <file path="/alter.samples.txt" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395508812030" ignored="false" />
+    <file path="/AlterStatementProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395513315383" ignored="false" />
+    <file path="/AlterTableLookupElement.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395984402568" ignored="false" />
+    <file path="/select_systimestamp.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395689941400" ignored="false" />
+    <file path="/case_when4.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395691012739" ignored="false" />
+    <file path="/case_when3.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395691126774" ignored="false" />
+    <file path="/case_when5.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395730295966" ignored="false" />
+    <file path="/case_when6.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395730238134" ignored="false" />
+    <file path="/AlterStmtProcessor.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395984703615" ignored="false" />
+    <file path="/ClassUtil.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395813784183" ignored="false" />
+    <file path="/Alter_BaseCompletionTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395987128251" ignored="false" />
+    <file path="/alter_start.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395858623503" ignored="false" />
+    <file path="/alter_table.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395858687806" ignored="false" />
+    <file path="/alter_table2.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395858802700" ignored="false" />
+    <file path="/alter_table_drop.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395858863640" ignored="false" />
+    <file path="/alter_table_drop_column.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395859048776" ignored="false" />
+    <file path="/alter_table_drop_pk.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395863180153" ignored="false" />
+    <file path="/alter_table_drop_pk2.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395863208005" ignored="false" />
+    <file path="/alter_table_drop_pk3.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395863241157" ignored="false" />
+    <file path="/alter_table_drop_pk4.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395863470904" ignored="false" />
+    <file path="/alter_table_drop_constraint.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395900575532" ignored="false" />
+    <file path="/VariantsProvider.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395903230471" ignored="false" />
+    <file path="/alter_table_rename.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395986933469" ignored="false" />
+    <file path="/alter_table_rename_constraint.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395986996226" ignored="false" />
+    <file path="/alter_table_rename_column.sql" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1395987028773" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -192,6 +243,42 @@
   </component>
   <component name="DebuggerManager">
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint url="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/LocalFSChangeTracker.java" line="268" class="com.deepsky.lang.integration.LocalFSChangeTracker" package="com.deepsky.lang.integration">
         <option name="ENABLED" value="false" />
@@ -239,66 +326,6 @@
         <option name="LOG_MESSAGE" value="&quot;File is about to index: &quot; + file&#13;&#13;JAVA" />
       </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/ComplContributor.java" line="183" class="com.deepsky.lang.plsql.completion.ComplContributor" package="com.deepsky.lang.plsql.completion">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/MyCompletionContributor.java" line="191" class="com.deepsky.lang.plsql.completion.MyCompletionContributor.CompletionCaller" package="com.deepsky.lang.plsql.completion">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/MyCompletionContributor.java" line="193" class="com.deepsky.lang.plsql.completion.MyCompletionContributor.CompletionCaller" package="com.deepsky.lang.plsql.completion">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/MyCompletionContributor.java" line="195" class="com.deepsky.lang.plsql.completion.MyCompletionContributor.CompletionCaller" package="com.deepsky.lang.plsql.completion">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$USER_HOME$/Idea_src/ideaIC-129.1359/platform/lang-impl/src/com/intellij/codeInsight/completion/CodeCompletionHandlerBase.java" line="226" class="com.intellij.codeInsight.completion.CodeCompletionHandlerBase" package="com.intellij.codeInsight.completion">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -538,21 +565,6 @@
         <option name="CONDITION" value="&#13;&#13;JAVA" />
         <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
-      <breakpoint url="file://$USER_HOME$/Idea_src/ideaIC-129.1359/platform/lang-impl/src/com/intellij/codeInsight/completion/CodeCompletionHandlerBase.java" line="275" class="com.intellij.codeInsight.completion.CodeCompletionHandlerBase" package="com.intellij.codeInsight.completion">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="true" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="false" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="&#13;&#13;JAVA" />
-        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
-      </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/annotationProcessors/src/test/java/test/compiler/SimpleCompileTest.java" line="38" class="test.compiler.SimpleCompileTest" package="test.compiler">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
@@ -628,23 +640,8 @@
         <option name="CONDITION" value="&#13;&#13;JAVA" />
         <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/CompletionBase.java" line="161" class="com.deepsky.lang.plsql.completion.processors.CompletionBase" package="com.deepsky.lang.plsql.completion.processors">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/MyCompletionContributor.java" line="78" class="com.deepsky.lang.plsql.completion.MyCompletionContributor" package="com.deepsky.lang.plsql.completion">
-        <option name="ENABLED" value="true" />
+      <breakpoint url="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/ErrorNodeProcessor.java" line="165" class="com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor" package="com.deepsky.lang.plsql.completion.processors">
+        <option name="ENABLED" value="false" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
         <option name="REMOVE_AFTER_HIT" value="false" />
@@ -659,42 +656,6 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </line_breakpoints>
-    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint>
-        <option name="NOTIFY_CAUGHT" value="true" />
-        <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint>
-        <option name="NOTIFY_CAUGHT" value="true" />
-        <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-    </breakpoint_any>
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -704,44 +665,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ErrorNodeProcessor.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/ErrorNodeProcessor.java">
+      <file leaf-file-name="AlterStmtProcessor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/AlterStmtProcessor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="412" column="20" selection-start="19591" selection-end="19591" vertical-scroll-proportion="0.0">
+            <state line="149" column="51" selection-start="8021" selection-end="8021" vertical-scroll-proportion="-4.8">
+              <folding>
+                <element signature="e#6216#6532#0" expanded="true" />
+                <element signature="e#6521#6522#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AlterTableLookupElement.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/ddl/AlterTableLookupElement.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="89" column="61" selection-start="4635" selection-end="4635" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="plugin.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
+      <file leaf-file-name="Alter_BaseCompletionTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/Alter_BaseCompletionTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="45" column="22" selection-start="2230" selection-end="2230" vertical-scroll-proportion="0.0">
+            <state line="118" column="68" selection-start="4756" selection-end="4756" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="build.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/build.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="18" selection-start="2125" selection-end="2125" vertical-scroll-proportion="2.7707007">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LiveTemplateCompletionContributor.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Idea_src/ideaIC-129.1359/platform/lang-impl/src/com/intellij/codeInsight/template/impl/LiveTemplateCompletionContributor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="39" selection-start="2574" selection-end="2574" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test1.sql" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test1.sql">
+      <file leaf-file-name="correlated_update4.sql" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/completion/base/dml/update/correlated_update4.sql">
           <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
@@ -749,19 +704,37 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DDLProcessor.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/DDLProcessor.java">
+      <file leaf-file-name="DML_BaseCompletionTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/DML_BaseCompletionTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="112" column="39" selection-start="5691" selection-end="5691" vertical-scroll-proportion="0.0">
+            <state line="92" column="120" selection-start="3690" selection-end="3690" vertical-scroll-proportion="0.13200723">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="InsertStmtProcessor.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/InsertStmtProcessor.java">
+      <file leaf-file-name="delete1.sql" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/completion/base/dml/delete/delete1.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="94" column="62" selection-start="5069" selection-end="5069" vertical-scroll-proportion="0.0">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DeleteStmtProcessor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/DeleteStmtProcessor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="67" column="45" selection-start="3311" selection-end="3311" vertical-scroll-proportion="-3.8">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ErrorNodeProcessor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/ErrorNodeProcessor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="554" column="50" selection-start="25884" selection-end="25918" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -785,20 +758,20 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/ansi_select4.sql" />
-        <option value="$PROJECT_DIR$/parser/src/main/grammars/plsql_parser.g" />
-        <option value="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/left_outer_join.sql" />
-        <option value="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/Select_BaseCompletionTest.java" />
-        <option value="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/GenericCompletionTest.java" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_constraint2.sql" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_constraint3.sql" />
+        <option value="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/ErrorNodeProcessorTest.java" />
+        <option value="$PROJECT_DIR$/db_browser/pom.xml" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/CompletionBase.java" />
         <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/ErrorNodeProcessor.java" />
-        <option value="$PROJECT_DIR$/annotationProcessors/src/main/java/com/deepsky/lang/plsql/completion/syntaxTreePath/generated/CompletionProcessorBase.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/GenericProcessor.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/DDLProcessor.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/MyCompletionContributor.java" />
-        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/GenericCompletionContributor.java" />
-        <option value="$PROJECT_DIR$/bugs.txt" />
-        <option value="$PROJECT_DIR$/test1.sql" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/InsertStmtProcessor.java" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_rename.sql" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_rename_constraint.sql" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_rename_column.sql" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/ddl/AlterTableLookupElement.java" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/AlterStmtProcessor.java" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/Alter_BaseCompletionTest.java" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/DeleteStmtProcessor.java" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/DML_BaseCompletionTest.java" />
         <option value="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
         <option value="$PROJECT_DIR$/build.xml" />
       </list>
@@ -1713,6 +1686,348 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="deepsky" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lang" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plsql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="deepsky" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lang" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plsql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lookups" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ddl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="alter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="completion" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -1810,6 +2125,40 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="utils" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1847,6 +2196,170 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lookups" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lookups" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="completion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lookups" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ddl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotationProcessors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotationProcessors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotationProcessors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
@@ -1856,14 +2369,14 @@
   <component name="PropertiesComponent">
     <property name="last_directory_selection" value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion" />
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="SDKs" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.lastSelected" value="preferences.pluginManager" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Idea_src/ideaIC-129.1359/tools" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Idea_src/ideaIC-129.1359" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="GoToClass.includeJavaFiles" value="false" />
     <property name="MemberChooser.copyJavadoc" value="false" />
@@ -1877,25 +2390,29 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.deepsky.lang.plsql.completion.lookups.ddl" />
+      <recent name="com.deepsky.lang.plsql.completion.lookups" />
       <recent name="com.deepsky.lang.plsql.completion.lookups.dml" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter" />
+      <recent name="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/ddl/createTable" />
       <recent name="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select" />
       <recent name="$PROJECT_DIR$/main/src/test/resources/functions" />
       <recent name="$PROJECT_DIR$/parser/src/main/grammars" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/plsql/select" />
-    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.deepsky.lang.plsql.completion" />
       <recent name="com.deepsky.lang.plsql.completion.lookups" />
       <recent name="com.deepsky.lang.plsql.completion.syntaxTreePath.generated" />
       <recent name="com.deepsky.lang.plsql.completion.syntaxTreePath.generator" />
       <recent name="com.deepsky.lang.plsql.completion.syntaxTreePath.logic" />
-      <recent name="au.com.bytecode.opencsv" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/plsql/select" />
     </key>
   </component>
-  <component name="RunManager" selected="Remote.idea[5005]">
+  <component name="RunManager" selected="JUnit.DML_BaseCompletionTest">
     <configuration default="false" name="GenericCompletionTest" type="JUnit" factoryName="JUnit" temporary="true">
       <module name="db_browser" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1922,95 +2439,17 @@
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <configuration default="false" name="PlSqlParser_ViewTest" type="JUnit" factoryName="JUnit" temporary="true">
-      <module name="main" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="test.deepsky.lang.plsql.parser" />
-      <option name="MAIN_CLASS_NAME" value="test.deepsky.lang.plsql.parser.PlSqlParser_ViewTest" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
-      <patterns />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
-    <configuration default="false" name="PlSqlParser_FunctionTest" type="JUnit" factoryName="JUnit" temporary="true">
-      <module name="main" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="test.deepsky.lang.plsql.parser" />
-      <option name="MAIN_CLASS_NAME" value="test.deepsky.lang.plsql.parser.PlSqlParser_FunctionTest" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
-      <patterns />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
-    <configuration default="false" name="GenericCompletionTest.test_select_A11" type="JUnit" factoryName="JUnit" temporary="true">
+    <configuration default="false" name="Alter_BaseCompletionTest.testAlter$alter_table_drop_constraint2" type="JUnit" factoryName="JUnit" temporary="true">
       <module name="db_browser" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
       <option name="PACKAGE_NAME" value="test.deepsky.lang.plsql.completion2" />
-      <option name="MAIN_CLASS_NAME" value="test.deepsky.lang.plsql.completion2.GenericCompletionTest" />
-      <option name="METHOD_NAME" value="test_select_A11" />
+      <option name="MAIN_CLASS_NAME" value="test.deepsky.lang.plsql.completion2.Alter_BaseCompletionTest" />
+      <option name="METHOD_NAME" value="testAlter$alter_table_drop_constraint2" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
-      <patterns />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Select_BaseCompletionTest.testSelect$left_outer_join" type="JUnit" factoryName="JUnit" temporary="true">
-      <module name="db_browser" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="test.deepsky.lang.plsql.completion2" />
-      <option name="MAIN_CLASS_NAME" value="test.deepsky.lang.plsql.completion2.Select_BaseCompletionTest" />
-      <option name="METHOD_NAME" value="testSelect$left_outer_join" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="TEST_SEARCH_SCOPE">
@@ -2234,6 +2673,84 @@
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
+    <configuration default="false" name="ErrorNodeProcessorTest" type="JUnit" factoryName="JUnit">
+      <module name="completion" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="com.deepsky.lang.plsql.completion" />
+      <option name="MAIN_CLASS_NAME" value="com.deepsky.lang.plsql.completion.ErrorNodeProcessorTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="DDL_BaseCompletionTest" type="JUnit" factoryName="JUnit">
+      <module name="db_browser" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="test.deepsky.lang.plsql.completion2" />
+      <option name="MAIN_CLASS_NAME" value="test.deepsky.lang.plsql.completion2.DDL_BaseCompletionTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Alter_BaseCompletionTest" type="JUnit" factoryName="JUnit">
+      <module name="db_browser" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="test.deepsky.lang.plsql.completion2" />
+      <option name="MAIN_CLASS_NAME" value="test.deepsky.lang.plsql.completion2.Alter_BaseCompletionTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
     <configuration default="false" name="sql-assistant" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
       <module name="plugin_runner" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
@@ -2280,22 +2797,19 @@
       <item index="1" class="java.lang.String" itemvalue="JUnit.Select_BaseCompletionTest" />
       <item index="2" class="java.lang.String" itemvalue="JUnit.DML_BaseCompletionTest" />
       <item index="3" class="java.lang.String" itemvalue="JUnit.SyntaxTreePathParserTest" />
-      <item index="4" class="java.lang.String" itemvalue="Plugin.sql-assistant" />
-      <item index="5" class="java.lang.String" itemvalue="Remote.ANT-JUnitDebug[5433]" />
-      <item index="6" class="java.lang.String" itemvalue="Remote.idea[5005]" />
-      <item index="7" class="java.lang.String" itemvalue="JUnit.GenericCompletionTest" />
-      <item index="8" class="java.lang.String" itemvalue="JUnit.PlSqlParser_ViewTest" />
-      <item index="9" class="java.lang.String" itemvalue="JUnit.PlSqlParser_FunctionTest" />
-      <item index="10" class="java.lang.String" itemvalue="JUnit.GenericCompletionTest.test_select_A11" />
-      <item index="11" class="java.lang.String" itemvalue="JUnit.Select_BaseCompletionTest.testSelect$left_outer_join" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.GenericCompletionTest" />
+      <item index="5" class="java.lang.String" itemvalue="JUnit.ErrorNodeProcessorTest" />
+      <item index="6" class="java.lang.String" itemvalue="JUnit.DDL_BaseCompletionTest" />
+      <item index="7" class="java.lang.String" itemvalue="JUnit.Alter_BaseCompletionTest" />
+      <item index="8" class="java.lang.String" itemvalue="Plugin.sql-assistant" />
+      <item index="9" class="java.lang.String" itemvalue="Remote.ANT-JUnitDebug[5433]" />
+      <item index="10" class="java.lang.String" itemvalue="Remote.idea[5005]" />
+      <item index="11" class="java.lang.String" itemvalue="JUnit.Alter_BaseCompletionTest.testAlter$alter_table_drop_constraint2" />
     </list>
     <recent_temporary>
-      <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.GenericCompletionTest" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.Select_BaseCompletionTest.testSelect$left_outer_join" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.GenericCompletionTest.test_select_A11" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.PlSqlParser_FunctionTest" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.PlSqlParser_ViewTest" />
+      <list size="2">
+        <item index="0" class="java.lang.String" itemvalue="JUnit.Alter_BaseCompletionTest.testAlter$alter_table_drop_constraint2" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.GenericCompletionTest" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -2305,8 +2819,9 @@
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="SqlCodeAssistantSettings">
-    <option name="dbBrowserSelectedConnection" value="sql-assistant-v12" />
-    <option name="dbBrowserSplitDividerLocation" value="35" />
+    <option name="connection" value="jdbc:oracle:thin:sitaMCOEaDmin/itravel!23$@itravelorc.cgeukipxmndq.us-east-1.rds.amazonaws.com:1521:ORCL%ec2-user@54.208.120.185&amp;/home/sky/.ssh/id_rsa" />
+    <option name="dbBrowserSelectedConnection" value="sitaMCOEaDmin@itravelorc.cgeukipxmndq.us-east-1.rds.amazonaws.com:1521:ORCL" />
+    <option name="dbBrowserSplitDividerLocation" value="140" />
   </component>
   <component name="StructureViewFactory">
     <option name="ACTIVE_ACTIONS" value="ALPHA_COMPARATOR" />
@@ -2364,30 +2879,30 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="24" width="1280" height="696" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16126418" sideWeight="0.33887044" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.53833336" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6716667" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6066667" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16126418" sideWeight="0.62333333" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.555" sideWeight="0.68800646" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6016667" sideWeight="0.3119935" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.6611296" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37666667" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22042139" sideWeight="0.56166667" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19205834" sideWeight="0.46166667" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2893031" sideWeight="0.5233333" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23662885" sideWeight="0.56166667" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26904377" sideWeight="0.43166667" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23662885" sideWeight="0.675" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2552674" sideWeight="0.85" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.46166667" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Query Result" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.325" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44666666" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Query Result" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32833335" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -2477,114 +2992,117 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test1.sql">
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_rename.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="24" selection-start="157" selection-end="157" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_pk4.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/VariantsProviderImpl.java">
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_constraint.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="79" selection-start="2848" selection-end="2848" vertical-scroll-proportion="0.21857923" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/DDLProcessor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="112" column="39" selection-start="5691" selection-end="5691" vertical-scroll-proportion="0.0">
+        <state line="5" column="96" selection-start="206" selection-end="206" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/InsertStmtProcessor.java">
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_rename_constraint.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="94" column="62" selection-start="5069" selection-end="5069" vertical-scroll-proportion="0.0">
+        <state line="29" column="23" selection-start="889" selection-end="889" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar:///usr/local/java/jdk1.7.0_07/jre/lib/rt.jar!/sun/misc/Unsafe.class">
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_drop_column2.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="319" column="23" selection-start="10057" selection-end="10057" vertical-scroll-proportion="0.5296167" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/utils/VariantProcessor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="145" column="50" selection-start="7344" selection-end="7344" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/ideaIC-129.1359/platform/lang-api/src/com/intellij/codeInsight/completion/CompletionResultSet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="70" selection-start="3948" selection-end="3948" vertical-scroll-proportion="0.25765765">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Idea_src/ideaIC-129.1359/platform/lang-api/src/com/intellij/codeInsight/completion/CompletionService.java">
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/completion/base/alter/alter_table_rename_column.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="0" selection-start="3392" selection-end="3392" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#5158#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#4644#4659#0" expanded="false" />
-            <element signature="e#4714#4923#0" expanded="false" />
-            <element signature="e#4916#4917#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/GenericCompletionContributor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="53" selection-start="2090" selection-end="2090" vertical-scroll-proportion="0.45945945">
+        <state line="11" column="24" selection-start="157" selection-end="157" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/MyCompletionContributor.java">
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/ddl/AlterTableLookupElement.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="56" selection-start="2505" selection-end="2505" vertical-scroll-proportion="0.18650089">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/FSContentTracker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="33" selection-start="3151" selection-end="3151" vertical-scroll-proportion="0.3981982">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/ideaIC-129.1359/platform/lang-impl/src/com/intellij/codeInsight/template/impl/LiveTemplateCompletionContributor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="39" selection-start="2574" selection-end="2574" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/CompletionBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="116" column="99" selection-start="4941" selection-end="4941" vertical-scroll-proportion="0.027027028">
+        <state line="89" column="61" selection-start="4635" selection-end="4635" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/ErrorNodeProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="412" column="20" selection-start="19591" selection-end="19591" vertical-scroll-proportion="0.0">
+        <state line="554" column="50" selection-start="25884" selection-end="25918" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/AlterStmtProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="22" selection-start="2230" selection-end="2230" vertical-scroll-proportion="0.0">
+        <state line="149" column="51" selection-start="8021" selection-end="8021" vertical-scroll-proportion="-4.8">
+          <folding>
+            <element signature="e#6216#6532#0" expanded="true" />
+            <element signature="e#6521#6522#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/Alter_BaseCompletionTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="118" column="68" selection-start="4756" selection-end="4756" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/completion/base/dml/update/correlated_update4.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/completion/base/dml/delete/delete1.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/processors/DeleteStmtProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="67" column="45" selection-start="3311" selection-end="3311" vertical-scroll-proportion="-3.8">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="18" selection-start="2125" selection-end="2125" vertical-scroll-proportion="2.7707007">
+        <state line="13" column="45" selection-start="569" selection-end="569" vertical-scroll-proportion="0.35262206">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="56" selection-start="1851" selection-end="1851" vertical-scroll-proportion="0.1388889">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/DML_BaseCompletionTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="92" column="120" selection-start="3690" selection-end="3690" vertical-scroll-proportion="0.13200723">
           <folding />
         </state>
       </provider>

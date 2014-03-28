@@ -579,6 +579,29 @@ TODO
 
     }
 
+    // CASE WHEN EXPR
+//    @SyntaxTreePath("/..ANY//#SELECT ..#EXPR_COLUMN/#CASE_EXPRESSION_SRCH/..#RELATION_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+//    public void process$CaseSearchExpr(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {
+//        collectColumns(ctx, select, nameRef);
+//    }
+
+//    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN/..#CASE_EXPRESSION_SRCH/..#RELATION_CONDITION//..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+//    public void process$CaseSearchExprFuncCall(C_Context ctx, ASTNode expr, NameFragmentRef nameRef) {
+//        if(expr.getTreeParent().getPsi() instanceof SelectStatement){
+//            SelectStatement select = (SelectStatement) expr.getTreeParent().getPsi();
+//            collectColumns(ctx, select, nameRef);
+//        }
+//    }
+
+    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN//..#CASE_EXPRESSION_SRCH/..#RELATION_CONDITION//..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$CaseSearchExprFuncCall(C_Context ctx, ASTNode expr, NameFragmentRef nameRef) {
+        if(expr.getTreeParent().getPsi() instanceof SelectStatement){
+            SelectStatement select = (SelectStatement) expr.getTreeParent().getPsi();
+            collectColumns(ctx, select, nameRef);
+        }
+    }
+
+
 }
 
 

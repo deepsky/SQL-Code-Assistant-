@@ -174,8 +174,8 @@ public class ErrorNodeProcessorTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. #ERROR_TOKEN_A / .. 1$AlterTable #C_MARKER", context.getDesc(0).getTreePath());
-        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("/ .. #ERROR_TOKEN_A / .. 1#ALTER_TABLE 1#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
         assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start4", context.getDesc(0).getMeta().getMethodName());
     }
@@ -188,8 +188,8 @@ public class ErrorNodeProcessorTest extends AbstractCompletionTest {
 
         TreePathContext context = proc.getContext();
 
-        assertEquals("/ .. #ERROR_TOKEN_A / .. 1$AlterTable #C_MARKER", context.getDesc(0).getTreePath());
-        assertEquals(1, context.getDesc(0).getHandlerParameters().length);
+        assertEquals("/ .. #ERROR_TOKEN_A / .. 1#ALTER_TABLE 1#C_MARKER", context.getDesc(0).getTreePath());
+        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
         assertEquals("com.deepsky.lang.plsql.completion.processors.ErrorNodeProcessor", context.getDesc(0).getMeta().getClassName());
         assertEquals("process$Start4", context.getDesc(0).getMeta().getMethodName());
     }

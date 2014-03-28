@@ -30,11 +30,14 @@ import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.*;
+import com.deepsky.lang.plsql.completion.lookups.ddl.AlterIndexLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.ddl.AlterTableLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.CommentLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
+import com.deepsky.lang.plsql.completion.syntaxTreePath.ClassUtil;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.ddl.AlterTable;
+import com.deepsky.lang.plsql.psi.ref.TableRef;
 import com.deepsky.utils.StringUtils;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
@@ -43,6 +46,9 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.TokenType;
+import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,11 +64,6 @@ public class ErrorNodeProcessor extends CompletionBase {
 
     @SyntaxTreePath("/..#SEMI #C_MARKER")
     public void process$Start3(C_Context ctx) {
-        completeStart(ctx);
-    }
-
-    @SyntaxTreePath("/..1$AlterTable #C_MARKER")
-    public void process$Start4(C_Context ctx, AlterTable node) {
         completeStart(ctx);
     }
 
@@ -177,10 +178,10 @@ public class ErrorNodeProcessor extends CompletionBase {
             FromClause from = (FromClause) last.getPsi();
             GenericTable[] tables = from.getTableList();
             String tableAlias = tables[tables.length - 1].getAlias();
-                ctx.addElement(SelectLookupElement.createInnerJoin(SelectLookupElement.NO_PREFIX, false));
-                ctx.addElement(SelectLookupElement.createLeftJoin(SelectLookupElement.NO_PREFIX, false));
-                ctx.addElement(SelectLookupElement.createRightJoin(SelectLookupElement.NO_PREFIX, false));
-                ctx.addElement(SelectLookupElement.createFullJoin(SelectLookupElement.NO_PREFIX, false));
+            ctx.addElement(SelectLookupElement.createInnerJoin(SelectLookupElement.NO_PREFIX, false));
+            ctx.addElement(SelectLookupElement.createLeftJoin(SelectLookupElement.NO_PREFIX, false));
+            ctx.addElement(SelectLookupElement.createRightJoin(SelectLookupElement.NO_PREFIX, false));
+            ctx.addElement(SelectLookupElement.createFullJoin(SelectLookupElement.NO_PREFIX, false));
 
         } else if (last.getElementType() == PlSqlElementTypes.WHERE_CONDITION) {
             // select * from ... where...
@@ -230,7 +231,6 @@ public class ErrorNodeProcessor extends CompletionBase {
         ctx.addElement(SelectLookupElement.createFullJoin(SelectLookupElement.PREFIX, false));
         ctx.addElement(SelectLookupElement.createFullOuterJoin(SelectLookupElement.PREFIX, false));
     }
-
 
 
     @SyntaxTreePath("//..#EXISTS_EXPR/#EXISTS #ERROR_TOKEN_A/#C_MARKER")
@@ -459,7 +459,7 @@ public class ErrorNodeProcessor extends CompletionBase {
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///     INSERT
+    ///     DROP
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @SyntaxTreePath("/#DROP #TABLE #IDENTIFIER #C_MARKER")
     public void process$DropTableStart(C_Context ctx) {
@@ -484,5 +484,122 @@ public class ErrorNodeProcessor extends CompletionBase {
         completeStart(ctx);
         // TODO implement more case
     }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     ALTER
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @SyntaxTreePath("/..#ALTER #C_MARKER")
+    public void process$Alter(C_Context ctx) {
+        ctx.addElement(AlterTableLookupElement.create());
+        ctx.addElement(AlterIndexLookupElement.create());
+    }
+
+    @SyntaxTreePath("/1#DROP #C_MARKER")
+    public void process$AlterTableDropPK(C_Context ctx, ASTNode drop) {
+        ASTNode errorNode = drop.getTreeParent();
+        ASTNode prev = PsiUtil.prevVisibleSibling(errorNode);
+        if(prev != null && prev.getElementType() == PlSqlElementTypes.ALTER_TABLE){
+            ctx.addElement(KeywordLookupElement.create("index"));
+        }
+    }
+
+    @SyntaxTreePath("/..1#ALTER_TABLE 1#C_MARKER")
+    public void process$Start4(C_Context ctx, ASTNode alterTable, ASTNode caret) {
+        ASTNode nextLeaf = PsiUtil.nextNonWSLeaf(caret);
+        boolean nextSemi = nextLeaf != null && nextLeaf.getElementType() == PlSqlTokenTypes.SEMI;
+
+        List<ASTNode> childList = getChildren(alterTable);
+        if (match(childList, "ALTER ERROR_TOKEN_A")) {
+            List<ASTNode> nodes = getChildren(childList.get(1));
+            if (match(nodes, "TABLE IDENTIFIER")) {
+                ctx.addElement(AlterTableLookupElement.createAddColumn(nodes.get(1).getText()));
+                ctx.addElement(AlterTableLookupElement.createDrop(nodes.get(1).getText()));
+                ctx.addElement(AlterTableLookupElement.createRename(nodes.get(1).getText()));
+            }
+        } else if (childList.get(childList.size() - 1).getElementType() == PlSqlElementTypes.ALTER_TABLE_DROP_PK) {
+            final ASTNode lastNode = childList.get(childList.size() - 1);
+            if (match(lastNode, "PRIMARY KEY")) {
+                ctx.addElement(AlterTableLookupElement.createDropPKCascade());
+                ctx.addElement(AlterTableLookupElement.createDropPK_DropIndex());
+                ctx.addElement(AlterTableLookupElement.createDropPK_KeepIndex());
+            } else if (match(lastNode, "PRIMARY KEY CASCADE")) {
+                ctx.addElement(AlterTableLookupElement.createDropPK_DropIndex());
+                ctx.addElement(AlterTableLookupElement.createDropPK_KeepIndex());
+            } else if (match(lastNode, "PRIMARY KEY KEEP INDEX")) {
+                //ctx.addElement(AlterTableLookupElement.createDropPKCascade());
+            } else if (match(lastNode, "PRIMARY KEY DROP INDEX")) {
+                //ctx.addElement(AlterTableLookupElement.createDropPKCascade());
+            }
+        } else if (childList.get(childList.size() - 1).getElementType() == PlSqlElementTypes.ALTER_TABLE_DROP_CONSTR) {
+            final ASTNode lastNode = childList.get(childList.size() - 1);
+            if (match(lastNode, "CONSTRAINT CONSTRAINT_NAME")) {
+                ctx.addElement(KeywordLookupElement.create("cascade"));
+                if(!nextSemi){
+                    completeStart(ctx);
+                }
+            }
+        } else if(!nextSemi){
+                completeStart(ctx);
+
+        }
+    }
+
+
+    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #ERROR_TOKEN_A/#RENAME #COLUMN #COLUMN_NAME_REF/#C_MARKER")
+    public void process$alterTableRenameColumn(C_Context ctx, ASTNode tableRef) {
+        collectColumns(ctx, ((TableRef)tableRef.getPsi()).getTableName());
+    }
+
+    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #ERROR_TOKEN_A/#RENAME #CONSTRAINT #C_MARKER")
+    public void process$alterTableRenameConstraint(final C_Context ctx, ASTNode tableRef) {
+        alterTableRenameConstraint(ctx, (TableRef) tableRef.getPsi());
+    }
+
+    private boolean match(@NotNull ASTNode astNode, @NotNull String pattern) {
+        String[] parts = pattern.split(" ");
+        List<ASTNode> childList = getChildren(astNode);
+        if (parts.length != childList.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < childList.size(); i++) {
+            if (childList.get(i).getElementType() != ClassUtil.retrieveFieldValue(parts[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    private boolean match(@NotNull List<ASTNode> childList, @NotNull String pattern) {
+        String[] parts = pattern.split(" ");
+        if (parts.length != childList.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < childList.size(); i++) {
+            if (childList.get(i).getElementType() != ClassUtil.retrieveFieldValue(parts[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private List<ASTNode> getChildren(ASTNode parent) {
+        List<ASTNode> out = new ArrayList<ASTNode>();
+        ASTNode[] childList = parent.getChildren(null);
+        for (ASTNode a : childList) {
+            final IElementType etype = a.getElementType();
+            if (etype != PlSqlTokenTypes.WS && etype != PlSqlTokenTypes.LF && etype != TokenType.WHITE_SPACE
+                    && etype != PlSqlTokenTypes.SL_COMMENT && etype != PlSqlTokenTypes.ML_COMMENT) {
+                out.add(a);
+            }
+        }
+
+        return out;
+    }
+
+
 }
 

@@ -27,10 +27,7 @@ import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
-import com.deepsky.lang.plsql.psi.DeleteStatement;
-import com.deepsky.lang.plsql.psi.NameFragmentRef;
-import com.deepsky.lang.plsql.psi.SelectStatement;
-import com.deepsky.lang.plsql.psi.TableAlias;
+import com.deepsky.lang.plsql.psi.*;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
@@ -65,14 +62,32 @@ public class DeleteStmtProcessor extends CompletionBase {
     }
 
 //    @SyntaxTreePath("(//..#WHERE_CONDITION)[0]//..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    @SyntaxTreePath("/#DELETE #FROM 2$TableAlias #WHERE_CONDITION//..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$DeleteWhere(C_Context ctx, ASTNode delCommand, TableAlias t, NameFragmentRef nameRef) {
+    @SyntaxTreePath("/#DELETE #FROM 2$TableAlias #WHERE_CONDITION/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
+    public void process$DeleteWhere(C_Context ctx, ASTNode del, TableAlias t, ASTNode expr, NameFragmentRef nameRef) {
         collectColumns(ctx, t, false);
-        ctx.addElement(KeywordLookupElement.create("exists"));
+        if(expr.getChildren(null).length == 1){
+            ctx.addElement(KeywordLookupElement.create("exists"));
+        }
+    }
+
+    @SyntaxTreePath("/#DELETE #FROM 2$TableAlias #WHERE_CONDITION/..$Condition/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
+    public void process$DeleteWhere2(C_Context ctx, ASTNode del, TableAlias t, ASTNode expr, NameFragmentRef nameRef) {
+        collectColumns(ctx, t, false);
+        if(expr.getChildren(null).length == 1 && expr.getTreeParent().getPsi() instanceof LogicalExpression){
+            ctx.addElement(KeywordLookupElement.create("exists"));
+        }
+    }
+
+    @SyntaxTreePath("/#DELETE #FROM 2$TableAlias #WHERE_CONDITION/..$Condition/..$Condition/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
+    public void process$DeleteWhere3(C_Context ctx, ASTNode del, TableAlias t, ASTNode expr, NameFragmentRef nameRef) {
+        collectColumns(ctx, t, false);
+        if(expr.getChildren(null).length == 1 && expr.getTreeParent().getPsi() instanceof LogicalExpression){
+            ctx.addElement(KeywordLookupElement.create("exists"));
+        }
     }
 
     @SyntaxTreePath("/#DELETE #FROM 2$TableAlias #WHERE_CONDITION//..#EXISTS_EXPR//..3$SelectStatement/..#WHERE_CONDITION//..#VAR_REF/..4$NameFragmentRef/#C_MARKER")
-    public void process$DeleteWithSubquey(C_Context ctx, ASTNode delCommand, TableAlias t, SelectStatement select, NameFragmentRef ref) {
+    public void process$DeleteWithSubquey(C_Context ctx, ASTNode del, TableAlias t, SelectStatement select, NameFragmentRef ref) {
         collectColumns(ctx, select, ref);
         VariantsProvider provider = ctx.getProvider();
         provider.collectColumnNames(t, ctx.getLookup(), false);

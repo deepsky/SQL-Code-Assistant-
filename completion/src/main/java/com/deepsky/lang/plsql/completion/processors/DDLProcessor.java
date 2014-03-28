@@ -122,6 +122,14 @@ public class DDLProcessor extends CompletionBase {
         }
     }
 
+    @SyntaxTreePath("/..1#TABLE_DEF/#CREATE #ERROR_TOKEN_A/#TABLE ..#COLUMN_DEF/#COLUMN_NAME_DDL #TYPE_NAME_REF/2$NameFragmentRef/#C_MARKER")
+    public void process$TableType2Name(C_Context ctx, ASTNode node, NameFragmentRef ref) {
+        VariantsProvider provider = ctx.getProvider();
+        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup());
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///     RENAME TABLE

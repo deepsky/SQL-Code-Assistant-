@@ -208,6 +208,26 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
         assertSelectFieldLookup(myItems, "id", "text1");
     }
 
+    public void testSelect$case_when3() throws Exception {
+        configureByFile(getFilePath());
+        assertLookupFilterOutFunc(myItems, "id", "text1");
+    }
+
+    public void testSelect$case_when4() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "id", "text1");
+    }
+
+    public void testSelect$case_when5() throws Exception {
+        configureByFile(getFilePath());
+        assertLookupFilterOutFunc(myItems, "id", "text1");
+    }
+
+    public void testSelect$case_when6() throws Exception {
+        configureByFile(getFilePath());
+        assertLookupFilterOutFunc(myItems, "id", "text1");
+    }
+
     public void testSelect$select_from() throws Exception {
         configureByFile(getFilePath());
         assertSelectFieldLookup(myItems, "id", "id1", "text2");
@@ -453,7 +473,14 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
         configureByFile(getFilePath());
         assertSelectFieldLookup(myItems, "jjon");
     }
+
+    public void testSelect$select_systimestamp() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "jjon");
+    }
+
 }
+
 
 
 

@@ -97,4 +97,13 @@ public interface VariantsProvider {
 
     List<? extends LookupElement> takeCollectedLookups();
 
+    void collectTableConstraints(String tableName, TableConstraintProcessor proc);
+
+
+    int FK_CONSTRAINT = 1;
+    int PK_CONSTRAINT = 2;
+
+    interface TableConstraintProcessor {
+        void process(String constraintName, int constraintType);
+    }
 }

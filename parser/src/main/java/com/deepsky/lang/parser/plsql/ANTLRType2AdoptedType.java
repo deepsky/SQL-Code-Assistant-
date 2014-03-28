@@ -4,7 +4,7 @@ import com.intellij.psi.tree.IElementType;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 
 public class ANTLRType2AdoptedType {
-	static public IElementType[] type2etype = new IElementType[404];
+	static public IElementType[] type2etype = new IElementType[409];
 	static {
 		type2etype[PLSqlTokenTypes.CREATE_VIEW_COLUMN_DEF] = PLSqlTypesAdopted.CREATE_VIEW_COLUMN_DEF;
 		type2etype[PLSqlTokenTypes.DROP_VIEW] = PLSqlTypesAdopted.DROP_VIEW;
@@ -23,8 +23,8 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.OBJECT_NAME] = PLSqlTypesAdopted.OBJECT_NAME;
 		type2etype[PLSqlTokenTypes.STRING_LITERAL] = PLSqlTypesAdopted.STRING_LITERAL;
 		type2etype[PLSqlTokenTypes.EXCEPTION_SECTION] = PLSqlTypesAdopted.EXCEPTION_SECTION;
-		type2etype[PLSqlTokenTypes.DROP_SEQUENCE] = PLSqlTypesAdopted.DROP_SEQUENCE;
 		type2etype[PLSqlTokenTypes.FORALL_LOOP_SPEC] = PLSqlTypesAdopted.FORALL_LOOP_SPEC;
+		type2etype[PLSqlTokenTypes.DROP_SEQUENCE] = PLSqlTypesAdopted.DROP_SEQUENCE;
 		type2etype[PLSqlTokenTypes.SYSTIMESTAMP_CONST] = PLSqlTypesAdopted.SYSTIMESTAMP_CONST;
 		type2etype[PLSqlTokenTypes.MEMBER_OF] = PLSqlTypesAdopted.MEMBER_OF;
 		type2etype[PLSqlTokenTypes.QUERY_PARTITION_CLAUSE] = PLSqlTypesAdopted.QUERY_PARTITION_CLAUSE;
@@ -57,9 +57,9 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.SORTED_DEF] = PLSqlTypesAdopted.SORTED_DEF;
 		type2etype[PLSqlTokenTypes.VAR_REF] = PLSqlTypesAdopted.VAR_REF;
 		type2etype[PLSqlTokenTypes.CONDITIONAL_COMPILATION] = PLSqlTypesAdopted.CONDITIONAL_COMPILATION;
+		type2etype[PLSqlTokenTypes.CURSOR_LOOP_SPEC] = PLSqlTypesAdopted.CURSOR_LOOP_SPEC;
 		type2etype[PLSqlTokenTypes.CREATE_USER] = PLSqlTypesAdopted.CREATE_USER;
 		type2etype[PLSqlTokenTypes.DROP_ROLE] = PLSqlTypesAdopted.DROP_ROLE;
-		type2etype[PLSqlTokenTypes.CURSOR_LOOP_SPEC] = PLSqlTypesAdopted.CURSOR_LOOP_SPEC;
 		type2etype[PLSqlTokenTypes.EXPR_COLUMN] = PLSqlTypesAdopted.EXPR_COLUMN;
 		type2etype[PLSqlTokenTypes.TRIGGER_TARGET] = PLSqlTypesAdopted.TRIGGER_TARGET;
 		type2etype[PLSqlTokenTypes.RANK_FUNCTION] = PLSqlTypesAdopted.RANK_FUNCTION;
@@ -112,12 +112,14 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.GOTO_STATEMENT] = PLSqlTypesAdopted.GOTO_STATEMENT;
 		type2etype[PLSqlTokenTypes.SPEC_CALL_ARGUMENT_LIST] = PLSqlTypesAdopted.SPEC_CALL_ARGUMENT_LIST;
 		type2etype[PLSqlTokenTypes.FK_SPEC] = PLSqlTypesAdopted.FK_SPEC;
+		type2etype[PLSqlTokenTypes.ALTER_TABLE_RENAME_COL] = PLSqlTypesAdopted.ALTER_TABLE_RENAME_COL;
 		type2etype[PLSqlTokenTypes.BIND_VAR] = PLSqlTypesAdopted.BIND_VAR;
 		type2etype[PLSqlTokenTypes.SUBQUERY_UPDATE_COMMAND] = PLSqlTypesAdopted.SUBQUERY_UPDATE_COMMAND;
 		type2etype[PLSqlTokenTypes.INSERT_COMMAND] = PLSqlTypesAdopted.INSERT_COMMAND;
 		type2etype[PLSqlTokenTypes.LOGICAL_EXPR] = PLSqlTypesAdopted.LOGICAL_EXPR;
 		type2etype[PLSqlTokenTypes.SQLPLUS_EXEC] = PLSqlTypesAdopted.SQLPLUS_EXEC;
 		type2etype[PLSqlTokenTypes.SUBQUERY] = PLSqlTypesAdopted.SUBQUERY;
+		type2etype[PLSqlTokenTypes.ALTER_TABLE_DROP_CONSTR] = PLSqlTypesAdopted.ALTER_TABLE_DROP_CONSTR;
 		type2etype[PLSqlTokenTypes.ALIAS_NAME] = PLSqlTypesAdopted.ALIAS_NAME;
 		type2etype[PLSqlTokenTypes.CREATE_SYNONYM] = PLSqlTypesAdopted.CREATE_SYNONYM;
 		type2etype[PLSqlTokenTypes.REJECT_SPEC] = PLSqlTypesAdopted.REJECT_SPEC;
@@ -214,6 +216,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.FIELD_NAME] = PLSqlTypesAdopted.FIELD_NAME;
 		type2etype[PLSqlTokenTypes.RECORD_ITEM] = PLSqlTypesAdopted.RECORD_ITEM;
 		type2etype[PLSqlTokenTypes.OWNER_COLUMN_NAME_LIST] = PLSqlTypesAdopted.OWNER_COLUMN_NAME_LIST;
+		type2etype[PLSqlTokenTypes.ALTER_TABLE_DROP_PK] = PLSqlTypesAdopted.ALTER_TABLE_DROP_PK;
 		type2etype[PLSqlTokenTypes.TABLE_TYPE_REF] = PLSqlTypesAdopted.TABLE_TYPE_REF;
 		type2etype[PLSqlTokenTypes.DELETE_COMMAND] = PLSqlTypesAdopted.DELETE_COMMAND;
 		type2etype[PLSqlTokenTypes.COLLECTION_METHOD_NAME] = PLSqlTypesAdopted.COLLECTION_METHOD_NAME;
@@ -237,6 +240,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.COMMENT_STMT] = PLSqlTypesAdopted.COMMENT_STMT;
 		type2etype[PLSqlTokenTypes.ALTER_TRIGGER] = PLSqlTypesAdopted.ALTER_TRIGGER;
 		type2etype[PLSqlTokenTypes.SQLPLUS_SET] = PLSqlTypesAdopted.SQLPLUS_SET;
+		type2etype[PLSqlTokenTypes.ALTER_TABLE_DROP_COL] = PLSqlTypesAdopted.ALTER_TABLE_DROP_COL;
 		type2etype[PLSqlTokenTypes.ALTER_TABLE] = PLSqlTypesAdopted.ALTER_TABLE;
 		type2etype[PLSqlTokenTypes.COLUMN_DEF] = PLSqlTypesAdopted.COLUMN_DEF;
 		type2etype[PLSqlTokenTypes.COLUMN_NAME_LIST] = PLSqlTypesAdopted.COLUMN_NAME_LIST;
@@ -253,6 +257,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.INTO_CLAUSE] = PLSqlTypesAdopted.INTO_CLAUSE;
 		type2etype[PLSqlTokenTypes.INTERVAL_CONST] = PLSqlTypesAdopted.INTERVAL_CONST;
 		type2etype[PLSqlTokenTypes.ROLLBACK_STATEMENT] = PLSqlTypesAdopted.ROLLBACK_STATEMENT;
+		type2etype[PLSqlTokenTypes.ALTER_TABLE_RENAME_CONSTR] = PLSqlTypesAdopted.ALTER_TABLE_RENAME_CONSTR;
 		type2etype[PLSqlTokenTypes.STORAGE_PARAM] = PLSqlTypesAdopted.STORAGE_PARAM;
 		type2etype[PLSqlTokenTypes.RELATION_OP] = PLSqlTypesAdopted.RELATION_OP;
 		type2etype[PLSqlTokenTypes.CURSOR_NAME] = PLSqlTypesAdopted.CURSOR_NAME;

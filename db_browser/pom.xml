@@ -63,6 +63,7 @@
                         <exclude>**/Select_BaseCompletionTest.java</exclude>
                         <exclude>**/CtrlStmt_BaseCompletionTest.java</exclude>
                         <exclude>**/GenericCompletionTest.java</exclude>
+                        <exclude>**/Alter_BaseCompletionTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

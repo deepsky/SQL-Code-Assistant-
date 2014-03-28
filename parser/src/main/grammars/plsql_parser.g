@@ -325,6 +325,14 @@ tokens {
     CREATE_VARRAY_COLLECTION;
 */
 
+    ALTER_TABLE_RENAME_CONSTR;
+    ALTER_TABLE_RENAME_COL;
+    ALTER_TABLE_RENAME;
+    ALTER_TABLE_DROP_COL;
+    ALTER_TABLE_DROP_PK;
+    ALTER_TABLE_DROP_COL;
+    ALTER_TABLE_DROP_CONSTR;
+
     // Types after resolving
     TABLE_REF_NOT_RESOLVED;
     VIEW_NAME_REF;
@@ -1312,7 +1320,7 @@ constraint_name:
 // [ALTER TABLE START] ------------------------------------------------
 // -------------------------------------------------------------------
 alter_table:
-    "table"! (schema_name DOT)? table_ref (alter_table_spec)?
+    "table"! (schema_name DOT)? table_ref alter_table_spec
     ;
 
 alter_table_spec:
@@ -1323,10 +1331,16 @@ alter_table_spec:
        )
     | ("rename"
             (   ("constraint" identifier2 "to" identifier2)
+                    { #alter_table_spec = #([ALTER_TABLE_RENAME_CONSTR, "ALTER_TABLE_RENAME_CONSTR" ], #alter_table_spec);}
                 | ("to" identifier2)
-                | ("column" column_name_ref "to" column_name_ref) )
+                    { #alter_table_spec = #([ALTER_TABLE_RENAME, "ALTER_TABLE_RENAME" ], #alter_table_spec);}
+                | ("column" column_name_ref "to" column_name_ref)
+                    { #alter_table_spec = #([ALTER_TABLE_RENAME_COL, "ALTER_TABLE_RENAME_COL" ], #alter_table_spec);}
+                )
       )
-    | "drop" ( ("column" column_name_ref) | drop_clause )
+    | "drop" ( ("column" column_name_ref)
+                    { #alter_table_spec = #([ALTER_TABLE_DROP_COL, "ALTER_TABLE_DROP_COL" ], #alter_table_spec);}
+                | drop_clause )
     ;
 
 modify_constraint_clause:
@@ -1384,8 +1398,11 @@ inline_out_of_line_constraint:
 
 drop_clause:
     ("primary" "key" ("cascade")? (("keep"|"drop") "index")? )
+        { #drop_clause = #([ALTER_TABLE_DROP_PK, "ALTER_TABLE_DROP_PK" ], #drop_clause);}
     | ("unique" OPEN_PAREN identifier2 (COMMA! identifier2)* CLOSE_PAREN ("cascade")? (("keep"|"drop") "index")?)
+        { #drop_clause = #([ALTER_TABLE_DROP_COL, "ALTER_TABLE_DROP_COL" ], #drop_clause);}
     | ("constraint" constraint_name ("cascade")?)
+        { #drop_clause = #([ALTER_TABLE_DROP_CONSTR, "ALTER_TABLE_DROP_CONSTR" ], #drop_clause);}
     ;
 
 using_index_clause:

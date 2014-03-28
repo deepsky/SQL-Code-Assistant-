@@ -880,6 +880,21 @@ public class VariantsProviderImpl implements VariantsProvider {
         return new ArrayList<LookupElement>();
     }
 
+    public void collectTableConstraints(String tableName, TableConstraintProcessor proc){
+        ResolveDescriptor rhlp = resolver.resolveTableRef(tableName);
+
+        if (rhlp != null) {
+            List<ContextPathUtil.FKConstraintSpec> l = ContextPathUtil.extractFKConstraintsFromTableValue(rhlp.getValue());
+            for(ContextPathUtil.FKConstraintSpec fk: l){
+                proc.process(fk.getName(), VariantsProvider.FK_CONSTRAINT);
+            }
+            String pkConstrName = ContextPathUtil.extractPKConstrNameFromTableValue(rhlp.getValue());
+            if(pkConstrName != null){
+                proc.process(pkConstrName, VariantsProvider.PK_CONSTRAINT);
+            }
+        }
+    }
+
     private Set<String> getParametersNames(CallArgumentList argList) {
         Set<String> out = new HashSet<String>();
         for (CallArgument a : argList.getArguments()) {

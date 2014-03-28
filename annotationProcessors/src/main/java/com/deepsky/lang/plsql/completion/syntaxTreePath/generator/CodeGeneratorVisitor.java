@@ -25,6 +25,7 @@ package com.deepsky.lang.plsql.completion.syntaxTreePath.generator;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.completion.syntaxTreePath.ClassUtil;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.structures.*;
 
 import java.io.IOException;
@@ -832,7 +833,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         TNode process(TNode cur);
     }
 
-    private String generateCondition(boolean equals, StringNode node) {
+    private String generateCondition(boolean equals, final StringNode node) {
         // n.getElementType() == PlSqlElementTypes." + node.getName() + "
         // n.getElementType() != PlSqlElementTypes." + cur.getName()
 
@@ -843,7 +844,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 return "!(o instanceof ASTNode) || !(((ASTNode)o).getPsi() instanceof " + node.getName() + ")";
             }
         } else {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
 
             if (equals) sb.append("o instanceof ASTNode && ");
             else sb.append("!(o instanceof ASTNode) || ");
@@ -852,47 +853,17 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
             if (equals) sb.append(" == ");
             else sb.append(" != ");
 
-            // Check against PlSqlElementTypes
-            Class clazz = PlSqlElementTypes.class;
-            for (Class ext : clazz.getInterfaces()) {
-                for (Field field : ext.getDeclaredFields()) {
-                    if (field.getName().equals(node.getName())) {
-                        return sb.append("PlSqlElementTypes.").append(node.getName()).toString();
-                    }
+            return ClassUtil.findFieldForName(node.getName(), new ClassUtil.NameProcessor() {
+                @Override
+                public String process(String type, String prefix) {
+                    return sb.append(type).append(".").append(prefix).append(node.getName()).toString();
                 }
-            }
-
-            for (Field field : clazz.getDeclaredFields()) {
-                if (field.getName().equals(node.getName())) {
-                    return sb.append("PlSqlElementTypes.").append(node.getName()).toString();
-                }
-            }
-
-            // Check against PlSqlTokenTypes
-            Class clazz1 = PlSqlTokenTypes.class;
-            for (Class ext : clazz1.getInterfaces()) {
-                for (Field field : ext.getDeclaredFields()) {
-                    if (field.getName().equals(node.getName())) {
-                        return sb.append("PlSqlTokenTypes.").append(node.getName()).toString();
-                    }
-                }
-            }
-
-
-            for (Class ext : clazz1.getInterfaces()) {
-                for (Field field : ext.getDeclaredFields()) {
-                    if (field.getName().equals("KEYWORD_" + node.getName())) {
-                        return sb.append("PlSqlTokenTypes.").append("KEYWORD_").append(node.getName()).toString();
-                    }
-                }
-            }
-
-            throw new RuntimeException("Cannot find element: " + node.getName());
+            });
         }
     }
 
 
-    private String generateConditionForSS(boolean equals, StringNode node) {
+    private String generateConditionForSS(boolean equals, final StringNode node) {
         // n.getElementType() == PlSqlElementTypes." + node.getName() + "
         // n.getElementType() != PlSqlElementTypes." + cur.getName()
 
@@ -903,47 +874,18 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 return "!(n.getPsi() instanceof " + node.getName() + ")";
             }
         } else {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append("n.getElementType() ");
             if (equals) sb.append(" == ");
             else sb.append(" != ");
 
-            // Check against PlSqlElementTypes
-            Class clazz = PlSqlElementTypes.class;
-            for (Class ext : clazz.getInterfaces()) {
-                for (Field field : ext.getDeclaredFields()) {
-                    if (field.getName().equals(node.getName())) {
-                        return sb.append("PlSqlElementTypes.").append(node.getName()).toString();
-                    }
+            return ClassUtil.findFieldForName(node.getName(), new ClassUtil.NameProcessor() {
+                @Override
+                public String process(String type, String prefix) {
+                    return sb.append(type).append(".").append(prefix).append(node.getName()).toString();
                 }
-            }
+            });
 
-            for (Field field : clazz.getDeclaredFields()) {
-                if (field.getName().equals(node.getName())) {
-                    return sb.append("PlSqlElementTypes.").append(node.getName()).toString();
-                }
-            }
-
-            // Check against PlSqlTokenTypes
-            Class clazz1 = PlSqlTokenTypes.class;
-            for (Class ext : clazz1.getInterfaces()) {
-                for (Field field : ext.getDeclaredFields()) {
-                    if (field.getName().equals(node.getName())) {
-                        return sb.append("PlSqlTokenTypes.").append(node.getName()).toString();
-                    }
-                }
-            }
-
-
-            for (Class ext : clazz1.getInterfaces()) {
-                for (Field field : ext.getDeclaredFields()) {
-                    if (field.getName().equals("KEYWORD_" + node.getName())) {
-                        return sb.append("PlSqlTokenTypes.").append("KEYWORD_").append(node.getName()).toString();
-                    }
-                }
-            }
-
-            throw new RuntimeException("Cannot find element: " + node.getName());
         }
     }
 
@@ -953,7 +895,6 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
             return node.getName();
         } else {
             return "#" + node.getName();
-
         }
     }
 
