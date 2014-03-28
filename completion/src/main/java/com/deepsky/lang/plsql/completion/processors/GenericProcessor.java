@@ -157,8 +157,18 @@ public class GenericProcessor extends CompletionBase {
 //        ctx.addElement(OrderByLookupElement.createBy());
 //    }
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN/..#ARITHMETIC_EXPR//..#FUNCTION_CALL/..#CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$SelectExprFunc(C_Context ctx, ASTNode exprColumn, NameFragmentRef ref) {
+//    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN/..#ARITHMETIC_EXPR//..#FUNCTION_CALL/..#CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+//    public void process$SelectExprFunc(C_Context ctx, ASTNode exprColumn, NameFragmentRef ref) {
+//        PsiElement parent = exprColumn.getTreeParent().getPsi();
+//        if(parent instanceof SelectStatement){
+//            collectColumnsAndSysFunc(ctx, (SelectStatement) parent,ref );
+//        } else {
+//            // TODO - handle error case
+//        }
+//    }
+
+    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN//..#FUNCTION_CALL/..#CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$SelectExprFunc2(C_Context ctx, ASTNode exprColumn, NameFragmentRef ref) {
         PsiElement parent = exprColumn.getTreeParent().getPsi();
         if(parent instanceof SelectStatement){
             collectColumnsAndSysFunc(ctx, (SelectStatement) parent,ref );
