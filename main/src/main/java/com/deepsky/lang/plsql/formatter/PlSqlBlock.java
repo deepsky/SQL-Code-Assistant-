@@ -28,6 +28,7 @@ package com.deepsky.lang.plsql.formatter;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.formatter.processors.PlSqlSpacingProcessor;
 import com.deepsky.lang.plsql.formatter.processors.PlSqlSpacingProcessorBasic;
 import com.deepsky.lang.plsql.formatter.settings.PlSqlCodeStyleSettings;
@@ -43,6 +44,7 @@ import com.intellij.util.containers.CollectionFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -87,7 +89,12 @@ public class PlSqlBlock extends AbstractBlock {
 
     @Override
     protected List<Block> buildChildren() {
-        return new PlSqlBlockGenerator(this).generateSubBlocks();
+        try {
+            return new PlSqlBlockGenerator(this).generateSubBlocks();
+        } catch (SyntaxTreeCorruptedException e){
+            e.printStackTrace();
+            return new ArrayList<Block>();
+        }
     }
 
     /**
