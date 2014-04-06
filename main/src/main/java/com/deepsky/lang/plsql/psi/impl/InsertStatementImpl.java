@@ -54,7 +54,8 @@ public class InsertStatementImpl extends PlSqlElementBase implements InsertState
     public ColumnSpec[] getColumnList() {
         final ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.COLUMN_SPEC_LIST);
         if (node == null) {
-            throw new SyntaxTreeCorruptedException();
+            //throw new SyntaxTreeCorruptedException();
+            return new ColumnSpec[0];
         }
 
         ColumnSpecList columnList = (ColumnSpecList) node.getPsi();

@@ -35,4 +35,9 @@ public interface TreePathIterator {
 
     int saveState();
 
+    <T> T next(Class<T> e) throws EOFException, ClassCastException;
+
+    <T> T peek(Class<T> e) throws EOFException, ClassCastException;
+
+//    <T> void consume(Class<T> e) throws EOFException;
 }

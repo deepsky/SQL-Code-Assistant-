@@ -54,6 +54,9 @@ public abstract class CompletionProcessorBase {
         };
     }
 
+    protected TreePathIterator getIterator(){
+        return pathIterator;
+    }
 
     private class ASTNodeProxy implements InvocationHandler {
 
@@ -72,62 +75,6 @@ public abstract class CompletionProcessorBase {
         }
     }
 
-    protected Object next() throws EOFException{
-        Object o = pathIterator.next();
-        if(o == null){
-            throw new EOFException();
-        }
-        return o;
-    }
-
-    protected Object peek() throws EOFException{
-        Object o = pathIterator.peek();
-        if(o == null){
-            throw new EOFException();
-        }
-        return o;
-    }
-
-    protected void setState(int lexerState) throws InvalidLexerStateException {
-        pathIterator.setState(lexerState);
-    }
-
-    protected int saveState(){
-        return pathIterator.saveState();
-    }
-
-    protected <T> T next(Class<T> e) throws EOFException, ClassCastException {
-        Object o = pathIterator.next();
-        if(o == null){
-            throw new EOFException();
-        }
-
-        if(e.isInstance(o)){
-            return (T)o;
-        }
-
-        throw new ClassCastException("Target: " + e + " Object from lexer: " + o);
-    }
-
-    protected <T> T peek(Class<T> e) throws EOFException, ClassCastException {
-        Object o = pathIterator.peek();
-        if(o == null){
-            throw new EOFException();
-        }
-
-        if(e.isInstance(o)){
-            return (T)o;
-        }
-
-        throw new ClassCastException("Target: " + e + " Object from lexer: " + o);
-    }
-
-    protected <T> void consume(Class<T> e) throws EOFException {
-        Object o = pathIterator.next();
-        if(o == null){
-            throw new EOFException();
-        }
-    }
 
     protected abstract String getTreePath(int index);
     protected abstract String[] getClassPlusMethod(int index);

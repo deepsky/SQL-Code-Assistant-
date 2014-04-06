@@ -27,5 +27,5 @@ public interface WriterAdapter {
     void println(String x);
     void println();
     void print(String x);
-
+    void flush();
 }

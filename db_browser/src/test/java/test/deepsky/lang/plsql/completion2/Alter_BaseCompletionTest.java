@@ -115,4 +115,47 @@ public class Alter_BaseCompletionTest extends BaseCompletionTest {
         configureByFile(getFilePath());
         assertSelectFieldLookup(myItems,  "item_foreign_key", "item_primary_key");
     }
+
+    public void test_add() throws Exception {
+        configureByText("alter table tab1 add column1 number <caret>");
+        assertLookup(myItems, "not", "default", "primary", "constraint", "references",
+                "create", "alter", "comment", "delete", "drop", "insert", "select","update");
+    }
+
+    public void test_add2() throws Exception {
+        configureByText("alter table tab1 add column1 number <caret>;");
+        assertLookup(myItems, "not", "default", "primary", "constraint", "references");
+    }
+
+    public void test_add_pk() throws Exception {
+        configureByText("alter table tab1 add column1 number primary <caret>");
+        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+    }
+
+    public void test_add_notnull() throws Exception {
+        configureByText("alter table tab1 add column1 number not <caret>");
+        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+    }
+
+    public void test_add_default() throws Exception {
+        configureByText("alter table tab1 add column1 number not <caret>");
+        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+    }
+
+    public void test_add_references() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10));" +
+                " create table aTab (id number, text varchar2(10)); alter table tab1 add column1 number references <caret>;");
+        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+    }
+
+    public void test_add_references2() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10));" +
+                " create table aTab (id number, text varchar2(10)); alter table tab1 add column1 number references aTab <caret>;");
+        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+    }
+
+    public void test_add_constraint() throws Exception {
+        configureByText("alter table tab1 add column1 number constraint constraint_name1 <caret>");
+        assertLookup(myItems, "not", "primary", "references");
+    }
 }

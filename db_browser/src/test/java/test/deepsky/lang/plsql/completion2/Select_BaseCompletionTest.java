@@ -205,7 +205,7 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$case_when2() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "text1");
+        assertSelectFieldLookup(myItems, "id", "text1", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
     }
 
     public void testSelect$case_when3() throws Exception {

@@ -35,4 +35,8 @@ public interface TNodeVisitor {
     void visitStringNode(StringNode stringNode);
 
     void visitAnySymbolNode(AnySymbolNode anySymbolNode);
+
+    void visitSubNode(SubNode subNode);
+
+    void visitStringWithSubNode(StringWithSubNode stringWithSubNode);
 }

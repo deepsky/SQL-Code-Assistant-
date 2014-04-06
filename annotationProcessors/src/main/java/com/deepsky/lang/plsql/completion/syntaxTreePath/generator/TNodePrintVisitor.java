@@ -25,6 +25,7 @@ package com.deepsky.lang.plsql.completion.syntaxTreePath.generator;
 
 import com.deepsky.lang.plsql.completion.syntaxTreePath.structures.*;
 
+import java.util.List;
 import java.util.Stack;
 
 
@@ -132,6 +133,9 @@ public class TNodePrintVisitor implements TNodeVisitor {
             writer.print(" ");
         }
         writer.print((node.isNegative()? "!": "") + node.getName());
+//        for(SubNode subNode: node.getSubNodeList()){
+//            subNode.accept(this);
+//        }
 
         if (node.getChildren().size() == 1) {
             lfStack.push(false);
@@ -157,6 +161,52 @@ public class TNodePrintVisitor implements TNodeVisitor {
             writer.print(" ");
         }
         writer.print(node.getName());
+
+        if (node.getChildren().size() == 1) {
+            lfStack.push(false);
+            node.getChildren().get(0).accept(this);
+            lfStack.pop();
+        } else if (node.getChildren().size() > 1) {
+            offset+=4;
+            for(TNode n: node.getChildren()){
+                lfStack.push(true);
+                n.accept(this);
+                lfStack.pop();
+            }
+            offset-=4;
+        }
+    }
+
+    @Override
+    public void visitSubNode(SubNode node) {
+        writer.print("(/");
+        if (node.getChildren().size() == 1) {
+            lfStack.push(false);
+            node.getChildren().get(0).accept(this);
+            lfStack.pop();
+        } else if (node.getChildren().size() > 1) {
+            offset+=4;
+            for(TNode n: node.getChildren()){
+                lfStack.push(true);
+                n.accept(this);
+                lfStack.pop();
+            }
+            offset-=4;
+        }
+
+        writer.print(")");
+    }
+
+    @Override
+    public void visitStringWithSubNode(StringWithSubNode node) {
+        if (lfStack.peek()) {
+            writer.println();
+            writer.print(offset(offset));
+        } else {
+            writer.print(" ");
+        }
+        writer.print((node.isNegative()? "!": "") + node.getName());
+        node.getSubNode().accept(this);
 
         if (node.getChildren().size() == 1) {
             lfStack.push(false);

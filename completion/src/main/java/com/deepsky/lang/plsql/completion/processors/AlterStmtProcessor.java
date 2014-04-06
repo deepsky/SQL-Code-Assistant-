@@ -39,10 +39,13 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiDocumentManager;
 
+import java.util.List;
 
+
+@SyntaxTreePath("/..#ALTER_TABLE")
 public class AlterStmtProcessor extends CompletionBase {
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE #TABLE_REF/#C_MARKER")
+    @SyntaxTreePath("/#ALTER #TABLE #TABLE_REF/#C_MARKER")
     public void process$alterTableName(C_Context ctx) {
         collectTableNames(ctx, new InsertHandler<LookupElement>() {
             @Override
@@ -59,7 +62,7 @@ public class AlterStmtProcessor extends CompletionBase {
     }
 
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #ERROR_TOKEN_A/#TABLE #C_MARKER")
+    @SyntaxTreePath("/#ALTER #ERROR_TOKEN_A/#TABLE #C_MARKER")
     public void process$alterTableName2(C_Context ctx) {
         collectTableNames(ctx, new InsertHandler<LookupElement>() {
             @Override
@@ -75,12 +78,21 @@ public class AlterStmtProcessor extends CompletionBase {
         });
     }
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #INDEX #TABLE_REF/#C_MARKER")
+    @SyntaxTreePath("/#ALTER #INDEX #TABLE_REF/#C_MARKER")
     public void process$anyExists(C_Context ctx) {
         // TODO -- implement me
     }
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE #TABLE_REF #ERROR_TOKEN_A/#DROP #C_MARKER")
+    @SyntaxTreePath("/#ALTER #TABLE #TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$alterTableAddColumnType(C_Context ctx) {
+        VariantsProvider provider = ctx.getProvider();
+        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup());
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+    }
+
+    @SyntaxTreePath("/#ALTER #TABLE #TABLE_REF #ERROR_TOKEN_A/#DROP #C_MARKER")
     public void process$alterTableDrop(C_Context ctx) {
 //        InsertHandler insertHandler = new InsertHandler<LookupElement>() {
 //            @Override
@@ -101,17 +113,17 @@ public class AlterStmtProcessor extends CompletionBase {
     }
 
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE #TABLE_REF #DROP #ERROR_TOKEN_A/#PRIMARY #C_MARKER")
+    @SyntaxTreePath("/#ALTER #TABLE #TABLE_REF #DROP #ERROR_TOKEN_A/#PRIMARY #C_MARKER")
     public void process$alterTableDropPrimary(C_Context ctx) {
         ctx.addElement(KeywordLookupElement.create("key"));
     }
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #ALTER_TABLE_DROP_COL/#DROP #COLUMN #COLUMN_NAME_REF/#C_MARKER")
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ALTER_TABLE_DROP_COL/#DROP #COLUMN #COLUMN_NAME_REF/#C_MARKER")
     public void process$alterTableDropColumn(C_Context ctx, ASTNode tableRef) {
         collectColumns(ctx, ((TableRef)tableRef.getPsi()).getTableName());
     }
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #DROP #ALTER_TABLE_DROP_CONSTR/#CONSTRAINT #CONSTRAINT_NAME/#C_MARKER")
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #DROP #ALTER_TABLE_DROP_CONSTR/#CONSTRAINT #CONSTRAINT_NAME/#C_MARKER")
     public void process$alterTableDropConstraint(final C_Context ctx, ASTNode tableRef) {
         VariantsProvider provider = ctx.getProvider();
         String tableName = StringUtils.discloseDoubleQuotes(tableRef.getText());
@@ -124,31 +136,57 @@ public class AlterStmtProcessor extends CompletionBase {
         });
     }
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #ERROR_TOKEN_A/#RENAME #C_MARKER")
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ERROR_TOKEN_A/#RENAME #C_MARKER")
     public void process$alterTableRename(C_Context ctx, ASTNode tableRef) {
         ctx.addElement(AlterTableLookupElement.createRenameColumn(tableRef.getText()));
         ctx.addElement(AlterTableLookupElement.createRenameConstraint(tableRef.getText()));
         ctx.addElement(AlterTableLookupElement.createRenameTable(tableRef.getText()));
     }
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #ERROR_TOKEN_A/#RENAME #COLUMN #COLUMN_NAME_REF/#C_MARKER")
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ERROR_TOKEN_A/#RENAME #COLUMN #COLUMN_NAME_REF/#C_MARKER")
     public void process$alterTableRenameColumn(C_Context ctx, ASTNode tableRef) {
         collectColumns(ctx, ((TableRef)tableRef.getPsi()).getTableName());
     }
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #ALTER_TABLE_RENAME_COL/#RENAME #COLUMN #COLUMN_NAME_REF/#C_MARKER")
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ALTER_TABLE_RENAME_COL/#RENAME #COLUMN #COLUMN_NAME_REF/#C_MARKER")
     public void process$alterTableRenameColumn2(C_Context ctx, ASTNode tableRef) {
         collectColumns(ctx, ((TableRef)tableRef.getPsi()).getTableName());
     }
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #ALTER_TABLE_RENAME_CONSTR/#RENAME #CONSTRAINT #C_MARKER")
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ALTER_TABLE_RENAME_CONSTR/#RENAME #CONSTRAINT #C_MARKER")
     public void process$alterTableRenameConstraint(C_Context ctx, ASTNode tableRef) {
         alterTableRenameConstraint(ctx, (TableRef) tableRef.getPsi());
     }
 
-    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #ERROR_TOKEN_A/#RENAME #CONSTRAINT #C_MARKER")
-    public void process$alterTableRenameConstraint2(C_Context ctx, ASTNode tableRef) {
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ERROR_TOKEN_A/#RENAME #CONSTRAINT #C_MARKER")
+    public void process$renameConstraint2(C_Context ctx, ASTNode tableRef) {
         alterTableRenameConstraint(ctx, (TableRef) tableRef.getPsi());
     }
 
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #DATATYPE #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME #C_MARKER")
+    public void process$addConstraintOnColumn(C_Context ctx, ASTNode tableRef) {
+        ctx.addElement(AlterTableLookupElement.createAddColumnPK());
+        ctx.addElement(AlterTableLookupElement.createAddColumnFK());
+        ctx.addElement(AlterTableLookupElement.createAddColumnNotNull());
+    }
+
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #DATATYPE #ERROR_TOKEN_A/#REFERENCES #C_MARKER")
+    public void process$addReferencesOnColumn(C_Context ctx, ASTNode tableRef) {
+        collectTableNames(ctx);
+    }
+
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #DATATYPE #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME #NOT #C_MARKER")
+    public void process$addConstraintOnColumnNot(C_Context ctx, ASTNode tableRef) {
+        ctx.addElement(KeywordLookupElement.create("null"));
+    }
+
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #DATATYPE #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME #PRIMARY #C_MARKER")
+    public void process$addConstraintOnColumnPrimary(C_Context ctx, ASTNode tableRef) {
+        ctx.addElement(KeywordLookupElement.create("key"));
+    }
+
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #DATATYPE #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME #REFERENCES #C_MARKER")
+    public void process$addConstraintOnColumnReferences(C_Context ctx, ASTNode tableRef) {
+        collectTableNames(ctx);
+    }
 }

@@ -42,6 +42,7 @@ tokens {
     STARTER_ONE; STARTER_TWO;
     SYMBOL; ANY_SYMBOL;
     LEFT_OPEN;
+    SUB_NODE;
 }
 
 start_rule:
@@ -68,10 +69,17 @@ inner:
 symbol:
     ((NUMBER)? "ANY") => ((NUMBER)? "ANY")
     { #symbol = #([ANY_SYMBOL, "ANY_SYMBOL" ], #symbol);}
+    | ((EXCL)? ((NUMBER)? (SHARP|DOLLAR))? IDENTIFIER OPEN_PAREN SLASH) => symbol_inner
+    { #symbol = #([SUB_NODE, "SUB_NODE" ], #symbol);}
     | ((EXCL)? ((NUMBER)? (SHARP|DOLLAR))? IDENTIFIER)
     { #symbol = #([SYMBOL, "SYMBOL" ], #symbol);}
     ;
 
+
+symbol_inner:
+    ((EXCL)? ((NUMBER)? (SHARP|DOLLAR))? IDENTIFIER OPEN_PAREN SLASH (inner)+ CLOSE_PAREN)
+    { #symbol_inner = #([SYMBOL, "SYMBOL" ], #symbol_inner);}
+    ;
 
 //
 // Lexer

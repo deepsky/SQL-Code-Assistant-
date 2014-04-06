@@ -59,6 +59,11 @@ public class DDLProcessor extends CompletionBase {
         // TODO - implement more cases
     }
 
+    @SyntaxTreePath("/..1#TABLE_DEF/#CREATE #TABLE #TABLE_NAME_DDL #AS #ERROR_TOKEN_A/#C_MARKER")
+    public void process$TableFromSelectAs(C_Context ctx, ASTNode node) {
+        ctx.addElement(SelectLookupElement.create());
+    }
+
     @SyntaxTreePath("/..1#TABLE_DEF/#CREATE #TABLE ..#PK_SPEC//..#OWNER_COLUMN_NAME_LIST/..2$ColumnNameRef/#C_MARKER")
     public void process$TablePKSpec(C_Context ctx, ASTNode node, ColumnNameRef ref) {
         VariantsProvider provider = ctx.getProvider();

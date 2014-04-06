@@ -4,7 +4,7 @@ import com.intellij.psi.tree.IElementType;
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 
 public class ANTLRType2AdoptedType {
-	static public IElementType[] type2etype = new IElementType[409];
+	static public IElementType[] type2etype = new IElementType[419];
 	static {
 		type2etype[PLSqlTokenTypes.CREATE_VIEW_COLUMN_DEF] = PLSqlTypesAdopted.CREATE_VIEW_COLUMN_DEF;
 		type2etype[PLSqlTokenTypes.DROP_VIEW] = PLSqlTypesAdopted.DROP_VIEW;
@@ -159,6 +159,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.CLOSE_STATEMENT] = PLSqlTypesAdopted.CLOSE_STATEMENT;
 		type2etype[PLSqlTokenTypes.SUBQUERY_EXPR] = PLSqlTypesAdopted.SUBQUERY_EXPR;
 		type2etype[PLSqlTokenTypes.CREATE_MATERIALIZED_VIEW_LOG] = PLSqlTypesAdopted.CREATE_MATERIALIZED_VIEW_LOG;
+		type2etype[PLSqlTokenTypes.ALTER_TABLE_RENAME] = PLSqlTypesAdopted.ALTER_TABLE_RENAME;
 		type2etype[PLSqlTokenTypes.DBTIMEZONE] = PLSqlTypesAdopted.DBTIMEZONE;
 		type2etype[PLSqlTokenTypes.VARRAY_COLLECTION] = PLSqlTypesAdopted.VARRAY_COLLECTION;
 		type2etype[PLSqlTokenTypes.SUBQUERY_CONDITION] = PLSqlTypesAdopted.SUBQUERY_CONDITION;
@@ -313,6 +314,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.CONNECT_CLAUSE] = PLSqlTypesAdopted.CONNECT_CLAUSE;
 		type2etype[PLSqlTokenTypes.TABLESPACE_NAME] = PLSqlTypesAdopted.TABLESPACE_NAME;
 		type2etype[PLSqlTokenTypes.CURSOR_NAME_REF] = PLSqlTypesAdopted.CURSOR_NAME_REF;
+		type2etype[PLSqlTokenTypes.ERR_LOGGING_CLAUSE] = PLSqlTypesAdopted.ERR_LOGGING_CLAUSE;
 		type2etype[PLSqlTokenTypes.CREATE_DIRECTORY] = PLSqlTypesAdopted.CREATE_DIRECTORY;
 		type2etype[PLSqlTokenTypes.DROP_TABLE] = PLSqlTypesAdopted.DROP_TABLE;
 		type2etype[PLSqlTokenTypes.SQLPLUS_SERVEROUTPUT] = PLSqlTypesAdopted.SQLPLUS_SERVEROUTPUT;

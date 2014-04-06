@@ -42,14 +42,61 @@ public class TreePathIteratorImpl implements TreePathIterator {
     }
 
     @Override
-    public Object next() {
-        return stateQueue.get(stateQueue.size()-1).next();
+    public Object next() throws EOFException {
+        Object o = stateQueue.get(stateQueue.size()-1).next();
+        if(o == null){
+            throw new EOFException();
+        }
+        return o;
     }
 
     @Override
-    public Object peek() {
-        return stateQueue.get(stateQueue.size()-1).peek();
+    public Object peek() throws EOFException {
+        Object o = stateQueue.get(stateQueue.size()-1).peek();
+        if(o == null){
+            throw new EOFException();
+        }
+        return o;
     }
+
+
+    @Override
+    public <T> T next(Class<T> e) throws EOFException, ClassCastException {
+        Object o = stateQueue.get(stateQueue.size()-1).next();
+        if(o == null){
+            throw new EOFException();
+        }
+
+        if(e.isInstance(o)){
+            return (T)o;
+        }
+
+        throw new ClassCastException("Target: " + e + " Object from lexer: " + o);
+    }
+
+
+    @Override
+    public <T> T peek(Class<T> e) throws EOFException, ClassCastException {
+        Object o = stateQueue.get(stateQueue.size()-1).peek();
+        if(o == null){
+            throw new EOFException();
+        }
+
+        if(e.isInstance(o)){
+            return (T)o;
+        }
+
+        throw new ClassCastException("Target: " + e + " Object from lexer: " + o);
+    }
+
+//    @Override
+//    public <T> void consume(Class<T> e) throws EOFException {
+//        Object o = stateQueue.get(stateQueue.size()-1).next();
+//        if(o == null){
+//            throw new EOFException();
+//        }
+//    }
+
 
     @Override
     public boolean hasNext() {

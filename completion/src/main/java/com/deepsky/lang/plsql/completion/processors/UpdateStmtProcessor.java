@@ -79,6 +79,11 @@ public class UpdateStmtProcessor extends CompletionBase {
         collectTableNames(ctx);
     }
 
+    @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias/#TABLE_REF/#C_MARKER")
+    public void process$UpdateTable(C_Context ctx, TableAlias t) {
+        collectTableNames(ctx);
+    }
+
     @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET #ERROR_TOKEN_A/#C_MARKER")
     public void process$UpdateColumnVar(C_Context ctx, TableAlias t) {
         collectColumns(ctx, t, false);
@@ -87,6 +92,26 @@ public class UpdateStmtProcessor extends CompletionBase {
 
     @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$UpdateColumnVar2(C_Context ctx, TableAlias t, NameFragmentRef nameRef) {
+        collectColumns(ctx, t, false);
+        if (nameRef.getPrevFragment() == null) {
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+            ctx.addElement(KeywordLookupElement.create("current_timestamp"));
+        }
+
+    }
+
+    @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET ..#COLUMN_SPEC #EQ #ARITHMETIC_EXPR//..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$UpdateColumnVar3(C_Context ctx, TableAlias t, NameFragmentRef nameRef) {
+        collectColumns(ctx, t, false);
+        if (nameRef.getPrevFragment() == null) {
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+            ctx.addElement(KeywordLookupElement.create("current_timestamp"));
+        }
+
     }
 
     @SyntaxTreePath("/#SIMPLE_UPDATE_COMMAND/#UPDATE 1$TableAlias #SET ..#WHERE_CONDITION/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")

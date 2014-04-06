@@ -390,15 +390,24 @@ public class GenericCompletionTest extends BaseCompletionTest {
     ///////////// DELETE
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void test_start6() throws Exception {
+    public void test_delete1() throws Exception {
         configureByText("delete from tab  <caret>");
         assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "update", "where");
     }
 
-    public void test_start7() throws Exception {
+    public void test_delete2() throws Exception {
         configureByText("delete from tab where id < 8 <caret>");
         assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
+
+    public void test_delete3() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(3)); delete from <caret> where id < 8;");
+        assertLookup(myItems, "tab1");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////// DROP
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void test_start8() throws Exception {
         configureByText("drop table tab <caret>");
@@ -605,6 +614,40 @@ public class GenericCompletionTest extends BaseCompletionTest {
         configureByText("update tab set a = 7 where is = 1 <caret>");
         assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select","update", "where");
     }
+
+    public void test_update_3() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10));" +
+                " create table aTab (id number, text varchar2(10)); update <caret> set id = 4;");
+        assertLookup(myItems, "tab1", "atab");
+    }
+
+    public void test_update_0() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10));" +
+                " create table aTab (id number, text varchar2(10)); update tab1  set id = <caret>;");
+        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+    }
+
+    public void test_update_01() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10));" +
+                " create table aTab (id number, text varchar2(10)); update tab1  set id = <caret> + 1000;");
+        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+    }
+
+    public void test_update_011() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10));" +
+                " create table aTab (id number, text varchar2(10)); update tab1  set id = substr(<caret>) + 1000;");
+        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+    }
+
+    public void test_update_02() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10));" +
+                " create table aTab (id number, text varchar2(10)); update tab1  set id = <caret>");
+        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////         COMMENT
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void test_comment_1() throws Exception {
         configureByText("create table tab1 (id number, text varchar2(10)); comm<caret> ");

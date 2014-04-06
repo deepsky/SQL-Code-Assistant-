@@ -23,32 +23,11 @@
 
 package com.deepsky.lang.plsql.completion.syntaxTreePath.structures;
 
-import java.io.PrintStream;
 
 public class AnySymbolNode extends TNode {
 
     public AnySymbolNode(int pos){
         super("ANY");
-    }
-
-    @Override
-    public void printOut(int offset, PrintStream writer) {
-        if(getChildren().size() == 1){
-            writer.print(offset(offset));
-            writer.print(getName());
-            writer.print("\t");
-            getChildren().get(0).printOut(0, writer);
-        } else if(getChildren().size() > 1){
-            writer.print(offset(offset));
-            writer.println(getName());
-            for(TNode child: getChildren()){
-                child.printOut(offset+4, writer);
-                writer.println();
-            }
-        } else {
-            writer.print(offset(offset));
-            writer.print(getName());
-        }
     }
 
     @Override

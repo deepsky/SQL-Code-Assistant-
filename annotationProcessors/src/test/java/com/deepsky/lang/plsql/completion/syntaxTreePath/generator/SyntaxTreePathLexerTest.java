@@ -346,5 +346,80 @@ public class SyntaxTreePathLexerTest {
         assertEquals("IDENTIFIER", t.getText());
         assertEquals(SyntaxTreePathTokenTypes.IDENTIFIER, t.getType());
     }
+
+    @Test
+    public void test_deep() throws TokenStreamException {
+
+        String test = "//1$SelectStatement(/#SELECT .. #EXPR_COLUMN ..ANY) #CARET";
+        Reader r = new StringReader(test);
+        SyntaxTreePathLexer lexer = new SyntaxTreePathLexer(r);
+
+        Token t = lexer.nextToken();
+        assertEquals("//", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.DOUBLE_SLASH, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("1", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.NUMBER, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("$", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.DOLLAR, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("SelectStatement", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.IDENTIFIER, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("(", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.OPEN_PAREN, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("/", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.SLASH, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("#", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.SHARP, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("SELECT", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.IDENTIFIER, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("..", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.DOUBLEDOT, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("#", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.SHARP, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("EXPR_COLUMN", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.IDENTIFIER, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("..", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.DOUBLEDOT, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("ANY", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.LITERAL_ANY, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals(")", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.CLOSE_PAREN, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("#", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.SHARP, t.getType());
+
+        t = lexer.nextToken();
+        assertEquals("CARET", t.getText());
+        assertEquals(SyntaxTreePathTokenTypes.IDENTIFIER, t.getType());
+
+        assertEquals(SyntaxTreePathTokenTypes.EOF, lexer.nextToken().getType());
+    }
+
 }
 

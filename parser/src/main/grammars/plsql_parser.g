@@ -344,6 +344,8 @@ tokens {
     BUILT_IT_FUNCTION_CALL; // call of built in function
     UDF_CALL; // call of function
     UDP_CALL; // call of procedure
+
+    ERR_LOGGING_CLAUSE;
 }
 
 {
@@ -3482,7 +3484,7 @@ insert_command:
     ("insert"! "into"!
         (
           (table_alias) => table_alias (column_spec_list)?
-                ( ( "values"! (parentesized_exp_list | variable_ref)) | select_expression ) (returning)?
+                ( ( "values"! (parentesized_exp_list | variable_ref)) | select_expression ) (returning|error_logging_clause)?
             { #insert_command = #([INSERT_COMMAND, "INSERT_COMMAND" ], #insert_command); }
 
          // To define the set of rows to be inserted into the target table of an INSERT statement
@@ -3490,6 +3492,11 @@ insert_command:
             { #insert_command = #([INSERT_INTO_SUBQUERY_COMMAND, "INSERT_INTO_SUBQUERY_COMMAND" ], #insert_command); }
          )
     ) // (SEMI)?
+    ;
+
+error_logging_clause:
+    "log" "errors" "into" table_spec OPEN_PAREN string_literal CLOSE_PAREN ("reject" "limit" (NUMBER|"unlimited"))?
+    { #error_logging_clause = #([ERR_LOGGING_CLAUSE, "ERR_LOGGING_CLAUSE" ], #error_logging_clause); }
     ;
 
 column_spec_list:
@@ -3507,6 +3514,7 @@ merge_command:
     "using"! ( table_alias | from_subquery ) "on" condition
     when_action (when_action)?
     ("delete" "where" condition)?
+    (error_logging_clause)?
     ;
 
 when_action:
@@ -3536,7 +3544,7 @@ update_command:
 simple_update:
     column_spec EQ plsql_expression ( COMMA column_spec EQ plsql_expression )*
     ( where_condition ) ?
-    ( returning )?
+    ( returning|error_logging_clause )?
     ;
 
 subquery_update:
@@ -3552,7 +3560,7 @@ returning:
     ;
 
 delete_command:
-    "delete"! ("from")? table_alias ( where_condition )? (returning)?
+    "delete"! ("from")? table_alias ( where_condition )? (returning|error_logging_clause)?
     ;
 
 set_transaction_command:
@@ -3921,6 +3929,7 @@ identifier2:
     | "location"
     | "limit"
     | "unlimited"
+    | "errors"
     | "concat"
     | "clob"
     | "nclob"
@@ -4271,6 +4280,7 @@ identifier_alias:
     | "location"
     | "limit"
     | "unlimited"
+    | "errors"
     | "concat"
     | "clob"
     | "nclob"
@@ -4621,6 +4631,7 @@ variable_name :
     | "location"
     | "limit"
     | "unlimited"
+    | "errors"
     | "concat"
     | "clob"
     | "nclob"

@@ -23,22 +23,33 @@
 
 package com.deepsky.lang.plsql.completion.syntaxTreePath.generator;
 
-import com.deepsky.lang.common.PlSqlTokenTypes;
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.ClassUtil;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.structures.*;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Field;
 import java.util.*;
 
 
 public class CodeGeneratorVisitor implements TNodeVisitor {
 
     WriterAdapter writer = null;
-    Stack<String> methodStack = new Stack<String>();
+    Stack<MethodContext> methodStack = new Stack<MethodContext>();
 
+
+    private class MethodContext {
+        String method;
+        boolean returnValue = false;
+
+        public MethodContext(String method) {
+            this.method = method;
+        }
+
+        public MethodContext(String method, boolean returnValue) {
+            this.method = method;
+            this.returnValue = returnValue;
+        }
+    }
 
     public CodeGeneratorVisitor() {
         this.writer = new WriterAdapter() {
@@ -55,6 +66,11 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
             @Override
             public void print(String x) {
                 System.out.print(x);
+            }
+
+            @Override
+            public void flush() {
+                System.out.flush();
             }
         };
 
@@ -88,6 +104,15 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public void flush() {
+                try {
+                    writer.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         };
     }
 
@@ -105,6 +130,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         writer.println("import com.deepsky.lang.plsql.psi.ddl.*;");
         writer.println("import com.deepsky.lang.plsql.psi.names.*;");
         writer.println("import com.deepsky.lang.common.PlSqlTokenTypes;");
+        writer.println("import java.util.Stack;");
         writer.println();
         writer.println("public class " + root.getProcessorClassName() + " extends CompletionProcessorBase {");
         writer.println();
@@ -155,9 +181,13 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         writer.println();
 
         writer.println("\tprivate TreePathContext context;");
+        writer.println("\tprivate Stack<TreePathIterator> iteStack = new Stack<TreePathIterator>();");
         writer.println();
+
+        // Generate class constructor
         writer.println("\tpublic " + root.getProcessorClassName() + "(TreePath treePath) {");
         writer.println("\t\tsuper(treePath);");
+        writer.println("\t\titeStack.push(getIterator());");
         writer.println("\t}");
         writer.println();
 
@@ -194,11 +224,11 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         writer.println("\tcontext = new TreePathContextImpl();");
         writer.println("\tlong ms = System.currentTimeMillis();");
         writer.println("\ttry {");
-        writer.println("\t\tObject o = peek();");
+        writer.println("\t\tObject o = iteStack.peek().peek();");
         writer.println("\t\tif (!(o instanceof SlashNode))");
         writer.println("\t\t\treturn false;");
         writer.println();
-        writer.println("\t\tint lexerState = saveState();");
+        writer.println("\t\tint lexerState = iteStack.peek().saveState();");
 
         String prefix = "\t\t";
         Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
@@ -208,7 +238,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
             writer.println(prefix + "if (processSS(context)){");
             writer.println(prefix + "\treturn true;");
             writer.println(prefix + "}");
-            writer.println(prefix + "setState(lexerState);");
+            writer.println(prefix + "iteStack.peek().setState(lexerState);");
             writer.println();
 
             node2MethodName.put(sSlash, "processSS");
@@ -235,7 +265,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         writer.println();
 
         for (Map.Entry<TNode, String> e : node2MethodName.entrySet()) {
-            methodStack.push(e.getValue());
+            methodStack.push(new MethodContext(e.getValue()));
             e.getKey().accept(this);
             methodStack.pop();
         }
@@ -257,12 +287,12 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
         generateMethodComment(node);
 
-        String nodeMethodName = methodStack.peek();
+        String nodeMethodName = methodStack.peek().method;
         writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
         writer.println("\tTreePathContext.Marker m = context.createMarker(\"..\");");
         writer.println("\ttry {");
         writer.println("\t\twhile(true){");
-        writer.println("\t\t\tObject o = peek();");
+        writer.println("\t\t\tObject o = iteStack.peek().peek();");
         writer.println("\t\t\tif (o instanceof SlashNode)");
         writer.println("\t\t\t\tbreak;");
         writer.println();
@@ -273,7 +303,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
             generateDD_Call(n, "\t\t\t", nodeMethodName, node2MethodName);
         }
 
-        writer.println("\t\t\tconsume(ASTNode.class);");
+        writer.println("\t\t\titeStack.peek().next(ASTNode.class);");
         writer.println("\t\t}");
         writer.println("\t} catch (EOFException ignored) {");
         writer.println("\t}");
@@ -283,45 +313,61 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         writer.println();
 
         for (Map.Entry<TNode, String> e : node2MethodName.entrySet()) {
-            methodStack.push(e.getValue());
+            methodStack.push(new MethodContext(e.getValue()));
             e.getKey().accept(this);
             methodStack.pop();
         }
     }
 
-    private String generateDD_Call(TNode node, final String prefix, final String parentMethodName, final Map<TNode, String> node2MethodName) {
+
+    private Map<String, Integer> dupNames = new HashMap<String, Integer>();
+
+    private String normalizeName(String methodName) {
+        Integer nameCounter = dupNames.get(methodName);
+        if (nameCounter == null) {
+            dupNames.put(methodName, 1);
+            return methodName;
+        } else {
+            dupNames.put(methodName, nameCounter + 1);
+            return methodName + (nameCounter + 1);
+        }
+    }
+
+    private String generateDD_Call(TNode node, final String prefix, final String parentMethodName,
+                                   final Map<TNode, String> node2MethodName) {
         String methodName = null;
         if (node instanceof StringNode) {
             StringNode stringNode = (StringNode) node;
             if (stringNode.isNegative()) {
                 writer.println(prefix + "if (" + generateConditionForSS(false, (StringNode) node) + ") {");
                 writer.println(prefix + "\t// Negative case");
-                writer.println(prefix + "\tint lexerState4 = saveState();");
+                writer.println(prefix + "\tint lexerState4 = iteStack.peek().saveState();");
                 methodName = parentMethodName + "_1_" + node.getName();
                 writer.println(prefix + "\tif (" + methodName + "(context)){");
                 writer.println(prefix + "\t\treturn true;");
                 writer.println(prefix + "\t}");
-                writer.println(prefix + "\tsetState(lexerState4);");
+                writer.println(prefix + "\titeStack.peek().setState(lexerState4);");
                 writer.println(prefix + "}");
             } else {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
-                writer.println(prefix + "\tint lexerState4 = saveState();");
-                methodName = parentMethodName + "_" + node.getName();
+                writer.println(prefix + "\tint lexerState4 = iteStack.peek().saveState();");
+                methodName = normalizeName(parentMethodName + "_" + node.getName());
+
                 writer.println(prefix + "\tif (" + methodName + "(context)){");
                 writer.println(prefix + "\t\treturn true;");
                 writer.println(prefix + "\t}");
-                writer.println(prefix + "\tsetState(lexerState4);");
+                writer.println(prefix + "\titeStack.peek().setState(lexerState4);");
                 writer.println(prefix + "}");
             }
             node2MethodName.put(node, methodName);
-        } else if (node instanceof AnySymbolNode){
+        } else if (node instanceof AnySymbolNode) {
             writer.println(prefix + "{");
-            writer.println(prefix + "\tint lexerState4 = saveState();");
+            writer.println(prefix + "\tint lexerState4 = iteStack.peek().saveState();");
             methodName = parentMethodName + "_" + node.getName();
             writer.println(prefix + "\tif (" + methodName + "(context)){");
             writer.println(prefix + "\t\treturn true;");
             writer.println(prefix + "\t}");
-            writer.println(prefix + "\tsetState(lexerState4);");
+            writer.println(prefix + "\titeStack.peek().setState(lexerState4);");
             writer.println(prefix + "}");
 
             node2MethodName.put(node, methodName);
@@ -334,14 +380,14 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
     public void visitDS(DoubleSlashNode node) {
         generateMethodComment(node);
 
-        String nodeMethodName = methodStack.peek();
+        String nodeMethodName = methodStack.peek().method;
         writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
         writer.println("\tTreePathContext.Marker m = context.createMarker(\"//\");");
         writer.println("\ttry {");
         writer.println("\t\twhile(true){");
-        writer.println("\t\t\tObject o = next();");
+        writer.println("\t\t\tObject o = iteStack.peek().next();");
         writer.println("\t\t\tif (o instanceof SlashNode){");
-        writer.println("\t\t\t\tASTNode n = peek(ASTNode.class);");
+        writer.println("\t\t\t\tASTNode n = iteStack.peek().peek(ASTNode.class);");
 
         Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
         for (TNode n : node.getChildren()) {
@@ -358,7 +404,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         writer.println();
 
         for (Map.Entry<TNode, String> e : node2MethodName.entrySet()) {
-            methodStack.push(e.getValue());
+            methodStack.push(new MethodContext(e.getValue()));
             e.getKey().accept(this);
             methodStack.pop();
         }
@@ -369,12 +415,12 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         String methodName = null;
         if (node instanceof DoubleDotNode) {
             writer.println(prefix + "{");
-            writer.println(prefix + "\tint lexerState = saveState();");
+            writer.println(prefix + "\tint lexerState = iteStack.peek().saveState();");
             methodName = parentMethodName + "_DD";
             writer.println(prefix + "\tif (" + methodName + "(context)){");
             writer.println(prefix + "\t\treturn true;");
             writer.println(prefix + "\t}");
-            writer.println(prefix + "\tsetState(lexerState);");
+            writer.println(prefix + "\titeStack.peek().setState(lexerState);");
             writer.println(prefix + "}");
 
             node2MethodName.put(node, methodName);
@@ -382,7 +428,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
             // String node
             if (node.getChildren().size() == 0) {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
-                writer.println(prefix + "\tASTNode n1 = next(ASTNode.class);");
+                writer.println(prefix + "\tASTNode n1 = iteStack.peek().next(ASTNode.class);");
                 writer.println(prefix + "\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) node) + "\");");
                 writer.println(prefix + "\tm1.setASTNode(n1, " + ((StringNode) node).isDollar() + ");");
                 writer.println(prefix + "\t// TODO - implement hit");
@@ -391,12 +437,12 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 writer.println(prefix + "}");
             } else {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
-                writer.println(prefix + "\tint lexerState3 = saveState();");
+                writer.println(prefix + "\tint lexerState3 = iteStack.peek().saveState();");
                 methodName = parentMethodName + "_" + node.getName();
                 writer.println(prefix + "\tif (" + methodName + "(context)){");
                 writer.println(prefix + "\t\treturn true;");
                 writer.println(prefix + "\t}");
-                writer.println(prefix + "\tsetState(lexerState3);");
+                writer.println(prefix + "\titeStack.peek().setState(lexerState3);");
                 writer.println(prefix + "}");
 
                 node2MethodName.put(node, methodName);
@@ -404,12 +450,12 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         } else if (node instanceof AnySymbolNode) {
             // AnySymbolNode node
             writer.println(prefix + "{");
-            writer.println(prefix + "\tint lexerState3 = saveState();");
+            writer.println(prefix + "\tint lexerState3 = iteStack.peek().saveState();");
             methodName = parentMethodName + "_" + node.getName();
             writer.println(prefix + "\tif (" + methodName + "(context)){");
             writer.println(prefix + "\t\treturn true;");
             writer.println(prefix + "\t}");
-            writer.println(prefix + "\tsetState(lexerState3);");
+            writer.println(prefix + "\titeStack.peek().setState(lexerState3);");
             writer.println(prefix + "}");
 
             node2MethodName.put(node, methodName);
@@ -424,13 +470,13 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
         generateMethodComment(node);
 
-        String nodeMethodName = methodStack.peek();
+        String nodeMethodName = methodStack.peek().method;
         writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
         writer.println("\tTreePathContext.Marker m = context.createMarker(\"/\");");
         writer.println("\tint lexerState;");
         writer.println("\ttry {");
-        writer.println("\t\tconsume(SlashNode.class);");
-        writer.println("\t\tASTNode n = peek(ASTNode.class);");
+        writer.println("\t\titeStack.peek().next(SlashNode.class);");
+        writer.println("\t\tASTNode n = iteStack.peek().peek(ASTNode.class);");
 
         Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
         for (TNode n : node.getChildren()) {
@@ -448,7 +494,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         for (TNode n : node.getChildren()) {
             String methodName = node2MethodName.get(n);
             if (methodName != null) {
-                methodStack.push(methodName);
+                methodStack.push(new MethodContext(methodName));
                 n.accept(this);
                 methodStack.pop();
             }
@@ -459,17 +505,17 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
     private String generateSS_Call(TNode node, String prefix, String parentMethodName) {
         String methodName = null;
         if (node instanceof DoubleDotNode) {
-            writer.println(prefix + "lexerState = saveState();");
+            writer.println(prefix + "lexerState = iteStack.peek().saveState();");
             methodName = parentMethodName + "_DD";
             writer.println(prefix + "if (" + methodName + "(context)){");
             writer.println(prefix + "\treturn true;");
             writer.println(prefix + "}");
-            writer.println(prefix + "setState(lexerState);");
+            writer.println(prefix + "iteStack.peek().setState(lexerState);");
         } else if (node instanceof StringNode) {
             // String node
             if (node.getChildren().size() == 0) {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
-                writer.println(prefix + "\tASTNode n1 = next(ASTNode.class);");
+                writer.println(prefix + "\tASTNode n1 = iteStack.peek().next(ASTNode.class);");
                 writer.println(prefix + "\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) node) + "\");");
                 writer.println(prefix + "\tm1.setASTNode(n1, " + ((StringNode) node).isDollar() + ");");
                 writer.println(prefix + "\t// TODO - implement hit");
@@ -478,24 +524,24 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 writer.println(prefix + "}");
             } else {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
-                writer.println(prefix + "\tint lexerState2 = saveState();");
+                writer.println(prefix + "\tint lexerState2 = iteStack.peek().saveState();");
                 methodName = parentMethodName + "_" + node.getName();
                 writer.println(prefix + "\tif (" + methodName + "(context)){");
                 writer.println(prefix + "\t\treturn true;");
                 writer.println(prefix + "\t}");
-                writer.println(prefix + "\tsetState(lexerState2);");
+                writer.println(prefix + "\titeStack.peek().setState(lexerState2);");
                 writer.println(prefix + "}");
             }
         } else if (node instanceof AnySymbolNode) {
             // AnySymbolNode node
-                writer.println(prefix + "{");
-                writer.println(prefix + "\tint lexerState2 = saveState();");
-                methodName = parentMethodName + "_" + node.getName();
-                writer.println(prefix + "\tif (" + methodName + "(context)){");
-                writer.println(prefix + "\t\treturn true;");
-                writer.println(prefix + "\t}");
-                writer.println(prefix + "\tsetState(lexerState2);");
-                writer.println(prefix + "}");
+            writer.println(prefix + "{");
+            writer.println(prefix + "\tint lexerState2 = iteStack.peek().saveState();");
+            methodName = parentMethodName + "_" + node.getName();
+            writer.println(prefix + "\tif (" + methodName + "(context)){");
+            writer.println(prefix + "\t\treturn true;");
+            writer.println(prefix + "\t}");
+            writer.println(prefix + "\titeStack.peek().setState(lexerState2);");
+            writer.println(prefix + "}");
         } else {
             System.err.println("No correct token 2!");
         }
@@ -506,13 +552,13 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
     public void visitStringNode(StringNode node) {
         generateMethodComment(node);
 
-        String nodeMethodName = methodStack.peek();
+        String nodeMethodName = methodStack.peek().method;
         writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
         writer.println("\tTreePathContext.Marker m = context.createMarker(\"" + buildMarkerName(node) + "\");");
         writer.println("\tint lexerState;");
         writer.println("\tObject o;");
         writer.println("\ttry {");
-        writer.println("\t\tm.setASTNode(next(ASTNode.class), " + node.isDollar() + ");  // Consume " + node.getName());
+        writer.println("\t\tm.setASTNode(iteStack.peek().next(ASTNode.class), " + node.isDollar() + ");  // Consume " + node.getName());
 
         Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
         if (node.getChildren().size() == 0) {
@@ -534,7 +580,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         writer.println();
 
         for (Map.Entry<TNode, String> e : node2MethodName.entrySet()) {
-            methodStack.push(e.getValue());
+            methodStack.push(new MethodContext(e.getValue()));
             e.getKey().accept(this);
             methodStack.pop();
         }
@@ -565,21 +611,214 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         String methodName = null;
         if (node instanceof DoubleDotNode) {
             writer.println(prefix + "{");
-            writer.println(prefix + "lexerState = saveState();");
+            writer.println(prefix + "lexerState = iteStack.peek().saveState();");
             methodName = parentMethodName + "_DD";
             writer.println(prefix + "if (" + methodName + "(context)){");
             writer.println(prefix + "\treturn true;");
             writer.println(prefix + "}");
-            writer.println(prefix + "setState(lexerState);");
+            writer.println(prefix + "iteStack.peek().setState(lexerState);");
             writer.println(prefix + "}");
 
             node2MethodName.put(node, methodName);
         } else if (node instanceof StringNode) {
-            writer.println(prefix + "lexerState = saveState();");
+            writer.println(prefix + "lexerState = iteStack.peek().saveState();");
             writer.println(prefix + "do {");
 
             if (node.getChildren().size() == 0) {
-                writer.println(prefix + "\to = next();");
+                writer.println(prefix + "\to = iteStack.peek().next();");
+                writer.println(prefix + "\tif (" + generateCondition(true, (StringNode) node) + ") {");
+                writer.println(prefix + "\t\t// TODO - implement hit");
+                writer.println(prefix + "\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) node) + "\");");
+                writer.println(prefix + "\t\tm1.setASTNode((ASTNode)o, " + ((StringNode) node).isDollar() + ");");
+                writer.println(prefix + "\t\tcontext.setMetaInfoRef(" + ((StringNode) node).getMetaInfoRef() + ");");
+                writer.println(prefix + "\t\treturn false;");
+                writer.println(prefix + "\t} else ");
+                writer.println(prefix + "\t\tbreak;");
+            } else {
+
+                final int[] endType = {-1};
+                final String[] methodName1 = {parentMethodName};
+                final StringNode[] last = {null};
+                //final Map<String, Integer> dupNames = new HashMap<String, Integer>();
+                iterateOverSequence(node, new SequenceProcessor() {
+                    @Override
+                    public TNode process(TNode cur) {
+                        if (cur instanceof StringNode) {
+                            if (cur.getChildren().size() <= 1) {
+                                writer.println(prefix + "\to = iteStack.peek().next();");
+                                writer.println(prefix + "\tif (" + generateCondition(false, (StringNode) cur) + ") {");
+                                writer.println(prefix + "\t\tbreak;");
+                                writer.println(prefix + "\t} else {");
+                                writer.println(prefix + "\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) cur) + "\");");
+                                writer.println(prefix + "\t\tm1.setASTNode((ASTNode)o, " + ((StringNode) cur).isDollar() + ");");
+                                writer.println(prefix + "\t}");
+
+                                methodName1[0] = methodName1[0] + "_" + cur.getName();
+                                endType[0] = 1;
+                                last[0] = (StringNode) cur;
+                                return cur.getChildren().size() == 0 ? null : cur.getChildren().get(0);
+                            } else if (cur.getChildren().size() > 1) {
+                                writer.println(prefix + "\to = iteStack.peek().peek();");
+                                writer.println(prefix + "\tif (" + generateCondition(true, (StringNode) cur) + ") {");
+                                String methodName1 = normalizeName(parentMethodName + "_" + cur.getName());
+                                node2MethodName.put(cur, methodName1);
+
+                                writer.println(prefix + "\t\tif (" + methodName1 + "(context)){");
+                                writer.println(prefix + "\t\t\treturn true;");
+                                writer.println(prefix + "\t\t}");
+                                writer.println(prefix + "\t}");
+                            }
+
+                        } else {
+                            generateString_Call(cur, prefix + "\t", methodName1[0], node2MethodName);
+                        }
+                        endType[0] = -1;
+                        return null;
+                    }
+                });
+
+                if (endType[0] == 1) {
+                    writer.println(prefix + "\t// TODO - implement hit");
+                    writer.println(prefix + "\tcontext.setMetaInfoRef(" + last[0].getMetaInfoRef() + ");");
+                    writer.println(prefix + "\treturn " + Boolean.toString(methodStack.peek().returnValue) + ";");
+//                    writer.println(prefix + "\treturn false;");
+                }
+            }
+            writer.println(prefix + "} while(false);");
+            writer.println(prefix + "iteStack.peek().setState(lexerState);");
+            writer.println(prefix + "m.rollbackTo();");
+
+        } else if (node instanceof DoubleSlashNode) {
+            writer.println(prefix + "o = iteStack.peek().peek();");
+            writer.println(prefix + "if (o instanceof SlashNode) {");
+            writer.println(prefix + "\tint lexerState1 = iteStack.peek().saveState();");
+            methodName = parentMethodName + "_DS";
+            writer.println(prefix + "\tif (" + methodName + "(context)){");
+            writer.println(prefix + "\t\treturn true;");
+            writer.println(prefix + "\t}");
+            writer.println(prefix + "\titeStack.peek().setState(lexerState1);");
+            writer.println(prefix + "}");
+
+            node2MethodName.put(node, methodName);
+        } else if (node instanceof SingleSlashNode) {
+            writer.println(prefix + "o = iteStack.peek().peek();");
+            writer.println(prefix + "if (o instanceof SlashNode) {");
+            writer.println(prefix + "\tint lexerState1 = iteStack.peek().saveState();");
+            methodName = parentMethodName + "_SS";
+            writer.println(prefix + "\tif (" + methodName + "(context)){");
+            writer.println(prefix + "\t\treturn true;");
+            writer.println(prefix + "\t}");
+            writer.println(prefix + "\titeStack.peek().setState(lexerState1);");
+            writer.println(prefix + "}");
+
+            node2MethodName.put(node, methodName);
+        }
+
+        return methodName;
+    }
+
+    @Override
+    public void visitSubNode(SubNode subNode) {
+        generateMethodComment(subNode);
+
+        String nodeMethodName = methodStack.peek().method + "_SUBNODE";
+        writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
+        writer.println("\tASTNode n;");
+        writer.println("\ttry {");
+        writer.println("\t\titeStack.push(new ASTNodeIterator(iteStack.peek().peek(ASTNode.class)));");
+
+        Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
+        for (TNode n : subNode.getChildren()) {
+            generateSubNode_Call(n, "\t\t", nodeMethodName, node2MethodName);
+        }
+
+        writer.println("\t} catch (EOFException ignored) {");
+        writer.println("\t} finally {");
+        writer.println("\t\titeStack.pop();");
+        writer.println("\t}");
+        writer.println("\treturn false;");
+        writer.println("}");
+        writer.println();
+
+        for (Map.Entry<TNode, String> e : node2MethodName.entrySet()) {
+            methodStack.push(new MethodContext(e.getValue(), true));
+            e.getKey().accept(this);
+            methodStack.pop();
+        }
+    }
+
+    @Override
+    public void visitStringWithSubNode(StringWithSubNode node) {
+        generateMethodComment(node);
+
+        String nodeMethodName = methodStack.peek().method;
+        writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
+        writer.println("\tTreePathContext.Marker m = context.createMarker(\"" + buildMarkerName(node) + "\");");
+        writer.println("\tint lexerState;");
+        writer.println("\tObject o;");
+        writer.println("\ttry {");
+
+        writer.println("\t\tif(!" + nodeMethodName + "_SUBNODE(context)) {");
+        writer.println("\t\t\tm.discard();");
+        writer.println("\t\t\treturn false;");
+        writer.println("\t\t}");
+
+        writer.println("\t\tm.setASTNode(iteStack.peek().next(ASTNode.class), " + node.isDollar() + ");  // Consume " + node.getName());
+        Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
+        if (node.getChildren().size() == 0) {
+            if (methodStack.peek().returnValue) {
+                // Called from SUBNODE
+                writer.println("\t\treturn true;");
+            } else {
+                // Standalone call
+                writer.println("\t\tcontext.setMetaInfoRef(" + node.getMetaInfoRef() + ");");
+                writer.println("\t\t// TODO - implement hit");
+                writer.println("\t\treturn false;");
+            }
+        } else if (node.getChildren().size() != 1) {
+            writer.flush();
+            throw new RuntimeException("Too many children! size=" + node.getChildren().size());
+        } else {
+            generateStringSubNode_Call(node.getChildren().get(0), "\t\t", nodeMethodName, node2MethodName);
+        }
+
+        writer.println("\t} catch (EOFException ignored) {");
+        writer.println("\t}");
+        writer.println("\tm.discard();");
+        writer.println("\treturn false;");
+        writer.println("}");
+        writer.println();
+
+        methodStack.push(new MethodContext(nodeMethodName));
+        node.getSubNode().accept(this);
+        methodStack.pop();
+
+        for (Map.Entry<TNode, String> e : node2MethodName.entrySet()) {
+            methodStack.push(new MethodContext(e.getValue()));
+            e.getKey().accept(this);
+            methodStack.pop();
+        }
+    }
+
+    private String generateStringSubNode_Call(final TNode node, final String prefix, final String parentMethodName, final Map<TNode, String> node2MethodName) {
+        String methodName = null;
+        if (node instanceof DoubleDotNode) {
+            writer.println(prefix + "{");
+            writer.println(prefix + "lexerState = iteStack.peek().saveState();");
+            methodName = parentMethodName + "_DD";
+            writer.println(prefix + "if (" + methodName + "(context)){");
+            writer.println(prefix + "\treturn true;");
+            writer.println(prefix + "}");
+            writer.println(prefix + "iteStack.peek().setState(lexerState);");
+            writer.println(prefix + "}");
+
+            node2MethodName.put(node, methodName);
+        } else if (node instanceof StringNode) {
+            writer.println(prefix + "lexerState = iteStack.peek().saveState();");
+            writer.println(prefix + "do {");
+
+            if (node.getChildren().size() == 0) {
+                writer.println(prefix + "\to = iteStack.peek().next();");
                 writer.println(prefix + "\tif (" + generateCondition(true, (StringNode) node) + ") {");
                 writer.println(prefix + "\t\t// TODO - implement hit");
                 writer.println(prefix + "\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) node) + "\");");
@@ -598,7 +837,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                     public TNode process(TNode cur) {
                         if (cur instanceof StringNode) {
                             if (cur.getChildren().size() <= 1) {
-                                writer.println(prefix + "\to = next();");
+                                writer.println(prefix + "\to = iteStack.peek().next();");
                                 writer.println(prefix + "\tif (" + generateCondition(false, (StringNode) cur) + ") {");
                                 writer.println(prefix + "\t\tbreak;");
                                 writer.println(prefix + "\t} else {");
@@ -611,14 +850,15 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                                 last[0] = (StringNode) cur;
                                 return cur.getChildren().size() == 0 ? null : cur.getChildren().get(0);
                             } else if (cur.getChildren().size() > 1) {
-                                writer.println(prefix + "\to = peek();");
+                                writer.println(prefix + "\to = iteStack.peek().peek();");
                                 writer.println(prefix + "\tif (" + generateCondition(true, (StringNode) cur) + ") {");
-                                String methodName1 = parentMethodName + "_" + cur.getName();
+                                String methodName1 = normalizeName(parentMethodName + "_" + cur.getName());
+                                node2MethodName.put(cur, methodName1);
+
                                 writer.println(prefix + "\t\tif (" + methodName1 + "(context)){");
                                 writer.println(prefix + "\t\t\treturn true;");
                                 writer.println(prefix + "\t\t}");
                                 writer.println(prefix + "\t}");
-                                node2MethodName.put(cur, methodName1);
                             }
 
                         } else {
@@ -632,54 +872,86 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 if (endType[0] == 1) {
                     writer.println(prefix + "\t// TODO - implement hit");
                     writer.println(prefix + "\tcontext.setMetaInfoRef(" + last[0].getMetaInfoRef() + ");");
-                    writer.println(prefix + "\treturn false;");
+                    writer.println(prefix + "\treturn " + Boolean.toString(methodStack.peek().returnValue) + ";");
                 }
             }
             writer.println(prefix + "} while(false);");
-            writer.println(prefix + "setState(lexerState);");
+            writer.println(prefix + "iteStack.peek().setState(lexerState);");
             writer.println(prefix + "m.rollbackTo();");
 
-        } else if (node instanceof DoubleSlashNode) {
-            writer.println(prefix + "o = peek();");
-            writer.println(prefix + "if (o instanceof SlashNode) {");
-            writer.println(prefix + "\tint lexerState1 = saveState();");
-            methodName = parentMethodName + "_DS";
-            writer.println(prefix + "\tif (" + methodName + "(context)){");
-            writer.println(prefix + "\t\treturn true;");
-            writer.println(prefix + "\t}");
-            writer.println(prefix + "\tsetState(lexerState1);");
-            writer.println(prefix + "}");
-
-            node2MethodName.put(node, methodName);
-        } else if (node instanceof SingleSlashNode) {
-            writer.println(prefix + "o = peek();");
-            writer.println(prefix + "if (o instanceof SlashNode) {");
-            writer.println(prefix + "\tint lexerState1 = saveState();");
-            methodName = parentMethodName + "_SS";
-            writer.println(prefix + "\tif (" + methodName + "(context)){");
-            writer.println(prefix + "\t\treturn true;");
-            writer.println(prefix + "\t}");
-            writer.println(prefix + "\tsetState(lexerState1);");
-            writer.println(prefix + "}");
-
-            node2MethodName.put(node, methodName);
+        } else {
+            writer.flush();
+            throw new RuntimeException("Not supported type: " + node.getChildren().size());
         }
 
         return methodName;
     }
 
 
+    private void generateSubNode_Call(TNode node, final String prefix, final String parentMethodName, final Map<TNode, String> node2MethodName) {
+        if (node instanceof StringNode) {
+            writer.println(prefix + "do {");
+            final String[] methodName1 = {parentMethodName};
+
+            iterateOverSequence(node, new SequenceProcessor() {
+                @Override
+                public TNode process(TNode cur) {
+                    if (cur instanceof StringWithSubNode) {
+                        writer.println(prefix + "\tn = iteStack.peek().peek(ASTNode.class);");
+                        writer.println(prefix + "\tif (" + generateConditionForSubNode(true, (StringNode) cur) + ") {");
+                        String methodName1 = normalizeName(parentMethodName + "_" + cur.getName());
+                        node2MethodName.put(cur, methodName1);
+
+                        writer.println(prefix + "\t\tif (!" + methodName1 + "(context)){");
+                        writer.println(prefix + "\t\t\tbreak;");
+                        writer.println(prefix + "\t\t}");
+                        writer.println(prefix + "\t} else {");
+                        writer.println(prefix + "\t\tbreak;");
+                        writer.println(prefix + "\t}");
+                        return cur.getChildren().size() == 0 ? null : cur.getChildren().get(0);
+                    } else if (cur instanceof StringNode) {
+                        if (cur.getChildren().size() <= 1) {
+                            writer.println(prefix + "\tn = iteStack.peek().next(ASTNode.class);");
+                            writer.println(prefix + "\tif (" + generateConditionForSubNode(false, (StringNode) cur) + ") {");
+                            writer.println(prefix + "\t\tbreak;");
+                            writer.println(prefix + "\t} else {");
+                            writer.println(prefix + "\t\tcontext.createMarker(\"" + buildMarkerName((StringNode) cur) + "\").setASTNode(n, " + ((StringNode) cur).isDollar() + ");");
+                            writer.println(prefix + "\t}");
+
+                            methodName1[0] = methodName1[0] + "_" + cur.getName();
+                            return cur.getChildren().size() == 0 ? null : cur.getChildren().get(0);
+                        } else {
+                            throw new RuntimeException("Too many children: " + cur.getChildren().size());
+                        }
+
+                    } else {
+                        throw new RuntimeException("Type for SubNode not supported: " + cur.getClass());
+                    }
+                }
+            });
+
+            writer.println(prefix + "\tif(iteStack.peek().hasNext() == true){");
+            writer.println(prefix + "\t\tbreak;");
+            writer.println(prefix + "\t}");
+            writer.println(prefix + "\t// ASTNode list matched");
+            writer.println(prefix + "\treturn true;");
+            writer.println(prefix + "} while(false);");
+        } else {
+            assert false;
+        }
+    }
+
     @Override
     public void visitAnySymbolNode(AnySymbolNode anySymbolNode) {
         generateMethodComment(anySymbolNode);
 
-        String nodeMethodName = methodStack.peek();
+        String nodeMethodName = methodStack.peek().method;
         writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
         writer.println("\tTreePathContext.Marker m = context.createMarker(\"ANY\");");
         writer.println("\tint lexerState;");
         writer.println("\tObject o;");
         writer.println("\ttry {");
-        writer.println("\t\tm.setASTNode(next(ASTNode.class), false);  // Consume ANY node");
+        writer.println("\t\tm.setASTNode(iteStack.peek().next(ASTNode.class), false);  // Consume ANY node");
 
         Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
         if (anySymbolNode.getChildren().size() == 0) {
@@ -702,7 +974,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         writer.println();
 
         for (Map.Entry<TNode, String> e : node2MethodName.entrySet()) {
-            methodStack.push(e.getValue());
+            methodStack.push(new MethodContext(e.getValue()));
             e.getKey().accept(this);
             methodStack.pop();
         }
@@ -712,21 +984,21 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         String methodName = null;
         if (node instanceof DoubleDotNode) {
             writer.println(prefix + "{");
-            writer.println(prefix + "lexerState = saveState();");
+            writer.println(prefix + "lexerState = iteStack.peek().saveState();");
             methodName = parentMethodName + "_DD";
             writer.println(prefix + "if (" + methodName + "(context)){");
             writer.println(prefix + "\treturn true;");
             writer.println(prefix + "}");
-            writer.println(prefix + "setState(lexerState);");
+            writer.println(prefix + "iteStack.peek().setState(lexerState);");
             writer.println(prefix + "}");
 
             node2MethodName.put(node, methodName);
         } else if (node instanceof StringNode) {
-            writer.println(prefix + "lexerState = saveState();");
+            writer.println(prefix + "lexerState = iteStack.peek().saveState();");
             writer.println(prefix + "do {");
 
             if (node.getChildren().size() == 0) {
-                writer.println(prefix + "\to = next();");
+                writer.println(prefix + "\to = iteStack.peek().next();");
                 writer.println(prefix + "\tif (" + generateCondition(true, (StringNode) node) + ") {");
                 writer.println(prefix + "\t\t// TODO - implement hit");
                 writer.println(prefix + "\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) node) + "\");");
@@ -745,7 +1017,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                     public TNode process(TNode cur) {
                         if (cur instanceof StringNode) {
                             if (cur.getChildren().size() <= 1) {
-                                writer.println(prefix + "\to = next();");
+                                writer.println(prefix + "\to = iteStack.peek().next();");
                                 writer.println(prefix + "\tif (" + generateCondition(false, (StringNode) cur) + ") {");
                                 writer.println(prefix + "\t\tbreak;");
                                 writer.println(prefix + "\t} else {");
@@ -758,7 +1030,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                                 last[0] = (StringNode) cur;
                                 return cur.getChildren().size() == 0 ? null : cur.getChildren().get(0);
                             } else if (cur.getChildren().size() > 1) {
-                                writer.println(prefix + "\to = peek();");
+                                writer.println(prefix + "\to = iteStack.peek().peek();");
                                 writer.println(prefix + "\tif (" + generateCondition(true, (StringNode) cur) + ") {");
                                 String methodName1 = parentMethodName + "_" + cur.getName();
                                 writer.println(prefix + "\t\tif (" + methodName1 + "(context)){");
@@ -783,30 +1055,30 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 }
             }
             writer.println(prefix + "} while(false);");
-            writer.println(prefix + "setState(lexerState);");
+            writer.println(prefix + "iteStack.peek().setState(lexerState);");
             writer.println(prefix + "m.rollbackTo();");
 
         } else if (node instanceof DoubleSlashNode) {
-            writer.println(prefix + "o = peek();");
+            writer.println(prefix + "o = iteStack.peek().peek();");
             writer.println(prefix + "if (o instanceof SlashNode) {");
-            writer.println(prefix + "\tlexerState = saveState();");
+            writer.println(prefix + "\tlexerState = iteStack.peek().saveState();");
             methodName = parentMethodName + "_DS";
             writer.println(prefix + "\tif (" + methodName + "(context)){");
             writer.println(prefix + "\t\treturn true;");
             writer.println(prefix + "\t}");
-            writer.println(prefix + "\tsetState(lexerState);");
+            writer.println(prefix + "\titeStack.peek().setState(lexerState);");
             writer.println(prefix + "}");
 
             node2MethodName.put(node, methodName);
         } else if (node instanceof SingleSlashNode) {
-            writer.println(prefix + "o = peek();");
+            writer.println(prefix + "o = iteStack.peek().peek();");
             writer.println(prefix + "if (o instanceof SlashNode) {");
-            writer.println(prefix + "\tlexerState = saveState();");
+            writer.println(prefix + "\tlexerState = iteStack.peek().saveState();");
             methodName = parentMethodName + "_SS";
             writer.println(prefix + "\tif (" + methodName + "(context)){");
             writer.println(prefix + "\t\treturn true;");
             writer.println(prefix + "\t}");
-            writer.println(prefix + "\tsetState(lexerState);");
+            writer.println(prefix + "\titeStack.peek().setState(lexerState);");
             writer.println(prefix + "}");
 
             node2MethodName.put(node, methodName);
@@ -889,6 +1161,33 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         }
     }
 
+
+    private String generateConditionForSubNode(boolean equals, final StringNode node) {
+        // n.getElementType() == PlSqlElementTypes." + node.getName() + "
+        // n.getElementType() != PlSqlElementTypes." + cur.getName()
+
+        if (node.isDollar()) {
+            if (equals) {
+                return "(n.getPsi() instanceof " + node.getName();
+            } else {
+                return "!(n.getPsi() instanceof " + node.getName() + ")";
+            }
+        } else {
+            final StringBuilder sb = new StringBuilder();
+
+            sb.append("n.getElementType() ");
+
+            if (equals) sb.append(" == ");
+            else sb.append(" != ");
+
+            return ClassUtil.findFieldForName(node.getName(), new ClassUtil.NameProcessor() {
+                @Override
+                public String process(String type, String prefix) {
+                    return sb.append(type).append(".").append(prefix).append(node.getName()).toString();
+                }
+            });
+        }
+    }
 
     private String buildMarkerName(StringNode node) {
         if (node.isDollar()) {

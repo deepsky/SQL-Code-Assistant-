@@ -29,10 +29,9 @@ import antlr.collections.AST;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generated.SyntaxTreePathLexer;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generated.SyntaxTreePathParser;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generated.SyntaxTreePathTokenTypes;
-import com.deepsky.lang.plsql.completion.syntaxTreePath.structures.RootNode;
-import com.deepsky.lang.plsql.completion.syntaxTreePath.structures.StringNode;
-import com.deepsky.lang.plsql.completion.syntaxTreePath.structures.TNode;
+import com.deepsky.lang.plsql.completion.syntaxTreePath.structures.*;
 
+import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
@@ -43,7 +42,7 @@ import java.util.List;
 public class CodeGenerator {
 
     private MyRootNode masterNode = new MyRootNode();
-    private List<NamePosPair> pairs = null;
+    private NamePosChain namePosChain = null;
     private String className;
 
     /**
@@ -66,14 +65,15 @@ public class CodeGenerator {
     private void addPath(String path, String className, String methodName, String[] args) throws RecognitionException, TokenStreamException {
         AST ast = parse(path);
 
-        pairs = new ArrayList<NamePosPair>();
+        //pairs = new ArrayList<NamePosPair>();
+        namePosChain = new NamePosChain();
         StringNode node = parseStartRule(ast);
 
         // Check added tree on duplication
         boolean duplicateFound = false;
-        String purePath = buildTreePath(pairs, false);
-        for(List<NamePosPair> p: masterNode.pairMap){
-            if(purePath.equals(buildTreePath(p, false))){
+        String purePath = namePosChain.printOut(false);
+        for(NamePosChain p: masterNode.pairMap){
+            if(purePath.equals(p.printOut(false))){
                 // Duplicate found!
                 // TODO - report error
                 duplicateFound = true;
@@ -83,7 +83,7 @@ public class CodeGenerator {
 
         if(!duplicateFound){
             node.setMetaInfoRef(masterNode.pairMap.size());
-            masterNode.pairMap.add(pairs);
+            masterNode.pairMap.add(namePosChain);
             masterNode.classMethodPair.add(new String[]{
                     className==null? "": className,
                     methodName==null? "": methodName});
@@ -118,13 +118,13 @@ public class CodeGenerator {
         while (cur != null) {
             if (cur.getType() == SyntaxTreePathTokenTypes.STARTER_TWO) {
                 currentNode = currentNode.findOrAddDoubleSlash();
-                pairs.add(new NamePosPair("//"));
+                namePosChain.add(new NamePosPair("//"));
                 AST two = cur.getFirstChild();
                 currentNode = parseInner(currentNode, two.getNextSibling());
             } else {
                 // SyntaxTreePathTokenTypes.STARTER_ONE
                 currentNode = currentNode.findOrAddSingleSlash();
-                pairs.add(new NamePosPair("/"));
+                namePosChain.add(new NamePosPair("/"));
                 AST one = cur.getFirstChild();
                 currentNode = parseInner(currentNode, one.getNextSibling());
             }
@@ -144,14 +144,15 @@ public class CodeGenerator {
                 currentNode = parseSymbol(currentNode, node);
             } else if (node.getType() == SyntaxTreePathTokenTypes.ANY_SYMBOL) {
                 currentNode = parseAnySymbol(currentNode, node);
-            } else {
-                //SyntaxTreePathTokenTypes.LEFT_OPEN
+            } else if (node.getType() == SyntaxTreePathTokenTypes.SUB_NODE) {
+                AST cur = node.getFirstChild();
+                currentNode = parseSubNodeSymbol(currentNode, cur);
+                int hh =0;
+            } else if (node.getType() == SyntaxTreePathTokenTypes.LEFT_OPEN){
                 AST cur = node.getFirstChild();
                 currentNode = currentNode.findOrAddDoubleDot();
-                pairs.add(new NamePosPair(".."));
-//                currentNode = parseSymbol(currentNode, cur.getNextSibling());
+                namePosChain.add(new NamePosPair(".."));
                 currentNode = parseInner(currentNode, cur.getNextSibling());
-                //node = node.getFirstChild();
             }
 
             node = node.getNextSibling();
@@ -171,7 +172,7 @@ public class CodeGenerator {
             cur = cur.getNextSibling();
         }
 
-        pairs.add(new NamePosPair("ANY", pos));
+        namePosChain.add(new NamePosPair("ANY", pos));
         return tnode.findOrAddAnySymbol(pos);
     }
 
@@ -197,38 +198,43 @@ public class CodeGenerator {
             cur = cur.getNextSibling();
         }
 
-        pairs.add(new NamePosPair(ident, pos, isDollar, isExcl));
+        namePosChain.add(new NamePosPair(ident, pos, isDollar, isExcl));
         return tnode.findOrAdd(isDollar, pos, ident, isExcl);
     }
 
 
-    private String buildTreePath(List<NamePosPair> p, boolean withPrefix){
-        StringBuilder sb = new StringBuilder();
-        for(NamePosPair pair: p){
-            if(pair.isExcl){
-                sb.append("!");
-            }
-            if(withPrefix){
-                if(pair.pos == -2){
-                    // do nothing
-                } else if(pair.pos == -1){
-                    if(!pair.isDollar){
-                        sb.append("#");
-                    }
-                } else {
-                    if(!pair.isDollar){
-                        sb.append(pair.pos).append("#");
-                    } else {
-                        sb.append(pair.pos).append("$");
-                    }
-                }
-                sb.append(pair.name).append(" ");
+    private TNode parseSubNodeSymbol(TNode tnode, AST node) {
+        AST cur = node.getFirstChild();
 
-            } else {
-                sb.append(pair.name).append(" ");
+        String ident = null;
+        int pos = -1;
+        boolean isDollar = true;
+        boolean isExcl = false;
+        while (cur != null) {
+            if (cur.getType() == SyntaxTreePathTokenTypes.NUMBER) {
+                pos = Integer.parseInt(cur.getText());
+            } else if (cur.getType() == SyntaxTreePathTokenTypes.SHARP) {
+                isDollar = false;
+            } else if (cur.getType() == SyntaxTreePathTokenTypes.DOLLAR) {
+                isDollar = true;
+            } else if (cur.getType() == SyntaxTreePathTokenTypes.IDENTIFIER) {
+                ident = cur.getText();
+            } else if (cur.getType() == SyntaxTreePathTokenTypes.EXCL) {
+                isExcl = true;
+            } else if (cur.getType() == SyntaxTreePathTokenTypes.SYMBOL) {
+                namePosChain.add(new NamePosPair(ident, pos, isDollar, isExcl));
+                namePosChain.goDown();
+                SubNode subNode = new SubNode();
+                parseInner(subNode, cur);
+                namePosChain.goUp();
+                return tnode.findOrAdd(subNode, ident, isDollar, pos, isExcl);
             }
+            cur = cur.getNextSibling();
         }
-        return sb.toString().trim();
+
+        throw new RuntimeException();
+//        namePosChain.add(new NamePosPair(ident, pos, isDollar, isExcl));
+//        return tnode.findOrAdd(isDollar, pos, ident, isExcl);
     }
 
     public void generate(Writer writer) {
@@ -241,7 +247,7 @@ public class CodeGenerator {
 
     private class MyRootNode extends RootNode {
 
-        List<List<NamePosPair>> pairMap = new ArrayList<List<NamePosPair>>();
+        List<NamePosChain> pairMap = new ArrayList<NamePosChain>();
         List<String[]> classMethodPair = new ArrayList<String[]>();
         List<String[]> methodParamTypes = new ArrayList<String[]>();
 
@@ -258,7 +264,7 @@ public class CodeGenerator {
         @Override
         public String getTreePath(int pathIndex) {
             if(pathIndex >= 0 && pathIndex < pairMap.size()){
-                return buildTreePath(pairMap.get(pathIndex), true);
+                return pairMap.get(pathIndex).printOut(true);
             } else {
                 throw new RuntimeException();
             }
@@ -267,17 +273,7 @@ public class CodeGenerator {
         @Override
         public int[] getParameterIndexList(int pathIndex) {
             if(pathIndex >= 0 && pathIndex < pairMap.size()){
-                int[] out = new int[pairMap.get(pathIndex).size()];
-                int idx = 0;
-                int nodeIdx = 0;
-                for(NamePosPair p: pairMap.get(pathIndex)){
-                    if(p.pos > 0){
-                        out[idx] = nodeIdx; // TODO - p.pos should be validated to be: sequentially incremented and started with 1
-                        idx++;
-                    }
-                    nodeIdx++;
-                }
-                return Arrays.copyOf(out, idx);
+                return pairMap.get(pathIndex).getParameterIndexList();
             } else {
                 throw new RuntimeException();
             }
@@ -296,31 +292,6 @@ public class CodeGenerator {
         @Override
         public String getMethodFor(int pathIndex) {
             return classMethodPair.get(pathIndex)[1];
-        }
-    }
-
-    private class NamePosPair {
-        String name;
-        int pos;
-        boolean isDollar;
-        boolean isExcl;
-
-        public NamePosPair(String ident, int pos, boolean isDollar, boolean isExcl) {
-            this.name = ident;
-            this.pos = pos;
-            this.isDollar = isDollar;
-            this.isExcl = isExcl;
-        }
-
-        public NamePosPair(String ident, int pos) {
-            this.name = ident;
-            this.pos = pos;
-        }
-
-        public NamePosPair(String ident) {
-            this.name = ident;
-            this.pos = -2;
-            this.isDollar = false;
         }
     }
 

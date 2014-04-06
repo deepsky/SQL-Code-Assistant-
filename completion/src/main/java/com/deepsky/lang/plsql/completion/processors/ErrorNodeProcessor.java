@@ -504,6 +504,7 @@ public class ErrorNodeProcessor extends CompletionBase {
         }
     }
 
+/*
     @SyntaxTreePath("/..1#ALTER_TABLE 1#C_MARKER")
     public void process$Start4(C_Context ctx, ASTNode alterTable, ASTNode caret) {
         ASTNode nextLeaf = PsiUtil.nextNonWSLeaf(caret);
@@ -516,6 +517,7 @@ public class ErrorNodeProcessor extends CompletionBase {
                 ctx.addElement(AlterTableLookupElement.createAddColumn(nodes.get(1).getText()));
                 ctx.addElement(AlterTableLookupElement.createDrop(nodes.get(1).getText()));
                 ctx.addElement(AlterTableLookupElement.createRename(nodes.get(1).getText()));
+                return;
             }
         } else if (childList.get(childList.size() - 1).getElementType() == PlSqlElementTypes.ALTER_TABLE_DROP_PK) {
             final ASTNode lastNode = childList.get(childList.size() - 1);
@@ -535,15 +537,86 @@ public class ErrorNodeProcessor extends CompletionBase {
             final ASTNode lastNode = childList.get(childList.size() - 1);
             if (match(lastNode, "CONSTRAINT CONSTRAINT_NAME")) {
                 ctx.addElement(KeywordLookupElement.create("cascade"));
-                if(!nextSemi){
-                    completeStart(ctx);
-                }
             }
-        } else if(!nextSemi){
-                completeStart(ctx);
+        } else if (match(childList, "ALTER TABLE TABLE_REF ADD A_COLUMN_DEF")) {
+//            final ASTNode lastNode = childList.get(childList.size() - 1);
+//            if (match(lastNode, "COLUMN_NAME_DDL DATATYPE ERROR_TOKEN_A")) {
+//                ctx.addElement(KeywordLookupElement.create("cascade"));
+//            }
+            ctx.addElement(AlterTableLookupElement.createAddColumnPK());
+            ctx.addElement(AlterTableLookupElement.createAddColumnFK());
+            ctx.addElement(AlterTableLookupElement.createAddColumnNotNull());
+            ctx.addElement(AlterTableLookupElement.createAddConstraint());
+            ctx.addElement(KeywordLookupElement.create("default"));
+        }
 
+        if(!nextSemi){
+            completeStart(ctx);
         }
     }
+*/
+
+    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #ERROR_TOKEN_A(/#TABLE 2#IDENTIFIER)) 3#C_MARKER")
+    public void process$StartTest1111(C_Context ctx, ASTNode alterTable, ASTNode tabName, ASTNode caret) {
+        ctx.addElement(AlterTableLookupElement.createAddColumn(tabName.getText()));
+        ctx.addElement(AlterTableLookupElement.createDrop(tabName.getText()));
+        ctx.addElement(AlterTableLookupElement.createRename(tabName.getText()));
+    }
+
+
+    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #TABLE #TABLE_REF #DROP #ALTER_TABLE_DROP_PK(/#PRIMARY #KEY #CASCADE))  1#C_MARKER")
+    public void process$StartTest1112(C_Context ctx, ASTNode alterTable, ASTNode caret) {
+        ASTNode nextLeaf = PsiUtil.nextNonWSLeaf(caret);
+        boolean nextSemi = nextLeaf != null && nextLeaf.getElementType() == PlSqlTokenTypes.SEMI;
+
+        ctx.addElement(AlterTableLookupElement.createDropPK_DropIndex());
+        ctx.addElement(AlterTableLookupElement.createDropPK_KeepIndex());
+        if(!nextSemi){
+            completeStart(ctx);
+        }
+    }
+
+    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #TABLE #TABLE_REF #DROP #ALTER_TABLE_DROP_PK(/#PRIMARY #KEY))  1#C_MARKER")
+    public void process$StartTest1115(C_Context ctx, ASTNode alterTable, ASTNode caret) {
+        ASTNode nextLeaf = PsiUtil.nextNonWSLeaf(caret);
+        boolean nextSemi = nextLeaf != null && nextLeaf.getElementType() == PlSqlTokenTypes.SEMI;
+
+        ctx.addElement(AlterTableLookupElement.createDropPKCascade());
+        ctx.addElement(AlterTableLookupElement.createDropPK_DropIndex());
+        ctx.addElement(AlterTableLookupElement.createDropPK_KeepIndex());
+        if(!nextSemi){
+            completeStart(ctx);
+        }
+    }
+
+    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #TABLE #TABLE_REF #DROP #ALTER_TABLE_DROP_CONSTR(/#CONSTRAINT #CONSTRAINT_NAME)) 1#C_MARKER")
+    public void process$StartTest1113(C_Context ctx, ASTNode alterTable, ASTNode caret) {
+        ASTNode nextLeaf = PsiUtil.nextNonWSLeaf(caret);
+        boolean nextSemi = nextLeaf != null && nextLeaf.getElementType() == PlSqlTokenTypes.SEMI;
+        ctx.addElement(KeywordLookupElement.create("cascade"));
+
+        if(!nextSemi){
+            completeStart(ctx);
+        }
+    }
+
+    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #TABLE #TABLE_REF #ADD #A_COLUMN_DEF)  1#C_MARKER")
+    public void process$StartTest1114(C_Context ctx, ASTNode alterTable, ASTNode caret) {
+        ASTNode nextLeaf = PsiUtil.nextNonWSLeaf(caret);
+        boolean nextSemi = nextLeaf != null && nextLeaf.getElementType() == PlSqlTokenTypes.SEMI;
+
+        ctx.addElement(AlterTableLookupElement.createAddColumnPK());
+        ctx.addElement(AlterTableLookupElement.createAddColumnFK());
+        ctx.addElement(AlterTableLookupElement.createAddColumnNotNull());
+        ctx.addElement(AlterTableLookupElement.createAddConstraint());
+        ctx.addElement(KeywordLookupElement.create("default"));
+
+        if(!nextSemi){
+            completeStart(ctx);
+        }
+    }
+
+    //@SyntaxTreePath("/..1#ALTER_TABLE(/ALTER TABLE TABLE_REF ADD A_COLUMN_DEF(/COLUMN_NAME_DDL DATATYPE ERROR_TOKEN_A)) 1#C_MARKER")
 
 
     @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #ERROR_TOKEN_A/#RENAME #COLUMN #COLUMN_NAME_REF/#C_MARKER")
@@ -599,7 +672,5 @@ public class ErrorNodeProcessor extends CompletionBase {
 
         return out;
     }
-
-
 }
 

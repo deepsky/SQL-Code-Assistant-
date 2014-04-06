@@ -23,10 +23,6 @@
 
 package com.deepsky.lang.plsql.completion.syntaxTreePath.structures;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.PrintStream;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,41 +31,41 @@ public abstract class TNode {
     private String name;
     private List<TNode> children = new ArrayList<TNode>();
 
-    public TNode(String name){
+    public TNode(String name) {
         this.name = name;
     }
 
     public TNode() {
     }
 
-    public TNode findOrAdd(@NotNull String name){
+//    public TNode findOrAdd(@NotNull String name){
+//
+//        for(TNode child: children){
+//            if(child.name.equals(name)){
+//                return child;
+//            }
+//        }
+//
+//        if(name.equals("//")){
+//            TNode node = new DoubleSlashNode();
+//            children.add(node);
+//            return node;
+//        } else if(name.equals("/")){
+//            TNode node = new SingleSlashNode();
+//            children.add(node);
+//            return node;
+//        } else if(name.equals("..")){
+//            TNode node = new SingleSlashNode();
+//            children.add(node);
+//            return node;
+//        }
+//
+//        TNode node = new StringNode(name);
+//        children.add(node);
+//        return node;
+//    }
 
-        for(TNode child: children){
-            if(child.name.equals(name)){
-                return child;
-            }
-        }
-
-        if(name.equals("//")){
-            TNode node = new DoubleSlashNode();
-            children.add(node);
-            return node;
-        } else if(name.equals("/")){
-            TNode node = new SingleSlashNode();
-            children.add(node);
-            return node;
-        } else if(name.equals("..")){
-            TNode node = new SingleSlashNode();
-            children.add(node);
-            return node;
-        }
-
-        TNode node = new StringNode(name);
-        children.add(node);
-        return node;
-    }
-
-    public String getName(){
+    public String getName() {
         return name;
     }
 
@@ -77,12 +73,11 @@ public abstract class TNode {
         return children;
     }
 
-    public abstract void printOut(int offset, PrintStream writer);
     public abstract void accept(TNodeVisitor visitor);
 
-    public TNode findOrAddDoubleSlash(){
-        for(TNode child: children){
-            if(child.name.equals("//")){
+    public TNode findOrAddDoubleSlash() {
+        for (TNode child : children) {
+            if (child.name.equals("//")) {
                 return child;
             }
         }
@@ -93,8 +88,8 @@ public abstract class TNode {
     }
 
     public TNode findOrAddSingleSlash() {
-        for(TNode child: children){
-            if(child.name.equals("/")){
+        for (TNode child : children) {
+            if (child.name.equals("/")) {
                 return child;
             }
         }
@@ -105,8 +100,8 @@ public abstract class TNode {
     }
 
     public TNode findOrAddDoubleDot() {
-        for(TNode child: children){
-            if(child.name.equals("..")){
+        for (TNode child : children) {
+            if (child.name.equals("..")) {
                 return child;
             }
         }
@@ -117,15 +112,19 @@ public abstract class TNode {
     }
 
     public TNode findOrAdd(boolean isDollar, int pos, String ident, boolean isNegative) {
-        for(TNode child: children){
-            if(child instanceof StringNode){
-                if(child.name.equals(ident)){
+        for (TNode child : children) {
+            if (child instanceof StringWithSubNode) {
+                // String node can be merged with String Node only
+                continue;
+            } else if (child instanceof StringNode) {
+                if (child.name.equals(ident)) {
                     StringNode sNode = (StringNode) child;
-                    if((sNode.isDollar() && isDollar) || (!sNode.isDollar() && !isDollar)){
-                        if((sNode.isNegative() && isNegative) || (!sNode.isNegative() && !isNegative))
-                            return child;
+                    if ((sNode.isDollar() && isDollar) || (!sNode.isDollar() && !isDollar)) {
+                        if ((sNode.isNegative() && isNegative) || (!sNode.isNegative() && !isNegative)) {
+                            return sNode;
+                        }
                     } else {
-                        // TODO different nodes with same name!!! Report error
+                        // TODO different nodes with the same name!!! Report error
                     }
                 } else {
                     // TODO check the case #TABLE_REF and $TableRef i.e. ASTNode element type against PSI element
@@ -140,8 +139,8 @@ public abstract class TNode {
 
 
     public TNode findOrAddAnySymbol(int pos) {
-        for(TNode child: children){
-            if(child instanceof AnySymbolNode){
+        for (TNode child : children) {
+            if (child instanceof AnySymbolNode) {
                 return child;
             }
         }
@@ -151,10 +150,35 @@ public abstract class TNode {
         return node;
     }
 
-    protected String offset(int offset){
+    protected String offset(int offset) {
         StringBuilder b = new StringBuilder();
-        for(int i =0; i<offset;i++)
+        for (int i = 0; i < offset; i++)
             b.append(" ");
         return b.toString();
+    }
+
+    public TNode findOrAdd(SubNode subNode, String name, boolean isDollar, int pos, boolean isNegative) {
+        for (TNode child : children) {
+            if (child instanceof StringWithSubNode) {
+                StringWithSubNode sNode = (StringWithSubNode) child;
+                if (sNode.getName().equals(name)) {
+                    if ((sNode.isDollar() && isDollar) || (!sNode.isDollar() && !isDollar)) {
+                        if ((sNode.isNegative() && isNegative) || (!sNode.isNegative() && !isNegative)) {
+                            if (sNode.getSubNode().equals(subNode)) {
+                                return sNode;
+                            }
+                        }
+                    } else {
+                        // TODO different nodes with the same name!!! Report error
+                    }
+                } else {
+                    // TODO check the case #TABLE_REF and $TableRef i.e. ASTNode element type against PSI element
+                }
+            }
+        }
+
+        TNode node = new StringWithSubNode(subNode, name, isDollar, pos, isNegative);
+        children.add(node);
+        return node;
     }
 }

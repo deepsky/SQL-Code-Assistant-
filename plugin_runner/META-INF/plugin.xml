@@ -38,12 +38,12 @@
         <li>[KNOWN ISSUE] Initial indexing of numerous SQL files (1k and more) may take time</li>
      </ul>
     <br>
-    Version 1.5.10.12<br><br>
+    Version 1.5.11.12<br><br>
 
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.5.10.129</version>
+    <version>1.5.11.129</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
@@ -54,6 +54,7 @@
             <li><b>1.5.10.129</b>
                  <ul>
                     - [NEW] Support completion for ALTER TABLE statement<br>
+                    - [NEW] Support error logging clause<br>
                     - [FIX] Fixes in completion<br>
                  </ul>
             </li>

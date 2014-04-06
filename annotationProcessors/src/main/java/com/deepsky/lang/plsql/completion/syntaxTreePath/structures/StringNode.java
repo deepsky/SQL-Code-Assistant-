@@ -23,44 +23,22 @@
 
 package com.deepsky.lang.plsql.completion.syntaxTreePath.structures;
 
-import java.io.PrintStream;
-
 public class StringNode extends TNode {
 
     private boolean isDollar = true;
-    private int pos =-1;
+    private int pos = -1;
     private int metaInfoRef;
     private boolean negative;
 
-    public StringNode(boolean isDollar, int pos, String name, boolean negative){
+    public StringNode(boolean isDollar, int pos, String name, boolean negative) {
         super(name);
         this.isDollar = isDollar;
         this.pos = pos;
         this.negative = negative;
     }
 
-    public StringNode(String name){
+    public StringNode(String name) {
         super(name);
-    }
-
-    @Override
-    public void printOut(int offset, PrintStream writer) {
-        if(getChildren().size() == 1){
-            writer.print(offset(offset));
-            writer.print(getName());
-            writer.print("\t");
-            getChildren().get(0).printOut(0, writer);
-        } else if(getChildren().size() > 1){
-            writer.print(offset(offset));
-            writer.println(getName());
-            for(TNode child: getChildren()){
-                child.printOut(offset+4, writer);
-                writer.println();
-            }
-        } else {
-            writer.print(offset(offset));
-            writer.print(getName());
-        }
     }
 
     @Override
@@ -87,4 +65,25 @@ public class StringNode extends TNode {
     public boolean isNegative() {
         return negative;
     }
+
+    public boolean equals(Object obj) {
+        if(obj instanceof StringNode && ((StringNode)obj).getChildren().size() == getChildren().size()){
+            StringNode ext = (StringNode) obj;
+            if(ext.getName().equals(getName())){
+                if((ext.isDollar() && isDollar) || (!ext.isDollar() && !isDollar)){
+                    if((ext.isNegative() && negative) || (!ext.isNegative() && !negative)){
+                        for(int i = 0; i<getChildren().size(); i++){
+                            if(!getChildren().get(i).equals(ext.getChildren().get(i)))
+                                return false;
+                        }
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } else {
+            return super.equals(obj);
+        }
+    }
+
 }

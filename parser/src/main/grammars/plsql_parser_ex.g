@@ -327,6 +327,7 @@ tokens {
 
     ALTER_TABLE_RENAME_CONSTR;
     ALTER_TABLE_RENAME_COL;
+    ALTER_TABLE_RENAME;
     ALTER_TABLE_DROP_COL;
     ALTER_TABLE_DROP_PK;
     ALTER_TABLE_DROP_COL;
@@ -343,6 +344,8 @@ tokens {
     BUILT_IT_FUNCTION_CALL; // call of built in function
     UDF_CALL; // call of function
     UDP_CALL; // call of procedure
+
+    ERR_LOGGING_CLAUSE;
 }
 
 {
@@ -1332,6 +1335,7 @@ alter_table_spec:
             (   ("constraint" identifier2 "to" identifier2)
                     {  __markRule(ALTER_TABLE_RENAME_CONSTR);}
                 | ("to" identifier2)
+                    {  __markRule(ALTER_TABLE_RENAME);}
                 | ("column" column_name_ref "to" column_name_ref)
                     {  __markRule(ALTER_TABLE_RENAME_COL);}
                 )
@@ -3480,7 +3484,7 @@ insert_command:
     ("insert"! "into"!
         (
           (table_alias) => table_alias (column_spec_list)?
-                ( ( "values"! (parentesized_exp_list | variable_ref)) | select_expression ) (returning)?
+                ( ( "values"! (parentesized_exp_list | variable_ref)) | select_expression ) (returning|error_logging_clause)?
             {  __markRule(INSERT_COMMAND); }
 
          // To define the set of rows to be inserted into the target table of an INSERT statement
@@ -3488,6 +3492,11 @@ insert_command:
             {  __markRule(INSERT_INTO_SUBQUERY_COMMAND); }
          )
     ) // (SEMI)?
+    ;
+
+error_logging_clause:
+    "log" "errors" "into" table_spec OPEN_PAREN string_literal CLOSE_PAREN ("reject" "limit" (NUMBER|"unlimited"))?
+    {  __markRule(ERR_LOGGING_CLAUSE); }
     ;
 
 column_spec_list:
@@ -3505,6 +3514,7 @@ merge_command:
     "using"! ( table_alias | from_subquery ) "on" condition
     when_action (when_action)?
     ("delete" "where" condition)?
+    (error_logging_clause)?
     ;
 
 when_action:
@@ -3534,7 +3544,7 @@ update_command:
 simple_update:
     column_spec EQ plsql_expression ( COMMA column_spec EQ plsql_expression )*
     ( where_condition ) ?
-    ( returning )?
+    ( returning|error_logging_clause )?
     ;
 
 subquery_update:
@@ -3550,7 +3560,7 @@ returning:
     ;
 
 delete_command:
-    "delete"! ("from")? table_alias ( where_condition )? (returning)?
+    "delete"! ("from")? table_alias ( where_condition )? (returning|error_logging_clause)?
     ;
 
 set_transaction_command:
@@ -3919,6 +3929,7 @@ identifier2:
     | "location"
     | "limit"
     | "unlimited"
+    | "errors"
     | "concat"
     | "clob"
     | "nclob"
@@ -4269,6 +4280,7 @@ identifier_alias:
     | "location"
     | "limit"
     | "unlimited"
+    | "errors"
     | "concat"
     | "clob"
     | "nclob"
@@ -4619,6 +4631,7 @@ variable_name :
     | "location"
     | "limit"
     | "unlimited"
+    | "errors"
     | "concat"
     | "clob"
     | "nclob"
