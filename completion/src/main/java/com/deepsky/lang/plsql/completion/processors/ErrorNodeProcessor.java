@@ -555,6 +555,22 @@ public class ErrorNodeProcessor extends CompletionBase {
         }
     }
 */
+//    @SyntaxTreePath("/..1#ALTER_TABLE 1#C_MARKER")
+//    public void process$Start4(C_Context ctx, ASTNode alterTable, ASTNode caret) {
+//        int hh = 0;
+//    }
+
+    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER ..#ADD #A_COLUMN_DEF(/#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A(/#CONSTRAINT #CONSTRAINT_NAME #REFERENCES 2#IDENTIFIER))) 3#C_MARKER")
+    public void process$AlterTabReferencesTabColumn(C_Context ctx, ASTNode alterTable, ASTNode tableRef, ASTNode marker) {
+        final boolean doFinalize = is2ndLatest(alterTable.getTreeParent(), marker);
+        final String tableName = StringUtils.discloseDoubleQuotes(tableRef.getText());
+        ctx.addElement(AlterTableLookupElement.createAddColumnFK(tableName));
+    }
+
+    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER .. #SEMI) 3#C_MARKER")
+    public void process$AlterTabEnd(C_Context ctx, ASTNode alterTable, ASTNode caret) {
+        completeStart(ctx);
+    }
 
     @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #ERROR_TOKEN_A(/#TABLE 2#IDENTIFIER)) 3#C_MARKER")
     public void process$StartTest1111(C_Context ctx, ASTNode alterTable, ASTNode tabName, ASTNode caret) {
@@ -600,14 +616,20 @@ public class ErrorNodeProcessor extends CompletionBase {
         }
     }
 
-    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #TABLE #TABLE_REF #ADD #A_COLUMN_DEF)  1#C_MARKER")
-    public void process$StartTest1114(C_Context ctx, ASTNode alterTable, ASTNode caret) {
+    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #TABLE #TABLE_REF #ADD #A_COLUMN_DEF(/#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A(/#REFERENCES 2#IDENTIFIER))) #C_MARKER")
+    public void process$AlterTableRef(C_Context ctx, ASTNode alterTable, ASTNode tableRef) {
+        final String tableName = StringUtils.discloseDoubleQuotes(tableRef.getText());
+        ctx.addElement(AlterTableLookupElement.createAddColumnFK(tableName));
+    }
+
+    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #TABLE #TABLE_REF #ADD 2#A_COLUMN_DEF(/#COLUMN_NAME_DDL $TypeSpec)) 3#C_MARKER")
+    public void process$StartTest1114(C_Context ctx, ASTNode alterTable, ASTNode colDef, ASTNode caret) {
         ASTNode nextLeaf = PsiUtil.nextNonWSLeaf(caret);
         boolean nextSemi = nextLeaf != null && nextLeaf.getElementType() == PlSqlTokenTypes.SEMI;
 
-        ctx.addElement(AlterTableLookupElement.createAddColumnPK());
+        ctx.addElement(AlterTableLookupElement.createAddColumnPK(!nextSemi));
         ctx.addElement(AlterTableLookupElement.createAddColumnFK());
-        ctx.addElement(AlterTableLookupElement.createAddColumnNotNull());
+        ctx.addElement(AlterTableLookupElement.createAddColumnNotNull(!nextSemi));
         ctx.addElement(AlterTableLookupElement.createAddConstraint());
         ctx.addElement(KeywordLookupElement.create("default"));
 
@@ -615,9 +637,6 @@ public class ErrorNodeProcessor extends CompletionBase {
             completeStart(ctx);
         }
     }
-
-    //@SyntaxTreePath("/..1#ALTER_TABLE(/ALTER TABLE TABLE_REF ADD A_COLUMN_DEF(/COLUMN_NAME_DDL DATATYPE ERROR_TOKEN_A)) 1#C_MARKER")
-
 
     @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #ERROR_TOKEN_A/#RENAME #COLUMN #COLUMN_NAME_REF/#C_MARKER")
     public void process$alterTableRenameColumn(C_Context ctx, ASTNode tableRef) {

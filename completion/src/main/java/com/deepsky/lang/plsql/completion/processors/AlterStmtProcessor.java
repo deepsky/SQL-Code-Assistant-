@@ -163,30 +163,66 @@ public class AlterStmtProcessor extends CompletionBase {
         alterTableRenameConstraint(ctx, (TableRef) tableRef.getPsi());
     }
 
-    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #DATATYPE #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME #C_MARKER")
-    public void process$addConstraintOnColumn(C_Context ctx, ASTNode tableRef) {
-        ctx.addElement(AlterTableLookupElement.createAddColumnPK());
-        ctx.addElement(AlterTableLookupElement.createAddColumnFK());
-        ctx.addElement(AlterTableLookupElement.createAddColumnNotNull());
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/2#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME/3#C_MARKER")
+    public void process$generateConstraintName(C_Context ctx, ASTNode tableRef, ASTNode column, ASTNode marker) {
+        final String tableName = StringUtils.discloseDoubleQuotes(tableRef.getText());
+        final String columnName = StringUtils.discloseDoubleQuotes(column.getText());
+
+        ctx.addElement(AlterTableLookupElement.buildAddConstraintName(tableName, columnName));
     }
 
-    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #DATATYPE #ERROR_TOKEN_A/#REFERENCES #C_MARKER")
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME 2#C_MARKER")
+    public void process$addConstraintOnColumn(C_Context ctx, ASTNode tableRef, ASTNode marker) {
+        final boolean doFinalize = is2ndLatest(tableRef.getTreeParent(), marker);
+        ctx.addElement(AlterTableLookupElement.createAddColumnPK(doFinalize));
+        ctx.addElement(AlterTableLookupElement.createAddColumnFK());
+        ctx.addElement(AlterTableLookupElement.createAddColumnNotNull(doFinalize));
+    }
+
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A/#REFERENCES #C_MARKER")
     public void process$addReferencesOnColumn(C_Context ctx, ASTNode tableRef) {
         collectTableNames(ctx);
     }
 
-    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #DATATYPE #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME #NOT #C_MARKER")
-    public void process$addConstraintOnColumnNot(C_Context ctx, ASTNode tableRef) {
-        ctx.addElement(KeywordLookupElement.create("null"));
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A/#NOT 2#C_MARKER")
+    public void process$addNotNull(C_Context ctx, ASTNode tableRef, ASTNode marker) {
+        final boolean doFinalize = is2ndLatest(tableRef.getTreeParent(), marker);
+        ctx.addElement(KeywordLookupElement.create("null", false, doFinalize));
     }
 
-    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #DATATYPE #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME #PRIMARY #C_MARKER")
-    public void process$addConstraintOnColumnPrimary(C_Context ctx, ASTNode tableRef) {
-        ctx.addElement(KeywordLookupElement.create("key"));
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME #NOT 2#C_MARKER")
+    public void process$addConstraintOnColumnNot(C_Context ctx, ASTNode tableRef, ASTNode marker) {
+        final boolean doFinalize = is2ndLatest(tableRef.getTreeParent(), marker);
+        ctx.addElement(KeywordLookupElement.create("null", false, doFinalize));
     }
 
-    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #DATATYPE #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME #REFERENCES #C_MARKER")
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME #PRIMARY 2#C_MARKER")
+    public void process$addConstraintOnColumnPrimary(C_Context ctx, ASTNode tableRef, ASTNode marker) {
+        final boolean doFinalize = is2ndLatest(tableRef.getTreeParent(), marker);
+        ctx.addElement(KeywordLookupElement.create("key", false, doFinalize));
+    }
+
+
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL $TypeSpec #COLUMN_FK_SPEC/..#REFERENCES 2#TABLE_REF #OPEN_PAREN #COLUMN_NAME_REF/3#C_MARKER")
+    public void process$addRefConstraintOnColumn(C_Context ctx, ASTNode tableRef, ASTNode tableRef2, ASTNode marker) {
+        collectColumns(ctx, StringUtils.discloseDoubleQuotes(tableRef2.getText()));
+    }
+
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A/#PRIMARY 2#C_MARKER")
+    public void process$addPKOnColumn(C_Context ctx, ASTNode tableRef, ASTNode marker) {
+        final boolean doFinalize = is2ndLatest(tableRef.getTreeParent(), marker);
+        ctx.addElement(KeywordLookupElement.create("key", false, doFinalize));
+    }
+
+    @SyntaxTreePath("/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME #REFERENCES #C_MARKER")
     public void process$addConstraintOnColumnReferences(C_Context ctx, ASTNode tableRef) {
         collectTableNames(ctx);
     }
+
+    @SyntaxTreePath("/#ALTER #TABLE #TABLE_REF #ADD #A_COLUMN_DEF/..#COLUMN_FK_SPEC/#REFERENCES 1#TABLE_REF #OPEN_PAREN #COLUMN_NAME_REF/#C_MARKER")
+    public void process$addColumnVarsFOrFK(C_Context ctx, ASTNode tableRef) {
+        final String tableName = StringUtils.discloseDoubleQuotes(tableRef.getText());
+        collectColumns(ctx, tableName);
+    }
+
 }

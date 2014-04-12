@@ -344,7 +344,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
         return new AlterTableLookupElement<LookupElement>(e);
     }
 
-    public static LookupElement createAddColumnPK() {
+    public static LookupElement createAddColumnPK(final boolean doFinalize) {
         LookupElement e = LookupElementBuilder.create("primary")
                 .withPresentableText("primary key")
                 .withCaseSensitivity(false)
@@ -353,7 +353,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = "primary key";
+                        String prefix = "primary key" + (doFinalize?";":"");
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
                         final Document document = editor.getDocument();
 
@@ -390,7 +390,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
         return new AlterTableLookupElement<LookupElement>(e);
     }
 
-    public static LookupElement createAddColumnNotNull() {
+    public static LookupElement createAddColumnNotNull(final boolean doFinalize) {
         LookupElement e = LookupElementBuilder.create("not")
                 .withPresentableText("not null")
                 .withCaseSensitivity(false)
@@ -399,7 +399,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = "not null";
+                        String prefix = "not null" + (doFinalize?";":"");
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
                         final Document document = editor.getDocument();
 
@@ -429,6 +429,53 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
                         editor.getCaretModel().moveToOffset(context.getTailOffset());
                         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
                         //LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new AlterTableLookupElement<LookupElement>(e);
+    }
+
+    public static LookupElement createAddColumnFK(String tableName) {
+        LookupElement e = LookupElementBuilder.create("(")
+                .withPresentableText("(<column name>)")
+                .withCaseSensitivity(false)
+                .withTypeText("Add a foreign key references " + tableName, true)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "()";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset()-1);
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new AlterTableLookupElement<LookupElement>(e);
+    }
+
+    public static LookupElement buildAddConstraintName(String tableName, String columnName) {
+        final String constraintName = "c_" + tableName + "_" + columnName;
+        LookupElement e = LookupElementBuilder.create(constraintName)
+                .withPresentableText(constraintName)
+                .withCaseSensitivity(false)
+                .withTypeText("Constraint name", true)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = constraintName + " ";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset());
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        LookupUtils.scheduleAutoPopup(editor, context);
                     }
                 })
                 .withStrikeoutness(false);

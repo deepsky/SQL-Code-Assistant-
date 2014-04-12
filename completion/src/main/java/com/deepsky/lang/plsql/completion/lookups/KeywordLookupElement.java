@@ -102,4 +102,26 @@ public class KeywordLookupElement  <T extends LookupElement> extends LookupEleme
         return new KeywordLookupElement<LookupElement>(
                 PrioritizedLookupElement.withGrouping(e, 3));
     }
+
+    public static LookupElement create(final String name, final boolean autoPopup, final boolean doFinalize) {
+        LookupElement e = LookupElementBuilder.create(name)
+                .withCaseSensitivity(false)
+                .withBoldness(true)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = name + (autoPopup?" ":"") + (doFinalize?";":"");
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        editor.getCaretModel().moveToOffset(context.getTailOffset());
+                        final Document document = editor.getDocument();
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        if(autoPopup)
+                            LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                });
+
+        return new KeywordLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 3));
+    }
 }

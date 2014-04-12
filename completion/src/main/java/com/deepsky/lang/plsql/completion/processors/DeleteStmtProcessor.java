@@ -70,7 +70,7 @@ public class DeleteStmtProcessor extends CompletionBase {
         }
     }
 
-    @SyntaxTreePath("/#DELETE #FROM 2$TableAlias #WHERE_CONDITION/..$Condition/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/#DELETE #FROM 2$TableAlias #WHERE_CONDITION//..$Condition/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
     public void process$DeleteWhere2(C_Context ctx, ASTNode del, TableAlias t, ASTNode expr, NameFragmentRef nameRef) {
         collectColumns(ctx, t, false);
         if(expr.getChildren(null).length == 1 && expr.getTreeParent().getPsi() instanceof LogicalExpression){

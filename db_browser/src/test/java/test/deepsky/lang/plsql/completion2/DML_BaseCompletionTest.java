@@ -97,7 +97,8 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
 
     public void testUpdate$correlated_update_with_subquery() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "a.deptno", "a.id", "a.sal", "b.deptno", "b.id", "b.sal");
+        assertSelectFieldLookup(myItems, "a.deptno", "a.id", "a.sal", "b.deptno", "b.id", "b.sal",
+                "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
     }
 
 
@@ -146,7 +147,7 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
     // DELETE
     public void testDelete$correlated_subquery_delete() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "a.deptno", "a.id", "a.sal", "exists");
+        assertSelectFieldLookup(myItems, "a.deptno", "a.id", "a.sal");
     }
 
     public void testDelete$delete0() throws Exception {

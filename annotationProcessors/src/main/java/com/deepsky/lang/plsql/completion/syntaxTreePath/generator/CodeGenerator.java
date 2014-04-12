@@ -203,13 +203,13 @@ public class CodeGenerator {
     }
 
 
-    private TNode parseSubNodeSymbol(TNode tnode, AST node) {
+    private TNode parseSubNodeSymbol(TNode tNode, AST node) {
         AST cur = node.getFirstChild();
-
         String ident = null;
         int pos = -1;
         boolean isDollar = true;
         boolean isExcl = false;
+
         while (cur != null) {
             if (cur.getType() == SyntaxTreePathTokenTypes.NUMBER) {
                 pos = Integer.parseInt(cur.getText());
@@ -221,20 +221,21 @@ public class CodeGenerator {
                 ident = cur.getText();
             } else if (cur.getType() == SyntaxTreePathTokenTypes.EXCL) {
                 isExcl = true;
-            } else if (cur.getType() == SyntaxTreePathTokenTypes.SYMBOL) {
+            } else if (cur.getType() == SyntaxTreePathTokenTypes.OPEN_PAREN) {
+                cur = cur.getNextSibling();
+                if(cur == null || cur.getType() != SyntaxTreePathTokenTypes.SLASH)
+                    throw new RuntimeException("SUBNODE - not correct syntax");
                 namePosChain.add(new NamePosPair(ident, pos, isDollar, isExcl));
                 namePosChain.goDown();
                 SubNode subNode = new SubNode();
                 parseInner(subNode, cur);
                 namePosChain.goUp();
-                return tnode.findOrAdd(subNode, ident, isDollar, pos, isExcl);
+                return tNode.findOrAdd(subNode, ident, isDollar, pos, isExcl);
             }
             cur = cur.getNextSibling();
         }
 
         throw new RuntimeException();
-//        namePosChain.add(new NamePosPair(ident, pos, isDollar, isExcl));
-//        return tnode.findOrAdd(isDollar, pos, ident, isExcl);
     }
 
     public void generate(Writer writer) {

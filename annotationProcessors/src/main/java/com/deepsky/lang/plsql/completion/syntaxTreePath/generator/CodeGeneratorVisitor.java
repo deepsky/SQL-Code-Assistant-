@@ -130,6 +130,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         writer.println("import com.deepsky.lang.plsql.psi.ddl.*;");
         writer.println("import com.deepsky.lang.plsql.psi.names.*;");
         writer.println("import com.deepsky.lang.common.PlSqlTokenTypes;");
+        writer.println("import com.deepsky.lang.plsql.psi.types.*;");
         writer.println("import java.util.Stack;");
         writer.println();
         writer.println("public class " + root.getProcessorClassName() + " extends CompletionProcessorBase {");
@@ -313,7 +314,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         writer.println();
 
         for (Map.Entry<TNode, String> e : node2MethodName.entrySet()) {
-            methodStack.push(new MethodContext(e.getValue()));
+            methodStack.push(new MethodContext(e.getValue(), methodStack.peek().returnValue));
             e.getKey().accept(this);
             methodStack.pop();
         }
@@ -347,16 +348,18 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 writer.println(prefix + "\t\treturn true;");
                 writer.println(prefix + "\t}");
                 writer.println(prefix + "\titeStack.peek().setState(lexerState4);");
+                writer.println(prefix + "\tm.rollbackTo();");
                 writer.println(prefix + "}");
             } else {
                 writer.println(prefix + "if (" + generateConditionForSS(true, (StringNode) node) + ") {");
                 writer.println(prefix + "\tint lexerState4 = iteStack.peek().saveState();");
                 methodName = normalizeName(parentMethodName + "_" + node.getName());
-
+                // TODO - optimize the case when node has no children
                 writer.println(prefix + "\tif (" + methodName + "(context)){");
                 writer.println(prefix + "\t\treturn true;");
                 writer.println(prefix + "\t}");
                 writer.println(prefix + "\titeStack.peek().setState(lexerState4);");
+                writer.println(prefix + "\tm.rollbackTo();");
                 writer.println(prefix + "}");
             }
             node2MethodName.put(node, methodName);
@@ -368,6 +371,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
             writer.println(prefix + "\t\treturn true;");
             writer.println(prefix + "\t}");
             writer.println(prefix + "\titeStack.peek().setState(lexerState4);");
+            writer.println(prefix + "\tm.rollbackTo();");
             writer.println(prefix + "}");
 
             node2MethodName.put(node, methodName);
@@ -562,9 +566,16 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
         Map<TNode, String> node2MethodName = new HashMap<TNode, String>();
         if (node.getChildren().size() == 0) {
-            writer.println("\t\tcontext.setMetaInfoRef(" + node.getMetaInfoRef() + ");");
-            writer.println("\t\t// TODO - implement hit");
-            writer.println("\t\treturn false;");
+            if (methodStack.peek().returnValue) {
+                // Called from SUBNODE
+                writer.println("\t\t//Called from SUBNODE");
+                writer.println("\t\treturn true;");
+            } else {
+                // Standalone call
+                writer.println("\t\tcontext.setMetaInfoRef(" + node.getMetaInfoRef() + ");");
+                writer.println("\t\t// TODO - implement hit");
+                writer.println("\t\treturn false;");
+            }
         } else {
             sortChildren(node);
             for (TNode n : node.getChildren()) {
@@ -620,6 +631,20 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
             writer.println(prefix + "}");
 
             node2MethodName.put(node, methodName);
+//        } else if (node instanceof StringWithSubNode) {
+//            writer.println(prefix + "do {");
+//            writer.println(prefix + "\tASTNode n = iteStack.peek().peek(ASTNode.class);");
+//            writer.println(prefix + "\tif (" + generateConditionForSubNode(true, (StringNode) node) + ") {");
+//            String methodName1 = normalizeName(parentMethodName + "_" + node.getName());
+//            node2MethodName.put(node, methodName1);
+//
+//            writer.println(prefix + "\t\tif (" + methodName1 + "(context)){");
+//            writer.println(prefix + "\t\t\tbreak;");
+//            writer.println(prefix + "\t\t}");
+//            writer.println(prefix + "\t} else {");
+//            writer.println(prefix + "\t\tbreak;");
+//            writer.println(prefix + "\treturn false");
+//            writer.println(prefix + "} while(false);");
         } else if (node instanceof StringNode) {
             writer.println(prefix + "lexerState = iteStack.peek().saveState();");
             writer.println(prefix + "do {");
@@ -630,8 +655,16 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 writer.println(prefix + "\t\t// TODO - implement hit");
                 writer.println(prefix + "\t\tTreePathContext.Marker m1 = context.createMarker(\"" + buildMarkerName((StringNode) node) + "\");");
                 writer.println(prefix + "\t\tm1.setASTNode((ASTNode)o, " + ((StringNode) node).isDollar() + ");");
-                writer.println(prefix + "\t\tcontext.setMetaInfoRef(" + ((StringNode) node).getMetaInfoRef() + ");");
-                writer.println(prefix + "\t\treturn false;");
+
+                if(methodStack.peek().returnValue){
+                    // A part of SUBNODE
+                    writer.println(prefix + "\t\t// Called from SUBNODE");
+                    writer.println(prefix + "\t\treturn true;");
+                } else {
+                    writer.println(prefix + "\t\tcontext.setMetaInfoRef(" + ((StringNode) node).getMetaInfoRef() + ");");
+                    writer.println(prefix + "\t\treturn false;");
+                }
+
                 writer.println(prefix + "\t} else ");
                 writer.println(prefix + "\t\tbreak;");
             } else {
@@ -639,7 +672,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                 final int[] endType = {-1};
                 final String[] methodName1 = {parentMethodName};
                 final StringNode[] last = {null};
-                //final Map<String, Integer> dupNames = new HashMap<String, Integer>();
+
                 iterateOverSequence(node, new SequenceProcessor() {
                     @Override
                     public TNode process(TNode cur) {
@@ -679,9 +712,14 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
 
                 if (endType[0] == 1) {
                     writer.println(prefix + "\t// TODO - implement hit");
-                    writer.println(prefix + "\tcontext.setMetaInfoRef(" + last[0].getMetaInfoRef() + ");");
-                    writer.println(prefix + "\treturn " + Boolean.toString(methodStack.peek().returnValue) + ";");
-//                    writer.println(prefix + "\treturn false;");
+                    if(methodStack.peek().returnValue){
+                        // A part of SUBNODE
+                        writer.println(prefix + "\t// Called from SUBNODE");
+                        writer.println(prefix + "\treturn true;");
+                    } else {
+                        writer.println(prefix + "\tcontext.setMetaInfoRef(" + last[0].getMetaInfoRef() + ");");
+                        writer.println(prefix + "\treturn false;");
+                    }
                 }
             }
             writer.println(prefix + "} while(false);");
@@ -724,6 +762,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         String nodeMethodName = methodStack.peek().method + "_SUBNODE";
         writer.println("private boolean " + nodeMethodName + "(TreePathContext context) {");
         writer.println("\tASTNode n;");
+        writer.println("\tint lexerState;");
         writer.println("\ttry {");
         writer.println("\t\titeStack.push(new ASTNodeIterator(iteStack.peek().peek(ASTNode.class)));");
 
@@ -768,6 +807,7 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
         if (node.getChildren().size() == 0) {
             if (methodStack.peek().returnValue) {
                 // Called from SUBNODE
+                writer.println("\t\t//Called from SUBNODE");
                 writer.println("\t\treturn true;");
             } else {
                 // Standalone call
@@ -925,19 +965,29 @@ public class CodeGeneratorVisitor implements TNodeVisitor {
                         }
 
                     } else {
-                        throw new RuntimeException("Type for SubNode not supported: " + cur.getClass());
+                        generateSubNode_Call(cur, prefix, parentMethodName, node2MethodName );
+                        return null;
+//                        throw new RuntimeException("Type for SubNode not supported: " + cur.getClass());
                     }
                 }
             });
 
-            writer.println(prefix + "\tif(iteStack.peek().hasNext() == true){");
+            writer.println(prefix + "\t// Make sure no more nodes existing");
+            writer.println(prefix + "\tif(iteStack.peek().hasNext()){");
             writer.println(prefix + "\t\tbreak;");
             writer.println(prefix + "\t}");
             writer.println(prefix + "\t// ASTNode list matched");
             writer.println(prefix + "\treturn true;");
             writer.println(prefix + "} while(false);");
+        } else if (node instanceof DoubleDotNode){
+            String methodName = parentMethodName + "_DD";
+            writer.println(prefix + "\tif (!" + methodName + "(context)){");
+            writer.println(prefix + "\t\treturn false;");
+            writer.println(prefix + "\t}");
+
+            node2MethodName.put(node, methodName);
         } else {
-            assert false;
+            throw new RuntimeException("Not expected node: " + node);
         }
     }
 

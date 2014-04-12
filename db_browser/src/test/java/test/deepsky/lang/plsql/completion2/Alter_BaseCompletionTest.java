@@ -116,6 +116,11 @@ public class Alter_BaseCompletionTest extends BaseCompletionTest {
         assertSelectFieldLookup(myItems,  "item_foreign_key", "item_primary_key");
     }
 
+    public void test_after_alter() throws Exception {
+        configureByText("alter table tab1 add name varchar2(20);\n<caret> ");
+        assertLookup(myItems, "create", "alter", "comment", "delete", "drop", "insert", "select","update");
+    }
+
     public void test_add() throws Exception {
         configureByText("alter table tab1 add column1 number <caret>");
         assertLookup(myItems, "not", "default", "primary", "constraint", "references",
@@ -129,33 +134,80 @@ public class Alter_BaseCompletionTest extends BaseCompletionTest {
 
     public void test_add_pk() throws Exception {
         configureByText("alter table tab1 add column1 number primary <caret>");
-        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+        assertLookup(myItems, "key");
     }
 
     public void test_add_notnull() throws Exception {
         configureByText("alter table tab1 add column1 number not <caret>");
-        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+        assertLookup(myItems, "null");
     }
 
     public void test_add_default() throws Exception {
-        configureByText("alter table tab1 add column1 number not <caret>");
-        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+        configureByText("alter table tab1 add column1 number def<caret>");
+        assertLookup(myItems, "default");
     }
 
     public void test_add_references() throws Exception {
         configureByText("create table tab1 (id number, text varchar2(10));" +
                 " create table aTab (id number, text varchar2(10)); alter table tab1 add column1 number references <caret>;");
-        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+        assertLookup(myItems, "atab", "tab1");
     }
 
     public void test_add_references2() throws Exception {
         configureByText("create table tab1 (id number, text varchar2(10));" +
                 " create table aTab (id number, text varchar2(10)); alter table tab1 add column1 number references aTab <caret>;");
-        assertLookup(myItems, "id", "text", "sysdate", "systimestamp", "current_timestamp", "dbtimezone");
+        assertLookup(myItems, "(");
     }
 
-    public void test_add_constraint() throws Exception {
+    public void test_add_references2_1() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10));" +
+                " create table aTab (id number, text varchar2(10)); alter table tab1 add column1 number references aTab (<caret>);");
+        assertLookup(myItems, "id", "text");
+    }
+
+    public void test_add_constraint0() throws Exception {
+        configureByText("alter table tab1 add column1 number constraint <caret>");
+        assertLookup(myItems, "c_tab1_column1");
+    }
+
+    public void test_add_constraint1() throws Exception {
         configureByText("alter table tab1 add column1 number constraint constraint_name1 <caret>");
         assertLookup(myItems, "not", "primary", "references");
     }
+
+    public void test_add_constraint2() throws Exception {
+        configureByText( "create table tab1 (id number, text varchar2(10));" +
+                "create table child (id number, text varchar2(10));" +
+                "alter table child add tab1_id number constraint constraint_name1 references tab1 <caret>");
+        assertLookup(myItems, "(");
+    }
+
+    public void test_add_constraint3() throws Exception {
+        configureByText( "create table tab1 (id number, text varchar2(10));" +
+                "create table child (id number, text varchar2(10));" +
+                "alter table child add tab1_id number constraint constraint_name1 references tab1 (<caret>)");
+        assertLookup(myItems, "id", "text");
+    }
+
+    public void test_add_constraint2_0() throws Exception {
+        configureByText( "create table tab1 (id number, text varchar2(10));" +
+                "create table child (id number, text varchar2(10));" +
+                "alter table child add tab1_id number references <caret>");
+        assertLookup(myItems, "tab1", "child");
+    }
+
+    public void test_add_constraint2_1() throws Exception {
+        configureByText( "create table tab1 (id number, text1 varchar2(10));" +
+                "create table child (id number, text varchar2(10));" +
+                "alter table child add tab1_id number references tab1 <caret>");
+        assertLookup(myItems, "(");
+    }
+
+    public void test_add_constraint3_1() throws Exception {
+        configureByText( "create table tab1 (id number, text1 varchar2(10));" +
+                "create table child (id number, text varchar2(10));" +
+                "alter table child add tab1_id number references tab1 (<caret>)");
+        assertLookup(myItems, "id", "text1");
+    }
+
 }

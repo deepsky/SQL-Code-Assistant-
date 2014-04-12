@@ -250,7 +250,8 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$subqueries_instead_columns1() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "e.deptno", "e.id", "e.sal", "deptno1", "id1", "sal1");
+        assertSelectFieldLookup(myItems, "e.deptno", "e.id", "e.sal", "deptno1", "id1", "sal1",
+                "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
     }
 
     public void testSelect$asterisk() throws Exception {
