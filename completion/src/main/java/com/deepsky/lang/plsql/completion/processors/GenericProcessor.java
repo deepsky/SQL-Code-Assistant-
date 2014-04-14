@@ -177,6 +177,17 @@ public class GenericProcessor extends CompletionBase {
         }
     }
 
+    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION//..#FUNCTION_CALL/..#CALL_ARGUMENT_LIST/..#CALL_ARGUMENT/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$SelectWhereSysFunc(C_Context ctx, ASTNode exprColumn, NameFragmentRef ref) {
+        PsiElement parent = exprColumn.getTreeParent().getPsi();
+        if(parent instanceof SelectStatement){
+            collectColumnsAndSysFunc(ctx, (SelectStatement) parent,ref );
+            collectSystemFunctions(ctx);
+        } else {
+            // TODO - handle error case
+        }
+    }
+
     @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN/..#ARITHMETIC_EXPR/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$SelectExpr(C_Context ctx, ASTNode exprColumn, NameFragmentRef ref) {
         PsiElement parent = exprColumn.getTreeParent().getPsi();
@@ -196,6 +207,7 @@ public class GenericProcessor extends CompletionBase {
             }
             SelectStatement select = (SelectStatement) parent.getPsi();
             collectColumns(ctx, select, nameRef);
+            collectSystemFunctions(ctx);
         }
     }
 
@@ -262,7 +274,7 @@ public class GenericProcessor extends CompletionBase {
     }
 
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#EXISTS_EXPR/..#SUBQUERY/..$SelectStatement/..#WHERE_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION//..#EXISTS_EXPR/..#SUBQUERY/..$SelectStatement/..#WHERE_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$SelectExistsExpr(C_Context ctx, ASTNode where, ASTNode expr, NameFragmentRef nameRef) {
         ASTNode parent = where.getTreeParent();
         if(parent.getPsi() instanceof SelectStatement){
@@ -283,7 +295,7 @@ public class GenericProcessor extends CompletionBase {
     }
 
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#EXISTS_EXPR/..#SUBQUERY/..$SelectStatement/..#WHERE_CONDITION/..2$Condition/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION//..#EXISTS_EXPR/..#SUBQUERY/..$SelectStatement/..#WHERE_CONDITION/..2$Condition/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
     public void process$SelectExistsExpr2(C_Context ctx, ASTNode where, Condition condition, ASTNode expr, NameFragmentRef nameRef) {
         ASTNode parent = where.getTreeParent();
         if(parent.getPsi() instanceof SelectStatement){
@@ -303,7 +315,7 @@ public class GenericProcessor extends CompletionBase {
         }
     }
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION/..#EXISTS_EXPR/..#SUBQUERY/..$SelectStatement/..#WHERE_CONDITION/..$Condition/..2$Condition/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
+    @SyntaxTreePath("/..ANY//#SELECT ..1#WHERE_CONDITION//..#EXISTS_EXPR/..#SUBQUERY/..$SelectStatement/..#WHERE_CONDITION/..$Condition/..2$Condition/..3#VAR_REF/..4$NameFragmentRef/#C_MARKER")
     public void process$SelectExistsExpr3(C_Context ctx, ASTNode where, Condition condition, ASTNode expr, NameFragmentRef nameRef) {
         ASTNode parent = where.getTreeParent();
         if(parent.getPsi() instanceof SelectStatement){

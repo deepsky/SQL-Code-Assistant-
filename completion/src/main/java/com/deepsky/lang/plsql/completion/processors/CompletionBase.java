@@ -125,7 +125,7 @@ public abstract class CompletionBase {
         }
 
         // Collect table names/table correlation names as a prefix of column names
-        for (LookupElement elem : provider.collectCorrelationOrTableNames(select, ctx.getLookup())){
+        for (LookupElement elem : provider.collectCorrelationOrTableNames(select, ctx.getLookup())) {
             ctx.addElement(elem);
         }
     }
@@ -182,6 +182,57 @@ public abstract class CompletionBase {
         }
     }
 
+    protected void collectViewNames(C_Context ctx) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectViewNameVariants(ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+    }
+
+    protected void collectFunctionNames(C_Context ctx) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectSchemaWideFunctions(ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+    }
+
+    protected void collectProcedureNames(C_Context ctx) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectSchemaWideProcedures(ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+    }
+
+    protected void collectSequenceNames(C_Context ctx) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectSequenceVariants(null, ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+    }
+
+    protected void collectTriggerNames(C_Context ctx) {
+        VariantsProvider provider = ctx.getProvider();
+        final List<LookupElement> variants = new ArrayList<LookupElement>();
+        variants.addAll(provider.collectTriggerVariants(ctx.getLookup()));
+
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+    }
+
+
     protected void collectTableNames(@NotNull C_Context ctx, @NotNull InsertHandler<LookupElement> insertHandler) {
         VariantsProvider provider = ctx.getProvider();
         final List<LookupElement> variants = new ArrayList<LookupElement>();
@@ -222,6 +273,16 @@ public abstract class CompletionBase {
             ctx.addElement(elem);
         }
     }
+
+    protected void collectSystemFunctions(C_Context ctx) {
+        VariantsProvider provider = ctx.getProvider();
+        if (ctx.getLookup() != null && ctx.getLookup().length() > 0) {
+            for (LookupElement elem : provider.collectSystemFuncCall(ctx.getLookup())) {
+                ctx.addElement(elem);
+            }
+        }
+    }
+
 
     protected void completeStart(C_Context ctx) {
         ctx.addElement(SelectLookupElement.create());

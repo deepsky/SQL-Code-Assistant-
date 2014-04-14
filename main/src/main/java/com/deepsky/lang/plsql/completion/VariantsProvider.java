@@ -66,6 +66,8 @@ public interface VariantsProvider {
     List<LookupElement> collectVarVariants(String usageCtx, String lookUpStr);
 
     List<LookupElement> collectFuncCall(String usageCtx, String alias, String lookUpStr);
+    Collection<LookupElement> collectSchemaWideFunctions(String lookUpStr);
+    Collection<LookupElement> collectSchemaWideProcedures(String lookUpStr);
 
     List<LookupElement> collectProcCall(String usageCtx, String alias, String lookUpStr);
 
@@ -80,6 +82,7 @@ public interface VariantsProvider {
     List<LookupElement> collectColumnNames(@NotNull String tableName, String lookupStr);
 
     Collection<? extends LookupElement> collectSequenceVariants(String prevText, String lookUpStr);
+    Collection<? extends LookupElement> collectTriggerVariants(String lookUpStr);
 
 
     /**

@@ -888,7 +888,7 @@ synonym_name:
 
 create_db_link:
     "database" "link" object_name
-    "connect" "to" identifier2 "identified" "by" DOUBLE_QUOTED_STRING
+    "connect" "to" identifier2 "identified" "by" (DOUBLE_QUOTED_STRING|identifier2)
     ("using" (identifier2|string_literal))?
     ;
 
@@ -3345,6 +3345,8 @@ pseudo_column :
         { #pseudo_column = #([CURRENT_TIMESTAMP_CONST, "CURRENT_TIMESTAMP_CONST"], #pseudo_column); }
         | "dbtimezone"
         { #pseudo_column = #([DBTIMEZONE, "DBTIMEZONE"], #pseudo_column); }
+        | "sessiontimezone"
+        { #pseudo_column = #([DBTIMEZONE, "DBTIMEZONE"], #pseudo_column); }
         | "rownum"
         { #pseudo_column = #([ROWNUM, "ROWNUM"], #pseudo_column); }
         | (name_fragment2 DOT)? "rowid"
@@ -3800,6 +3802,7 @@ identifier2:
 //    | "user"      not allowed in column
 //    | "date"  todo -- is it legal to have identifer DATE??
     | "dbtimezone"
+    | "sessiontimezone"
     | "commit"
     | "rollback"
     | "savepoint"
@@ -4151,6 +4154,7 @@ identifier_alias:
 //    | "user"      not allowed in column
 //    | "date"  todo -- is it legal to have identifer DATE??
     | "dbtimezone"
+    | "sessiontimezone"
     | "commit"
     | "rollback"
     | "savepoint"
@@ -4498,7 +4502,7 @@ variable_name :
     | "open"
     | "exec"
     | "user"
-    | "dbtimezone"
+//    | "dbtimezone"
     | "execute"
     | "commit"
     | "rollback"

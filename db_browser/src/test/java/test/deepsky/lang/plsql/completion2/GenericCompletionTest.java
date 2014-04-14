@@ -23,7 +23,6 @@
 
 package test.deepsky.lang.plsql.completion2;
 
-import com.intellij.codeInsight.CodeInsightSettings;
 
 public class GenericCompletionTest extends BaseCompletionTest {
 
@@ -43,12 +42,58 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_start12() throws Exception {
         configureByText("select c<caret>");
-        assertLookup(myItems, "count");
+        assertLookup(myItems, "count", "cast", "chr", "case");
     }
 
     public void test_start13() throws Exception {
         configureByText("select count(*) <caret>");
         assertLookup(myItems, "from");
+    }
+
+    public void test_select_start() throws Exception {
+        configureByText("select my_func() <caret>");
+        assertLookup(myItems, "from");
+    }
+
+    public void test_select_start1() throws Exception {
+        configureByText("select my_func(id, name) <caret>");
+        assertLookup(myItems, "from");
+    }
+
+    public void test_select_start2() throws Exception {
+        configureByText("select shift_timestamp(TIMESTAMP '2005-09-11 01:50:42')\n" +
+                ", TIMESTAMP '2005-09-11 01:50:42' <caret>");
+        assertLookup(myItems, "from");
+    }
+
+    public void test_select_start3() throws Exception {
+        configureByText("select sys<caret>");
+        assertLookup(myItems, "sysdate", "systimestamp", "sys_extract_utc");
+    }
+
+    public void test_select_start31() throws Exception {
+        configureByText("select 'Hello' || sys<caret>");
+        assertLookup(myItems, "sysdate", "systimestamp", "sys_extract_utc");
+    }
+
+    public void test_select_start32() throws Exception {
+        configureByText("select (1-2/98) + to_n<caret>");
+        assertLookup(myItems, "to_number", "to_number");
+    }
+
+    public void test_select_start4() throws Exception {
+        configureByText("select ses<caret>");
+        assertLookup(myItems, "sessiontimezone");
+    }
+
+    public void test_select_start5() throws Exception {
+        configureByText("select to_time<caret>");
+        assertLookup(myItems, "to_timestamp_tz", "to_timestamp");
+    }
+
+    public void test_select_start6() throws Exception {
+        configureByText("select sysdate, to_time<caret>");
+        assertLookup(myItems, "to_timestamp_tz", "to_timestamp");
     }
 
     public void test_start131() throws Exception {
@@ -106,12 +151,12 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_select_12() throws Exception {
         configureByText("create sequence seq1; select * from dual where \n <caret>");
-        assertLookup(myItems, "exists");
+        assertLookupFilterOutFunc(myItems, "exists");
     }
 
     public void test_select_2() throws Exception {
         configureByText("create table tab (a integer); select * from tab where <caret>");
-        assertLookup(myItems, "a", "exists");
+        assertLookupFilterOutFunc(myItems, "a", "exists");
     }
 
     public void test_select_21() throws Exception {
@@ -148,6 +193,32 @@ public class GenericCompletionTest extends BaseCompletionTest {
         configureByText("create table tab (a integer); select * from tab order by <caret>");
         assertLookupFilterOutFunc(myItems, "a");
     }
+
+    public void test_select_42() throws Exception {
+        configureByText("create table tab (a integer); select * from tab where to_custom(<caret>)");
+        assertLookupFilterOutFunc(myItems, "a", "current_timestamp","dbtimezone","sysdate","systimestamp");
+    }
+
+    public void test_select_43() throws Exception {
+        configureByText("create table tab (a integer); select * from tab where to_<caret>");
+        assertLookup(myItems, "to_number", "to_number", "to_timestamp", "to_timestamp_tz", "to_char", "to_char", "to_date","to_date","to_dsinterval");
+    }
+
+    public void test_select_44() throws Exception {
+        configureByText("create table tab (a integer); select * from tab where to_custom(sub<caret>)");
+        assertLookup(myItems, "substr",  "substr");
+    }
+
+    public void test_select_45() throws Exception {
+        configureByText("create table tab (a integer); select * from tab where to_custom(substr(<caret>))");
+        assertLookupFilterOutFunc(myItems, "a", "current_timestamp","dbtimezone","sysdate","systimestamp");
+    }
+
+    public void test_select_46() throws Exception {
+        configureByText("create table tab (a integer); select * from tab where to_custom('1234' || substr(<caret>))");
+        assertLookupFilterOutFunc(myItems, "a","current_timestamp","dbtimezone","sysdate","systimestamp");
+    }
+
 
     public void test_select_5() throws Exception {
         configureByText("create table tab (a integer); select * from tab group <caret>");
@@ -688,4 +759,33 @@ public class GenericCompletionTest extends BaseCompletionTest {
         configureByText("create table tab1 (id number, text varchar2(10)); comment on table <caret> ");
         assertLookup(myItems, "tab1");
     }
+
+
+    public void test_create_table_as_select() throws Exception {
+        configureByText("create table TAB123\n" +
+                "as select *\n" +
+                "   from TAB\n" +
+                "  where id <20000000 <caret> ");
+        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select","update");
+    }
+
+    public void test_create_table_as_select1() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10));" +
+                "create table TAB123\n" +
+                "as select *\n" +
+                "   from TAB1\n" +
+                "  where id <20000000 or <caret> ");
+        assertLookupFilterOutFunc(myItems, "id", "text", "exists", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
+    }
+
+    public void test_create_table_as_select2() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10));" +
+                "create table TAB123\n" +
+                "as select *\n" +
+                "   from TAB1\n" +
+                "  where id <20000000 and <caret> ");
+        assertLookupFilterOutFunc(myItems, "id", "text", "exists", "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
+    }
 }
+
+

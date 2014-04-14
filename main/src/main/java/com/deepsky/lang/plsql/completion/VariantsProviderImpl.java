@@ -615,7 +615,7 @@ public class VariantsProviderImpl implements VariantsProvider {
         return out;
     }
 
-    private Collection<LookupElement> collectSchemaWideFunctions(String lookUpStr) {
+    public Collection<LookupElement> collectSchemaWideFunctions(String lookUpStr) {
         Set<LookupElement> out = new HashSet<LookupElement>();
         ContextItem[] procs = nameProvider.findTopLevelItems(
                 new int[]{ContextPath.FUNCTION_BODY, ContextPath.FUNCTION_SPEC}, null
@@ -740,7 +740,7 @@ public class VariantsProviderImpl implements VariantsProvider {
     }
 
 
-    private Collection<LookupElement> collectSchemaWideProcedures(String lookUpStr) {
+    public Collection<LookupElement> collectSchemaWideProcedures(String lookUpStr) {
         Set<LookupElement> out = new HashSet<LookupElement>();
         ContextItem[] procs = nameProvider.findTopLevelItems(
                 new int[]{ContextPath.PROCEDURE_BODY, ContextPath.PROCEDURE_SPEC}, null
@@ -860,6 +860,19 @@ public class VariantsProviderImpl implements VariantsProvider {
         return out;
     }
 
+
+    public Collection<? extends LookupElement> collectTriggerVariants(String lookUpStr) {
+        final List<LookupElement> out = new ArrayList<LookupElement>();
+            // Find triggers
+            ContextItem[] findings = nameProvider.findTopLevelItems(new int[]{ContextPath.CREATE_TRIGGER}, null);
+            for (ContextItem seq : findings) {
+                String name = ContextPathUtil.extractLastCtxName(seq.getCtxPath());
+                if (name.toLowerCase().startsWith(lookUpStr.toLowerCase())) {
+                    out.add(TriggerLookupElement.create(name));
+                }
+            }
+        return out;
+    }
 
     public List<LookupElement> collectColumnNames(@NotNull String tableName, String lookupStr) {
         final List<ColumnElement> columns = new ArrayList<ColumnElement>();

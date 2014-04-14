@@ -67,7 +67,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
 //                .withPresentableText("alter table " + tableName + " add <column> <type>")
                 .withPresentableText("add <column> <type>")
                 .withCaseSensitivity(false)
-                .withTypeText("Add column to " + tableName, true)
+                .withTypeText("Add column to " + tableName.toUpperCase(), true)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
@@ -90,7 +90,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
         LookupElement e = LookupElementBuilder.create("column")
                 .withPresentableText("column <old column> to <new column>")
                 .withCaseSensitivity(false)
-                .withTypeText("Rename column in " + tableName, true)
+                .withTypeText("Rename column in " + tableName.toUpperCase(), true)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
@@ -113,7 +113,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
         LookupElement e = LookupElementBuilder.create("constraint")
                 .withPresentableText("constraint <old name> to <new name>")
                 .withCaseSensitivity(false)
-                .withTypeText("Rename constraint in " + tableName, true)
+                .withTypeText("Rename constraint in " + tableName.toUpperCase(), true)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
@@ -162,7 +162,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
         LookupElement e = LookupElementBuilder.create("to")
                 .withPresentableText("to <new table name>")
                 .withCaseSensitivity(false)
-                .withTypeText("Rename " + tableName, true)
+                .withTypeText("Rename " + tableName.toUpperCase(), true)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
@@ -185,7 +185,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
         LookupElement e = LookupElementBuilder.create("rename")
                 .withPresentableText("rename")
                 .withCaseSensitivity(false)
-                .withTypeText("Rename column, constraint or table " + tableName, true)
+                .withTypeText("Rename column, constraint or " + tableName.toUpperCase() + " table", true)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
@@ -208,7 +208,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
         LookupElement e = LookupElementBuilder.create("drop")
                 .withPresentableText("drop column <column>")
                 .withCaseSensitivity(false)
-                .withTypeText("Drop a column in " + tableName , true)
+                .withTypeText("Drop a column in " + tableName.toUpperCase(), true)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
@@ -231,7 +231,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
         LookupElement e = LookupElementBuilder.create("drop")
                 .withPresentableText("drop")
                 .withCaseSensitivity(false)
-                .withTypeText("Drop column, primary key or constraint in " + tableName, true)
+                .withTypeText("Drop column, primary key or constraint in " + tableName.toUpperCase(), true)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
@@ -462,7 +462,7 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
     public static LookupElement buildAddConstraintName(String tableName, String columnName) {
         final String constraintName = "c_" + tableName + "_" + columnName;
         LookupElement e = LookupElementBuilder.create(constraintName)
-                .withPresentableText(constraintName)
+                .withPresentableText(constraintName + " ..")
                 .withCaseSensitivity(false)
                 .withTypeText("Constraint name", true)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
@@ -482,4 +482,53 @@ public class AlterTableLookupElement<T extends LookupElement> extends LookupElem
 
         return new AlterTableLookupElement<LookupElement>(e);
     }
+
+    public static LookupElement buildAddConstraintNameFK(String tableName, String columnName) {
+        final String constraintName = "c_" + tableName + "_" + columnName;
+        LookupElement e = LookupElementBuilder.create(constraintName)
+                .withPresentableText(constraintName + " ..")
+                .withCaseSensitivity(false)
+                .withTypeText("Constraint name", true)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = constraintName + " ";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset());
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new AlterTableLookupElement<LookupElement>(e);
+    }
+
+    public static LookupElement buildAddConstraintNamePK(String tableName, String columnName) {
+        final String constraintName = "pk_" + tableName + "_" + columnName;
+        LookupElement e = LookupElementBuilder.create(constraintName)
+                .withPresentableText(constraintName + " primary key")
+                .withCaseSensitivity(false)
+                .withTypeText("Primary Key constraint name", true)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = constraintName + " ";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset());
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new AlterTableLookupElement<LookupElement>(e);
+    }
+
 }

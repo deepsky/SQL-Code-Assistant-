@@ -88,7 +88,7 @@ public abstract class BaseCompletionTest extends LightFixtureCompletionTestCase 
             "lower", "lpad", "lpad", "ltrim", "ltrim", "max", "min", "mod", "numtodsinterval", "numtoyminterval",
             "nvl", "nvl2", "rawtohex", "regexp_substr", "replace", "round", "round", "round", "round", "rpad",
             "rpad", "sign", "substr", "substr", "sum", "sys_extract_utc", "to_char", "to_char", "to_date",
-            "to_date", "to_dsinterval", "to_number", "to_number", "to_timestamp", "translate", "trim", "trunc", "trunc",
+            "to_date", "to_dsinterval", "to_number", "to_number", "to_timestamp", "to_timestamp_tz", "translate", "trim", "trunc", "trunc",
             "trunc", "updating", "upper", "userenv"
     };
 

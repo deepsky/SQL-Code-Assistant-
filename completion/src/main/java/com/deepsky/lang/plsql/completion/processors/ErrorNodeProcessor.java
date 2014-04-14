@@ -46,6 +46,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
@@ -98,24 +99,128 @@ public class ErrorNodeProcessor extends CompletionBase {
         ctx.addElement(KeywordLookupElement.create("from"));
     }
 
-    @SyntaxTreePath("/#ERROR_TOKEN_A/#SELECT ..#EXPR_COLUMN/#COUNT_FUNC #ALIAS_NAME/#ALIAS_IDENT/1#C_MARKER")
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#SELECT ..#EXPR_COLUMN/..#ALIAS_NAME/#ALIAS_IDENT/1#C_MARKER")
     public void process$SelectCount(C_Context ctx, ASTNode marker) {
+        ctx.addElement(KeywordLookupElement.create("from"));
+    }
+
+    @SyntaxTreePath("/#ERROR_TOKEN_A/#SELECT ..#EXPR_COLUMN/1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SelectSysFunc(C_Context ctx, ASTNode varRef) {
+        if(varRef.getChildren(null).length == 1){
+            collectSystemFunctions(ctx);
+            ctx.addElement(CaseExpressionLookupElement.createCase());
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+
+    }
+
+    @SyntaxTreePath("/#SELECT ..#EXPR_COLUMN/..#ALIAS_NAME/#ALIAS_IDENT/1#C_MARKER")
+    public void process$SelectCompleteFrom2(C_Context ctx, ASTNode marker) {
         ctx.addElement(KeywordLookupElement.create("from"));
     }
 
     @SyntaxTreePath("/#SELECT 1#C_MARKER")
     public void process$Select(C_Context ctx, ASTNode marker) {
-        ctx.addElement(CommonFunctionLookupElement.createCount());
-//        ctx.addElement(KeywordLookupElement.create("cfrom"));
+        collectSystemFunctions(ctx);
+        ctx.addElement(KeywordLookupElement.create("systimestamp"));
+        ctx.addElement(KeywordLookupElement.create("sysdate"));
+        ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+        ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        ctx.addElement(CaseExpressionLookupElement.createCase());
+    }
+
+    @SyntaxTreePath("/#SELECT #CASE 1#C_MARKER")
+    public void process$SelectCase(C_Context ctx, ASTNode marker) {
+        ctx.addElement(CaseExpressionLookupElement.createCaseWhen());
+    }
+
+    @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A/#ERROR_TOKEN_A/#CASE #WHEN 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SelectCaseWhen(C_Context ctx, ASTNode varRef) {
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+    }
+
+
+    @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #C_MARKER")
+    public void process$SelectCaseWhenThen(C_Context ctx) {
+        ctx.addElement(CaseExpressionLookupElement.createCaseWhenThen());
+    }
+
+    @SyntaxTreePath("/#SELECT ..#EXPR_COLUMN//..#ERROR_TOKEN_A/#CASE 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SelectCase2(C_Context ctx, ASTNode varRef) {
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(CaseExpressionLookupElement.createCaseWhen());
+        }
+    }
+
+    @SyntaxTreePath("/#SELECT ..#EXPR_COLUMN//..#ERROR_TOKEN_A/#CASE #WHEN 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SelectCaseWhen2(C_Context ctx, ASTNode varRef) {
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+    }
+
+    @SyntaxTreePath("/#SELECT ..1#EXPR_COLUMN//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN 2#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SelectCaseWhenThenExpr2(C_Context ctx, ASTNode columnExpr, ASTNode varRef) {
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+    }
+
+    @SyntaxTreePath("/#SELECT ..1#EXPR_COLUMN//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN $Expression #ELSE 2#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SelectCaseWhenThenElseExpr2(C_Context ctx, ASTNode columnExpr, ASTNode varRef) {
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+    }
+
+    @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SelectCaseWhenThenExpr(C_Context ctx, ASTNode varRef) {
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+    }
+
+    @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN $Expression #C_MARKER")
+    public void process$SelectCaseWhenThenExpr2(C_Context ctx) {
+        ctx.addElement(CaseExpressionLookupElement.createCaseWhenThenWhen());
+        ctx.addElement(KeywordLookupElement.create("else"));
+        ctx.addElement(KeywordLookupElement.create("end"));
+    }
+
+
+    @SyntaxTreePath("/#SELECT #ERROR_TOKEN_A/..$Expression/..1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SelectCompleteExpr(C_Context ctx, ASTNode varRef) {
+        if(varRef.getChildren(null).length == 1){
+            collectSystemFunctions(ctx);
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
     }
 
     @SyntaxTreePath("/#SELECT 1#IDENTIFIER 2#C_MARKER")
     public void process$SelectIdent(C_Context ctx, ASTNode ident, ASTNode marker) {
-        ctx.addElement(KeywordLookupElement.create("from"));
-    }
-
-    @SyntaxTreePath("/#SELECT #EXPR_COLUMN/..#ALIAS_NAME/#ALIAS_IDENT/#C_MARKER")
-    public void process$SelectIdent2(C_Context ctx) {
         ctx.addElement(KeywordLookupElement.create("from"));
     }
 
@@ -142,9 +247,13 @@ public class ErrorNodeProcessor extends CompletionBase {
         // TODO - implement me
     }
 
-    @SyntaxTreePath("/#SELECT .. 1#EXPR_COLUMN #COMMA #ERROR_TOKEN_A/2#C_MARKER")
-    public void process$SelectColumnCommaMarker() {
-        // TODO - implement me
+    @SyntaxTreePath("/#SELECT .. #EXPR_COLUMN #COMMA #ERROR_TOKEN_A/1#C_MARKER")
+    public void process$SelectColumnCommaMarker(C_Context ctx, ASTNode marker) {
+        collectSystemFunctions(ctx);
+        ctx.addElement(KeywordLookupElement.create("systimestamp"));
+        ctx.addElement(KeywordLookupElement.create("sysdate"));
+        ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+        ctx.addElement(KeywordLookupElement.create("dbtimezone"));
     }
 
     @SyntaxTreePath("/#SELECT .. 1#EXPR_COLUMN 2#C_MARKER")
@@ -236,6 +345,14 @@ public class ErrorNodeProcessor extends CompletionBase {
     @SyntaxTreePath("//..#EXISTS_EXPR/#EXISTS #ERROR_TOKEN_A/#C_MARKER")
     public void process$ExistsExpr(C_Context ctx) {
         ctx.addElement(SelectLookupElement.createSubquery());
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     CREATE TABLE
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @SyntaxTreePath("/#CREATE #TABLE #TABLE_NAME_DDL #AS #SELECT_EXPRESSION #C_MARKER")
+    public void process$CreateTabAsSelect(C_Context ctx) {
+        completeStart(ctx);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -497,11 +614,17 @@ public class ErrorNodeProcessor extends CompletionBase {
 
     @SyntaxTreePath("/1#DROP #C_MARKER")
     public void process$AlterTableDropPK(C_Context ctx, ASTNode drop) {
-        ASTNode errorNode = drop.getTreeParent();
-        ASTNode prev = PsiUtil.prevVisibleSibling(errorNode);
-        if(prev != null && prev.getElementType() == PlSqlElementTypes.ALTER_TABLE){
-            ctx.addElement(KeywordLookupElement.create("index"));
-        }
+        ctx.addElement(KeywordLookupElement.create("table"));
+        ctx.addElement(KeywordLookupElement.create("view"));
+        ctx.addElement(KeywordLookupElement.create("procedure"));
+        ctx.addElement(KeywordLookupElement.create("function"));
+        ctx.addElement(KeywordLookupElement.create("sequence"));
+        ctx.addElement(KeywordLookupElement.create("trigger"));
+//        ASTNode errorNode = drop.getTreeParent();
+//        ASTNode prev = PsiUtil.prevVisibleSibling(errorNode);
+//        if(prev != null && prev.getElementType() == PlSqlElementTypes.ALTER_TABLE){
+//            ctx.addElement(KeywordLookupElement.create("index"));
+//        }
     }
 
 /*
@@ -560,6 +683,14 @@ public class ErrorNodeProcessor extends CompletionBase {
 //        int hh = 0;
 //    }
 
+    @SyntaxTreePath("/..#ALTER_TABLE/#ALTER #TABLE 1#TABLE_REF #ADD #A_COLUMN_DEF/2#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A/#CONSTRAINT #CONSTRAINT_NAME/3#C_MARKER")
+    public void process$generateConstraintName(C_Context ctx, ASTNode tableRef, ASTNode column, ASTNode marker) {
+        final String tableName = StringUtils.discloseDoubleQuotes(tableRef.getText());
+        final String columnName = StringUtils.discloseDoubleQuotes(column.getText());
+
+        ctx.addElement(AlterTableLookupElement.buildAddConstraintName(tableName, columnName));
+    }
+
     @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER ..#ADD #A_COLUMN_DEF(/#COLUMN_NAME_DDL $TypeSpec #ERROR_TOKEN_A(/#CONSTRAINT #CONSTRAINT_NAME #REFERENCES 2#IDENTIFIER))) 3#C_MARKER")
     public void process$AlterTabReferencesTabColumn(C_Context ctx, ASTNode alterTable, ASTNode tableRef, ASTNode marker) {
         final boolean doFinalize = is2ndLatest(alterTable.getTreeParent(), marker);
@@ -572,13 +703,19 @@ public class ErrorNodeProcessor extends CompletionBase {
         completeStart(ctx);
     }
 
-    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #ERROR_TOKEN_A(/#TABLE 2#IDENTIFIER)) 3#C_MARKER")
-    public void process$StartTest1111(C_Context ctx, ASTNode alterTable, ASTNode tabName, ASTNode caret) {
+    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #ERROR_TOKEN_A(/#TABLE 2$PsiElement)) 3#C_MARKER")
+    public void process$StartTest1111(C_Context ctx, ASTNode alterTable, PsiElement tabName, ASTNode caret) {
         ctx.addElement(AlterTableLookupElement.createAddColumn(tabName.getText()));
         ctx.addElement(AlterTableLookupElement.createDrop(tabName.getText()));
         ctx.addElement(AlterTableLookupElement.createRename(tabName.getText()));
     }
 
+//    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #ERROR_TOKEN_A(/#TABLE 2#IDENTIFIER)) 3#C_MARKER")
+//    public void process$StartTest1111(C_Context ctx, ASTNode alterTable, ASTNode tabName, ASTNode caret) {
+//        ctx.addElement(AlterTableLookupElement.createAddColumn(tabName.getText()));
+//        ctx.addElement(AlterTableLookupElement.createDrop(tabName.getText()));
+//        ctx.addElement(AlterTableLookupElement.createRename(tabName.getText()));
+//    }
 
     @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #TABLE #TABLE_REF #DROP #ALTER_TABLE_DROP_PK(/#PRIMARY #KEY #CASCADE))  1#C_MARKER")
     public void process$StartTest1112(C_Context ctx, ASTNode alterTable, ASTNode caret) {

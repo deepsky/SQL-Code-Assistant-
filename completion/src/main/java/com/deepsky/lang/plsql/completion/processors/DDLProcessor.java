@@ -151,4 +151,37 @@ public class DDLProcessor extends CompletionBase {
         collectTableNames(context);
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     DROP
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @SyntaxTreePath("/..#DROP_TABLE/#DROP #TABLE #TABLE_REF/#C_MARKER")
+    public void process$DropTable(C_Context context) {
+        collectTableNames(context);
+    }
+
+    @SyntaxTreePath("/..#DROP_VIEW/#DROP #VIEW #TABLE_REF/#C_MARKER")
+    public void process$DropView(C_Context context) {
+        collectViewNames(context);
+    }
+
+    @SyntaxTreePath("/..#DROP_FUNCTION/#DROP #FUNCTION #CALLABLE_NAME_REF/#EXEC_NAME_REF/#C_MARKER")
+    public void process$DropFunction(C_Context context) {
+        collectFunctionNames(context);
+    }
+
+    @SyntaxTreePath("/..#DROP_PROCEDURE/#DROP #PROCEDURE #CALLABLE_NAME_REF/#EXEC_NAME_REF/#C_MARKER")
+    public void process$DropProcedure(C_Context context) {
+        collectProcedureNames(context);
+    }
+
+    @SyntaxTreePath("/..#DROP_SEQUENCE/#DROP #SEQUENCE #SEQUENCE_NAME/#C_MARKER")
+    public void process$DropSequence(C_Context context) {
+        collectSequenceNames(context);
+    }
+
+    @SyntaxTreePath("/..#DROP_TRIGGER/#DROP #TRIGGER #OBJECT_NAME/#C_MARKER")
+    public void process$DropTrigger(C_Context context) {
+        collectTriggerNames(context);
+    }
 }

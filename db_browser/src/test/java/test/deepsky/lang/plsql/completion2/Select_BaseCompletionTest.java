@@ -38,7 +38,7 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
     // SELECT
     public void testSelect$select_field() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "text");
+        assertSelectFieldLookup(myItems, "id", "text", "case");
     }
 
     public void testSelect$select_field_dot() throws Exception {
@@ -78,7 +78,7 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$seq_in_select_field() throws Exception {
         configureByFile(getFilePath());
-        assertLookup(myItems, "text", "te_seq", "id");
+        assertLookup(myItems, "text", "te_seq", "id", "case");
     }
 
     public void testSelect$seq_in_select_field1() throws Exception {
@@ -98,7 +98,12 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$exists1() throws Exception {
         configureByFile(getFilePath());
-//        assertSelectFieldLookup(myItems, "parent_id", "text", "id", "text");
+        assertSelectFieldLookup(myItems, "parent_id", "child.text", "id", "parent.text", "exists",
+                "current_timestamp","dbtimezone", "sysdate", "systimestamp");
+    }
+
+    public void testSelect$not_exists1() throws Exception {
+        configureByFile(getFilePath());
         assertSelectFieldLookup(myItems, "parent_id", "child.text", "id", "parent.text", "exists",
                 "current_timestamp","dbtimezone", "sysdate", "systimestamp");
     }
@@ -114,6 +119,11 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
     }
 
     public void testSelect$exists3_1() throws Exception {
+        configureByFile(getFilePath());
+        assertSelectFieldLookup(myItems, "p.parent_id", "p.text");
+    }
+
+    public void testSelect$not_exists3_1() throws Exception {
         configureByFile(getFilePath());
         assertSelectFieldLookup(myItems, "p.parent_id", "p.text");
     }
@@ -230,7 +240,7 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$select_from() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "id1", "text2");
+        assertSelectFieldLookup(myItems, "case", "id", "id1", "text2");
     }
 
     public void testSelect$select_from2() throws Exception {
@@ -312,17 +322,17 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$ansi_select3() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "p.id", "p.text", "parent_id", "child.text");
+        assertSelectFieldLookup(myItems, "p.id", "p.text", "parent_id", "child.text", "case");
     }
 
     public void testSelect$ansi_select4() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "parent.text", "parent_id", "child.text");
+        assertSelectFieldLookup(myItems, "id", "parent.text", "parent_id", "child.text", "case");
     }
 
     public void testSelect$select_from_view0() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "text");
+        assertSelectFieldLookup(myItems, "id", "text", "case");
     }
 
     // TODO - FIX ME
@@ -333,7 +343,7 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$select_from_view11() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "text");
+        assertSelectFieldLookup(myItems, "id", "text", "case");
     }
 
     public void testSelect$select_from_view2() throws Exception {
@@ -378,7 +388,7 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$view_all_errors2() throws Exception {
         configureByFile(getFilePath());
-        assertLookup(myItems, "APPLY_NAME", "QUEUE_NAME", "QUEUE_OWNER", "LOCAL_TRANSACTION_ID", "SOURCE_DATABASE", "SOURCE_TRANSACTION_ID",
+        assertLookup(myItems, "CASE", "APPLY_NAME", "QUEUE_NAME", "QUEUE_OWNER", "LOCAL_TRANSACTION_ID", "SOURCE_DATABASE", "SOURCE_TRANSACTION_ID",
                 "SOURCE_COMMIT_SCN", "MESSAGE_NUMBER", "ERROR_NUMBER", "ERROR_MESSAGE", "RECIPIENT_ID", "RECIPIENT_NAME",
                 "MESSAGE_COUNT", "ERROR_CREATION_TIME");
     }
@@ -462,12 +472,12 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$tab_correlation1() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "left", "lright");
+        assertLookupFilterOutFunc(myItems, "left", "lright");
     }
 
     public void testSelect$tab_correlation2() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "lefttable", "lright");
+        assertLookupFilterOutFunc(myItems, "lefttable", "lright");
     }
 
     public void testSelect$tab_correlation3() throws Exception {

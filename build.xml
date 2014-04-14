@@ -11,7 +11,7 @@
 
     <property name="bundle.dir" value="./out"/>
     <property name="bundle.name" value="sql-assistant"/>
-    <property name="plugin.ver" value="1.5.10.129"/>
+    <property name="plugin.ver" value="1.5.11.129"/>
 
     <property name="build.dir" value="${base.dir}/build"/>
     <property name="unzip.dir" value="${base.dir}/unzip"/>
@@ -184,6 +184,7 @@
 
             <formatter type="plain"/>
             <test name="test.deepsky.lang.plsql.completion2.GenericCompletionTest" />
+            <test name="test.deepsky.lang.plsql.completion2.CaseGenericCompletionTest" />
             <test name="test.deepsky.lang.plsql.completion2.Select_BaseCompletionTest" />
             <test name="test.deepsky.lang.plsql.completion2.DML_BaseCompletionTest" />
             <test name="test.deepsky.lang.plsql.completion2.DDL_BaseCompletionTest" />

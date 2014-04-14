@@ -38,7 +38,7 @@
         <li>[KNOWN ISSUE] Initial indexing of numerous SQL files (1k and more) may take time</li>
      </ul>
     <br>
-    Version 1.5.11.12<br><br>
+    Version 1.5.11.129<br><br>
 
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
@@ -51,7 +51,7 @@
 
     <change-notes><![CDATA[<html>
        <ul>
-            <li><b>1.5.10.129</b>
+            <li><b>1.5.11.129</b>
                  <ul>
                     - [NEW] Support completion for ALTER TABLE statement<br>
                     - [NEW] Support error logging clause<br>

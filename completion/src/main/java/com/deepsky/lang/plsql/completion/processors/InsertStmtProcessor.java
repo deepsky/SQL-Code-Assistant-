@@ -96,4 +96,15 @@ public class InsertStmtProcessor extends CompletionBase {
         collectTableNames(ctx);
     }
 
+    @SyntaxTreePath("/#INSERT #INTO #TABLE_ALIAS #VALUES #OPEN_PAREN #EXPR_LIST/..2#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void insertValues(C_Context ctx, ASTNode root, ASTNode varRef) {
+        if(varRef.getChildren(null).length == 1){
+            collectSystemFunctions(ctx);
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+    }
+
 }

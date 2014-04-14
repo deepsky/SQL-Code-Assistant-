@@ -26,10 +26,7 @@ package com.deepsky.lang.plsql.completion.processors;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
-import com.deepsky.lang.plsql.completion.lookups.GenericLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.GroupByLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.OrderByLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.*;
 import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
@@ -53,31 +50,54 @@ public class SelectStmtProcessor extends CompletionBase {
         // TODO - implement me
     }
 
+    @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A/#ERROR_TOKEN_A/#CASE #VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SelectCaseExpr(C_Context ctx, SelectStatement select) {
+        ctx.addElement(CaseExpressionLookupElement.createCaseWhen());
+    }
+
+    @SyntaxTreePath("/#SELECT ..#EXPR_COLUMN/#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN $Expression #C_MARKER")
+    public void process$SelectCaseEnd(C_Context ctx, SelectStatement select) {
+        ctx.addElement(CaseExpressionLookupElement.createCaseWhenThenWhen());
+        ctx.addElement(KeywordLookupElement.create("else"));
+        ctx.addElement(KeywordLookupElement.create("end"));
+    }
+
     // select * from (select a, <caret>)
     @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY// ..#ERROR_TOKEN_A/#SELECT ..#EXPR_COLUMN #COMMA #ERROR_TOKEN_A/#C_MARKER")
     public void process$SelectFromSubqueryError() {
         // TODO - implement me
     }
 
-    @SyntaxTreePath("/#SELECT ..2#EXPR_COLUMN/#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectVarRef(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
-        VariantsProvider provider = ctx.getProvider();
+    @SyntaxTreePath("/#SELECT ..#EXPR_COLUMN/2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectVarRef(C_Context ctx, SelectStatement select, ASTNode varRef, NameFragmentRef nameRef) {
         final NameFragmentRef prev = nameRef.getPrevFragment();
         final String prevText = prev != null ? prev.getText() : null;
 
-        provider.collectColumnVariants(select, prevText);
-
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.takeCollectedLookups());
-
+        collectColumns(ctx, select, nameRef);
         // Collect Sequence
-        variants.addAll(provider.collectSequenceVariants(prevText, ctx.getLookup()));
-
-        for (LookupElement elem : variants) {
+        VariantsProvider provider = ctx.getProvider();
+        for (LookupElement elem : provider.collectSequenceVariants(prevText, ctx.getLookup())) {
             ctx.addElement(elem);
+        }
+
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(CaseExpressionLookupElement.createCase());
         }
     }
 
+
+    @SyntaxTreePath("/#SELECT ..#EXPR_COLUMN/#CASE_EXPRESSION_SRCH/#CASE #WHEN 2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectCaseCondition(C_Context ctx, SelectStatement select, ASTNode varRef, NameFragmentRef nameRef) {
+        collectColumns(ctx, select, nameRef);
+
+        if(varRef.getChildren(null).length == 1){
+            collectSystemFunctions(ctx);
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+    }
 
     @SyntaxTreePath("/..1#EXPR_COLUMN/#SUBQUERY_EXPR//..2$SelectStatement/..#EXPR_COLUMN/#FUNCTION_CALL//..#CALL_ARGUMENT/..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
     public void process$SelectSubqueryExpr(C_Context ctx, SelectStatement select0, ASTNode expr, SelectStatement select, NameFragmentRef nameRef) {
