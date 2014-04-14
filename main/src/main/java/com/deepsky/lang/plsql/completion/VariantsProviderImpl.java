@@ -70,7 +70,7 @@ public class VariantsProviderImpl implements VariantsProvider {
         for (ContextItem item : findings) {
             String name = ContextPathUtil.extractLastCtxName(item.getCtxPath());
             if (name.toLowerCase().startsWith(lookupString.toLowerCase())) {
-                // todo - apply appropriate icon for item - view, table, synonym
+                // todo - apply appropriate icon for item - view, table, synonym 
                 out.add(TableLookupElement.create(name, Icons.TABLE));
             }
         }
@@ -615,7 +615,7 @@ public class VariantsProviderImpl implements VariantsProvider {
         return out;
     }
 
-    private Collection<LookupElement> collectSchemaWideFunctions(String lookUpStr) {
+    public Collection<LookupElement> collectSchemaWideFunctions(String lookUpStr) {
         Set<LookupElement> out = new HashSet<LookupElement>();
         ContextItem[] procs = nameProvider.findTopLevelItems(
                 new int[]{ContextPath.FUNCTION_BODY, ContextPath.FUNCTION_SPEC}, null
@@ -740,7 +740,7 @@ public class VariantsProviderImpl implements VariantsProvider {
     }
 
 
-    private Collection<LookupElement> collectSchemaWideProcedures(String lookUpStr) {
+    public Collection<LookupElement> collectSchemaWideProcedures(String lookUpStr) {
         Set<LookupElement> out = new HashSet<LookupElement>();
         ContextItem[] procs = nameProvider.findTopLevelItems(
                 new int[]{ContextPath.PROCEDURE_BODY, ContextPath.PROCEDURE_SPEC}, null
@@ -861,6 +861,19 @@ public class VariantsProviderImpl implements VariantsProvider {
     }
 
 
+    public Collection<? extends LookupElement> collectTriggerVariants(String lookUpStr) {
+        final List<LookupElement> out = new ArrayList<LookupElement>();
+            // Find triggers
+            ContextItem[] findings = nameProvider.findTopLevelItems(new int[]{ContextPath.CREATE_TRIGGER}, null);
+            for (ContextItem seq : findings) {
+                String name = ContextPathUtil.extractLastCtxName(seq.getCtxPath());
+                if (name.toLowerCase().startsWith(lookUpStr.toLowerCase())) {
+                    out.add(TriggerLookupElement.create(name));
+                }
+            }
+        return out;
+    }
+
     public List<LookupElement> collectColumnNames(@NotNull String tableName, String lookupStr) {
         final List<ColumnElement> columns = new ArrayList<ColumnElement>();
         ResolveDescriptor rhlp = resolver.resolveTableRef(tableName);
@@ -878,6 +891,21 @@ public class VariantsProviderImpl implements VariantsProvider {
         }
 
         return new ArrayList<LookupElement>();
+    }
+
+    public void collectTableConstraints(String tableName, TableConstraintProcessor proc){
+        ResolveDescriptor rhlp = resolver.resolveTableRef(tableName);
+
+        if (rhlp != null) {
+            List<ContextPathUtil.FKConstraintSpec> l = ContextPathUtil.extractFKConstraintsFromTableValue(rhlp.getValue());
+            for(ContextPathUtil.FKConstraintSpec fk: l){
+                proc.process(fk.getName(), VariantsProvider.FK_CONSTRAINT);
+            }
+            String pkConstrName = ContextPathUtil.extractPKConstrNameFromTableValue(rhlp.getValue());
+            if(pkConstrName != null){
+                proc.process(pkConstrName, VariantsProvider.PK_CONSTRAINT);
+            }
+        }
     }
 
     private Set<String> getParametersNames(CallArgumentList argList) {
@@ -1055,7 +1083,7 @@ public class VariantsProviderImpl implements VariantsProvider {
                             if (t instanceof TableAlias) {
                                 ch.tableFound(((TableAlias) t).getTableName(), _tAlias);
                             } else if (t instanceof FromSubquery) {
-                                processColumnsForSubquery(((FromSubquery) t).getSubquery(), ((FromSubquery) t).getAlias(), ch);
+                                processColumnsForSubquery(((FromSubquery) t).getSubquery(), t.getAlias(), ch);
                             }
                         }
                     } else if (t instanceof TableAlias && ((TableAlias) t).getTableName().equalsIgnoreCase(tableAlias)) {
@@ -1087,16 +1115,16 @@ public class VariantsProviderImpl implements VariantsProvider {
             addWithMarking(columns, list);
             for (ColumnElement it : columns) {
                 if (lookupStr == null || it.getName().startsWith(lookupStr.toLowerCase())) {
-                    columns1.add(SelectFieldLookupElement.create(tab.getAlias(), it, forceUsingTableAlias));
+                    columns1.add(SelectFieldLookupElement.create(tab.getAlias(), it));
                 }
             }
         }
     }
 
 
-    public void collectColumnVariants(SelectStatement select, final String alias) {
+    public void collectColumnVariants(SelectStatement select, final String tableCorrelationName) {
         final List<ColumnElement> columns = new ArrayList<ColumnElement>();
-        iterateTablesAndSubqueries(select, alias, new ColumnHandler() {
+        iterateTablesAndSubqueries(select, tableCorrelationName, new ColumnHandler() {
             public void subqueryColumnFound(String columnRef, boolean isColumnAlias, String subqueryAlias) {
                 List<ColumnElement> list = new ArrayList<ColumnElement>();
                 list.add(new ColumnElement(columnRef, subqueryAlias, null, null));
@@ -1114,11 +1142,41 @@ public class VariantsProviderImpl implements VariantsProvider {
 
         for (int i = 0; i < columns.size(); i++) {
             ColumnElement it = columns.get(i);
-            SelectFieldLookupElement e1 = (SelectFieldLookupElement) SelectFieldLookupElement.create(alias, it);
-            columns1.add(e1);
+            columns1.add(SelectFieldLookupElement.create(tableCorrelationName, it));
         }
     }
 
+
+    public List<LookupElement>  collectCorrelationOrTableNames(SelectStatement select, String lookup) {
+        final List<LookupElement> lookupElements = new ArrayList<LookupElement>();
+        if(lookup == null || lookup.length() == 0){
+            return lookupElements;
+        }
+        for (final GenericTable t : select.getFromClause().getTableList()) {
+            try {
+                final String correlationName = t.getAlias();
+                if(correlationName != null && correlationName.toLowerCase().startsWith(lookup.toLowerCase())){
+                    if (t instanceof TableAlias) {
+                        final String tableName = ((TableAlias)t).getTableName();
+                        lookupElements.add(TableLookupElement.createCorrelationName(tableName, correlationName, Icons.TABLE));
+                    } else {
+                        // FromSubquery case
+                        lookupElements.add(TableLookupElement.createSubqueryCorrelationName(correlationName));
+                    }
+                } else if (t instanceof TableAlias) {
+                    final String tableName = ((TableAlias)t).getTableName();
+                    if(tableName.toLowerCase().startsWith(lookup.toLowerCase())){
+                        lookupElements.add(TableLookupElement.createCorrelationName2(tableName, Icons.TABLE));
+                    }
+
+                }
+            } catch (SyntaxTreeCorruptedException ignored) {
+                // do nothing
+            }
+        }
+
+        return lookupElements;
+    }
 
     public List<LookupElement> collectVariableVariants(PlSqlBlock context, String prefix) {
         return null; // TODO -- implement me

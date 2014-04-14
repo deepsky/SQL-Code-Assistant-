@@ -66,6 +66,8 @@ public interface VariantsProvider {
     List<LookupElement> collectVarVariants(String usageCtx, String lookUpStr);
 
     List<LookupElement> collectFuncCall(String usageCtx, String alias, String lookUpStr);
+    Collection<LookupElement> collectSchemaWideFunctions(String lookUpStr);
+    Collection<LookupElement> collectSchemaWideProcedures(String lookUpStr);
 
     List<LookupElement> collectProcCall(String usageCtx, String alias, String lookUpStr);
 
@@ -80,6 +82,7 @@ public interface VariantsProvider {
     List<LookupElement> collectColumnNames(@NotNull String tableName, String lookupStr);
 
     Collection<? extends LookupElement> collectSequenceVariants(String prevText, String lookUpStr);
+    Collection<? extends LookupElement> collectTriggerVariants(String lookUpStr);
 
 
     /**
@@ -92,8 +95,18 @@ public interface VariantsProvider {
 
     // New approach
     void collectColumnVariants(SelectStatement select, final String alias);
+    List<LookupElement>  collectCorrelationOrTableNames(SelectStatement select, String lookup);
     void collectColumnNames(TableAlias tableName, String lookUpStr, boolean forceUsingTableAlias);
 
     List<? extends LookupElement> takeCollectedLookups();
 
+    void collectTableConstraints(String tableName, TableConstraintProcessor proc);
+
+
+    int FK_CONSTRAINT = 1;
+    int PK_CONSTRAINT = 2;
+
+    interface TableConstraintProcessor {
+        void process(String constraintName, int constraintType);
+    }
 }

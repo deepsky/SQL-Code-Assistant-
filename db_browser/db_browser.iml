@@ -39,7 +39,7 @@
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-util:4.0" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-analysis:4.0" level="project" />
     <orderEntry type="library" name="Maven: sql-assistant:completion:1.12.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: sql-assistant:annotations:1.13.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: sql-assistant:annotations:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: sql-assistant:annotationProcessors:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.intellij:openapi:1.5.0">

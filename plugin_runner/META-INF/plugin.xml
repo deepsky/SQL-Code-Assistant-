@@ -40,7 +40,7 @@
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.5.9.133</version>
+    <version>1.5.11.133</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
@@ -49,6 +49,13 @@
 
     <change-notes><![CDATA[<html>
        <ul>
+            <li><b>1.5.11.129</b>
+                 <ul>
+                    - [NEW] Support completion for ALTER TABLE statement<br>
+                    - [NEW] Support error logging clause<br>
+                    - [FIX] Fixes in completion<br>
+                 </ul>
+            </li>
             <li><b>1.5.9.133</b>
                  <ul>
                     - [NEW] More support on completion: SELECT JOIN, etc<br>

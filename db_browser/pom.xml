@@ -43,7 +43,7 @@
         <dependency>
             <groupId>sql-assistant</groupId>
             <artifactId>annotations</artifactId>
-            <version>1.13.1-SNAPSHOT</version>
+            <version>1.12.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
@@ -63,6 +63,8 @@
                         <exclude>**/Select_BaseCompletionTest.java</exclude>
                         <exclude>**/CtrlStmt_BaseCompletionTest.java</exclude>
                         <exclude>**/GenericCompletionTest.java</exclude>
+                        <exclude>**/CaseGenericCompletionTest.java</exclude>
+                        <exclude>**/Alter_BaseCompletionTest.java</exclude>
                     </excludes>
 
                     <systemPropertyVariables>

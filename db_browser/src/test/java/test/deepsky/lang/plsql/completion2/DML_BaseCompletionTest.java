@@ -90,13 +90,15 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
     public void testUpdate$correlated_update4() throws Exception {
         configureByFile(getFilePath());
 //        assertSelectFieldLookup(myItems, "e.id", "e.ticket_price", "e.venueno", "venues.capacity", "venues.id", "venues.venueno");
-        assertSelectFieldLookup(myItems, "capacity", "e.id", "e.ticket_price", "e.venueno", "id", "venueno");
+        assertSelectFieldLookup(myItems, "capacity", "e.id", "e.ticket_price", "e.venueno", "venues.id", "venues.venueno",
+                "current_timestamp", "dbtimezone", "sysdate","systimestamp");
 
     }
 
     public void testUpdate$correlated_update_with_subquery() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "a.deptno", "a.id", "a.sal", "b.deptno", "b.id", "b.sal");
+        assertSelectFieldLookup(myItems, "a.deptno", "a.id", "a.sal", "b.deptno", "b.id", "b.sal",
+                "current_timestamp", "dbtimezone", "sysdate", "systimestamp");
     }
 
 
@@ -145,7 +147,7 @@ public class DML_BaseCompletionTest extends BaseCompletionTest {
     // DELETE
     public void testDelete$correlated_subquery_delete() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "a.deptno", "a.id", "a.sal", "exists");
+        assertSelectFieldLookup(myItems, "a.deptno", "a.id", "a.sal");
     }
 
     public void testDelete$delete0() throws Exception {
