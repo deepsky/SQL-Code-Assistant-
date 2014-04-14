@@ -25,7 +25,6 @@
 
 package com.deepsky.lang.plsql.completion.lookups;
 
-import com.deepsky.lang.plsql.completion.VariantsProviderImpl;
 import com.deepsky.view.Icons;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
@@ -37,11 +36,11 @@ public class SequenceLookupElement<T extends LookupElement> extends LookupElemen
         super(delegate);
     }
 
-    public static LookupElement create(String name){
+    public static LookupElement create(String name) {
         LookupElement e = LookupElementBuilder
                 .create(name)
-                .setIcon(Icons.SEQUENCE)
-                .setCaseSensitive(false);
+                .withIcon(Icons.SEQUENCE)
+                .withCaseSensitivity(false);
 
         return new SequenceLookupElement<LookupElement>(e);
     }

@@ -162,6 +162,10 @@
         <arg name="value" type="CHAR" decs="Input string"/>
         <arg name="format" type="CHAR" decs="Date format"/>
     </function>
+    <function name="to_timestamp_tz" return-type="DATE" desc="TO_DATE('YYYY/MM/DD', '2009/02/21')">
+        <arg name="value" type="CHAR" decs="Input string"/>
+        <arg name="format" type="CHAR" decs="Date format"/>
+    </function>
     <function name="trunc" return-type="DATE" desc="TRUNC(TO_DATE('27-OCT-92','DD-MON-YY'), 'YEAR')">
         <arg name="value" type="DATE" />
         <arg name="format" type="CHAR"/>

@@ -7,7 +7,7 @@
     <groupId>sql-assistant</groupId>
     <artifactId>sql-assistant</artifactId>
     <packaging>pom</packaging>
-    <version>1.13.1-SNAPSHOT</version>
+    <version>1.13.2-SNAPSHOT</version>
 
     <properties>
         <idea.home>/home/sky/idea-IC-134.1445</idea.home>
@@ -15,18 +15,10 @@
 
     <modules>
         <module>commons</module>
-        <!--<module>antl_patch</module>-->
         <module>database</module>
         <module>main</module>
-        <!--<module>parser</module>-->
         <module>db_browser</module>
         <module>result_panel</module>
-<!--
-        <module>tools</module>
-        <module>annotations</module>
-        <module>annotationProcessors</module>
-        <module>completion</module>
--->
     </modules>
 
     <dependencies>

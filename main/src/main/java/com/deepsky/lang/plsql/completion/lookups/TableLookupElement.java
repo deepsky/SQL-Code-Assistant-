@@ -27,9 +27,13 @@ package com.deepsky.lang.plsql.completion.lookups;
 
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
+import com.intellij.codeInsight.lookup.AutoCompletionPolicy;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiDocumentManager;
 
 import javax.swing.*;
 
@@ -40,8 +44,8 @@ public class TableLookupElement <T extends LookupElement> extends LookupElementD
 
     public static TableLookupElement create(String name, Icon icon){
         LookupElement e = LookupElementBuilder.create(name)
-                .withIcon(icon)
-                .withCaseSensitivity(false);
+                            .withIcon(icon)
+                            .withCaseSensitivity(false);
 
         return new TableLookupElement<LookupElement>(e);
     }
@@ -59,6 +63,69 @@ public class TableLookupElement <T extends LookupElement> extends LookupElementD
                     .withIcon(icon)
                     .withCaseSensitivity(false);
         }
+
+        return new TableLookupElement<LookupElement>(e);
+    }
+
+    public static TableLookupElement createCorrelationName(String tableName, final String correlationName, Icon icon){
+        LookupElement e = LookupElementBuilder.create(correlationName)
+                .withIcon(icon)
+                .withTailText("(" + tableName + ")", true)
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = correlationName + ".";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset());
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                });
+
+        return new TableLookupElement<LookupElement>(e);
+    }
+
+    public static TableLookupElement createCorrelationName2(final String tableName, Icon icon){
+        LookupElement e = LookupElementBuilder.create(tableName)
+                .withIcon(icon)
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = tableName + ".";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset());
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                });
+
+        return new TableLookupElement<LookupElement>(e);
+    }
+
+    public static LookupElement createSubqueryCorrelationName(final String correlationName) {
+        LookupElement e = LookupElementBuilder.create(correlationName)
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = correlationName + ".";
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+                        final Document document = editor.getDocument();
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset());
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                });
 
         return new TableLookupElement<LookupElement>(e);
     }
