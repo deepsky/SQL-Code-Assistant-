@@ -7,15 +7,13 @@
     <groupId>sql-assistant</groupId>
     <artifactId>sql-assistant</artifactId>
     <packaging>pom</packaging>
-    <version>1.13.2-SNAPSHOT</version>
+    <version>1.13.3-SNAPSHOT</version>
 
     <properties>
         <idea.home>/home/sky/idea-IC-134.1445</idea.home>
     </properties>
 
     <modules>
-        <module>commons</module>
-        <module>database</module>
         <module>main</module>
         <module>db_browser</module>
         <module>result_panel</module>

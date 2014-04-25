@@ -11,7 +11,7 @@
 
     <property name="bundle.dir" value="./out"/>
     <property name="bundle.name" value="sql-assistant"/>
-    <property name="plugin.ver" value="1.5.11.135"/>
+    <property name="plugin.ver" value="1.5.12.135"/>
 
     <property name="build.dir" value="${base.dir}/build"/>
     <property name="unzip.dir" value="${base.dir}/unzip"/>
@@ -22,17 +22,17 @@
     <property name="root.lib.dir" value="${root.dir}/lib"/>
 
     <property name="db_browser.test.classes.dir" value="${base.dir}/db_browser/target/test-classes"/>
-    <property name="commons.test.classes.dir" value="${base.dir}/commons/target/test-classes"/>
+    <!--<property name="commons.test.classes.dir" value="${base.dir}/commons/target/test-classes"/>-->
     <property name="completion.test.classes.dir" value="${base.dir}/completion/target/test-classes"/>
 
     <property name="antl_patch.classes.dir" value="${base.dir}/antl_patch/target/classes"/>
     <property name="completion.classes.dir" value="${base.dir}/completion/target/classes"/>
     <property name="annotations.classes.dir" value="${base.dir}/annotations/target/classes"/>
-    <property name="commons.classes.dir" value="${base.dir}/commons/target/classes"/>
+    <!--<property name="commons.classes.dir" value="${base.dir}/commons/target/classes"/>-->
     <property name="main.classes.dir" value="${base.dir}/main/target/classes"/>
     <property name="parser.classes.dir" value="${base.dir}/parser/target/classes"/>
     <property name="annotationProcessors.classes.dir" value="${base.dir}/annotationProcessors/target/classes"/>
-    <property name="database.classes.dir" value="${base.dir}/database/target/classes"/>
+    <!--<property name="database.classes.dir" value="${base.dir}/database/target/classes"/>-->
     <property name="db_browser.classes.dir" value="${base.dir}/db_browser/target/classes"/>
     <property name="plugin_runner.dir" value="${base.dir}/plugin_runner"/>
 
@@ -43,6 +43,8 @@
     <property name="completion.jar" value="${plug-in.m2.repo}/completion/1.12.1-SNAPSHOT/completion-1.12.1-SNAPSHOT.jar"/>
     <property name="antl_patch.jar" value="${plug-in.m2.repo}/antl_patch/1.12.1-SNAPSHOT/antl_patch-1.12.1-SNAPSHOT.jar"/>
     <property name="parser.jar" value="${plug-in.m2.repo}/parser/1.12.1-SNAPSHOT/parser-1.12.1-SNAPSHOT.jar"/>
+    <property name="commons.jar" value="${plug-in.m2.repo}/commons/1.12.1-SNAPSHOT/commons-1.12.1-SNAPSHOT.jar"/>
+    <property name="database.jar" value="${plug-in.m2.repo}/database/1.12.1-SNAPSHOT/database-1.12.1-SNAPSHOT.jar"/>
 
 
 
@@ -61,10 +63,10 @@
             <fileset dir="main/target/classes">
                 <exclude name="icons/Thumbs.db"/>
             </fileset>
-            <fileset dir="database/target/classes" includes="*/**/*.class"/>
+            <!--<fileset dir="database/target/classes" includes="*/**/*.class"/>-->
             <fileset dir="db_browser/target/classes" includes="*/**/*.class"/>
-            <fileset dir="commons/target/classes" includes="*/**/*.class"/>
-            <fileset dir="commons/target/classes" includes="*.xml"/>
+            <!--<fileset dir="commons/target/classes" includes="*/**/*.class"/>-->
+            <!--<fileset dir="commons/target/classes" includes="*.xml"/>-->
             <fileset dir="result_panel/target/classes" includes="*/**/*.class"/>
             <fileset dir="plugin_runner" includes="META-INF/*.xml"/>
         </jar>
@@ -99,6 +101,8 @@
         <copy file="${completion.jar}" todir="${bundle.dir}/${bundle.name}/lib"/>
         <copy file="${antl_patch.jar}" todir="${bundle.dir}/${bundle.name}/lib"/>
         <copy file="${parser.jar}" todir="${bundle.dir}/${bundle.name}/lib"/>
+        <copy file="${commons.jar}" todir="${bundle.dir}/${bundle.name}/lib"/>
+        <copy file="${database.jar}" todir="${bundle.dir}/${bundle.name}/lib"/>
 
         <copy todir="${bundle.dir}/${bundle.name}/lib">
             <fileset dir="src/main/resources/licenses">
@@ -173,6 +177,8 @@
         <pathelement location="${completion.jar}"/>
         <pathelement location="${antl_patch.jar}"/>
         <pathelement location="${parser.jar}"/>
+        <pathelement location="${commons.jar}"/>
+        <pathelement location="${database.jar}"/>
 
     </path>
 
@@ -191,10 +197,10 @@
 
             <classpath>
                 <pathelement location="${db_browser.test.classes.dir}"/>
-                <pathelement location="${commons.test.classes.dir}"/>
-                <pathelement location="${commons.classes.dir}"/>
+                <!--<pathelement location="${commons.test.classes.dir}"/>-->
+                <!--<pathelement location="${commons.classes.dir}"/>-->
                 <pathelement location="${main.classes.dir}"/>
-                <pathelement location="${database.classes.dir}"/>
+                <!--<pathelement location="${database.classes.dir}"/>-->
                 <pathelement location="${db_browser.classes.dir}"/>
                 <pathelement location="${plugin_runner.dir}"/>
 

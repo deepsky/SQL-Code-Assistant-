@@ -64,7 +64,7 @@ public class CaseGenericCompletionTest extends BaseCompletionTest {
     public void test_select_case7() throws Exception {
         configureByText("create table tab1 (a integer, event_date timestamp, name varchar2(20)); \n" +
                 "select case when 1=2 then 123 else <caret>\n");
-        assertLookupFilterOutFunc(myItems, "systimestamp", "sysdate", "dbtimezone");
+        assertLookupFilterOutFunc(myItems, "systimestamp", "sysdate", "dbtimezone", "sessiontimezone");
     }
 
     public void test_select_case8() throws Exception {
@@ -100,7 +100,7 @@ public class CaseGenericCompletionTest extends BaseCompletionTest {
     public void test_select_case51() throws Exception {
         configureByText("create table tab1 (a integer, event_date timestamp, name varchar2(20)); \n" +
                 "select case when 1=2 then <caret>\n  from tab1");
-        assertLookupFilterOutFunc(myItems, "systimestamp", "sysdate", "dbtimezone", "sessiontimezone");
+        assertLookupFilterOutFunc(myItems, "systimestamp", "sysdate", "dbtimezone", "sessiontimezone", "when");
     }
 
     public void test_select_case52() throws Exception {
@@ -154,19 +154,19 @@ public class CaseGenericCompletionTest extends BaseCompletionTest {
     public void test_select_case91() throws Exception {
         configureByText("create table tab1 (a integer, event_date timestamp, name varchar2(20)); \n" +
                 "select case when 1 <> 3 then <caret> else -1 end as c1\nfrom tab1");
-        assertLookupFilterOutFunc(myItems, "a", "event_date", "name");
+        assertLookupFilterOutFunc(myItems, "a", "event_date", "name", "systimestamp", "sysdate", "dbtimezone", "sessiontimezone");
     }
 
     public void test_select_case92() throws Exception {
         configureByText("create table tab1 (a integer, event_date timestamp, name varchar2(20)); \n" +
                 "select case when 1 <> 3 then 12 else <caret> end as c1\nfrom tab1");
-        assertLookupFilterOutFunc(myItems, "a", "event_date", "name");
+        assertLookupFilterOutFunc(myItems, "a", "event_date", "name", "systimestamp", "sysdate", "dbtimezone", "sessiontimezone");
     }
 
     public void test_select_case93() throws Exception {
         configureByText("create table tab1 (a integer, event_date timestamp, name varchar2(20)); \n" +
                 "select case when 1 <> 3 then 12 when <caret> else 1 end as c1\nfrom tab1");
-        assertLookupFilterOutFunc(myItems, "a", "event_date", "name");
+        assertLookupFilterOutFunc(myItems, "a", "event_date", "name", "systimestamp", "sysdate", "dbtimezone", "sessiontimezone");
     }
 
     public void test_select_case94() throws Exception {

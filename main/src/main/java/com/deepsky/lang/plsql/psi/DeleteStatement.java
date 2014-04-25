@@ -34,5 +34,4 @@ public interface DeleteStatement extends Statement {
 
     @Nullable
     WhereCondition getWhereCondition();
-
 }

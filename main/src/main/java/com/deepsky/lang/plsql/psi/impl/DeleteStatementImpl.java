@@ -70,4 +70,5 @@ public class DeleteStatementImpl extends PlSqlElementBase implements DeleteState
         }
     }
 
+
 }

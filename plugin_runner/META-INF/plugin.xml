@@ -43,139 +43,17 @@
      </ul>
     <br>
 
-    I appreciate comments, suggestions or bug reports, thanks in advance.
+    I appreciate comments, suggestions or bug reports, thanks in advance.<br>
+
+    Version 1.5.12.135
     </html>
     ]]></description>
-    <version>1.5.11.135</version>
+    <version>1.5.12.135</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>
 
-    <change-notes><![CDATA[<html>
-       <ul>
-            <li><b>1.5.11.129</b>
-                 <ul>
-                    - [NEW] Support completion for ALTER TABLE statement<br>
-                    - [NEW] Support error logging clause<br>
-                    - [FIX] Fixes in completion<br>
-                 </ul>
-            </li>
-            <li><b>1.5.9.135</b>
-                 <ul>
-                    - [NEW] More support on completion: SELECT JOIN, etc<br>
-                    - [NEW] Parsing RESULT_CACHE construction<br>
-                    - [FIX] "member" can be a name of table/view<br>
-                 </ul>
-            </li>
-            <li><b>1.5.7.13</b>
-                 <ul>
-                    - [NEW] Refactoring of completion (implemented base cases for now)<br>
-                 </ul>
-            </li>
-            <li><b>1.4.9.13</b>
-                 <ul>
-                    - [NEW] Highlight errored string literals<br>
-                    - [FIX] NPE in Structure View in case of invalid file<br>
-                    - [FIX] Validation exception fixes<br>
-                 </ul>
-            </li>
-            <li><b>1.4.8.12</b>
-                 <ul>
-                    - [NEW] Public Key authentication for SSH tunnel<br>
-                    - [FIX] StringIndexOutOfBoundsException issue<br>
-                    - [FIX] DB Connection Editor dialog<br>
-                 </ul>
-            </li>
-            <li><b>1.4.7.12</b>
-                 <ul>
-                    - [FIX] GoToDBObject does not show objects with the same names<br>
-                    - [FIX] Indexing of SQL files<br>
-                    - [FIX] Data export to CSV format<br>
-                    - [KNOWN ISSUE] Case-sensitive table names, column names and so on are not supported for now<br>
-                 </ul>
-            </li>
-            <li><b>1.4.6.12</b>
-                 <ul>
-                    - [NEW] Added support for "Enter within comments"<br>
-                    - [FIX] SQL and PL/SQL file indexing<br>
-                    - [FIX] Some change in syntax highlighter to support Darcula color scheme<br>
-                    - [FIX] Data export to CSV format<br>
-                    - [FIX] Parser and formatter for REVOKE and GRANT statements<br>
-                    - [KNOWN ISSUE] Case-sensitive table names, column names and so on are not supported for now<br>
-                 </ul>
-            </li>
-            <li><b>1.4.5.12</b>
-                 <ul>
-                    - [NEW] Add support for RENAME TABLE statement, parsing, execution, code completion, etc<br>
-                    - [FIX] Enhanced support for GRANT statement<br>
-                    - [FIX] Performance improvement in the parser<br>
-                    - [FIX] Code formatter changed case of names in double quotes<br>
-                    - [KNOWN ISSUE] Case-sensitive table names, column names and so on are not supported for now<br>
-                 </ul>
-            </li>
-            <li><b>1.4.4.12</b>
-                 <ul>
-                    - [NEW] Initial support for Materialized Views (parsing and highlighting)<br>
-                    - [FIX] Some fixes in the parser<br>
-                    - [FIX] Syntax highlighting is broken on empty file<br>
-                    - [FIX] Enable parser to support DB links for %TYPE and %ROWTYPE<br>
-                    - [FIX] Bring back lost icons for buttons in Connection Settings dialog<br>
-                    - [KNOWN ISSUE] Case-sensitive table names, column names and so on are not supported for now<br>
-                 </ul>
-            </li>
-            <li><b>1.4.2.12</b>
-                 <ul>
-                    - [KNOWN ISSUE] Case-sensitive table names, column names and so on are not supported for now<br>
-                    - [NEW] Access to remote database via SSH (port forwarding)<br>
-                    - [FIX] Refresh session button does not work<br>
-                    - [FIX] Errored syntax failes syntax highlighting<br>
-                    - [FIX] Slash failes parsing<br>
-                 </ul>
-            </li>
-            <li><b>1.4.1.12</b>
-                 <ul>
-                    - [NEW] TNSNAMES.ORA files can be used to establish connection to a database<br>
-                 </ul>
-            </li>
-            <li><b>1.4.0.12</b>
-                 <ul>
-                    - [NEW] Show Explain plan for SQL statement<br>
-                    - [NEW] Support ALETR INDEX statement<br>
-                    - [FIX] Hangs up on cancelation of running SQL<br>
-                 </ul>
-            </li>
-            <li><b>1.3.1.12</b>
-                 <ul>
-                    - [FIX] Some fixes in the parser<br>
-                 </ul>
-            </li>
-            <li><b>1.3.0.11</b>
-                 <ul>
-                    - [NEW] Added configuration of Colors & Fonts<br>
-                    - [NEW] Autompletion of ":=", "||", SQL cursor attributes (PL/SQL), etc<br>
-                    - [NEW] Support of the quoting mechanizm in PL/SQL appeared in 10g<br>
-                 </ul>
-            </li>
-            <li><b>1.2.2.11</b>
-                 <ul>
-                    - [FIX] Allow hyphen character in DB host name, example: 'host-101.com'<br>
-                    - [FIX] DatabaseBrowser is not properly updated on ALTER TABLE request<br>
-                 </ul>
-            </li>
-            <li><b>1.2.1.11</b>
-                 <ul>
-                    - [FIX] Handling changes of File Type extensions<br>
-                    - [FIX] Find Usages for names in double quotes<br>
-                    - [FIX] Parsing<br>
-                 </ul>
-            </li>
-            <li><b>1.2.0.11</b>
-                 <ul>
-                    - [NEW] Code formatter added<br>
-                 </ul>
-            </li>
-        </ul>
-    </html>]]></change-notes>
+    <change-notes/>
     <idea-version since-build="134.100" until-build="135.*"/>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>

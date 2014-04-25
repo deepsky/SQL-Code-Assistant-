@@ -98,7 +98,6 @@ public class FSContentTracker {
             // TODO save error in the log
             System.err.println(e.getMessage());
         }
-
         return true;
     }
 
