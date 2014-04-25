@@ -195,7 +195,7 @@ from dual;
 
 
 create table "pln"."a345" (
-    id    number,
+    "id"    number,
     "text"  varchar2(45) not null enable,
     primary key ("id") using index pctfree 10 initrans 2 maxtrans 255 compute statistics
         storage (

@@ -16,14 +16,14 @@
         <dependency>
             <groupId>sql-assistant</groupId>
             <artifactId>commons</artifactId>
-            <version>1.13.1-SNAPSHOT</version>
+            <version>1.12.1-SNAPSHOT</version>
             <!--<type>jar</type>-->
             <!--<classifier>sources</classifier>-->
         </dependency>
         <dependency>
             <groupId>sql-assistant</groupId>
             <artifactId>main</artifactId>
-            <version>1.13.2-SNAPSHOT</version>
+            <version>1.13.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>

@@ -14,19 +14,9 @@
     </properties>
 
     <modules>
-        <module>commons</module>
-        <module>database</module>
         <module>main</module>
         <module>db_browser</module>
         <module>result_panel</module>
-<!--
-        <module>tools</module>
-        <module>parser</module>
-        <module>antl_patch</module>
-        <module>annotations</module>
-        <module>annotationProcessors</module>
-        <module>completion</module>
--->
     </modules>
 
     <dependencies>

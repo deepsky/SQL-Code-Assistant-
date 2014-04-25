@@ -192,6 +192,12 @@ public class SqlScriptRunService implements SqlScriptRunner {
                                 public String resultMessage() {
                                     return "";
                                 }
+
+                                @Override
+                                public String getSqlStatement() {
+                                    // TODO
+                                    return null;
+                                }
                             });
                         } catch (Throwable ignored) {
                         }
@@ -463,6 +469,11 @@ public class SqlScriptRunService implements SqlScriptRunner {
 
         public String resultMessage() {
             return message;
+        }
+
+        @Override
+        public String getSqlStatement() {
+            return null;  // TODO - implement me
         }
     }
 

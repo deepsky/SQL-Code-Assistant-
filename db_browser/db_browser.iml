@@ -4,15 +4,15 @@
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="commons" />
+    <orderEntry type="library" name="Maven: sql-assistant:commons:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: sql-assistant:antl_patch:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.13" level="project" />
@@ -24,12 +24,9 @@
     <orderEntry type="library" name="Maven: com.jcraft:jsch:0.1.50" level="project" />
     <orderEntry type="module" module-name="main" />
     <orderEntry type="module" module-name="result_panel" />
-    <orderEntry type="module" module-name="database" />
     <orderEntry type="library" name="Maven: sql-assistant:parser:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: sql-assistant:tools:1.12.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.joestelmach:natty:0.4-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2" level="project" />
+    <orderEntry type="library" name="Maven: sql-assistant:database:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy-test:2.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy:2.0.4" level="project" />

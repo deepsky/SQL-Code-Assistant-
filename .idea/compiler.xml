@@ -22,8 +22,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="commons" />
-        <module name="database" />
         <module name="db_browser" />
         <module name="main" />
         <module name="result_panel" />
