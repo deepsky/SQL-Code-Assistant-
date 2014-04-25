@@ -132,26 +132,30 @@ public class ErrorNodeProcessor extends CompletionBase {
         ctx.addElement(CaseExpressionLookupElement.createCase());
     }
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     CASE WHEN
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @SyntaxTreePath("/#SELECT #CASE 1#C_MARKER")
     public void process$SelectCase(C_Context ctx, ASTNode marker) {
         ctx.addElement(CaseExpressionLookupElement.createCaseWhen());
     }
 
-    @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A/#ERROR_TOKEN_A/#CASE #WHEN 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
-    public void process$SelectCaseWhen(C_Context ctx, ASTNode varRef) {
-        if(varRef.getChildren(null).length == 1){
-            ctx.addElement(KeywordLookupElement.create("systimestamp"));
-            ctx.addElement(KeywordLookupElement.create("sysdate"));
-            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
-            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
-        }
-    }
+//    @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A/#ERROR_TOKEN_A/#CASE #WHEN 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+//    public void process$SelectCaseWhen(C_Context ctx, ASTNode varRef) {
+//        if(varRef.getChildren(null).length == 1){
+//            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+//            ctx.addElement(KeywordLookupElement.create("sysdate"));
+//            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+//            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+//        }
+//    }
 
 
-    @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #C_MARKER")
-    public void process$SelectCaseWhenThen(C_Context ctx) {
-        ctx.addElement(CaseExpressionLookupElement.createCaseWhenThen());
-    }
+//    @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #C_MARKER")
+//    public void process$SelectCaseWhenThen(C_Context ctx) {
+//        ctx.addElement(CaseExpressionLookupElement.createCaseWhenThen());
+//    }
 
     @SyntaxTreePath("/#SELECT ..#EXPR_COLUMN//..#ERROR_TOKEN_A/#CASE 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
     public void process$SelectCase2(C_Context ctx, ASTNode varRef) {
@@ -160,15 +164,15 @@ public class ErrorNodeProcessor extends CompletionBase {
         }
     }
 
-    @SyntaxTreePath("/#SELECT ..#EXPR_COLUMN//..#ERROR_TOKEN_A/#CASE #WHEN 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
-    public void process$SelectCaseWhen2(C_Context ctx, ASTNode varRef) {
-        if(varRef.getChildren(null).length == 1){
-            ctx.addElement(KeywordLookupElement.create("systimestamp"));
-            ctx.addElement(KeywordLookupElement.create("sysdate"));
-            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
-            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
-        }
-    }
+//    @SyntaxTreePath("/#SELECT ..#EXPR_COLUMN//..#ERROR_TOKEN_A/#CASE #WHEN 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+//    public void process$SelectCaseWhen2(C_Context ctx, ASTNode varRef) {
+//        if(varRef.getChildren(null).length == 1){
+//            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+//            ctx.addElement(KeywordLookupElement.create("sysdate"));
+//            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+//            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+//        }
+//    }
 
     @SyntaxTreePath("/#SELECT ..1#EXPR_COLUMN//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN 2#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
     public void process$SelectCaseWhenThenExpr2(C_Context ctx, ASTNode columnExpr, ASTNode varRef) {
@@ -177,18 +181,19 @@ public class ErrorNodeProcessor extends CompletionBase {
             ctx.addElement(KeywordLookupElement.create("sysdate"));
             ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
             ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+            ctx.addElement(CaseExpressionLookupElement.createCaseWhenThenWhen());
         }
     }
 
-    @SyntaxTreePath("/#SELECT ..1#EXPR_COLUMN//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN $Expression #ELSE 2#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
-    public void process$SelectCaseWhenThenElseExpr2(C_Context ctx, ASTNode columnExpr, ASTNode varRef) {
-        if(varRef.getChildren(null).length == 1){
-            ctx.addElement(KeywordLookupElement.create("systimestamp"));
-            ctx.addElement(KeywordLookupElement.create("sysdate"));
-            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
-            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
-        }
-    }
+//    @SyntaxTreePath("/#SELECT ..1#EXPR_COLUMN//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN $Expression #ELSE 2#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+//    public void process$SelectCaseWhenThenElseExpr2(C_Context ctx, ASTNode columnExpr, ASTNode varRef) {
+//        if(varRef.getChildren(null).length == 1){
+//            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+//            ctx.addElement(KeywordLookupElement.create("sysdate"));
+//            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+//            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+//        }
+//    }
 
     @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
     public void process$SelectCaseWhenThenExpr(C_Context ctx, ASTNode varRef) {
@@ -200,13 +205,13 @@ public class ErrorNodeProcessor extends CompletionBase {
         }
     }
 
-    @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN $Expression #C_MARKER")
-    public void process$SelectCaseWhenThenExpr2(C_Context ctx) {
-        ctx.addElement(CaseExpressionLookupElement.createCaseWhenThenWhen());
-        ctx.addElement(KeywordLookupElement.create("else"));
-        ctx.addElement(KeywordLookupElement.create("end"));
-    }
-
+//    @SyntaxTreePath("/#SELECT ..#ERROR_TOKEN_A//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN $Expression #C_MARKER")
+//    public void process$SelectCaseWhenThenExpr2(C_Context ctx) {
+//        ctx.addElement(CaseExpressionLookupElement.createCaseWhenThenWhen());
+//        ctx.addElement(KeywordLookupElement.create("else"));
+//        ctx.addElement(KeywordLookupElement.create("end"));
+//    }
+//
 
     @SyntaxTreePath("/#SELECT #ERROR_TOKEN_A/..$Expression/..1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
     public void process$SelectCompleteExpr(C_Context ctx, ASTNode varRef) {

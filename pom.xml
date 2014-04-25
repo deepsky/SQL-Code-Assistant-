@@ -10,7 +10,7 @@
     <version>1.12.1-SNAPSHOT</version>
 
     <properties>
-        <idea.home>/home/sky/idea-IC-129.713</idea.home>
+        <idea.home>/home/sky/idea-IC-129.1328</idea.home>
     </properties>
 
     <modules>
@@ -25,6 +25,7 @@
         <module>annotations</module>
         <module>annotationProcessors</module>
         <module>completion</module>
+        <!--<module>main_diff</module>-->
     </modules>
 
     <dependencies>

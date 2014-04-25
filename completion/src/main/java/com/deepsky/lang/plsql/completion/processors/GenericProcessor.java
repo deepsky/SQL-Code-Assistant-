@@ -28,10 +28,7 @@ import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
-import com.deepsky.lang.plsql.completion.lookups.GenericLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.GroupByLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.OrderByLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.*;
 import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
@@ -615,14 +612,131 @@ TODO
 //        }
 //    }
 
-    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN//..#CASE_EXPRESSION_SRCH/..#RELATION_CONDITION//..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
-    public void process$CaseSearchExprFuncCall(C_Context ctx, ASTNode expr, NameFragmentRef nameRef) {
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     CASE WHEN
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN//..#CASE_EXPRESSION_SRCH/#CASE ..#WHEN $Condition//..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$CaseSearchExprCondition(C_Context ctx, ASTNode expr, NameFragmentRef nameRef) {
         if(expr.getTreeParent().getPsi() instanceof SelectStatement){
             SelectStatement select = (SelectStatement) expr.getTreeParent().getPsi();
             collectColumns(ctx, select, nameRef);
         }
     }
 
+    @SyntaxTreePath("/..ANY//#SELECT ..1#EXPR_COLUMN//..#CASE_EXPRESSION_SRCH/#CASE ..#WHEN #VAR_REF/..2$NameFragmentRef/#C_MARKER")
+    public void process$CaseSearchExprCondition2(C_Context ctx, ASTNode expr, NameFragmentRef nameRef) {
+        if(expr.getTreeParent().getPsi() instanceof SelectStatement){
+            SelectStatement select = (SelectStatement) expr.getTreeParent().getPsi();
+            collectColumns(ctx, select, nameRef);
+        }
+    }
+
+    @SyntaxTreePath("/..ANY//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #C_MARKER")
+    public void process$SelectCaseWhenThen(C_Context ctx) {
+        ctx.addElement(CaseExpressionLookupElement.createCaseWhenThen());
+    }
+
+    @SyntaxTreePath("/..ANY//..#ERROR_TOKEN_A/#CASE #WHEN 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SelectCaseWhen(C_Context ctx, ASTNode varRef) {
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+    }
+
+    @SyntaxTreePath("/..ANY//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN $Expression #C_MARKER")
+    public void process$SelectCaseWhenThenExpr2(C_Context ctx) {
+        ctx.addElement(CaseExpressionLookupElement.createCaseWhenThenWhen());
+        ctx.addElement(KeywordLookupElement.create("else"));
+        ctx.addElement(KeywordLookupElement.create("end"));
+    }
+
+    @SyntaxTreePath("/..ANY//..#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN $Expression #ELSE 1#VAR_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void process$SelectCaseWhenThenElseExpr2(C_Context ctx, ASTNode varRef) {
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+    }
+
+    @SyntaxTreePath("/..ANY//..1#CASE_EXPRESSION_SRCH/#CASE #WHEN $Condition #THEN $Expression #ELSE 2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectCaseWhenThenElseExpr3(C_Context ctx, ASTNode caseExpr, ASTNode varRef, NameFragmentRef nameRef) {
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+        ASTNode parent = caseExpr.getTreeParent();
+        if(parent != null && parent.getPsi() instanceof SelectStatement){
+            collectColumns(ctx, (SelectStatement) parent.getPsi(), nameRef);
+        } else if(parent != null) {
+            parent = parent.getTreeParent();
+            if(parent != null && parent.getPsi() instanceof SelectStatement){
+                collectColumns(ctx, (SelectStatement) parent.getPsi(), nameRef);
+            } else if(parent != null) {
+                parent = parent.getTreeParent();
+                if(parent != null && parent.getPsi() instanceof SelectStatement){
+                    collectColumns(ctx, (SelectStatement) parent.getPsi(), nameRef);
+                }
+            }
+        }
+    }
+
+    @SyntaxTreePath("/..ANY//..1#CASE_EXPRESSION_SRCH/#CASE #WHEN $Condition #THEN 2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectCaseWhenThenElseExpr4(C_Context ctx, ASTNode caseExpr, ASTNode varRef, NameFragmentRef nameRef) {
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+        ASTNode parent = caseExpr.getTreeParent();
+        if(parent != null && parent.getPsi() instanceof SelectStatement){
+            collectColumns(ctx, (SelectStatement) parent.getPsi(), nameRef);
+        } else if(parent != null) {
+            parent = parent.getTreeParent();
+            if(parent != null && parent.getPsi() instanceof SelectStatement){
+                collectColumns(ctx, (SelectStatement) parent.getPsi(), nameRef);
+            } else if(parent != null) {
+                parent = parent.getTreeParent();
+                if(parent != null && parent.getPsi() instanceof SelectStatement){
+                    collectColumns(ctx, (SelectStatement) parent.getPsi(), nameRef);
+                }
+            }
+        }
+    }
+
+    @SyntaxTreePath("/..ANY//..1#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN $Expression #WHEN 2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
+    public void process$SelectCaseWhenThenWhen(C_Context ctx, ASTNode expr, ASTNode varRef, NameFragmentRef nameRef) {
+        if(varRef.getChildren(null).length == 1){
+            ctx.addElement(KeywordLookupElement.create("systimestamp"));
+            ctx.addElement(KeywordLookupElement.create("sysdate"));
+            ctx.addElement(KeywordLookupElement.create("sessiontimezone"));
+            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
+        }
+
+        ASTNode parent = expr.getTreeParent();
+        if(parent != null && parent.getPsi() instanceof SelectStatement){
+            collectColumns(ctx, (SelectStatement) parent.getPsi(), nameRef);
+        } else if(parent != null) {
+            parent = parent.getTreeParent();
+            if(parent != null && parent.getPsi() instanceof SelectStatement){
+                collectColumns(ctx, (SelectStatement) parent.getPsi(), nameRef);
+            } else if(parent != null) {
+                parent = parent.getTreeParent();
+                if(parent != null && parent.getPsi() instanceof SelectStatement){
+                    collectColumns(ctx, (SelectStatement) parent.getPsi(), nameRef);
+                }
+            }
+        }
+    }
 
 }
 

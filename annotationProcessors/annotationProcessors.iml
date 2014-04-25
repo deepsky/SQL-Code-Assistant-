@@ -36,6 +36,7 @@
     <orderEntry type="library" name="Maven: com.joestelmach:natty:0.4-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.2" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2" level="project" />
+    <orderEntry type="library" name="Maven: sql-assistant:main_diff:1.12.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy-test:2.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy:2.0.4" level="project" />

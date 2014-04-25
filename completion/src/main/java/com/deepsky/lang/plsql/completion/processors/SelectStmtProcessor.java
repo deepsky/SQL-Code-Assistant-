@@ -23,22 +23,20 @@
 
 package com.deepsky.lang.plsql.completion.processors;
 
-import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.PsiUtil;
+import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
-import com.deepsky.lang.plsql.completion.lookups.*;
-import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.dml.UpdateLookupElement;
-import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.validation.ValidationException;
+import com.deepsky.lang.plsql.completion.lookups.CaseExpressionLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
+import com.deepsky.lang.plsql.psi.NameFragmentRef;
+import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @SyntaxTreePath("/..1$SelectStatement")
@@ -55,16 +53,19 @@ public class SelectStmtProcessor extends CompletionBase {
         ctx.addElement(CaseExpressionLookupElement.createCaseWhen());
     }
 
-    @SyntaxTreePath("/#SELECT ..#EXPR_COLUMN/#ERROR_TOKEN_A/#CASE #WHEN $Condition #THEN $Expression #C_MARKER")
-    public void process$SelectCaseEnd(C_Context ctx, SelectStatement select) {
-        ctx.addElement(CaseExpressionLookupElement.createCaseWhenThenWhen());
-        ctx.addElement(KeywordLookupElement.create("else"));
-        ctx.addElement(KeywordLookupElement.create("end"));
+    // select * from (select a from tab1) <caret>
+    @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY/#SUBQUERY #ALIAS_NAME/#ALIAS_IDENT/2#C_MARKER")
+    public void process$SelectFromSubqueryAlias(C_Context ctx, SelectStatement select, ASTNode marker) {
+        ASTNode next = PsiUtil.nextVisibleSibling(marker);
+        final boolean isSemiLast = next != null && next.getElementType() == PlSqlTokenTypes.SEMI;
+        if (!isSemiLast) {
+            completeStart(ctx);
+        }
     }
 
     // select * from (select a, <caret>)
     @SyntaxTreePath("/..#TABLE_REFERENCE_LIST_FROM/..#FROM_SUBQUERY// ..#ERROR_TOKEN_A/#SELECT ..#EXPR_COLUMN #COMMA #ERROR_TOKEN_A/#C_MARKER")
-    public void process$SelectFromSubqueryError() {
+    public void process$SelectFromSubqueryError(C_Context ctx) {
         // TODO - implement me
     }
 
@@ -80,7 +81,7 @@ public class SelectStmtProcessor extends CompletionBase {
             ctx.addElement(elem);
         }
 
-        if(varRef.getChildren(null).length == 1){
+        if (varRef.getChildren(null).length == 1) {
             ctx.addElement(CaseExpressionLookupElement.createCase());
         }
     }
@@ -90,7 +91,7 @@ public class SelectStmtProcessor extends CompletionBase {
     public void process$SelectCaseCondition(C_Context ctx, SelectStatement select, ASTNode varRef, NameFragmentRef nameRef) {
         collectColumns(ctx, select, nameRef);
 
-        if(varRef.getChildren(null).length == 1){
+        if (varRef.getChildren(null).length == 1) {
             collectSystemFunctions(ctx);
             ctx.addElement(KeywordLookupElement.create("systimestamp"));
             ctx.addElement(KeywordLookupElement.create("sysdate"));
@@ -107,7 +108,7 @@ public class SelectStmtProcessor extends CompletionBase {
         provider.collectColumnVariants(select, prevText);
 
         PsiElement parent = expr.getTreeParent().getPsi();
-        if(parent instanceof SelectStatement){
+        if (parent instanceof SelectStatement) {
             provider.collectColumnVariants((SelectStatement) parent, prevText);
         }
 
@@ -146,65 +147,6 @@ public class SelectStmtProcessor extends CompletionBase {
     public void process$SelectFromSubquery2() {
         // TODO - implement me
     }
-
-//    @SyntaxTreePath("//..#SUBQUERY_CONDITION/..#SUBQUERY/..2$SelectStatement/..#EXPR_COLUMN//#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-//    public void process$SelectWhereSubqueryCondition(C_Context ctx, SelectStatement s0, SelectStatement select, NameFragmentRef ref) {
-//        collectColumns(ctx, select, ref);
-//    }
-
-/*
-    @SyntaxTreePath("/..#WHERE_CONDITION//..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectWhere1(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
-        collectColumns(ctx, select, nameRef);
-
-        if(expr.getChildren(null).length == 1){
-            ASTNode parent = expr.getTreeParent();
-            if(parent.getElementType() == PlSqlElementTypes.WHERE_CONDITION){
-                ctx.addElement(KeywordLookupElement.create("exists"));
-            } else if(parent.getElementType() == PlSqlElementTypes.LOGICAL_EXPR){
-                ctx.addElement(KeywordLookupElement.create("exists"));
-            }
-        }
-
-        if(nameRef.getPrevFragment() == null && expr.getTreeParent().getElementType() == PlSqlElementTypes.RELATION_CONDITION){
-            // Possible case: column1 < sysdate/systimestamp/dbtimezone/current_timestamp
-            ctx.addElement(KeywordLookupElement.create("sysdate"));
-            ctx.addElement(KeywordLookupElement.create("systimestamp"));
-            ctx.addElement(KeywordLookupElement.create("dbtimezone"));
-            ctx.addElement(KeywordLookupElement.create("current_timestamp"));
-        }
-    }
-*/
-
-//    @SyntaxTreePath("/..#WHERE_CONDITION//..#RELATION_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-//    public void process$SelectWhere2(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
-//        collectColumns(ctx, select, nameRef);
-//    }
-
-//    @SyntaxTreePath("/..#WHERE_CONDITION//..#LIKE_CONDITION/..2#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-//    public void process$SelectWhere3(C_Context ctx, SelectStatement select, ASTNode expr, NameFragmentRef nameRef) {
-//        collectColumns(ctx, select, nameRef);
-//    }
-
-
-/*
-    @SyntaxTreePath("/..#WHERE_CONDITION/..#EXISTS_EXPR//..2$SelectStatement/..#WHERE_CONDITION/..#VAR_REF/..3$NameFragmentRef/#C_MARKER")
-    public void process$SelectExistsExpr(C_Context ctx, SelectStatement select, SelectStatement subquery, NameFragmentRef nameRef) {
-        VariantsProvider provider = ctx.getProvider();
-        final NameFragmentRef prev = nameRef.getPrevFragment();
-        final String prevText = prev != null ? prev.getText() : null;
-
-        provider.collectColumnVariants(select, prevText);
-        provider.collectColumnVariants(subquery, prevText);
-
-        final List<LookupElement> variants = new ArrayList<LookupElement>();
-        variants.addAll(provider.takeCollectedLookups());
-
-        for (LookupElement elem : variants) {
-            ctx.addElement(elem);
-        }
-    }
-*/
 
     @SyntaxTreePath("/..#EXPR_COLUMN/#LAG_FUNCTION/..#SPEC_CALL_ARGUMENT_LIST/..#QUERY_PARTITION_CLAUSE/..#VAR_REF/..2$NameFragmentRef/#C_MARKER")
     public void process$LagFunc(C_Context ctx, SelectStatement select, NameFragmentRef nameRef) {

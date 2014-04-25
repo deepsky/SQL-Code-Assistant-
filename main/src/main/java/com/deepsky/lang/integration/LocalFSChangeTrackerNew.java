@@ -572,7 +572,7 @@ public class LocalFSChangeTrackerNew extends GenericThreadService {
                     if (beingAdded.size() != 0 && !project.isDisposed()) {
                         helper.iterateOverContentEntries(new LocalFileProcessor() {
                             public void process(VirtualFile virtualFile, int command) {
-                                if (command == LocalFileProcessor.ADD_TO_INDEX) {
+                                if (command == ADD_TO_INDEX) {
                                     long ts = fsIndexer.getFileTimestamp(virtualFile.getPath());
                                     if (ts != virtualFile.getTimeStamp()) {
                                         log.info("#INDEX FILE: " + virtualFile.getPath());

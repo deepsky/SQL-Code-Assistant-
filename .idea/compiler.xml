@@ -51,6 +51,7 @@
       <module name="database" target="1.6" />
       <module name="db_browser" target="1.6" />
       <module name="main" target="1.6" />
+      <module name="main_diff" target="1.6" />
       <module name="parser" target="1.6" />
       <module name="resolver" target="1.7" />
       <module name="result_panel" target="1.6" />
