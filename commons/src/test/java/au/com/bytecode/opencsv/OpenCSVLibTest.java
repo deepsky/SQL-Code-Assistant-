@@ -1,4 +1,4 @@
-package com.deepsky.view.query_pane;
+package au.com.bytecode.opencsv;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import junit.framework.TestCase;
