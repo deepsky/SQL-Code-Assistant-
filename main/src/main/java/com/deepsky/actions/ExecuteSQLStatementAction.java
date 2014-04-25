@@ -38,6 +38,7 @@ import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
 import com.deepsky.view.Icons;
 import com.deepsky.view.query_pane.QueryResultPanel;
 import com.deepsky.view.query_pane.QueryResultWindow;
+import com.deepsky.view.query_pane.QueryStatisticsPanel;
 import com.deepsky.view.query_pane.markup.SqlStatementMarker;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -156,13 +157,20 @@ public class ExecuteSQLStatementAction extends AnAction {
                         }
 
                         public void handleDMLResult(SQLUpdateStatistics result) {
-                            SqlStatementMarker marker = psi.getModel().addMarker(_st, _end);
-                            QueryResultPanel resultPane = qrwn.createResultPanel(
-                                    QueryResultPanel.DML_QUERY_RESULT, marker, Icons.DML_RESULT, null /* ToolTip text */
+                            QueryStatisticsPanel resultPane = qrwn.findOrCreateDMLResultPanel(
+                                    "DML Result Panel", Icons.TABLE, null /* ToolTip text */
                             );
-                            resultPane.init(result);
+                            resultPane.append(result);
                             // show content pane
-                            qrwn.showContent(marker, false, 1500);
+                            qrwn.showContent("DML Result Panel");
+
+//                            SqlStatementMarker marker = psi.getModel().addMarker(_st, _end);
+//                            QueryResultPanel resultPane = qrwn.createResultPanel(
+//                                    QueryResultPanel.DML_QUERY_RESULT, marker, Icons.DML_RESULT, null /* ToolTip text */
+//                            );
+//                            resultPane.init(result);
+//                            // show content pane
+//                            qrwn.showContent(marker, false, 1500);
                         }
                     });
         } catch (SqlScriptRunner.AlreadyStartedException e) {

@@ -32,4 +32,6 @@ public interface SQLUpdateStatistics {
 
     String errorMessages();
     String resultMessage();
+
+    String getSqlStatement();
 }

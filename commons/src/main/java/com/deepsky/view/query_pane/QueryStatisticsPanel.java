@@ -69,27 +69,32 @@ public class QueryStatisticsPanel extends JPanel implements QueryResultPanel {
 
         PlainDocument doc = new PlainDocument();
 
-        String errors = stats.errorMessages();
-        try {
-            SimpleAttributeSet set = new SimpleAttributeSet();
-            StyleConstants.setFontFamily(set, Font.MONOSPACED);
-            doc.insertString(0, errors == null ? "No errors" : errors, set);
-        } catch (BadLocationException ignored) {
-        }
-
         textArea = new JTextArea(doc);
         textArea.setFont(font);
         central.add(new JBScrollPane(textArea), BorderLayout.CENTER);
         add(central, BorderLayout.CENTER);
 
+        String errors = stats.errorMessages();
+        try {
+            SimpleAttributeSet set = new SimpleAttributeSet();
+            StyleConstants.setFontFamily(set, Font.MONOSPACED);
+
+            doc.insertString(0, stats.getSqlStatement() + "\n", set);
+            if(errors != null){
+                Position endPos = doc.getEndPosition();
+                doc.insertString(endPos.getOffset(), errors, set);
+                endPos = doc.getEndPosition();
+                doc.insertString(endPos.getOffset(), "\n\n", set);
+            }
+        } catch (BadLocationException ignored) {
+        }
+
+        textArea.setCaretPosition(doc.getEndPosition().getOffset()-1);
+
         statusLine.setResponseMessage(stats.resultMessage());
         statusLine.setTimeSpent(stats.timeSpent());
 
         setVisible(true);
-
-        if (errors != null && errors.length() > 0) {
-            textArea.setCaretPosition(doc.getEndPosition().getOffset() - 1);
-        }
     }
 
 
@@ -101,12 +106,24 @@ public class QueryStatisticsPanel extends JPanel implements QueryResultPanel {
             String errors = stats.errorMessages();
             try {
                 Position endPos = doc.getEndPosition();
-                doc.insertString(endPos.getOffset(), errors == null ? "No errors" : errors, null);
+                SimpleAttributeSet set = new SimpleAttributeSet();
+                StyleConstants.setFontFamily(set, Font.MONOSPACED);
+
+                doc.insertString(endPos.getOffset(), stats.getSqlStatement() + "\n\n", set);
+
+                if(errors != null){
+                    endPos = doc.getEndPosition();
+                    doc.insertString(endPos.getOffset(), errors, set);
+                    endPos = doc.getEndPosition();
+                    doc.insertString(endPos.getOffset(), "\n\n", set);
+                }
             } catch (BadLocationException ignored) {
             }
-            if (errors != null && errors.length() > 0) {
-                textArea.setCaretPosition(doc.getEndPosition().getOffset() - 1);
-            }
+
+            textArea.setCaretPosition(doc.getEndPosition().getOffset()-1);
+
+            statusLine.setResponseMessage(stats.resultMessage());
+            statusLine.setTimeSpent(stats.timeSpent());
         }
     }
 }

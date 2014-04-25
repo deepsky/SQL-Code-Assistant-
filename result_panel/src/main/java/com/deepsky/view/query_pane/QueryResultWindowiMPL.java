@@ -400,7 +400,7 @@ public class QueryResultWindowiMPL implements  QueryResultWindow {
      * @param displayName
      */
     public void showContent(String displayName) {
-        showContent(displayName, null, true, 500);
+        showContent(displayName, null, false, 500);
     }
 
     public void showContent() {
@@ -420,7 +420,7 @@ public class QueryResultWindowiMPL implements  QueryResultWindow {
                     } catch (InterruptedException e1) {
                     }
                 }
-            }, true, true);
+            }, false, true);
         } else {
             // hide panel
             wm.hide(new Runnable() {
@@ -469,7 +469,7 @@ public class QueryResultWindowiMPL implements  QueryResultWindow {
             return;
         }
 
-        tabbedPane.requestFocusInWindow();
+        //tabbedPane.requestFocusInWindow();
         tabbedPane.setSelectedIndex(index);
 
         if (!wm.isVisible()) {

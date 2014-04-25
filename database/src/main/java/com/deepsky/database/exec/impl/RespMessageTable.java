@@ -74,6 +74,7 @@ public abstract class RespMessageTable {
         createEntry(PLSqlTypesAdopted.CREATE_TRIGGER, "Trigger created", true);
         createEntry(PLSqlTypesAdopted.CREATE_SYNONYM, "Synonym created", true);
         createEntry(PLSqlTypesAdopted.CREATE_TABLESPACE, "Tablespace created", true);
+        createEntry(PLSqlTypesAdopted.COMMENT_STMT, "Comment created", true);
 
         createEntry(PLSqlTypesAdopted.ALTER_TABLE, "Table altered", true);
         createEntry(PLSqlTypesAdopted.ALTER_TRIGGER, "Trigger altered", true);
@@ -99,7 +100,7 @@ public abstract class RespMessageTable {
 
         createEntry(PLSqlTypesAdopted.DROP_PACKAGE, "Package dropped", true);
 
-        createEntry(PLSqlTypesAdopted.COMMIT_STATEMENT, "Commited");
+        createEntry(PLSqlTypesAdopted.COMMIT_STATEMENT, "Committed");
         createEntry(PLSqlTypesAdopted.ROLLBACK_STATEMENT, "Rollbacked");
 
         // more checks needed 

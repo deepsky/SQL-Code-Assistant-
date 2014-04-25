@@ -208,7 +208,7 @@ public abstract class SQLExecutorSimple implements SQLExecutor {
         ms = System.currentTimeMillis() - ms;
 
         connectionManager.addProcessedStatement(node);
-        return new SQLUpdateStatisticsImpl(size, ms, responseMessage, messages);
+        return new SQLUpdateStatisticsImpl(node.getText(), size, ms, responseMessage, messages);
     }
 
     private String executePlSqlBlock(PlSqlBlock plSqlBlock) throws DBException {
@@ -393,8 +393,17 @@ public abstract class SQLExecutorSimple implements SQLExecutor {
         long timeSpent;
         String message;
         String errors;
+        String sqlStatement;
 
         public SQLUpdateStatisticsImpl(int rowsAffected, long timeSpent, String message, String errors) {
+            this.rowsAffected = rowsAffected;
+            this.timeSpent = timeSpent;
+            this.message = message;
+            this.errors = errors;
+        }
+
+        public SQLUpdateStatisticsImpl(String sqlStatement, int rowsAffected, long timeSpent, String message, String errors) {
+            this.sqlStatement = sqlStatement;
             this.rowsAffected = rowsAffected;
             this.timeSpent = timeSpent;
             this.message = message;
@@ -415,6 +424,11 @@ public abstract class SQLExecutorSimple implements SQLExecutor {
 
         public String resultMessage() {
             return message;
+        }
+
+        @Override
+        public String getSqlStatement() {
+            return sqlStatement;
         }
     }
 
