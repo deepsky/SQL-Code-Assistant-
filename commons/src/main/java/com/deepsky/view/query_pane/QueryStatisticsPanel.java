@@ -79,7 +79,9 @@ public class QueryStatisticsPanel extends JPanel implements QueryResultPanel {
             SimpleAttributeSet set = new SimpleAttributeSet();
             StyleConstants.setFontFamily(set, Font.MONOSPACED);
 
-            doc.insertString(0, stats.getSqlStatement() + "\n", set);
+            if(stats.getSqlStatement() != null){
+                doc.insertString(0, stats.getSqlStatement() + "\n", set);
+            }
             if(errors != null){
                 Position endPos = doc.getEndPosition();
                 doc.insertString(endPos.getOffset(), errors, set);
@@ -109,7 +111,9 @@ public class QueryStatisticsPanel extends JPanel implements QueryResultPanel {
                 SimpleAttributeSet set = new SimpleAttributeSet();
                 StyleConstants.setFontFamily(set, Font.MONOSPACED);
 
-                doc.insertString(endPos.getOffset(), stats.getSqlStatement() + "\n\n", set);
+                if(stats.getSqlStatement() != null){
+                    doc.insertString(endPos.getOffset(), stats.getSqlStatement() + "\n\n", set);
+                }
 
                 if(errors != null){
                     endPos = doc.getEndPosition();

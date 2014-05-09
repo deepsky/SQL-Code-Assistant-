@@ -30,6 +30,8 @@ import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.psi.names.ColumnNameRef;
+import com.deepsky.lang.plsql.psi.ref.TableRef;
+import com.deepsky.utils.StringUtils;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
 
@@ -184,4 +186,20 @@ public class DDLProcessor extends CompletionBase {
     public void process$DropTrigger(C_Context context) {
         collectTriggerNames(context);
     }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///     COMMENT
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @SyntaxTreePath("/..#COMMENT_STMT/#COMMENT #ON #TABLE #TABLE_REF/#C_MARKER")
+    public void process$CommentTabRef(C_Context context) {
+        collectTableNames(context);
+    }
+
+    @SyntaxTreePath("/..#COMMENT_STMT/#COMMENT #ON #COLUMN 1#TABLE_REF #DOT #COLUMN_NAME_REF/#C_MARKER")
+    public void process$CommentTabColumn(C_Context context, ASTNode tableRef) {
+        collectColumns(context, StringUtils.discloseDoubleQuotes(tableRef.getText()));
+    }
+
 }

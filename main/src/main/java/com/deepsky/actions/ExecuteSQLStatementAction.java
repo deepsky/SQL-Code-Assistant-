@@ -163,14 +163,6 @@ public class ExecuteSQLStatementAction extends AnAction {
                             resultPane.append(result);
                             // show content pane
                             qrwn.showContent("DML Result Panel");
-
-//                            SqlStatementMarker marker = psi.getModel().addMarker(_st, _end);
-//                            QueryResultPanel resultPane = qrwn.createResultPanel(
-//                                    QueryResultPanel.DML_QUERY_RESULT, marker, Icons.DML_RESULT, null /* ToolTip text */
-//                            );
-//                            resultPane.init(result);
-//                            // show content pane
-//                            qrwn.showContent(marker, false, 1500);
                         }
                     });
         } catch (SqlScriptRunner.AlreadyStartedException e) {

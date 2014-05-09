@@ -761,6 +761,31 @@ public class GenericCompletionTest extends BaseCompletionTest {
         assertLookup(myItems, "tab1");
     }
 
+    public void test_comment_16() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10)); " +
+                "create table abc (id number, text3 varchar2(10)); " +
+                "comment on table <caret> is '';");
+        assertLookup(myItems, "tab1", "abc");
+    }
+
+    public void test_comment_17() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10)); " +
+                "create table abc (id number, text3 varchar2(10)); " +
+                "comment on column <caret> is '';");
+        assertLookup(myItems, "tab1", "abc");
+    }
+
+    public void test_comment_171() throws Exception {
+        configureByText("create table tab1 (id number, text varchar2(10)); " +
+                "create table abc (id number, text3 varchar2(10)); " +
+                "comment on column abc.<caret> is '';");
+        assertLookup(myItems, "id", "text3");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////         CREATE TABLE
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     public void test_create_table_as_select() throws Exception {
         configureByText("create table TAB123\n" +
