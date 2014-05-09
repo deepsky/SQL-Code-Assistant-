@@ -210,6 +210,8 @@
             <test name="test.deepsky.lang.plsql.completion2.CaseGenericCompletionTest" />
             <test name="test.deepsky.lang.plsql.completion2.Alter_BaseCompletionTest" />
 
+            <test name="com.deepsky.lang.plsql.formatter.PlSqlFormatterTest" />
+
         </junit>
     </target>
 
