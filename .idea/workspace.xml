@@ -2,248 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="54de04b7-488f-4a63-9926-f47ea7ea238b" name="Default" comment="Fix Quick Object Lookup (13 ver specific)&#10;">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__sql_assistant_commons_1_12_1_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__sql_assistant_commons_1_13_2_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__sql_assistant_database_1_12_1_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__sql_assistant_database_1_13_2_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main/src/test/java/test/deepsky/lang/plsql/parser/PlSqlParser_DMLTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main/src/test/java/test/deepsky/lang/plsql/parser/PlSqlParser_FunctionTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/ddl/createTable/complete_type.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/ddl/createTable/complete_type2.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main/src/test/resources/dml/err_logging_misc.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main/src/test/resources/dml/insert_into_errlog.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main/src/test/resources/functions/regular_func.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main/src/test/resources/functions/result_cache.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main/src/test/resources/functions/result_cache2.sql" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_mockito_mockito_core_1_8_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_objenesis_objenesis_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/commons.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/pom.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/castor/sysfunction_def.xsd" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/au/com/bytecode/opencsv/CSVIterator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/au/com/bytecode/opencsv/CSVParser.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/au/com/bytecode/opencsv/CSVReader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/au/com/bytecode/opencsv/CSVWriter.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/ConnectionInfo.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/ConnectionManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/ConnectionManagerListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/ConnectionStatus.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/DBCancelException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/DBException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/DbConfigurationException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/DbMetaInfo.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/MyProgressIndicator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/SessionListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/exec/SQLUpdateStatistics.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/ora/DbUID.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/database/ora/DbUrl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/integration/CustomRecognitionException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/common/PlSqlFileType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/common/PlSqlLanguage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/common/PluginKey.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/common/PluginKeys.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/common/SharedConstants.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/common/SharedObjectPool.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/integration/PlSqlFileChangeTrackerAbstract.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/parser/adoptee/CharBufferAdopted.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/ConfigurationException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/NotSupportedException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/SyntaxTreeCorruptedException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/parser/ParserException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/parser/WrappedPackageException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/psi/utils/BaseFormatter.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/psi/utils/PsiUtil.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/resolver/ContextPath.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/resolver/ContextPathProvider.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/resolver/ResolveDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/resolver/index/ContextItem.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/ColumnDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/DbObject.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/DbObjectHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/ExecutableDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/FileBasedContextUrl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/FunctionDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/ObjectTypeDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/PackageBodyDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/PackageDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/PackageSpecDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/PlSqlObject.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/ProcedureDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/RecordTypeDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/RecordTypeItemDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/RefCursorTypeDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/SequenceDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/SqlScriptLocator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/SynonymDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/SynonymOfObjectDesc.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/TableCollectionDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/TableDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/TableDescriptorForRegular.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/TableDescriptorForSubquery.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/TableDescriptorLegacy.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/TriggerDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/Type.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/TypeFactory.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/UserDefinedTypeDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/VariableDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/VarrayCollectionDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/ViewDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/AnydataType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/BFileType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/BinaryIntegerType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/BlobType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/BooleanType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/CharType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/ClobType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/DateType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/FloatType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/IntegerType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/IntervalDayToSecType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/LongType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/NClobType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/NULLType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/NVarchar2Type.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/NumberType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/NumericType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/ObjectType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/PlsIntegerType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/RawType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/RecordType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/RefCursorType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/RowidType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/RowtypeType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/SmallIntType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/TableColumnRefType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/TimestampLocalTZType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/TimestampTZType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/TimestampType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/TypeBase.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/UserDefinedType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/Varchar2Type.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/VarcharType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/struct/types/VarrayType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/plsql/workarounds/LoggerProxy.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/lang/validation/ValidationException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/navigation/DbObjectContributor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/navigation/NameLookupService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/settings/SqlCodeAssistantSettings.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/utils/CustomClassLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/utils/FileUtils.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/utils/PluginPathProcessor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/utils/PluginPathProcessorException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/utils/StringUtils.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/Helpers.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/Icons.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/query_pane/ConversionException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/query_pane/QueryResultPanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/query_pane/QueryResultWindow.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/query_pane/QueryStatisticsPanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/query_pane/StatusLinePanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/query_pane/ValueConvertor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/query_pane/markup/SqlStatementMarker.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/query_pane/markup/SqlStatementMarkerListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/query_pane/markup/SqlStatementMarkupModel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/query_pane/markup/SqlStatementMarkupModelListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/java/com/deepsky/view/query_pane/markup/StatementGutterRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/main/resources/sysfunc_list.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/test/java/JCraft/UserAuthPubKey.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/test/java/au/com/bytecode/opencsv/CSVParserTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/test/java/au/com/bytecode/opencsv/CSVReaderTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/commons/src/test/java/au/com/bytecode/opencsv/OpenCSVLibTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/database.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/pom.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/CacheManagerListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ConnectionInfoFactory.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/DBDriveError.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/MappingHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ResultSetHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/StartupCacheManagerListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/StateListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/exec/RecordCache.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/exec/RowSetManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/exec/TableResizeListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/exec/UpdatableRecordCache.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/exec/impl/ColumnInfo.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/exec/impl/DbmsOutput.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/exec/impl/NotUpdatableResultSetException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/exec/impl/RSUpdateSupport.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/exec/impl/RespMessageTable.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/exec/impl/RowSetModelImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/fs/CachedVirtualFileSystem.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/impl/AsynchronousConnector.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/impl/CancelConnectException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/impl/ConnectionInfoBase.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/ClosedConnectionException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/DbObjectEx.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/DbObjectKey.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/ItemToUpdate.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/LowLevelConnectionProvider.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/Mix.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/ParseEventListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/PrioritizedList.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/SchemaObject.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/VersionMarker.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/desc/ColumnDescriptorImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/desc/ColumnHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/desc/FunctionDescriptorImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/desc/OraTableDescriptor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/desc/ParamStuff.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/handlers/DbObjectAttributed.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/handlers/ScriptGenerator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/handlers/TableDefGenerator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/types/LONGRAWType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/types/LONGType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora/types/RAWType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/CancelUpdateException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/DbCacheManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/DbObjectCache.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/DbObjectLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/DbObjectSpec.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/loaders/DbObjectLoaderAbstract.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/loaders/FunctionLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/loaders/PackageBodyLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/loaders/PackageSpecLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/loaders/ProcedureLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/loaders/SequenceLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/loaders/SynonymLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/loaders/TableLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/loaders/TriggerLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/loaders/TypeLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/database/ora2/loaders/ViewLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/utils/persistence/Persistable.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/utils/persistence/PersistableList.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/utils/persistence/PersistableMap.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/utils/persistence/PersistableMap2.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/database/src/main/java/com/deepsky/utils/persistence/PersistenceManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/cursor_in_anonymous_blk.sql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/select/cursor_in_anonymous_blk1.sql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/tree/DummyFileViewProvider.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/intellij/codeInsight/daemon/impl/Divider.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/CaseGenericCompletionTest.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/CaseGenericCompletionTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/DeleteStatement.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/DeleteStatement.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/DeleteStatementImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/DeleteStatementImpl.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__sql_assistant_commons_1_13_2_SNAPSHOT.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__sql_assistant_database_1_13_2_SNAPSHOT.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/ExecuteSQLStatementAction.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/ExecuteSQLStatementAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/FSContentTracker.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/integration/FSContentTracker.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/GenericCompletionTest.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/GenericCompletionTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/InsertStatementImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/InsertStatementImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/result_panel/src/main/java/com/deepsky/view/query_pane/QueryResultWindowiMPL.java" afterPath="$PROJECT_DIR$/result_panel/src/main/java/com/deepsky/view/query_pane/QueryResultWindowiMPL.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/database/exec/impl/SQLExecutorSimple.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/database/exec/impl/SQLExecutorSimple.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/Select_BaseCompletionTest.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/Select_BaseCompletionTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/ShowParameterInfoFake.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/ShowParameterInfoFake.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/SqlScriptRunService.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/SqlScriptRunService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/SqlScriptRunner.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/SqlScriptRunner.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/test/resources/table_definitions/create_tables.sql" afterPath="$PROJECT_DIR$/main/src/test/resources/table_definitions/create_tables.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/db_browser.iml" afterPath="$PROJECT_DIR$/db_browser/db_browser.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/main.iml" afterPath="$PROJECT_DIR$/main/main.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" afterPath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/pom.xml" afterPath="$PROJECT_DIR$/db_browser/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/pom.xml" afterPath="$PROJECT_DIR$/main/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/result_panel/pom.xml" afterPath="$PROJECT_DIR$/result_panel/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/result_panel/result_panel.iml" afterPath="$PROJECT_DIR$/result_panel/result_panel.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugin_runner/plugin_runner.iml" afterPath="$PROJECT_DIR$/plugin_runner/plugin_runner.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="sql-assistant.iws" />
@@ -422,18 +188,8 @@
       <file leaf-file-name="test.sql" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="795">
+            <state vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="795">
               <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dbms_plugts.pks" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/src/test/resources/11g/dbms_plugts.pks">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="155" max-vertical-offset="10110">
-              <caret line="22" column="4" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -442,7 +198,7 @@
       <file leaf-file-name="SqlScriptRunService.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/SqlScriptRunService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1890" max-vertical-offset="6375">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2925" max-vertical-offset="7845">
               <caret line="195" column="32" selection-start-line="195" selection-start-column="32" selection-end-line="195" selection-end-column="32" />
               <folding />
             </state>
@@ -452,8 +208,8 @@
       <file leaf-file-name="build.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2843" max-vertical-offset="3420">
-              <caret line="180" column="45" selection-start-line="180" selection-start-column="45" selection-end-line="180" selection-end-column="45" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="3450">
+              <caret line="13" column="45" selection-start-line="13" selection-start-column="45" selection-end-line="13" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -462,17 +218,17 @@
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1395">
+            <state vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="1395">
               <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_browser/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6666667" vertical-offset="5" max-vertical-offset="1380">
+            <state vertical-scroll-proportion="0.0" vertical-offset="5" max-vertical-offset="1380">
               <caret line="25" column="46" selection-start-line="25" selection-start-column="46" selection-end-line="25" selection-end-column="46" />
               <folding />
             </state>
@@ -482,7 +238,7 @@
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2805">
+            <state vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="2805">
               <caret line="9" column="19" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
               <folding />
             </state>
@@ -492,18 +248,18 @@
       <file leaf-file-name="plugin.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="285" max-vertical-offset="4230">
-              <caret line="47" column="5" selection-start-line="47" selection-start-column="5" selection-end-line="47" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="4200">
+              <caret line="43" column="37" selection-start-line="43" selection-start-column="37" selection-end-line="43" selection-end-column="37" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="t1.sql" pinned="false" current="false" current-in-tab="false">
-        <entry file="mock://sitamcoeadmin@itravelorc.cgeukipxmndq.us-east-1.rds.amazonaws.com:1521:ORCL#/FL!..$function!t1.dump">
+      <file leaf-file-name="join.sql" pinned="false" current="true" current-in-tab="true">
+        <entry file="mock://sitamcoeadmin@itravelorc.cgeukipxmndq.us-east-1.rds.amazonaws.com:1521:ORCL#/FL!..$table!join.dump">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="210">
-              <caret line="6" column="59" selection-start-line="6" selection-start-column="59" selection-end-line="6" selection-end-column="59" />
+            <state vertical-scroll-proportion="0.4531722" vertical-offset="0" max-vertical-offset="331">
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -571,13 +327,13 @@
         <option value="$PROJECT_DIR$/commons/pom.xml" />
         <option value="$PROJECT_DIR$/database/pom.xml" />
         <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlock.java" />
-        <option value="$PROJECT_DIR$/build.xml" />
-        <option value="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
         <option value="$PROJECT_DIR$/test.sql" />
         <option value="$PROJECT_DIR$/result_panel/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/db_browser/pom.xml" />
         <option value="$PROJECT_DIR$/main/pom.xml" />
+        <option value="$PROJECT_DIR$/build.xml" />
+        <option value="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
       </list>
     </option>
   </component>
@@ -1251,7 +1007,7 @@
   <component name="SqlCodeAssistantSettings">
     <option name="connection" value="jdbc:oracle:thin:sitaMCOEaDmin/itravel!23$@itravelorc.cgeukipxmndq.us-east-1.rds.amazonaws.com:1521:ORCL%ec2-user@54.208.120.185&amp;/home/sky/.ssh/id_rsa" />
     <option name="dbBrowserSelectedConnection" value="sitaMCOEaDmin@itravelorc.cgeukipxmndq.us-east-1.rds.amazonaws.com:1521:ORCL" />
-    <option name="dbBrowserSplitDividerLocation" value="119" />
+    <option name="dbBrowserSplitDividerLocation" value="117" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -1302,24 +1058,24 @@
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24433658" sideWeight="0.515" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24433658" sideWeight="0.515" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.49169436" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42358804" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.58112586" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32781458" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24919094" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2855987" sideWeight="0.7033333" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23300971" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23300971" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2564725" sideWeight="0.7033333" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5780731" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Query Result" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.40728477" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Query Result" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40728477" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.48013246" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.58112586" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -1403,6 +1159,30 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/db_browser/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="5" max-vertical-offset="1380">
+          <caret line="25" column="46" selection-start-line="25" selection-start-column="46" selection-end-line="25" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="2805">
+          <caret line="9" column="19" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="705" max-vertical-offset="4230">
+          <caret line="47" column="5" selection-start-line="47" selection-start-column="5" selection-end-line="47" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/test.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="465" max-vertical-offset="570">
@@ -1686,7 +1466,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="155" max-vertical-offset="10110">
           <caret line="22" column="4" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1694,31 +1473,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="2.0277297" vertical-offset="4290" max-vertical-offset="7710">
           <caret line="428" column="8" selection-start-line="428" selection-start-column="8" selection-end-line="428" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/SqlScriptRunService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1817" max-vertical-offset="6375">
-          <caret line="195" column="32" selection-start-line="195" selection-start-column="32" selection-end-line="195" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="285" max-vertical-offset="4230">
-          <caret line="47" column="5" selection-start-line="47" selection-start-column="5" selection-end-line="47" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2843" max-vertical-offset="3420">
-          <caret line="180" column="45" selection-start-line="180" selection-start-column="45" selection-end-line="180" selection-end-column="45" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1734,6 +1488,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.03986135" vertical-offset="128" max-vertical-offset="705">
           <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_browser/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="5" max-vertical-offset="1380">
+          <caret line="25" column="46" selection-start-line="25" selection-start-column="46" selection-end-line="25" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/SqlScriptRunService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1817" max-vertical-offset="6375">
+          <caret line="195" column="32" selection-start-line="195" selection-start-column="32" selection-end-line="195" selection-end-column="32" />
           <folding />
         </state>
       </provider>
@@ -1746,10 +1515,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/db_browser/pom.xml">
+    <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6666667" vertical-offset="5" max-vertical-offset="1380">
-          <caret line="25" column="46" selection-start-line="25" selection-start-column="46" selection-end-line="25" selection-end-column="46" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3450">
+          <caret line="13" column="45" selection-start-line="13" selection-start-column="45" selection-end-line="13" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="4200">
+          <caret line="43" column="37" selection-start-line="43" selection-start-column="37" selection-end-line="43" selection-end-column="37" />
           <folding />
         </state>
       </provider>
@@ -1806,7 +1583,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>db_browser</last-edited>
+          <last-edited>plugin_runner</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

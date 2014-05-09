@@ -428,6 +428,12 @@ public abstract class SQLExecutorSimple implements SQLExecutor {
 
         @Override
         public String getSqlStatement() {
+            // Fix statement i.e. add semicolon at the end if absent
+            if(sqlStatement != null){
+                if(!sqlStatement.endsWith(";")){
+                    return sqlStatement + ";";
+                }
+            }
             return sqlStatement;
         }
     }
