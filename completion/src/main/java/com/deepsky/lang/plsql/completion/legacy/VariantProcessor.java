@@ -23,14 +23,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.completion.utils;
+package com.deepsky.lang.plsql.completion.legacy;
 
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
-import com.deepsky.gui2.ConnectionSettings4;
 import com.deepsky.lang.plsql.completion.*;
 import com.deepsky.lang.plsql.completion.lookups.GenericLookupElement;
 import com.deepsky.lang.plsql.psi.*;
-import com.deepsky.lang.plsql.psi.impl.spec_func_call.LeadFunction;
 import com.deepsky.lang.plsql.psi.resolve.ASTNodeHandlerAdapter;
 import com.deepsky.lang.plsql.psi.resolve.ASTTreeProcessor;
 import com.deepsky.lang.plsql.resolver.ContextPath;

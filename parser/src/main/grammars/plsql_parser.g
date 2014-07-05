@@ -56,7 +56,7 @@ tokens {
     CASE_STATEMENT;
     COUNT_FUNC;
 
-    SQLPLUS_ANONYM_PLSQL_BLOCK;
+    ANONYM_PLSQL_BLOCK;
 
     RANK_FUNCTION; LEAD_FUNCTION; LAG_FUNCTION;
     TRIM_FUNC; DECODE_FUNC;
@@ -632,7 +632,7 @@ sqlplus_command:
         { #sqlplus_command = #([SQLPLUS_SERVEROUTPUT, "SQLPLUS_SERVEROUTPUT" ], #sqlplus_command);}
 
     | ("begin"|"declare") => (begin_block (SEMI!)? (DIVIDE!)? )
-        { #sqlplus_command = #([SQLPLUS_ANONYM_PLSQL_BLOCK, "SQLPLUS_ANONYM_PLSQL_BLOCK" ], #sqlplus_command);}
+        { #sqlplus_command = #([ANONYM_PLSQL_BLOCK, "ANONYM_PLSQL_BLOCK" ], #sqlplus_command);}
 
     | (AT_PREFIXED till_eol )
         { #sqlplus_command = #([SQLPLUS_RUNSCRIPT, "SQLPLUS_RUNSCRIPT" ], #sqlplus_command);}
@@ -667,10 +667,10 @@ create_or_replace
 {Integer retVal = -1;}:
     "create"! ( "or"! "replace"! )? ("force")?
     (
-        package_spec
-            { #create_or_replace = #([PACKAGE_SPEC, "PACKAGE_SPEC" ], #create_or_replace); }
-        | package_body
+        ("package" "body") => package_body
             { #create_or_replace = #([PACKAGE_BODY, "PACKAGE_BODY" ], #create_or_replace);}
+        | package_spec
+            { #create_or_replace = #([PACKAGE_SPEC, "PACKAGE_SPEC" ], #create_or_replace); }
         | (retVal = procedure_body )
             {  __markRule(retVal); }
         | (retVal = function_body )

@@ -37,7 +37,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import java.util.ArrayList;
 import java.util.List;
 
-@SyntaxTreePath("/..#UPDATE_COMMAND")
+@SyntaxTreePath("//..#UPDATE_COMMAND")
 public class UpdateStmtProcessor extends CompletionBase {
 
     @SyntaxTreePath("/#ERROR_TOKEN_A/#UPDATE #TABLE_ALIAS/#TABLE_REF #ALIAS_NAME//#C_MARKER")

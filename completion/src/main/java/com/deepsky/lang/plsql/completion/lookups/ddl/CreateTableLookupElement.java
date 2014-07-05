@@ -39,8 +39,8 @@ public class CreateTableLookupElement<T extends LookupElement> extends DDLLookup
         super(delegate);
     }
 
-    public static CreateTableLookupElement create() {//} String table_alias, final VariantsProviderImpl.ColumnElement it, boolean forceUsingTableAlias) {
-        LookupElement e = LookupElementBuilder.create("select")//it.getName())
+    public static CreateTableLookupElement create() {
+        LookupElement e = LookupElementBuilder.create("select")
 //                .withTailText(it.getTail(), true)
 //                .withTypeText(it.getType())
 //                .withIcon(it.getIcon())
@@ -48,8 +48,6 @@ public class CreateTableLookupElement<T extends LookupElement> extends DDLLookup
                 .withCaseSensitivity(false)
                 .withStrikeoutness(false); //it.isStrikeout());
 
-//        String _leId = it.getName() + (it.getTail() != null ? it.getTail() : "")
-//                + (it.tableAlias!=null? it.tableAlias: "");
         return new CreateTableLookupElement<LookupElement>(e);
     }
 

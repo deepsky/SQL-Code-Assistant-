@@ -90,6 +90,32 @@ public class SelectLookupElement<T extends LookupElement> extends LookupElementD
     }
 
 
+//    public static LookupElement createSelectInto() {
+//        LookupElement e = LookupElementBuilder.create("select")//it.getName())
+//                .withPresentableText("select .. into .. from <table>")
+//                .withCaseSensitivity(false)
+//                .withStrikeoutness(false)
+//                .withInsertHandler(new InsertHandler<LookupElement>() {
+//                    @Override
+//                    public void handleInsert(InsertionContext context, LookupElement item) {
+//                        final Editor editor = context.getEditor();
+//                        String prefix = "select 1 into \nfrom "; //it.getQualifyName(); //forceUsingTableAlias);
+//                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+//
+//                        final Document document = editor.getDocument();
+//                        editor.getCaretModel().moveToOffset(context.getTailOffset());
+//                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+//
+//                        LookupUtils.scheduleAutoPopup(editor, context);
+//                    }
+//                });
+//
+//        return new SelectLookupElement<LookupElement>(
+//                PrioritizedLookupElement.withGrouping(e, 1)
+//        );
+//    }
+
+
     public static SelectLookupElement createSelectFromSelect() {
         LookupElement e = LookupElementBuilder.create("select")//it.getName())
 //                .withTailText(it.getTail(), true)

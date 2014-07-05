@@ -216,7 +216,7 @@ public abstract class SQLExecutorSimple implements SQLExecutor {
             throw new DBException("Syntax of the PL/SQL BLOCK is not correct");
         } else if (plSqlBlock.getParent().getNode() == null) {
             throw new DBException("Syntax of the PL/SQL BLOCK is not correct");
-        } else if (plSqlBlock.getParent().getNode().getElementType() != PLSqlTypesAdopted.SQLPLUS_ANONYM_PLSQL_BLOCK) {
+        } else if (plSqlBlock.getParent().getNode().getElementType() != PLSqlTypesAdopted.ANONYM_PLSQL_BLOCK) {
             throw new DBException("PL/SQL BLOCK should be a top-level statement");
         } else if (bindVarFound(plSqlBlock)) {
             throw new DBException("Sorry, BIND variables not supported at the moment.");

@@ -38,8 +38,7 @@ import com.intellij.psi.PsiFile;
 
 public class LookupUtils {
 
-    public static void scheduleAutoPopup(final Editor editor, //@Nullable final Condition<PsiFile> condition,
-                                  final InsertionContext context) {
+    public static void scheduleAutoPopup(final Editor editor, final InsertionContext context) {
         if (ApplicationManager.getApplication().isUnitTestMode() && !CompletionAutoPopupHandler.ourTestingAutopopup) {
             return;
         }
@@ -83,6 +82,31 @@ public class LookupUtils {
 
         context.setLaterRunnable(request);
 //        addRequest(request, CodeInsightSettings.getInstance().AUTO_LOOKUP_DELAY);
+    }
+
+
+    public static String calcLookupPrefix(String lookup, String content) {
+
+        for (int i = lookup.length() - 1; i >= 0; i--) {
+            int i2 = i;
+            for (int j = content.length() - 1; j >= 0 && i2 >= 0; j--) {
+                if (lookup.charAt(i2) == content.charAt(j)) {
+                    // Check boundary
+                    if (i2 == 0) {
+                        return (j == 0 || content.charAt(j - 1) == ' ') ? lookup.substring(0, i + 1) : "";
+                    }
+
+                } else if (content.charAt(j) == ' ') {
+                    // Skip whitespaces
+                    continue;
+                } else {
+                    break;
+                }
+
+                i2--;
+            }
+        }
+        return "";
     }
 
 }

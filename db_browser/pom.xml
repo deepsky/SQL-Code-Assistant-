@@ -65,6 +65,7 @@
                         <exclude>**/GenericCompletionTest.java</exclude>
                         <exclude>**/CaseGenericCompletionTest.java</exclude>
                         <exclude>**/Alter_BaseCompletionTest.java</exclude>
+                        <exclude>**/PlSqlGenericCompletionTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

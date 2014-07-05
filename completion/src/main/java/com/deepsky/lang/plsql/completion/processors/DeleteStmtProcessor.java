@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@SyntaxTreePath("/..1#DELETE_COMMAND")
+@SyntaxTreePath("//..1#DELETE_COMMAND")
 public class DeleteStmtProcessor extends CompletionBase {
 
     @SyntaxTreePath("/#DELETE #FROM $TableAlias/#TABLE_REF #ALIAS_NAME//2#C_MARKER")
@@ -53,12 +53,22 @@ public class DeleteStmtProcessor extends CompletionBase {
 
 
     @SyntaxTreePath("/#DELETE #FROM $TableAlias/#TABLE_REF/2#C_MARKER")
+    public void process$DeleteFromTabRef(C_Context ctx, ASTNode d, ASTNode marker) {
+        if(is2ndLatest(d, marker)){
+            collectTableNamesFinalize(ctx);
+        } else {
+            collectTableNames(ctx);
+        }
+    }
+
+    @SyntaxTreePath("/#DELETE $TableAlias/#TABLE_REF/2#C_MARKER")
     public void process$DeleteTabRef(C_Context ctx, ASTNode d, ASTNode marker) {
         if(is2ndLatest(d, marker)){
             collectTableNamesFinalize(ctx);
         } else {
             collectTableNames(ctx);
         }
+        ctx.addElement(KeywordLookupElement.create("from"));
     }
 
 //    @SyntaxTreePath("(//..#WHERE_CONDITION)[0]//..#VAR_REF/..3$NameFragmentRef/#C_MARKER")

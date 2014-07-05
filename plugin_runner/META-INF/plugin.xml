@@ -38,12 +38,12 @@
         <li>[KNOWN ISSUE] Initial indexing of numerous SQL files (1k and more) may take time</li>
      </ul>
     <br>
-    Version 1.5.13.129<br><br>
+    Version 1.5.14.129<br><br>
 
     I appreciate comments, suggestions or bug reports, thanks in advance.
     </html>
     ]]></description>
-    <version>1.5.13.129</version>
+    <version>1.5.14.129</version>
     <vendor email="plsql.assistant@gmail.com"
             logo="/general/ijLogo.png"
             url="https://github.com/deepsky/SQL-Code-Assistant-">Serhiy Kulyk</vendor>

@@ -84,7 +84,6 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType SEQUENCE_NAME = new PlSqlElementType("SEQUENCE_NAME", PLSqlTokenTypes.SEQUENCE_NAME);
 	PlSqlElementType SQLPLUS_COLUMN = new PlSqlElementType("SQLPLUS_COLUMN", PLSqlTokenTypes.SQLPLUS_COLUMN);
 	PlSqlElementType RELATION_CONDITION = new PlSqlElementType("RELATION_CONDITION", PLSqlTokenTypes.RELATION_CONDITION);
-	PlSqlElementType SQLPLUS_ANONYM_PLSQL_BLOCK = new PlSqlElementType("SQLPLUS_ANONYM_PLSQL_BLOCK", PLSqlTokenTypes.SQLPLUS_ANONYM_PLSQL_BLOCK);
 	PlSqlElementType SELECT_EXPRESSION_UNION = new PlSqlElementType("SELECT_EXPRESSION_UNION", PLSqlTokenTypes.SELECT_EXPRESSION_UNION);
 	PlSqlElementType MONITORING_CLAUSE = new PlSqlElementType("MONITORING_CLAUSE", PLSqlTokenTypes.MONITORING_CLAUSE);
 	PlSqlElementType DATATYPE = new PlSqlElementType("DATATYPE", PLSqlTokenTypes.DATATYPE);
@@ -160,6 +159,7 @@ public interface PLSqlTypesAdopted {
 	PlSqlElementType SUBQUERY_EXPR = new PlSqlElementType("SUBQUERY_EXPR", PLSqlTokenTypes.SUBQUERY_EXPR);
 	PlSqlElementType CREATE_MATERIALIZED_VIEW_LOG = new PlSqlElementType("CREATE_MATERIALIZED_VIEW_LOG", PLSqlTokenTypes.CREATE_MATERIALIZED_VIEW_LOG);
 	PlSqlElementType ALTER_TABLE_RENAME = new PlSqlElementType("ALTER_TABLE_RENAME", PLSqlTokenTypes.ALTER_TABLE_RENAME);
+	PlSqlElementType ANONYM_PLSQL_BLOCK = new PlSqlElementType("ANONYM_PLSQL_BLOCK", PLSqlTokenTypes.ANONYM_PLSQL_BLOCK);
 	PlSqlElementType DBTIMEZONE = new PlSqlElementType("DBTIMEZONE", PLSqlTokenTypes.DBTIMEZONE);
 	PlSqlElementType VARRAY_COLLECTION = new PlSqlElementType("VARRAY_COLLECTION", PLSqlTokenTypes.VARRAY_COLLECTION);
 	PlSqlElementType SUBQUERY_CONDITION = new PlSqlElementType("SUBQUERY_CONDITION", PLSqlTokenTypes.SUBQUERY_CONDITION);

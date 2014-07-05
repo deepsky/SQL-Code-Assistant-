@@ -76,7 +76,7 @@ public class PlSqlParser_PLSQLTest extends PlSqlParser_AbstractTest {
         ASTNode root = parseScript(return_cursor_in_decl);
         List<ASTNode> users = PsiUtil.visibleChildren(root);
         assertEquals(1, users.size());
-        assertEquals(PlSqlElementTypes.SQLPLUS_ANONYM_PLSQL_BLOCK, users.get(0).getElementType());
+        assertEquals(PlSqlElementTypes.ANONYM_PLSQL_BLOCK, users.get(0).getElementType());
         PlSqlBlock blk = ((SqlPlusAnonymPlSqlBlock) users.get(0).getPsi()).getBlock();
         Declaration[] declList = blk.getDeclarations();
         assertEquals(6, declList.length);

@@ -24,7 +24,6 @@
 package com.deepsky.lang.plsql.completion;
 
 import com.deepsky.lang.common.PlSqlTokenTypes;
-import com.deepsky.lang.plsql.completion.legacy.logic.ObjectTreeParser;
 import com.deepsky.lang.plsql.completion.logic.ASTTreeAdapter;
 import com.deepsky.lang.plsql.completion.logic.TreePathBuilder;
 import com.deepsky.lang.plsql.completion.logic.TreePathImpl;

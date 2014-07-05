@@ -34,6 +34,7 @@ import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.UpdateLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.plsql.AnonymousPlSqlBlockLookupElement;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ref.TableRef;
@@ -108,6 +109,20 @@ public abstract class CompletionBase {
         }
         return false;
     }
+
+
+    protected void collectTypeNames(@NotNull C_Context ctx){
+        VariantsProvider provider = ctx.getProvider();
+        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup());
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+    }
+
+    protected void collectPlSqlVariables(@NotNull C_Context ctx, @NotNull SelectStatement select, @NotNull NameFragmentRef nameRef) {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
 
 
     protected void collectColumns(@NotNull C_Context ctx, @NotNull SelectStatement select, @Nullable NameFragmentRef nameRef) {
@@ -296,6 +311,19 @@ public abstract class CompletionBase {
         ctx.addElement(KeywordLookupElement.create("comment"));
     }
 
+    protected void completeStartWithPlSqlBlock(C_Context ctx) {
+        ctx.addElement(SelectLookupElement.create());
+//        ctx.addElement(SelectLookupElement.createSelectFromSelect());
+        ctx.addElement(InsertLookupElement.create());
+        ctx.addElement(UpdateLookupElement.create());
+        ctx.addElement(DeleteLookupElement.create());
+        ctx.addElement(KeywordLookupElement.create("create"));
+        ctx.addElement(KeywordLookupElement.create("drop"));
+        ctx.addElement(KeywordLookupElement.create("alter"));
+        ctx.addElement(KeywordLookupElement.create("comment"));
+        ctx.addElement(AnonymousPlSqlBlockLookupElement.create());
+        ctx.addElement(AnonymousPlSqlBlockLookupElement.createDeclare());
+    }
 
     public abstract class TreePathBuilderAbstract implements TreePathBuilder {
 

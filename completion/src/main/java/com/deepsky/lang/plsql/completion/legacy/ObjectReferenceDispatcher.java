@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.completion;
+package com.deepsky.lang.plsql.completion.legacy;
 
 import com.deepsky.generated.plsql.PLSqlTokenTypes;
 import com.deepsky.integration.plsql.PlSqlElementType;

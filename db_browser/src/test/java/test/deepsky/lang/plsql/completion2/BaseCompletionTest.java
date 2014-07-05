@@ -122,7 +122,7 @@ public abstract class BaseCompletionTest extends LightFixtureCompletionTestCase 
     private String[] lookupElementsToPlainString(LookupElement[] elements) {
         String[] out = new String[elements != null?elements.length: 0];
         for (int i = 0; elements != null && i < elements.length; i++) {
-            out[i] = elements[i].getLookupString();
+            out[i] = elements[i].getLookupString().toLowerCase();
         }
         return out;
     }

@@ -124,4 +124,5 @@ public class KeywordLookupElement  <T extends LookupElement> extends LookupEleme
         return new KeywordLookupElement<LookupElement>(
                 PrioritizedLookupElement.withGrouping(e, 3));
     }
+
 }

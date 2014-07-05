@@ -1,4 +1,4 @@
-package com.deepsky.lang.plsql.completion;
+package com.deepsky.lang.plsql.completion.legacy;
 
 import com.deepsky.integration.lexer.generated.PlSqlBaseTokenTypes;
 import com.deepsky.lang.PsiUtil;

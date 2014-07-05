@@ -84,7 +84,6 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.SEQUENCE_NAME] = PLSqlTypesAdopted.SEQUENCE_NAME;
 		type2etype[PLSqlTokenTypes.SQLPLUS_COLUMN] = PLSqlTypesAdopted.SQLPLUS_COLUMN;
 		type2etype[PLSqlTokenTypes.RELATION_CONDITION] = PLSqlTypesAdopted.RELATION_CONDITION;
-		type2etype[PLSqlTokenTypes.SQLPLUS_ANONYM_PLSQL_BLOCK] = PLSqlTypesAdopted.SQLPLUS_ANONYM_PLSQL_BLOCK;
 		type2etype[PLSqlTokenTypes.SELECT_EXPRESSION_UNION] = PLSqlTypesAdopted.SELECT_EXPRESSION_UNION;
 		type2etype[PLSqlTokenTypes.MONITORING_CLAUSE] = PLSqlTypesAdopted.MONITORING_CLAUSE;
 		type2etype[PLSqlTokenTypes.DATATYPE] = PLSqlTypesAdopted.DATATYPE;
@@ -160,6 +159,7 @@ public class ANTLRType2AdoptedType {
 		type2etype[PLSqlTokenTypes.SUBQUERY_EXPR] = PLSqlTypesAdopted.SUBQUERY_EXPR;
 		type2etype[PLSqlTokenTypes.CREATE_MATERIALIZED_VIEW_LOG] = PLSqlTypesAdopted.CREATE_MATERIALIZED_VIEW_LOG;
 		type2etype[PLSqlTokenTypes.ALTER_TABLE_RENAME] = PLSqlTypesAdopted.ALTER_TABLE_RENAME;
+		type2etype[PLSqlTokenTypes.ANONYM_PLSQL_BLOCK] = PLSqlTypesAdopted.ANONYM_PLSQL_BLOCK;
 		type2etype[PLSqlTokenTypes.DBTIMEZONE] = PLSqlTypesAdopted.DBTIMEZONE;
 		type2etype[PLSqlTokenTypes.VARRAY_COLLECTION] = PLSqlTypesAdopted.VARRAY_COLLECTION;
 		type2etype[PLSqlTokenTypes.SUBQUERY_CONDITION] = PLSqlTypesAdopted.SUBQUERY_CONDITION;

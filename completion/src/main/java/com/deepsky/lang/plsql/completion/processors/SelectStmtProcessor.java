@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@SyntaxTreePath("/..1$SelectStatement")
+@SyntaxTreePath("//..1$SelectStatement")
 public class SelectStmtProcessor extends CompletionBase {
 
 
@@ -84,6 +84,8 @@ public class SelectStmtProcessor extends CompletionBase {
         if (varRef.getChildren(null).length == 1) {
             ctx.addElement(CaseExpressionLookupElement.createCase());
         }
+
+        collectPlSqlVariables(ctx, select, nameRef);
     }
 
 

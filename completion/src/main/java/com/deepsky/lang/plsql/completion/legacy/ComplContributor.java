@@ -21,16 +21,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.completion;
+package com.deepsky.lang.plsql.completion.legacy;
 
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.common.PluginKeys2;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
+import com.deepsky.lang.plsql.completion.*;
 import com.deepsky.lang.plsql.completion.lookups.GenericLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
-import com.deepsky.lang.plsql.completion.utils.VariantProcessor;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.AlterTable;
 import com.deepsky.lang.plsql.psi.ddl.CreateIndex;
@@ -63,6 +63,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
+@Deprecated
 public class ComplContributor extends CompletionContributor {
     private static final Logger log = Logger.getInstance("#ComplContributor");
 
@@ -239,14 +240,14 @@ public class ComplContributor extends CompletionContributor {
 
                         public void processFileLevelText(ASTNode node) {
                             final String lookup = stripText(node.getText()).toLowerCase();
-                            if("insert".startsWith(lookup)) variants.add(KeywordLookupElement.create("insert"));
-                            if("select".startsWith(lookup)) variants.add(KeywordLookupElement.create("select"));
-                            if("update".startsWith(lookup)) variants.add(KeywordLookupElement.create("update"));
-                            if("delete".startsWith(lookup)) variants.add(KeywordLookupElement.create("delete"));
+                            if ("insert".startsWith(lookup)) variants.add(KeywordLookupElement.create("insert"));
+                            if ("select".startsWith(lookup)) variants.add(KeywordLookupElement.create("select"));
+                            if ("update".startsWith(lookup)) variants.add(KeywordLookupElement.create("update"));
+                            if ("delete".startsWith(lookup)) variants.add(KeywordLookupElement.create("delete"));
 
-                            if("alter".startsWith(lookup)) variants.add(KeywordLookupElement.create("alter"));
-                            if("rename".startsWith(lookup)) variants.add(KeywordLookupElement.create("rename"));
-                            if("create".startsWith(lookup)) variants.add(KeywordLookupElement.create("create"));
+                            if ("alter".startsWith(lookup)) variants.add(KeywordLookupElement.create("alter"));
+                            if ("rename".startsWith(lookup)) variants.add(KeywordLookupElement.create("rename"));
+                            if ("create".startsWith(lookup)) variants.add(KeywordLookupElement.create("create"));
                         }
                     });
                 }

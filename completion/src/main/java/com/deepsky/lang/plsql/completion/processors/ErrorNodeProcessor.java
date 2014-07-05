@@ -35,6 +35,7 @@ import com.deepsky.lang.plsql.completion.lookups.ddl.AlterTableLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.CommentLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.plsql.PlSqlPackageLookupElement;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.ClassUtil;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ref.TableRef;
@@ -59,13 +60,18 @@ public class ErrorNodeProcessor extends CompletionBase {
 
     @SyntaxTreePath("/1#C_MARKER")
     public void process$Start(C_Context ctx, ASTNode node) {
-        completeStart(ctx);
+        completeStartWithPlSqlBlock(ctx);
     }
 
+    @SyntaxTreePath("/#CREATE 1#C_MARKER")
+    public void process$Create(C_Context ctx, ASTNode node) {
+        ctx.addElement(PlSqlPackageLookupElement.createPackage());
+        ctx.addElement(PlSqlPackageLookupElement.createPackageBody());
+    }
 
     @SyntaxTreePath("/..#SEMI #C_MARKER")
     public void process$Start3(C_Context ctx) {
-        completeStart(ctx);
+        completeStartWithPlSqlBlock(ctx);
     }
 
     @SyntaxTreePath("/#DELETE #FROM #TABLE_ALIAS #WHERE_CONDITION 1#C_MARKER")
@@ -722,7 +728,7 @@ public class ErrorNodeProcessor extends CompletionBase {
 //        ctx.addElement(AlterTableLookupElement.createRename(tabName.getText()));
 //    }
 
-    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #TABLE #TABLE_REF #DROP #ALTER_TABLE_DROP_PK(/#PRIMARY #KEY #CASCADE))  1#C_MARKER")
+    @SyntaxTreePath("/..1#ALTER_TABLE(/#ALTER #TABLE #TABLE_REF #DROP #ALTER_TABLE_DROP_PK(/#PRIMARY #KEY #CASCADE)) 1#C_MARKER")
     public void process$StartTest1112(C_Context ctx, ASTNode alterTable, ASTNode caret) {
         ASTNode nextLeaf = PsiUtil.nextNonWSLeaf(caret);
         boolean nextSemi = nextLeaf != null && nextLeaf.getElementType() == PlSqlTokenTypes.SEMI;

@@ -78,9 +78,6 @@ public class PlSqlElementVisitor extends PsiElementVisitor {
     }
 
     public void visitPlSqlBlock(PlSqlBlock node) {
-//        for (PlSqlElement psi : node.getObjectList()) {
-//            psi.accept(this);
-//        }
         visitElement(node);
     }
 

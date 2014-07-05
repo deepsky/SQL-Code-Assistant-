@@ -56,7 +56,7 @@ tokens {
     CASE_STATEMENT;
     COUNT_FUNC;
 
-    SQLPLUS_ANONYM_PLSQL_BLOCK;
+    ANONYM_PLSQL_BLOCK;
 
     RANK_FUNCTION; LEAD_FUNCTION; LAG_FUNCTION;
     TRIM_FUNC; DECODE_FUNC;
@@ -632,7 +632,7 @@ sqlplus_command:
         {  __markRule(SQLPLUS_SERVEROUTPUT);}
 
     | ("begin"|"declare") => (begin_block (SEMI!)? (DIVIDE!)? )
-        {  __markRule(SQLPLUS_ANONYM_PLSQL_BLOCK);}
+        {  __markRule(ANONYM_PLSQL_BLOCK);}
 
     | (AT_PREFIXED till_eol )
         {  __markRule(SQLPLUS_RUNSCRIPT);}
@@ -667,10 +667,10 @@ create_or_replace
 {Integer retVal = -1;}:
     "create"! ( "or"! "replace"! )? ("force")?
     (
-        package_spec
-            {  __markRule(PACKAGE_SPEC); }
-        | package_body
+        ("package" "body") => package_body
             {  __markRule(PACKAGE_BODY);}
+        | package_spec
+            {  __markRule(PACKAGE_SPEC); }
         | (retVal = procedure_body )
             {  __markRule(retVal); }
         | (retVal = function_body )
