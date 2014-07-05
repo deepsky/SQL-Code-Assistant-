@@ -26,7 +26,7 @@
 package com.deepsky.lang.plsql.sqlIndex;
 
 import com.deepsky.database.ora.DbUrl;
-import com.deepsky.lang.plsql.completion.VariantsProvider;
+import com.deepsky.lang.plsql.completion.NameProvider;
 import com.deepsky.lang.plsql.resolver.ResolveDescriptor;
 import com.deepsky.lang.plsql.resolver.ResolveFacade;
 import com.deepsky.lang.plsql.resolver.index.IndexTree;
@@ -58,7 +58,7 @@ public interface AbstractSchema {
 
     ResolveFacade getResolveFacade();
 
-    VariantsProvider getVariantsProvider();
+    NameProvider getNameProvider();
 
     /**
      * Get resolve helper

@@ -23,9 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.completion.lookups;
+package com.deepsky.lang.plsql.completion.lookups.select;
 
-import com.deepsky.lang.plsql.completion.VariantsProviderImpl;
+import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
@@ -39,16 +39,16 @@ public class SelectFieldLookupElement<T extends LookupElement> extends LookupEle
 
     private String leId; // Lookup Element ID
     private String tableAlias;
-    private VariantsProviderImpl.ColumnElement it;
+    private VariantsProvider.ColumnElement it;
 
-    protected SelectFieldLookupElement(T delegate, String leId, String tableAlais, VariantsProviderImpl.ColumnElement it) {
+    protected SelectFieldLookupElement(T delegate, String leId, String tableAlais, VariantsProvider.ColumnElement it) {
         super(delegate);
         this.leId = leId;
         this.tableAlias = tableAlais;
         this.it = it;
     }
 
-    public static SelectFieldLookupElement create(String table_alias, final VariantsProviderImpl.ColumnElement it) {
+    public static SelectFieldLookupElement create(String table_alias, final VariantsProvider.ColumnElement it) {
         LookupElement e = LookupElementBuilder.create(it.getName())
                 .withTailText(it.getTail(), true)
                 .withTypeText(it.getType())
@@ -61,7 +61,7 @@ public class SelectFieldLookupElement<T extends LookupElement> extends LookupEle
         return new SelectFieldLookupElement<LookupElement>(e, _leId, table_alias, it);
     }
 
-    public static LookupElement create( VariantsProviderImpl.ColumnElement it) {
+    public static LookupElement create( VariantsProvider.ColumnElement it) {
         return create(null, it);
     }
 
@@ -109,7 +109,7 @@ public class SelectFieldLookupElement<T extends LookupElement> extends LookupEle
         return it.getName();
     }
 
-    public VariantsProviderImpl.ColumnElement getIt(){
+    public VariantsProvider.ColumnElement getIt(){
         return it;
     }
 

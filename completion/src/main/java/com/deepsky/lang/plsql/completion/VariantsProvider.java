@@ -28,6 +28,10 @@ package com.deepsky.lang.plsql.completion;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.completion.lookups.*;
+import com.deepsky.lang.plsql.completion.lookups.plsql.PackageLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.plsql.ProcedureLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.plsql.TriggerLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.select.SelectFieldLookupElement;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ddl.AlterTable;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
@@ -39,7 +43,6 @@ import com.deepsky.lang.plsql.resolver.helpers.ExecutableResolveHelper;
 import com.deepsky.lang.plsql.resolver.helpers.PackageResolveHelper;
 import com.deepsky.lang.plsql.resolver.index.ContextItem;
 import com.deepsky.lang.plsql.resolver.utils.*;
-import com.deepsky.lang.plsql.sqlIndex.ResolveHelper;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.struct.TypeFactory;
 import com.deepsky.view.Icons;
@@ -54,14 +57,21 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.util.*;
 
-public class VariantsProviderImpl implements VariantsProvider {
+public class VariantsProvider {
+
+    public final static int FILTER_NONE = 0;
+    public final static int FILTER_EXPR = 1;
+    public final static int FILTER_TYPES = 2;
+
+    public final static int FK_CONSTRAINT = 1;
+    public final static int PK_CONSTRAINT = 2;
+
 
     private NameProvider nameProvider;
-    private ResolveHelper resolver;
 
-    public VariantsProviderImpl(NameProvider nameProvider, ResolveHelper resolver) {
+
+    public VariantsProvider(NameProvider nameProvider) {
         this.nameProvider = nameProvider;
-        this.resolver = resolver;
     }
 
     public List<LookupElement> collectTableNameVariants(String lookupString) {
@@ -607,7 +617,7 @@ public class VariantsProviderImpl implements VariantsProvider {
             out.addAll(collectSystemFuncCall(lookUpStr));
         } else {
             // call a function of the specified package
-            PackageResolveHelper rhlp = resolver.resolvePackage(prefix);
+            PackageResolveHelper rhlp = nameProvider.getResolver().resolvePackage(prefix);
             if (rhlp != null) {
                 out.addAll(collectFunctionsInCtx(rhlp, lookUpStr));
             }
@@ -690,7 +700,7 @@ public class VariantsProviderImpl implements VariantsProvider {
             }
         } else {
             // call a procedure of the specified package
-            PackageResolveHelper rhlp = resolver.resolvePackage(prefix);
+            PackageResolveHelper rhlp = nameProvider.getResolver().resolvePackage(prefix);
             if (rhlp != null) {
                 out.addAll(collectProceduresInCtx(rhlp, lookUpStr));
             }
@@ -789,7 +799,7 @@ public class VariantsProviderImpl implements VariantsProvider {
     }
 
     public List<LookupElement> collectVarVariantsInPackage(String _pkgName, String lookUpStr) {
-        PackageResolveHelper pdesc = resolver.resolvePackage(_pkgName);
+        PackageResolveHelper pdesc = nameProvider.getResolver().resolvePackage(_pkgName);
         final List<LookupElement> out = new ArrayList<LookupElement>();
 
         if (pdesc != null) {
@@ -838,7 +848,7 @@ public class VariantsProviderImpl implements VariantsProvider {
         final List<LookupElement> out = new ArrayList<LookupElement>();
         if (prevText != null) {
             // resolve sequence name
-            ResolveDescriptor rhlp = resolver.resolveSequenceRef(prevText.toLowerCase());
+            ResolveDescriptor rhlp = nameProvider.getResolver().resolveSequenceRef(prevText.toLowerCase());
             if (rhlp != null) {
                 if ("nextval".startsWith(lookUpStr.toLowerCase())) {
                     out.add(SequenceMethodLookupElement.create(prevText, "nextval"));
@@ -876,7 +886,7 @@ public class VariantsProviderImpl implements VariantsProvider {
 
     public List<LookupElement> collectColumnNames(@NotNull String tableName, String lookupStr) {
         final List<ColumnElement> columns = new ArrayList<ColumnElement>();
-        ResolveDescriptor rhlp = resolver.resolveTableRef(tableName);
+        ResolveDescriptor rhlp = nameProvider.getResolver().resolveTableRef(tableName);
 
         if (rhlp != null) {
             List<ColumnElement> list = collectColumnsForTable(rhlp, tableName, null);
@@ -894,16 +904,16 @@ public class VariantsProviderImpl implements VariantsProvider {
     }
 
     public void collectTableConstraints(String tableName, TableConstraintProcessor proc){
-        ResolveDescriptor rhlp = resolver.resolveTableRef(tableName);
+        ResolveDescriptor rhlp = nameProvider.getResolver().resolveTableRef(tableName);
 
         if (rhlp != null) {
             List<ContextPathUtil.FKConstraintSpec> l = ContextPathUtil.extractFKConstraintsFromTableValue(rhlp.getValue());
             for(ContextPathUtil.FKConstraintSpec fk: l){
-                proc.process(fk.getName(), VariantsProvider.FK_CONSTRAINT);
+                proc.process(fk.getName(), FK_CONSTRAINT);
             }
             String pkConstrName = ContextPathUtil.extractPKConstrNameFromTableValue(rhlp.getValue());
             if(pkConstrName != null){
-                proc.process(pkConstrName, VariantsProvider.PK_CONSTRAINT);
+                proc.process(pkConstrName, PK_CONSTRAINT);
             }
         }
     }
@@ -923,7 +933,7 @@ public class VariantsProviderImpl implements VariantsProvider {
     private ResolveDescriptor[] resolveCallWithOverloads(Callable callable) {
         int ctype = callable instanceof FunctionCall ? ContextPath.FUNC_CALL : ContextPath.PROC_CALL;
         String ctxType = callable.getCtxPath1().getPath();
-        return resolver.resolveCallable(
+        return nameProvider.getResolver().resolveCallable(
                 ctype, ctxType, callable.getFunctionName()
         );
     }
@@ -959,7 +969,7 @@ public class VariantsProviderImpl implements VariantsProvider {
                 // because type is referenced from a package body makes a sense
                 // to search for the type in the package spec also
 
-                PackageResolveHelper pdesc = resolver.resolvePackage(name);
+                PackageResolveHelper pdesc = nameProvider.getResolver().resolvePackage(name);
                 if (pdesc != null) {
                     Iterator<ContextItem> ite = pdesc.iterateOverChildren(new int[]{
                             ContextPath.RECORD_TYPE,
@@ -1108,7 +1118,7 @@ public class VariantsProviderImpl implements VariantsProvider {
 
     public void collectColumnNames(TableAlias tab, String lookupStr, boolean forceUsingTableAlias) {
         final List<ColumnElement> columns = new ArrayList<ColumnElement>();
-        ResolveDescriptor rhlp = resolver.resolveTableRef(tab.getTableName());
+        ResolveDescriptor rhlp = nameProvider.getResolver().resolveTableRef(tab.getTableName());
 
         if (rhlp != null) {
             List<ColumnElement> list = collectColumnsForTable(rhlp, tab.getTableName(), tab.getAlias());
@@ -1132,7 +1142,7 @@ public class VariantsProviderImpl implements VariantsProvider {
             }
 
             public void tableFound(String table_name, @Nullable String table_alias) {
-                ResolveDescriptor rhlp = resolver.resolveTableRef(table_name);
+                ResolveDescriptor rhlp = nameProvider.getResolver().resolveTableRef(table_name);
                 if (rhlp != null) {
                     List<ColumnElement> list = collectColumnsForTable(rhlp, table_name, table_alias);
                     columns.addAll(list);
@@ -1277,5 +1287,9 @@ public class VariantsProviderImpl implements VariantsProvider {
         }
     }
 
+
+    public interface TableConstraintProcessor {
+        void process(String constraintName, int constraintType);
+    }
 
 }

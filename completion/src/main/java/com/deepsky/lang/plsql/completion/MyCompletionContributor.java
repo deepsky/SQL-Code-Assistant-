@@ -28,7 +28,7 @@ import com.deepsky.lang.common.PlSqlFile;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.common.PluginKeys2;
 import com.deepsky.lang.plsql.completion.logic.ASTTreeAdapter;
-import com.deepsky.lang.plsql.completion.lookups.SelectFieldLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.select.SelectFieldLookupElement;
 import com.deepsky.lang.plsql.completion.processors.C_Context;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generated.CompletionProcessor2;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.generator.CallMetaInfo;
@@ -227,7 +227,7 @@ public class MyCompletionContributor extends GenericCompletionContributor {
     private VariantsProvider chooseSearchDomain(PlSqlFile plsqlFile) {
         DbUrl dbUrl = plsqlFile.getDbUrl();
         AbstractSchema i = PluginKeys2.SQL_INDEX_MAN.getData(plsqlFile.getProject()).getIndex(dbUrl, 0);
-        return (i != null) ? i.getVariantsProvider() : null;
+        return (i != null) ? new VariantsProvider(i.getNameProvider()) : null;
     }
 
 

@@ -25,7 +25,7 @@ package com.deepsky.lang.plsql.completion.lookups.dml;
 
 import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
-import com.deepsky.lang.plsql.completion.lookups.SelectFieldLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.select.SelectFieldLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.TableLookupElement;
 import com.deepsky.lang.plsql.psi.ColumnSpec;
 import com.deepsky.lang.plsql.psi.ColumnSpecList;
@@ -40,7 +40,6 @@ import com.intellij.codeInsight.lookup.LookupElementDecorator;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.codeStyle.CodeStyleManager;
 
 import java.util.ArrayList;
 import java.util.List;

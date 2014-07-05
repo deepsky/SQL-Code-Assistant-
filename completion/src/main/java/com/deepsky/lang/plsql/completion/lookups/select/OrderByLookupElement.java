@@ -21,8 +21,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.completion.lookups;
+package com.deepsky.lang.plsql.completion.lookups.select;
 
+import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;

@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.completion.lookups;
+package com.deepsky.lang.plsql.completion.lookups.plsql;
 
 import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.completion.InsertionContext;

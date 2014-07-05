@@ -33,7 +33,7 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_start() throws Exception {
         configureByText("<caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select","update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select","update");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -503,17 +503,17 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_start_1() throws Exception {
         configureByText("select * from tab; <caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
 
     public void test_start_2() throws Exception {
         configureByText("create table tab (a integer); <caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
 
     public void test_start_3() throws Exception {
         configureByText("insert into tab values(1, 2); <caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
 
     public void test_start_31() throws Exception {
@@ -537,42 +537,42 @@ public class GenericCompletionTest extends BaseCompletionTest {
 
     public void test_start_4() throws Exception {
         configureByText("update tab set a = 7; <caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
 
     public void test_start_5() throws Exception {
         configureByText("update tab set a = 7 where is = 1; <caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
 
     public void test_start_6() throws Exception {
         configureByText("delete from tab;  <caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
 
     public void test_start_7() throws Exception {
         configureByText("delete from tab where id < 8; <caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
 
     public void test_start_8() throws Exception {
         configureByText("drop table tab; <caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
 
     public void test_start_9() throws Exception {
         configureByText("drop view tab; <caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
 
     public void test_start_10() throws Exception {
         configureByText("drop sequence tab; <caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
 
     public void test_start_11() throws Exception {
         configureByText("drop index idx_1; <caret>");
-        assertLookup(myItems, "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
+        assertLookup(myItems, "declare", "alter", "begin", "comment", "create", "delete", "drop", "insert", "select", "update");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

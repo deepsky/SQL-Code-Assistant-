@@ -24,19 +24,14 @@
 package com.deepsky.lang.plsql.completion.processors;
 
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
-import com.deepsky.lang.plsql.completion.VariantsProvider;
-import com.deepsky.lang.plsql.completion.lookups.GroupByLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.select.GroupByLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.OrderByLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.select.OrderByLookupElement;
 import com.deepsky.lang.plsql.psi.ColumnSpec;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.deepsky.lang.plsql.psi.TableAlias;
-import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @SyntaxTreePath("/..1#INSERT_COMMAND")
 public class InsertStmtProcessor extends CompletionBase {

@@ -27,7 +27,7 @@ import com.deepsky.lang.PsiUtil;
 import com.deepsky.lang.common.PlSqlTokenTypes;
 import com.deepsky.lang.plsql.completion.SyntaxTreePath;
 import com.deepsky.lang.plsql.completion.VariantsProvider;
-import com.deepsky.lang.plsql.completion.lookups.CaseExpressionLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.select.CaseExpressionLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.KeywordLookupElement;
 import com.deepsky.lang.plsql.psi.NameFragmentRef;
 import com.deepsky.lang.plsql.psi.SelectStatement;

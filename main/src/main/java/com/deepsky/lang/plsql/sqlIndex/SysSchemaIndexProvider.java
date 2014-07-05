@@ -27,7 +27,7 @@ package com.deepsky.lang.plsql.sqlIndex;
 
 import com.deepsky.database.ora.DbUrl;
 import com.deepsky.lang.plsql.ConfigurationException;
-import com.deepsky.lang.plsql.completion.VariantsProvider;
+import com.deepsky.lang.plsql.completion.NameProvider;
 import com.deepsky.lang.plsql.resolver.index.IndexTree;
 import com.deepsky.lang.plsql.resolver.index.IndexTreeBase;
 import com.deepsky.lang.plsql.resolver.utils.ContextPathUtil;
@@ -251,7 +251,7 @@ public class SysSchemaIndexProvider {
             return null;
         }
 
-        public VariantsProvider getVariantsProvider() {
+        public NameProvider getNameProvider() {
             // no variants provider for SYS schema
             return null;
         }

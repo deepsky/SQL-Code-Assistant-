@@ -24,7 +24,6 @@
 package com.deepsky.lang.plsql.completion.processors;
 
 import com.deepsky.lang.plsql.completion.VariantsProvider;
-import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElement;
 import org.jetbrains.annotations.NotNull;
 

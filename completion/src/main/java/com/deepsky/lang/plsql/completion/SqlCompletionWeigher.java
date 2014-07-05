@@ -26,8 +26,8 @@
 package com.deepsky.lang.plsql.completion;
 
 import com.deepsky.lang.plsql.completion.lookups.FunctionLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.ProcedureLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.SelectFieldLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.plsql.ProcedureLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.select.SelectFieldLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.SequenceLookupElement;
 import com.intellij.codeInsight.completion.CompletionLocation;
 import com.intellij.codeInsight.completion.CompletionWeigher;

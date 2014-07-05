@@ -31,8 +31,6 @@ import com.deepsky.database.ora2.DbObjectCache;
 import com.deepsky.lang.common.PlSqlSupportLoader;
 import com.deepsky.lang.plsql.NotSupportedException;
 import com.deepsky.lang.plsql.completion.NameProvider;
-import com.deepsky.lang.plsql.completion.VariantsProvider;
-import com.deepsky.lang.plsql.completion.VariantsProviderImpl;
 import com.deepsky.lang.plsql.resolver.*;
 import com.deepsky.lang.plsql.resolver.index.ContextItem;
 import com.deepsky.lang.plsql.resolver.index.IndexTree;
@@ -123,10 +121,10 @@ public class FSIndex extends SqlIndexBase {
             this.dbUrl = dbUrl;
         }
 
-        public VariantsProvider getVariantsProvider() {
+        public NameProvider getNameProvider() {
             AbstractSchema proxy = FSIndex.this.getSimpleIndex(userName);
-            ResolveHelper resolver = proxy.getResolveHelper();
-            return new VariantsProviderImpl(new NameProvider() {
+            final ResolveHelper resolver = proxy.getResolveHelper();
+            return new NameProvider() {
 
                 public String getContextPathValue(String ctxPath) {
                     return getIndexTree().getContextPathValue(ctxPath);
@@ -145,7 +143,13 @@ public class FSIndex extends SqlIndexBase {
                 public ContextItem[] findLocalCtxItems(String ctxPath, int[] ctxTypes) {
                     return getIndexTree().findCtxItems(ctxPath, ctxTypes);
                 }
-            }, resolver);
+
+                @NotNull
+                @Override
+                public ResolveHelper getResolver() {
+                    return resolver;
+                }
+            };
         }
 
 
@@ -172,13 +176,13 @@ public class FSIndex extends SqlIndexBase {
         public void flush() {
             try {
                 String idxFile = new File(indexDirPath, indexFileName).getAbsolutePath();
-                itree.dumpNames( idxFile, new IndexTree.IndexEntryFilter(){
-                            public boolean accept(String ctxPath, String value) {
-                                // save all entries except System ones
-                                return ctxPath != null &&
-                                        ContextPathUtil.extractLastCtxType(ctxPath) != ContextPath.SYSTEM_FUNC;
-                            }
-                        }
+                itree.dumpNames(idxFile, new IndexTree.IndexEntryFilter() {
+                    public boolean accept(String ctxPath, String value) {
+                        // save all entries except System ones
+                        return ctxPath != null &&
+                                ContextPathUtil.extractLastCtxType(ctxPath) != ContextPath.SYSTEM_FUNC;
+                    }
+                }
                 );
             } catch (IOException e) {
                 // todo  -- handle failing of index creation
