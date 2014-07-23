@@ -34,7 +34,7 @@ import com.deepsky.lang.plsql.completion.lookups.dml.DeleteLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.UpdateLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.plsql.AnonymousPlSqlBlockLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.plsql.PlSqlBlockLookupElement;
 import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
 import com.deepsky.lang.plsql.psi.*;
 import com.deepsky.lang.plsql.psi.ref.TableRef;
@@ -111,16 +111,16 @@ public abstract class CompletionBase {
     }
 
 
-    protected void collectTypeNames(@NotNull C_Context ctx){
+    protected void collectTypeNames(@NotNull C_Context ctx, boolean doFinalize){
         VariantsProvider provider = ctx.getProvider();
-        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup());
+        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup(), doFinalize);
         for (LookupElement elem : variants) {
             ctx.addElement(elem);
         }
     }
 
     protected void collectPlSqlVariables(@NotNull C_Context ctx, @NotNull SelectStatement select, @NotNull NameFragmentRef nameRef) {
-        //To change body of created methods use File | Settings | File Templates.
+        // TODO - implement me
     }
 
 
@@ -321,8 +321,8 @@ public abstract class CompletionBase {
         ctx.addElement(KeywordLookupElement.create("drop"));
         ctx.addElement(KeywordLookupElement.create("alter"));
         ctx.addElement(KeywordLookupElement.create("comment"));
-        ctx.addElement(AnonymousPlSqlBlockLookupElement.create());
-        ctx.addElement(AnonymousPlSqlBlockLookupElement.createDeclare());
+        ctx.addElement(PlSqlBlockLookupElement.create(true));
+        ctx.addElement(PlSqlBlockLookupElement.createDeclare());
     }
 
     public abstract class TreePathBuilderAbstract implements TreePathBuilder {

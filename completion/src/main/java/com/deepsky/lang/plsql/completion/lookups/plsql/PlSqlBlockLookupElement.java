@@ -23,6 +23,8 @@
 
 package com.deepsky.lang.plsql.completion.lookups.plsql;
 
+import com.deepsky.lang.common.PlSqlFileType;
+import com.deepsky.lang.common.PlSqlLanguage;
 import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
@@ -32,30 +34,35 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.codeStyle.CodeStyleManager;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 
-public class AnonymousPlSqlBlockLookupElement <T extends LookupElement> extends LookupElementDecorator<T> {
+public class PlSqlBlockLookupElement<T extends LookupElement> extends LookupElementDecorator<T> {
 
-    protected AnonymousPlSqlBlockLookupElement(T delegate) {
+    protected PlSqlBlockLookupElement(T delegate) {
         super(delegate);
     }
 
-    public static AnonymousPlSqlBlockLookupElement create() {
+    public static PlSqlBlockLookupElement create(final boolean doFinalize) {
         LookupElement e = LookupElementBuilder.create("begin")
                 .withPresentableText("begin .. end")
-                .withTypeText("Create anonymous PL/SQL block")
+                .withTypeText("Create PL/SQL block")
                 .withCaseSensitivity(false)
                 .withStrikeoutness(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = "begin\n\t\nend;";
+
+                        String prefix = "begin\n\t\nend;" + (doFinalize? "\n/": "\n");
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
 
                         final Document document = editor.getDocument();
-                        editor.getCaretModel().moveToOffset(context.getStartOffset()+6);
+
                         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
 
                         int startOffset = context.getStartOffset();
@@ -63,16 +70,25 @@ public class AnonymousPlSqlBlockLookupElement <T extends LookupElement> extends 
                                 startOffset,
                                 startOffset + prefix.length() + 1);
 
+                        final int line = editor.getCaretModel().getLogicalPosition().line;
+                        final int column = editor.getCaretModel().getLogicalPosition().column;
+                        final CodeStyleSettings styleSettings = CodeStyleSettingsManager.getSettings(context.getProject());
+                        final int indentSize = styleSettings.getIndentSize(PlSqlFileType.FILE_TYPE);
+                        final LogicalPosition pos = new LogicalPosition(line+1, column-5+indentSize);
+
+                        editor.getCaretModel().moveToLogicalPosition(pos);
+
                         LookupUtils.scheduleAutoPopup(editor, context);
+                        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
                     }
                 });
 
-        return new AnonymousPlSqlBlockLookupElement<LookupElement>(
+        return new PlSqlBlockLookupElement<LookupElement>(
                 PrioritizedLookupElement.withGrouping(e, 3)
         );
     }
 
-    public static AnonymousPlSqlBlockLookupElement createDeclare() {
+    public static PlSqlBlockLookupElement createDeclare() {
         LookupElement e = LookupElementBuilder.create("declare")
                 .withPresentableText("declare .. begin .. end")
                 .withTypeText("Create anonymous PL/SQL block")
@@ -82,17 +98,27 @@ public class AnonymousPlSqlBlockLookupElement <T extends LookupElement> extends 
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = "declare\n\t\nbegin\n\t\nend;";
+
+                        final int line = editor.getCaretModel().getLogicalPosition().line;
+                        final int column = editor.getCaretModel().getLogicalPosition().column;
+                        final CodeStyleSettings styleSettings = CodeStyleSettingsManager.getSettings(context.getProject());
+                        final int indentSize = styleSettings.getIndentSize(PlSqlFileType.FILE_TYPE);
+                        final LogicalPosition pos = new LogicalPosition(line+1, column-7+indentSize);
+
+                        String prefix = "declare\n\t\nbegin\n\t\nend;\n/\n";
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
 
                         final Document document = editor.getDocument();
                         editor.getCaretModel().moveToOffset(context.getTailOffset()-5);
                         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+
+                        editor.getCaretModel().moveToLogicalPosition(pos);
+
                         LookupUtils.scheduleAutoPopup(editor, context);
                     }
                 });
 
-        return new AnonymousPlSqlBlockLookupElement<LookupElement>(
+        return new PlSqlBlockLookupElement<LookupElement>(
                 PrioritizedLookupElement.withGrouping(e, 3)
         );
     }

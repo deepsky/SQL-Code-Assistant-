@@ -137,7 +137,7 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
     }
 
     public boolean createOrReplace() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return getText().matches("^create *or *replace (?i)");
     }
 
     public String getPackageName() {

@@ -112,6 +112,16 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
         }
     }
 
+
+    public PsiElement getReturnTypeElement() {
+        PsiElement type = this.findChildByType(PLSqlTypesAdopted.RETURN_TYPE);
+        if (type != null) {
+            return type;
+        } else {
+            throw new SyntaxTreeCorruptedException();
+        }
+    }
+
     @NotNull
     public Declaration[] getDeclarationList() {
         PlSqlBlock block = (PlSqlBlock) this.findChildByType(PLSqlTypesAdopted.PLSQL_BLOCK);
@@ -131,7 +141,7 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
     }
 
     public boolean createOrReplace() {
-        return false;
+        return getText().matches("^create *or *replace (?i)");
     }
 
     public ExecutableSpec getSpecification() {

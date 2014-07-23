@@ -26,6 +26,7 @@
 package com.deepsky.lang.plsql.completion.lookups.plsql;
 
 import com.intellij.codeInsight.TailType;
+import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
@@ -35,32 +36,35 @@ import com.intellij.openapi.editor.ScrollType;
 
 import javax.swing.*;
 
-public class PackageLookupElement <T extends LookupElement> extends LookupElementDecorator<T> {
+public class PackageNameLookupElement<T extends LookupElement> extends LookupElementDecorator<T> {
 
     String name;
 
-    protected PackageLookupElement(T delegate, String name) {
+    protected PackageNameLookupElement(T delegate, String name) {
         super(delegate);
         this.name = name;
     }
 
-    public static PackageLookupElement create(String name, Icon icon){
+    public static PackageNameLookupElement create(String name, Icon icon){
         LookupElement e = LookupElementBuilder.create(name)
-                            .setIcon(icon)
-                            .setCaseSensitive(false);
-
-        return new PackageLookupElement<LookupElement>(e, name);
-    }
-
-
-    public void handleInsert(final InsertionContext context) {
-        final Editor editor = context.getEditor();
+                            .withIcon(icon)
+                            .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
 //        final char completionChar = context.getCompletionChar();
-        final TailType tailType = TailType.DOT;
+                        final TailType tailType = TailType.DOT;
 
-        context.setAddCompletionChar(false);
-        tailType.processTail(editor, context.getTailOffset());
-        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+                        context.setAddCompletionChar(false);
+                        tailType.processTail(editor, context.getTailOffset());
+                        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+                    }
+                });
+
+        return new PackageNameLookupElement<LookupElement>(e, name);
     }
+
+
 
 }

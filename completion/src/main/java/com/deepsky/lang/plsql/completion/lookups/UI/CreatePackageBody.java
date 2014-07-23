@@ -21,29 +21,40 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.deepsky.lang.plsql.completion;
+package com.deepsky.lang.plsql.completion.lookups.UI;
 
-import antlr.RecognitionException;
-import antlr.TokenStreamException;
-import com.deepsky.lang.plsql.completion.syntaxTreePath.generated.CompletionProcessor2;
-import com.deepsky.lang.plsql.completion.syntaxTreePath.generator.TreePathContext;
-import com.deepsky.lang.plsql.completion.syntaxTreePath.logic.TreePath;
-import com.intellij.lang.ASTNode;
+import javax.swing.*;
 
-public class DeleteStmtProcessorTest extends AbstractCompletionTest {
+public class CreatePackageBody implements ParamProviderPopup {
+    private JButton button1;
+    private JButton button2;
+    private JCheckBox initSectionCheckBox;
+    private JTextField packageName;
+    private JPanel rootPanel;
 
-    public void test4_21() throws TokenStreamException, RecognitionException {
-        TreePath path = parseScript1("create table abc( id number)\n delete from tab2\n <caret> ");
-        CompletionProcessor2 proc = new CompletionProcessor2(path);
-        assertTrue(proc.process());
+    @Override
+    public void addCloseEventLister(CloseEventListener c) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 
-        TreePathContext context = proc.getContext();
+    @Override
+    public JComponent getRootComponent() {
+        return rootPanel;
+    }
 
-        assertEquals("// .. 1#DELETE_COMMAND / #DELETE #FROM TableAlias / #TABLE_REF #ALIAS_NAME // 2#C_MARKER", context.getDesc(0).getTreePath());
-        assertEquals(2, context.getDesc(0).getHandlerParameters().length);
-        assertTrue(context.getDesc(0).getHandlerParameters()[0] instanceof ASTNode);
-        assertEquals("com.deepsky.lang.plsql.completion.processors.DeleteStmtProcessor", context.getDesc(0).getMeta().getClassName());
-        assertEquals("process$DeleteAliasName", context.getDesc(0).getMeta().getMethodName());
+    @Override
+    public JComponent getFocusedComponent() {
+        return packageName;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Create Package Body";
+    }
+
+    @Override
+    public String getName() {
+        return packageName.getText();
     }
 
 }

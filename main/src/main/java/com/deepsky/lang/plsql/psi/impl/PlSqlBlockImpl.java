@@ -92,6 +92,23 @@ public class PlSqlBlockImpl extends PlSqlElementBase implements PlSqlBlock {
         return out.toArray(new PlSqlElement[out.size()]);
     }
 
+    /**
+     * Find ReturnStatement in the statement list
+     * @return
+     */
+    @Override
+    public ReturnStatement findReturnStatement() {
+        final ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.STATEMENT_LIST);
+        if (node != null) {
+            for (PsiElement psi : node.getPsi().getChildren()) {
+                if(psi instanceof ReturnStatement){
+                    return (ReturnStatement) psi;
+                }
+            }
+        }
+        return null;
+    }
+
 
     private void innerLoop(PsiElement element, List<PlSqlElement> l) {
         if (element instanceof PlSqlElement) {

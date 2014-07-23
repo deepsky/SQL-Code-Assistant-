@@ -24,6 +24,8 @@
 package com.deepsky.lang.plsql.completion.lookups.plsql;
 
 import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
+import com.deepsky.view.Icons;
+import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
@@ -32,7 +34,10 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.psi.PsiDocumentManager;
+
+import javax.swing.*;
 
 public class PlSqlPackageLookupElement<T extends LookupElement> extends LookupElementDecorator<T> {
 
@@ -40,23 +45,44 @@ public class PlSqlPackageLookupElement<T extends LookupElement> extends LookupEl
         super(delegate);
     }
 
+
+    public static PlSqlPackageLookupElement create(String name, Icon icon){
+        LookupElement e = LookupElementBuilder.create(name)
+                .withIcon(icon)
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+//        final char completionChar = context.getCompletionChar();
+                        final TailType tailType = TailType.DOT;
+
+                        context.setAddCompletionChar(false);
+                        tailType.processTail(editor, context.getTailOffset());
+                        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+                    }
+                });
+
+        return new PlSqlPackageLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 6));
+    }
+
+
     public static PlSqlPackageLookupElement createPackage() {
         LookupElement e = LookupElementBuilder.create("create package")
-//                .withTailText(it.getTail(), true)
-//                .withTypeText(it.getType())
-//                .withIcon(it.getIcon())
+                .withIcon(Icons.PACKAGE_SPEC)
                 .withPresentableText("create package <package name> as ... end;")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = "create package  as\nend;";
+                        String prefix = "create package  as\nend;\n/";
                         prefix = adoptPrefix(item.getLookupString(), editor.getDocument().getText(), context.getStartOffset(), prefix);
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
                         final Document document = editor.getDocument();
 
-                        editor.getCaretModel().moveToOffset(context.getTailOffset() - 8);
+                        editor.getCaretModel().moveToOffset(context.getTailOffset() - 10);
                         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
 
 /*
@@ -90,21 +116,19 @@ public class PlSqlPackageLookupElement<T extends LookupElement> extends LookupEl
 
     public static PlSqlPackageLookupElement createPackageBody() {
         LookupElement e = LookupElementBuilder.create("create package body")
-//                .withTailText(it.getTail(), true)
-//                .withTypeText(it.getType())
-//                .withIcon(it.getIcon())
+                .withIcon(Icons.PACKAGE_BODY)
                 .withPresentableText("create package body <package name> as ... end;")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
                         final Editor editor = context.getEditor();
-                        String prefix = "create package body  as\nend;";
+                        String prefix = "create package body  as\nend;\n/";
                         prefix = adoptPrefix(item.getLookupString(), editor.getDocument().getText(), context.getStartOffset(), prefix);
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
                         final Document document = editor.getDocument();
 
-                        editor.getCaretModel().moveToOffset(context.getTailOffset() - 8);
+                        editor.getCaretModel().moveToOffset(context.getTailOffset() - 10);
                         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
 
                         LookupUtils.scheduleAutoPopup(editor, context);

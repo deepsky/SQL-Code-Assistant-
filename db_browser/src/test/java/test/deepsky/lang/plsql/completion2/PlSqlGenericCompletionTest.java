@@ -32,12 +32,12 @@ public class PlSqlGenericCompletionTest extends BaseCompletionTest {
 
     public void test_start() throws Exception {
         configureByText("<caret>");
-        assertLookup(myItems, "alter", "comment", "create", "delete", "drop", "insert", "select","update", "begin");
+        assertLookup(myItems, "alter", "declare", "comment", "create", "delete", "drop", "insert", "select","update", "begin");
     }
 
     public void test_create() throws Exception {
         configureByText("create <caret>");
-        assertLookup(myItems, "table", "trigger", "package", "package body");
+        assertLookup(myItems, "create table", "trigger", "create package", "create package body");
     }
 
     public void test_start_in_package() throws Exception {

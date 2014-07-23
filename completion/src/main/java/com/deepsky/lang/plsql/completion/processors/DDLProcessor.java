@@ -123,7 +123,7 @@ public class DDLProcessor extends CompletionBase {
     @SyntaxTreePath("/..1#TABLE_DEF/#CREATE #TABLE ..#COLUMN_DEF/#COLUMN_NAME_DDL #TYPE_NAME_REF/2$NameFragmentRef/#C_MARKER")
     public void process$TableTypeName(C_Context ctx, ASTNode node, NameFragmentRef ref) {
         VariantsProvider provider = ctx.getProvider();
-        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup());
+        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup(), false);
         for (LookupElement elem : variants) {
             ctx.addElement(elem);
         }
@@ -132,7 +132,16 @@ public class DDLProcessor extends CompletionBase {
     @SyntaxTreePath("/..1#TABLE_DEF/#CREATE #ERROR_TOKEN_A/#TABLE ..#COLUMN_DEF/#COLUMN_NAME_DDL #TYPE_NAME_REF/2$NameFragmentRef/#C_MARKER")
     public void process$TableType2Name(C_Context ctx, ASTNode node, NameFragmentRef ref) {
         VariantsProvider provider = ctx.getProvider();
-        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup());
+        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup(), false);
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+    }
+
+    @SyntaxTreePath("/..1#CREATE_TEMP_TABLE/#CREATE .. #TABLE #TABLE_NAME_DDL #OPEN_PAREN ..#COLUMN_DEF/#COLUMN_NAME_DDL #TYPE_NAME_REF/2$NameFragmentRef/#C_MARKER")
+    public void process$TempTableType2Name(C_Context ctx, ASTNode node, NameFragmentRef ref) {
+        VariantsProvider provider = ctx.getProvider();
+        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup(), false);
         for (LookupElement elem : variants) {
             ctx.addElement(elem);
         }

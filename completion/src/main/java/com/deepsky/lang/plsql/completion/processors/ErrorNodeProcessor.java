@@ -32,10 +32,13 @@ import com.deepsky.lang.plsql.completion.VariantsProvider;
 import com.deepsky.lang.plsql.completion.lookups.*;
 import com.deepsky.lang.plsql.completion.lookups.ddl.AlterIndexLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.ddl.AlterTableLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.ddl.CreateTableLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.CommentLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.InsertLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.dml.SelectLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.plsql.FunctionLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.plsql.PlSqlPackageLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.plsql.ProcedureLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.select.CaseExpressionLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.select.GroupByLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.select.OrderByLookupElement;
@@ -70,6 +73,13 @@ public class ErrorNodeProcessor extends CompletionBase {
     public void process$Create(C_Context ctx, ASTNode node) {
         ctx.addElement(PlSqlPackageLookupElement.createPackage());
         ctx.addElement(PlSqlPackageLookupElement.createPackageBody());
+        ctx.addElement(ProcedureLookupElement.create());
+        ctx.addElement(ProcedureLookupElement.createOrReplace());
+        ctx.addElement(FunctionLookupElement.create());
+        //ctx.addElement(FunctionLookupElement.createOrReplace());
+
+        ctx.addElement(CreateTableLookupElement.createRegular());
+        ctx.addElement(CreateTableLookupElement.createTemporary());
     }
 
     @SyntaxTreePath("/..#SEMI #C_MARKER")

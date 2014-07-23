@@ -45,4 +45,17 @@ public abstract class DDLLookupElementBase<T extends LookupElement> extends Look
         PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
     }
 
+    public static String adoptPrefix(String lookupString, String text, int endOffset, String prefix) {
+
+        int i = endOffset;
+        for (int cnt = lookupString.length() + 20; i > 0 && cnt > 0; cnt--, i--) ;
+
+        String _prefix = LookupUtils.calcLookupPrefix(lookupString, text.substring(i, endOffset));
+        if (prefix.startsWith(_prefix)) {
+            return prefix.substring(_prefix.length());
+        }
+        return prefix;
+    }
+
+
 }

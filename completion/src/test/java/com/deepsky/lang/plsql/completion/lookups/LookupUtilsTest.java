@@ -20,6 +20,11 @@ public class LookupUtilsTest {
         assertEquals("create package", LookupUtils.calcLookupPrefix("create package", "create   package"));
         assertEquals("create package", LookupUtils.calcLookupPrefix("create package", "create   package   "));
 
+        assertEquals("create ", LookupUtils.calcLookupPrefix("create package body", "create table eee (\n" +
+                "hjh BLOB\n" +
+                ");\n" +
+                "\n" +
+                "create "));
     }
 
 }

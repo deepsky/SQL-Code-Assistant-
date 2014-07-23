@@ -93,7 +93,8 @@ public class LookupUtils {
                 if (lookup.charAt(i2) == content.charAt(j)) {
                     // Check boundary
                     if (i2 == 0) {
-                        return (j == 0 || content.charAt(j - 1) == ' ') ? lookup.substring(0, i + 1) : "";
+                        return (j == 0 || content.charAt(j - 1) == ' '
+                                || content.charAt(j - 1) == '\n') ? lookup.substring(0, i + 1) : "";
                     }
 
                 } else if (content.charAt(j) == ' ') {
@@ -109,4 +110,26 @@ public class LookupUtils {
         return "";
     }
 
+    public static String adoptPrefix(String lookupString, String text, int endOffset, String prefix) {
+        int i = endOffset;
+        for (int cnt = lookupString.length() + 20; i > 0 && cnt > 0; cnt--, i--) ;
+
+        String _prefix = LookupUtils.calcLookupPrefix(lookupString, text.substring(i, endOffset));
+        if (prefix.startsWith(_prefix)) {
+            return prefix.substring(_prefix.length());
+        }
+        return prefix;
+    }
+
+
+    public static int calcPrefixSize(String lookupString, String text, int endOffset, String prefix) {
+        int i = endOffset;
+        for (int cnt = lookupString.length() + 20; i > 0 && cnt > 0; cnt--, i--) ;
+
+        String _prefix = LookupUtils.calcLookupPrefix(lookupString, text.substring(i, endOffset));
+        if (prefix.startsWith(_prefix)) {
+            return prefix.length() - _prefix.length();
+        }
+        return prefix.length();
+    }
 }

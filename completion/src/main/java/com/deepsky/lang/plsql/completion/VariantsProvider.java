@@ -28,8 +28,8 @@ package com.deepsky.lang.plsql.completion;
 import com.deepsky.lang.parser.plsql.PlSqlElementTypes;
 import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.completion.lookups.*;
-import com.deepsky.lang.plsql.completion.lookups.plsql.PackageLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.plsql.ProcedureLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.plsql.PlSqlPackageLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.ProcedureCallLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.plsql.TriggerLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.select.SelectFieldLookupElement;
 import com.deepsky.lang.plsql.psi.*;
@@ -189,7 +189,7 @@ public class VariantsProvider {
                 String procName = ContextPathUtil.extractLastCtxName(ctxPath);
                 Icon icon = ctxType == ContextPath.PROCEDURE_SPEC ? Icons.PROCEDURE_SPEC : Icons.PROCEDURE_BODY;
                 ArgumentSpec[] args = ContextPathUtil.extractArguments(item.getValue());
-                return ProcedureLookupElement.create(procName, args, icon);
+                return ProcedureCallLookupElement.create(procName, args, icon);
             }
             case ContextPath.FUNCTION_SPEC:
             case ContextPath.FUNCTION_BODY: {
@@ -197,7 +197,7 @@ public class VariantsProvider {
                 Icon icon = ctxType == ContextPath.FUNCTION_SPEC ? Icons.FUNCTION_SPEC : Icons.FUNCTION_BODY;
                 String value = item.getValue();
                 ArgumentSpec[] args = ContextPathUtil.extractArguments(value);
-                return FunctionLookupElement.create(procName, args, ContextPathUtil.extractRetType(value), icon);
+                return FunctionCallLookupElement.create(procName, args, ContextPathUtil.extractRetType(value), icon);
             }
             case ContextPath.VARIABLE_DECL: {
                 String ctxName = findCtxAncestor(item.getCtxPath(), new int[]{
@@ -519,11 +519,11 @@ public class VariantsProvider {
         return out;
     }
 
-    public List<LookupElement> collectDataTypeVariants(String ctxPath, String lookUpStr) {
+    public List<LookupElement> collectDataTypeVariants(String ctxPath, String lookUpStr, boolean doFinalize) {
         List<LookupElement> out = new ArrayList<LookupElement>();
         for (String typeName : DataTypeLookupElement.getDataTypeNames()) {
             if (lookUpStr.length() == 0 || typeName.toLowerCase().startsWith(lookUpStr.toLowerCase())) {
-                out.add(DataTypeLookupElement.create(typeName, Icons.RECORD_TYPE_DECL));
+                out.add(DataTypeLookupElement.create(typeName, Icons.RECORD_TYPE_DECL, doFinalize));
             }
         }
 
@@ -638,7 +638,7 @@ public class VariantsProvider {
 
                 Icon icon = ctxType == ContextPath.FUNCTION_SPEC ? Icons.FUNCTION_SPEC : Icons.FUNCTION_BODY;
                 ArgumentSpec[] args = ContextPathUtil.extractArguments(proc.getValue());
-                out.add(ProcedureLookupElement.create(procName, args, icon));
+                out.add(ProcedureCallLookupElement.create(procName, args, icon));
             }
         }
 
@@ -658,7 +658,7 @@ public class VariantsProvider {
 
                 Icon icon = ctxType == ContextPath.FUNCTION_SPEC ? Icons.FUNCTION_SPEC : Icons.FUNCTION_BODY;
                 ArgumentSpec[] args = ContextPathUtil.extractArguments(proc.getValue());
-                out.add(ProcedureLookupElement.create(procName, args, icon));
+                out.add(ProcedureCallLookupElement.create(procName, args, icon));
             }
         }
 
@@ -678,7 +678,7 @@ public class VariantsProvider {
 
                 Icon icon = ctxType == ContextPath.FUNCTION_SPEC ? Icons.FUNCTION_SPEC : Icons.FUNCTION_BODY;
                 ArgumentSpec[] args = ContextPathUtil.extractArguments(proc.getValue());
-                out.add(ProcedureLookupElement.create(procName, args, icon));
+                out.add(ProcedureCallLookupElement.create(procName, args, icon));
             }
         }
         return out;
@@ -722,7 +722,7 @@ public class VariantsProvider {
 
                 Icon icon = ctxType == ContextPath.PROCEDURE_SPEC ? Icons.PROCEDURE_SPEC : Icons.PROCEDURE_BODY;
                 ArgumentSpec[] args = ContextPathUtil.extractArguments(proc.getValue());
-                out.add(ProcedureLookupElement.create(procName, args, icon));
+                out.add(ProcedureCallLookupElement.create(procName, args, icon));
             }
         }
 
@@ -742,7 +742,7 @@ public class VariantsProvider {
 
                 Icon icon = ctxType == ContextPath.PROCEDURE_SPEC ? Icons.PROCEDURE_SPEC : Icons.PROCEDURE_BODY;
                 ArgumentSpec[] args = ContextPathUtil.extractArguments(proc.getValue());
-                out.add(ProcedureLookupElement.create(procName, args, icon));
+                out.add(ProcedureCallLookupElement.create(procName, args, icon));
             }
         }
 
@@ -763,7 +763,7 @@ public class VariantsProvider {
 
                 Icon icon = ctxType == ContextPath.PROCEDURE_SPEC ? Icons.PROCEDURE_SPEC : Icons.PROCEDURE_BODY;
                 ArgumentSpec[] args = ContextPathUtil.extractArguments(proc.getValue());
-                out.add(ProcedureLookupElement.create(procName, args, icon));
+                out.add(ProcedureCallLookupElement.create(procName, args, icon));
             }
         }
 
@@ -779,7 +779,7 @@ public class VariantsProvider {
             if (lookUpStr == null || name.toLowerCase().startsWith(lookUpStr.toLowerCase())) {
                 ArgumentSpec[] args = ContextPathUtil.extractArguments(item.getValue());
                 Type t = ContextPathUtil.extractRetType(item.getValue());
-                out.add(FunctionLookupElement.create(name, args, t, Icons.FUNCTION_SPEC));
+                out.add(FunctionCallLookupElement.create(name, args, t, Icons.FUNCTION_SPEC));
             }
         }
         return out;
@@ -791,7 +791,7 @@ public class VariantsProvider {
         for (ContextItem item : items) {
             String last = ContextPathUtil.extractLastCtxName(item.getCtxPath());
             if (lookUpStr == null || last.startsWith(lookUpStr.toLowerCase())) {
-                out.add(PackageLookupElement.create(last, Icons.PACKAGE_SPEC));
+                out.add(PlSqlPackageLookupElement.create(last, Icons.PACKAGE_SPEC));
 
             }
         }

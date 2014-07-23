@@ -45,19 +45,19 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 
 import javax.swing.*;
 
-public class FunctionLookupElement <T extends LookupElement> extends LookupElementDecorator<T> {
+public class FunctionCallLookupElement<T extends LookupElement> extends LookupElementDecorator<T> {
 
     final private static int MAX_LEN = 69;
 
     String name;
     String args;
-    protected FunctionLookupElement(T delegate, String name, String args) {
+    protected FunctionCallLookupElement(T delegate, String name, String args) {
         super(delegate);
         this.name = name;
         this.args = args;
     }
 
-    public static FunctionLookupElement create(String _name, ArgumentSpec[] args, Type type, Icon icon){
+    public static FunctionCallLookupElement create(String _name, ArgumentSpec[] args, Type type, Icon icon){
         String name = _name;
         String tail = "()";
         if(args.length == 0){
@@ -81,7 +81,7 @@ public class FunctionLookupElement <T extends LookupElement> extends LookupEleme
                             .setTailText(tail)
                             .setCaseSensitive(false);
 
-        return new FunctionLookupElement<LookupElement>(e, name, new ArgumentListHelper(args).encodeArgumentsWoNames());
+        return new FunctionCallLookupElement<LookupElement>(e, name, new ArgumentListHelper(args).encodeArgumentsWoNames());
     }
 
     private static String cutOff(String name, int length) {
@@ -170,7 +170,7 @@ todo -- is this check needed?
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FunctionLookupElement that = (FunctionLookupElement) o;
+        FunctionCallLookupElement that = (FunctionCallLookupElement) o;
         return (name+ args).equals(that.name + that.args);
     }
 

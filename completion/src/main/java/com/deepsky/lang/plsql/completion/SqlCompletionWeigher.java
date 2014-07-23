@@ -25,8 +25,8 @@
 
 package com.deepsky.lang.plsql.completion;
 
-import com.deepsky.lang.plsql.completion.lookups.FunctionLookupElement;
-import com.deepsky.lang.plsql.completion.lookups.plsql.ProcedureLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.FunctionCallLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.ProcedureCallLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.select.SelectFieldLookupElement;
 import com.deepsky.lang.plsql.completion.lookups.SequenceLookupElement;
 import com.intellij.codeInsight.completion.CompletionLocation;
@@ -39,9 +39,9 @@ public class SqlCompletionWeigher extends CompletionWeigher {
     public Comparable weigh(@NotNull final LookupElement element, @NotNull CompletionLocation location) {
         if(element instanceof SequenceLookupElement){
             return -2;
-        } else if(element instanceof FunctionLookupElement){
+        } else if(element instanceof FunctionCallLookupElement){
             return -1;
-        } else if(element instanceof ProcedureLookupElement){
+        } else if(element instanceof ProcedureCallLookupElement){
             return -1;
         } else if(element instanceof SelectFieldLookupElement){
             return -3;

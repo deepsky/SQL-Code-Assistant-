@@ -32,6 +32,7 @@ import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.psi.PsiElement;
@@ -46,17 +47,20 @@ import java.util.Map;
 public class DataTypeLookupElement<T extends LookupElement> extends LookupElementDecorator<T> {
 
     private SQLDatatype datatype;
-    protected DataTypeLookupElement(SQLDatatype datatype, T delegate) {
+    private boolean doFinalize;
+
+    protected DataTypeLookupElement(SQLDatatype datatype, T delegate, boolean doFinalize) {
         super(delegate);
         this.datatype = datatype;
+        this.doFinalize = doFinalize;
     }
 
-    public static DataTypeLookupElement create(String name, Icon icon) {
+    public static DataTypeLookupElement create(String name, Icon icon, boolean doFinalize) {
         LookupElement e = LookupElementBuilder.create(name)
-                .setIcon(icon)
-                .setCaseSensitive(false);
+                .withIcon(icon)
+                .withCaseSensitivity(false);
 
-        return new DataTypeLookupElement<LookupElement>(dataTypes.get(name.toUpperCase()), e);
+        return new DataTypeLookupElement<LookupElement>(dataTypes.get(name.toUpperCase()), e, doFinalize);
     }
 
 
@@ -86,6 +90,11 @@ public class DataTypeLookupElement<T extends LookupElement> extends LookupElemen
 //            PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
         }
 
+        if(doFinalize){
+            final Document document = editor.getDocument();
+            document.insertString(context.getTailOffset(), ";");
+        }
+
 /*
       insertExplicitTypeParams(item, document, offset, file);
 
@@ -104,6 +113,8 @@ public class DataTypeLookupElement<T extends LookupElement> extends LookupElemen
         if (needLeftParenth && hasParams) {
             // Invoke parameters popup
             AutoPopupController.getInstance(context.getProject()).autoPopupParameterInfo(editor, null); //f0);
+        } else {
+            editor.getCaretModel().moveToOffset(context.getTailOffset());
         }
         editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }

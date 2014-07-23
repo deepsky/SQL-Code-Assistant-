@@ -485,6 +485,12 @@ public class PlSqlIndentProcessor {
             return Indent.getNormalIndent(false);
         }
 
+// TODO - Indent formatter should work with specification like completion - /#NODE1/#NODE3../...
+//        if(parentType == PlSqlElementTypes.ERROR_TOKEN_A){
+//            if(childType == PlSqlElementTypes.COLUMN_DEF){
+//                return Indent.getNormalIndent(false);
+//            }
+//        }
 
         //return Indent.getNoneIndent();
         return Indent.getIndent(Indent.Type.NONE, false, false);

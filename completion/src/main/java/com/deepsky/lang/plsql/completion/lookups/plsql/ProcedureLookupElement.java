@@ -1,15 +1,13 @@
 /*
- * Copyright (c) 2009,2010 Serhiy Kulyk
+ * Copyright (c) 2009,2014 Serhiy Kulyk
  * All rights reserved.
- *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
- *     1. Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     2. Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
+ *      1. Redistributions of source code must retain the above copyright
+ *        notice, this list of conditions and the following disclaimer.
+ *      2. Redistributions in binary form must reproduce the above copyright
+ *        notice, this list of conditions and the following disclaimer in the
+ *        documentation and/or other materials provided with the distribution.
  *
  * SQL CODE ASSISTANT PLUG-IN FOR INTELLIJ IDEA IS PROVIDED BY SERHIY KULYK
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -25,129 +23,160 @@
 
 package com.deepsky.lang.plsql.completion.lookups.plsql;
 
-import com.deepsky.lang.plsql.completion.lookups.DataTypeParenthesesHandler;
-import com.deepsky.lang.plsql.psi.utils.Formatter;
-import com.deepsky.lang.plsql.resolver.utils.ArgumentListHelper;
-import com.deepsky.lang.plsql.resolver.utils.ArgumentSpec;
-import com.intellij.codeInsight.AutoPopupController;
-import com.intellij.codeInsight.CodeInsightSettings;
+import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
+import com.deepsky.lang.plsql.completion.lookups.UI.CreateFunction;
+import com.deepsky.lang.plsql.completion.lookups.UI.CreateProcedure;
+import com.deepsky.lang.plsql.completion.lookups.UI.ParamProviderPopup;
+import com.deepsky.lang.plsql.psi.Function;
+import com.deepsky.lang.plsql.psi.Procedure;
+import com.deepsky.lang.plsql.struct.Type;
+import com.deepsky.lang.plsql.workarounds.LoggerProxy;
+import com.deepsky.view.Icons;
 import com.intellij.codeInsight.TailType;
+import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
+import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollType;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 
-import javax.swing.*;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.codeStyle.CodeStyleManager;
 
-public class ProcedureLookupElement  <T extends LookupElement> extends LookupElementDecorator<T> {
 
-    final private static int MAX_LEN = 69;
+public class ProcedureLookupElement <T extends LookupElement> extends BaseLookupDecorator<T> {
 
-    String name;
-    String args;
-    boolean hasParams;
-    protected ProcedureLookupElement(T delegate, String name, String args, boolean hasParams) {
+    static LoggerProxy log = LoggerProxy.getInstance("#ProcedureLookupElement");
+
+    protected ProcedureLookupElement(T delegate) {
         super(delegate);
-        this.name = name;
-        this.args = args;
-        this.hasParams = hasParams;
-    }
-
-    public static ProcedureLookupElement create(String _name, ArgumentSpec[] args, Icon icon){
-        String name = _name;
-        String tail = "";
-        if(args.length != 0){
-            tail = Formatter.formatArgList(args);
-        }
-
-        if(tail.length() + name.length()  > MAX_LEN){
-            tail = cutOff(tail, MAX_LEN - name.length());
-        }
-
-        LookupElement e = LookupElementBuilder.create(name)
-                            .setIcon(icon)
-                            .setTailText(tail)
-                            .setCaseSensitive(false);
-
-        return new ProcedureLookupElement<LookupElement>(e, name,
-                new ArgumentListHelper(args).encodeArgumentsWoNames(), args.length != 0);
-    }
-
-    private static String cutOff(String name, int length) {
-        return name.substring(0, length - "...".length()) + "...";
-    }
-
-    public void handleInsert(final InsertionContext context) {
-        final Editor editor = context.getEditor();
-        final char completionChar = context.getCompletionChar();
-        final TailType tailType = TailType.SEMICOLON;
-
-        context.setAddCompletionChar(false);
-
-        final LookupElement[] allItems = context.getElements();
-        final boolean overloadsMatter = false;//allItems.length == 1 && item.getUserData(LookupItem.FORCE_SHOW_SIGNATURE_ATTR) == null;
-
-        final boolean needLeftParenth = hasParams; //isToInsertParenth(file.findElementAt(context.getStartOffset()));
-        final boolean needRightParenth = shouldInsertRParenth(completionChar, tailType, hasParams);
-
-        if (needLeftParenth) {
-            final CodeStyleSettings styleSettings = CodeStyleSettingsManager.getSettings(context.getProject());
-            new DataTypeParenthesesHandler(//myMethod,
-                    hasParams,
-                    overloadsMatter,
-                    styleSettings.SPACE_BEFORE_METHOD_CALL_PARENTHESES,
-                    styleSettings.SPACE_WITHIN_METHOD_CALL_PARENTHESES && hasParams,
-                    needRightParenth
-            ).handleInsert(context, getDelegate()); // item
-
-        }
-
-        if (needLeftParenth && hasParams) {
-            // Invoke parameters popup
-            AutoPopupController.getInstance(context.getProject()).autoPopupParameterInfo(editor, null); //f0);
-        }
-
-//        if (tailType == TailType.SMART_COMPLETION || !hasParams) {
-//          tailType.processTail(editor, context.getTailOffset());
-//        }
-        tailType.processTail(editor, context.getTailOffset());
-
-        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
 
 
-    private boolean shouldInsertRParenth(char completionChar, TailType tailType, boolean hasParams) {
-/*
-todo -- is this check needed?
-        if (tailType == TailType.SMART_COMPLETION) {
-            return false;
-        }
-*/
+    public static ProcedureLookupElement create() {
+        LookupElement e = LookupElementBuilder.create("create procedure")
+                .withIcon(Icons.PROCEDURE_BODY)
+                .withPresentableText("create procedure <procedure name> is begin .. end;")
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "create or replace procedure proc1\n" +
+                                "is\n" +
+                                "begin\n" +
+                                "NULL;\n" +
+                                "end;\n" +
+                                "/";
 
-        if (completionChar == '(' && hasParams) {
-            //it's highly probable that the user will type ')' next and it may not be overwritten if the flag is off
-            return CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET;
-        }
+                        insertPrefix(context, editor, prefix);
 
-        return true;
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new ProcedureLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 6));
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        ProcedureLookupElement that = (ProcedureLookupElement) o;
-        return (name+ args).equals(that.name + that.args);
+    public static ProcedureLookupElement createOrReplace() {
+        LookupElement e = LookupElementBuilder.create("create or replace procedure")
+                .withIcon(Icons.PROCEDURE_BODY)
+                .withPresentableText("create or replace procedure <procedure name> is begin .. end;")
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "create or replace procedure proc1\n" +
+                                "is\n" +
+                                "begin\n" +
+                                "NULL;\n" +
+                                "end;\n" +
+                                "/";
+
+                        insertPrefix(context, editor, prefix);
+
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new ProcedureLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 6));
     }
 
 
-    public int hashCode() {
-        return (name+ args).hashCode();
+    public static ProcedureLookupElement createBody(String text) {
+        LookupElement e = LookupElementBuilder.create("procedure")
+                .withIcon(Icons.PROCEDURE_BODY)
+                .withPresentableText("procedure <procedure name> is begin .. end;")
+                .withTypeText(text, false)
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "procedure proc1 \n" +
+                                "is\n" +
+                                "begin\n" +
+                                "NULL;\n" +
+                                "end;\n";
+
+                        insertPrefix(context, editor, prefix);
+
+                    }
+                })
+                .withStrikeoutness(false);
+
+        return new ProcedureLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 6));
     }
 
+
+    private static void insertPrefix(final InsertionContext context, final Editor editor, String prefix) {
+
+        insertPrefix(context, editor, prefix, Procedure.class, new BaseLookupDecorator.PopupBuilder<Procedure>() {
+            @Override
+            public ParamProviderPopup createPopup(final Procedure e) {
+                 final CreateProcedure f = new CreateProcedure(
+                        e.getEName(),
+                        e.getPackageName());
+
+                f.addCloseEventLister(new ParamProviderPopup.CloseEventListener() {
+                    @Override
+                    public void close(final boolean isOk) {
+                        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+                            public void run() {
+                                // User pressed OK, update procedure name
+                                if (isOk && !context.getProject().isDisposed()) {
+                                    try {
+                                        TextRange range = e.getEObjectName().getTextRange();
+                                        editor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), f.getName());
+                                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
+                                        editor.getCaretModel().moveToOffset(range.getStartOffset() + f.getName().length());
+
+                                    } catch (Throwable e) {
+                                        log.warn(e.getMessage());
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+                return f;
+            }
+        });
+
+    }
+
+
+    public static LookupElement createSpec(String text) {
+        // TODO - implement me
+        return null;  //To change body of created methods use File | Settings | File Templates.
+    }
 }
-

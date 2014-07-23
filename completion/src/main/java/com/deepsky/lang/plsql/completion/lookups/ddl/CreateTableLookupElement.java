@@ -24,8 +24,10 @@
 package com.deepsky.lang.plsql.completion.lookups.ddl;
 
 import com.deepsky.lang.plsql.completion.lookups.DDLLookupElementBase;
+import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
 import com.deepsky.lang.plsql.completion.lookups.TableLookupElement;
 import com.deepsky.view.Icons;
+import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
@@ -39,39 +41,63 @@ public class CreateTableLookupElement<T extends LookupElement> extends DDLLookup
         super(delegate);
     }
 
-    public static CreateTableLookupElement create() {
-        LookupElement e = LookupElementBuilder.create("select")
-//                .withTailText(it.getTail(), true)
-//                .withTypeText(it.getType())
-//                .withIcon(it.getIcon())
-                .withPresentableText("create table ... ()")
+    public static CreateTableLookupElement createRegular() {
+        LookupElement e = LookupElementBuilder.create("create table")
+                .withTypeText("Create regular table", true)
+                .withIcon(Icons.TABLE)
+                .withPresentableText("create table <table name> (..)")
                 .withCaseSensitivity(false)
-                .withStrikeoutness(false); //it.isStrikeout());
+                .withStrikeoutness(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "create table (\n);";
+                        prefix = adoptPrefix(item.getLookupString(), editor.getDocument().getText(), context.getStartOffset(), prefix);
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+
+                        final Document document = editor.getDocument();
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+
+                        editor.getCaretModel().moveToOffset(context.getTailOffset()-3);
+
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                });
 
         return new CreateTableLookupElement<LookupElement>(e);
     }
 
 
-    public void handleInsert(InsertionContext context) {
+    public static CreateTableLookupElement createTemporary() {
+        LookupElement e = LookupElementBuilder.create("create temporary table")
+                .withTypeText("Create temporary table", true)
+                .withIcon(Icons.TEMP_TABLE)
+                .withPresentableText("create temporary table <table name> (..) on commit ..")
+                .withCaseSensitivity(false)
+                .withStrikeoutness(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
+                    @Override
+                    public void handleInsert(InsertionContext context, LookupElement item) {
+                        final Editor editor = context.getEditor();
+                        String prefix = "create temporary table (\n) on commit preserve rows;";
+                        prefix = adoptPrefix(
+                                item.getLookupString(),
+                                editor.getDocument().getText(),
+                                context.getStartOffset(), prefix);
 
-        final Editor editor = context.getEditor();
-        String prefix = "create table ();"; //it.getQualifyName(); //forceUsingTableAlias);
-        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
-        emulateInsertion(TableLookupElement.create("", Icons.TABLE), context.getTailOffset(), context);
+                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
 
-//                setOffsets(context, offset, offset);
+                        final Document document = editor.getDocument();
+                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
 
-        //final Editor editor = context.getEditor();
-        int offset = editor.getCaretModel().getOffset() + prefix.length() + 1;
-        final Document document = editor.getDocument();
-        LookupElement item = TableLookupElement.create("", Icons.TABLE);
-        final String lookupString = item.getLookupString();
+                        editor.getCaretModel().moveToOffset(context.getTailOffset()-4);
 
-        document.insertString(offset, lookupString);
-        editor.getCaretModel().moveToOffset(context.getTailOffset());
-        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
-        item.handleInsert(context);
+                        LookupUtils.scheduleAutoPopup(editor, context);
+                    }
+                });
 
+        return new CreateTableLookupElement<LookupElement>(e);
     }
 
 

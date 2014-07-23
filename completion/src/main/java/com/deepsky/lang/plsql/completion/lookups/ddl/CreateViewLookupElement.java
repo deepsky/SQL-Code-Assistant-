@@ -39,7 +39,7 @@ public class CreateViewLookupElement<T extends LookupElement> extends DDLLookupE
         super(delegate);
     }
 
-    public static CreateTableLookupElement create() {//} String table_alias, final VariantsProviderImpl.ColumnElement it, boolean forceUsingTableAlias) {
+    public static CreateViewLookupElement create() {//} String table_alias, final VariantsProviderImpl.ColumnElement it, boolean forceUsingTableAlias) {
         LookupElement e = LookupElementBuilder.create("select")//it.getName())
 //                .withTailText(it.getTail(), true)
 //                .withTypeText(it.getType())
@@ -50,7 +50,7 @@ public class CreateViewLookupElement<T extends LookupElement> extends DDLLookupE
 
 //        String _leId = it.getName() + (it.getTail() != null ? it.getTail() : "")
 //                + (it.tableAlias!=null? it.tableAlias: "");
-        return new CreateTableLookupElement<LookupElement>(e);
+        return new CreateViewLookupElement<LookupElement>(e);
     }
 
 
