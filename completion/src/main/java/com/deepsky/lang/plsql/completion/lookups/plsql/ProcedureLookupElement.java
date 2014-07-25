@@ -23,34 +23,23 @@
 
 package com.deepsky.lang.plsql.completion.lookups.plsql;
 
-import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
-import com.deepsky.lang.plsql.completion.lookups.UI.CreateFunction;
+import com.deepsky.lang.plsql.completion.lookups.UI.CreateOrReplaceProcedure;
 import com.deepsky.lang.plsql.completion.lookups.UI.CreateProcedure;
-import com.deepsky.lang.plsql.completion.lookups.UI.ParamProviderPopup;
-import com.deepsky.lang.plsql.psi.Function;
+import com.deepsky.lang.plsql.psi.Executable;
 import com.deepsky.lang.plsql.psi.Procedure;
-import com.deepsky.lang.plsql.struct.Type;
-import com.deepsky.lang.plsql.workarounds.LoggerProxy;
+import com.deepsky.lang.plsql.psi.ProcedureSpec;
 import com.deepsky.view.Icons;
-import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.codeInsight.lookup.LookupElementDecorator;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.codeStyle.CodeStyleManager;
 
 
-public class ProcedureLookupElement <T extends LookupElement> extends BaseLookupDecorator<T> {
-
-    static LoggerProxy log = LoggerProxy.getInstance("#ProcedureLookupElement");
+public class ProcedureLookupElement<T extends LookupElement> extends BaseLookupDecorator<T> {
 
     protected ProcedureLookupElement(T delegate) {
         super(delegate);
@@ -60,21 +49,45 @@ public class ProcedureLookupElement <T extends LookupElement> extends BaseLookup
     public static ProcedureLookupElement create() {
         LookupElement e = LookupElementBuilder.create("create procedure")
                 .withIcon(Icons.PROCEDURE_BODY)
-                .withPresentableText("create procedure <procedure name> is begin .. end;")
+                .withPresentableText("create procedure <procedure name> is begin .. end")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
-                    public void handleInsert(InsertionContext context, LookupElement item) {
-                        final Editor editor = context.getEditor();
-                        String prefix = "create or replace procedure proc1\n" +
+                    public void handleInsert(final InsertionContext context, LookupElement item) {
+                        String prefix = "create procedure proc1\n" +
                                 "is\n" +
                                 "begin\n" +
                                 "NULL;\n" +
                                 "end;\n" +
                                 "/";
 
-                        insertPrefix(context, editor, prefix);
+                        final CreateOrReplaceProcedure f = new CreateOrReplaceProcedure("proc1");
+                        insertPrefix2(context, prefix, f, Procedure.class, new InsertionHandler<Procedure>() {
+                            @Override
+                            public void handle(Editor editor, Procedure e) {
+                                int startOffset = e.getTextRange().getStartOffset();
+                                int endOffset = e.getTextRange().getEndOffset();
 
+                                TextRange range = e.getEObjectName().getTextRange();
+                                int increment = f.getName().length() - range.getLength();
+                                editor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), f.getName());
+
+                                // Add "OR REPLACE"
+                                String procText = editor.getDocument().getText().substring(
+                                        startOffset,
+                                        endOffset + increment);
+                                Executable exec = insertOrReplace(procText);
+                                int cursorOffset = startOffset + exec.getEObjectName().getTextRange().getEndOffset();
+
+                                editor.getDocument().replaceString(
+                                        startOffset,
+                                        endOffset + increment,
+                                        exec.getText());
+
+                                PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
+                                editor.getCaretModel().moveToOffset(cursorOffset);
+                            }
+                        });
                     }
                 })
                 .withStrikeoutness(false);
@@ -84,50 +97,33 @@ public class ProcedureLookupElement <T extends LookupElement> extends BaseLookup
     }
 
 
-    public static ProcedureLookupElement createOrReplace() {
-        LookupElement e = LookupElementBuilder.create("create or replace procedure")
-                .withIcon(Icons.PROCEDURE_BODY)
-                .withPresentableText("create or replace procedure <procedure name> is begin .. end;")
-                .withCaseSensitivity(false)
-                .withInsertHandler(new InsertHandler<LookupElement>() {
-                    @Override
-                    public void handleInsert(InsertionContext context, LookupElement item) {
-                        final Editor editor = context.getEditor();
-                        String prefix = "create or replace procedure proc1\n" +
-                                "is\n" +
-                                "begin\n" +
-                                "NULL;\n" +
-                                "end;\n" +
-                                "/";
-
-                        insertPrefix(context, editor, prefix);
-
-                    }
-                })
-                .withStrikeoutness(false);
-
-        return new ProcedureLookupElement<LookupElement>(
-                PrioritizedLookupElement.withGrouping(e, 6));
-    }
-
-
-    public static ProcedureLookupElement createBody(String text) {
+    public static ProcedureLookupElement createBody(final String text) {
         LookupElement e = LookupElementBuilder.create("procedure")
                 .withIcon(Icons.PROCEDURE_BODY)
-                .withPresentableText("procedure <procedure name> is begin .. end;")
+                .withPresentableText("procedure <procedure name> is begin .. end")
                 .withTypeText(text, false)
+                .withTailText("(Body)", true)
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
-                    public void handleInsert(InsertionContext context, LookupElement item) {
-                        final Editor editor = context.getEditor();
+                    public void handleInsert(final InsertionContext context, LookupElement item) {
                         String prefix = "procedure proc1 \n" +
                                 "is\n" +
                                 "begin\n" +
                                 "NULL;\n" +
                                 "end;\n";
 
-                        insertPrefix(context, editor, prefix);
+                        final CreateProcedure f = new CreateProcedure("proc1", text);
+                        insertPrefix2(context, prefix, f, Procedure.class, new InsertionHandler<Procedure>() {
+                            @Override
+                            public void handle(Editor editor, Procedure e) {
+                                TextRange range = e.getEObjectName().getTextRange();
+                                int cursorOffset = range.getStartOffset() + f.getName().length();
+                                editor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), f.getName());
+                                PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
+                                editor.getCaretModel().moveToOffset(cursorOffset);
+                            }
+                        });
 
                     }
                 })
@@ -138,45 +134,35 @@ public class ProcedureLookupElement <T extends LookupElement> extends BaseLookup
     }
 
 
-    private static void insertPrefix(final InsertionContext context, final Editor editor, String prefix) {
-
-        insertPrefix(context, editor, prefix, Procedure.class, new BaseLookupDecorator.PopupBuilder<Procedure>() {
-            @Override
-            public ParamProviderPopup createPopup(final Procedure e) {
-                 final CreateProcedure f = new CreateProcedure(
-                        e.getEName(),
-                        e.getPackageName());
-
-                f.addCloseEventLister(new ParamProviderPopup.CloseEventListener() {
+    public static LookupElement createSpec(final String text) {
+        LookupElement e = LookupElementBuilder.create("procedure")
+                .withIcon(Icons.PROCEDURE_SPEC)
+                .withPresentableText("procedure <procedure name>")
+                .withTailText("(Specification)", true)
+                .withTypeText(text, false)
+                .withCaseSensitivity(false)
+                .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
-                    public void close(final boolean isOk) {
-                        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                            public void run() {
-                                // User pressed OK, update procedure name
-                                if (isOk && !context.getProject().isDisposed()) {
-                                    try {
-                                        TextRange range = e.getEObjectName().getTextRange();
-                                        editor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), f.getName());
-                                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
-                                        editor.getCaretModel().moveToOffset(range.getStartOffset() + f.getName().length());
+                    public void handleInsert(final InsertionContext context, LookupElement item) {
+                        String prefix = "procedure proc1;";
 
-                                    } catch (Throwable e) {
-                                        log.warn(e.getMessage());
-                                    }
-                                }
+                        final CreateProcedure f = new CreateProcedure("proc1", text);
+                        insertPrefix2(context, prefix, f, ProcedureSpec.class, new InsertionHandler<ProcedureSpec>() {
+                            @Override
+                            public void handle(Editor editor, ProcedureSpec e) {
+                                TextRange range = e.getEObjectName().getTextRange();
+                                int cursorOffset = range.getStartOffset() + f.getName().length();
+                                editor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), f.getName());
+                                PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
+                                editor.getCaretModel().moveToOffset(cursorOffset);
                             }
                         });
+
                     }
-                });
-                return f;
-            }
-        });
+                })
+                .withStrikeoutness(false);
 
-    }
-
-
-    public static LookupElement createSpec(String text) {
-        // TODO - implement me
-        return null;  //To change body of created methods use File | Settings | File Templates.
+        return new ProcedureLookupElement<LookupElement>(
+                PrioritizedLookupElement.withGrouping(e, 6));
     }
 }

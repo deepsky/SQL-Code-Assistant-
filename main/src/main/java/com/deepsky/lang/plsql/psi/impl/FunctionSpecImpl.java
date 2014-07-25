@@ -83,6 +83,15 @@ public class FunctionSpecImpl extends PlSqlElementBase implements FunctionSpec {
         }
     }
 
+    @Override
+    public PsiElement getReturnTypeElement() {
+        PsiElement type = this.findChildByType(PLSqlTypesAdopted.RETURN_TYPE);
+        if (type == null) {
+            throw new SyntaxTreeCorruptedException();
+        }
+        return type;
+    }
+
     public String getPackageName() {
         PsiElement parent = this.getParent();
         if (parent instanceof PackageBody) {

@@ -26,10 +26,16 @@ package com.deepsky.lang.plsql.completion.lookups.plsql;
 import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
 import com.deepsky.lang.plsql.completion.lookups.UI.ObjectUIBuilder;
 import com.deepsky.lang.plsql.completion.lookups.UI.ParamProviderPopup;
+import com.deepsky.lang.plsql.psi.Executable;
+import com.deepsky.lang.plsql.psi.Function;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
+import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiDocumentManager;
@@ -37,6 +43,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 
 public class BaseLookupDecorator <T extends LookupElement> extends LookupElementDecorator<T> {
+
+    static LoggerProxy log = LoggerProxy.getInstance("#BaseLookupDecorator");
 
     protected BaseLookupDecorator(T delegate) {
         super(delegate);
@@ -82,5 +90,57 @@ public class BaseLookupDecorator <T extends LookupElement> extends LookupElement
             }
         }
     }
+
+
+    protected static interface InsertionHandler <T extends PlSqlElement> {
+        void handle(Editor editor, T e);
+    }
+
+    protected static <T extends PlSqlElement> void insertPrefix2(
+            final InsertionContext context, String prefix, final ParamProviderPopup f,
+            Class<T> target, final InsertionHandler<T> handler) {
+
+        insertPrefix(context, context.getEditor(), prefix, target, new BaseLookupDecorator.PopupBuilder<T>() {
+            @Override
+            public ParamProviderPopup createPopup(final T e) {
+                f.addCloseEventLister(new ParamProviderPopup.CloseEventListener() {
+                    @Override
+                    public void close(final boolean isOk) {
+                        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+                            public void run() {
+                                // User pressed OK, update procedure name
+                                if (isOk && !context.getProject().isDisposed()) {
+                                    try {
+                                        handler.handle(context.getEditor(), e);
+                                    } catch (Throwable e) {
+                                        log.warn(e.getMessage());
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+                return f;
+            }
+        });
+    }
+
+
+
+
+    protected static Executable insertOrReplace(String text) {
+        MarkupGeneratorEx2 generator = new MarkupGeneratorEx2();
+        ASTNode root = generator.parse(text);
+        Executable func1 = (Executable) root.getFirstChildNode().getPsi();
+        String adoptedText = text;
+        if(!func1.createOrReplace()){
+            // Add "OR REPLACE"
+            adoptedText = text.replaceFirst("^create (?i)", "create or replace ");
+        }
+
+        root = generator.parse(adoptedText);
+        return (Executable) root.getFirstChildNode().getPsi();
+    }
+
 
 }

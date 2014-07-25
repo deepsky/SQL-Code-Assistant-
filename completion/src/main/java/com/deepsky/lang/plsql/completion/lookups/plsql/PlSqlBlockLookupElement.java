@@ -48,9 +48,13 @@ public class PlSqlBlockLookupElement<T extends LookupElement> extends LookupElem
     }
 
     public static PlSqlBlockLookupElement create(final boolean doFinalize) {
-        LookupElement e = LookupElementBuilder.create("begin")
+        String typeText;
+        if(doFinalize) typeText = "Create anonymous PL/SQL block";
+        else typeText = "Create PL/SQL block";
+
+        LookupElementBuilder e = LookupElementBuilder.create("begin")
                 .withPresentableText("begin .. end")
-                .withTypeText("Create PL/SQL block")
+                .withTypeText(typeText)
                 .withCaseSensitivity(false)
                 .withStrikeoutness(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
@@ -105,7 +109,7 @@ public class PlSqlBlockLookupElement<T extends LookupElement> extends LookupElem
                         final int indentSize = styleSettings.getIndentSize(PlSqlFileType.FILE_TYPE);
                         final LogicalPosition pos = new LogicalPosition(line+1, column-7+indentSize);
 
-                        String prefix = "declare\n\t\nbegin\n\t\nend;\n/\n";
+                        String prefix = "declare\n\t\nbegin\n\tNULL;\nend;\n/\n";
                         editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
 
                         final Document document = editor.getDocument();

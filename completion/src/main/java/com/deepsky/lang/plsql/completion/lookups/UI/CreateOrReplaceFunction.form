@@ -44,7 +44,33 @@
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <model>
+                <item value="BLOB"/>
+                <item value="CLOB"/>
+                <item value="NCLOB"/>
+                <item value="DATE"/>
+                <item value="TIMESTAMP"/>
+                <item value="TIMESTAMP WITH TIME ZONE"/>
+                <item value="TIMESTAMP WITH LOCAL TIME ZONE"/>
+                <item value="INTERVAL DAY TO SECOND"/>
+                <item value="INTERVAL YEAR TO MONTH"/>
+                <item value="INTEGER"/>
+                <item value="NUMBER"/>
+                <item value="DECIMAL"/>
+                <item value="DOUBLE PRECISION"/>
+                <item value="FLOAT"/>
+                <item value="INT"/>
+                <item value="NUMERIC"/>
+                <item value="CHAR"/>
+                <item value="VARCHAR"/>
+                <item value="VARCHAR2"/>
+                <item value="NCHAR"/>
+                <item value="NVARCHAR2"/>
+                <item value="RAW"/>
+                <item value="ROWID"/>
+              </model>
+            </properties>
           </component>
           <component id="2a39" class="javax.swing.JCheckBox" binding="crOrUpCheckBox">
             <constraints>

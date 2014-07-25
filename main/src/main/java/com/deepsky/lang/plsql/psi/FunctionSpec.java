@@ -26,7 +26,10 @@
 package com.deepsky.lang.plsql.psi;
 
 import com.deepsky.lang.plsql.struct.Type;
+import com.intellij.psi.PsiElement;
 
 public interface FunctionSpec extends ExecutableSpec {
     Type getReturnType();
+
+    PsiElement getReturnTypeElement();
 }

@@ -126,18 +126,27 @@ public class PlSqlProcessor extends CompletionBase {
     public void packageBodyAsFuncProc(C_Context ctx, ASTNode pkgName) {
         ctx.addElement(ProcedureLookupElement.createBody(pkgName.getText()));
         ctx.addElement(FunctionLookupElement.createBody(pkgName.getText()));
+
+        ctx.addElement(ProcedureLookupElement.createSpec(pkgName.getText()));
+        ctx.addElement(FunctionLookupElement.createSpec(pkgName.getText()));
     }
 
     @SyntaxTreePath("/..#PACKAGE_BODY/#CREATE ..#ERROR_TOKEN_A/#PACKAGE #BODY 1#PACKAGE_NAME #IS #C_MARKER")
     public void packageBodyIsFuncProc(C_Context ctx, ASTNode pkgName) {
         ctx.addElement(ProcedureLookupElement.createBody(pkgName.getText()));
         ctx.addElement(FunctionLookupElement.createBody(pkgName.getText()));
+
+        ctx.addElement(ProcedureLookupElement.createSpec(pkgName.getText()));
+        ctx.addElement(FunctionLookupElement.createSpec(pkgName.getText()));
     }
 
     @SyntaxTreePath("/..#PACKAGE_BODY/#CREATE ..#BODY 1#PACKAGE_NAME #AS ..#ERROR_TOKEN_A/#C_MARKER")
     public void packageBodyAsFuncProc2(C_Context ctx, ASTNode pkgName) {
         ctx.addElement(ProcedureLookupElement.createBody(pkgName.getText()));
         ctx.addElement(FunctionLookupElement.createBody(pkgName.getText()));
+
+        ctx.addElement(ProcedureLookupElement.createSpec(pkgName.getText()));
+        ctx.addElement(FunctionLookupElement.createSpec(pkgName.getText()));
     }
 
     @SyntaxTreePath("/..#PACKAGE_SPEC/#CREATE ..#ERROR_TOKEN_A/#PACKAGE 1#PACKAGE_NAME #AS #C_MARKER")
@@ -162,8 +171,18 @@ public class PlSqlProcessor extends CompletionBase {
         collectTypeNames(ctx, false);
    }
 
+    @SyntaxTreePath("//..#FUNCTION_SPEC/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#IDENTIFIER #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void funcParameterTypeInSpec(C_Context ctx) {
+        collectTypeNames(ctx, false);
+    }
+
     @SyntaxTreePath("//..#PROCEDURE_BODY/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#IDENTIFIER #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
     public void procParameterType(C_Context ctx) {
+        collectTypeNames(ctx, false);
+    }
+
+    @SyntaxTreePath("//..#PROCEDURE_SPEC/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#IDENTIFIER #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void procParameterTypeInSpec(C_Context ctx) {
         collectTypeNames(ctx, false);
     }
 }

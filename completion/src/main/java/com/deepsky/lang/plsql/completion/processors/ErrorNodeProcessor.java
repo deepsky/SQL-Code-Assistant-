@@ -74,7 +74,7 @@ public class ErrorNodeProcessor extends CompletionBase {
         ctx.addElement(PlSqlPackageLookupElement.createPackage());
         ctx.addElement(PlSqlPackageLookupElement.createPackageBody());
         ctx.addElement(ProcedureLookupElement.create());
-        ctx.addElement(ProcedureLookupElement.createOrReplace());
+//        ctx.addElement(ProcedureLookupElement.createOrReplace());
         ctx.addElement(FunctionLookupElement.create());
         //ctx.addElement(FunctionLookupElement.createOrReplace());
 
