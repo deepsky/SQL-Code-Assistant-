@@ -211,4 +211,29 @@ public class PlSqlProcessor extends CompletionBase {
     public void procParameterTypeInSpec(C_Context ctx) {
         collectTypeNames(ctx, false);
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //////// Variable Decl
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    @SyntaxTreePath("/..#PACKAGE_SPEC/..#PACKAGE_NAME #IS ..#VARIABLE_DECLARATION/#VARIABLE_NAME #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void varDeclInPackageSpecIS(C_Context ctx) {
+        collectTypeNames(ctx, true);
+    }
+
+    @SyntaxTreePath("/..#PACKAGE_SPEC/..#PACKAGE_NAME #AS ..#VARIABLE_DECLARATION/#VARIABLE_NAME #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void varDeclInPackageSpecAS(C_Context ctx) {
+        collectTypeNames(ctx, true);
+    }
+
+    @SyntaxTreePath("/..#PACKAGE_BODY/..#PACKAGE_NAME #IS ..#VARIABLE_DECLARATION/#VARIABLE_NAME #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void varDeclInPackageBodyIS(C_Context ctx) {
+        collectTypeNames(ctx, true);
+    }
+
+    @SyntaxTreePath("/..#PACKAGE_BODY/..#PACKAGE_NAME #AS ..#VARIABLE_DECLARATION/#VARIABLE_NAME #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void varDeclInPackageBodyAS(C_Context ctx) {
+        collectTypeNames(ctx, true);
+    }
 }
