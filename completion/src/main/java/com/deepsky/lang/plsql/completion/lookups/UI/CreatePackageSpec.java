@@ -23,12 +23,50 @@
 
 package com.deepsky.lang.plsql.completion.lookups.UI;
 
-/**
- * Created with IntelliJ IDEA.
- * User: sky
- * Date: 7/22/14
- * Time: 8:50 AM
- * To change this template use File | Settings | File Templates.
- */
-public class CreatePackageSpec {
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CreatePackageSpec extends ParamProviderPopup{
+    private JTextField textField1;
+    private JButton cancelButton;
+    private JButton OKButton;
+    private JPanel rootPanel;
+
+    public CreatePackageSpec(String pkgName) {
+        super("Create Package Specification");
+        textField1.setText(pkgName);
+
+        OKButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fireOKevent();
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fireCancelEvent();
+            }
+        });
+
+        OKButton.addKeyListener(new KeyListener());
+        textField1.addKeyListener(new KeyListener());
+    }
+
+    @Override
+    public JComponent getRootComponent() {
+        return rootPanel;
+    }
+
+    @Override
+    public JComponent getFocusedComponent() {
+        return textField1;
+    }
+
+    @Override
+    public String getName() {
+        return textField1.getText();
+    }
 }

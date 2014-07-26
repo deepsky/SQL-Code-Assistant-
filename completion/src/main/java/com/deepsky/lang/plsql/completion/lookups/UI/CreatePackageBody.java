@@ -24,18 +24,40 @@
 package com.deepsky.lang.plsql.completion.lookups.UI;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CreatePackageBody implements ParamProviderPopup {
-    private JButton button1;
-    private JButton button2;
+public class CreatePackageBody extends ParamProviderPopup {
+    private JButton cancelButton;
+    private JButton OKButton;
     private JCheckBox initSectionCheckBox;
     private JTextField packageName;
     private JPanel rootPanel;
 
-    @Override
-    public void addCloseEventLister(CloseEventListener c) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public CreatePackageBody(String pkgName) {
+        super("Create Package Body");
+        packageName.setText(pkgName);
+
+        OKButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fireOKevent();
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fireCancelEvent();
+            }
+        });
+
+        OKButton.addKeyListener(new KeyListener());
+        packageName.addKeyListener(new KeyListener());
     }
+
 
     @Override
     public JComponent getRootComponent() {
@@ -48,13 +70,11 @@ public class CreatePackageBody implements ParamProviderPopup {
     }
 
     @Override
-    public String getTitle() {
-        return "Create Package Body";
-    }
-
-    @Override
     public String getName() {
         return packageName.getText();
     }
 
+    public boolean insertInitSection(){
+        return initSectionCheckBox.isSelected();
+    }
 }

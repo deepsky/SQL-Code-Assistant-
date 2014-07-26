@@ -23,17 +23,35 @@
 
 package com.deepsky.lang.plsql.completion.lookups.UI;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface ParamProviderPopup {
+public abstract class ParamProviderPopup {
+    private String title;
 
-    void addCloseEventLister(CloseEventListener c);
+    private List<CloseEventListener> listeners= new ArrayList<CloseEventListener>();
 
-    JComponent getRootComponent();
+    public ParamProviderPopup(String title){
+        this.title = title;
 
-    JComponent getFocusedComponent();
+    }
 
-    interface CloseEventListener {
+    public void addCloseEventLister(CloseEventListener c) {
+        if(c != null){
+            listeners.add(c);
+        }
+    }
+
+    public abstract JComponent getRootComponent();
+
+    public abstract JComponent getFocusedComponent();
+
+    public interface CloseEventListener {
         /**
          * Notify about user initiated closing
          *
@@ -43,7 +61,31 @@ public interface ParamProviderPopup {
 
     }
 
-    String getTitle();
+    public String getTitle(){
+        return title;
+    }
 
-    String getName();
+    public abstract String getName();
+
+
+    protected void fireCancelEvent() {
+        for(CloseEventListener e: listeners){
+            e.close(false);
+        }
+    }
+
+    protected void fireOKevent() {
+        for(CloseEventListener e: listeners){
+            e.close(true);
+        }
+    }
+
+    protected class KeyListener extends KeyAdapter {
+        public void keyPressed(@NotNull KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                fireOKevent();
+            }
+        }
+    }
+
 }

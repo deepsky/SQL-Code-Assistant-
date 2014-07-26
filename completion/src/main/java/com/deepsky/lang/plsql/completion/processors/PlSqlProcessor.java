@@ -149,6 +149,21 @@ public class PlSqlProcessor extends CompletionBase {
         ctx.addElement(FunctionLookupElement.createSpec(pkgName.getText()));
     }
 
+    @SyntaxTreePath("/..#PACKAGE_BODY/..#PACKAGE_INIT_SECTION/#BEGIN #STATEMENT_LIST/..#PROCEDURE_CALL/#CALLABLE_NAME_REF/#EXEC_NAME_REF/#C_MARKER")
+    public void startInPackageBodyInitSection(C_Context ctx) {
+        //ctx.addElement(SelectLookupElement.createSelectInto());
+        // TODO - check on the list of permissible statements in INIT section
+        ctx.addElement(UpdateLookupElement.create());
+        ctx.addElement(DeleteLookupElement.create());
+        ctx.addElement(InsertLookupElement.create());
+
+        ctx.addElement(KeywordLookupElement.create("commit", false, true));
+        ctx.addElement(KeywordLookupElement.create("rollback", false, true));
+
+        ctx.addElement(PlSqlBlockLookupElement.create(false));
+    }
+
+
     @SyntaxTreePath("/..#PACKAGE_SPEC/#CREATE ..#ERROR_TOKEN_A/#PACKAGE 1#PACKAGE_NAME #AS #C_MARKER")
     public void packageAsFuncProc(C_Context ctx, ASTNode pkgName) {
         ctx.addElement(ProcedureLookupElement.createSpec(pkgName.getText()));
@@ -161,6 +176,17 @@ public class PlSqlProcessor extends CompletionBase {
         ctx.addElement(FunctionLookupElement.createSpec(pkgName.getText()));
     }
 
+    @SyntaxTreePath("/..#PACKAGE_SPEC/#CREATE #PACKAGE 1#PACKAGE_NAME #AS ..#ERROR_TOKEN_A/#C_MARKER")
+    public void packageAsFuncProc2(C_Context ctx, ASTNode pkgName) {
+        ctx.addElement(ProcedureLookupElement.createSpec(pkgName.getText()));
+        ctx.addElement(FunctionLookupElement.createSpec(pkgName.getText()));
+    }
+
+    @SyntaxTreePath("/..#PACKAGE_SPEC/#CREATE #PACKAGE 1#PACKAGE_NAME #IS ..#ERROR_TOKEN_A/#C_MARKER")
+    public void packageIsFuncProc2(C_Context ctx, ASTNode pkgName) {
+        ctx.addElement(ProcedureLookupElement.createSpec(pkgName.getText()));
+        ctx.addElement(FunctionLookupElement.createSpec(pkgName.getText()));
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////
     //////// Parameter Spec

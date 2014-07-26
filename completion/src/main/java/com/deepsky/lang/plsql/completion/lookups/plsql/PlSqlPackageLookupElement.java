@@ -24,6 +24,10 @@
 package com.deepsky.lang.plsql.completion.lookups.plsql;
 
 import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
+import com.deepsky.lang.plsql.completion.lookups.UI.CreatePackageBody;
+import com.deepsky.lang.plsql.completion.lookups.UI.CreatePackageSpec;
+import com.deepsky.lang.plsql.psi.PackageBody;
+import com.deepsky.lang.plsql.psi.PackageSpec;
 import com.deepsky.view.Icons;
 import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.completion.InsertHandler;
@@ -31,22 +35,21 @@ import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.codeInsight.lookup.LookupElementDecorator;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 
 import javax.swing.*;
 
-public class PlSqlPackageLookupElement<T extends LookupElement> extends LookupElementDecorator<T> {
+public class PlSqlPackageLookupElement<T extends LookupElement> extends BaseLookupDecorator<T> {
 
     protected PlSqlPackageLookupElement(T delegate) {
         super(delegate);
     }
 
 
-    public static PlSqlPackageLookupElement create(String name, Icon icon){
+    public static PlSqlPackageLookupElement create(String name, Icon icon) {
         LookupElement e = LookupElementBuilder.create(name)
                 .withIcon(icon)
                 .withCaseSensitivity(false)
@@ -71,28 +74,34 @@ public class PlSqlPackageLookupElement<T extends LookupElement> extends LookupEl
     public static PlSqlPackageLookupElement createPackage() {
         LookupElement e = LookupElementBuilder.create("create package")
                 .withIcon(Icons.PACKAGE_SPEC)
-                .withPresentableText("create package <package name> as ... end;")
+                .withPresentableText("create package <package name> as ... end")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
-                    public void handleInsert(InsertionContext context, LookupElement item) {
-                        final Editor editor = context.getEditor();
-                        String prefix = "create package  as\nend;\n/";
-                        prefix = adoptPrefix(item.getLookupString(), editor.getDocument().getText(), context.getStartOffset(), prefix);
-                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
-                        final Document document = editor.getDocument();
+                    public void handleInsert(final InsertionContext context, LookupElement item) {
+//                        final Editor editor = context.getEditor();
+                        String prefix = "create package package1 as\nend;\n/";
 
-                        editor.getCaretModel().moveToOffset(context.getTailOffset() - 10);
-                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        final CreatePackageSpec f = new CreatePackageSpec("package1");
+                        insertPrefix2(context, prefix, f, PackageSpec.class, new BaseLookupDecorator.InsertionHandler<PackageSpec>() {
+                            @Override
+                            public void handle(Editor editor, PackageSpec e) {
+                                TextRange range = e.getPackageNameElement().getTextRange();
+                                int cursorOffset = range.getStartOffset() + f.getName().length();
+                                editor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), f.getName());
+                                PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
+                                editor.getCaretModel().moveToOffset(cursorOffset);
+                            }
+                        });
 
-/*
-                        int startOffset = context.getStartOffset();
-                        CodeStyleManager.getInstance(context.getProject()).reformatText(context.getFile(),
-                                startOffset,
-                                startOffset + prefix.length() + 1);
-*/
-
-                        LookupUtils.scheduleAutoPopup(editor, context);
+//                        prefix = adoptPrefix(item.getLookupString(), editor.getDocument().getText(), context.getStartOffset(), prefix);
+//                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+//                        final Document document = editor.getDocument();
+//
+//                        editor.getCaretModel().moveToOffset(context.getTailOffset() - 10);
+//                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+//
+//                        LookupUtils.scheduleAutoPopup(editor, context);
                     }
                 })
                 .withStrikeoutness(false);
@@ -102,7 +111,6 @@ public class PlSqlPackageLookupElement<T extends LookupElement> extends LookupEl
     }
 
     private static String adoptPrefix(String lookupString, String text, int endOffset, String prefix) {
-
         int i = endOffset;
         for (int cnt = lookupString.length() + 20; i > 0 && cnt > 0; cnt--, i--) ;
 
@@ -117,21 +125,42 @@ public class PlSqlPackageLookupElement<T extends LookupElement> extends LookupEl
     public static PlSqlPackageLookupElement createPackageBody() {
         LookupElement e = LookupElementBuilder.create("create package body")
                 .withIcon(Icons.PACKAGE_BODY)
-                .withPresentableText("create package body <package name> as ... end;")
+                .withPresentableText("create package body <package name> as ... end")
                 .withCaseSensitivity(false)
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
-                    public void handleInsert(InsertionContext context, LookupElement item) {
-                        final Editor editor = context.getEditor();
-                        String prefix = "create package body  as\nend;\n/";
-                        prefix = adoptPrefix(item.getLookupString(), editor.getDocument().getText(), context.getStartOffset(), prefix);
-                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
-                        final Document document = editor.getDocument();
+                    public void handleInsert(final InsertionContext context, LookupElement item) {
+                        String prefix = "create package body package1 as\n\nend;\n/\n";
 
-                        editor.getCaretModel().moveToOffset(context.getTailOffset() - 10);
-                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+                        final CreatePackageBody f = new CreatePackageBody("package1");
+                        insertPrefix2(context, prefix, f, PackageBody.class, new BaseLookupDecorator.InsertionHandler<PackageBody>() {
+                            @Override
+                            public void handle(Editor editor, PackageBody e) {
+                                String text1 = e.getText().replaceFirst("package1", f.getName());
+                                if (f.insertInitSection()) {
+                                    // Insert ... BEGIN\n\tNULL;
+                                    text1 = text1.replaceFirst("end;", "begin\n\tNULL;\nend;");
+                                }
 
-                        LookupUtils.scheduleAutoPopup(editor, context);
+                                TextRange range = e.getPackageNameElement().getTextRange();
+                                int cursorOffset = range.getStartOffset() + f.getName().length();
+                                editor.getDocument().replaceString(
+                                        e.getTextRange().getStartOffset(),
+                                        e.getTextRange().getEndOffset(), text1);
+
+                                PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
+                                editor.getCaretModel().moveToOffset(cursorOffset);
+                            }
+                        });
+
+//                        prefix = adoptPrefix(item.getLookupString(), editor.getDocument().getText(), context.getStartOffset(), prefix);
+//                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
+//                        final Document document = editor.getDocument();
+//
+//                        editor.getCaretModel().moveToOffset(context.getTailOffset() - 10);
+//                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
+
+//                        LookupUtils.scheduleAutoPopup(editor, context);
                     }
                 })
                 .withStrikeoutness(false);

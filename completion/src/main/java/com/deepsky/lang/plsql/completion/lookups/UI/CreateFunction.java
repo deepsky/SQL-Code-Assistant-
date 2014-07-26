@@ -30,7 +30,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateFunction implements FunctionParamPopup {
+public class CreateFunction extends FunctionParamPopup {
     private JPanel rootPanel;
     private JButton cancelButton;
     private JButton OKButton;
@@ -39,10 +39,8 @@ public class CreateFunction implements FunctionParamPopup {
     private JLabel packageOwnerName;
 
 
-    private List<CloseEventListener> listeners= new ArrayList<CloseEventListener>();
-
-
     public CreateFunction(String defaultFuncName, String defaultType, String pkgName) {
+        super("Create Function");
 
         textField1.setText(defaultFuncName);
         packageOwnerName.setText(pkgName);
@@ -67,37 +65,12 @@ public class CreateFunction implements FunctionParamPopup {
         comboBox1.addKeyListener(new KeyListener());
     }
 
-    private void fireCancelEvent() {
-        for(CloseEventListener e: listeners){
-            e.close(false);
-        }
-    }
-
-    private void fireOKevent() {
-        for(CloseEventListener e: listeners){
-            e.close(true);
-        }
-    }
-
     public JComponent getRootComponent() {
         return rootPanel;
     }
 
     public JComponent getFocusedComponent() {
         return textField1;
-    }
-
-    @Override
-    public String getTitle() {
-        return "Create Function";
-    }
-
-
-    @Override
-    public void addCloseEventLister(CloseEventListener c) {
-        if(c != null){
-            listeners.add(c);
-        }
     }
 
     public String getName() {
@@ -108,12 +81,4 @@ public class CreateFunction implements FunctionParamPopup {
         return (String) comboBox1.getModel().getSelectedItem();
     }
 
-
-    private class KeyListener extends KeyAdapter {
-        public void keyPressed(@NotNull KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                fireOKevent();
-            }
-        }
-    }
 }

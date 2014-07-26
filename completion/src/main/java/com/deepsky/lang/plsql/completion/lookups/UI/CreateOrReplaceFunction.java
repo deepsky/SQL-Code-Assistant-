@@ -30,7 +30,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateOrReplaceFunction implements FunctionParamPopup {
+public class CreateOrReplaceFunction extends FunctionParamPopup {
     private JTextField functionName;
     private JButton cancelButton;
     private JButton OKButton;
@@ -38,9 +38,8 @@ public class CreateOrReplaceFunction implements FunctionParamPopup {
     private JComboBox comboBox1;
     private JCheckBox crOrUpCheckBox;
 
-    private List<CloseEventListener> listeners= new ArrayList<CloseEventListener>();
-
     public CreateOrReplaceFunction(String defaultFuncName, String defaultType) {
+        super("Create Function");
 
         functionName.setText(defaultFuncName);
         comboBox1.getModel().setSelectedItem(defaultType);
@@ -51,7 +50,6 @@ public class CreateOrReplaceFunction implements FunctionParamPopup {
                 fireOKevent();
             }
         });
-
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,25 +67,6 @@ public class CreateOrReplaceFunction implements FunctionParamPopup {
         return crOrUpCheckBox.isSelected();
     }
 
-    private void fireCancelEvent() {
-        for(CloseEventListener e: listeners){
-            e.close(false);
-        }
-    }
-
-    private void fireOKevent() {
-        for(CloseEventListener e: listeners){
-            e.close(true);
-        }
-    }
-
-    @Override
-    public void addCloseEventLister(CloseEventListener c) {
-        if(c != null){
-            listeners.add(c);
-        }
-    }
-
     @Override
     public JComponent getRootComponent() {
         return rootPanel;
@@ -99,11 +78,6 @@ public class CreateOrReplaceFunction implements FunctionParamPopup {
     }
 
     @Override
-    public String getTitle() {
-        return "Create Function";
-    }
-
-    @Override
     public String getName() {
         return functionName.getText();
     }
@@ -111,14 +85,6 @@ public class CreateOrReplaceFunction implements FunctionParamPopup {
     @Override
     public String getFunctionType() {
         return (String) comboBox1.getModel().getSelectedItem();
-    }
-
-    private class KeyListener extends KeyAdapter {
-        public void keyPressed(@NotNull KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                fireOKevent();
-            }
-        }
     }
 
 }

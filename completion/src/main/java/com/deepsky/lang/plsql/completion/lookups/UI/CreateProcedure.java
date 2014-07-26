@@ -23,27 +23,19 @@
 
 package com.deepsky.lang.plsql.completion.lookups.UI;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 
-public class CreateProcedure implements ParamProviderPopup {
+public class CreateProcedure extends ParamProviderPopup {
     private JButton buttonCancel;
     private JButton buttonOk;
     private JTextField procedureName;
     private JTextField packageName;
     private JPanel rootPanel;
 
-    private List<CloseEventListener> listeners= new ArrayList<CloseEventListener>();
-
-
     public CreateProcedure(String eName, String pkgName) {
+        super("Create Procedure");
         procedureName.setText(eName);
         packageName.setText(pkgName);
 
@@ -65,26 +57,6 @@ public class CreateProcedure implements ParamProviderPopup {
         procedureName.addKeyListener(new KeyListener());
     }
 
-    private void fireCancelEvent() {
-        for(CloseEventListener e: listeners){
-            e.close(false);
-        }
-    }
-
-    private void fireOKevent() {
-        for(CloseEventListener e: listeners){
-            e.close(true);
-        }
-    }
-
-
-    @Override
-    public void addCloseEventLister(CloseEventListener c) {
-        if(c != null){
-            listeners.add(c);
-        }
-    }
-
     @Override
     public JComponent getRootComponent() {
         return rootPanel;
@@ -95,21 +67,8 @@ public class CreateProcedure implements ParamProviderPopup {
         return procedureName;
     }
 
-    @Override
-    public String getTitle() {
-        return "Create Procedure";
-    }
-
     public String getName() {
         return procedureName.getText();
-    }
-
-    private class KeyListener extends KeyAdapter {
-        public void keyPressed(@NotNull KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                fireOKevent();
-            }
-        }
     }
 
 }

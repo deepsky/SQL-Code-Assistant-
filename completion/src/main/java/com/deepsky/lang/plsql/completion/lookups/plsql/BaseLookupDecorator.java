@@ -42,7 +42,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 
-public class BaseLookupDecorator <T extends LookupElement> extends LookupElementDecorator<T> {
+public abstract class BaseLookupDecorator <T extends LookupElement> extends LookupElementDecorator<T> {
 
     static LoggerProxy log = LoggerProxy.getInstance("#BaseLookupDecorator");
 
@@ -52,7 +52,6 @@ public class BaseLookupDecorator <T extends LookupElement> extends LookupElement
 
     public static interface PopupBuilder<T extends PlSqlElement> {
         ParamProviderPopup createPopup(T e);
-
     }
 
 

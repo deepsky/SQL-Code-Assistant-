@@ -23,26 +23,19 @@
 
 package com.deepsky.lang.plsql.completion.lookups.UI;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 
-public class CreateOrReplaceProcedure implements ParamProviderPopup {
+public class CreateOrReplaceProcedure extends ParamProviderPopup {
     private JButton buttonCancel;
     private JTextField textField1;
     private JButton buttonOk;
     private JCheckBox crOrReplaceCheck;
     private JPanel rootPanel;
 
-    private List<CloseEventListener> listeners= new ArrayList<CloseEventListener>();
-
-    public CreateOrReplaceProcedure(String eName){
+    public CreateOrReplaceProcedure(String eName) {
+        super("Create Or Replace Procedure");
         textField1.setText(eName);
 
         buttonOk.addActionListener(new ActionListener() {
@@ -51,23 +44,14 @@ public class CreateOrReplaceProcedure implements ParamProviderPopup {
                 fireOKevent();
             }
         });
-
         buttonCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fireCancelEvent();
             }
         });
-
         buttonOk.addKeyListener(new KeyListener());
         textField1.addKeyListener(new KeyListener());
-    }
-
-    @Override
-    public void addCloseEventLister(CloseEventListener c) {
-        if(c != null){
-            listeners.add(c);
-        }
     }
 
     @Override
@@ -81,39 +65,12 @@ public class CreateOrReplaceProcedure implements ParamProviderPopup {
     }
 
     @Override
-    public String getTitle() {
-        return "Create Or Replace Procedure";
-    }
-
-    @Override
     public String getName() {
         return textField1.getText();
     }
 
-
-    private void fireCancelEvent() {
-        for(CloseEventListener e: listeners){
-            e.close(false);
-        }
-    }
-
-    private void fireOKevent() {
-        for(CloseEventListener e: listeners){
-            e.close(true);
-        }
-    }
-
     public boolean isCreateOrReplace() {
         return crOrReplaceCheck.isSelected();
-    }
-
-
-    private class KeyListener extends KeyAdapter {
-        public void keyPressed(@NotNull KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                fireOKevent();
-            }
-        }
     }
 
 }

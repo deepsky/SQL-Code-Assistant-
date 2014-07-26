@@ -23,6 +23,11 @@
 
 package com.deepsky.lang.plsql.completion.lookups.UI;
 
-public interface FunctionParamPopup extends ParamProviderPopup {
-    String getFunctionType();
+public abstract class FunctionParamPopup extends ParamProviderPopup {
+
+    public FunctionParamPopup(String title) {
+        super(title);
+    }
+
+    public abstract String getFunctionType();
 }
