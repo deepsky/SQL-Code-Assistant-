@@ -140,10 +140,6 @@ public class FunctionImpl extends PlSqlElementBase implements Function {
         return (PlSqlBlock) blk.getPsi();
     }
 
-    public boolean createOrReplace() {
-        return getText().matches("^create *or *replace (?i)");
-    }
-
     public ExecutableSpec getSpecification() {
         ResolveFacade facade = ((ResolveProvider) getContainingFile()).getResolver();
         return facade.findSpecificationFor(this);

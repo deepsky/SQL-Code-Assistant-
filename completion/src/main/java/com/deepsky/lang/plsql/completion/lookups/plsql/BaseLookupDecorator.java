@@ -29,6 +29,7 @@ import com.deepsky.lang.plsql.completion.lookups.UI.ParamProviderPopup;
 import com.deepsky.lang.plsql.psi.Executable;
 import com.deepsky.lang.plsql.psi.Function;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
+import com.deepsky.lang.plsql.psi.spices.CompilableObject;
 import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
 import com.intellij.codeInsight.completion.InsertionContext;
@@ -38,6 +39,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
@@ -88,6 +90,8 @@ public abstract class BaseLookupDecorator <T extends LookupElement> extends Look
                 b.show(editor.getComponent());
             }
         }
+
+        editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE); //RELATIVE);
     }
 
 
@@ -127,18 +131,18 @@ public abstract class BaseLookupDecorator <T extends LookupElement> extends Look
 
 
 
-    protected static Executable insertOrReplace(String text) {
+    protected static <T extends CompilableObject> T insertOrReplace(String text) {
         MarkupGeneratorEx2 generator = new MarkupGeneratorEx2();
         ASTNode root = generator.parse(text);
-        Executable func1 = (Executable) root.getFirstChildNode().getPsi();
+        T func1 = (T) root.getFirstChildNode().getPsi();
         String adoptedText = text;
         if(!func1.createOrReplace()){
             // Add "OR REPLACE"
-            adoptedText = text.replaceFirst("^create (?i)", "create or replace ");
+            adoptedText = text.replaceFirst("^create[ \n\t](?i)", "create or replace ");
         }
 
         root = generator.parse(adoptedText);
-        return (Executable) root.getFirstChildNode().getPsi();
+        return (T) root.getFirstChildNode().getPsi();
     }
 
 

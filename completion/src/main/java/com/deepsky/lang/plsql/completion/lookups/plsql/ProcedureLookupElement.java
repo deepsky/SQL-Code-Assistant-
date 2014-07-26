@@ -69,28 +69,31 @@ public class ProcedureLookupElement<T extends LookupElement> extends BaseLookupD
                                 int endOffset = e.getTextRange().getEndOffset();
 
                                 TextRange range = e.getEObjectName().getTextRange();
+                                int cursorOffset = range.getStartOffset() + f.getName().length();
                                 int increment = f.getName().length() - range.getLength();
                                 editor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), f.getName());
 
-                                // Add "OR REPLACE"
-                                String procText = editor.getDocument().getText().substring(
-                                        startOffset,
-                                        endOffset + increment);
-                                Executable exec = insertOrReplace(procText);
-                                int cursorOffset = startOffset + exec.getEObjectName().getTextRange().getEndOffset();
 
-                                editor.getDocument().replaceString(
-                                        startOffset,
-                                        endOffset + increment,
-                                        exec.getText());
+                                if (f.isCreateOrReplace()) {
+                                    // Add "OR REPLACE"
+                                    String procText = editor.getDocument().getText().substring(
+                                            startOffset,
+                                            endOffset + increment);
+                                    Procedure exec = insertOrReplace(procText);
+                                    cursorOffset = startOffset + exec.getEObjectName().getTextRange().getEndOffset();
+                                    editor.getDocument().replaceString(
+                                            startOffset,
+                                            endOffset + increment,
+                                            exec.getText());
+                                }
 
                                 PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
                                 editor.getCaretModel().moveToOffset(cursorOffset);
                             }
                         });
                     }
-                })
-                .withStrikeoutness(false);
+                }).
+                withStrikeoutness(false);
 
         return new ProcedureLookupElement<LookupElement>(
                 PrioritizedLookupElement.withGrouping(e, 6));

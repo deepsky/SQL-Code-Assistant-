@@ -205,7 +205,7 @@ public class FunctionLookupElement<T extends LookupElement> extends BaseLookupDe
                                         if(f instanceof CreateOrReplaceFunction && ((CreateOrReplaceFunction)f).isCreateOrReplace()){
                                             // Add "OR REPLACE"
                                             int textLength = funcText.length();
-                                            Executable exec = insertOrReplace(funcText);
+                                            Function exec = insertOrReplace(funcText);
                                             cursorOffset = e.getTextRange().getStartOffset() + exec.getEObjectName().getTextRange().getEndOffset();
                                             editor.getDocument().replaceString(
                                                     funcRange.getStartOffset(),
