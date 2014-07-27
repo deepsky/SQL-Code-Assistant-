@@ -123,6 +123,7 @@ public class ImportStep3Dialog extends JDialog {
             String[] columns = importDTO.getTableList().get(importDTO.getSelectedTable()).getColumnNames();
 
             String selected;
+
             @Override
             public void setSelectedItem(Object anItem) {
                 selected = (String) anItem;

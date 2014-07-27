@@ -1021,9 +1021,14 @@ create_table:
 create_temp_table:
     ("global")? "temporary"! (schema_name DOT!)? "table"! table_name_ddl
     (OPEN_PAREN! column_def (COMMA! (column_def|table_level_constraint))* CLOSE_PAREN!)?
-    ("on" "commit" ("preserve" | "delete") "rows" )
-    (cache_clause)?
+    (temp_table_params)+
     ("as" select_expression)?
+    ;
+
+temp_table_params:
+    ("on" "commit" ("preserve" | "delete") "rows" )
+    | ("tablespace" tablespace_name)
+    | (cache_clause)
     ;
 
 // NESTED TABLE ad_textdocs_ntab STORE AS textdocs_nestedtab

@@ -79,7 +79,7 @@ public class ErrorNodeProcessor extends CompletionBase {
         //ctx.addElement(FunctionLookupElement.createOrReplace());
 
         ctx.addElement(CreateTableLookupElement.createRegular());
-        ctx.addElement(CreateTableLookupElement.createTemporary());
+        //ctx.addElement(CreateTableLookupElement.createTemporary());
     }
 
     @SyntaxTreePath("/..#SEMI #C_MARKER")

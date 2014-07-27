@@ -23,6 +23,7 @@
 
 package com.deepsky.lang.plsql.completion.lookups.UI;
 
+import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -32,6 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CreateOrReplaceFunction extends FunctionParamPopup {
@@ -46,6 +48,8 @@ public class CreateOrReplaceFunction extends FunctionParamPopup {
         super("Create Function");
 
         functionName.setText(defaultFuncName);
+
+        comboBox1.setModel(new CollectionComboBoxModel(Arrays.asList(TYPES)));
         comboBox1.getModel().setSelectedItem(defaultType);
 
         OKButton.addActionListener(new ActionListener() {

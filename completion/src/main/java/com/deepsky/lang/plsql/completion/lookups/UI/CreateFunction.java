@@ -23,6 +23,7 @@
 
 package com.deepsky.lang.plsql.completion.lookups.UI;
 
+import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -32,6 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CreateFunction extends FunctionParamPopup {
@@ -48,6 +50,8 @@ public class CreateFunction extends FunctionParamPopup {
 
         textField1.setText(defaultFuncName);
         packageOwnerName.setText(pkgName);
+
+        comboBox1.setModel(new CollectionComboBoxModel(Arrays.asList(TYPES)));
         comboBox1.getModel().setSelectedItem(defaultType);
 
         OKButton.addActionListener(new ActionListener() {
@@ -120,6 +124,7 @@ public class CreateFunction extends FunctionParamPopup {
         label3.setText("Package:");
         panel1.add(label3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         packageOwnerName = new JLabel();
+        packageOwnerName.setFont(new Font(packageOwnerName.getFont().getName(), Font.BOLD, packageOwnerName.getFont().getSize()));
         packageOwnerName.setText("None");
         panel1.add(packageOwnerName, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();

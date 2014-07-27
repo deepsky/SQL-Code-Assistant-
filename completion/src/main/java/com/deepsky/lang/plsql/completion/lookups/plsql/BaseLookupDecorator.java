@@ -26,6 +26,7 @@ package com.deepsky.lang.plsql.completion.lookups.plsql;
 import com.deepsky.lang.plsql.completion.lookups.LookupUtils;
 import com.deepsky.lang.plsql.completion.lookups.UI.ObjectUIBuilder;
 import com.deepsky.lang.plsql.completion.lookups.UI.ParamProviderPopup;
+import com.deepsky.lang.plsql.formatter.settings.PlSqlCodeStyleSettings;
 import com.deepsky.lang.plsql.psi.Executable;
 import com.deepsky.lang.plsql.psi.Function;
 import com.deepsky.lang.plsql.psi.PlSqlElement;
@@ -43,6 +44,7 @@ import com.intellij.openapi.editor.ScrollType;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 
 public abstract class BaseLookupDecorator <T extends LookupElement> extends LookupElementDecorator<T> {
 
@@ -72,10 +74,18 @@ public abstract class BaseLookupDecorator <T extends LookupElement> extends Look
 
             PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
 
+            // Format text but keep location of the code
+            PlSqlCodeStyleSettings settings = CodeStyleSettingsManager.getSettings(context.getProject()).getCustomSettings(PlSqlCodeStyleSettings.class);
+            int old1 = settings.MAX_LINES_BETWEEN_FILE_LEVEL_STMT;
+            int old2 = settings.MAX_LINES_BETWEEN_PKG_LEVEL_STMT;
+            settings.MAX_LINES_BETWEEN_FILE_LEVEL_STMT = 200;
+            settings.MAX_LINES_BETWEEN_PKG_LEVEL_STMT = 200;
             int startOffset = context.getStartOffset();
             CodeStyleManager.getInstance(context.getProject()).reformatText(context.getFile(),
                     startOffset - _prefix.length(),
                     startOffset + prefixBeingInserted.length() + 1);
+            settings.MAX_LINES_BETWEEN_FILE_LEVEL_STMT = old1;
+            settings.MAX_LINES_BETWEEN_PKG_LEVEL_STMT = old2;
 
             PsiElement startElem = context.getFile().findElementAt(startOffset);
             PsiElement func = startElem != null ? startElem.getNextSibling() : null;

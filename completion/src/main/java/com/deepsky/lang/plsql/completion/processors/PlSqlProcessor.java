@@ -176,13 +176,13 @@ public class PlSqlProcessor extends CompletionBase {
         ctx.addElement(FunctionLookupElement.createSpec(pkgName.getText()));
     }
 
-    @SyntaxTreePath("/..#PACKAGE_SPEC/#CREATE #PACKAGE 1#PACKAGE_NAME #AS ..#ERROR_TOKEN_A/#C_MARKER")
+    @SyntaxTreePath("/..#PACKAGE_SPEC/#CREATE ..#PACKAGE 1#PACKAGE_NAME #AS ..#ERROR_TOKEN_A/#C_MARKER")
     public void packageAsFuncProc2(C_Context ctx, ASTNode pkgName) {
         ctx.addElement(ProcedureLookupElement.createSpec(pkgName.getText()));
         ctx.addElement(FunctionLookupElement.createSpec(pkgName.getText()));
     }
 
-    @SyntaxTreePath("/..#PACKAGE_SPEC/#CREATE #PACKAGE 1#PACKAGE_NAME #IS ..#ERROR_TOKEN_A/#C_MARKER")
+    @SyntaxTreePath("/..#PACKAGE_SPEC/#CREATE ..#PACKAGE 1#PACKAGE_NAME #IS ..#ERROR_TOKEN_A/#C_MARKER")
     public void packageIsFuncProc2(C_Context ctx, ASTNode pkgName) {
         ctx.addElement(ProcedureLookupElement.createSpec(pkgName.getText()));
         ctx.addElement(FunctionLookupElement.createSpec(pkgName.getText()));

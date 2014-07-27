@@ -2456,6 +2456,26 @@ public abstract class PLSqlParserAdoptedExt extends com.deepsky.generated.plsql.
 		returnType = -1;
 	}
 
+	public void temp_table_params() throws RecognitionException,TokenStreamException{
+		if (getPredicting() == 0) {
+			PsiBuilder.Marker m = builder.mark();
+			try {
+			super.temp_table_params();
+			if(returnType > 0 ){
+				m.done( ANTLRType2AdoptedType.type2etype[returnType] );
+			} else {
+				m.drop();
+			}
+			} catch(antlr.RecognitionException ex){
+				m.drop();
+				throw ex;
+			}
+		} else {
+			super.temp_table_params();
+		}
+		returnType = -1;
+	}
+
 	public void cache_clause() throws RecognitionException,TokenStreamException{
 		if (getPredicting() == 0) {
 			PsiBuilder.Marker m = builder.mark();

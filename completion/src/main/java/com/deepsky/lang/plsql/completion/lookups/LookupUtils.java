@@ -33,6 +33,7 @@ import com.intellij.codeInsight.editorActions.CompletionAutoPopupHandler;
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 
@@ -84,6 +85,44 @@ public class LookupUtils {
 //        addRequest(request, CodeInsightSettings.getInstance().AUTO_LOOKUP_DELAY);
     }
 
+
+    public static void scheduleAutoPopup2(final Editor editor, final Project project) {
+        if (ApplicationManager.getApplication().isUnitTestMode() && !CompletionAutoPopupHandler.ourTestingAutopopup) {
+            return;
+        }
+
+        if (!CodeInsightSettings.getInstance().AUTO_POPUP_COMPLETION_LOOKUP) {
+            return;
+        }
+        if (PowerSaveMode.isEnabled()) {
+            return;
+        }
+
+        if (!CompletionServiceImpl.isPhase(CompletionPhase.CommittingDocuments.class, CompletionPhase.NoCompletion.getClass())) {
+            return;
+        }
+
+        final CompletionProgressIndicator currentCompletion = CompletionServiceImpl.getCompletionService().getCurrentCompletion();
+        if (currentCompletion != null) {
+            currentCompletion.closeAndFinish(true);
+        }
+
+        final CompletionPhase.CommittingDocuments phase = new CompletionPhase.CommittingDocuments(null, editor);
+        CompletionServiceImpl.setCompletionPhase(phase);
+
+        CompletionAutoPopupHandler.runLaterWithCommitted(project, editor.getDocument(), new Runnable() {
+            @Override
+            public void run() {
+                if (phase.checkExpired()) return;
+                if (project.isDisposed()) return;
+
+                PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+                //if (file != null && condition != null && !condition.value(file)) return;
+
+                CompletionAutoPopupHandler.invokeCompletion(CompletionType.BASIC, true, project, editor, 0, false);
+            }
+        });
+    }
 
     public static String calcLookupPrefix(String lookup, String content) {
 

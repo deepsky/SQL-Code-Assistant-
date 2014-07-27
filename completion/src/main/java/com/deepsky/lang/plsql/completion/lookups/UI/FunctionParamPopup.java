@@ -25,6 +25,33 @@ package com.deepsky.lang.plsql.completion.lookups.UI;
 
 public abstract class FunctionParamPopup extends ParamProviderPopup {
 
+    protected String[] TYPES = {
+            "BLOB",
+            "CLOB",
+            "NCLOB",
+            "DATE",
+            "TIMESTAMP",
+            "TIMESTAMP WITH TIME ZONE",
+            "TIMESTAMP WITH LOCAL TIME ZONE",
+            "INTERVAL DAY TO SECOND",
+            "INTERVAL YEAR TO MONTH",
+            "INTEGER",
+            "NUMBER",
+            "DECIMAL",
+            "DOUBLE PRECISION",
+            "FLOAT",
+            "INT",
+            "NUMERIC",
+            "CHAR",
+            "VARCHAR",
+            "VARCHAR2",
+            "NCHAR",
+            "NVARCHAR2",
+            "RAW",
+            "ROWID"
+    } ;
+
+
     public FunctionParamPopup(String title) {
         super(title);
     }

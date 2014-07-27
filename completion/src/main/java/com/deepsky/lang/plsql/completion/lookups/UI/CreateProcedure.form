@@ -48,6 +48,8 @@
             </constraints>
             <properties>
               <editable value="false"/>
+              <font style="1"/>
+              <text value="fff"/>
             </properties>
           </component>
         </children>
