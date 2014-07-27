@@ -168,6 +168,7 @@ public class PlSqlIndentProcessor {
             if (PlSqlTokenTypes.PACKAGE_LEVEL_WORDS.contains(childType)
                     || childType == PlSqlElementTypes.PACKAGE_NAME
                     || childType == PlSqlTokenTypes.SEMI
+                    || childType == PlSqlElementTypes.PACKAGE_INIT_SECTION
                     || childType == PlSqlTokenTypes.DIVIDE) {
                 return Indent.getNoneIndent();
             } else if (child.getPsi() instanceof PsiComment) {
@@ -176,6 +177,17 @@ public class PlSqlIndentProcessor {
                 }
             }
             return Indent.getNormalIndent(true);
+        }
+
+        if (parentType == PlSqlElementTypes.PACKAGE_INIT_SECTION) {
+            if(childType == PlSqlTokenTypes.KEYWORD_BEGIN){
+                return Indent.getNoneIndent();
+            } else if (child.getPsi() instanceof PsiComment) {
+                if (plSqlSettings.COMMENT_AT_FIRST_COLUMN) {
+                    return Indent.getAbsoluteNoneIndent();
+                }
+            }
+            return Indent.getNormalIndent(false);
         }
 
         // TYPE DECLARATION

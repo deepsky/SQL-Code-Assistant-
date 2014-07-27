@@ -214,21 +214,11 @@ public class PlSqlBlock extends AbstractBlock {
         if (targetType == PlSqlElementTypes.EXCEPTION_HANDLER) return Indent.getNormalIndent();
 
         if (targetType == PlSqlElementTypes.PLSQL_BLOCK) {
-//            if(parent.findChildByType(PlSqlElementTypes.DECLARE_LIST) != null){
-//                return Indent.getNoneIndent();
-//            } else {
-//                return Indent.getNormalIndent(false);
-//            }
             return Indent.getNormalIndent(false);
-/*
-            if (PlSqlElementTypes.PLSQL_BLOCK_PARENTS.contains(parent.getTreeParent().getElementType())) {
-                return Indent.getNoneIndent();
-            } else {
-                return Indent.getNormalIndent(true);
-            }
-            return Indent.getNormalIndent(true);
-*/
-//            return Indent.getNoneIndent();
+        }
+
+        if (targetType == PlSqlElementTypes.PACKAGE_INIT_SECTION){
+            return Indent.getNormalIndent();
         }
 
         if (targetType == PlSqlElementTypes.PACKAGE_BODY || targetType == PlSqlElementTypes.PACKAGE_SPEC){
