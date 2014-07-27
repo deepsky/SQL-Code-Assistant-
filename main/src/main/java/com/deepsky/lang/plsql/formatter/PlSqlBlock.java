@@ -214,6 +214,13 @@ public class PlSqlBlock extends AbstractBlock {
         if (targetType == PlSqlElementTypes.EXCEPTION_HANDLER) return Indent.getNormalIndent();
 
         if (targetType == PlSqlElementTypes.PLSQL_BLOCK) {
+            if(newChildIndex != -1){
+                ASTNode target = PsiUtil.getVisibleChildByPos(parent, newChildIndex);
+                if(target.getElementType() == PlSqlTokenTypes.KEYWORD_BEGIN){
+                    return Indent.getNoneIndent();
+                }
+
+            }
             return Indent.getNormalIndent(false);
         }
 
