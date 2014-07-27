@@ -23,26 +23,30 @@
 
 package com.deepsky.lang.plsql.completion.lookups.UI;
 
+import com.intellij.openapi.ui.Messages;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class ParamProviderPopup {
     private String title;
 
-    private List<CloseEventListener> listeners= new ArrayList<CloseEventListener>();
+    private List<CloseEventListener> listeners = new ArrayList<CloseEventListener>();
 
-    public ParamProviderPopup(String title){
+    protected static final String VALID_NAME_PATTERN = "^[a-zA-Z][a-zA-Z0-9\\_\\$\\#]*$";
+
+    public ParamProviderPopup(String title) {
         this.title = title;
 
     }
 
     public void addCloseEventLister(CloseEventListener c) {
-        if(c != null){
+        if (c != null) {
             listeners.add(c);
         }
     }
@@ -61,7 +65,7 @@ public abstract class ParamProviderPopup {
 
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
@@ -69,13 +73,42 @@ public abstract class ParamProviderPopup {
 
 
     protected void fireCancelEvent() {
-        for(CloseEventListener e: listeners){
+        for (CloseEventListener e : listeners) {
             e.close(false);
         }
     }
 
+
     protected void fireOKevent() {
-        for(CloseEventListener e: listeners){
+
+        try {
+            doAdditionalValidation();
+        } catch (NameValidationException e) {
+            // Process exception
+            Messages.showErrorDialog(e.getMessage(), "Name Validation Error");
+            return;
+        }
+
+        if (!getName().matches(VALID_NAME_PATTERN)) {
+            // Process exception
+            Messages.showErrorDialog("Entered name does not follow Oracle's guidelines for naming schema objects", "Name Validation Error");
+            return;
+        }
+        String name = getName();
+        if (name.length() > 30) {
+            // Process exception
+            Messages.showErrorDialog("Entered name exceeds max length of the name (30 characters)", "Name Validation Error");
+            return;
+        }
+
+        // Check the name against reserved words
+        if (Arrays.asList(RESRVER_WORDS).contains(name.toUpperCase())) {
+            // Process exception
+            Messages.showErrorDialog("Entered name was identified as Oracle's reserved word", "Name Validation Error");
+            return;
+        }
+
+        for (CloseEventListener e : listeners) {
             e.close(true);
         }
     }
@@ -88,4 +121,126 @@ public abstract class ParamProviderPopup {
         }
     }
 
+    protected void doAdditionalValidation() throws NameValidationException {
+        // Do nothing by default
+    }
+
+    protected class NameValidationException extends Exception {
+
+        public NameValidationException(String message) {
+            super(message);
+        }
+    }
+
+
+    static final protected String[] RESRVER_WORDS = {"ACCESS",
+            "ADD",
+            "ALL",
+            "ALTER",
+            "AND",
+            "ANY",
+            "AS",
+            "ASC",
+            "AUDIT",
+            "BETWEEN",
+            "BY",
+            "CHAR",
+            "CHECK",
+            "CLUSTER",
+            "COLUMN",
+            "COMMENT",
+            "COMPRESS",
+            "CONNECT",
+            "CREATE",
+            "CURRENT",
+            "DATE",
+            "DECIMAL",
+            "DEFAULT",
+            "DELETE",
+            "DESC",
+            "DISTINCT",
+            "DROP",
+            "ELSE",
+            "EXCLUSIVE",
+            "EXISTS",
+            "FILE",
+            "FLOAT",
+            "FOR",
+            "FROM",
+            "GRANT",
+            "GROUP",
+            "HAVING",
+            "IDENTIFIED",
+            "IMMEDIATE",
+            "IN",
+            "INCREMENT",
+            "INDEX",
+            "INITIAL",
+            "INSERT",
+            "INTEGER",
+            "INTERSECT",
+            "INTO",
+            "IS",
+            "LEVEL",
+            "LIKE",
+            "LOCK",
+            "LONG",
+            "MAXEXTENTS",
+            "MINUS",
+            "MLSLABEL",
+            "MODE",
+            "MODIFY",
+            "NOAUDIT",
+            "NOCOMPRESS",
+            "NOT",
+            "NOWAIT",
+            "NULL",
+            "NUMBER",
+            "OF",
+            "OFFLINE",
+            "ON",
+            "ONLINE",
+            "OPTION",
+            "OR",
+            "ORDER",
+            "PCTFREE",
+            "PRIOR",
+            "PRIVILEGES",
+            "PUBLIC",
+            "RAW",
+            "RENAME",
+            "RESOURCE",
+            "REVOKE",
+            "ROW",
+            "ROWID",
+            "ROWNUM",
+            "ROWS",
+            "SELECT",
+            "SESSION",
+            "SET",
+            "SHARE",
+            "SIZE",
+            "SMALLINT",
+            "START",
+            "SUCCESSFUL",
+            "SYNONYM",
+            "SYSDATE",
+            "TABLE",
+            "THEN",
+            "TO",
+            "TRIGGER",
+            "UID",
+            "UNION",
+            "UNIQUE",
+            "UPDATE",
+            "USER",
+            "VALIDATE",
+            "VALUES",
+            "VARCHAR",
+            "VARCHAR",
+            "VIEW",
+            "WHENEVER",
+            "WHERE",
+            "WITH",
+    };
 }

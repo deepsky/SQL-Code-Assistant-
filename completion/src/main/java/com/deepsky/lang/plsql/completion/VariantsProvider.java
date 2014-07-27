@@ -519,11 +519,11 @@ public class VariantsProvider {
         return out;
     }
 
-    public List<LookupElement> collectDataTypeVariants(String ctxPath, String lookUpStr, boolean doFinalize) {
+    public List<LookupElement> collectDataTypeVariants(String lookUpStr, boolean withoutSizing, boolean doFinalize) {
         List<LookupElement> out = new ArrayList<LookupElement>();
         for (String typeName : DataTypeLookupElement.getDataTypeNames()) {
             if (lookUpStr.length() == 0 || typeName.toLowerCase().startsWith(lookUpStr.toLowerCase())) {
-                out.add(DataTypeLookupElement.create(typeName, Icons.RECORD_TYPE_DECL, doFinalize));
+                out.add(DataTypeLookupElement.create(typeName, Icons.RECORD_TYPE_DECL, withoutSizing, doFinalize));
             }
         }
 

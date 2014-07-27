@@ -114,22 +114,12 @@ public class CreateTableLookupElement<T extends LookupElement> extends BaseLooku
                                             TextRange range = def.getTableNameElement().getTextRange();
                                             int cursorOffset = range.getStartOffset() + f.getName().length();
                                             editor.getCaretModel().moveToOffset(cursorOffset);
-//                                            LookupUtils.scheduleAutoPopup2(editor, context.getProject());
                                         }
                                     }
                                 }
                             }
                         });
 
-//                        prefix = adoptPrefix(item.getLookupString(), editor.getDocument().getText(), context.getStartOffset(), prefix);
-//                        editor.getDocument().replaceString(context.getStartOffset(), context.getTailOffset(), prefix);
-//
-//                        final Document document = editor.getDocument();
-//                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
-//
-//                        editor.getCaretModel().moveToOffset(context.getTailOffset()-3);
-//
-//                        LookupUtils.scheduleAutoPopup(editor, context);
                     }
                 });
 

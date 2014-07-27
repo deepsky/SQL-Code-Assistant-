@@ -48,11 +48,13 @@ public class DataTypeLookupElement<T extends LookupElement> extends LookupElemen
 
     private SQLDatatype datatype;
     private boolean doFinalize;
+    private boolean withoutSizing;
 
-    protected DataTypeLookupElement(SQLDatatype datatype, T delegate, boolean doFinalize) {
+    private DataTypeLookupElement(SQLDatatype datatype, T delegate, boolean withoutSizing, boolean doFinalize) {
         super(delegate);
         this.datatype = datatype;
         this.doFinalize = doFinalize;
+        this.withoutSizing = withoutSizing;
     }
 
     public static DataTypeLookupElement create(String name, Icon icon, boolean doFinalize) {
@@ -60,9 +62,17 @@ public class DataTypeLookupElement<T extends LookupElement> extends LookupElemen
                 .withIcon(icon)
                 .withCaseSensitivity(false);
 
-        return new DataTypeLookupElement<LookupElement>(dataTypes.get(name.toUpperCase()), e, doFinalize);
+        return new DataTypeLookupElement<LookupElement>(dataTypes.get(name.toUpperCase()), e, false, doFinalize);
     }
 
+
+    public static DataTypeLookupElement create(String name, Icon icon, boolean withoutSizing, boolean doFinalize) {
+        LookupElement e = LookupElementBuilder.create(name)
+                .withIcon(icon)
+                .withCaseSensitivity(false);
+
+        return new DataTypeLookupElement<LookupElement>(dataTypes.get(name.toUpperCase()), e, withoutSizing, doFinalize);
+    }
 
     public void handleInsert(final InsertionContext context) {
         final Editor editor = context.getEditor();
@@ -75,8 +85,8 @@ public class DataTypeLookupElement<T extends LookupElement> extends LookupElemen
         final boolean overloadsMatter = false;
 
         final boolean hasParams = datatype.isSizeable();
-        final boolean needLeftParenth = isToInsertParenth(file.findElementAt(context.getStartOffset()));
-        final boolean needRightParenth = shouldInsertRParenth(completionChar, tailType, hasParams);
+        final boolean needLeftParenth = datatype.isSizeable() && !datatype.isSizeOptional() && !withoutSizing;
+        final boolean needRightParenth = !withoutSizing && shouldInsertRParenth(completionChar, tailType, hasParams);
 
         if (needLeftParenth) {
             final CodeStyleSettings styleSettings = CodeStyleSettingsManager.getSettings(context.getProject());
@@ -87,7 +97,6 @@ public class DataTypeLookupElement<T extends LookupElement> extends LookupElemen
                     styleSettings.SPACE_WITHIN_METHOD_CALL_PARENTHESES && hasParams,
                     needRightParenth
             ).handleInsert(context, getDelegate()); // item
-//            PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
         }
 
         if(doFinalize){
@@ -120,9 +129,6 @@ public class DataTypeLookupElement<T extends LookupElement> extends LookupElemen
     }
 
 
-    private boolean isToInsertParenth(PsiElement place) {
-        return datatype.isSizeable() && !datatype.isSizeOptional();
-    }
 
     private boolean shouldInsertRParenth(char completionChar, TailType tailType, boolean hasParams) {
 /*

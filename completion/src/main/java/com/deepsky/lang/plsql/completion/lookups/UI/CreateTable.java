@@ -23,6 +23,7 @@
 
 package com.deepsky.lang.plsql.completion.lookups.UI;
 
+import com.intellij.openapi.ui.Messages;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -31,6 +32,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class CreateTable extends ParamProviderPopup {
     private JTextField tableName;
@@ -181,6 +183,26 @@ public class CreateTable extends ParamProviderPopup {
 
         b.append(";\n");
         return b.toString();
+    }
+
+    protected void doAdditionalValidation() throws NameValidationException {
+        if (tablespaceTextField.getText().length() > 0) {
+            if (!tablespaceTextField.getText().matches(VALID_NAME_PATTERN)) {
+                // Process exception
+                throw new NameValidationException("Tablespace name does not follow Oracle's guidelines for naming schema objects");
+            }
+
+            if (tablespaceTextField.getText().length() > 30) {
+                // Process exception
+                throw new NameValidationException("Tablespace name exceeds max length of the name (30 characters)");
+            }
+
+            // Check the name against reserved words
+            if (Arrays.asList(RESRVER_WORDS).contains(tablespaceTextField.getText().toUpperCase())) {
+                // Process exception
+                throw new NameValidationException("Tablespace name was identified as Oracle's reserved word");
+            }
+        }
     }
 
     @Override

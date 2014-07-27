@@ -86,10 +86,7 @@ public class AlterStmtProcessor extends CompletionBase {
     @SyntaxTreePath("/#ALTER #TABLE #TABLE_REF #ADD #A_COLUMN_DEF/#COLUMN_NAME_DDL #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
     public void process$alterTableAddColumnType(C_Context ctx) {
         VariantsProvider provider = ctx.getProvider();
-        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup(), false);
-        for (LookupElement elem : variants) {
-            ctx.addElement(elem);
-        }
+        collectTypeNames(ctx, false);
     }
 
     @SyntaxTreePath("/#ALTER #TABLE #TABLE_REF #ERROR_TOKEN_A/#DROP #C_MARKER")

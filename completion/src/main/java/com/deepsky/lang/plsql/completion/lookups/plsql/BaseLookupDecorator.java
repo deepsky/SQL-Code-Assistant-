@@ -94,6 +94,9 @@ public abstract class BaseLookupDecorator <T extends LookupElement> extends Look
             }
 
             if (func != null) {
+                editor.getCaretModel().moveToOffset(func.getTextRange().getStartOffset());
+                editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+
                 ParamProviderPopup f = builder.createPopup((T) func);
 
                 ObjectUIBuilder b = new ObjectUIBuilder(context.getProject(), f);
@@ -101,7 +104,6 @@ public abstract class BaseLookupDecorator <T extends LookupElement> extends Look
             }
         }
 
-        editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE); //RELATIVE);
     }
 
 

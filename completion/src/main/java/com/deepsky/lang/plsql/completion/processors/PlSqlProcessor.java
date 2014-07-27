@@ -194,22 +194,22 @@ public class PlSqlProcessor extends CompletionBase {
 
     @SyntaxTreePath("//..#FUNCTION_BODY/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#IDENTIFIER #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
     public void funcParameterType(C_Context ctx) {
-        collectTypeNames(ctx, false);
+        collectTypeNames(ctx, true, false);
    }
 
     @SyntaxTreePath("//..#FUNCTION_SPEC/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#IDENTIFIER #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
     public void funcParameterTypeInSpec(C_Context ctx) {
-        collectTypeNames(ctx, false);
+        collectTypeNames(ctx, true, false);
     }
 
     @SyntaxTreePath("//..#PROCEDURE_BODY/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#IDENTIFIER #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
     public void procParameterType(C_Context ctx) {
-        collectTypeNames(ctx, false);
+        collectTypeNames(ctx, true, false);
     }
 
     @SyntaxTreePath("//..#PROCEDURE_SPEC/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#IDENTIFIER #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
     public void procParameterTypeInSpec(C_Context ctx) {
-        collectTypeNames(ctx, false);
+        collectTypeNames(ctx, true, false);
     }
 
 

@@ -113,7 +113,15 @@ public abstract class CompletionBase {
 
     protected void collectTypeNames(@NotNull C_Context ctx, boolean doFinalize){
         VariantsProvider provider = ctx.getProvider();
-        List<LookupElement> variants = provider.collectDataTypeVariants(null, ctx.getLookup(), doFinalize);
+        List<LookupElement> variants = provider.collectDataTypeVariants(ctx.getLookup(), false, doFinalize);
+        for (LookupElement elem : variants) {
+            ctx.addElement(elem);
+        }
+    }
+
+    protected void collectTypeNames(@NotNull C_Context ctx, boolean withoutSizing, boolean doFinalize){
+        VariantsProvider provider = ctx.getProvider();
+        List<LookupElement> variants = provider.collectDataTypeVariants(ctx.getLookup(), withoutSizing, doFinalize);
         for (LookupElement elem : variants) {
             ctx.addElement(elem);
         }
