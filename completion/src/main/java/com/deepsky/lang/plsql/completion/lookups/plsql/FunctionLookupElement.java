@@ -24,7 +24,9 @@
 package com.deepsky.lang.plsql.completion.lookups.plsql;
 
 import com.deepsky.lang.plsql.completion.lookups.UI.*;
+import com.deepsky.lang.plsql.formatter.settings.PlSqlCodeStyleSettings;
 import com.deepsky.lang.plsql.psi.*;
+import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.lang.plsql.struct.Type;
 import com.deepsky.lang.plsql.tree.MarkupGeneratorEx2;
 import com.deepsky.lang.plsql.workarounds.LoggerProxy;
@@ -39,6 +41,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.codeStyle.CodeStyleManager;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 
 
 public class FunctionLookupElement<T extends LookupElement> extends BaseLookupDecorator<T> {
@@ -80,7 +85,7 @@ public class FunctionLookupElement<T extends LookupElement> extends BaseLookupDe
     }
 
 
-    public static FunctionLookupElement createBody(String text) {
+    public static FunctionLookupElement createBody(final String text) {
         LookupElement e = LookupElementBuilder.create("function")
                 .withIcon(Icons.FUNCTION_BODY)
                 .withPresentableText("function <function name> return <data type> is .. end")
@@ -90,7 +95,6 @@ public class FunctionLookupElement<T extends LookupElement> extends BaseLookupDe
                 .withInsertHandler(new InsertHandler<LookupElement>() {
                     @Override
                     public void handleInsert(InsertionContext context, LookupElement item) {
-                        final Editor editor = context.getEditor();
                         String prefix = "function func1\n" +
                                 "return NUMBER\n" +
                                 "is\n" +
@@ -98,7 +102,15 @@ public class FunctionLookupElement<T extends LookupElement> extends BaseLookupDe
                                 "return 0;\n" +
                                 "end;\n";
 
-                        updateFunctionBody(context, editor, prefix, false);
+                        final FunctionParamPopup f = new CreateFunction("func1","NUMBER", text);
+                        insertPrefix3(context, prefix, f, Function.class, new InsertionHandler<Function>() {
+                            @Override
+                            public void handle(Editor editor, Function e) {
+                                TextRange range = e.getEObjectName().getTextRange();
+                                editor.getCaretModel().moveToOffset(range.getEndOffset());
+                            }
+                        });
+                        //updateFunctionBody(context, editor, prefix, false);
                     }
                 })
                 .withStrikeoutness(false);

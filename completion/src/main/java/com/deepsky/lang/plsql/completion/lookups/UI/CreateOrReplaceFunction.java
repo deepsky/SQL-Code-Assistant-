@@ -93,6 +93,11 @@ public class CreateOrReplaceFunction extends FunctionParamPopup {
     }
 
     @Override
+    public String getStatementText() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public String getFunctionType() {
         return (String) comboBox1.getModel().getSelectedItem();
     }

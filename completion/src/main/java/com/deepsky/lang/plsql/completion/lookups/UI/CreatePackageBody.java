@@ -79,6 +79,11 @@ public class CreatePackageBody extends ParamProviderPopup {
         return packageName.getText();
     }
 
+    @Override
+    public String getStatementText() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public boolean insertInitSection() {
         return initSectionCheckBox.isSelected();
     }

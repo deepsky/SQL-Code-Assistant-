@@ -76,6 +76,11 @@ public class CreateOrReplaceProcedure extends ParamProviderPopup {
         return textField1.getText();
     }
 
+    @Override
+    public String getStatementText() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public boolean isCreateOrReplace() {
         return crOrReplaceCheck.isSelected();
     }

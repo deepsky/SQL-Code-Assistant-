@@ -27,14 +27,11 @@ import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class CreateFunction extends FunctionParamPopup {
     private JPanel rootPanel;
@@ -43,6 +40,9 @@ public class CreateFunction extends FunctionParamPopup {
     private JTextField textField1;
     private JComboBox comboBox1;
     private JLabel packageOwnerName;
+    private JCheckBox addExHandlerCheck;
+    private JComboBox exHandlerName;
+    private JCheckBox addReferencePUTCheck;
 
 
     public CreateFunction(String defaultFuncName, String defaultType, String pkgName) {
@@ -53,6 +53,8 @@ public class CreateFunction extends FunctionParamPopup {
 
         comboBox1.setModel(new CollectionComboBoxModel(Arrays.asList(TYPES)));
         comboBox1.getModel().setSelectedItem(defaultType);
+        exHandlerName.setModel(new CollectionComboBoxModel(Arrays.asList(ERROR_CODES)));
+        exHandlerName.setSelectedItem("ZERO_DIVIDE");
 
         OKButton.addActionListener(new ActionListener() {
             @Override
@@ -71,6 +73,18 @@ public class CreateFunction extends FunctionParamPopup {
         OKButton.addKeyListener(new KeyListener());
         textField1.addKeyListener(new KeyListener());
         comboBox1.addKeyListener(new KeyListener());
+        addExHandlerCheck.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (addExHandlerCheck.isSelected()) {
+                    exHandlerName.setEnabled(true);
+                    addReferencePUTCheck.setEnabled(true);
+                } else {
+                    exHandlerName.setEnabled(false);
+                    addReferencePUTCheck.setEnabled(false);
+                }
+            }
+        });
     }
 
     public JComponent getRootComponent() {
@@ -83,6 +97,49 @@ public class CreateFunction extends FunctionParamPopup {
 
     public String getName() {
         return textField1.getText();
+    }
+
+    @Override
+    public String getStatementText() {
+        StringBuilder b = new StringBuilder();
+        if (packageOwnerName.getText().length() > 0) {
+            // Do not add "create"
+            b.append("function ");
+        } else {
+            b.append("create function ");
+        }
+
+        b.append(getName()).append("\n");
+        b.append("return ").append(comboBox1.getSelectedItem()).append("\n");
+        b.append("is\n");
+        b.append("begin\n");
+        b.append("\t-- Add your code here\n");
+
+        b.append("\treturn ").append(adoptReturnValue()).append(";\n");
+        if (addExHandlerCheck.isSelected()) {
+            b.append("exception\n");
+            b.append("\twhen ").append(exHandlerName.getSelectedItem()).append(" then\n");
+            b.append("\t\treturn ").append(adoptReturnValue()).append(";\n");
+            b.append("\twhen ").append("others then -- handles all other errors\n");
+            b.append("\t\treturn ").append(adoptReturnValue()).append(";\n");
+        }
+
+        b.append("end;\n");
+        if (packageOwnerName.getText().length() == 0) {
+            // Do not add "create"
+            b.append("/\n");
+        }
+        return b.toString();
+    }
+
+    private String adoptReturnValue() {
+        String type = comboBox1.getSelectedItem().toString();
+        if (type.equals("NUMBER") || type.equals("INTEGER") || type.equals("INT")
+                || type.equals("DOUBLE PRECISION") || type.equals("FLOAT")
+                || type.equals("NUMERIC") || type.equals("DECIMAL")) {
+            return "0";
+        }
+        return "NULL";
     }
 
     public String getFunctionType() {
@@ -107,7 +164,7 @@ public class CreateFunction extends FunctionParamPopup {
         rootPanel = new JPanel();
         rootPanel.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
         rootPanel.add(panel1, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Specification"));
         final JLabel label1 = new JLabel();
@@ -127,18 +184,34 @@ public class CreateFunction extends FunctionParamPopup {
         packageOwnerName.setFont(new Font(packageOwnerName.getFont().getName(), Font.BOLD, packageOwnerName.getFont().getSize()));
         packageOwnerName.setText("None");
         panel1.add(packageOwnerName, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        addExHandlerCheck = new JCheckBox();
+        addExHandlerCheck.setText("Add Exception Handling Section");
+        panel1.add(addExHandlerCheck, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
-        rootPanel.add(panel2, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3), null));
+        panel2.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel2, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        exHandlerName = new JComboBox();
+        exHandlerName.setEnabled(false);
+        panel2.add(exHandlerName, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        panel2.add(spacer1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        addReferencePUTCheck = new JCheckBox();
+        addReferencePUTCheck.setEnabled(false);
+        addReferencePUTCheck.setSelected(true);
+        addReferencePUTCheck.setText("Add Reference PUT_LINE");
+        panel2.add(addReferencePUTCheck, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        rootPanel.add(panel3, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3), null));
         cancelButton = new JButton();
         cancelButton.setText("Cancel");
-        panel2.add(cancelButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        panel2.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        panel3.add(cancelButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        panel3.add(spacer2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         OKButton = new JButton();
         OKButton.setText("   OK   ");
-        panel2.add(OKButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel3.add(OKButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

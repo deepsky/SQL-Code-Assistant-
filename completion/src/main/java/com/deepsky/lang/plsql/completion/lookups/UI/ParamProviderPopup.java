@@ -70,7 +70,7 @@ public abstract class ParamProviderPopup {
     }
 
     public abstract String getName();
-
+    public abstract String getStatementText();
 
     protected void fireCancelEvent() {
         for (CloseEventListener e : listeners) {
@@ -243,4 +243,6 @@ public abstract class ParamProviderPopup {
             "WHERE",
             "WITH",
     };
+
+
 }
