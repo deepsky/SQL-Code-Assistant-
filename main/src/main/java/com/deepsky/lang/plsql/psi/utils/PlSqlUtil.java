@@ -227,19 +227,27 @@ public class PlSqlUtil {
             prefix = "CREATE OR REPLACE ";
         }
 
-        final String[] endingSemi = {""};
+        final String[] endings = new String[]{""};
         try {
             iterateLeafsFromEnd(co.getNode(), new HandleLeafElement() {
                 public void handle(ASTNode elem) {
                     if (elem.getElementType() == TokenType.WHITE_SPACE) {
+                        endings[0] = elem.getText() + endings[0];
                     } else if (elem.getElementType() == PlSqlTokenTypes.WS) {
+                        endings[0] = elem.getText() + endings[0];
                     } else if (elem.getElementType() == PlSqlTokenTypes.ML_COMMENT) {
+                        endings[0] = elem.getText() + endings[0];
+                    } else if (elem.getElementType() == PlSqlTokenTypes.SL_COMMENT) {
+                        endings[0] = elem.getText() + endings[0];
                     } else if (elem.getElementType() == PlSqlTokenTypes.BAD_ML_COMMENT) {
+                        endings[0] = elem.getText() + endings[0];
+                    } else if (elem.getElementType() == PlSqlTokenTypes.LF) {
+                        endings[0] = elem.getText() + endings[0];
+                    } else if (elem.getElementType() == PlSqlTokenTypes.DIVIDE) {
+                        endings[0] = elem.getText() + endings[0];
                     } else if (elem.getElementType() == PlSqlTokenTypes.SEMI) {
-                        // appending of SEMI no need
-                        throw new BreakIteration();
+                        endings[0] = elem.getText() + endings[0];
                     } else {
-                        endingSemi[0] = ";\n";
                         throw new BreakIteration();
                     }
                 }
@@ -247,7 +255,8 @@ public class PlSqlUtil {
         } catch (BreakIteration ignored) {
         }
 
-        return prefix + co.getText() + endingSemi[0];
+        final String text = co.getText();
+        return prefix + text.substring(0, text.length() - endings[0].length()) + ";";
     }
 
     public static void iterateLeafsFromBeggining(ASTNode node, HandleLeafElement elem) {
