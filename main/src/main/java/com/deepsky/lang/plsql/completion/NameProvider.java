@@ -26,33 +26,11 @@
 package com.deepsky.lang.plsql.completion;
 
 import com.deepsky.lang.plsql.resolver.index.ContextItem;
+import com.deepsky.lang.plsql.sqlIndex.ResolveHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface NameProvider {
-
-    /**
-     * Search for the items in the root context
-     * @param ctxTypes -
-     * @param name - if name is null return all items withspecified type
-     * @return
-     */
-//    @NotNull
-//    ContextItem[] findCtxItems(int[] ctxTypes, @Nullable String name);
-
-
-//    @NotNull
-//    ContextItem[] findCtxItems(String ctxPath, String name);
-
-
-    /**
-     * Search for the items with specified types in the context
-     * @param ctxPath - context to search
-     * @param ctxTypes - to look for
-     * @return
-     */
-//    @NotNull
-//    ContextItem[] findCtxItems(String ctxPath, int[] ctxTypes);
 
     // get value of the context path
     String getContextPathValue(String ctxPath);
@@ -62,4 +40,7 @@ public interface NameProvider {
 
     @NotNull
     ContextItem[] findLocalCtxItems(String ctxPath, int[] ctxTypes);
+
+    @NotNull
+    ResolveHelper getResolver();
 }

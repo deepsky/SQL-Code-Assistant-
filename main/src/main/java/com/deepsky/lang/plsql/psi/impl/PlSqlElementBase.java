@@ -114,4 +114,9 @@ public class PlSqlElementBase extends ASTWrapperPsiElement implements PlSqlEleme
         return ContextPathManager.getCtxPath(getNode());
     }
 
+    public boolean createOrReplace() {
+        return getText().matches("^create[ \n\t]*or[ \n\t]*replace[ \n\t](?i)");
+    }
+
+
 }

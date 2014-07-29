@@ -26,4 +26,5 @@
 package com.deepsky.lang.plsql.psi;
 
 public interface ReturnStatement extends Statement {
+    Expression getExpression();
 }

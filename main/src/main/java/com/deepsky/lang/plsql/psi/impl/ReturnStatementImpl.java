@@ -25,13 +25,17 @@
 
 package com.deepsky.lang.plsql.psi.impl;
 
+import com.deepsky.lang.PsiUtil;
+import com.deepsky.lang.plsql.psi.Expression;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
 import com.deepsky.lang.plsql.psi.ReturnStatement;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class ReturnStatementImpl extends PlSqlElementBase implements ReturnStatement {
+
     public ReturnStatementImpl(ASTNode astNode) {
         super(astNode);
     }
@@ -44,4 +48,11 @@ public class ReturnStatementImpl extends PlSqlElementBase implements ReturnState
         }
     }
 
+    @Override
+    public Expression getExpression() {
+        // "return"! (condition)? SEMI
+        ASTNode exprNode = PsiUtil.nextVisibleSibling(getNode().getFirstChildNode());
+        PsiElement expr = exprNode.getPsi();
+        return expr instanceof Expression? (Expression) expr: null;
+    }
 }

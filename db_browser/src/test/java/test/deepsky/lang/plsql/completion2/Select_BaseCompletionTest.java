@@ -145,7 +145,7 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$complex_relation() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "p.id", "text", "parent_id", "p.text1");
+        assertSelectFieldLookup(myItems, "case", "p.id", "text", "parent_id", "p.text1");
     }
 
     public void testSelect$complex_relation1() throws Exception {
@@ -395,12 +395,12 @@ public class Select_BaseCompletionTest extends BaseCompletionTest {
 
     public void testSelect$expr_inSubquery() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "id", "text");
+        assertSelectFieldLookup(myItems, "case", "id", "text");
     }
 
     public void testSelect$select_subquery_alias() throws Exception {
         configureByFile(getFilePath());
-        assertSelectFieldLookup(myItems, "a.id", "a.text", "tab_101.id", "tab_101.text");
+        assertSelectFieldLookup(myItems, "a.id", "case", "a.text", "tab_101.id", "tab_101.text");
     }
 
     public void testSelect$select_where101() throws Exception {

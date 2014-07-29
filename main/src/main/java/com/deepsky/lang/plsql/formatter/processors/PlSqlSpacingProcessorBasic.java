@@ -264,6 +264,10 @@ public class PlSqlSpacingProcessorBasic {
                     return SpacingConstants.NO_SPACING;
                 }
             }
+        } else if(leftType == PlSqlTokenTypes.KEYWORD_BEGIN && rightType == PlSqlElementTypes.STATEMENT_LIST){
+//            return Spacing.createSpacing(1, 1, 1, true, 20);
+        } else if(leftType == PlSqlElementTypes.STATEMENT_LIST && rightType == PlSqlElementTypes.PLSQL_BLOCK_END){
+//            return Spacing.createSpacing(0, 1, 0, true, 20);
         }
 
         return SpacingConstants.ONE_SPACE_WITH_NEWLINE; //COMMON_SPACING;
