@@ -51,30 +51,6 @@ public abstract class FunctionParamPopup extends ParamProviderPopup {
             "ROWID"
     } ;
 
-    protected final static String[] ERROR_CODES = {
-            "ACCESS_INTO_NULL",
-            "CASE_NOT_FOUND",
-            "COLLECTION_IS_NULL",
-            "CURSOR_ALREADY_OPEN",
-            "DUP_VAL_ON_INDEX",
-            "INVALID_CURSOR",
-            "INVALID_NUMBER",
-            "LOGIN_DENIED",
-            "NO_DATA_FOUND",
-            "NO_DATA_NEEDED",
-            "NOT_LOGGED_ON",
-            "PROGRAM_ERROR",
-            "ROWTYPE_MISMATCH",
-            "SELF_IS_NULL",
-            "STORAGE_ERROR",
-            "SUBSCRIPT_BEYOND_COUNT",
-            "SUBSCRIPT_OUTSIDE_LIMIT",
-            "SYS_INVALID_ROWID",
-            "TIMEOUT_ON_RESOURCE",
-            "TOO_MANY_ROWS",
-            "VALUE_ERROR",
-            "ZERO_DIVIDE",
-    };
 
 
     public FunctionParamPopup(String title) {
@@ -82,4 +58,14 @@ public abstract class FunctionParamPopup extends ParamProviderPopup {
     }
 
     public abstract String getFunctionType();
+
+    protected String adoptReturnValue(String type) {
+        if (type.equals("NUMBER") || type.equals("INTEGER") || type.equals("INT")
+                || type.equals("DOUBLE PRECISION") || type.equals("FLOAT")
+                || type.equals("NUMERIC") || type.equals("DECIMAL")) {
+            return "0";
+        }
+        return "NULL";
+    }
+
 }

@@ -27,4 +27,12 @@ public class LookupUtilsTest {
                 "create "));
     }
 
+
+    @Test
+    public void test2() {
+
+        assertEquals("create pa", LookupUtils.calcLookupPrefix("create package", "create \n\npa"));
+
+    }
+
 }

@@ -39,6 +39,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
@@ -178,7 +179,7 @@ public abstract class BaseLookupDecorator <T extends LookupElement> extends Look
 
                                         // Set cursor position at the right place
                                         PsiElement startElem = context.getFile().findElementAt(range.getStartOffset() + 10);
-                                        PsiElement func = startElem != null ? startElem.getNextSibling() : null;
+                                        PsiElement func = startElem; // != null ? startElem.getNextSibling() : null;
                                         while (func != null && !target.isInstance(func)) {
                                             func = func.getParent();
                                         }
@@ -200,6 +201,66 @@ public abstract class BaseLookupDecorator <T extends LookupElement> extends Look
         });
     }
 
+    protected static <T extends PlSqlElement> void __insertPrefix3(
+            final InsertionContext context, String prefix, final ParamProviderPopup f,
+            final Class<T> target, final InsertionHandler<T> handler) {
+
+        insertPrefix(context, context.getEditor(), prefix, target, new BaseLookupDecorator.PopupBuilder<T>() {
+            @Override
+            public ParamProviderPopup createPopup(final T e) {
+                f.addCloseEventLister(new ParamProviderPopup.CloseEventListener() {
+                    @Override
+                    public void close(final boolean isOk) {
+
+                        new WriteCommandAction.Simple(context.getProject()) {
+                            @Override
+                            protected void run() throws Throwable {
+                                // User pressed OK, update procedure name
+                                if (isOk && !context.getProject().isDisposed()) {
+                                    try {
+                                        Editor editor = context.getEditor();
+                                        TextRange range = e.getTextRange();
+                                        String text = f.getStatementText();
+                                        int indent = text.length() - e.getTextRange().getLength();
+
+                                        editor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), text);
+                                        PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
+
+                                        // Format text but keep location of the code
+                                        PlSqlCodeStyleSettings settings = CodeStyleSettingsManager.getSettings(
+                                                context.getProject()).getCustomSettings(PlSqlCodeStyleSettings.class);
+                                        int old = settings.MAX_LINES_BETWEEN_FILE_LEVEL_STMT;
+                                        settings.MAX_LINES_BETWEEN_FILE_LEVEL_STMT = 200;
+                                        CodeStyleManager.getInstance(context.getProject()).reformatText(context.getFile(),
+                                                range.getStartOffset(),
+                                                range.getEndOffset() + indent);
+                                        settings.MAX_LINES_BETWEEN_FILE_LEVEL_STMT = old;
+
+                                        // Set cursor position at the right place
+                                        PsiElement startElem = context.getFile().findElementAt(range.getStartOffset() + 10);
+                                        PsiElement func = startElem; // != null ? startElem.getNextSibling() : null;
+                                        while (func != null && !target.isInstance(func)) {
+                                            func = func.getParent();
+                                        }
+
+                                        if (func != null) {
+                                            handler.handle(context.getEditor(), e);
+                                        }
+
+                                    } catch (Throwable e) {
+                                        log.error(e.getMessage());
+                                    }
+                                }
+
+                            }
+                        }.execute().throwException();
+
+                    }
+                });
+                return f;
+            }
+        });
+    }
 
     protected static <T extends CompilableObject> T insertOrReplace(String text) {
         MarkupGeneratorEx2 generator = new MarkupGeneratorEx2();

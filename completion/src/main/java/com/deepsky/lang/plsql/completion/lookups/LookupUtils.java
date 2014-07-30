@@ -132,11 +132,11 @@ public class LookupUtils {
                 if (lookup.charAt(i2) == content.charAt(j)) {
                     // Check boundary
                     if (i2 == 0) {
-                        return (j == 0 || content.charAt(j - 1) == ' '
+                        return (j == 0 || content.charAt(j - 1) == ' ' || content.charAt(j - 1) == '\t'
                                 || content.charAt(j - 1) == '\n') ? lookup.substring(0, i + 1) : "";
                     }
 
-                } else if (content.charAt(j) == ' ') {
+                } else if (content.charAt(j) == ' ' || content.charAt(j) == '\n' || content.charAt(j) == '\t') {
                     // Skip whitespaces
                     continue;
                 } else {

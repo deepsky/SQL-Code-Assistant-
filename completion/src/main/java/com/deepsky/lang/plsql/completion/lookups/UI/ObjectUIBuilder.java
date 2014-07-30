@@ -56,6 +56,7 @@ public class ObjectUIBuilder {
                 .createComponentPopupBuilder(uiForm.getRootComponent(), uiForm.getFocusedComponent());
 
         popup = builder
+                //.setKeyboardActions()
                 .setProject(project)
                 .setCancelOnClickOutside(true)
                 .setCancelOnOtherWindowOpen(true)
@@ -63,12 +64,14 @@ public class ObjectUIBuilder {
                 .setBelongsToGlobalPopupStack(true)
                 .setFocusable(true)
                 .setMovable(true)
-                .setResizable(false)
+                .setResizable(true)
                 .setCancelButton(new MinimizeButton("Hide"))
-                .setDimensionServiceKey(null, "TNSFileContentPopup", true)
+                .setDimensionServiceKey(project, uiForm.getDimensionServiceKey(), true)
                 .setTitle(uiForm.getTitle())
                 .setModalContext(false)
                 .setRequestFocus(true)
+                .setLocateByContent(true)
+                .setMayBeParent(true)
                 .setCancelCallback(new Computable<Boolean>() {
                     @Override
                     public Boolean compute() {

@@ -11,7 +11,7 @@
 
     <property name="bundle.dir" value="./out"/>
     <property name="bundle.name" value="sql-assistant"/>
-    <property name="plugin.ver" value="1.5.13.129"/>
+    <property name="plugin.ver" value="1.6.1.129"/>
 
     <property name="build.dir" value="${base.dir}/build"/>
     <property name="unzip.dir" value="${base.dir}/unzip"/>
