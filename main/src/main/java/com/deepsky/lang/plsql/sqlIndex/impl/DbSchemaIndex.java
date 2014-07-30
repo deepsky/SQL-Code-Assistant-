@@ -32,8 +32,6 @@ import com.deepsky.database.ora2.DbObjectCache;
 import com.deepsky.database.ora2.loaders.SynonymLoader;
 import com.deepsky.lang.common.PlSqlSupportLoader;
 import com.deepsky.lang.plsql.completion.NameProvider;
-import com.deepsky.lang.plsql.completion.VariantsProvider;
-import com.deepsky.lang.plsql.completion.VariantsProviderImpl;
 import com.deepsky.lang.plsql.resolver.ContextPath;
 import com.deepsky.lang.plsql.resolver.index.ContextItem;
 import com.deepsky.lang.plsql.resolver.index.IndexEntriesWalkerInterruptable;
@@ -347,27 +345,10 @@ public class DbSchemaIndex extends SqlIndexBase {
         }
 
 
-        public VariantsProvider getVariantsProvider() {
+        public NameProvider getNameProvider() {
             AbstractSchema proxy = DbSchemaIndex.this.getSimpleIndex(userName);
-            ResolveHelper resolver = proxy.getResolveHelper();
-            return new VariantsProviderImpl(new NameProvider() {
-/*
-                @NotNull
-                public ContextItem[] findCtxItems(int[] ctxTypes, @Nullable String name) {
-                    return getIndexTree().findCtxItems(ctxTypes, name);
-                }
-
-                @NotNull
-                public ContextItem[] findCtxItems(String ctxPath, String name) {
-                    return getIndexTree().findCtxItems(ctxPath, name);
-                }
-
-                @NotNull
-                public ContextItem[] findCtxItems(String ctxPath, int[] ctxTypes) {
-                    return getIndexTree().findCtxItems(ctxPath, ctxTypes);
-                }
-*/
-
+            final ResolveHelper resolver = proxy.getResolveHelper();
+            return new NameProvider() {
                 public String getContextPathValue(String ctxPath) {
                     return getIndexTree().getContextPathValue(ctxPath);
                 }
@@ -381,7 +362,13 @@ public class DbSchemaIndex extends SqlIndexBase {
                 public ContextItem[] findLocalCtxItems(String ctxPath, int[] ctxTypes) {
                     return getIndexTree().findCtxItems(ctxPath, ctxTypes);
                 }
-            }, resolver);
+
+                @NotNull
+                @Override
+                public ResolveHelper getResolver() {
+                    return resolver;
+                }
+            };
         }
 
 

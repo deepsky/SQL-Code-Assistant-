@@ -91,7 +91,7 @@ public class ExecSQLStmtStructurePopupAction extends ExecuteSQLStatementAction {
                         );
                         //PlSqlElementTypes.EXECUTABLE_STATEMENTS);
                         if(astStmt != null){
-                            if( astStmt.getElementType() == PlSqlElementTypes.SQLPLUS_ANONYM_PLSQL_BLOCK){
+                            if( astStmt.getElementType() == PlSqlElementTypes.ANONYM_PLSQL_BLOCK){
                                 ASTNode plsqlBlk = astStmt.findChildByType(PlSqlElementTypes.PLSQL_BLOCK);
                                 if(plsqlBlk != null){
                                     executeStatement(project, plsqlBlk, (PlSqlFile) psi, _st, _end);

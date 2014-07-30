@@ -31,6 +31,7 @@ import com.deepsky.lang.plsql.SyntaxTreeCorruptedException;
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
 import com.deepsky.lang.plsql.psi.GenericConstraint;
 import com.deepsky.lang.plsql.psi.PlSqlElementVisitor;
+import com.deepsky.lang.plsql.psi.SelectStatement;
 import com.deepsky.lang.plsql.psi.ddl.PartitionSpecification;
 import com.deepsky.lang.plsql.psi.ddl.TableDefinition;
 import com.deepsky.utils.StringUtils;
@@ -63,6 +64,13 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
         } else {
             throw new SyntaxTreeCorruptedException();
         }
+    }
+
+    @Override
+    public PsiElement getTableNameElement() {
+        PsiElement psi = this.findChildByType(PLSqlTypesAdopted.TABLE_NAME_DDL);
+        if (psi != null) return psi;
+        throw new SyntaxTreeCorruptedException();
     }
 
     @NotNull
@@ -146,6 +154,22 @@ public class TableDefinitionImpl extends PlSqlElementBase implements TableDefini
             return spec != null? (PartitionSpecification) spec.getPsi() : null;
         }
         return null;
+    }
+
+
+    final private static TokenSet SELECT_EXPR = TokenSet.create(
+            PLSqlTypesAdopted.SELECT_EXPRESSION, PLSqlTypesAdopted.SELECT_EXPRESSION_UNION);
+
+    @Override
+    public boolean definedAsSelect() {
+        PsiElement psi = this.findChildByType(SELECT_EXPR);
+        return psi != null;
+    }
+
+    @Nullable
+    @Override
+    public SelectStatement getSelectStatement() {
+        return (SelectStatement) this.findChildByType(SELECT_EXPR);
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {

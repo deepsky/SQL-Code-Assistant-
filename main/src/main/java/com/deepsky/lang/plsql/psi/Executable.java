@@ -47,10 +47,10 @@ public interface Executable extends PlSqlElement, NavigationItem {
 
     @NotNull
     Declaration[] getDeclarationList();
+
     @NotNull
     PlSqlBlock getBlock();
 
-    boolean createOrReplace();
 //    ExecutableDescriptor describe();
     boolean equals(ExecutableDescriptor edesc);
 

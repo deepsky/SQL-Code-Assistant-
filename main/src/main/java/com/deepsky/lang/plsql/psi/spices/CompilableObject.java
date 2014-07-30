@@ -42,4 +42,6 @@ public interface CompilableObject extends PlSqlElement {
     // prefix the object scripts with 'CREATE' or 'CREATE OR REPLACE'  
     @NotNull
     String getCreateQuery();
+
+    boolean createOrReplace();
 }

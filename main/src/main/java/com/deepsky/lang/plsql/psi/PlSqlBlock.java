@@ -41,4 +41,6 @@ public interface PlSqlBlock extends PlSqlElement {
     @NotNull
     PlSqlElement[] getObjectList();
 
+    ReturnStatement findReturnStatement();
+
 }

@@ -136,10 +136,6 @@ public class ProcedureImpl extends PlSqlElementBase implements Procedure {
         return (PlSqlBlock) blk.getPsi();
     }
 
-    public boolean createOrReplace() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public String getPackageName() {
         PackageBody pkg = this.getParent() instanceof PackageBody ? (PackageBody) this.getParent() : null;
         return pkg != null ? pkg.getPackageName() : null;

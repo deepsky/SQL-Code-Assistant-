@@ -27,6 +27,7 @@ package com.deepsky.lang.plsql.psi;
 
 import com.deepsky.lang.plsql.psi.spices.CompilableObject;
 import com.intellij.navigation.NavigationItem;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 public interface PackageSpec extends PlSqlElement, NavigationItem, CompilableObject {
@@ -42,4 +43,6 @@ public interface PackageSpec extends PlSqlElement, NavigationItem, CompilableObj
 
     @NotNull
     ExecutableSpec[] findExecutableByName(String name);
+
+    PsiElement getPackageNameElement();
 }

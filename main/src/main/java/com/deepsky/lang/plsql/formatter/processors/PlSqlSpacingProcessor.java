@@ -621,4 +621,12 @@ public class PlSqlSpacingProcessor extends PlSqlElementVisitor {
             createSpaceProperty(1, false, 0);
         }
     }
+
+    public void visitPlSqlBlock(PlSqlBlock node) {
+        if(leftChild.getElementType() == PlSqlTokenTypes.KEYWORD_BEGIN
+                && rightChild.getElementType() == PlSqlElementTypes.PLSQL_BLOCK_END){
+            myResult = Spacing.createSpacing(1, 1, 2, true, 2);
+        }
+    }
+
 }

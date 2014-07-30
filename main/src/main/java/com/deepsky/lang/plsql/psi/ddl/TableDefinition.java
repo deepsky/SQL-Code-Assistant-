@@ -27,6 +27,8 @@ package com.deepsky.lang.plsql.psi.ddl;
 
 import com.deepsky.lang.plsql.psi.ColumnDefinition;
 import com.deepsky.lang.plsql.psi.GenericConstraint;
+import com.deepsky.lang.plsql.psi.SelectStatement;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,6 +46,8 @@ public interface TableDefinition extends SqlDDLStatement {
     int PARTITION_NONE      = -1;
 
     String getTableName();
+    PsiElement getTableNameElement();
+
     @NotNull
     ColumnDefinition[] getColumnDefs();
 
@@ -57,4 +61,13 @@ public interface TableDefinition extends SqlDDLStatement {
 
     @Nullable
     PartitionSpecification getPartitionSpec();
+
+    boolean definedAsSelect();
+
+    /**
+     * Return SELECT statement if tabled defined AS SELECT * FROM ...
+     * @return
+     */
+    @Nullable
+    SelectStatement getSelectStatement();
 }

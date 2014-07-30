@@ -35,6 +35,7 @@ import com.deepsky.lang.plsql.resolver.ResolveFacade;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
@@ -124,6 +125,16 @@ public class PackageBodyImpl extends PlSqlElementBase implements PackageBody {
     public PackageSpec getPackageSpecification() {
         ResolveFacade facade = ((ResolveProvider) getContainingFile()).getResolver();
         return facade.findPackageSpecification(this);
+    }
+
+    @Override
+    public PsiElement getPackageNameElement() {
+        ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.PACKAGE_NAME);
+        if(node != null){
+            return node.getPsi();
+        } else
+            throw new SyntaxTreeCorruptedException();
+
     }
 
 

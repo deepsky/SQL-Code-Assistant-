@@ -148,7 +148,6 @@ public class SyntaxHighlightAnnotator extends AbstractHighlightingVisitor implem
             if (type == PlSqlTokenTypes.FILE) {
                 int err = 0;
             } else if (type == PlSqlElementTypes.ERROR_TOKEN_A) {
-            } else if (type == PlSqlTokenTypes.IDENTIFIER) {
                 int err = 0;
             } else if (!PlSqlTokenTypes.NOT_KEYWORDS.contains(type)) {
                 // KEYWORD IDENTIFIED
@@ -157,9 +156,8 @@ public class SyntaxHighlightAnnotator extends AbstractHighlightingVisitor implem
                 // PUNCTUATION CHARACTERS or WS
                 // These elements were identified by lexer so no highlighting needed here
             }
-        } else {
-            super.visitElement(element);
         }
+        super.visitElement(element);
     }
 
 }

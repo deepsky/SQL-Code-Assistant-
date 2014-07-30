@@ -185,6 +185,16 @@ public class PackageSpecImpl extends PlSqlElementBase implements PackageSpec {
         return out.toArray(new ExecutableSpec[0]);
     }
 
+    @Override
+    public PsiElement getPackageNameElement() {
+        ASTNode node = getNode().findChildByType(PLSqlTypesAdopted.PACKAGE_NAME);
+        if(node != null){
+            return node.getPsi();
+        }
+
+        throw new SyntaxTreeCorruptedException();
+    }
+
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof PlSqlElementVisitor) {
             ((PlSqlElementVisitor) visitor).visitPackageSpec(this);

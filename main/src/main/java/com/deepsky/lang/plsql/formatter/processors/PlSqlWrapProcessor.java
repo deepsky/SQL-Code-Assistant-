@@ -319,6 +319,11 @@ public class PlSqlWrapProcessor {
             }
         }
 
+
+        if (childType == PlSqlElementTypes.PACKAGE_INIT_SECTION) {
+            return Wrap.createWrap(WrapType.ALWAYS, true);
+        }
+
         if (parentType == PlSqlElementTypes.PACKAGE_BODY
                 || parentType == PlSqlElementTypes.PACKAGE_SPEC) {
             if (childType == PlSqlTokenTypes.KEYWORD_IS

@@ -31,7 +31,7 @@ import com.deepsky.lang.common.PluginKeys2;
 import com.deepsky.lang.integration.FSContentTracker;
 import com.deepsky.lang.integration.LocalFSChangeTracker;
 import com.deepsky.lang.integration.PlSqlFileChangeTracker;
-import com.deepsky.lang.plsql.completion.lookups.SelectFieldLookupElement;
+import com.deepsky.lang.plsql.completion.lookups.select.SelectFieldLookupElement;
 import com.deepsky.lang.plsql.indexMan.FSIndexer;
 import com.deepsky.lang.plsql.indexMan.IndexManagerImpl;
 import com.deepsky.lang.plsql.sqlIndex.IndexManager;
@@ -122,7 +122,7 @@ public abstract class BaseCompletionTest extends LightFixtureCompletionTestCase 
     private String[] lookupElementsToPlainString(LookupElement[] elements) {
         String[] out = new String[elements != null?elements.length: 0];
         for (int i = 0; elements != null && i < elements.length; i++) {
-            out[i] = elements[i].getLookupString();
+            out[i] = elements[i].getLookupString().toLowerCase();
         }
         return out;
     }

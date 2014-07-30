@@ -8,6 +8,7 @@
     </JAVADOC>
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/sql-assistant/completion/1.12.1-SNAPSHOT/completion-1.12.1-SNAPSHOT-sources.jar!/" />
+      <root url="file://$PROJECT_DIR$/../code-assistant-linux-v12/completion/src/main/java" />
     </SOURCES>
   </library>
 </component>

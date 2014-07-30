@@ -626,7 +626,7 @@ public class PlSqlParserDefinition implements ParserDefinition {
             case PLSqlTokenTypes.SQLPLUS_REPFOOTER:
             case PLSqlTokenTypes.SQLPLUS_REPHEADER:
                 return new SqlPlusCommandImpl(node);
-            case PLSqlTokenTypes.SQLPLUS_ANONYM_PLSQL_BLOCK:
+            case PLSqlTokenTypes.ANONYM_PLSQL_BLOCK:
                 return new SqlPlusAnonymPlSqlBlockImpl(node);
 
             case PLSqlTokenTypes.COMMIT_STATEMENT:
