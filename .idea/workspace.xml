@@ -2,46 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="54de04b7-488f-4a63-9926-f47ea7ea238b" name="Default" comment="Fix typo">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateFunctionSpec.form" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateFunctionSpec.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureSpec.form" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureSpec.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateFunction.form" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateFunctionBody.form" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateFunction.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateFunctionBody.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedure.form" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureBody.form" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedure.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureBody.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/BaseLookupDecorator.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/BaseLookupDecorator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceFunction.form" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceFunction.form" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceFunction.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceFunction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceProcedure.form" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceProcedure.form" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceProcedure.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceProcedure.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreatePackageBody.form" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreatePackageBody.form" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreatePackageBody.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreatePackageBody.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreatePackageSpec.form" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreatePackageSpec.form" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreatePackageSpec.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreatePackageSpec.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateTable.form" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateTable.form" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateTable.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateTable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/FunctionLookupElement.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/FunctionLookupElement.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/FunctionParamPopup.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/FunctionParamPopup.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/LookupUtils.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/LookupUtils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/lookups/LookupUtilsTest.java" afterPath="$PROJECT_DIR$/completion/src/test/java/com/deepsky/lang/plsql/completion/lookups/LookupUtilsTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/ObjectUIBuilder.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/ObjectUIBuilder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/ParamProviderPopup.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/ParamProviderPopup.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/PlSqlPackageLookupElement.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/PlSqlPackageLookupElement.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/ProcedureLookupElement.java" afterPath="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/ProcedureLookupElement.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" afterPath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="sql-assistant.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406696458842" ignored="false" />
+    <file path="/Dummy.txt" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406784193103" ignored="false" />
     <file path="/README" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1387828340684" ignored="false" />
     <file path="/a.dummy" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406468112925" ignored="false" />
     <file path="/pom.xml" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1400509047828" ignored="false" />
     <file path="$USER_HOME$/sqlcode_assistant/sql-assistant-linux-129.713/build.xml" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1387830013351" ignored="false" />
     <file path="$USER_HOME$/sqlcode_assistant/sql-assistant-linux-129.713/.idea/workspace.xml" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1387830152587" ignored="false" />
     <file path="/.gitignore" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1387830138610" ignored="false" />
-    <file path="/fragment.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406658284181" ignored="false" />
+    <file path="/fragment.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406784589184" ignored="false" />
     <file path="/LocalFSChangeTracker.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1388000147892" ignored="false" />
     <file path="/plugin.xml" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406465697235" ignored="false" />
     <file path="/ConnectionPersistStorage.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1388001288925" ignored="false" />
@@ -250,7 +226,7 @@
     <file path="/ReturnStatementImpl.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406003249314" ignored="false" />
     <file path="/PlSqlBlockImpl.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406004281890" ignored="false" />
     <file path="/CreateProcedure.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406701168203" ignored="false" />
-    <file path="/CreatePackageBody.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406358655756" ignored="false" />
+    <file path="/CreatePackageBody.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406744669765" ignored="false" />
     <file path="/BaseLookupDecorator.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406657290991" ignored="false" />
     <file path="/CreateOrReplaceFunction.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406698877315" ignored="false" />
     <file path="/FunctionParamPopup.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406611433556" ignored="false" />
@@ -271,9 +247,10 @@
     <file path="/CreateTable.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406465317500" ignored="false" />
     <file path="/TableDefinition.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406374150701" ignored="false" />
     <file path="/TableDefinitionImpl.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406380029125" ignored="false" />
-    <file path="/PlSqlFormatterTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406395227617" ignored="false" />
+    <file path="/PlSqlFormatterTest.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406784459991" ignored="false" />
     <file path="/PlSqlUtil.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406526486268" ignored="false" />
     <file path="/CreateProcedureSpec.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406701890873" ignored="false" />
+    <file path="/PlSqlBlockGenerator.java" changelist="54de04b7-488f-4a63-9926-f47ea7ea238b" time="1406782968530" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -288,43 +265,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint>
-        <option name="NOTIFY_CAUGHT" value="true" />
-        <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint>
-        <option name="NOTIFY_CAUGHT" value="true" />
-        <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-    </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint url="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/indexMan/FSIndexer.java" line="62" class="com.deepsky.lang.plsql.indexMan.FSIndexer" package="com.deepsky.lang.plsql.indexMan">
         <option name="ENABLED" value="true" />
@@ -746,21 +686,6 @@
         <option name="CONDITION" value="&#13;&#13;JAVA" />
         <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlock.java" line="171" class="com.deepsky.lang.plsql.formatter.PlSqlBlock" package="com.deepsky.lang.plsql.formatter">
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
       <breakpoint url="file://$USER_HOME$/Idea_src/ideaIC-129.1359/platform/lang-impl/src/com/intellij/codeInsight/editorActions/EnterHandler.java" line="418" class="com.intellij.codeInsight.editorActions.EnterHandler.DoEnterAction" package="com.intellij.codeInsight.editorActions">
         <option name="ENABLED" value="false" />
         <option name="LOG_ENABLED" value="false" />
@@ -806,7 +731,59 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlockGenerator.java" line="356" class="com.deepsky.lang.plsql.formatter.PlSqlBlockGenerator" package="com.deepsky.lang.plsql.formatter">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
     </line_breakpoints>
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </breakpoint_any>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -819,7 +796,27 @@
       <file leaf-file-name="FunctionLookupElement.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/FunctionLookupElement.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="61" selection-start="1481" selection-end="1499" vertical-scroll-proportion="-2.4">
+            <state line="41" column="13" selection-start="2250" selection-end="2250" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BaseLookupDecorator.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/BaseLookupDecorator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="51" column="22" selection-start="2789" selection-end="2789" vertical-scroll-proportion="-4.9166665">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlSqlBlock.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlock.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="171" column="0" selection-start="6140" selection-end="6140" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -828,79 +825,25 @@
       <file leaf-file-name="ProcedureLookupElement.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/ProcedureLookupElement.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="168" column="75" selection-start="9158" selection-end="9158" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#2703#5693#0" expanded="true" />
-                <element signature="e#3323#3705#0" expanded="true" />
-                <element signature="e#3678#3679#0" expanded="true" />
-                <element signature="e#5674#5675#0" expanded="true" />
-                <element signature="e#6811#7193#0" expanded="true" />
-                <element signature="e#7166#7167#0" expanded="true" />
-                <element signature="e#8603#10270#0" expanded="true" />
-                <element signature="e#9368#9369#0" expanded="true" />
-                <element signature="e#10251#10252#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CreateProcedureSpec.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureSpec.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="44" column="45" selection-start="2031" selection-end="2031" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="bugs.txt" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/bugs.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="22" selection-start="58" selection-end="58" vertical-scroll-proportion="0.04731861">
+            <state line="133" column="0" selection-start="6632" selection-end="6632" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CreateProcedureBody.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureBody.java">
+      <file leaf-file-name="PlSqlPackageLookupElement.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/PlSqlPackageLookupElement.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="81" column="0" selection-start="2135" selection-end="3372" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#3050#3369#0" expanded="true" />
-                <element signature="e#3358#3359#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CreateOrReplaceProcedure.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceProcedure.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="125" column="0" selection-start="3726" selection-end="4592" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#3072#3391#0" expanded="true" />
-                <element signature="e#3380#3381#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CreateFunctionBody.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateFunctionBody.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="122" column="0" selection-start="4841" selection-end="4841" vertical-scroll-proportion="0.0">
+            <state line="43" column="13" selection-start="2256" selection-end="2256" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CreateOrReplaceFunction.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceFunction.java">
+      <file leaf-file-name="PlSqlBlockLookupElement.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/PlSqlBlockLookupElement.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="132" column="0" selection-start="5168" selection-end="5168" vertical-scroll-proportion="0.0">
+            <state line="43" column="13" selection-start="2359" selection-end="2359" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -924,22 +867,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceProcedure.form" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/FunctionParamPopup.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/ParamProviderPopup.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/FunctionLookupElement.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/ObjectUIBuilder.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceFunction.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceProcedure.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateFunction.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateFunctionBody.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedure.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureBody.form" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureBody.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureSpec.java" />
-        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/ProcedureLookupElement.java" />
         <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureSpec.form" />
         <option value="$PROJECT_DIR$/bugs.txt" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreatePackageBody.java" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/PlSqlPackageLookupElement.java" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreatePackageSpec.java" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/resources/formatter/arguments_in_body.test" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/resources/formatter/arguments_in_spec.test" />
+        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/common/PlSqlParserDefinition.java" />
+        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlockGenerator.java" />
+        <option value="$PROJECT_DIR$/parser/src/main/grammars/plsql_parser.g" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/resources/formatter/args_vars_in_body.test" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/java/com/deepsky/lang/plsql/formatter/PlSqlFormatterTest.java" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/resources/formatter/alignment_in_arguments.test" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/resources/formatter/alignment_in_arguments2.test" />
+        <option value="$PROJECT_DIR$/db_browser/src/test/resources/formatter/comments_in_pkg_no_indent.test" />
+        <option value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/ProcedureLookupElement.java" />
       </list>
     </option>
   </component>
@@ -994,7 +937,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1096,6 +1038,374 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="deepsky" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="deepsky" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lang" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="deepsky" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lang" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plsql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="deepsky" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lang" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plsql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="formatter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="deepsky" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lang" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plsql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="formatter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="processors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="formatter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="formatter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql-assistant-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="code-assistant-linux-v12" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db_browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1353,91 +1663,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="CreateProcedure" />
-              <option name="myItemType" value="com.intellij.uiDesigner.projectView.FormNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant-v12" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="code-assistant-linux-v12" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="completion" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="completion" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lookups" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UI" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" />
-              <option name="myItemType" value="com.intellij.uiDesigner.projectView.FormNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant-v12" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="code-assistant-linux-v12" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="completion" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="completion" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lookups" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UI" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" />
+              <option name="myItemId" value="CreatePackageSpec" />
               <option name="myItemType" value="com.intellij.uiDesigner.projectView.FormNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1480,48 +1706,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="CreateOrReplaceFunction" />
-              <option name="myItemType" value="com.intellij.uiDesigner.projectView.FormNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant-v12" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="code-assistant-linux-v12" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="completion" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="completion" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lookups" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UI" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" />
               <option name="myItemType" value="com.intellij.uiDesigner.projectView.FormNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1642,19 +1826,20 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="project.structure.last.edited" value="Modules" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="96" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="98" />
-    <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="98" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
-    <property name="MemberChooser.sorted" value="false" />
-    <property name="recentsLimit" value="5" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="96" />
+    <property name="recentsLimit" value="5" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="last_opened_file_path" value="$USER_HOME$/Idea_src/ideaIC-129.1359/xml" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="101" />
@@ -1669,9 +1854,9 @@
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="last_directory_selection" value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion" />
-    <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
@@ -1679,8 +1864,8 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="dynamic.classpath" value="false" />
     <property name="options.searchVisible" value="true" />
+    <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -1709,33 +1894,7 @@
       <recent name="$PROJECT_DIR$/db_browser/src/test/resources/completion/base/plsql/select" />
     </key>
   </component>
-  <component name="RunManager" selected="Plugin.sql-assistant">
-    <configuration default="false" name="PlSqlGenericCompletionTest.test_start_begin_nested0_1" type="JUnit" factoryName="JUnit" temporary="true">
-      <module name="db_browser" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="PACKAGE_NAME" value="test.deepsky.lang.plsql.completion2" />
-      <option name="MAIN_CLASS_NAME" value="test.deepsky.lang.plsql.completion2.PlSqlGenericCompletionTest" />
-      <option name="METHOD_NAME" value="test_start_begin_nested0_1" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
-      <patterns />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="JUnit.PlSqlFormatterTest">
     <configuration default="false" name="LookupUtilsTest.test1" type="JUnit" factoryName="JUnit" temporary="true">
       <module name="completion" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1834,6 +1993,32 @@
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
+    <configuration default="false" name="PlSqlFormatterTest.testAlignment_in_arguments" type="JUnit" factoryName="JUnit" temporary="true">
+      <module name="db_browser" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.deepsky.lang.plsql.formatter" />
+      <option name="MAIN_CLASS_NAME" value="com.deepsky.lang.plsql.formatter.PlSqlFormatterTest" />
+      <option name="METHOD_NAME" value="testAlignment_in_arguments" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
       <module name="plugin_runner" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
@@ -1870,6 +2055,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1895,19 +2093,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2198,32 +2383,6 @@
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <configuration default="false" name="PlSqlFormatterTest" type="JUnit" factoryName="JUnit">
-      <module name="db_browser" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.deepsky.lang.plsql.formatter" />
-      <option name="MAIN_CLASS_NAME" value="com.deepsky.lang.plsql.formatter.PlSqlFormatterTest" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
-      <patterns />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
-      <method />
-    </configuration>
     <configuration default="false" name="PlSqlGenericCompletionTest" type="JUnit" factoryName="JUnit">
       <module name="db_browser" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -2317,6 +2476,32 @@
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
+    <configuration default="false" name="PlSqlFormatterTest" type="JUnit" factoryName="JUnit">
+      <module name="db_browser" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="com.deepsky.lang.plsql.formatter" />
+      <option name="MAIN_CLASS_NAME" value="com.deepsky.lang.plsql.formatter.PlSqlFormatterTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
     <list size="21">
       <item index="0" class="java.lang.String" itemvalue="Application.CodeGeneratorRunner" />
       <item index="1" class="java.lang.String" itemvalue="JUnit.Select_BaseCompletionTest" />
@@ -2328,25 +2513,25 @@
       <item index="7" class="java.lang.String" itemvalue="JUnit.PlSqlParser_DMLTest" />
       <item index="8" class="java.lang.String" itemvalue="JUnit.SyntaxTreePathLexerTest" />
       <item index="9" class="java.lang.String" itemvalue="JUnit.CaseGenericCompletionTest" />
-      <item index="10" class="java.lang.String" itemvalue="JUnit.PlSqlFormatterTest" />
-      <item index="11" class="java.lang.String" itemvalue="JUnit.PlSqlGenericCompletionTest" />
-      <item index="12" class="java.lang.String" itemvalue="Plugin.sql-assistant" />
-      <item index="13" class="java.lang.String" itemvalue="Remote.ANT-JUnitDebug[5433]" />
-      <item index="14" class="java.lang.String" itemvalue="Remote.idea[5005]" />
-      <item index="15" class="java.lang.String" itemvalue="JUnit.DDLProcessorTest" />
-      <item index="16" class="java.lang.String" itemvalue="JUnit.PlSqlGenericCompletionTest.test_start_begin_nested0_1" />
-      <item index="17" class="java.lang.String" itemvalue="JUnit.LookupUtilsTest.test1" />
-      <item index="18" class="java.lang.String" itemvalue="JUnit.DeleteStmtProcessorTest" />
-      <item index="19" class="java.lang.String" itemvalue="Application.CreateProcedureBody" />
-      <item index="20" class="java.lang.String" itemvalue="JUnit.LookupUtilsTest.test2" />
+      <item index="10" class="java.lang.String" itemvalue="JUnit.PlSqlGenericCompletionTest" />
+      <item index="11" class="java.lang.String" itemvalue="Plugin.sql-assistant" />
+      <item index="12" class="java.lang.String" itemvalue="Remote.ANT-JUnitDebug[5433]" />
+      <item index="13" class="java.lang.String" itemvalue="Remote.idea[5005]" />
+      <item index="14" class="java.lang.String" itemvalue="JUnit.DDLProcessorTest" />
+      <item index="15" class="java.lang.String" itemvalue="JUnit.LookupUtilsTest.test1" />
+      <item index="16" class="java.lang.String" itemvalue="JUnit.DeleteStmtProcessorTest" />
+      <item index="17" class="java.lang.String" itemvalue="Application.CreateProcedureBody" />
+      <item index="18" class="java.lang.String" itemvalue="JUnit.LookupUtilsTest.test2" />
+      <item index="19" class="java.lang.String" itemvalue="JUnit.PlSqlFormatterTest" />
+      <item index="20" class="java.lang.String" itemvalue="JUnit.PlSqlFormatterTest.testAlignment_in_arguments" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.LookupUtilsTest.test2" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.LookupUtilsTest.test1" />
-        <item index="2" class="java.lang.String" itemvalue="Application.CreateProcedureBody" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.DeleteStmtProcessorTest" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.PlSqlGenericCompletionTest.test_start_begin_nested0_1" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.PlSqlFormatterTest.testAlignment_in_arguments" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.LookupUtilsTest.test2" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.LookupUtilsTest.test1" />
+        <item index="3" class="java.lang.String" itemvalue="Application.CreateProcedureBody" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.DeleteStmtProcessorTest" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -2425,24 +2610,24 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="24" width="1280" height="696" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20988655" sideWeight="0.66333336" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.13290113" sideWeight="0.66333336" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.7475083" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18314424" sideWeight="0.66333336" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.68800646" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.475" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18314424" sideWeight="0.55333334" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.515" sideWeight="0.68800646" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35666665" sideWeight="0.3119935" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.66833335" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33666667" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.335" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18638574" sideWeight="0.61333334" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16693678" sideWeight="0.45" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23662885" sideWeight="0.585" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24473257" sideWeight="0.66333336" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2382496" sideWeight="0.485" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25666666" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20988655" sideWeight="0.66333336" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2540,128 +2725,116 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Idea_src/ideaIC-129.1359/java/java-impl/src/com/intellij/refactoring/introduceParameter/IntroduceParameterHandler.java">
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/common/PlSqlParserDefinition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="224" column="6" selection-start="10243" selection-end="10243" vertical-scroll-proportion="0.33333334">
-          <folding>
-            <element signature="e#10292#10319#0" expanded="false" />
-            <element signature="e#10326#11136#0" expanded="false" />
-            <element signature="e#11127#11128#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Idea_src/ideaIC-129.1359/platform/platform-api/src/com/intellij/openapi/ui/popup/ComponentPopupBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="135" column="34" selection-start="4084" selection-end="4084" vertical-scroll-proportion="0.33333334">
+        <state line="166" column="0" selection-start="6852" selection-end="6852" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/LookupUtils.java">
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/formatter/comments_in_pkg_no_indent.test">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="145" column="52" selection-start="6602" selection-end="6602" vertical-scroll-proportion="3.1812866">
+        <state line="67" column="1" selection-start="1694" selection-end="1694" vertical-scroll-proportion="0.8238748">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceFunction.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceFunction.java">
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/formatter/alignment_in_arguments2.test">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="132" column="0" selection-start="5168" selection-end="5168" vertical-scroll-proportion="0.0">
+        <state line="18" column="1" selection-start="289" selection-end="289" vertical-scroll-proportion="0.48824593">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/ObjectUIBuilder.java">
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/java/com/deepsky/lang/plsql/formatter/PlSqlFormatterTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="18" selection-start="2441" selection-end="2441" vertical-scroll-proportion="0.10488246">
+        <state line="276" column="0" selection-start="7048" selection-end="7048" vertical-scroll-proportion="0.14647378">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/formatter/alignment_in_proc.test">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="1" selection-start="1005" selection-end="1005" vertical-scroll-proportion="0.9457505">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_browser/src/test/resources/formatter/alignment_in_arguments.test">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="1" selection-start="356" selection-end="356" vertical-scroll-proportion="0.5424955">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/parser/src/main/grammars/plsql_parser.g">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2145" column="0" selection-start="70737" selection-end="70737" vertical-scroll-proportion="-0.10516934">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/ArgumentImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="0" selection-start="2851" selection-end="2851" vertical-scroll-proportion="0.16550523">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/Argument.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="15" selection-start="1701" selection-end="1701" vertical-scroll-proportion="0.28745645">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlockGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="109" column="0" selection-start="5253" selection-end="5253" vertical-scroll-proportion="0.16042781">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlock.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="171" column="0" selection-start="6140" selection-end="6140" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/PlSqlPackageLookupElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="13" selection-start="2256" selection-end="2256" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/PlSqlBlockLookupElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="13" selection-start="2359" selection-end="2359" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/ProcedureLookupElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="133" column="0" selection-start="6632" selection-end="6632" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/FunctionLookupElement.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="61" selection-start="1481" selection-end="1499" vertical-scroll-proportion="-2.4">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateFunctionBody.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="122" column="0" selection-start="4841" selection-end="4841" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceProcedure.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureBody.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateOrReplaceProcedure.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="0" selection-start="3726" selection-end="4592" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#3072#3391#0" expanded="true" />
-            <element signature="e#3380#3381#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureBody.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="0" selection-start="2135" selection-end="3372" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#3050#3369#0" expanded="true" />
-            <element signature="e#3358#3359#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/ProcedureLookupElement.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="168" column="75" selection-start="9158" selection-end="9158" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#2703#5693#0" expanded="true" />
-            <element signature="e#3323#3705#0" expanded="true" />
-            <element signature="e#3678#3679#0" expanded="true" />
-            <element signature="e#5674#5675#0" expanded="true" />
-            <element signature="e#6811#7193#0" expanded="true" />
-            <element signature="e#7166#7167#0" expanded="true" />
-            <element signature="e#8603#10270#0" expanded="true" />
-            <element signature="e#9368#9369#0" expanded="true" />
-            <element signature="e#10251#10252#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureSpec.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/UI/CreateProcedureSpec.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="45" selection-start="2031" selection-end="2031" vertical-scroll-proportion="0.0">
+        <state line="41" column="13" selection-start="2250" selection-end="2250" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bugs.txt">
+    <entry file="file://$PROJECT_DIR$/completion/src/main/java/com/deepsky/lang/plsql/completion/lookups/plsql/BaseLookupDecorator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="22" selection-start="58" selection-end="58" vertical-scroll-proportion="0.04731861">
+        <state line="51" column="22" selection-start="2789" selection-end="2789" vertical-scroll-proportion="-4.9166665">
           <folding />
         </state>
       </provider>

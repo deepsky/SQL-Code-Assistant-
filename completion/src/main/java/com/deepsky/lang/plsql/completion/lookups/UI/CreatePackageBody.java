@@ -81,7 +81,26 @@ public class CreatePackageBody extends ParamProviderPopup {
 
     @Override
     public String getStatementText() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        StringBuilder b = new StringBuilder();
+        if (crOrReplaceCheck.isSelected()) {
+            b.append("create or replace package body ");
+        } else {
+            // Do not add "replace"
+            b.append("create package body ");
+        }
+
+        b.append(getName()).append("\n");
+        b.append("is\n");
+        b.append("\t-- Add code here\n");
+
+        if (initSectionCheckBox.isSelected()) {
+            b.append("begin\n");
+            b.append("\t-- Add package initialization code here\n");
+            b.append("\tNULL;\n");
+        }
+        b.append("end;\n");
+        b.append("/\n");
+        return b.toString();
     }
 
     public boolean insertInitSection() {

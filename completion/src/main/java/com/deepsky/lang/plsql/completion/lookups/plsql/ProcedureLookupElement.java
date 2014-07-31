@@ -70,35 +70,6 @@ public class ProcedureLookupElement<T extends LookupElement> extends BaseLookupD
                             }
                         });
 
-//                        insertPrefix2(context, prefix, f, Procedure.class, new InsertionHandler<Procedure>() {
-//                            @Override
-//                            public void handle(Editor editor, Procedure e) {
-//                                int startOffset = e.getTextRange().getStartOffset();
-//                                int endOffset = e.getTextRange().getEndOffset();
-//
-//                                TextRange range = e.getEObjectName().getTextRange();
-//                                int cursorOffset = range.getStartOffset() + f.getName().length();
-//                                int increment = f.getName().length() - range.getLength();
-//                                editor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), f.getName());
-//
-//
-//                                if (f.isCreateOrReplace()) {
-//                                    // Add "OR REPLACE"
-//                                    String procText = editor.getDocument().getText().substring(
-//                                            startOffset,
-//                                            endOffset + increment);
-//                                    Procedure exec = insertOrReplace(procText);
-//                                    cursorOffset = startOffset + exec.getEObjectName().getTextRange().getEndOffset();
-//                                    editor.getDocument().replaceString(
-//                                            startOffset,
-//                                            endOffset + increment,
-//                                            exec.getText());
-//                                }
-//
-//                                PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
-//                                editor.getCaretModel().moveToOffset(cursorOffset);
-//                            }
-//                        });
                     }
                 }).
                 withStrikeoutness(false);
@@ -132,17 +103,6 @@ public class ProcedureLookupElement<T extends LookupElement> extends BaseLookupD
                             }
                         });
 
-//                        insertPrefix2(context, prefix, f, Procedure.class, new InsertionHandler<Procedure>() {
-//                            @Override
-//                            public void handle(Editor editor, Procedure e) {
-//                                TextRange range = e.getEObjectName().getTextRange();
-//                                int cursorOffset = range.getStartOffset() + f.getName().length();
-//                                editor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), f.getName());
-//                                PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
-//                                editor.getCaretModel().moveToOffset(cursorOffset);
-//                            }
-//                        });
-
                     }
                 })
                 .withStrikeoutness(false);
@@ -171,17 +131,6 @@ public class ProcedureLookupElement<T extends LookupElement> extends BaseLookupD
                                 editor.getCaretModel().moveToOffset(range.getEndOffset());
                             }
                         });
-//                        insertPrefix2(context, prefix, f, ProcedureSpec.class, new InsertionHandler<ProcedureSpec>() {
-//                            @Override
-//                            public void handle(Editor editor, ProcedureSpec e) {
-//                                TextRange range = e.getEObjectName().getTextRange();
-//                                int cursorOffset = range.getStartOffset() + f.getName().length();
-//                                editor.getDocument().replaceString(range.getStartOffset(), range.getEndOffset(), f.getName());
-//                                PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
-//                                editor.getCaretModel().moveToOffset(cursorOffset);
-//                            }
-//                        });
-
                     }
                 })
                 .withStrikeoutness(false);
