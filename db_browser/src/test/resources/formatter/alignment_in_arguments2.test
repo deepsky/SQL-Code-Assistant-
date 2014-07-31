@@ -1,0 +1,19 @@
+create function child (
+    pParentID number,
+    pChildVersID varchar2(23)
+) RETURN GlobalTree.childID%TYPE
+is
+begin
+    return 0;
+end;
+/
+--------
+create function child (
+    pParentID    number,
+    pChildVersID varchar2(23)
+) RETURN GlobalTree.childID%TYPE
+is
+begin
+    return 0;
+end;
+/

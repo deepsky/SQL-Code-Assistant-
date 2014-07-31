@@ -2155,8 +2155,8 @@ default1:
     ;
 
 parameter_name :
-    identifier2
-    | "comment"
+    (identifier2
+    | "comment")
     {  __markRule(PARAMETER_NAME);}
     ;
 

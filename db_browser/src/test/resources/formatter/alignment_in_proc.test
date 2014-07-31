@@ -1,0 +1,37 @@
+FUNCTION GetProperty (
+    token      binary_integer,
+    PropName IN NOCOPY VARCHAR2,
+    argCount   binary_integer,
+    retVal out double precision)
+RETURN binary_integer
+IS
+    inArgTable      INTEGER;
+    inArgTypeTable  DATE;
+    dblVal          VARCHAR2(50) := P_TIME_ZONE;
+    ret             binary_integer;
+BEGIN
+    -- Find number
+    ret := OAgetNumber(token, PropName, inArgTable, inArgTypeTable, dblVal, argCount);
+    retVal := ret;
+    RETURN ret;
+END GetProperty;
+/
+--------------
+FUNCTION GetProperty (
+    token              binary_integer,
+    PropName IN NOCOPY VARCHAR2,
+    argCount           binary_integer,
+    retVal   out       double precision)
+RETURN binary_integer
+IS
+    inArgTable      INTEGER;
+    inArgTypeTable  DATE;
+    dblVal          VARCHAR2(50) := P_TIME_ZONE;
+    ret             binary_integer;
+BEGIN
+    -- Find number
+    ret    := OAgetNumber(token, PropName, inArgTable, inArgTypeTable, dblVal, argCount);
+    retVal := ret;
+    RETURN ret;
+END GetProperty;
+/
