@@ -354,6 +354,7 @@ public class PlSqlBlockGenerator {
             }
         } catch (SyntaxTreeCorruptedException e) {
             // do nothing
+            int hh =0;
         }
     }
 

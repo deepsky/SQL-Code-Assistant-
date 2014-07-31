@@ -34,10 +34,9 @@ AS/*****************************************************************************
 END logger_const_pkg;
 /
 -----
-CREATE
-OR REPLACE PACKAGE
-logger_const_pkg
-AS /******************************************************************************
+CREATE OR REPLACE PACKAGE logger_const_pkg
+AS
+/******************************************************************************
    NAME:       logger_const_pkg -  (dynamically generated) logger constants Package
    PURPOSE:
 
@@ -55,11 +54,15 @@ AS /****************************************************************************
     The dynamically generated version is created by : logger_proxy_pkg
 
 ******************************************************************************/
+
 --
 -- Public declaration of package
 --
+
 /*=========================*/
 /*======= Constants =======*/
 /*=========================*/
+
+
 END logger_const_pkg;
 /
