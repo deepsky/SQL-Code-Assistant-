@@ -1,64 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="54de04b7-488f-4a63-9926-f47ea7ea238b" name="Default" comment="Fix Quick Object Lookup (13 ver specific)&#10;">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/NamedYItem.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/VariantsProvider.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/VariantsProviderImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/DataTypeLookupElement.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/DataTypeParenthesesHandler.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/FunctionLookupElement.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/GenericLookupElement.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/LookupUtils.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/PackageLookupElement.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/ProcedureLookupElement.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/SelectFieldLookupElement.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/SequenceLookupElement.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/SequenceMethodLookupElement.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/TableLookupElement.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/lookups/TriggerLookupElement.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/AbstractSchema.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/AbstractSchema.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/BaseCompletionTest.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/BaseCompletionTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/spices/CompilableObject.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/spices/CompilableObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/ddl/CreateTempTableImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/ddl/CreateTempTableImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/impl/DbSchemaIndex.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/impl/DbSchemaIndex.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/ExecSQLStmtStructurePopupAction.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/ExecSQLStmtStructurePopupAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/Executable.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/Executable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/ExecuteSQLStatementAction.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/ExecuteSQLStatementAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/ExplainPlanAction.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/ExplainPlanAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/impl/FSIndex.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/impl/FSIndex.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/Function.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/Function.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/FunctionImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/FunctionImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/FunctionSpec.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/FunctionSpec.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/FunctionSpecImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/FunctionSpecImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/GenericCompletionTest.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/GenericCompletionTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/NameProvider.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion/NameProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PackageBody.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PackageBody.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/PackageBodyImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/PackageBodyImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PackageSpec.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PackageSpec.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/PackageSpecImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/PackageSpecImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlock.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlock.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PlSqlBlock.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PlSqlBlock.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/PlSqlBlockImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/PlSqlBlockImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/PlSqlElementBase.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/PlSqlElementBase.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PlSqlElementVisitor.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/PlSqlElementVisitor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/processors/PlSqlIndentProcessor.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/processors/PlSqlIndentProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/common/PlSqlParserDefinition.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/common/PlSqlParserDefinition.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/test/java/test/deepsky/lang/plsql/parser/PlSqlParser_PLSQLTest.java" afterPath="$PROJECT_DIR$/main/src/test/java/test/deepsky/lang/plsql/parser/PlSqlParser_PLSQLTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/processors/PlSqlSpacingProcessor.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/processors/PlSqlSpacingProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/processors/PlSqlSpacingProcessorBasic.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/processors/PlSqlSpacingProcessorBasic.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/utils/PlSqlUtil.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/utils/PlSqlUtil.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/processors/PlSqlWrapProcessor.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/processors/PlSqlWrapProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/ProcedureImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/ProcedureImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/ReturnStatement.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/ReturnStatement.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/ReturnStatementImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/ReturnStatementImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/database/exec/impl/SQLExecutorSimple.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/database/exec/impl/SQLExecutorSimple.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/Select_BaseCompletionTest.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/Select_BaseCompletionTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/SysSchemaIndexProvider.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/sqlIndex/SysSchemaIndexProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/ddl/TableDefinition.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/ddl/TableDefinition.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/TableDefinitionImpl.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/psi/impl/TableDefinitionImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
+    <list default="true" id="54de04b7-488f-4a63-9926-f47ea7ea238b" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlockGenerator.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/formatter/PlSqlBlockGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/java/com/deepsky/lang/plsql/formatter/PlSqlFormatterTest.java" afterPath="$PROJECT_DIR$/db_browser/src/test/java/com/deepsky/lang/plsql/formatter/PlSqlFormatterTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/SyntaxHighlightAnnotator.java" afterPath="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/SyntaxHighlightAnnotator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/alias_name_alignment.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/alias_name_alignment.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/alter_table.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/alter_table.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/alter_table_lowercase.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/alter_table_lowercase.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/alter_table_uppercase.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/alter_table_uppercase.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/ansi_join_tab.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/ansi_join_tab.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/blanklines_inside_select.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/blanklines_inside_select.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/comments_alignment.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/comments_alignment.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/comments_in_pkg.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/comments_in_pkg.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/comments_in_pkg_no_indent.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/comments_in_pkg_no_indent.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/concat_in_plsql_blk.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/concat_in_plsql_blk.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/conditions.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/conditions.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/create_object_type.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/create_object_type.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/create_table_abc.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/create_table_abc.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/create_table_abc1.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/create_table_abc1.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/create_tables.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/create_tables.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/create_trigger.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/create_trigger.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/db_browser.iml" afterPath="$PROJECT_DIR$/db_browser/db_browser.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/dpriver.samples2.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/dpriver.samples2.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/empty_pkg.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/empty_pkg.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/empty_pkg_body.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/empty_pkg_body.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/fk_pk_spacing.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/fk_pk_spacing.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/func1.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/func1.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/in_select.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/in_select.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/indent_in_where_clause.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/indent_in_where_clause.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/insert_into.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/insert_into.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/long_datatypes.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/long_datatypes.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/main.iml" afterPath="$PROJECT_DIR$/main/main.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/notnull_alignment.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/notnull_alignment.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/pkg_var_types.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/pkg_var_types.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/plsql_blk_exc.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/plsql_blk_exc.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/plsql_samples.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/plsql_samples.sql" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" afterPath="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/procedure_body.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/procedure_body.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/rename_table.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/rename_table.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/select02.sql" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/select02.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/select_expr.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/select_expr.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/select_expr2.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/select_expr2.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/select_in_cursor.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/select_in_cursor.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/select_union.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/select_union.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/subqueries.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/subqueries.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/subquery_in_cursor.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/subquery_in_cursor.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/subquery_update.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/subquery_update.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/types_in_decl.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/types_in_decl.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view1.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view1.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view2.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view2.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view3.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view3.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view_1.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view_1.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view_2.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view_2.test" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view_3.test" afterPath="$PROJECT_DIR$/db_browser/src/test/resources/formatter/view_3.test" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="sql-assistant.iws" />
@@ -200,19 +195,46 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="build.xml" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="build.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="44" selection-start="567" selection-end="567" vertical-scroll-proportion="0.24444444" vertical-offset="63" max-vertical-offset="3375">
+            <state line="10" column="0" selection-start="417" selection-end="417" vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="3375">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rr.sql" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="diff.txt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/diff.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="3" column="0" selection-start="617" selection-end="617" vertical-scroll-proportion="0.0" vertical-offset="45" max-vertical-offset="135">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="diff_cp.txt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/diff_cp.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="31" column="25" selection-start="0" selection-end="6777" vertical-scroll-proportion="0.0" vertical-offset="465" max-vertical-offset="675">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="rr.sql" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/rr.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="0" selection-start="30" selection-end="45" vertical-scroll-proportion="0.0" vertical-offset="30" max-vertical-offset="705">
+            <state line="16" column="34" selection-start="216" selection-end="216" vertical-scroll-proportion="0.27027026" vertical-offset="90" max-vertical-offset="1170">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SyntaxHighlightAnnotator.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/SyntaxHighlightAnnotator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="145" column="46" selection-start="7588" selection-end="7588" vertical-scroll-proportion="0.0" vertical-offset="1449" max-vertical-offset="2025">
               <folding />
             </state>
           </provider>
@@ -221,7 +243,7 @@
       <file leaf-file-name="plugin.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="45" column="18" selection-start="2249" selection-end="2249" vertical-scroll-proportion="0.0" vertical-offset="435" max-vertical-offset="4185">
+            <state line="34" column="67" selection-start="1849" selection-end="1849" vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="4185">
               <folding />
             </state>
           </provider>
@@ -230,7 +252,7 @@
       <file leaf-file-name="BaseCompletionTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/BaseCompletionTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="0" selection-start="2011" selection-end="2011" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2280">
+            <state line="38" column="0" selection-start="2011" selection-end="2011" vertical-scroll-proportion="0.0" vertical-offset="570" max-vertical-offset="2670">
               <folding />
             </state>
           </provider>
@@ -249,15 +271,6 @@
         <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/SqlScriptRunService.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="448" column="4" selection-start="17527" selection-end="17527" vertical-scroll-proportion="0.0" vertical-offset="6720" max-vertical-offset="7845">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/db_browser/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="27" selection-start="962" selection-end="962" vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="1380">
               <folding />
             </state>
           </provider>
@@ -312,10 +325,13 @@
         <option value="$PROJECT_DIR$/main/pom.xml" />
         <option value="$PROJECT_DIR$/db_browser/pom.xml" />
         <option value="$PROJECT_DIR$/result_panel/pom.xml" />
-        <option value="$PROJECT_DIR$/rr.sql" />
         <option value="$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/BaseCompletionTest.java" />
-        <option value="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
         <option value="$PROJECT_DIR$/build.xml" />
+        <option value="$PROJECT_DIR$/diff_cp.txt" />
+        <option value="$PROJECT_DIR$/diff.txt" />
+        <option value="$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml" />
+        <option value="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/SyntaxHighlightAnnotator.java" />
+        <option value="$PROJECT_DIR$/rr.sql" />
       </list>
     </option>
   </component>
@@ -367,7 +383,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+    <navigator proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -378,80 +394,11 @@
       <autoscrollFromSource />
       <sortByType />
     </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="result_panel" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin_runner" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql-code-assistant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin_runner" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="META-INF" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="project.structure.last.edited" value="Libraries" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="71" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="69" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="83" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="OverrideImplement.combined" value="true" />
@@ -465,7 +412,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../code-assistant-linux-v12/database/target/database-1.12.1-SNAPSHOT.jar!/" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="87" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="963" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="965" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="967" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="87" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="83" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -493,10 +440,15 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion" />
     </key>
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.deepsky.lang.plsql.completion.syntaxTreePath.logic" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion" />
+      <recent name="$PROJECT_DIR$/annotationProcessors/src/main" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="au.com.bytecode.opencsv" />
@@ -504,10 +456,6 @@
       <recent name="com.deepsky.lang.plsql.completion.syntaxTreePath.generated" />
       <recent name="com.deepsky.lang.plsql.completion.processors" />
       <recent name="com.deepsky.lang.plsql.completion" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/plsql/completion" />
-      <recent name="$PROJECT_DIR$/annotationProcessors/src/main" />
     </key>
   </component>
   <component name="RunManager" selected="JUnit.GenericCompletionTest">
@@ -964,7 +912,11 @@
       <created>1394986353616</created>
       <updated>1394986353616</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Get in sync with v12">
+      <created>1406614895545</created>
+      <updated>1406614895545</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -989,29 +941,29 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="24" width="1280" height="696" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20873787" sideWeight="0.515" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.50830567" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20873787" sideWeight="0.515" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5166113" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42358804" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.55315614" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32781458" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32781458" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24919094" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20550162" sideWeight="0.7033333" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23543689" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25566342" sideWeight="0.7033333" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25566342" sideWeight="0.7033333" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5780731" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42218542" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5529801" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1037,7 +989,8 @@
     </option>
     <MESSAGE value="Highlight errored string literals&#10;" />
     <MESSAGE value="Fix &quot;Accessing invalid virtual file&quot; issue" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix &quot;Accessing invalid virtual file&quot; issue" />
+    <MESSAGE value="Get in sync with v12" />
+    <option name="LAST_COMMIT_MESSAGE" value="Get in sync with v12" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1059,13 +1012,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/db_browser/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="27" selection-start="962" selection-end="962" vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="1380">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/result_panel/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="12" column="19" selection-start="521" selection-end="521" vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="705">
@@ -1263,13 +1209,6 @@
         <state line="31" column="38" selection-start="1624" selection-end="1624" vertical-scroll-proportion="0.090121314" vertical-offset="68" max-vertical-offset="870" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/SqlScriptRunService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="448" column="4" selection-start="17527" selection-end="17527" vertical-scroll-proportion="0.0" vertical-offset="5605" max-vertical-offset="6735">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="18" selection-start="578" selection-end="578" vertical-scroll-proportion="0.0" vertical-offset="75" max-vertical-offset="2805">
@@ -1282,27 +1221,6 @@
         <state line="26" column="27" selection-start="965" selection-end="965" vertical-scroll-proportion="0.51993066" vertical-offset="90" max-vertical-offset="1395" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/result_panel/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="19" selection-start="521" selection-end="521" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="705">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db_browser/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="27" selection-start="962" selection-end="962" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1380">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rr.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="30" selection-end="45" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="705">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/db_browser/src/test/java/test/deepsky/lang/plsql/completion2/BaseCompletionTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="38" column="0" selection-start="2011" selection-end="2011" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2280">
@@ -1310,16 +1228,63 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/diff_cp.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="25" selection-start="0" selection-end="6777" vertical-scroll-proportion="0.0" vertical-offset="405" max-vertical-offset="675">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/diff.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="0" selection-start="617" selection-end="617" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="135">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_browser/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="44" selection-start="1070" selection-end="1070" vertical-scroll-proportion="0.24291497" vertical-offset="375" max-vertical-offset="1380" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/actions/SqlScriptRunService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="448" column="4" selection-start="17527" selection-end="17527" vertical-scroll-proportion="0.0" vertical-offset="6437" max-vertical-offset="7035">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/plugin_runner/META-INF/plugin.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="18" selection-start="2249" selection-end="2249" vertical-scroll-proportion="0.0" vertical-offset="435" max-vertical-offset="4185">
+        <state line="34" column="67" selection-start="1849" selection-end="1849" vertical-scroll-proportion="0.0" vertical-offset="435" max-vertical-offset="4185">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/result_panel/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="19" selection-start="521" selection-end="521" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="705">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="44" selection-start="567" selection-end="567" vertical-scroll-proportion="0.24444444" vertical-offset="63" max-vertical-offset="3375">
+        <state line="10" column="0" selection-start="417" selection-end="417" vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="3375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/src/main/java/com/deepsky/lang/validation/SyntaxHighlightAnnotator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="145" column="46" selection-start="7588" selection-end="7588" vertical-scroll-proportion="0.0" vertical-offset="1449" max-vertical-offset="2025">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rr.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="34" selection-start="216" selection-end="216" vertical-scroll-proportion="0.27027026" vertical-offset="90" max-vertical-offset="1170">
           <folding />
         </state>
       </provider>

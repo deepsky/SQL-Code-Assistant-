@@ -268,6 +268,21 @@ public class PlSqlFormatterTest extends PlSqlFormatterTestCase {
         doTest();
     }
 
+
+    public void testAlignment_in_arguments() {
+        doTest();
+    }
+
+    public void testAlignment_in_arguments2() {
+        doTest();
+    }
+
+    public void testAlignment_in_proc() {
+        doTest();
+    }
+
+
+
     // --- stuff to run test cases
     public void doTest() {
         final List<String> data = readInput(getTestDataPath2() + "/" + getTestName(true) + ".test");
