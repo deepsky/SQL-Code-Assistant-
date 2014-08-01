@@ -114,36 +114,6 @@ public abstract class BaseLookupDecorator <T extends LookupElement> extends Look
         void handle(Editor editor, T e);
     }
 
-    protected static <T extends PlSqlElement> void insertPrefix2(
-            final InsertionContext context, String prefix, final ParamProviderPopup f,
-            Class<T> target, final InsertionHandler<T> handler) {
-
-        insertPrefix(context, context.getEditor(), prefix, target, new BaseLookupDecorator.PopupBuilder<T>() {
-            @Override
-            public ParamProviderPopup createPopup(final T e) {
-                f.addCloseEventLister(new ParamProviderPopup.CloseEventListener() {
-                    @Override
-                    public void close(final boolean isOk) {
-                        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                            public void run() {
-                                // User pressed OK, update procedure name
-                                if (isOk && !context.getProject().isDisposed()) {
-                                    try {
-                                        handler.handle(context.getEditor(), e);
-                                    } catch (Throwable e) {
-                                        log.warn(e.getMessage());
-                                    }
-                                }
-                            }
-                        });
-                    }
-                });
-                return f;
-            }
-        });
-    }
-
-
     protected static <T extends PlSqlElement> void insertPrefix3(
             final InsertionContext context, String prefix, final ParamProviderPopup f,
             final Class<T> target, final InsertionHandler<T> handler) {
@@ -244,7 +214,7 @@ public abstract class BaseLookupDecorator <T extends LookupElement> extends Look
                                         }
 
                                         if (func != null) {
-                                            handler.handle(context.getEditor(), e);
+                                            handler.handle(context.getEditor(), (T)func);
                                         }
 
                                     } catch (Throwable e) {

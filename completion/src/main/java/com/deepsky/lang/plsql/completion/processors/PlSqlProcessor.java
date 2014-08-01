@@ -37,18 +37,6 @@ import com.intellij.lang.ASTNode;
 
 public class PlSqlProcessor extends CompletionBase {
 
-//    @SyntaxTreePath("/..#ANONYM_PLSQL_BLOCK/#PLSQL_BLOCK//..#STATEMENT_LIST/..#PROCEDURE_CALL/#CALLABLE_NAME_REF/#EXEC_NAME_REF/#C_MARKER")
-//    public void startInsideBlock(C_Context ctx) {
-//        //ctx.addElement(SelectLookupElement.createSelectInto());
-//        ctx.addElement(UpdateLookupElement.create());
-//        ctx.addElement(DeleteLookupElement.create());
-//        ctx.addElement(InsertLookupElement.create());
-//
-//        ctx.addElement(KeywordLookupElement.create("commit", false, true));
-//        ctx.addElement(KeywordLookupElement.create("rollback", false, true));
-//
-//        ctx.addElement(AnonymousPlSqlBlockLookupElement.create());
-//    }
 
     @SyntaxTreePath("//..1#PLSQL_BLOCK/..#BEGIN #STATEMENT_LIST/..#PROCEDURE_CALL/#CALLABLE_NAME_REF/#EXEC_NAME_REF/#C_MARKER")
     public void startInsideBlock(C_Context ctx, ASTNode plsqlBlock) {
@@ -192,24 +180,35 @@ public class PlSqlProcessor extends CompletionBase {
     //////// Parameter Spec
     ////////////////////////////////////////////////////////////////////////////////////
 
-    @SyntaxTreePath("//..#FUNCTION_BODY/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#IDENTIFIER #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    @SyntaxTreePath("//..#FUNCTION_BODY/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#PARAMETER_NAME #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
     public void funcParameterType(C_Context ctx) {
         collectTypeNames(ctx, true, false);
    }
 
-    @SyntaxTreePath("//..#FUNCTION_SPEC/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#IDENTIFIER #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    @SyntaxTreePath("//..#FUNCTION_SPEC/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#PARAMETER_NAME #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
     public void funcParameterTypeInSpec(C_Context ctx) {
         collectTypeNames(ctx, true, false);
     }
 
-    @SyntaxTreePath("//..#PROCEDURE_BODY/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#IDENTIFIER #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    @SyntaxTreePath("//..#PROCEDURE_BODY/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#PARAMETER_NAME #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
     public void procParameterType(C_Context ctx) {
         collectTypeNames(ctx, true, false);
     }
 
-    @SyntaxTreePath("//..#PROCEDURE_SPEC/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#IDENTIFIER #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    @SyntaxTreePath("//..#PROCEDURE_SPEC/..#ARGUMENT_LIST/..#PARAMETER_SPEC/#PARAMETER_NAME #TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
     public void procParameterTypeInSpec(C_Context ctx) {
         collectTypeNames(ctx, true, false);
+    }
+
+    @SyntaxTreePath("//..#FUNCTION_BODY/..#RETURN #RETURN_TYPE/#TYPE_NAME_REF/#NAME_FRAGMENT/#C_MARKER")
+    public void funcBodyReturnType(C_Context ctx) {
+        collectTypeNames(ctx, true, false);
+    }
+
+    @SyntaxTreePath("//..1#FUNCTION_SPEC/..#RETURN #RETURN_TYPE/#TYPE_NAME_REF/#NAME_FRAGMENT/2#C_MARKER")
+    public void funcSpecReturnType(C_Context ctx, ASTNode func, ASTNode marker) {
+        final boolean doFinalize = is2ndLatest(func, marker);
+        collectTypeNames(ctx, true, doFinalize);
     }
 
 
