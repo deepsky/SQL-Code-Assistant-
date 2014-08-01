@@ -1,0 +1,21 @@
+create or replace package body package1
+as
+    function child (
+        pParentID number,
+        pChildVersID varchar2(23)
+    ) RETURN GlobalTree.childID%TYPE;
+
+
+end;
+/
+-----------
+create or replace package body package1
+as
+    function child (
+        pParentID    number,
+        pChildVersID varchar2(23)
+    ) RETURN GlobalTree.childID%TYPE;
+
+
+end;
+/
